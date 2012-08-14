@@ -1,0 +1,7 @@
+<resources>
+	<string name="app_name">ClassyGames</string>
+	<string name="main_activity_title">ClassyGames</string>
+	<string name="games_list_activity_title">Games List</string>
+	<string name="menu_settings">Settings</string>
+	<string name="login_with_facebook">Login with Facebook</string>
+</resources>

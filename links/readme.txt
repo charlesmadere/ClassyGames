@@ -1,0 +1,1 @@
+Shortcuts to important stuff on the net for later reading. Think of it as team-wide bookmarks.
