@@ -1,21 +1,22 @@
 package edu.selu.android.classygames;
 
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-import com.actionbarsherlock.app.SherlockActivity;
 import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
 import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
 
 
-public class MainActivity extends SherlockActivity
+public class MainActivity extends Activity
 {
 
 
@@ -34,54 +35,62 @@ public class MainActivity extends SherlockActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_activity);
 
-		loginWithFacebook = (Button) findViewById(R.id.loginWithFacebook);
+		loginWithFacebook = (Button) findViewById(R.id.login_with_facebook);
 		loginWithFacebook.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(final View v)
 			{
-				startActivity(new Intent(MainActivity.this, GamesListActivity.class));
+				facebook = new Facebook(FACEBOOK_APP_ID);
+				facebook.authorize(MainActivity.this, new DialogListener()
+				{
+					@Override
+					public void onComplete(final Bundle values)
+					{
+						alertDialogBuilder.setMessage("onComplete");
+						AlertDialog alert = alertDialogBuilder.create();
+						alert.show();
+
+						startActivity(new Intent(MainActivity.this, GamesListActivity.class));
+					}
+
+
+					@Override
+					public void onFacebookError(final FacebookError e)
+					{
+						alertDialogBuilder.setMessage("onFacebookError");
+						AlertDialog alert = alertDialogBuilder.create();
+						alert.show();
+					}
+
+
+					@Override
+					public void onError(final DialogError e)
+					{
+						alertDialogBuilder.setMessage("onError");
+						AlertDialog alert = alertDialogBuilder.create();
+						alert.show();
+					}
+
+
+					@Override
+					public void onCancel()
+					{
+						alertDialogBuilder.setMessage("onCancel");
+						AlertDialog alert = alertDialogBuilder.create();
+						alert.show();
+					}
+				});
 			}
 		});
 
 		alertDialogBuilder = new AlertDialog.Builder(this);
-
-		facebook = new Facebook(FACEBOOK_APP_ID);
-		facebook.authorize(this, new DialogListener()
-		{
+		alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener()
+		{	
 			@Override
-			public void onComplete(final Bundle values)
+			public void onClick(DialogInterface dialog, final int which)
 			{
-				alertDialogBuilder.setMessage("onComplete");
-				AlertDialog alert = alertDialogBuilder.create();
-				alert.show();
-			}
-
-
-			@Override
-			public void onFacebookError(final FacebookError e)
-			{
-				alertDialogBuilder.setMessage("onFacebookError");
-				AlertDialog alert = alertDialogBuilder.create();
-				alert.show();
-			}
-
-
-			@Override
-			public void onError(final DialogError e)
-			{
-				alertDialogBuilder.setMessage("onError");
-				AlertDialog alert = alertDialogBuilder.create();
-				alert.show();
-			}
-
-
-			@Override
-			public void onCancel()
-			{
-				alertDialogBuilder.setMessage("onCancel");
-				AlertDialog alert = alertDialogBuilder.create();
-				alert.show();
+				dialog.cancel();
 			}
 		});
 	}

@@ -5,8 +5,9 @@
 	android:gravity="center_vertical|center_horizontal"
 	android:orientation="vertical">
 	<Button
-		android:id="@+id/loginWithFacebook"
-		android:layout_width="fill_parent"
+		style="@style/facebook_button"
+		android:id="@+id/login_with_facebook"
 		android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
 		android:text="@string/login_with_facebook" />
 </LinearLayout>
