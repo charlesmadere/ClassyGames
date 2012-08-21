@@ -26,8 +26,8 @@ public class MainActivity extends SherlockActivity
 	AlertDialog.Builder alertDialogBuilder;
 
 	// Facebook variables and data here
-	public final String FACEBOOK_APP_ID = "324400870964487";
-	public Facebook facebook;
+	private final String FACEBOOK_APP_ID = "324400870964487";
+	private Facebook facebook;
 
 
 	@Override
