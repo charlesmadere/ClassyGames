@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-	<style name="Theme" parent="Theme.Sherlock.Light.DarkActionBar">
+	<style name="Theme">
 		<item name="android:background">@drawable/dust</item>
 	</style>
 	<style name="facebook_button">

@@ -13,7 +13,7 @@ import com.facebook.android.FacebookError;
 
 public class MainActivity extends Activity {
 
-	public final static String LOG_TAG = "ClassyGames";
+	public static final String LOG_TAG = "ClassyGames";
     Facebook facebook = new Facebook("324400870964487");
     AlertDialog.Builder alertDialogBuilder;
 
@@ -29,7 +29,7 @@ public class MainActivity extends Activity {
 
             @Override
             public void onFacebookError(FacebookError error) {
-            	Log.d(LOG_TAG, error.toString());
+            	Log.d(LOG_TAG, "CHECK YOUR LOGCAT TO COPY AND PASTE THIS KEY INTO OUR FACEBOOK APP'S SETTINGS!!" + error.toString());
 				alertDialogBuilder.setMessage(error.toString());
 				AlertDialog alert = alertDialogBuilder.create();
 				alert.show();
