@@ -13,8 +13,10 @@ import com.facebook.android.FacebookError;
 
 public class MainActivity extends Activity {
 
+	public final static String LOG_TAG = "ClassyGames";
     Facebook facebook = new Facebook("324400870964487");
     AlertDialog.Builder alertDialogBuilder;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +29,7 @@ public class MainActivity extends Activity {
 
             @Override
             public void onFacebookError(FacebookError error) {
-            	Log.v("ClassyGames", error.toString());
+            	Log.d(LOG_TAG, error.toString());
 				alertDialogBuilder.setMessage(error.toString());
 				AlertDialog alert = alertDialogBuilder.create();
 				alert.show();
