@@ -14,8 +14,7 @@
 			android:label="@string/main_activity_title"
 			android:name=".MainActivity"
 			android:screenOrientation="portrait"
-			android:theme="@style/Theme.Sherlock.Light.DarkActionBar"
-			style="@style/ClassyGames">
+			android:theme="@style/Theme.Styled">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
@@ -25,7 +24,7 @@
 			android:label="@string/games_list_activity_title"
 			android:name=".GamesListActivity"
 			android:screenOrientation="portrait"
-			android:theme="@style/Theme.Sherlock.Light.DarkActionBar">
+			android:theme="@style/Theme.Styled">
 		</activity>
 	</application>
 </manifest>

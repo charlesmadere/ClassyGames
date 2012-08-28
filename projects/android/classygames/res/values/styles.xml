@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-	<style name="ClassyGames" parent="Theme.Sherlock.Light.DarkActionBar">
-		<item name="actionBarStyle">@style/Widget.Styled.ActionBar</item>
-		<item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
-		<item name="android:background">@drawable/dust</item>
-	</style>
-	<style name="Widget.Styled.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
-		<item name="background">@drawable/dust_bar</item>
-		<item name="android:background">@drawable/dust_bar</item>
+	<style name="ClassyGames">
+		<item name="android:background">@drawable/bg_bright_squares</item>
 	</style>
 	<style name="facebook_button">
 		<item name="android:background">@color/facebook_blue</item>
