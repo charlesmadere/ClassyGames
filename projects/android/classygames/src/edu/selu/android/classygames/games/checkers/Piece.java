@@ -2,9 +2,10 @@ package edu.selu.android.classygames.games.checkers;
 
 
 import edu.selu.android.classygames.games.generics.Coordinate;
+import edu.selu.android.classygames.games.generics.GenericPiece;
 
 
-public class Piece
+public class Piece extends GenericPiece
 {
 
 
@@ -12,38 +13,15 @@ public class Piece
 	public final static int TYPE_KING = 2;
 
 
-	Coordinate position;
-	int type;
-
-
 	public Piece()
 	{
-		position = new Coordinate();
-		type = TYPE_NORMAL;
+		super(new Coordinate(), TYPE_NORMAL);
 	}
 
 
 	public Piece(final Coordinate position)
 	{
-		this.position = position;
-	}
-
-
-	Coordinate getPosition()
-	{
-		return position;
-	}
-
-
-	void setPosition(final Coordinate position)
-	{
-		this.position = position;
-	}
-
-
-	int getType()
-	{
-		return type;
+		super(position, TYPE_NORMAL);
 	}
 
 
@@ -59,7 +37,7 @@ public class Piece
 	}
 
 
-	void setKing()
+	void setToKing()
 	{
 		type = TYPE_KING;
 	}

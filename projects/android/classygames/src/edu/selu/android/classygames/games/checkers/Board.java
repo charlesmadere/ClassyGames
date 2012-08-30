@@ -1,11 +1,11 @@
 package edu.selu.android.classygames.games.checkers;
 
 
-public class Board
+import edu.selu.android.classygames.games.generics.GenericBoard;
+
+
+public class Board extends GenericBoard
 {
-
-
-	Position spots[][]; // TODO how many x and y positions does a checker board have?
 
 
 	public Board()

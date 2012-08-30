@@ -1,25 +1,21 @@
 package edu.selu.android.classygames.games.checkers;
 
 
-import java.util.LinkedList;
+import edu.selu.android.classygames.games.generics.GenericTeam;
 
 
-public class Team
+public class Team extends GenericTeam
 {
-
-
-	LinkedList<Piece> pieces;
 
 
 	public Team()
 	{
+		super();
 
-	}
-
-
-	int getRemainingPieces()
-	{
-		return pieces.size();
+		for (int i = 0; i < Checkers.CHECKERS_NUMBER_OF_PIECES; ++i)
+		{
+			
+		}
 	}
 
 

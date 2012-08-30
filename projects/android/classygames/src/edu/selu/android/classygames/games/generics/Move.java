@@ -47,4 +47,11 @@ public class Move
 	}
 
 
+	void set(final Coordinate positionNew, final Coordinate positionOriginal)
+	{
+		this.positionNew = positionNew;
+		this.positionOriginal = positionOriginal;
+	}
+
+
 }

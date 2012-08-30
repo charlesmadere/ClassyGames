@@ -21,7 +21,7 @@ public class MainActivity extends SherlockActivity
 {
 
 
-	public static final String LOG_TAG = "ClassyGames";
+	public final static String LOG_TAG = "ClassyGames";
 	private Button loginWithFacebook;
 	AlertDialog.Builder alertDialogBuilder;
 
