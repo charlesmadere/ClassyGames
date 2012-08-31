@@ -1,4 +1,4 @@
-package edu.selu.android.classygames.games.generics;
+package edu.selu.android.classygames.games;
 
 
 public abstract class GenericPiece
@@ -14,6 +14,9 @@ public abstract class GenericPiece
 		this.position = position;
 		this.type = type;
 	}
+
+
+	public abstract void draw();
 
 
 	Coordinate getPosition()

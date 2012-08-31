@@ -1,8 +1,8 @@
 package edu.selu.android.classygames.games.checkers;
 
 
-import edu.selu.android.classygames.games.generics.Coordinate;
-import edu.selu.android.classygames.games.generics.GenericPosition;
+import edu.selu.android.classygames.games.Coordinate;
+import edu.selu.android.classygames.games.GenericPosition;
 
 
 public class Position extends GenericPosition

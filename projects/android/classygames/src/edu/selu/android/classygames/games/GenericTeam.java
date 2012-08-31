@@ -1,10 +1,10 @@
-package edu.selu.android.classygames.games.generics;
+package edu.selu.android.classygames.games;
 
 
 import java.util.ArrayList;
 
 
-public class GenericTeam
+public abstract class GenericTeam
 {
 
 
@@ -14,6 +14,15 @@ public class GenericTeam
 	protected GenericTeam()
 	{
 		pieces = new ArrayList<GenericPiece>();
+	}
+
+
+	void draw()
+	{
+		for (GenericPiece piece : pieces)
+		{
+			piece.draw();
+		}
 	}
 
 

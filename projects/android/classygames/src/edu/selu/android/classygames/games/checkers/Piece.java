@@ -1,8 +1,8 @@
 package edu.selu.android.classygames.games.checkers;
 
 
-import edu.selu.android.classygames.games.generics.Coordinate;
-import edu.selu.android.classygames.games.generics.GenericPiece;
+import edu.selu.android.classygames.games.Coordinate;
+import edu.selu.android.classygames.games.GenericPiece;
 
 
 public class Piece extends GenericPiece
@@ -22,6 +22,13 @@ public class Piece extends GenericPiece
 	public Piece(final Coordinate position)
 	{
 		super(position, TYPE_NORMAL);
+	}
+
+
+	@Override
+	public void draw()
+	{
+
 	}
 
 

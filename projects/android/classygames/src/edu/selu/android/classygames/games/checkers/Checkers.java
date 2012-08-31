@@ -1,14 +1,14 @@
 package edu.selu.android.classygames.games.checkers;
 
 
-import edu.selu.android.classygames.games.generics.GenericGame;
+import edu.selu.android.classygames.games.GenericGame;
 
 
 public class Checkers extends GenericGame
 {
 
 
-	public static final int CHECKERS_NUMBER_OF_PIECES = 10;
+	public final static int NUMBER_OF_PIECES = 12;
 
 
 	public Checkers()
