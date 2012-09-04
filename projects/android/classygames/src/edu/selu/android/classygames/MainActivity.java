@@ -2,6 +2,7 @@ package edu.selu.android.classygames;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,11 +22,15 @@ public class MainActivity extends SherlockActivity
 {
 
 
-	public final static String LOG_TAG = "ClassyGames";
+	private SharedPreferences sharedPreferences;
 
 
-	private final String FACEBOOK_APP_ID = "324400870964487";
+	// facebook data
 	private Facebook facebook;
+
+	public final static String FACEBOOK_APP_ID = "324400870964487";
+	public final static String FACEBOOK_TOKEN = "access_token";
+	public final static String FACEBOOK_EXPIRES = "expires_in";
 
 
 	@Override
@@ -35,50 +40,78 @@ public class MainActivity extends SherlockActivity
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main_activity);
 
-		Button loginWithFacebook = (Button) findViewById(R.id.login_with_facebook);
-		loginWithFacebook.setOnClickListener(new OnClickListener()
+		facebook = new Facebook(FACEBOOK_APP_ID);
+
+		sharedPreferences = getPreferences(MODE_PRIVATE);
+		final String access_token = sharedPreferences.getString(FACEBOOK_TOKEN, null);
+		final long expires = sharedPreferences.getLong(FACEBOOK_EXPIRES, 0);
+
+		if (access_token != null)
 		{
-			@Override
-			public void onClick(final View v)
+			facebook.setAccessToken(access_token);
+		}
+
+		if (expires != 0)
+		{
+			facebook.setAccessExpires(expires);
+		}
+
+		if (facebook.isSessionValid())
+		// user has already authorized our app. this will skip the login screen and bring them
+		// straight to the games list
+		{
+			goToGamesList();
+		}
+		else
+		{
+			Button loginWithFacebook = (Button) findViewById(R.id.login_with_facebook);
+			loginWithFacebook.setOnClickListener(new OnClickListener()
 			{
-				facebook = new Facebook(FACEBOOK_APP_ID);
-				facebook.authorize(MainActivity.this, new DialogListener()
+				@Override
+				public void onClick(final View v)
 				{
-					@Override
-					public void onComplete(final Bundle values)
+					facebook.authorize(MainActivity.this, new DialogListener()
 					{
-						startActivity(new Intent(MainActivity.this, GamesListActivity.class));
-					}
+						@Override
+						public void onComplete(final Bundle values)
+						{
+							SharedPreferences.Editor editor = sharedPreferences.edit();
+							editor.putString(FACEBOOK_TOKEN, facebook.getAccessToken());
+							editor.putLong(FACEBOOK_EXPIRES, facebook.getAccessExpires());
+							editor.commit();
+							goToGamesList();
+						}
 
 
-					@Override
-					public void onFacebookError(final FacebookError e)
-					{
-						final String msg = "Facebook has encountered an error. Please try again. \"" + e.toString() + "\"";
-						Toast toast = Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
-						toast.show();
-						Log.d(LOG_TAG, msg);
-					}
+						@Override
+						public void onFacebookError(final FacebookError e)
+						{
+							final String msg = "Facebook has encountered an error. Please try again. \"" + e.toString() + "\"";
+							Toast toast = Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT);
+							toast.show();
+							Log.d(Utilities.LOG_TAG, msg);
+						}
 
 
-					@Override
-					public void onError(final DialogError e)
-					{
-						final String msg = "An error has ocurred: \"" + e.toString() + "\"";
-						Toast toast = Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
-						toast.show();
-						Log.d(LOG_TAG, msg);
-					}
+						@Override
+						public void onError(final DialogError e)
+						{
+							final String msg = "An error has ocurred: \"" + e.toString() + "\"";
+							Toast toast = Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT);
+							toast.show();
+							Log.d(Utilities.LOG_TAG, msg);
+						}
 
 
-					@Override
-					public void onCancel()
-					{
+						@Override
+						public void onCancel()
+						{
 
-					}
-				});
-			}
-		});
+						}
+					});
+				}
+			});
+		}
 	}
 
 
@@ -87,6 +120,12 @@ public class MainActivity extends SherlockActivity
 	{
 		super.onActivityResult(requestCode, resultCode, data);
 		facebook.authorizeCallback(requestCode, resultCode, data);
+	}
+
+
+	private void goToGamesList()
+	{
+		startActivity(new Intent(MainActivity.this, GamesListActivity.class));
 	}
 
 

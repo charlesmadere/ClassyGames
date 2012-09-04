@@ -13,6 +13,7 @@
 		<activity
 			android:label="@string/main_activity_title"
 			android:name=".MainActivity"
+			android:noHistory="true"
 			android:screenOrientation="portrait"
 			android:theme="@style/Theme.Styled">
 			<intent-filter>

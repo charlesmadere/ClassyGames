@@ -9,11 +9,14 @@ import android.os.Build;
 import com.actionbarsherlock.app.ActionBar;
 
 
-public final class Utilities
+public class Utilities
 {
 
 
-	public static void styleActionBar(Resources resources, ActionBar actionBar)
+	public final static String LOG_TAG = "ClassyGames";
+
+
+	public static void styleActionBar(final Resources resources, final ActionBar actionBar)
 	// This is a workaround for http://b.android.com/15340 from http://stackoverflow.com/a/5852198/132047
 	// This ensures that pre ice cream sandwich devices properly render our customized actionbar
 	{

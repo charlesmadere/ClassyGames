@@ -1,7 +1,6 @@
 package edu.selu.android.classygames.games.checkers;
 
 
-import edu.selu.android.classygames.games.Coordinate;
 import edu.selu.android.classygames.games.GenericTeam;
 
 
@@ -19,7 +18,7 @@ public class Team extends GenericTeam
 
 		for (int i = 0; i < Checkers.NUMBER_OF_PIECES; ++i)
 		{
-			pieces.add(new Piece(new Coordinate()));
+			pieces.add(new Piece());
 		}
 	}
 
@@ -30,7 +29,7 @@ public class Team extends GenericTeam
 
 		switch (whichTeam)
 		// TODO write some code that will create the pieces for whichever team. that for loop
-		// above is an example of what it would kinda look like...
+		// above is an example of what it would (maybe) kinda look like...
 		{
 			case TEAM_ORANGE:
 				break;
