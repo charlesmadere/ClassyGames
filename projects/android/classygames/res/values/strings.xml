@@ -3,4 +3,6 @@
 	<string name="main_activity_title">Classy Games</string>
 	<string name="games_list_activity_title">Games List</string>
 	<string name="login_with_facebook">Login with Facebook</string>
+	<string name="new_game">New Game</string>
+	<string name="refresh">Refresh</string>
 </resources>
