@@ -4,6 +4,7 @@
 		<item name="android:background">@drawable/bg_bright_squares</item>
 	</style>
 	<style name="facebook_button">
+		<item name="android:background">@drawable/facebook_button</item>
 		<item name="android:textColor">@color/facebook_gray</item>
 	</style>
 </resources>
