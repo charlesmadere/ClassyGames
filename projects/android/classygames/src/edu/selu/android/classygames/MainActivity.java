@@ -126,6 +126,7 @@ public class MainActivity extends SherlockActivity
 	private void goToGamesList()
 	{
 		startActivity(new Intent(MainActivity.this, GamesListActivity.class));
+		finish();
 	}
 
 
