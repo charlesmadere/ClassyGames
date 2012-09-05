@@ -9,12 +9,47 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 
 public class GamesListActivity extends SherlockActivity
 {
 
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		MenuInflater inflater = getSupportMenuInflater();
+		inflater.inflate(R.menu.games_list_activity, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+	
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch (item.getItemId()) 
+		{
+			case R.id.refresh_button:
+			
+				Context context = getApplicationContext();
+				CharSequence text = "REFRESHENING";
+				int duration = Toast.LENGTH_SHORT;
+				
+				Toast toast = Toast.makeText(context, text, duration);
+				toast.show();
+				
+				return true;
+				
+			default:
+				
+				return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	
 	@Override
 	public void onCreate(final Bundle savedInstanceState)
 	{
