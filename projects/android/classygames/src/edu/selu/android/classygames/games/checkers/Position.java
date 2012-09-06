@@ -13,7 +13,6 @@ public class Position extends GenericPosition
 	public final static int PIECE_NORMAL = 1;
 	public final static int PIECE_KING = 2;
 
-
 	Coordinate spot;
 	int hasPiece;
 

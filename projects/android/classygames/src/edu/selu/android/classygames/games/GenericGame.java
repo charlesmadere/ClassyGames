@@ -11,4 +11,7 @@ public abstract class GenericGame
 	}
 
 
+	abstract public void run();
+
+
 }
