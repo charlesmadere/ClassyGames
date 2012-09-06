@@ -26,5 +26,11 @@
 			android:screenOrientation="portrait"
 			android:theme="@style/Theme.Styled">
 		</activity>
+		<activity
+			android:label="@string/new_game_activity_title"
+			android:name=".NewGameActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/Theme.Styled">
+		</activity>
 	</application>
 </manifest>

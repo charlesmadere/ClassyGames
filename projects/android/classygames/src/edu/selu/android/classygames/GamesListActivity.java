@@ -1,6 +1,7 @@
 package edu.selu.android.classygames;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -46,7 +47,7 @@ public class GamesListActivity extends SherlockActivity
 
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
+	public boolean onCreateOptionsMenu(final Menu menu)
 	{
 		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.games_list_activity, menu);
@@ -55,16 +56,17 @@ public class GamesListActivity extends SherlockActivity
 
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item)
+	public boolean onOptionsItemSelected(final MenuItem item)
 	{
 		switch (item.getItemId()) 
-		{
+		{		
+			case R.id.actionbar_new_game:
+				Utilities.easyToastAndLog(GamesListActivity.this, "NUEVO JUEGO!!");
+				startActivity(new Intent(GamesListActivity.this, NewGameActivity.class));
+				return true;
+
 			case R.id.actionbar_refresh:
 				Utilities.easyToastAndLog(GamesListActivity.this, "REFRESHENING");
-				return true;
-			
-			case R.id.new_game:
-				Utilities.easyToastAndLog(GamesListActivity.this, "NUEVO JUEGO!!");
 				return true;
 			
 			default:
