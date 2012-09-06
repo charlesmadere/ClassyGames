@@ -23,26 +23,6 @@ public class GamesListActivity extends SherlockActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.games_list_activity);
 		Utilities.styleActionBar(getResources(), getSupportActionBar());
-
-		Button newGame = (Button) findViewById(R.id.new_game);
-		newGame.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(final View v)
-			{
-				Utilities.easyToastAndLog(GamesListActivity.this, "NEW GAME!");
-			}
-		});
-
-		Button refresh = (Button) findViewById(R.id.refresh);
-		refresh.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(final View v)
-			{
-				Utilities.easyToastAndLog(GamesListActivity.this, "REFRESHENING");
-			}
-		});
 	}
 
 
