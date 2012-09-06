@@ -62,7 +62,11 @@ public class GamesListActivity extends SherlockActivity
 			case R.id.actionbar_refresh:
 				Utilities.easyToastAndLog(GamesListActivity.this, "REFRESHENING");
 				return true;
-
+			
+			case R.id.new_game:
+				Utilities.easyToastAndLog(GamesListActivity.this, "NUEVO JUEGO!!");
+				return true;
+			
 			default:
 				return super.onOptionsItemSelected(item);
 		}
