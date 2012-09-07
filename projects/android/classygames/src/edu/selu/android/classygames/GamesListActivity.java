@@ -16,13 +16,25 @@ import com.actionbarsherlock.view.MenuItem;
 public class GamesListActivity extends SherlockActivity
 {
 
-
 	@Override
 	public void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.games_list_activity);
 		Utilities.styleActionBar(getResources(), getSupportActionBar());
+		
+		Button play = (Button) findViewById(R.id.playbutton);
+		play.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View view) {
+				
+				Intent boardintent = new Intent(view.getContext(), CheckersGameActivity.class);
+				startActivity(boardintent);
+				
+			}
+		});
 	}
 
 
@@ -54,5 +66,8 @@ public class GamesListActivity extends SherlockActivity
 		}
 	}
 
+		
+		
+		
 
 }
