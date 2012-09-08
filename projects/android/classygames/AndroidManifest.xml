@@ -1,47 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="edu.selu.android.classygames"
-    android:versionCode="1"
-    android:versionName="0.1" >
+	package="edu.selu.android.classygames"
+	android:versionCode="1"
+	android:versionName="0.1" >
 
-    <uses-sdk
-        android:minSdkVersion="10"
-        android:targetSdkVersion="16" />
+	<uses-sdk
+		android:minSdkVersion="10"
+		android:targetSdkVersion="16" />
 
-    <uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.INTERNET" />
 
-    <application
-        android:icon="@drawable/launcher"
-        android:label="@string/app_name" >
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/main_activity_title"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Styled" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".GamesListActivity"
-            android:label="@string/games_list_activity_title"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Styled" >
-        </activity>
-        <activity
-            android:name=".NewGameActivity"
-            android:label="@string/new_game_activity_title"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Styled" >
-        </activity>
-        <activity
-            android:name=".CheckersGameActivity"
-            android:label="@string/title_activity_checkers_game" 
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Styled" >
-        </activity>
-    </application>
-
+	<application
+		android:icon="@drawable/launcher"
+		android:label="@string/app_name" >
+		<activity
+			android:label="@string/main_activity_title"
+			android:name=".MainActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/Theme.Styled" >
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+		<activity
+			android:label="@string/games_list_activity_title"
+			android:name=".GamesListActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/Theme.Styled">
+		</activity>
+		<activity
+			android:label="@string/new_game_activity_title"
+			android:name=".NewGameActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/Theme.Styled">
+		</activity>
+		<activity
+			android:label="@string/checkers_game_activity_title" 
+			android:name=".CheckersGameActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/Theme.Styled">
+		</activity>
+	</application>
 </manifest>

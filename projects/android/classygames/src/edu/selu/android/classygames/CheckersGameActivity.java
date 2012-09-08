@@ -13,7 +13,7 @@ public class CheckersGameActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_checkers_game);
+        setContentView(R.layout.checkers_game_activity);
         
   //Testing
         

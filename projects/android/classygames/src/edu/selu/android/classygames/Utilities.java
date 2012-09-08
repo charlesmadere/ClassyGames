@@ -42,6 +42,28 @@ public class Utilities
 
 
 	/**
+	 * <p>Prints a Toast message to the screen and prints that same message to the Log.e
+	 * console.</p>
+	 * 
+	 * <p><strong>Examples</strong><br />
+	 * Utilities.easyToastAndLog(MainActivity.this, "Hello!");<br />
+	 * Utilities.easyToastAndLog(getApplicationContext(), "Another message huh?");</p>
+	 * 
+	 * @param context
+	 * Just put the name of your class.this, or you can use getApplicationContext().
+	 * 
+	 * @param message
+	 * The String that you want to be shown as a toast message. This exact String will also
+	 * be printed to the Log.e console.
+	 */
+	public static void easyToastAndLogError(final Context context, final String message)
+	{
+		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+		Log.e(LOG_TAG, message);
+	}
+
+
+	/**
 	 * <p>This is a workaround for http://b.android.com/15340 from http://stackoverflow.com/a/5852198/132047.
 	 * This ensures that pre ice cream sandwich devices properly render our customized actionbar.
 	 * This method should always be run immediately after the setContentView() method is run.</p>
