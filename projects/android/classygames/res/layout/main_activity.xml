@@ -7,16 +7,18 @@
 	<ImageView
 		android:adjustViewBounds="true"
 		android:contentDescription="@string/app_name"
+		android:gravity="center_horizontal|center_vertical"
 		android:layout_height="wrap_content"
 		android:layout_width="fill_parent"
+		android:paddingTop="48dip"
 		android:src="@drawable/logo" />
 	<LinearLayout
-		android:gravity="center_vertical"
+	    android:gravity="center_horizontal|center_vertical"
 		android:layout_height="fill_parent"
 		android:layout_width="fill_parent"
 		android:orientation="vertical">
 		<Button
-			android:id="@+id/login_with_facebook"
+			android:id="@+id/main_activity_button_login_with_facebook"
 			android:layout_height="wrap_content"
 			android:layout_width="fill_parent"
 			android:text="@string/login_with_facebook"

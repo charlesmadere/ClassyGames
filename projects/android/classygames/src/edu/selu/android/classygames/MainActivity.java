@@ -64,7 +64,7 @@ public class MainActivity extends SherlockActivity
 		}
 		else
 		{
-			Button loginWithFacebook = (Button) findViewById(R.id.login_with_facebook);
+			Button loginWithFacebook = (Button) findViewById(R.id.main_activity_button_login_with_facebook);
 			loginWithFacebook.setOnClickListener(new OnClickListener()
 			{
 				@Override
