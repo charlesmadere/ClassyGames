@@ -7,7 +7,6 @@
 	<ImageView
 		android:adjustViewBounds="true"
 		android:contentDescription="@string/games_list_activity_turn_yours"
-		android:gravity="right|center_vertical"
 		android:layout_height="wrap_content"
 		android:layout_width="fill_parent"
 		android:src="@drawable/turn_yours" />
@@ -23,7 +22,6 @@
 	<ImageView
 		android:adjustViewBounds="true"
 		android:contentDescription="@string/games_list_activity_turn_theirs"
-		android:gravity="right|center_vertical"
 		android:layout_height="wrap_content"
 		android:layout_width="fill_parent"
 		android:src="@drawable/turn_theirs" />

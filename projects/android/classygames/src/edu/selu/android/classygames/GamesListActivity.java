@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListActivity;
@@ -75,7 +76,11 @@ public class GamesListActivity extends SherlockListActivity
 	public boolean onOptionsItemSelected(final MenuItem item)
 	{
 		switch (item.getItemId()) 
-		{		
+		{
+			case R.id.actionbar_about:
+				Utilities.easyToastAndLog(GamesListActivity.this, "About!");
+				return true;
+
 			case R.id.actionbar_new_game:
 				Utilities.easyToastAndLog(GamesListActivity.this, "NUEVO JUEGO!!");
 				startActivity(new Intent(GamesListActivity.this, NewGameActivity.class));
@@ -103,7 +108,16 @@ public class GamesListActivity extends SherlockListActivity
 			gamesTurnYours.add(new Checkers());
 			gamesTurnYours.add(new Checkers());
 			gamesTurnYours.add(new Checkers());
-			Thread.sleep(5000);
+			gamesTurnYours.add(new Checkers());
+			gamesTurnYours.add(new Checkers());
+			gamesTurnYours.add(new Checkers());
+			gamesTurnYours.add(new Checkers());
+			gamesTurnYours.add(new Checkers());
+			gamesTurnYours.add(new Checkers());
+			gamesTurnYours.add(new Checkers());
+			gamesTurnYours.add(new Checkers());
+			gamesTurnYours.add(new Checkers());
+			Thread.sleep(1000);
 			Log.i(Utilities.LOG_TAG, "Size: " + gamesTurnYours.size());
 		}
 		catch (Exception e)
@@ -162,8 +176,14 @@ public class GamesListActivity extends SherlockListActivity
 
 			if (game != null)
 			{
+				ImageView picture = (ImageView) convertView.findViewById(R.id.games_list_activity_listview_item_picture);
 				TextView name = (TextView) convertView.findViewById(R.id.games_list_activity_listview_item_name);
 				TextView time = (TextView) convertView.findViewById(R.id.games_list_activity_listview_item_time);
+
+				if (picture != null)
+				{
+
+				}
 
 				if (name != null)
 				{

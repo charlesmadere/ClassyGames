@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="about">About</string>
 	<string name="app_name">Classy Games</string>
 	<string name="checkers_game_activity_title">Checkers Game</string>
 	<string name="games_list_activity_turn_theirs">Their Turn</string>
