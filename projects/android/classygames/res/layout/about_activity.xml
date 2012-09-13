@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-	android:drawableTop="@drawable/logo"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_height="fill_parent"
 	android:layout_width="fill_parent"
-	android:text="@string/about_activity_about"
+	android:orientation="vertical"
 	style="@style/ClassyGames">
-</TextView>
+	<ImageView
+		android:adjustViewBounds="true"
+		android:contentDescription="@string/app_name"
+		android:gravity="center_vertical"
+		android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:paddingLeft="4dip"
+		android:paddingRight="4dip"
+		android:paddingTop="48dip"
+		android:src="@drawable/logo" />
+	<TextView
+		android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:paddingLeft="8dip"
+		android:paddingRight="8dip"
+		android:paddingTop="16dip"
+		android:text="@string/about_activity_about" />
+</LinearLayout>
