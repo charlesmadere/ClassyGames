@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -43,7 +44,7 @@ public class GamesListActivity extends SherlockListActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.games_list_activity);
 		Utilities.styleActionBar(getResources(), getSupportActionBar());
-
+		
 		gamesTurnYours = new ArrayList<GenericGame>();
 		gamesListAdapterTurnYours = new GamesListAdapter(this, R.layout.games_list_activity_listview_item, gamesTurnYours);
 		setListAdapter(gamesListAdapterTurnYours);
