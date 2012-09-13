@@ -15,7 +15,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -79,16 +78,18 @@ public class GamesListActivity extends SherlockListActivity
 		switch (item.getItemId()) 
 		{
 			case R.id.actionbar_about:
-				Utilities.easyToastAndLog(GamesListActivity.this, "About!");
+				startActivity(new Intent(GamesListActivity.this, AboutActivity.class));
+				return true;
+
+			case R.id.actionbar_logout:
+				startActivity(new Intent(GamesListActivity.this, LogoutActivity.class));
 				return true;
 
 			case R.id.actionbar_new_game:
-				Utilities.easyToastAndLog(GamesListActivity.this, "NUEVO JUEGO!!");
 				startActivity(new Intent(GamesListActivity.this, NewGameActivity.class));
 				return true;
 
 			case R.id.actionbar_refresh:
-				Utilities.easyToastAndLog(GamesListActivity.this, "REFRESHENING");
 				startActivity(new Intent(GamesListActivity.this, CheckersGameActivity.class));
 				return true;
 			

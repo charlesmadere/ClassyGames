@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="about">About</string>
+	<string name="about_activity_title">About</string>
+	<string name="about_activity_about">Classy Games was developed by</string>
 	<string name="app_name">Classy Games</string>
 	<string name="checkers_game_activity_title">Checkers Game</string>
 	<string name="games_list_activity_turn_theirs">Their Turn</string>
@@ -10,6 +12,8 @@
 	<string name="games_list_activity_listview_turn_yours_no_games">None of your friends have sent a move your way. Perhaps you should start a new game?</string>
 	<string name="games_list_activity_title">Games List</string>
 	<string name="login_with_facebook">Login with Facebook</string>
+	<string name="logout">Logout</string>
+	<string name="logout_activity_title">Logout of Classy Games</string>
 	<string name="main_activity_title">Classy Games</string>
 	<string name="new_game">New Game</string>
 	<string name="new_game_activity_title">New Game</string>

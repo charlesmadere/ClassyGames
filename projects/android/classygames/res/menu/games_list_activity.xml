@@ -2,15 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 	<item 
 		android:id="@+id/actionbar_new_game"
-		android:showAsAction="ifRoom"
+		android:showAsAction="ifRoom|withText"
 		android:title="@string/new_game" />
 	<item
 		android:icon="@drawable/ab_refresh"
 		android:id="@+id/actionbar_refresh"
-		android:showAsAction="ifRoom" 
+		android:showAsAction="ifRoom|withText"
 		android:title="@string/refresh" />
 	<item
+		android:id="@+id/actionbar_logout"
+		android:showAsAction="never|withText"
+		android:title="@string/logout" />
+	<item
 		android:id="@+id/actionbar_about"
-		android:showAsAction="ifRoom"
+		android:showAsAction="never|withText"
 		android:title="@string/about" />
 </menu>

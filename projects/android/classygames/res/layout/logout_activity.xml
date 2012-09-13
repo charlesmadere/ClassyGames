@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="fill_parent"
+	android:layout_width="fill_parent"
+	android:orientation="vertical"
+	style="@style/ClassyGames">
+	<ImageView
+		android:adjustViewBounds="true"
+		android:contentDescription="@string/app_name"
+		android:gravity="center_horizontal|center_vertical"
+		android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:paddingLeft="4dip"
+		android:paddingRight="4dip"
+		android:paddingTop="48dip"
+		android:src="@drawable/logo" />
+	<LinearLayout
+		android:gravity="center_horizontal|center_vertical"
+		android:layout_height="fill_parent"
+		android:layout_width="fill_parent"
+		android:paddingLeft="24dip"
+		android:paddingRight="24dip"
+		android:orientation="vertical">
+		<Button
+			android:id="@+id/main_activity_button_login_with_facebook"
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+			android:text="@string/login_with_facebook"
+			style="@style/facebook_button" />
+	</LinearLayout>
+</LinearLayout>

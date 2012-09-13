@@ -24,20 +24,32 @@
 			</intent-filter>
 		</activity>
 		<activity
-			android:label="@string/games_list_activity_title"
-			android:name=".GamesListActivity"
-			android:screenOrientation="portrait"
-			android:theme="@style/Theme.Styled">
-		</activity>
-		<activity
-			android:label="@string/new_game_activity_title"
-			android:name=".NewGameActivity"
+			android:label="@string/about_activity_title"
+			android:name=".AboutActivity"
 			android:screenOrientation="portrait"
 			android:theme="@style/Theme.Styled">
 		</activity>
 		<activity
 			android:label="@string/checkers_game_activity_title" 
 			android:name=".CheckersGameActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/Theme.Styled">
+		</activity>
+		<activity
+			android:label="@string/games_list_activity_title"
+			android:name=".GamesListActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/Theme.Styled">
+		</activity>
+		<activity
+			android:label="@string/logout_activity_title"
+			android:name=".LogoutActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/Theme.Styled">
+		</activity>
+		<activity
+			android:label="@string/new_game_activity_title"
+			android:name=".NewGameActivity"
 			android:screenOrientation="portrait"
 			android:theme="@style/Theme.Styled">
 		</activity>
