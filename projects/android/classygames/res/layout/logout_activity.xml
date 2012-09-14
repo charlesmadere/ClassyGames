@@ -4,16 +4,16 @@
 	android:layout_width="fill_parent"
 	android:orientation="vertical"
 	style="@style/ClassyGames">
-	<ImageView
-		android:adjustViewBounds="true"
-		android:contentDescription="@string/app_name"
-		android:gravity="center_vertical"
+	<TextView
 		android:layout_height="wrap_content"
 		android:layout_width="fill_parent"
-		android:paddingLeft="4dip"
-		android:paddingRight="4dip"
+		android:lineSpacingExtra="6dip"
+		android:paddingBottom="24dip"
+		android:paddingLeft="8dip"
+		android:paddingRight="8dip"
 		android:paddingTop="48dip"
-		android:src="@drawable/logo" />
+		android:text="@string/logout_activity_logout"
+		android:textSize="17sp" />
 	<LinearLayout
 		android:gravity="center_vertical"
 		android:layout_height="fill_parent"

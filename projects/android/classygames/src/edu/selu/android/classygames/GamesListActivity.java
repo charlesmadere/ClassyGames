@@ -82,7 +82,7 @@ public class GamesListActivity extends SherlockListActivity
 				return true;
 
 			case R.id.actionbar_logout:
-				startActivity(new Intent(GamesListActivity.this, LogoutActivity.class));
+				startActivityForResult(new Intent(GamesListActivity.this, LogoutActivity.class), 0);
 				return true;
 
 			case R.id.actionbar_new_game:
@@ -150,6 +150,21 @@ public class GamesListActivity extends SherlockListActivity
 			gamesListAdapterTurnYours.notifyDataSetChanged();
 		}
 	};
+
+
+	@Override
+	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data)
+	{
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (resultCode == 1)
+		{
+			finish();
+		}
+		else
+		{
+		}
+	}
 
 
 	private class GamesListAdapter extends ArrayAdapter<GenericGame>

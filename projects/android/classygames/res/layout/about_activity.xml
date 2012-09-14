@@ -17,8 +17,10 @@
 	<TextView
 		android:layout_height="wrap_content"
 		android:layout_width="fill_parent"
+		android:lineSpacingExtra="6dip"
 		android:paddingLeft="8dip"
 		android:paddingRight="8dip"
 		android:paddingTop="16dip"
-		android:text="@string/about_activity_about" />
+		android:text="@string/about_activity_about"
+		android:textSize="17sp" />
 </LinearLayout>

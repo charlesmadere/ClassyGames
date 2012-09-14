@@ -2,6 +2,7 @@ package edu.selu.android.classygames;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
@@ -10,6 +11,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.facebook.android.AsyncFacebookRunner;
+import com.facebook.android.Facebook;
 
 
 public class Utilities
@@ -17,6 +20,15 @@ public class Utilities
 
 
 	public final static String LOG_TAG = "ClassyGames";
+	public static SharedPreferences sharedPreferences;
+
+	// facebook stuff
+	public static Facebook facebook;
+	public static AsyncFacebookRunner facebookRunner;
+
+	public final static String FACEBOOK_APP_ID = "324400870964487";
+	public final static String FACEBOOK_TOKEN = "access_token";
+	public final static String FACEBOOK_EXPIRES = "expires_in";
 
 
 	/**
@@ -84,6 +96,21 @@ public class Utilities
 			BitmapDrawable bg = (BitmapDrawable) resources.getDrawable(R.drawable.bg_actionbar);
 			bg.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
 			actionBar.setBackgroundDrawable(bg);
+		}
+	}
+
+
+	/**
+	 * This method must be called before using any of the Facebook variables stored in this class.
+	 * It ensures that no Facebook variables are null. If they are null, it sets them to the proper
+	 * values. If you're having NullPointer errors, you probably need to call this method.
+	 */
+	public static void ensureFacebookIsNotNull()
+	{
+		if (facebook == null || facebookRunner == null)
+		{
+			facebook = new Facebook(FACEBOOK_APP_ID);
+			facebookRunner = new AsyncFacebookRunner(facebook);
 		}
 	}
 
