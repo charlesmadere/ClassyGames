@@ -4,8 +4,13 @@
 	android:layout_width="fill_parent"
 	android:orientation="vertical"
 	style="@style/ClassyGames">
-	<TextView
+	<ListView
+		android:id="@+id/android:list"
 		android:layout_height="wrap_content"
-		android:layout_width="match_parent"
-		android:text="@string/app_name" />
+		android:layout_width="fill_parent" />
+	<TextView
+		android:id="@android:id/empty"
+		android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:text="null" />
 </LinearLayout>
