@@ -170,6 +170,8 @@ public class GamesListActivity extends SherlockListActivity
 
 	private class GamesListAdapter extends ArrayAdapter<GenericGame>
 	{
+
+
 		private ArrayList<GenericGame> games;
 
 

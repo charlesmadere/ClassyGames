@@ -7,7 +7,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.MenuItem;
@@ -32,8 +38,10 @@ public class NewGameActivity extends SherlockListActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.new_game_activity);
 		Utilities.styleActionBar(getResources(), getSupportActionBar());
+
+		people = new ArrayList<Person>();
 		
-		//Get friends list
+
 		try
 		{
 			Utilities.ensureFacebookIsNotNull();
@@ -91,6 +99,47 @@ public class NewGameActivity extends SherlockListActivity
 		}
 
 
+	}
+
+
+	private class PeopleAdapter extends ArrayAdapter<Person>
+	{
+
+
+		private ArrayList<Person> people;
+
+
+		public PeopleAdapter(final Context context, final int textViewResourceId, final ArrayList<Person> people)
+		{
+			super(context, textViewResourceId, people);
+
+			this.people = people;
+		}
+
+
+		@Override
+		public View getView(final int position, View convertView, final ViewGroup parent)
+		{
+			if (convertView == null)
+			{
+				LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				convertView = layoutInflater.inflate(R.layout.new_game_activity_listview_item, null);
+			}
+
+			Person person = people.get(position);
+
+			if (person != null)
+			{
+				TextView name = (TextView) convertView.findViewById(R.id.new_game_activity_listview_item_name);
+
+				if (name != null)
+				{
+					name.setText(person.getName());
+				}
+			}
+
+			return convertView;
+		}
 	}
 
 

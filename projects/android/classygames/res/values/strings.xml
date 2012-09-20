@@ -19,5 +19,6 @@
 	<string name="main_activity_title">Classy Games</string>
 	<string name="new_game">New Game</string>
 	<string name="new_game_activity_title">New Game</string>
+	<string name="new_game_activity_listview_no_friends">Well you don't seem to have any Facebook friends. In order to play Classy Games you must have some Facebook friends.</string>
 	<string name="refresh">Refresh</string>
 </resources>
