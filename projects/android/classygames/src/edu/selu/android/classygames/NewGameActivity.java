@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockListActivity;
@@ -113,11 +114,30 @@ public class NewGameActivity extends SherlockListActivity
 	            });
 	        }
 	    }
-		
+
+
 		@Override
 		public void onComplete(final String response, final Object state)
 		{
-//			Utilities.easyToastAndLog(NewGameActivity.this, "completell");
+			try
+			{
+				final JSONArray friends = Util.parseJson(response).getJSONArray("data");
+
+	            final int friendsLength = friends.length();
+	            for (int i = 0; i < friendsLength; ++i)
+	            {
+	            	JSONObject friend = friends.getJSONObject(i);
+	            	Log.d(Utilities.LOG_TAG, friend.getString("id") + " " + friend.getString("name"));
+	            }
+			}
+			catch (FacebookError e)
+			{
+				e.printStackTrace();
+			}
+			catch (JSONException e)
+			{
+				e.printStackTrace();
+			}
 		}
 
 
