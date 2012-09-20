@@ -7,10 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.MenuItem;
@@ -19,14 +16,14 @@ import com.facebook.android.BaseRequestListener;
 import com.facebook.android.FacebookError;
 import com.facebook.android.Util;
 
+import edu.selu.android.classygames.games.Person;
+
 
 public class NewGameActivity extends SherlockListActivity
 {
 
 
-	private ArrayList<String> friends;
-	private ProgressDialog progressDialog;
-	private Runnable runnable;
+	private ArrayList<Person> people;
 
 
 	@Override
@@ -42,13 +39,10 @@ public class NewGameActivity extends SherlockListActivity
 			Utilities.ensureFacebookIsNotNull();
 			AsyncFacebookRunner mAsyncRunner = new AsyncFacebookRunner(Utilities.facebook);
 			mAsyncRunner.request("/me/friends", new FriendsRequestListener());
-//			Bundle bundle = new Bundle();
-//			bundle.putString("fields", "birthday");
-//			mAsyncRunner.request("me/friends", bundle, new FriendListRequestListener());
 		}
 		catch (Exception e)
 		{
-			Utilities.easyToastAndLogError(NewGameActivity.this, "FRIENDS_LIST_FAIL");
+			Utilities.easyToastAndLogError(NewGameActivity.this, "Failed retrieving your Facebook friends.");
 		}
 	}
 
@@ -68,52 +62,8 @@ public class NewGameActivity extends SherlockListActivity
 	}
 
 
-	//Friends List Adapter Defined
-	public class FriendsRequestListener extends BaseRequestListener
+	private class FriendsRequestListener extends BaseRequestListener
 	{
-
-
-		String _error;
-
-
-		public void onComplete(final String response)
-		{
-	        _error = null;
-
-	        try
-	        {
-	            JSONObject json = Util.parseJson(response);
-	            final JSONArray friends = json.getJSONArray("data");
-
-	            NewGameActivity.this.runOnUiThread(new Runnable()
-	            {
-	                public void run()
-	                {
-	                    //Supposed to do stuff with array here
-	                }
-	            });
-
-	        }
-	        catch (JSONException e)
-	        {
-	            _error = "JSON Error in response";
-	        }
-	        catch (FacebookError e)
-	        {
-	            _error = "Facebook Error: " + e.getMessage();
-	        }
-
-	        if (_error != null)
-	        {
-	            NewGameActivity.this.runOnUiThread(new Runnable()
-	            {
-	                public void run()
-	                {
-	                    Utilities.easyToastAndLogError(NewGameActivity.this, "Error occurred: " + _error);
-	                }
-	            });
-	        }
-	    }
 
 
 		@Override
@@ -127,7 +77,7 @@ public class NewGameActivity extends SherlockListActivity
 	            for (int i = 0; i < friendsLength; ++i)
 	            {
 	            	JSONObject friend = friends.getJSONObject(i);
-	            	Log.d(Utilities.LOG_TAG, friend.getString("id") + " " + friend.getString("name"));
+	            	people.add(new Person(friend.getInt("id"), friend.getString("name")));
 	            }
 			}
 			catch (FacebookError e)
