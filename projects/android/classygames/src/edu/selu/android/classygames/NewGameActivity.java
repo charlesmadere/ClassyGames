@@ -42,7 +42,7 @@ public class NewGameActivity extends SherlockActivity
 		}
 		catch(Exception e)
 		{
-			Log.e(Utilities.LOG_TAG, "FRIENDS_LIST_FAIL" + e.getMessage());
+			Utilities.easyToastAndLogError(NewGameActivity.this, "FRIENDS_LIST_FAIL");
 		}
 	}
 
@@ -53,13 +53,9 @@ public class NewGameActivity extends SherlockActivity
 		switch (item.getItemId()) 
 		{		
 			case android.R.id.home:
-				
-	            // app icon in action bar clicked; go home
-	            Intent intent = new Intent(this, GamesListActivity.class);
-	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	            startActivity(intent);
+				finish();
 	            return true;
-	            
+
 			default:
 				return super.onOptionsItemSelected(item);
 		}
