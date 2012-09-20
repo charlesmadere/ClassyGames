@@ -28,29 +28,30 @@ public class NewGameActivity extends SherlockActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.new_game_activity);
 		Utilities.styleActionBar(getResources(), getSupportActionBar());
+
 		// makes the back arrow visible
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		//Get friends list
-				try 
-				{
-					AsyncFacebookRunner mAsyncRunner = new AsyncFacebookRunner(Utilities.facebook);
-					Bundle bundle = new Bundle();
-					bundle.putString("fields", "birthday");
-					mAsyncRunner.request("me/friends", bundle, new FriendListRequestListener());
-				}
-				catch(Exception e)
-				{
-					Log.e(Utilities.LOG_TAG, "FRIENDS_LIST_FAIL" + e.getMessage());
-				}
+		try
+		{
+			AsyncFacebookRunner mAsyncRunner = new AsyncFacebookRunner(Utilities.facebook);
+			Bundle bundle = new Bundle();
+			bundle.putString("fields", "birthday");
+			mAsyncRunner.request("me/friends", bundle, new FriendListRequestListener());
+		}
+		catch(Exception e)
+		{
+			Log.e(Utilities.LOG_TAG, "FRIENDS_LIST_FAIL" + e.getMessage());
+		}
 	}
+
 
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item)
 	{
 		switch (item.getItemId()) 
 		{		
-			
 			case android.R.id.home:
 				
 	            // app icon in action bar clicked; go home
@@ -66,46 +67,60 @@ public class NewGameActivity extends SherlockActivity
 
 
 	//Friends List Adapter Defined
-	public class FriendListRequestListener extends BaseRequestListener {
+	public class FriendListRequestListener extends BaseRequestListener
+	{
+
+
 		String _error;
-			
-		public void onComplete(final String response) {
+
+
+		public void onComplete(final String response)
+		{
 	        _error = null;
 
-	        try {
+	        try
+	        {
 	            JSONObject json = Util.parseJson(response);
 	            final JSONArray friends = json.getJSONArray("data");
-	            
-	            NewGameActivity.this.runOnUiThread(new Runnable() {
-	                public void run() {
+
+	            NewGameActivity.this.runOnUiThread(new Runnable()
+	            {
+	                public void run()
+	                {
 	                    //Supposed to do stuff with array here
 	                }
 	            });
 
-	        } catch (JSONException e) {
+	        }
+	        catch (JSONException e)
+	        {
 	            _error = "JSON Error in response";
-	        } catch (FacebookError e) {
+	        }
+	        catch (FacebookError e)
+	        {
 	            _error = "Facebook Error: " + e.getMessage();
 	        }
 
 	        if (_error != null)
 	        {
-	            NewGameActivity.this.runOnUiThread(new Runnable() {
-	                public void run() {
-	                    Toast.makeText(getApplicationContext(), "Error occurred:  " + 
-	                                    _error, Toast.LENGTH_LONG).show();
+	            NewGameActivity.this.runOnUiThread(new Runnable()
+	            {
+	                public void run()
+	                {
+	                    Toast.makeText(getApplicationContext(), "Error occurred: " + _error, Toast.LENGTH_LONG).show();
 	                }
 	            });
 	        }
 	    }
 		
 		@Override
-		public void onComplete(String response, Object state) {
-			// TODO Auto-generated method stub
-			
+		public void onComplete(final String response, final Object state)
+		{
+
 		}
-		
-		
+
+
 	}
+
 
 }
