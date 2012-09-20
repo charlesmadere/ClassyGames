@@ -22,8 +22,16 @@ public class Utilities
 	public final static String LOG_TAG = "ClassyGames";
 	public static SharedPreferences sharedPreferences;
 
-	// facebook stuff
+	/**
+	 * PLEASE USE THE Utilities.ensureFacebookIsNotNull() method BEFORE using ANY Facebook
+	 * variables found in this class
+	 */
 	public static Facebook facebook;
+
+	/**
+	 * PLEASE USE THE Utilities.ensureFacebookIsNotNull() method BEFORE using ANY Facebook
+	 * variables found in this class
+	 */
 	public static AsyncFacebookRunner facebookRunner;
 
 	public final static String FACEBOOK_APP_ID = "324400870964487";
@@ -76,31 +84,6 @@ public class Utilities
 
 
 	/**
-	 * <p>This is a workaround for http://b.android.com/15340 from http://stackoverflow.com/a/5852198/132047.
-	 * This ensures that pre ice cream sandwich devices properly render our customized actionbar.
-	 * This method should always be run immediately after the setContentView() method is run.</p>
-	 * 
-	 * <p><strong>Example</strong><br />
-	 * Utilities.styleActionBar(getResources(), getSupportActionBar());</p>
-	 * 
-	 * @param resources
-	 * getResources()
-	 * 
-	 * @param actionBar
-	 * getSupportActionBar()
-	 */
-	public static void styleActionBar(final Resources resources, final ActionBar actionBar)
-	{
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-		{
-			BitmapDrawable bg = (BitmapDrawable) resources.getDrawable(R.drawable.bg_actionbar);
-			bg.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
-			actionBar.setBackgroundDrawable(bg);
-		}
-	}
-
-
-	/**
 	 * This method must be called before using any of the Facebook variables stored in this class.
 	 * It ensures that no Facebook variables are null. If they are null, it sets them to the proper
 	 * values. If you're having NullPointer errors, you probably need to call this method.
@@ -112,6 +95,58 @@ public class Utilities
 			facebook = new Facebook(FACEBOOK_APP_ID);
 			facebookRunner = new AsyncFacebookRunner(facebook);
 		}
+	}
+
+
+	/**
+	 * <p>This is a workaround for http://b.android.com/15340 from http://stackoverflow.com/a/5852198/132047.
+	 * This ensures that pre ice cream sandwich devices properly render our customized actionbar.
+	 * This method should always be run immediately after the setContentView() method is run.</p>
+	 * 
+	 * <p><strong>Examples</strong><br />
+	 * Utilities.styleActionBar(getResources(), getSupportActionBar(), false);</p>
+	 * 
+	 * @param resources
+	 * getResources()
+	 * 
+	 * @param actionBar
+	 * getSupportActionBar()
+	 * 
+	 * @param backArrow
+	 * Whether or not you want to have a back arrow drawn next to the app icon in the actionbar.
+	 */
+	public static void styleActionBar(final Resources resources, final ActionBar actionBar, final boolean backArrow)
+	{
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+		{
+			BitmapDrawable bg = (BitmapDrawable) resources.getDrawable(R.drawable.bg_actionbar);
+			bg.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
+			actionBar.setBackgroundDrawable(bg);
+		}
+
+		if (backArrow)
+		{
+			actionBar.setDisplayHomeAsUpEnabled(true);
+		}
+	}
+
+	/**
+	 * <p>This is a workaround for http://b.android.com/15340 from http://stackoverflow.com/a/5852198/132047.
+	 * This ensures that pre ice cream sandwich devices properly render our customized actionbar.
+	 * This method should always be run immediately after the setContentView() method is run.</p>
+	 * 
+	 * <p><strong>Examples</strong><br />
+	 * Utiltiles.styleActionBar(getResources(), getSupportActionBar());</p>
+	 * 
+	 * @param resources
+	 * getResources()
+	 * 
+	 * @param actionBar
+	 * getSupportActionBar()
+	 */
+	public static void styleActionBar(final Resources resources, final ActionBar actionBar)
+	{
+		styleActionBar(resources, actionBar, true);
 	}
 
 

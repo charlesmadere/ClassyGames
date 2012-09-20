@@ -17,7 +17,6 @@ public class AboutActivity extends SherlockActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.about_activity);
 		Utilities.styleActionBar(getResources(), getSupportActionBar());
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 

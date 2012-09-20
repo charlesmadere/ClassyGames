@@ -28,7 +28,6 @@ public class LogoutActivity extends SherlockActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.logout_activity);
 		Utilities.styleActionBar(getResources(), getSupportActionBar());
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		Button logoutOfFacebook = (Button) findViewById(R.id.logout_activity_button_logout_of_facebook);
 		logoutOfFacebook.setOnClickListener(new OnClickListener()

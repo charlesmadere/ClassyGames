@@ -34,7 +34,7 @@ public class GamesListActivity extends SherlockListActivity
 	private GamesListAdapter gamesListAdapterTurnTheirs;
 	private GamesListAdapter gamesListAdapterTurnYours;
 	private ProgressDialog progressDialog;
-	private Runnable viewGames;
+	private Runnable runnable;
 
 
 	@Override
@@ -42,13 +42,13 @@ public class GamesListActivity extends SherlockListActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.games_list_activity);
-		Utilities.styleActionBar(getResources(), getSupportActionBar());
+		Utilities.styleActionBar(getResources(), getSupportActionBar(), false);
 		
 		gamesTurnYours = new ArrayList<GenericGame>();
 		gamesListAdapterTurnYours = new GamesListAdapter(this, R.layout.games_list_activity_listview_item, gamesTurnYours);
 		setListAdapter(gamesListAdapterTurnYours);
 
-		viewGames = new Runnable()
+		runnable = new Runnable()
 		{
 			@Override
 			public void run()
@@ -57,7 +57,7 @@ public class GamesListActivity extends SherlockListActivity
 			}
 		};
 
-		Thread thread = new Thread(null, viewGames, "MagentoBackground");
+		Thread thread = new Thread(null, runnable, "MagentoBackground");
 		thread.start();
 		progressDialog = ProgressDialog.show(GamesListActivity.this, "Please wait...", "Retrieving data...");
 	}
@@ -163,6 +163,7 @@ public class GamesListActivity extends SherlockListActivity
 		}
 		else
 		{
+
 		}
 	}
 

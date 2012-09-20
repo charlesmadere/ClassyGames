@@ -1,16 +1,17 @@
 package edu.selu.android.classygames;
 
 
+import java.util.ArrayList;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Intent;
+import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.BaseRequestListener;
@@ -18,8 +19,13 @@ import com.facebook.android.FacebookError;
 import com.facebook.android.Util;
 
 
-public class NewGameActivity extends SherlockActivity
+public class NewGameActivity extends SherlockListActivity
 {
+
+
+	private ArrayList<String> friends;
+	private ProgressDialog progressDialog;
+	private Runnable runnable;
 
 
 	@Override
@@ -28,19 +34,18 @@ public class NewGameActivity extends SherlockActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.new_game_activity);
 		Utilities.styleActionBar(getResources(), getSupportActionBar());
-
-		// makes the back arrow visible
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		//Get friends list
 		try
 		{
+			Utilities.ensureFacebookIsNotNull();
 			AsyncFacebookRunner mAsyncRunner = new AsyncFacebookRunner(Utilities.facebook);
-			Bundle bundle = new Bundle();
-			bundle.putString("fields", "birthday");
-			mAsyncRunner.request("me/friends", bundle, new FriendListRequestListener());
+			mAsyncRunner.request("/me/friends", new FriendsRequestListener());
+//			Bundle bundle = new Bundle();
+//			bundle.putString("fields", "birthday");
+//			mAsyncRunner.request("me/friends", bundle, new FriendListRequestListener());
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
 			Utilities.easyToastAndLogError(NewGameActivity.this, "FRIENDS_LIST_FAIL");
 		}
@@ -63,7 +68,7 @@ public class NewGameActivity extends SherlockActivity
 
 
 	//Friends List Adapter Defined
-	public class FriendListRequestListener extends BaseRequestListener
+	public class FriendsRequestListener extends BaseRequestListener
 	{
 
 
@@ -103,7 +108,7 @@ public class NewGameActivity extends SherlockActivity
 	            {
 	                public void run()
 	                {
-	                    Toast.makeText(getApplicationContext(), "Error occurred: " + _error, Toast.LENGTH_LONG).show();
+	                    Utilities.easyToastAndLogError(NewGameActivity.this, "Error occurred: " + _error);
 	                }
 	            });
 	        }
@@ -112,7 +117,7 @@ public class NewGameActivity extends SherlockActivity
 		@Override
 		public void onComplete(final String response, final Object state)
 		{
-
+//			Utilities.easyToastAndLog(NewGameActivity.this, "completell");
 		}
 
 
