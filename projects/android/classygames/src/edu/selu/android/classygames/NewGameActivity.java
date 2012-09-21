@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListActivity;
@@ -28,10 +29,13 @@ import edu.selu.android.classygames.games.Person;
 
 public class NewGameActivity extends SherlockListActivity
 {
-	private PeopleAdapter peopleAdapter;
+
+
 	private ArrayList<Person> people;
+	private PeopleAdapter peopleAdapter;
 	private ProgressDialog progressDialog;
 	private Runnable runnable;
+	private Thread thread;
 
 
 	@Override
@@ -60,8 +64,6 @@ public class NewGameActivity extends SherlockListActivity
 				{
 					Utilities.easyToastAndLogError(NewGameActivity.this, "Failed retrieving your Facebook friends.");
 				}
-
-				runOnUiThread(returnRes);
 			}
 		};
 
@@ -75,11 +77,11 @@ public class NewGameActivity extends SherlockListActivity
 		@Override
 		public void run()
 		{
-			if(true)
+			if (people != null && people.size() >= 1)
 			{
 				peopleAdapter.notifyDataSetChanged();
 				
-				for(int i = 0; i < people.size(); i++)
+				for (int i = 0; i < people.size(); ++i)
 				{
 					peopleAdapter.add(people.get(i));
 				}
@@ -122,7 +124,7 @@ public class NewGameActivity extends SherlockListActivity
 	            	JSONObject friend = friends.getJSONObject(i);
 	            	people.add(new Person(friend.getInt("id"), friend.getString("name")));
 	            }
-	    
+	            runOnUiThread(returnRes);
 			}
 			catch (FacebookError e)
 			{
@@ -166,7 +168,13 @@ public class NewGameActivity extends SherlockListActivity
 
 			if (person != null)
 			{
+				ImageView picture = (ImageView) convertView.findViewById(R.id.new_game_activity_listview_item_picture);
 				TextView name = (TextView) convertView.findViewById(R.id.new_game_activity_listview_item_name);
+
+				if (picture != null)
+				{
+
+				}
 
 				if (name != null)
 				{
