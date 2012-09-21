@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -27,9 +28,10 @@ import edu.selu.android.classygames.games.Person;
 
 public class NewGameActivity extends SherlockListActivity
 {
-
-
+	private PeopleAdapter peopleAdapter;
 	private ArrayList<Person> people;
+	private ProgressDialog progressDialog;
+	private Runnable runnable;
 
 
 	@Override
@@ -40,21 +42,54 @@ public class NewGameActivity extends SherlockListActivity
 		Utilities.styleActionBar(getResources(), getSupportActionBar());
 
 		people = new ArrayList<Person>();
+		peopleAdapter = new PeopleAdapter(this, R.layout.new_game_activity_listview_item,people);
+		setListAdapter(peopleAdapter);
 		
+		runnable = new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				try
+				{
+					Utilities.ensureFacebookIsNotNull();
+					AsyncFacebookRunner mAsyncRunner = new AsyncFacebookRunner(Utilities.facebook);
+					mAsyncRunner.request("/me/friends", new FriendsRequestListener());
+				}
+				catch (Exception e)
+				{
+					Utilities.easyToastAndLogError(NewGameActivity.this, "Failed retrieving your Facebook friends.");
+				}
 
-		try
-		{
-			Utilities.ensureFacebookIsNotNull();
-			AsyncFacebookRunner mAsyncRunner = new AsyncFacebookRunner(Utilities.facebook);
-			mAsyncRunner.request("/me/friends", new FriendsRequestListener());
-		}
-		catch (Exception e)
-		{
-			Utilities.easyToastAndLogError(NewGameActivity.this, "Failed retrieving your Facebook friends.");
-		}
+				runOnUiThread(returnRes);
+			}
+		};
+
+		Thread thread = new Thread(null, runnable, "Populator");
+		thread.start();
+		progressDialog = ProgressDialog.show(NewGameActivity.this, "Please wait...", "Loading Friends...");
 	}
-
-
+	
+	private Runnable returnRes = new Runnable()
+	{
+		@Override
+		public void run()
+		{
+			if(true)
+			{
+				peopleAdapter.notifyDataSetChanged();
+				
+				for(int i = 0; i < people.size(); i++)
+				{
+					peopleAdapter.add(people.get(i));
+				}
+			}
+			
+			progressDialog.dismiss();
+			peopleAdapter.notifyDataSetChanged();
+		}
+	};
+	
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item)
 	{
@@ -87,6 +122,7 @@ public class NewGameActivity extends SherlockListActivity
 	            	JSONObject friend = friends.getJSONObject(i);
 	            	people.add(new Person(friend.getInt("id"), friend.getString("name")));
 	            }
+	    
 			}
 			catch (FacebookError e)
 			{
