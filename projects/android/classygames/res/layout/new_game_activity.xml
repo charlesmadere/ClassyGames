@@ -12,5 +12,7 @@
 		android:id="@android:id/empty"
 		android:layout_height="wrap_content"
 		android:layout_width="fill_parent"
-		android:text="@string/new_game_activity_listview_no_friends" />
+		android:lineSpacingExtra="6dip"
+		android:text="@string/new_game_activity_listview_no_friends"
+		android:textSize="17sp" />
 </LinearLayout>
