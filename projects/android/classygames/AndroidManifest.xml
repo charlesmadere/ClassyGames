@@ -33,7 +33,8 @@
 			android:label="@string/checkers_game_activity_title" 
 			android:name=".CheckersGameActivity"
 			android:screenOrientation="portrait"
-			android:theme="@style/Theme.Styled">
+			android:theme="@style/Theme.Styled"
+			android:background="@drawable/board">
 		</activity>
 		<activity
 			android:label="@string/games_list_activity_title"

@@ -51,15 +51,40 @@ public class ImageAdapter extends BaseAdapter {
         return imageView;
     }
 	
+	
 	private Integer[] mThumbIds = {
 			
 			//TO-DO
 			// To add references to images here: The squares for the board 
 			//Testing with these first
 			
-			R.drawable.checkers_piece_king_green,
-			R.drawable.checkers_piece_king_orange,
-			R.drawable.checkers_piece_normal_green
+			R.drawable.checkers_piece_king_green,	
+			R.drawable.checkers_piece_normal_green,
+			R.drawable.checkers_piece_normal_green,
+			R.drawable.checkers_piece_normal_green,
+			R.drawable.checkers_piece_normal_green,
+			R.drawable.checkers_piece_normal_green,
+			R.drawable.checkers_piece_normal_green,
+			R.drawable.checkers_piece_normal_green,
+			R.drawable.checkers_piece_normal_green,
+			R.drawable.checkers_piece_normal_green,
+			R.drawable.checkers_piece_normal_green,
+			R.drawable.checkers_piece_normal_green,
+			R.drawable.checkers_piece_normal_green,
+			
+			R.drawable.checkers_piece_normal_orange,
+			R.drawable.checkers_piece_normal_orange,
+			R.drawable.checkers_piece_normal_orange,
+			R.drawable.checkers_piece_normal_orange,
+			R.drawable.checkers_piece_normal_orange,
+			R.drawable.checkers_piece_normal_orange,
+			R.drawable.checkers_piece_normal_orange,
+			R.drawable.checkers_piece_normal_orange,
+			R.drawable.checkers_piece_normal_orange,
+			R.drawable.checkers_piece_normal_orange,
+			R.drawable.checkers_piece_normal_orange,
+			R.drawable.checkers_piece_normal_orange,
+			R.drawable.checkers_piece_king_orange
 	};
 
 }
