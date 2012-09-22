@@ -5,7 +5,7 @@ public class Person
 {
 
 
-	private int id;
+	private long id;
 	private String name;
 
 
@@ -23,14 +23,14 @@ public class Person
 	}
 
 
-	public Person(final int id, final String name)
+	public Person(final long id, final String name)
 	{
 		this.id = id;
 		this.name = name;
 	}
 
 
-	public int getId()
+	public long getId()
 	{
 		return id;
 	}
