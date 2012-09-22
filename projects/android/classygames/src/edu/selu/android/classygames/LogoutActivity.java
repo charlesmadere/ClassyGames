@@ -14,6 +14,7 @@ import android.widget.Button;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.AsyncFacebookRunner.RequestListener;
 import com.facebook.android.FacebookError;
 
@@ -35,15 +36,14 @@ public class LogoutActivity extends SherlockActivity
 			@Override
 			public void onClick(final View v)
 			{
-				Utilities.ensureFacebookIsNotNull();
-				Utilities.facebookRunner.logout(LogoutActivity.this, new RequestListener()
+				new AsyncFacebookRunner(Utilities.getFacebook()).logout(LogoutActivity.this, new RequestListener()
 				{
 					@Override
 					public void onComplete(final String response, final Object state)
 					{
 						SharedPreferences.Editor editor = Utilities.sharedPreferences.edit();
-						editor.putString(Utilities.FACEBOOK_TOKEN, Utilities.facebook.getAccessToken());
-						editor.putLong(Utilities.FACEBOOK_EXPIRES, Utilities.facebook.getAccessExpires());
+						editor.putString(Utilities.FACEBOOK_TOKEN, Utilities.getFacebook().getAccessToken());
+						editor.putLong(Utilities.FACEBOOK_EXPIRES, Utilities.getFacebook().getAccessExpires());
 						editor.commit();
 
 						setResult(1);

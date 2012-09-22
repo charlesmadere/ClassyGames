@@ -11,7 +11,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.Facebook;
 
 
@@ -26,13 +25,7 @@ public class Utilities
 	 * PLEASE USE THE Utilities.ensureFacebookIsNotNull() method BEFORE using ANY Facebook
 	 * variables found in this class
 	 */
-	public static Facebook facebook;
-
-	/**
-	 * PLEASE USE THE Utilities.ensureFacebookIsNotNull() method BEFORE using ANY Facebook
-	 * variables found in this class
-	 */
-	public static AsyncFacebookRunner facebookRunner;
+	private static Facebook facebook;
 
 	public final static String FACEBOOK_APP_ID = "324400870964487";
 	public final static String FACEBOOK_TOKEN = "access_token";
@@ -110,17 +103,16 @@ public class Utilities
 
 
 	/**
-	 * This method must be called before using any of the Facebook variables stored in this class.
-	 * It ensures that no Facebook variables are null. If they are null, it sets them to the proper
-	 * values. If you're having NullPointer errors, you probably need to call this method.
+	 * Use this method to retrieve the global Facebook variable that our app uses. 
 	 */
-	public static void ensureFacebookIsNotNull()
+	public static Facebook getFacebook()
 	{
-		if (facebook == null || facebookRunner == null)
+		if (facebook == null)
 		{
 			facebook = new Facebook(FACEBOOK_APP_ID);
-			facebookRunner = new AsyncFacebookRunner(facebook);
 		}
+
+		return facebook;
 	}
 
 

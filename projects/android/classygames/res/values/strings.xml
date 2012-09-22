@@ -13,7 +13,7 @@
 	<string name="games_list_activity_title">Games List</string>
 	<string name="login_with_facebook">Login with Facebook</string>
 	<string name="logout">Logout</string>
-	<string name="logout_activity_logout">Are you sure you want to logout of Facebook? You will need to login again to continue using Classy Games. You will keep on playing, right? After pressing this button, Classy Games will close.</string>
+	<string name="logout_activity_logout">Are you sure you want to logout of Facebook? You will need to login again to continue using Classy Games. You will keep on playing, right? After pressing this button, you will be returned to the Classy Games login screen.</string>
 	<string name="logout_activity_title">Logout of Classy Games</string>
 	<string name="logout_of_facebook">Logout of Facebook</string>
 	<string name="main_activity_title">Classy Games</string>

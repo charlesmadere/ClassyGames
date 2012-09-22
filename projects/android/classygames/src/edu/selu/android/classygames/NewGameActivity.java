@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,12 +29,6 @@ import edu.selu.android.classygames.games.Person;
 public class NewGameActivity extends SherlockListActivity
 {
 
-	/*
-	 * 
-	 * TODO
-	 * CRASHING IN GINGERBREAD
-	 * 
-	 */
 
 	private ArrayList<Person> people;
 	private PeopleAdapter peopleAdapter;
@@ -58,8 +53,9 @@ public class NewGameActivity extends SherlockListActivity
 			{
 				try
 				{
-					Utilities.ensureFacebookIsNotNull();
-					final JSONArray friends = Util.parseJson(Utilities.facebook.request("me/friends")).getJSONArray("data");
+					final String request = Utilities.getFacebook().request("me/friends");
+					final JSONObject response = Util.parseJson(request);
+					final JSONArray friends = response.getJSONArray("data");
 
 					final int friendsLength = friends.length();
 					for (int i = 0; i < friendsLength; ++i)
@@ -67,16 +63,18 @@ public class NewGameActivity extends SherlockListActivity
 						final JSONObject friend = friends.getJSONObject(i);
 						final long id = friend.getLong("id");
 						people.add(new Person(id, friend.getString("name")));
-						UrlImageViewHelper.loadUrlDrawable(NewGameActivity.this, "https://graph.facebook.com/" + id + "/picture?return_ssl_resources=1");
+
+//						UrlImageViewHelper.loadUrlDrawable(NewGameActivity.this, "https://graph.facebook.com/" + id + "/picture?return_ssl_resources=1");
 					}
 
 					people.trimToSize();
 
-					// TODO: sort the arraylist of facebook friends into alphabetical order
+					// TODO: sort the arraylist of facebook friends into alphabetical order. currently it's
+					// sorted by id, which is how facebook delivers the data to us.
 				}
-				catch (Exception e)
+				catch (final Exception e)
 				{
-					Utilities.easyToastAndLogError(NewGameActivity.this, "Failed retrieving your Facebook friends. " + e.getMessage());
+					Log.e(Utilities.LOG_TAG, e.getMessage());
 				}
 
 				runOnUiThread(populateFacebookFriends);
@@ -84,7 +82,7 @@ public class NewGameActivity extends SherlockListActivity
 		};
 
 		progressDialog = ProgressDialog.show(NewGameActivity.this, "Facebook is working...", "Retrieving all of your Facebook friends...");
-		new Thread(null, runnable, "acquireFacebookFriends").start();
+		new Thread(null, runnable, "RetrieveFacebookFriends").start();
 	}
 
 
@@ -119,6 +117,7 @@ public class NewGameActivity extends SherlockListActivity
 
 
 		private ArrayList<Person> people;
+		private ViewHolder viewHolder;
 
 
 		public PeopleAdapter(final Context context, final int textViewResourceId, final ArrayList<Person> people)
@@ -153,30 +152,54 @@ public class NewGameActivity extends SherlockListActivity
 
 			if (person != null)
 			{
-				ImageView picture = (ImageView) convertView.findViewById(R.id.new_game_activity_listview_item_picture);
-				if (picture != null)
+				viewHolder = new ViewHolder();
+				viewHolder.picture = (ImageView) convertView.findViewById(R.id.new_game_activity_listview_item_picture);
+				if (viewHolder.picture != null)
 				{
-					UrlImageViewHelper.setUrlDrawable(picture, "https://graph.facebook.com/" + person.getId() + "/picture?return_ssl_resources=1");
+					UrlImageViewHelper.setUrlDrawable(viewHolder.picture, "https://graph.facebook.com/" + person.getId() + "/picture?return_ssl_resources=1");
 				}
 
-				TextView name = (TextView) convertView.findViewById(R.id.new_game_activity_listview_item_name);
-				if (name != null)
+				viewHolder.name = (TextView) convertView.findViewById(R.id.new_game_activity_listview_item_name);
+				if (viewHolder.name != null)
 				{
-					name.setText(person.getName());
+					viewHolder.name.setText(person.getName());
 				}
+
+				viewHolder.onClickListener = new OnClickListener()
+				{
+					@Override
+					public void onClick(final View v)
+					{
+						Utilities.easyToastAndLog(NewGameActivity.this, "\"" + person.getName() + "\" \"" + person.getId() + "\"");
+					}
+				};
+
+				convertView.setOnClickListener(viewHolder.onClickListener);
+				convertView.setTag(viewHolder);
 			}
-
-			convertView.setOnClickListener(new OnClickListener()
-			{
-				@Override
-				public void onClick(final View v)
-				{
-					Utilities.easyToastAndLog(NewGameActivity.this, "\"" + person.getName() + "\" \"" + person.getId() + "\"");
-				}
-			});
 
 			return convertView;
 		}
+
+
+		/**
+		 * made this li'l class while trying to optimize our listview
+		 * https://developer.android.com/training/improving-layouts/smooth-scrolling.html
+		 * apparently it helps performance
+		 *
+		 */
+		private class ViewHolder
+		{
+
+
+			public ImageView picture;
+			public OnClickListener onClickListener;
+			public TextView name;
+
+
+		}
+
+
 	}
 
 
