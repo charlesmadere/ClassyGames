@@ -62,12 +62,38 @@ public class Utilities
 
 
 	/**
+	 * <p>Prints a Toast message to the screen and prints that same message to each and
+	 * every log console.</p>
+	 * 
+	 * <p><strong>Examples</strong><br />
+	 * Utilities.easyToastAndLogAll(MainActivity.this, "Hello!");<br />
+	 * Utilities.easyToastAndLogAll(getApplicationContext(), "Another message huh?");</p>
+	 * 
+	 * @param context
+	 * Just put the name of your class.this, or you can use getApplicationContext().
+	 * 
+	 * @param message
+	 * The String that you want to be shown as a toast message. This exact String will also
+	 * be printed to the Log.d console.
+	 */
+	public static void easyToastAndLogAll(final Context context, final String message)
+	{
+		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+		Log.d(LOG_TAG, message);
+		Log.e(LOG_TAG, message);
+		Log.i(LOG_TAG, message);
+		Log.v(LOG_TAG, message);
+		Log.wtf(LOG_TAG, message);
+	}
+
+
+	/**
 	 * <p>Prints a Toast message to the screen and prints that same message to the Log.e
 	 * console.</p>
 	 * 
 	 * <p><strong>Examples</strong><br />
-	 * Utilities.easyToastAndLog(MainActivity.this, "Hello!");<br />
-	 * Utilities.easyToastAndLog(getApplicationContext(), "Another message huh?");</p>
+	 * Utilities.easyToastAndLogError(MainActivity.this, "Hello!");<br />
+	 * Utilities.easyToastAndLogError(getApplicationContext(), "Another message huh?");</p>
 	 * 
 	 * @param context
 	 * Just put the name of your class.this, or you can use getApplicationContext().
