@@ -20,6 +20,7 @@
 	<TextView
 		android:gravity="center_vertical"
 		android:id="@+id/games_list_activity_listview_item_name"
+		android:layout_alignParentRight="true"
 		android:layout_alignParentTop="true"
 		android:layout_alignWithParentIfMissing="true"
 		android:layout_height="wrap_content"
@@ -34,11 +35,12 @@
 		android:id="@+id/games_list_activity_listview_item_time"
 		android:layout_alignParentBottom="true"
 		android:layout_alignParentRight="true"
+		android:layout_alignWithParentIfMissing="true"
 		android:layout_below="@id/games_list_activity_listview_item_name"
 		android:layout_height="wrap_content"
 		android:layout_toRightOf="@id/games_list_activity_listview_item_picture"
 		android:layout_width="fill_parent"
 		android:singleLine="true"
-		android:textColor="@color/gray_medium"
+		android:textColor="@color/gray_dark"
 		android:textSize="17sp" />
 </RelativeLayout>
