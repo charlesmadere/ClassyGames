@@ -36,6 +36,15 @@ public class Checkers extends GenericGame
 	}
 
 
+	public Checkers(final Person person, final SimpleDateFormat lastMoveTime)
+	{
+		super(person, lastMoveTime);
+
+		TEAM_GREEN = new Team();
+		TEAM_ORANGE = new Team();
+	}
+
+
 	public Checkers(final int id, final Person person, final Resources resources)
 	{
 		super(id, person);

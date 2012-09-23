@@ -117,7 +117,6 @@ public class NewGameActivity extends SherlockListActivity
 
 
 		private ArrayList<Person> people;
-		private ViewHolder viewHolder;
 
 
 		public PeopleAdapter(final Context context, final int textViewResourceId, final ArrayList<Person> people)
@@ -152,7 +151,7 @@ public class NewGameActivity extends SherlockListActivity
 
 			if (person != null)
 			{
-				viewHolder = new ViewHolder();
+				ViewHolder viewHolder = new ViewHolder();
 				viewHolder.picture = (ImageView) convertView.findViewById(R.id.new_game_activity_listview_item_picture);
 				if (viewHolder.picture != null)
 				{
@@ -183,9 +182,9 @@ public class NewGameActivity extends SherlockListActivity
 
 
 		/**
-		 * made this li'l class while trying to optimize our listview
+		 * made this li'l class while trying to optimize our listview. apparently it
+		 * helps performance
 		 * https://developer.android.com/training/improving-layouts/smooth-scrolling.html
-		 * apparently it helps performance
 		 *
 		 */
 		private class ViewHolder

@@ -33,6 +33,14 @@ public abstract class GenericGame
 	}
 
 
+	public GenericGame(final Person person, final SimpleDateFormat lastMoveTime)
+	{
+		id = 0;
+		this.person = person;
+		this.lastMoveTime = new SimpleDateFormat(lastMoveTimeFormat, Locale.US);
+	}
+
+
 	public GenericGame(final int id, final Person person)
 	{
 		this.id = id;
@@ -64,9 +72,9 @@ public abstract class GenericGame
 	}
 
 
-	public String getLastMoveTimeToString()
+	public SimpleDateFormat getLastMoveTime()
 	{
-		return DateFormat.getDateTimeInstance().format(new Date(0));
+		return lastMoveTime;
 	}
 
 
@@ -79,12 +87,6 @@ public abstract class GenericGame
 	void setPerson(final Person person)
 	{
 		this.person = person;
-	}
-
-
-	public String getPersonName()
-	{
-		return person.getName();
 	}
 
 

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -29,12 +30,9 @@ public class GamesListActivity extends SherlockListActivity
 {
 
 
-	private ArrayList<GenericGame> gamesTurnTheirs;
-	private ArrayList<GenericGame> gamesTurnYours;
-	private GamesListAdapter gamesListAdapterTurnTheirs;
-	private GamesListAdapter gamesListAdapterTurnYours;
+	private ArrayList<GenericGame> games;
+	private GamesListAdapter gamesAdapter;
 	private ProgressDialog progressDialog;
-	private Runnable runnable;
 
 
 	@Override
@@ -44,22 +42,47 @@ public class GamesListActivity extends SherlockListActivity
 		setContentView(R.layout.games_list_activity);
 		Utilities.styleActionBar(getResources(), getSupportActionBar(), false);
 		
-		gamesTurnYours = new ArrayList<GenericGame>();
-		gamesListAdapterTurnYours = new GamesListAdapter(this, R.layout.games_list_activity_listview_item, gamesTurnYours);
-		setListAdapter(gamesListAdapterTurnYours);
+		games = new ArrayList<GenericGame>();
+		gamesAdapter = new GamesListAdapter(this, R.layout.games_list_activity_listview_item, games);
+		setListAdapter(gamesAdapter);
 
-		runnable = new Runnable()
+		Runnable runnable = new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				createGames();
+				try
+				{
+					// TODO: this code will eventually be replaced by an actual call to our
+					// server. This call will ask the server for a games list
+
+					games.add(new Checkers());
+					games.add(new Checkers(new Person("Bart")));
+					games.add(new Checkers());
+					games.add(new Checkers());
+					games.add(new Checkers());
+					games.add(new Checkers());
+					games.add(new Checkers());
+					games.add(new Checkers());
+					games.add(new Checkers());
+					games.add(new Checkers());
+					games.add(new Checkers());
+					games.add(new Checkers());
+					games.add(new Checkers());
+					games.add(new Checkers());
+					games.add(new Checkers());
+				}
+				catch (final Exception e)
+				{
+					Log.e(Utilities.LOG_TAG, e.getMessage());
+				}
+
+				runOnUiThread(populateGames);
 			}
 		};
 
-		Thread thread = new Thread(null, runnable, "MagentoBackground");
-		thread.start();
-		progressDialog = ProgressDialog.show(GamesListActivity.this, "Please wait...", "Retrieving data...");
+		progressDialog = ProgressDialog.show(GamesListActivity.this, "Classy Games is working...", "Retrieving all of your games...");
+		new Thread(null, runnable, "RetrieveGames").start();
 	}
 
 
@@ -99,55 +122,13 @@ public class GamesListActivity extends SherlockListActivity
 	}
 
 
-	private void createGames()
-	{
-		try
-		{
-			gamesTurnYours = new ArrayList<GenericGame>();
-			gamesTurnYours.add(new Checkers());
-			gamesTurnYours.add(new Checkers(new Person("Bart")));
-			gamesTurnYours.add(new Checkers());
-			gamesTurnYours.add(new Checkers());
-			gamesTurnYours.add(new Checkers());
-			gamesTurnYours.add(new Checkers());
-			gamesTurnYours.add(new Checkers());
-			gamesTurnYours.add(new Checkers());
-			gamesTurnYours.add(new Checkers());
-			gamesTurnYours.add(new Checkers());
-			gamesTurnYours.add(new Checkers());
-			gamesTurnYours.add(new Checkers());
-			gamesTurnYours.add(new Checkers());
-			gamesTurnYours.add(new Checkers());
-			gamesTurnYours.add(new Checkers());
-			Thread.sleep(1000);
-			Log.i(Utilities.LOG_TAG, "Size: " + gamesTurnYours.size());
-		}
-		catch (Exception e)
-		{
-			Log.e(Utilities.LOG_TAG, "BACKGROUND_PROC " + e.getMessage());
-		}
-
-		runOnUiThread(returnRes);
-	}
-
-
-	private Runnable returnRes = new Runnable()
+	private Runnable populateGames = new Runnable()
 	{
 		@Override
 		public void run()
 		{
-			if (gamesTurnYours != null && gamesTurnYours.size() >= 1)
-			{
-				gamesListAdapterTurnYours.notifyDataSetChanged();
-
-				for (int i = 0; i < gamesTurnYours.size(); ++i)
-				{
-					gamesListAdapterTurnYours.add(gamesTurnYours.get(i));
-				}
-			}
-
+			gamesAdapter.notifyDataSetChanged();
 			progressDialog.dismiss();
-			gamesListAdapterTurnYours.notifyDataSetChanged();
 		}
 	};
 
@@ -157,13 +138,9 @@ public class GamesListActivity extends SherlockListActivity
 	{
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (resultCode == 1)
+		if (resultCode == LogoutActivity.LOGGED_OUT)
 		{
 			finish();
-		}
-		else
-		{
-
 		}
 	}
 
@@ -192,32 +169,65 @@ public class GamesListActivity extends SherlockListActivity
 				convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_item, null);
 			}
 
-			GenericGame game = games.get(position);
+			final GenericGame game = games.get(position);
 
 			if (game != null)
 			{
-				ImageView picture = (ImageView) convertView.findViewById(R.id.games_list_activity_listview_item_picture);
-				TextView name = (TextView) convertView.findViewById(R.id.games_list_activity_listview_item_name);
-				TextView time = (TextView) convertView.findViewById(R.id.games_list_activity_listview_item_time);
-
-				if (picture != null)
+				ViewHolder viewHolder = new ViewHolder();
+				viewHolder.picture = (ImageView) convertView.findViewById(R.id.games_list_activity_listview_item_picture);
+				if (viewHolder.picture != null)
 				{
 
 				}
 
-				if (name != null)
+				viewHolder.name = (TextView) convertView.findViewById(R.id.games_list_activity_listview_item_name);
+				if (viewHolder.name != null)
 				{
-					name.setText(game.getPersonName());
+					viewHolder.name.setText(game.getPerson().getName());
 				}
 
-				if (time != null)
+				viewHolder.time = (TextView) convertView.findViewById(R.id.games_list_activity_listview_item_time);
+				if (viewHolder.time != null)
 				{
-					time.setText(game.getLastMoveTimeToString());
+					viewHolder.time.setText(game.getLastMoveTime().toString());
 				}
+
+				viewHolder.onClickListener = new OnClickListener()
+				{
+					@Override
+					public void onClick(final View v)
+					{
+						Utilities.easyToastAndLog(GamesListActivity.this, "\"" + game.getPerson().getName() + "\" \"" + game.getLastMoveTime().toString() + "\"");
+					}
+				};
+
+				convertView.setOnClickListener(viewHolder.onClickListener);
+				convertView.setTag(viewHolder);
 			}
 
 			return convertView;
 		}
+
+
+		/**
+		 * made this li'l class while trying to optimize our listview. apparently it
+		 * helps performance
+		 * https://developer.android.com/training/improving-layouts/smooth-scrolling.html
+		 *
+		 */
+		private class ViewHolder
+		{
+
+
+			ImageView picture;
+			OnClickListener onClickListener;
+			TextView name;
+			TextView time;
+
+
+		}
+
+
 	}
 
 

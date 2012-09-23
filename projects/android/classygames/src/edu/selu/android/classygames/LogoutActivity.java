@@ -23,6 +23,10 @@ public class LogoutActivity extends SherlockActivity
 {
 
 
+	public final static int LOGGED_OUT = 1;
+
+
+
 	@Override
 	public void onCreate(final Bundle savedInstanceState)
 	{
@@ -46,7 +50,7 @@ public class LogoutActivity extends SherlockActivity
 						editor.putLong(Utilities.FACEBOOK_EXPIRES, Utilities.getFacebook().getAccessExpires());
 						editor.commit();
 
-						setResult(1);
+						setResult(LOGGED_OUT);
 						startActivity(new Intent(LogoutActivity.this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 						finish();
 					}

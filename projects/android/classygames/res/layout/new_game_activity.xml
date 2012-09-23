@@ -5,6 +5,7 @@
 	android:orientation="vertical"
 	style="@style/ClassyGames">
 	<ListView
+		android:cacheColorHint="#00000000"
 		android:id="@+id/android:list"
 		android:layout_height="wrap_content"
 		android:layout_width="fill_parent" />
@@ -13,10 +14,8 @@
 		android:layout_height="wrap_content"
 		android:layout_width="fill_parent"
 		android:lineSpacingExtra="6dip"
-		android:paddingBottom="24dip"
 		android:paddingLeft="8dip"
 		android:paddingRight="8dip"
-		android:paddingTop="48dip"
 		android:text="@string/new_game_activity_listview_no_friends"
 		android:textSize="17sp" />
 </LinearLayout>

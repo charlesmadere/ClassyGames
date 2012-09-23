@@ -11,6 +11,7 @@
 		android:layout_width="fill_parent"
 		android:src="@drawable/turn_yours" />
 	<ListView
+		android:cacheColorHint="#00000000"
 		android:id="@+id/android:list"
 		android:layout_height="wrap_content"
 		android:layout_width="fill_parent" />
@@ -26,6 +27,7 @@
 		android:layout_width="fill_parent"
 		android:src="@drawable/turn_theirs" />
 	<ListView
+		android:cacheColorHint="#00000000"
 		android:id="@+id/games_list_activity_listview_turn_theirs"
 		android:layout_height="wrap_content"
 		android:layout_width="fill_parent" />
