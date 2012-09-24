@@ -21,5 +21,6 @@
 		android:layout_height="fill_parent"
 		android:layout_width="fill_parent"
 		android:singleLine="true"
+		android:textColor="@color/gray_darker"
 		android:textSize="20sp" />
 </LinearLayout>

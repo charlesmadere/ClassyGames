@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -150,6 +151,7 @@ public class GamesListActivity extends SherlockListActivity
 
 
 		private ArrayList<GenericGame> games;
+		private Typeface typeface;
 
 
 		public GamesListAdapter(final Context context, final int textViewResourceId, final ArrayList<GenericGame> games)
@@ -170,6 +172,7 @@ public class GamesListActivity extends SherlockListActivity
 			}
 
 			final GenericGame game = games.get(position);
+			typeface = Typeface.createFromAsset(getAssets(), "fonts/blue_highway_d.ttf");
 
 			if (game != null)
 			{
@@ -184,6 +187,7 @@ public class GamesListActivity extends SherlockListActivity
 				if (viewHolder.name != null)
 				{
 					viewHolder.name.setText(game.getPerson().getName());
+					viewHolder.name.setTypeface(typeface);
 				}
 
 				viewHolder.time = (TextView) convertView.findViewById(R.id.games_list_activity_listview_item_time);

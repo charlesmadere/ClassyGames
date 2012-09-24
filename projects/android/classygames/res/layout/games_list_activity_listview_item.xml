@@ -27,9 +27,8 @@
 		android:layout_toRightOf="@id/games_list_activity_listview_item_picture"
 		android:layout_width="fill_parent"
 		android:singleLine="true"
-		android:textColor="@color/gray_dark"
-		android:textSize="19sp"
-		android:textStyle="bold" />
+		android:textColor="@color/gray_darker"
+		android:textSize="19sp"/>
 	<TextView
 		android:gravity="center_vertical"
 		android:id="@+id/games_list_activity_listview_item_time"

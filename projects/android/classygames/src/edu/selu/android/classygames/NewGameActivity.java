@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -117,6 +118,7 @@ public class NewGameActivity extends SherlockListActivity
 
 
 		private ArrayList<Person> people;
+		private Typeface typeface;
 
 
 		public PeopleAdapter(final Context context, final int textViewResourceId, final ArrayList<Person> people)
@@ -137,17 +139,7 @@ public class NewGameActivity extends SherlockListActivity
 			}
 
 			final Person person = people.get(position);
-
-			/*if (person != null)
-			{
-				TextView textView = (TextView) convertView.findViewById(R.id.new_game_activity_listview_item);
-
-				if (textView != null)
-				{
-					textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-					textView.setText(person.getName());
-				}
-			}*/
+			typeface = Typeface.createFromAsset(getAssets(), "fonts/blue_highway_d.ttf");
 
 			if (person != null)
 			{
@@ -162,6 +154,7 @@ public class NewGameActivity extends SherlockListActivity
 				if (viewHolder.name != null)
 				{
 					viewHolder.name.setText(person.getName());
+					viewHolder.name.setTypeface(typeface);
 				}
 
 				viewHolder.onClickListener = new OnClickListener()
