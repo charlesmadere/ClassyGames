@@ -13,7 +13,6 @@ public abstract class GenericGame
 	protected int id;
 	protected Person person;
 	protected SimpleDateFormat lastMoveTime;
-	protected String lastMoveTimeString;
 	private final static String lastMoveTimeFormat = "MMMM dd, yyyy hh:mm a";
 
 
@@ -22,7 +21,6 @@ public abstract class GenericGame
 		id = 0;
 		person = new Person();
 		lastMoveTime = new SimpleDateFormat(lastMoveTimeFormat, Locale.US);
-		lastMoveTimeString = lastMoveTime.format(new Date());
 	}
 
 
@@ -31,7 +29,6 @@ public abstract class GenericGame
 		id = 0;
 		this.person = person;
 		lastMoveTime = new SimpleDateFormat(lastMoveTimeFormat, Locale.US);
-		lastMoveTimeString = lastMoveTime.format(new Date());
 	}
 
 
@@ -40,7 +37,6 @@ public abstract class GenericGame
 		id = 0;
 		this.person = person;
 		this.lastMoveTime = new SimpleDateFormat(lastMoveTimeFormat, Locale.US);
-		lastMoveTimeString = lastMoveTime.format(new Date());
 	}
 
 
@@ -49,7 +45,6 @@ public abstract class GenericGame
 		this.id = id;
 		this.person = person;
 		lastMoveTime = new SimpleDateFormat(lastMoveTimeFormat, Locale.US);
-		lastMoveTimeString = lastMoveTime.format(new Date());
 	}
 
 
@@ -58,7 +53,6 @@ public abstract class GenericGame
 		this.id = id;
 		this.person = person;
 		this.lastMoveTime = lastMoveTime;
-		lastMoveTimeString = lastMoveTime.format(new Date());
 	}
 
 
@@ -79,7 +73,7 @@ public abstract class GenericGame
 
 	public String getLastMoveTime()
 	{
-		return lastMoveTimeString;
+		return lastMoveTime.format(new Date());
 	}
 
 
