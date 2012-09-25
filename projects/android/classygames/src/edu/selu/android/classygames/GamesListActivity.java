@@ -2,7 +2,6 @@ package edu.selu.android.classygames;
 
 
 import java.util.ArrayList;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -193,7 +192,7 @@ public class GamesListActivity extends SherlockListActivity
 				viewHolder.time = (TextView) convertView.findViewById(R.id.games_list_activity_listview_item_time);
 				if (viewHolder.time != null)
 				{
-					viewHolder.time.setText(game.getLastMoveTime().toString());
+					viewHolder.time.setText(game.getLastMoveTime());
 				}
 
 				viewHolder.onClickListener = new OnClickListener()

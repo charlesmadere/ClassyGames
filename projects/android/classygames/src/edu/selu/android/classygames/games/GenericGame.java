@@ -1,7 +1,6 @@
 package edu.selu.android.classygames.games;
 
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -14,7 +13,8 @@ public abstract class GenericGame
 	protected int id;
 	protected Person person;
 	protected SimpleDateFormat lastMoveTime;
-	private final static String lastMoveTimeFormat = "MM.dd.yyyy HH:mm";
+	protected String lastMoveTimeString;
+	private final static String lastMoveTimeFormat = "MMMM dd, yyyy hh:mm a";
 
 
 	public GenericGame()
@@ -22,6 +22,7 @@ public abstract class GenericGame
 		id = 0;
 		person = new Person();
 		lastMoveTime = new SimpleDateFormat(lastMoveTimeFormat, Locale.US);
+		lastMoveTimeString = lastMoveTime.format(new Date());
 	}
 
 
@@ -30,6 +31,7 @@ public abstract class GenericGame
 		id = 0;
 		this.person = person;
 		lastMoveTime = new SimpleDateFormat(lastMoveTimeFormat, Locale.US);
+		lastMoveTimeString = lastMoveTime.format(new Date());
 	}
 
 
@@ -38,6 +40,7 @@ public abstract class GenericGame
 		id = 0;
 		this.person = person;
 		this.lastMoveTime = new SimpleDateFormat(lastMoveTimeFormat, Locale.US);
+		lastMoveTimeString = lastMoveTime.format(new Date());
 	}
 
 
@@ -46,6 +49,7 @@ public abstract class GenericGame
 		this.id = id;
 		this.person = person;
 		lastMoveTime = new SimpleDateFormat(lastMoveTimeFormat, Locale.US);
+		lastMoveTimeString = lastMoveTime.format(new Date());
 	}
 
 
@@ -54,6 +58,7 @@ public abstract class GenericGame
 		this.id = id;
 		this.person = person;
 		this.lastMoveTime = lastMoveTime;
+		lastMoveTimeString = lastMoveTime.format(new Date());
 	}
 
 
@@ -72,9 +77,9 @@ public abstract class GenericGame
 	}
 
 
-	public SimpleDateFormat getLastMoveTime()
+	public String getLastMoveTime()
 	{
-		return lastMoveTime;
+		return lastMoveTimeString;
 	}
 
 
