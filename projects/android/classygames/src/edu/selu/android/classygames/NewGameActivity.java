@@ -9,6 +9,8 @@ import org.json.JSONObject;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,9 +33,7 @@ public class NewGameActivity extends SherlockListActivity
 {
 
 
-	private ArrayList<Person> people;
 	private PeopleAdapter peopleAdapter;
-	private ProgressDialog progressDialog;
 
 
 	@Override
@@ -43,61 +43,10 @@ public class NewGameActivity extends SherlockListActivity
 		setContentView(R.layout.new_game_activity);
 		Utilities.styleActionBar(getResources(), getSupportActionBar());
 
-		people = new ArrayList<Person>();
-		peopleAdapter = new PeopleAdapter(NewGameActivity.this, R.layout.new_game_activity_listview_item, people);
-		setListAdapter(peopleAdapter);
-
-		Runnable runnable = new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				try
-				{
-					final String request = Utilities.getFacebook().request("me/friends");
-					final JSONObject response = Util.parseJson(request);
-					final JSONArray friends = response.getJSONArray("data");
-
-					final int friendsLength = friends.length();
-					for (int i = 0; i < friendsLength; ++i)
-					{
-						final JSONObject friend = friends.getJSONObject(i);
-						final long id = friend.getLong("id");
-						people.add(new Person(id, friend.getString("name")));
-
-//						UrlImageViewHelper.loadUrlDrawable(NewGameActivity.this, "https://graph.facebook.com/" + id + "/picture?return_ssl_resources=1");
-					}
-
-					people.trimToSize();
-
-					// TODO: sort the arraylist of facebook friends into alphabetical order. currently it's
-					// sorted by id, which is how facebook delivers the data to us.
-				}
-				catch (final Exception e)
-				{
-					Log.e(Utilities.LOG_TAG, e.getMessage());
-				}
-
-				runOnUiThread(populateFacebookFriends);
-			}
-		};
-
-		progressDialog = ProgressDialog.show(NewGameActivity.this, "Facebook is working...", "Retrieving all of your Facebook friends...");
-		new Thread(null, runnable, "RetrieveFacebookFriends").start();
+		new AsyncPopulateFacebookFriends().execute();
 	}
 
 
-	private Runnable populateFacebookFriends = new Runnable()
-	{
-		@Override
-		public void run()
-		{
-			peopleAdapter.notifyDataSetChanged();
-			progressDialog.dismiss();
-		}
-	};
-
-	
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item)
 	{
@@ -110,6 +59,99 @@ public class NewGameActivity extends SherlockListActivity
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+
+	private final class AsyncPopulateFacebookFriends extends AsyncTask<Void, Long, ArrayList<Person>>
+	{
+
+
+		private ProgressDialog progressDialog;
+
+
+		@Override
+		protected ArrayList<Person> doInBackground(final Void... v)
+		{
+			ArrayList<Person> people = new ArrayList<Person>();
+
+			try
+			{
+				final String request = Utilities.getFacebook().request("me/friends");
+				final JSONObject response = Util.parseJson(request);
+				final JSONArray friends = response.getJSONArray("data");
+
+				final int friendsLength = friends.length();
+				publishProgress((long) friendsLength);
+
+				for (int i = 0; i < friendsLength; ++i)
+				{
+					final JSONObject friend = friends.getJSONObject(i);
+					final long id = friend.getLong("id");
+					people.add(new Person(id, friend.getString("name")));
+
+					publishProgress((long) i, id);
+				}
+
+				people.trimToSize();
+
+				// TODO: sort the arraylist of facebook friends into alphabetical order. currently it's
+				// sorted by id, which is how facebook delivers the data to us.
+			}
+			catch (final Exception e)
+			{
+				Log.e(Utilities.LOG_TAG, e.getMessage());
+			}
+
+			return people;
+		}
+
+
+		@Override
+		protected void onPostExecute(final ArrayList<Person> people)
+		{
+			peopleAdapter = new PeopleAdapter(NewGameActivity.this, R.layout.new_game_activity_listview_item, people);
+			setListAdapter(peopleAdapter);
+			peopleAdapter.notifyDataSetChanged();
+
+			if (progressDialog.isShowing())
+			{
+				progressDialog.dismiss();
+			}
+		}
+
+
+		@Override
+		protected void onPreExecute()
+		{
+			progressDialog = new ProgressDialog(NewGameActivity.this);
+			progressDialog.setMessage("Retrieving all of your Facebook friends...");
+			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+			progressDialog.setTitle(R.string.new_game_activity_progressdialog_title);
+			progressDialog.show();
+		}
+
+
+		@Override
+		protected void onProgressUpdate(final Long... i)
+		{
+			switch (i.length)
+			{
+				case 1:
+					progressDialog.setMax(i[0].intValue());
+					break;
+
+				case 2:
+					progressDialog.setProgress(i[0].intValue());
+
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+					{
+						UrlImageViewHelper.loadUrlDrawable(NewGameActivity.this, "https://graph.facebook.com/" + i[1] + "/picture?return_ssl_resources=1");
+					}
+					break;
+			}
+		}
+
+
 	}
 
 
