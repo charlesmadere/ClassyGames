@@ -132,21 +132,21 @@ public class NewGameActivity extends SherlockListActivity
 
 
 		@Override
-		protected void onProgressUpdate(final Long... i)
+		protected void onProgressUpdate(final Long... l)
 		{
-			switch (i.length)
+			switch (l.length)
 			{
 				case 1:
-					progressDialog.setMax(i[0].intValue());
+					progressDialog.setMax(l[0].intValue());
 					break;
 
 				case 2:
-					progressDialog.setProgress(i[0].intValue());
+					progressDialog.setProgress(l[0].intValue());
 
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+					/*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
 					{
 						UrlImageViewHelper.loadUrlDrawable(NewGameActivity.this, "https://graph.facebook.com/" + i[1] + "/picture?return_ssl_resources=1");
-					}
+					}*/
 					break;
 			}
 		}
