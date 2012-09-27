@@ -118,7 +118,6 @@ public class NewGameActivity extends SherlockListActivity
 
 
 		private ArrayList<Person> people;
-		private Typeface typeface;
 
 
 		public PeopleAdapter(final Context context, final int textViewResourceId, final ArrayList<Person> people)
@@ -139,7 +138,7 @@ public class NewGameActivity extends SherlockListActivity
 			}
 
 			final Person person = people.get(position);
-			typeface = Typeface.createFromAsset(getAssets(), "fonts/blue_highway_d.ttf");
+			Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/blue_highway_d.ttf");
 
 			if (person != null)
 			{
@@ -174,13 +173,13 @@ public class NewGameActivity extends SherlockListActivity
 		}
 
 
+		private class ViewHolder
 		/**
-		 * made this li'l class while trying to optimize our listview. apparently it
-		 * helps performance
+		 * made this li'l class while trying to optimize our listview. apparently using
+		 * something like this helps performance
 		 * https://developer.android.com/training/improving-layouts/smooth-scrolling.html
 		 *
 		 */
-		private class ViewHolder
 		{
 
 

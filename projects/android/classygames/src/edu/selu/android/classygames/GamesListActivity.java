@@ -150,7 +150,6 @@ public class GamesListActivity extends SherlockListActivity
 
 
 		private ArrayList<GenericGame> games;
-		private Typeface typeface;
 
 
 		public GamesListAdapter(final Context context, final int textViewResourceId, final ArrayList<GenericGame> games)
@@ -171,7 +170,7 @@ public class GamesListActivity extends SherlockListActivity
 			}
 
 			final GenericGame game = games.get(position);
-			typeface = Typeface.createFromAsset(getAssets(), "fonts/blue_highway_d.ttf");
+			Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/blue_highway_d.ttf");
 
 			if (game != null)
 			{
