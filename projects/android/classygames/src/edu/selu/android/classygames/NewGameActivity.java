@@ -2,6 +2,9 @@ package edu.selu.android.classygames;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -10,7 +13,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -79,7 +81,6 @@ public class NewGameActivity extends SherlockListActivity
 				final String request = Utilities.getFacebook().request("me/friends");
 				final JSONObject response = Util.parseJson(request);
 				final JSONArray friends = response.getJSONArray("data");
-
 				final int friendsLength = friends.length();
 				publishProgress((long) friendsLength);
 
@@ -90,12 +91,10 @@ public class NewGameActivity extends SherlockListActivity
 					people.add(new Person(id, friend.getString("name")));
 
 					publishProgress((long) i, id);
-				}
+				}				
 
 				people.trimToSize();
-
-				// TODO: sort the arraylist of facebook friends into alphabetical order. currently it's
-				// sorted by id, which is how facebook delivers the data to us.
+				Collections.sort(people, new Sorter());
 			}
 			catch (final Exception e)
 			{
@@ -230,6 +229,20 @@ public class NewGameActivity extends SherlockListActivity
 			public TextView name;
 
 
+		}
+
+
+	}
+
+
+	private class Sorter implements Comparator<Person>
+	{
+
+
+		@Override
+		public int compare(final Person geo, final Person jarrad)
+		{
+			return geo.getName().compareToIgnoreCase(jarrad.getName());
 		}
 
 
