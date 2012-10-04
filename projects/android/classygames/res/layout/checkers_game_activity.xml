@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridView xmlns:android="http://schemas.android.com/apk/res/android"
-	android:background="@drawable/board"
-	android:columnWidth="50dp"
-	android:gravity="center"
-	android:horizontalSpacing="1dp"
-	android:id="@+id/gridView1"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_height="fill_parent"
-	android:layout_width="fill_parent"
-	android:numColumns="8"
-	android:verticalSpacing="1dp" />
+	android:layout_width="fill_parent">
+	<TextView
+		android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:text="@string/app_name" />
+</LinearLayout>

@@ -2,13 +2,9 @@ package edu.selu.android.classygames;
 
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.GridView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.MenuItem;
 
 
 public class CheckersGameActivity extends SherlockActivity
@@ -21,19 +17,21 @@ public class CheckersGameActivity extends SherlockActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.checkers_game_activity);
 		Utilities.styleActionBar(getResources(), getSupportActionBar());
+	}
 
-		//Testing
-		GridView gridview = (GridView) findViewById(R.id.gridView1);
-		gridview.setAdapter(new ImageAdapter(this));
 
-		gridview.setOnItemClickListener(new OnItemClickListener()
+	@Override
+	public boolean onOptionsItemSelected(final MenuItem item)
+	{
+		switch (item.getItemId())
 		{
-			@Override
-			public void onItemClick(AdapterView<?> parent, View v, int position, long id)
-			{
-				Toast.makeText(CheckersGameActivity.this,""+ position, Toast.LENGTH_SHORT).show();
-			}
-		});
+			case android.R.id.home:
+				finish();
+				return true;
+
+			default:
+				return super.onOptionsItemSelected(item);
+		}
 	}
 
 
