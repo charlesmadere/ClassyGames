@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,10 +30,8 @@ import edu.selu.android.classygames.games.checkers.Checkers;
 public class GamesListActivity extends SherlockListActivity
 {
 
-
-	private ArrayList<GenericGame> games;
+	
 	private GamesListAdapter gamesAdapter;
-	private ProgressDialog progressDialog;
 
 
 	@Override
@@ -42,47 +41,7 @@ public class GamesListActivity extends SherlockListActivity
 		setContentView(R.layout.games_list_activity);
 		Utilities.styleActionBar(getResources(), getSupportActionBar(), false);
 		
-		games = new ArrayList<GenericGame>();
-		gamesAdapter = new GamesListAdapter(this, R.layout.games_list_activity_listview_item, games);
-		setListAdapter(gamesAdapter);
-
-		Runnable runnable = new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				try
-				{
-					// TODO: this code will eventually be replaced by an actual call to our
-					// server. This call will ask the server for a games list
-
-					games.add(new Checkers());
-					games.add(new Checkers(new Person("Bart")));
-					games.add(new Checkers());
-					games.add(new Checkers());
-					games.add(new Checkers());
-					games.add(new Checkers());
-					games.add(new Checkers());
-					games.add(new Checkers());
-					games.add(new Checkers());
-					games.add(new Checkers());
-					games.add(new Checkers());
-					games.add(new Checkers());
-					games.add(new Checkers());
-					games.add(new Checkers());
-					games.add(new Checkers());
-				}
-				catch (final Exception e)
-				{
-					Log.e(Utilities.LOG_TAG, e.getMessage());
-				}
-
-				runOnUiThread(populateGames);
-			}
-		};
-
-		progressDialog = ProgressDialog.show(GamesListActivity.this, "Classy Games is working...", "Retrieving all of your games...");
-		new Thread(null, runnable, "RetrieveGames").start();
+		new AsyncPopulateGamesList().execute();
 	}
 
 
@@ -121,16 +80,86 @@ public class GamesListActivity extends SherlockListActivity
 		}
 	}
 
-
-	private Runnable populateGames = new Runnable()
+	private final class AsyncPopulateGamesList extends AsyncTask<Void,Long, ArrayList<GenericGame>>
 	{
+		
+		private ProgressDialog progressDialog;
+		
+		
 		@Override
-		public void run()
+		protected ArrayList<GenericGame> doInBackground(final Void... v)
 		{
-			gamesAdapter.notifyDataSetChanged();
-			progressDialog.dismiss();
+			ArrayList<GenericGame> game = new ArrayList<GenericGame>();
+			
+			try
+			{
+				// TODO: this code will eventually be replaced by an actual call to our
+				// server. This call will ask the server for a games list
+
+				game.add(new Checkers());
+				game.add(new Checkers(new Person("Bart")));
+				game.add(new Checkers());
+				game.add(new Checkers());
+				game.add(new Checkers());
+				game.add(new Checkers());
+				game.add(new Checkers());
+				game.add(new Checkers());
+				game.add(new Checkers());
+				game.add(new Checkers());
+				game.add(new Checkers());
+				game.add(new Checkers());
+				game.add(new Checkers());
+				game.add(new Checkers());
+				game.add(new Checkers());
+			}
+			catch (final Exception e)
+			{
+				Log.e(Utilities.LOG_TAG, e.getMessage());
+			}
+			
+			return game;
 		}
-	};
+		
+		
+		@Override
+		protected void onPostExecute(final ArrayList<GenericGame> games)
+		{
+			gamesAdapter = new GamesListAdapter(GamesListActivity.this, R.layout.new_game_activity_listview_item, games);
+			setListAdapter(gamesAdapter);
+			gamesAdapter.notifyDataSetChanged();
+			
+			if (progressDialog.isShowing())
+			{
+				progressDialog.dismiss();
+			}
+		}
+		
+		
+		@Override
+		protected void onPreExecute()
+		{
+			progressDialog = new ProgressDialog(GamesListActivity.this);
+			progressDialog.setMessage("Loading Games...");
+			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+			progressDialog.setTitle(R.string.games_list_activity_progressdialog_title);
+			progressDialog.show();
+		}
+		
+		@Override
+		protected void onProgressUpdate(final Long... l)
+		{
+			switch(l.length)
+			{
+				case 1:
+					progressDialog.setMax(l[0].intValue());
+					break;
+				case 2:
+					progressDialog.setProgress(l[0].intValue());
+					break;
+			}
+		}
+	
+	}
 
 
 	@Override
