@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
 import edu.selu.android.classygames.R;
 import edu.selu.android.classygames.games.Coordinate;
-import edu.selu.android.classygames.games.GenericPiece;
 import edu.selu.android.classygames.games.GenericTeam;
 
 
@@ -74,15 +73,15 @@ public class Team extends GenericTeam
 	}
 
 
-	@Override
-	public void run()
-	// TODO
-	{
-		for (GenericPiece piece : pieces)
-		{
-
-		}
-	}
+//	@Override
+//	public void run()
+//	// TODO
+//	{
+//		for (GenericPiece piece : pieces)
+//		{
+//
+//		}
+//	}
 
 
 }

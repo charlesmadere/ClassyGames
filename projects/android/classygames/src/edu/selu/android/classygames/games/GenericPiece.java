@@ -1,6 +1,9 @@
 package edu.selu.android.classygames.games;
 
 
+import android.graphics.Canvas;
+
+
 public abstract class GenericPiece
 {
 
@@ -27,7 +30,7 @@ public abstract class GenericPiece
 	}
 
 
-	public abstract void run();
+	public abstract void draw(final Canvas canvas, final int paddingTop, final int paddingLeft);
 
 
 	Coordinate getPosition()

@@ -63,12 +63,12 @@ public class Checkers extends GenericGame
 	}
 
 
-	@Override
-	public void run()
-	{
-		TEAM_GREEN.run();
-		TEAM_ORANGE.run();
-	}
+//	@Override
+//	public void run()
+//	{
+//		TEAM_GREEN.run();
+//		TEAM_ORANGE.run();
+//	}
 
 
 }

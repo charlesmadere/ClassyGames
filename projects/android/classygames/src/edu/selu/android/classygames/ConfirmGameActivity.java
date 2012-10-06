@@ -7,7 +7,7 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 
 
-public class CheckersGameActivity extends SherlockActivity
+public class ConfirmGameActivity extends SherlockActivity
 {
 
 
@@ -15,7 +15,7 @@ public class CheckersGameActivity extends SherlockActivity
 	public void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.checkers_game_activity);
+		setContentView(R.layout.confirm_game_activity);
 		Utilities.styleActionBar(getResources(), getSupportActionBar());
 	}
 
