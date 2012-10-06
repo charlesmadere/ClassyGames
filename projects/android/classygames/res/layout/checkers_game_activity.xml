@@ -6,435 +6,435 @@
 	android:orientation="vertical"
 	style="@style/ClassyGames">
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_a0"
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_a0"
 		android:layout_height="wrap_content"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_a1"
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_a1"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_a0"
+		android:layout_toRightOf="@id/checkers_game_activity_board_a0"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_a2"
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_a2"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_a1"
+		android:layout_toRightOf="@id/checkers_game_activity_board_a1"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_a3"
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_a3"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_a2"
+		android:layout_toRightOf="@id/checkers_game_activity_board_a2"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_a4"
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_a4"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_a3"
+		android:layout_toRightOf="@id/checkers_game_activity_board_a3"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_a5"
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_a5"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_a4"
+		android:layout_toRightOf="@id/checkers_game_activity_board_a4"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_a6"
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_a6"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_a5"
+		android:layout_toRightOf="@id/checkers_game_activity_board_a5"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_a7"
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_a7"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_a6"
+		android:layout_toRightOf="@id/checkers_game_activity_board_a6"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_b0"
-		android:layout_below="@id/board_a0"
-		android:layout_height="wrap_content"
-		android:layout_width="wrap_content" />
-	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_b1"
-		android:layout_below="@id/board_a1"
-		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_b0"
-		android:layout_width="wrap_content" />
-	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_b2"
-		android:layout_below="@id/board_a2"
-		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_b1"
-		android:layout_width="wrap_content" />
-	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_b3"
-		android:layout_below="@id/board_a3"
-		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_b2"
-		android:layout_width="wrap_content" />
-	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_b4"
-		android:layout_below="@id/board_a4"
-		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_b3"
-		android:layout_width="wrap_content" />
-	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_b5"
-		android:layout_below="@id/board_a5"
-		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_b4"
-		android:layout_width="wrap_content" />
-	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_b6"
-		android:layout_below="@id/board_a6"
-		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_b5"
-		android:layout_width="wrap_content" />
-	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_b7"
-		android:layout_below="@id/board_a7"
-		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_b6"
-		android:layout_width="wrap_content" />
-	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_c0"
-		android:layout_below="@id/board_b0"
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_b0"
+		android:layout_below="@id/checkers_game_activity_board_a0"
 		android:layout_height="wrap_content"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_c1"
-		android:layout_below="@id/board_b1"
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_b1"
+		android:layout_below="@id/checkers_game_activity_board_a1"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_c0"
+		android:layout_toRightOf="@id/checkers_game_activity_board_b0"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_c2"
-		android:layout_below="@id/board_b2"
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_b2"
+		android:layout_below="@id/checkers_game_activity_board_a2"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_c1"
+		android:layout_toRightOf="@id/checkers_game_activity_board_b1"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_c3"
-		android:layout_below="@id/board_b3"
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_b3"
+		android:layout_below="@id/checkers_game_activity_board_a3"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_c2"
+		android:layout_toRightOf="@id/checkers_game_activity_board_b2"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_c4"
-		android:layout_below="@id/board_b4"
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_b4"
+		android:layout_below="@id/checkers_game_activity_board_a4"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_c3"
+		android:layout_toRightOf="@id/checkers_game_activity_board_b3"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_c5"
-		android:layout_below="@id/board_b5"
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_b5"
+		android:layout_below="@id/checkers_game_activity_board_a5"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_c4"
+		android:layout_toRightOf="@id/checkers_game_activity_board_b4"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_c6"
-		android:layout_below="@id/board_b6"
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_b6"
+		android:layout_below="@id/checkers_game_activity_board_a6"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_c5"
+		android:layout_toRightOf="@id/checkers_game_activity_board_b5"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_c7"
-		android:layout_below="@id/board_b7"
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_b7"
+		android:layout_below="@id/checkers_game_activity_board_a7"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_c6"
+		android:layout_toRightOf="@id/checkers_game_activity_board_b6"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_d0"
-		android:layout_below="@id/board_c0"
-		android:layout_height="wrap_content"
-		android:layout_width="wrap_content" />
-	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_d1"
-		android:layout_below="@id/board_c1"
-		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_d0"
-		android:layout_width="wrap_content" />
-	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_d2"
-		android:layout_below="@id/board_c2"
-		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_d1"
-		android:layout_width="wrap_content" />
-	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_d3"
-		android:layout_below="@id/board_c3"
-		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_d2"
-		android:layout_width="wrap_content" />
-	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_d4"
-		android:layout_below="@id/board_c4"
-		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_d3"
-		android:layout_width="wrap_content" />
-	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_d5"
-		android:layout_below="@id/board_c5"
-		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_d4"
-		android:layout_width="wrap_content" />
-	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_d6"
-		android:layout_below="@id/board_c6"
-		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_d5"
-		android:layout_width="wrap_content" />
-	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_d7"
-		android:layout_below="@id/board_c7"
-		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_d6"
-		android:layout_width="wrap_content" />
-	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_e0"
-		android:layout_below="@id/board_d0"
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_c0"
+		android:layout_below="@id/checkers_game_activity_board_b0"
 		android:layout_height="wrap_content"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_e1"
-		android:layout_below="@id/board_d1"
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_c1"
+		android:layout_below="@id/checkers_game_activity_board_b1"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_e0"
+		android:layout_toRightOf="@id/checkers_game_activity_board_c0"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_e2"
-		android:layout_below="@id/board_d2"
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_c2"
+		android:layout_below="@id/checkers_game_activity_board_b2"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_e1"
+		android:layout_toRightOf="@id/checkers_game_activity_board_c1"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_e3"
-		android:layout_below="@id/board_d3"
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_c3"
+		android:layout_below="@id/checkers_game_activity_board_b3"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_e2"
+		android:layout_toRightOf="@id/checkers_game_activity_board_c2"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_e4"
-		android:layout_below="@id/board_d4"
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_c4"
+		android:layout_below="@id/checkers_game_activity_board_b4"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_e3"
+		android:layout_toRightOf="@id/checkers_game_activity_board_c3"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_e5"
-		android:layout_below="@id/board_d5"
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_c5"
+		android:layout_below="@id/checkers_game_activity_board_b5"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_e4"
+		android:layout_toRightOf="@id/checkers_game_activity_board_c4"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_e6"
-		android:layout_below="@id/board_d6"
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_c6"
+		android:layout_below="@id/checkers_game_activity_board_b6"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_e5"
+		android:layout_toRightOf="@id/checkers_game_activity_board_c5"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_e7"
-		android:layout_below="@id/board_d7"
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_c7"
+		android:layout_below="@id/checkers_game_activity_board_b7"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_e6"
+		android:layout_toRightOf="@id/checkers_game_activity_board_c6"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_f0"
-		android:layout_below="@id/board_e0"
-		android:layout_height="wrap_content"
-		android:layout_width="wrap_content" />
-	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_f1"
-		android:layout_below="@id/board_e1"
-		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_f0"
-		android:layout_width="wrap_content" />
-	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_f2"
-		android:layout_below="@id/board_e2"
-		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_f1"
-		android:layout_width="wrap_content" />
-	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_f3"
-		android:layout_below="@id/board_e3"
-		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_f2"
-		android:layout_width="wrap_content" />
-	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_f4"
-		android:layout_below="@id/board_e4"
-		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_f3"
-		android:layout_width="wrap_content" />
-	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_f5"
-		android:layout_below="@id/board_e5"
-		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_f4"
-		android:layout_width="wrap_content" />
-	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_f6"
-		android:layout_below="@id/board_e6"
-		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_f5"
-		android:layout_width="wrap_content" />
-	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_f7"
-		android:layout_below="@id/board_e7"
-		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_f6"
-		android:layout_width="wrap_content" />
-	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_g0"
-		android:layout_below="@id/board_f0"
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_d0"
+		android:layout_below="@id/checkers_game_activity_board_c0"
 		android:layout_height="wrap_content"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_g1"
-		android:layout_below="@id/board_f1"
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_d1"
+		android:layout_below="@id/checkers_game_activity_board_c1"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_g0"
+		android:layout_toRightOf="@id/checkers_game_activity_board_d0"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_g2"
-		android:layout_below="@id/board_f2"
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_d2"
+		android:layout_below="@id/checkers_game_activity_board_c2"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_g1"
+		android:layout_toRightOf="@id/checkers_game_activity_board_d1"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_g3"
-		android:layout_below="@id/board_f3"
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_d3"
+		android:layout_below="@id/checkers_game_activity_board_c3"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_g2"
+		android:layout_toRightOf="@id/checkers_game_activity_board_d2"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_g4"
-		android:layout_below="@id/board_f4"
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_d4"
+		android:layout_below="@id/checkers_game_activity_board_c4"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_g3"
+		android:layout_toRightOf="@id/checkers_game_activity_board_d3"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_g5"
-		android:layout_below="@id/board_f5"
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_d5"
+		android:layout_below="@id/checkers_game_activity_board_c5"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_g4"
+		android:layout_toRightOf="@id/checkers_game_activity_board_d4"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_g6"
-		android:layout_below="@id/board_f6"
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_d6"
+		android:layout_below="@id/checkers_game_activity_board_c6"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_g5"
+		android:layout_toRightOf="@id/checkers_game_activity_board_d5"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_g7"
-		android:layout_below="@id/board_f7"
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_d7"
+		android:layout_below="@id/checkers_game_activity_board_c7"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_g6"
+		android:layout_toRightOf="@id/checkers_game_activity_board_d6"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_h0"
-		android:layout_below="@id/board_g0"
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_e0"
+		android:layout_below="@id/checkers_game_activity_board_d0"
 		android:layout_height="wrap_content"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_h1"
-		android:layout_below="@id/board_g1"
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_e1"
+		android:layout_below="@id/checkers_game_activity_board_d1"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_h0"
+		android:layout_toRightOf="@id/checkers_game_activity_board_e0"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_h2"
-		android:layout_below="@id/board_g2"
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_e2"
+		android:layout_below="@id/checkers_game_activity_board_d2"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_h1"
+		android:layout_toRightOf="@id/checkers_game_activity_board_e1"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_h3"
-		android:layout_below="@id/board_g3"
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_e3"
+		android:layout_below="@id/checkers_game_activity_board_d3"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_h2"
+		android:layout_toRightOf="@id/checkers_game_activity_board_e2"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_h4"
-		android:layout_below="@id/board_g4"
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_e4"
+		android:layout_below="@id/checkers_game_activity_board_d4"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_h3"
+		android:layout_toRightOf="@id/checkers_game_activity_board_e3"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_h5"
-		android:layout_below="@id/board_g5"
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_e5"
+		android:layout_below="@id/checkers_game_activity_board_d5"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_h4"
+		android:layout_toRightOf="@id/checkers_game_activity_board_e4"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_dark"
-		android:id="@+id/board_h6"
-		android:layout_below="@id/board_g6"
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_e6"
+		android:layout_below="@id/checkers_game_activity_board_d6"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_h5"
+		android:layout_toRightOf="@id/checkers_game_activity_board_e5"
 		android:layout_width="wrap_content" />
 	<edu.selu.android.classygames.views.CheckersSquareView
-		android:background="@drawable/board_light"
-		android:id="@+id/board_h7"
-		android:layout_below="@id/board_g7"
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_e7"
+		android:layout_below="@id/checkers_game_activity_board_d7"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/board_h6"
+		android:layout_toRightOf="@id/checkers_game_activity_board_e6"
+		android:layout_width="wrap_content" />
+	<edu.selu.android.classygames.views.CheckersSquareView
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_f0"
+		android:layout_below="@id/checkers_game_activity_board_e0"
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content" />
+	<edu.selu.android.classygames.views.CheckersSquareView
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_f1"
+		android:layout_below="@id/checkers_game_activity_board_e1"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/checkers_game_activity_board_f0"
+		android:layout_width="wrap_content" />
+	<edu.selu.android.classygames.views.CheckersSquareView
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_f2"
+		android:layout_below="@id/checkers_game_activity_board_e2"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/checkers_game_activity_board_f1"
+		android:layout_width="wrap_content" />
+	<edu.selu.android.classygames.views.CheckersSquareView
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_f3"
+		android:layout_below="@id/checkers_game_activity_board_e3"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/checkers_game_activity_board_f2"
+		android:layout_width="wrap_content" />
+	<edu.selu.android.classygames.views.CheckersSquareView
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_f4"
+		android:layout_below="@id/checkers_game_activity_board_e4"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/checkers_game_activity_board_f3"
+		android:layout_width="wrap_content" />
+	<edu.selu.android.classygames.views.CheckersSquareView
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_f5"
+		android:layout_below="@id/checkers_game_activity_board_e5"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/checkers_game_activity_board_f4"
+		android:layout_width="wrap_content" />
+	<edu.selu.android.classygames.views.CheckersSquareView
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_f6"
+		android:layout_below="@id/checkers_game_activity_board_e6"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/checkers_game_activity_board_f5"
+		android:layout_width="wrap_content" />
+	<edu.selu.android.classygames.views.CheckersSquareView
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_f7"
+		android:layout_below="@id/checkers_game_activity_board_e7"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/checkers_game_activity_board_f6"
+		android:layout_width="wrap_content" />
+	<edu.selu.android.classygames.views.CheckersSquareView
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_g0"
+		android:layout_below="@id/checkers_game_activity_board_f0"
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content" />
+	<edu.selu.android.classygames.views.CheckersSquareView
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_g1"
+		android:layout_below="@id/checkers_game_activity_board_f1"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/checkers_game_activity_board_g0"
+		android:layout_width="wrap_content" />
+	<edu.selu.android.classygames.views.CheckersSquareView
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_g2"
+		android:layout_below="@id/checkers_game_activity_board_f2"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/checkers_game_activity_board_g1"
+		android:layout_width="wrap_content" />
+	<edu.selu.android.classygames.views.CheckersSquareView
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_g3"
+		android:layout_below="@id/checkers_game_activity_board_f3"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/checkers_game_activity_board_g2"
+		android:layout_width="wrap_content" />
+	<edu.selu.android.classygames.views.CheckersSquareView
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_g4"
+		android:layout_below="@id/checkers_game_activity_board_f4"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/checkers_game_activity_board_g3"
+		android:layout_width="wrap_content" />
+	<edu.selu.android.classygames.views.CheckersSquareView
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_g5"
+		android:layout_below="@id/checkers_game_activity_board_f5"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/checkers_game_activity_board_g4"
+		android:layout_width="wrap_content" />
+	<edu.selu.android.classygames.views.CheckersSquareView
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_g6"
+		android:layout_below="@id/checkers_game_activity_board_f6"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/checkers_game_activity_board_g5"
+		android:layout_width="wrap_content" />
+	<edu.selu.android.classygames.views.CheckersSquareView
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_g7"
+		android:layout_below="@id/checkers_game_activity_board_f7"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/checkers_game_activity_board_g6"
+		android:layout_width="wrap_content" />
+	<edu.selu.android.classygames.views.CheckersSquareView
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_h0"
+		android:layout_below="@id/checkers_game_activity_board_g0"
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content" />
+	<edu.selu.android.classygames.views.CheckersSquareView
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_h1"
+		android:layout_below="@id/checkers_game_activity_board_g1"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/checkers_game_activity_board_h0"
+		android:layout_width="wrap_content" />
+	<edu.selu.android.classygames.views.CheckersSquareView
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_h2"
+		android:layout_below="@id/checkers_game_activity_board_g2"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/checkers_game_activity_board_h1"
+		android:layout_width="wrap_content" />
+	<edu.selu.android.classygames.views.CheckersSquareView
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_h3"
+		android:layout_below="@id/checkers_game_activity_board_g3"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/checkers_game_activity_board_h2"
+		android:layout_width="wrap_content" />
+	<edu.selu.android.classygames.views.CheckersSquareView
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_h4"
+		android:layout_below="@id/checkers_game_activity_board_g4"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/checkers_game_activity_board_h3"
+		android:layout_width="wrap_content" />
+	<edu.selu.android.classygames.views.CheckersSquareView
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_h5"
+		android:layout_below="@id/checkers_game_activity_board_g5"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/checkers_game_activity_board_h4"
+		android:layout_width="wrap_content" />
+	<edu.selu.android.classygames.views.CheckersSquareView
+		android:background="@drawable/bg_texres"
+		android:id="@+id/checkers_game_activity_board_h6"
+		android:layout_below="@id/checkers_game_activity_board_g6"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/checkers_game_activity_board_h5"
+		android:layout_width="wrap_content" />
+	<edu.selu.android.classygames.views.CheckersSquareView
+		android:background="@drawable/bg_subtlegrey"
+		android:id="@+id/checkers_game_activity_board_h7"
+		android:layout_below="@id/checkers_game_activity_board_g7"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/checkers_game_activity_board_h6"
 		android:layout_width="wrap_content" />
 </RelativeLayout>
