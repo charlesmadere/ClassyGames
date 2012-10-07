@@ -57,27 +57,44 @@ public class GamesListActivity extends SherlockListActivity
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item)
 	{
-		switch (item.getItemId()) 
-		{
-			case R.id.actionbar_about:
+	//	switch (item.getItemId()) 
+		//{ 
+			int id = item.getItemId();
+			
+			if(id == R.id.actionbar_about)
+			{
 				startActivity(new Intent(GamesListActivity.this, AboutActivity.class));
 				return true;
-
-			case R.id.actionbar_logout:
+			}
+		//	case R.id.actionbar_about:
+			else if(id == R.id.actionbar_about)
+			{
+				startActivity(new Intent(GamesListActivity.this, AboutActivity.class));
+				return true;
+			}
+		//	case R.id.actionbar_logout:
+			else if(id == R.id.actionbar_logout)
+			{
 				startActivityForResult(new Intent(GamesListActivity.this, LogoutActivity.class), 0);
 				return true;
-
-			case R.id.actionbar_new_game:
+			}
+		//	case R.id.actionbar_new_game:
+			else if(id == R.id.actionbar_new_game) 
+			{
 				startActivity(new Intent(GamesListActivity.this, NewGameActivity.class));
 				return true;
-
-			case R.id.actionbar_refresh:
+			}
+	//		case R.id.actionbar_refresh:
+			else if (id == R.id.actionbar_refresh)
+			{
 				startActivity(new Intent(GamesListActivity.this, CheckersGameActivity.class));
 				return true;
-			
-			default:
-				return super.onOptionsItemSelected(item);
-		}
+			}
+		//	default:
+			else
+			{
+				return super.onOptionsItemSelected(item);	
+			}
 	}
 
 	private final class AsyncPopulateGamesList extends AsyncTask<Void,Long, ArrayList<GenericGame>>
