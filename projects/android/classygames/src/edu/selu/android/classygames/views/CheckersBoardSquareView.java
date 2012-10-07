@@ -8,14 +8,14 @@ import android.widget.ImageView;
 import edu.selu.android.classygames.games.checkers.Piece;
 
 
-public class CheckersSquareView extends ImageView
+public class CheckersBoardSquareView extends ImageView
 {
 
 
 	private Piece piece;
 
 
-	public CheckersSquareView(final Context context)
+	public CheckersBoardSquareView(final Context context)
 	{
 		super(context);
 		piece = new Piece();
@@ -24,7 +24,7 @@ public class CheckersSquareView extends ImageView
 	}
 
 
-	public CheckersSquareView(final Context context, final Piece piece)
+	public CheckersBoardSquareView(final Context context, final Piece piece)
 	{
 		super(context);
 		this.piece = piece;
@@ -33,7 +33,7 @@ public class CheckersSquareView extends ImageView
 	}
 
 
-	public CheckersSquareView(final Context context, final AttributeSet attributes)
+	public CheckersBoardSquareView(final Context context, final AttributeSet attributes)
 	{
 		super(context, attributes);
 		piece = new Piece();
@@ -42,7 +42,7 @@ public class CheckersSquareView extends ImageView
 	}
 
 
-	public CheckersSquareView(final Context context, final AttributeSet attributes, final Piece piece)
+	public CheckersBoardSquareView(final Context context, final AttributeSet attributes, final Piece piece)
 	{
 		super(context, attributes);
 		this.piece = piece;
