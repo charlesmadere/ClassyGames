@@ -137,7 +137,8 @@ public class Utilities
 	{
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 		{
-			BitmapDrawable bg = (BitmapDrawable) resources.getDrawable(R.drawable.bg_actionbar);
+			final BitmapDrawable bg = (BitmapDrawable) resources.getDrawable(R.drawable.bg_actionbar);
+			bg.setDither(true);
 			bg.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
 			actionBar.setBackgroundDrawable(bg);
 		}

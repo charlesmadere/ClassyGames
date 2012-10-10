@@ -56,7 +56,7 @@ public abstract class GenericGame
 	}
 
 
-	abstract public void run();
+//	abstract public void run();
 
 
 	public int getId()

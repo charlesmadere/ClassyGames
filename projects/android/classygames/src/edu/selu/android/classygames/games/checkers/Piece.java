@@ -1,6 +1,7 @@
 package edu.selu.android.classygames.games.checkers;
 
 
+import android.graphics.Canvas;
 import edu.selu.android.classygames.games.Coordinate;
 import edu.selu.android.classygames.games.GenericPiece;
 
@@ -26,17 +27,9 @@ public class Piece extends GenericPiece
 
 
 	@Override
-	public void run()
-	// TODO this method is by no means final
+	public void draw(final Canvas canvas, final int paddingTop, final int paddingLeft)
 	{
-		switch (type)
-		{
-			case TYPE_NORMAL:
-				break;
 
-			case TYPE_KING:
-				break;
-		}
 	}
 
 

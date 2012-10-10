@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
 import edu.selu.android.classygames.R;
 import edu.selu.android.classygames.games.Coordinate;
-import edu.selu.android.classygames.games.GenericPiece;
 import edu.selu.android.classygames.games.GenericTeam;
 
 
@@ -36,8 +35,8 @@ public class Team extends GenericTeam
 		switch (this.whichTeam)
 		{
 			case TEAM_GREEN:
-				ICON_NORMAL_GREEN = (BitmapDrawable) resources.getDrawable(R.drawable.checkers_piece_normal_green);
-				ICON_KING_GREEN = (BitmapDrawable) resources.getDrawable(R.drawable.checkers_piece_king_green);
+//				ICON_NORMAL_GREEN = (BitmapDrawable) resources.getDrawable(R.drawable.checkers_piece_normal_green);
+//				ICON_KING_GREEN = (BitmapDrawable) resources.getDrawable(R.drawable.checkers_piece_king_green);
 
 				pieces.add(new Piece(new Coordinate(1, 0), 0));
 				pieces.add(new Piece(new Coordinate(3, 0), 1));
@@ -54,8 +53,8 @@ public class Team extends GenericTeam
 				break;
 
 			case TEAM_ORANGE:
-				ICON_NORMAL_ORANGE = (BitmapDrawable) resources.getDrawable(R.drawable.checkers_piece_normal_orange);
-				ICON_KING_ORANGE = (BitmapDrawable) resources.getDrawable(R.drawable.checkers_piece_king_orange);
+//				ICON_NORMAL_ORANGE = (BitmapDrawable) resources.getDrawable(R.drawable.checkers_piece_normal_orange);
+//				ICON_KING_ORANGE = (BitmapDrawable) resources.getDrawable(R.drawable.checkers_piece_king_orange);
 
 				pieces.add(new Piece(new Coordinate(0, 7), 0));
 				pieces.add(new Piece(new Coordinate(2, 7), 1));
@@ -74,15 +73,15 @@ public class Team extends GenericTeam
 	}
 
 
-	@Override
-	public void run()
-	// TODO
-	{
-		for (GenericPiece piece : pieces)
-		{
-
-		}
-	}
+//	@Override
+//	public void run()
+//	// TODO
+//	{
+//		for (GenericPiece piece : pieces)
+//		{
+//
+//		}
+//	}
 
 
 }

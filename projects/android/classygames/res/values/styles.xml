@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 	<style name="ClassyGames">
-		<item name="android:background">@drawable/bg_bright_squares</item>
+		<item name="android:background">@drawable/bg_bright</item>
 	</style>
 	<style name="facebook_button">
 		<item name="android:background">@drawable/facebook_button</item>

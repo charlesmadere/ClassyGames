@@ -26,7 +26,6 @@ public class LogoutActivity extends SherlockActivity
 	public final static int LOGGED_OUT = 1;
 
 
-
 	@Override
 	public void onCreate(final Bundle savedInstanceState)
 	{
