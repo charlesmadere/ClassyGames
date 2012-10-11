@@ -18,18 +18,47 @@ public class Utilities
 {
 
 
+	public final static String FONTS_BLUE_HIGHWAY_D = "fonts/blue_highway_d.ttf";
 	public final static String LOG_TAG = "ClassyGames";
 	public static SharedPreferences sharedPreferences;
 
-	/**
-	 * PLEASE USE THE Utilities.ensureFacebookIsNotNull() method BEFORE using ANY Facebook
-	 * variables found in this class
-	 */
 	private static Facebook facebook;
-
 	public final static String FACEBOOK_APP_ID = "324400870964487";
-	public final static String FACEBOOK_TOKEN = "access_token";
 	public final static String FACEBOOK_EXPIRES = "expires_in";
+	public final static String FACEBOOK_TOKEN = "access_token";
+
+	public final static String FACEBOOK_GRAPH_API_URL = "https://graph.facebook.com/";
+	public final static String FACEBOOK_GRAPH_API_URL_PICTURE = "/picture";
+	public final static String FACEBOOK_GRAPH_API_URL_PICTURE_SSL = "return_ssl_resources=1";
+	public final static String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE = "?type=";
+	public final static String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_LARGE = FACEBOOK_GRAPH_API_URL_PICTURE + FACEBOOK_GRAPH_API_URL_PICTURE_TYPE + "large";
+	public final static String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_LARGE_SSL = FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_LARGE + "&" + FACEBOOK_GRAPH_API_URL_PICTURE_SSL;
+	public final static String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_NORMAL = FACEBOOK_GRAPH_API_URL_PICTURE + FACEBOOK_GRAPH_API_URL_PICTURE_TYPE + "normal";
+	public final static String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_NORMAL_SSL = FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_NORMAL + "&" + FACEBOOK_GRAPH_API_URL_PICTURE_SSL;
+	public final static String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SMALL = FACEBOOK_GRAPH_API_URL_PICTURE + FACEBOOK_GRAPH_API_URL_PICTURE_TYPE + "small";
+	public final static String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SMALL_SSL = FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SMALL + "&" + FACEBOOK_GRAPH_API_URL_PICTURE_SSL;
+	public final static String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE = FACEBOOK_GRAPH_API_URL_PICTURE + FACEBOOK_GRAPH_API_URL_PICTURE_TYPE + "square";
+	public final static String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE_SSL = FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE + "&" + FACEBOOK_GRAPH_API_URL_PICTURE_SSL;
+
+
+	/**
+	 * <p>Prints a Toast message to the screen.</p>
+	 * 
+	 * <p><strong>Examples</strong><br />
+	 * Utilities.easyToast(MainActivity.this, "Hello!");<br />
+	 * Utilities.easyToast(getApplicationContext(), "Another message huh?");</p>
+	 * 
+	 * @param context
+	 * Just put the name of your class.this, or you can use getApplicationContext().
+	 * 
+	 * @param message
+	 * The String that you want to be shown as a toast message.
+	 * 
+	 */
+	public static void easyToast(final Context context, final String message)
+	{
+		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+	}
 
 
 	/**
@@ -49,7 +78,7 @@ public class Utilities
 	 */
 	public static void easyToastAndLog(final Context context, final String message)
 	{
-		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+		easyToast(context, message);
 		Log.d(LOG_TAG, message);
 	}
 
@@ -71,7 +100,7 @@ public class Utilities
 	 */
 	public static void easyToastAndLogAll(final Context context, final String message)
 	{
-		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+		easyToast(context, message);
 		Log.d(LOG_TAG, message);
 		Log.e(LOG_TAG, message);
 		Log.i(LOG_TAG, message);
@@ -97,7 +126,7 @@ public class Utilities
 	 */
 	public static void easyToastAndLogError(final Context context, final String message)
 	{
-		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+		easyToast(context, message);
 		Log.e(LOG_TAG, message);
 	}
 
@@ -148,6 +177,7 @@ public class Utilities
 			actionBar.setDisplayHomeAsUpEnabled(true);
 		}
 	}
+
 
 	/**
 	 * <p>This is a workaround for http://b.android.com/15340 from http://stackoverflow.com/a/5852198/132047.

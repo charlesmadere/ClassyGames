@@ -31,7 +31,7 @@ import edu.selu.android.classygames.games.checkers.Checkers;
 public class GamesListActivity extends SherlockListActivity
 {
 
-	
+
 	private GamesListAdapter gamesAdapter;
 
 
@@ -157,7 +157,6 @@ public class GamesListActivity extends SherlockListActivity
 		{
 			progressDialog = new ProgressDialog(GamesListActivity.this);
 			progressDialog.setMessage("Loading all of your games...");
-			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 			progressDialog.setTitle(R.string.games_list_activity_progressdialog_title);
 			progressDialog.show();
 		}
@@ -179,7 +178,7 @@ public class GamesListActivity extends SherlockListActivity
 			super(context, textViewResourceId, games);
 
 			this.games = games;
-			typeface = Typeface.createFromAsset(getAssets(), "fonts/blue_highway_d.ttf");
+			typeface = Typeface.createFromAsset(getAssets(), Utilities.FONTS_BLUE_HIGHWAY_D);
 		}
 
 
@@ -201,6 +200,11 @@ public class GamesListActivity extends SherlockListActivity
 				if (viewHolder.picture != null)
 				{
 
+				}
+
+				if (typeface == null)
+				{
+					typeface = Typeface.createFromAsset(getAssets(), Utilities.FONTS_BLUE_HIGHWAY_D);
 				}
 
 				viewHolder.name = (TextView) convertView.findViewById(R.id.games_list_activity_listview_item_name);

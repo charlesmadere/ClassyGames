@@ -12,7 +12,7 @@
 	<string name="games_list_activity_listview_turn_theirs_no_games">You have no pending games for your friends! You should start a new one!</string>
 	<string name="games_list_activity_listview_turn_yours_no_games">None of your friends have sent a move your way. Perhaps you should start a new game?</string>
 	<string name="games_list_activity_title">Games List</string>
-	<string name="games_list_activity_progressdialog_title">Games Are On Their Way</string>
+	<string name="games_list_activity_progressdialog_title">Classy Games is working&#8230;</string>
 	<string name="login_with_facebook">Login with Facebook</string>
 	<string name="logout">Logout</string>
 	<string name="logout_activity_logout">Are you sure you want to logout of Facebook? You will need to login again to continue using Classy Games. You will keep on playing, right? After pressing this button, you will be returned to the Classy Games login screen.</string>
@@ -20,7 +20,6 @@
 	<string name="logout_of_facebook">Logout of Facebook</string>
 	<string name="main_activity_title">Classy Games</string>
 	<string name="new_game">New Game</string>
-	<string name="new_game_activity_progressdialog_message">Retrieving all of your Facebook friends&#8230;</string>
 	<string name="new_game_activity_progressdialog_title">Facebook is working&#8230;</string>
 	<string name="new_game_activity_title">New Game</string>
 	<string name="new_game_activity_listview_item_picture_description">Friend\'s Picture</string>

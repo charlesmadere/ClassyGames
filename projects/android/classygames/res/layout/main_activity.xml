@@ -14,7 +14,7 @@
 		android:paddingRight="4dip"
 		android:src="@drawable/logo" />
 	<LinearLayout
-	    android:gravity="top"
+		android:gravity="top"
 		android:layout_height="fill_parent"
 		android:layout_weight="5"
 		android:layout_width="fill_parent"

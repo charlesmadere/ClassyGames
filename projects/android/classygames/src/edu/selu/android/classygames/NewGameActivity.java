@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -166,7 +167,7 @@ public class NewGameActivity extends SherlockListActivity
 			super(context, textViewResourceId, people);
 
 			this.people = people;
-			typeface = Typeface.createFromAsset(getAssets(), "fonts/blue_highway_d.ttf");
+			typeface = Typeface.createFromAsset(getAssets(), Utilities.FONTS_BLUE_HIGHWAY_D);
 		}
 
 
@@ -187,7 +188,12 @@ public class NewGameActivity extends SherlockListActivity
 				viewHolder.picture = (ImageView) convertView.findViewById(R.id.new_game_activity_listview_item_picture);
 				if (viewHolder.picture != null)
 				{
-					UrlImageViewHelper.setUrlDrawable(viewHolder.picture, "https://graph.facebook.com/" + person.getId() + "/picture?return_ssl_resources=1");
+					UrlImageViewHelper.setUrlDrawable(viewHolder.picture, Utilities.FACEBOOK_GRAPH_API_URL + person.getId() + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE_SSL);
+				}
+
+				if (typeface == null)
+				{
+					typeface = Typeface.createFromAsset(getAssets(), Utilities.FONTS_BLUE_HIGHWAY_D);
 				}
 
 				viewHolder.name = (TextView) convertView.findViewById(R.id.new_game_activity_listview_item_name);
@@ -202,7 +208,13 @@ public class NewGameActivity extends SherlockListActivity
 					@Override
 					public void onClick(final View v)
 					{
-						Utilities.easyToastAndLog(NewGameActivity.this, "\"" + person.getName() + "\" \"" + person.getId() + "\"");
+						Intent intent = new Intent(NewGameActivity.this, ConfirmGameActivity.class);
+						intent.putExtra(ConfirmGameActivity.INTENT_DATA_PERSON_ID, person.getId());
+						intent.putExtra(ConfirmGameActivity.INTENT_DATA_PERSON_NAME, person.getName());
+
+						// start the ConfirmGameActivity with a bit of extra data. We're passing it both
+						// the id and name of the facebook person that the user clicked on
+						startActivity(intent);
 					}
 				};
 

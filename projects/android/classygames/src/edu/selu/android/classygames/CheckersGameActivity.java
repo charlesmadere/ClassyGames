@@ -24,7 +24,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 
 
 	@Override
-	public void onCreate(Bundle savedInstanceState)
+	public void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		// setContentView(R.layout.checkers_game_activity);
