@@ -2,6 +2,7 @@ package edu.selu.android.classygames;
 
 
 import java.util.ArrayList;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -55,6 +56,18 @@ public class GamesListActivity extends SherlockListActivity
 
 
 	@Override
+	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data)
+	{
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (resultCode == LogoutActivity.LOGGED_OUT)
+		{
+			finish();
+		}
+	}
+
+
+	@Override
 	public boolean onOptionsItemSelected(final MenuItem item)
 	{
 		switch (item.getItemId()) 
@@ -74,53 +87,57 @@ public class GamesListActivity extends SherlockListActivity
 			case R.id.actionbar_refresh:
 				startActivity(new Intent(GamesListActivity.this, CheckersGameActivity.class));
 				return true;
-			
+
 			default:
 				return super.onOptionsItemSelected(item);
 		}
 	}
 
-	private final class AsyncPopulateGamesList extends AsyncTask<Void,Long, ArrayList<GenericGame>>
+
+	private final class AsyncPopulateGamesList extends AsyncTask<Void, Void, ArrayList<GenericGame>>
 	{
-		
+
+
 		private ProgressDialog progressDialog;
-		
-		
+
+
 		@Override
 		protected ArrayList<GenericGame> doInBackground(final Void... v)
 		{
-			ArrayList<GenericGame> game = new ArrayList<GenericGame>();
-			
+			ArrayList<GenericGame> games = new ArrayList<GenericGame>();
+
 			try
 			{
 				// TODO: this code will eventually be replaced by an actual call to our
 				// server. This call will ask the server for a games list
 
-				game.add(new Checkers());
-				game.add(new Checkers(new Person("Bart")));
-				game.add(new Checkers());
-				game.add(new Checkers());
-				game.add(new Checkers());
-				game.add(new Checkers());
-				game.add(new Checkers());
-				game.add(new Checkers());
-				game.add(new Checkers());
-				game.add(new Checkers());
-				game.add(new Checkers());
-				game.add(new Checkers());
-				game.add(new Checkers());
-				game.add(new Checkers());
-				game.add(new Checkers());
+				games.add(new Checkers());
+				games.add(new Checkers(new Person("Bart")));
+				games.add(new Checkers());
+				games.add(new Checkers());
+				games.add(new Checkers());
+				games.add(new Checkers());
+				games.add(new Checkers());
+				games.add(new Checkers());
+				games.add(new Checkers());
+				games.add(new Checkers());
+				games.add(new Checkers());
+				games.add(new Checkers());
+				games.add(new Checkers());
+				games.add(new Checkers());
+				games.add(new Checkers());
+
+				games.trimToSize();
 			}
 			catch (final Exception e)
 			{
 				Log.e(Utilities.LOG_TAG, e.getMessage());
 			}
-			
-			return game;
+
+			return games;
 		}
-		
-		
+
+
 		@Override
 		protected void onPostExecute(final ArrayList<GenericGame> games)
 		{
@@ -133,44 +150,19 @@ public class GamesListActivity extends SherlockListActivity
 				progressDialog.dismiss();
 			}
 		}
-		
-		
+
+
 		@Override
 		protected void onPreExecute()
 		{
 			progressDialog = new ProgressDialog(GamesListActivity.this);
-			progressDialog.setMessage("Loading Games...");
+			progressDialog.setMessage("Loading all of your games...");
 			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 			progressDialog.setTitle(R.string.games_list_activity_progressdialog_title);
 			progressDialog.show();
 		}
-		
-		@Override
-		protected void onProgressUpdate(final Long... l)
-		{
-			switch(l.length)
-			{
-				case 1:
-					progressDialog.setMax(l[0].intValue());
-					break;
-				case 2:
-					progressDialog.setProgress(l[0].intValue());
-					break;
-			}
-		}
-	
-	}
 
 
-	@Override
-	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data)
-	{
-		super.onActivityResult(requestCode, resultCode, data);
-
-		if (resultCode == LogoutActivity.LOGGED_OUT)
-		{
-			finish();
-		}
 	}
 
 
@@ -179,6 +171,7 @@ public class GamesListActivity extends SherlockListActivity
 
 
 		private ArrayList<GenericGame> games;
+		private Typeface typeface;
 
 
 		public GamesListAdapter(final Context context, final int textViewResourceId, final ArrayList<GenericGame> games)
@@ -186,6 +179,7 @@ public class GamesListActivity extends SherlockListActivity
 			super(context, textViewResourceId, games);
 
 			this.games = games;
+			typeface = Typeface.createFromAsset(getAssets(), "fonts/blue_highway_d.ttf");
 		}
 
 
@@ -199,7 +193,6 @@ public class GamesListActivity extends SherlockListActivity
 			}
 
 			final GenericGame game = games.get(position);
-			Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/blue_highway_d.ttf");
 
 			if (game != null)
 			{
@@ -240,13 +233,13 @@ public class GamesListActivity extends SherlockListActivity
 		}
 
 
+		private class ViewHolder
 		/**
 		 * made this li'l class while trying to optimize our listview. apparently it
 		 * helps performance
 		 * https://developer.android.com/training/improving-layouts/smooth-scrolling.html
 		 *
 		 */
-		private class ViewHolder
 		{
 
 

@@ -4,7 +4,6 @@ package edu.selu.android.classygames;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -91,10 +90,10 @@ public class NewGameActivity extends SherlockListActivity
 					people.add(new Person(id, friend.getString("name")));
 
 					publishProgress((long) i, id);
-				}				
+				}
 
 				people.trimToSize();
-				Collections.sort(people, new Sorter());
+				Collections.sort(people, new FacebookFriendsSorter());
 			}
 			catch (final Exception e)
 			{
@@ -159,6 +158,7 @@ public class NewGameActivity extends SherlockListActivity
 
 
 		private ArrayList<Person> people;
+		private Typeface typeface;
 
 
 		public PeopleAdapter(final Context context, final int textViewResourceId, final ArrayList<Person> people)
@@ -166,6 +166,7 @@ public class NewGameActivity extends SherlockListActivity
 			super(context, textViewResourceId, people);
 
 			this.people = people;
+			typeface = Typeface.createFromAsset(getAssets(), "fonts/blue_highway_d.ttf");
 		}
 
 
@@ -179,7 +180,6 @@ public class NewGameActivity extends SherlockListActivity
 			}
 
 			final Person person = people.get(position);
-			Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/blue_highway_d.ttf");
 
 			if (person != null)
 			{
@@ -235,7 +235,7 @@ public class NewGameActivity extends SherlockListActivity
 	}
 
 
-	private class Sorter implements Comparator<Person>
+	private class FacebookFriendsSorter implements Comparator<Person>
 	{
 
 
