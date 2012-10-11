@@ -19,6 +19,7 @@ public class Utilities
 
 
 	public final static String FONTS_BLUE_HIGHWAY_D = "fonts/blue_highway_d.ttf";
+	public final static String FONTS_SNELL_ROUND_HAND_BDSCR = "fonts/snell_round_hand_bdscr.otf";
 	public final static String LOG_TAG = "ClassyGames";
 	public static SharedPreferences sharedPreferences;
 

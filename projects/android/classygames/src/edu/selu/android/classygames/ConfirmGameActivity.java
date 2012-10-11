@@ -1,10 +1,14 @@
 package edu.selu.android.classygames;
 
 
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 
 public class ConfirmGameActivity extends SherlockActivity
@@ -46,10 +50,15 @@ public class ConfirmGameActivity extends SherlockActivity
 			{
 				this.id = id;
 				this.name = name;
+
+				ImageView personPicture = (ImageView) findViewById(R.id.confirm_game_activity_person_picture);
+				UrlImageViewHelper.setUrlDrawable(personPicture, Utilities.FACEBOOK_GRAPH_API_URL + this.id + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_LARGE_SSL);
+
+				TextView personName = (TextView) findViewById(R.id.confirm_game_activity_person_name);
+				personName.setTypeface(Typeface.createFromAsset(getAssets(), Utilities.FONTS_BLUE_HIGHWAY_D));
+				personName.setText(name);
 			}
 		}
-
-		Utilities.easyToast(ConfirmGameActivity.this, id + " " + name);
 	}
 
 

@@ -5,6 +5,10 @@
 	<string name="about_activity_about">Classy Games was developed by a team of six students attending Southeastern Louisiana University.</string>
 	<string name="app_name">Classy Games</string>
 	<string name="checkers_game_activity_title">Checkers Game</string>
+	<string name="confirm_game_activity_button_accept">Start Game!</string>
+	<string name="confirm_game_activity_button_deny">Nevermind&#8230;</string>
+	<string name="confirm_game_activity_description">Are you sure that you want to start a game with this person?</string>
+	<string name="confirm_game_activity_person_picture_description">Friend\'s Picture</string>
 	<string name="confirm_game_activity_title">Confirm Game</string>
 	<string name="games_list_activity_turn_theirs">Their Turn</string>
 	<string name="games_list_activity_turn_yours">Your Turn</string>
@@ -15,7 +19,7 @@
 	<string name="games_list_activity_progressdialog_title">Classy Games is working&#8230;</string>
 	<string name="login_with_facebook">Login with Facebook</string>
 	<string name="logout">Logout</string>
-	<string name="logout_activity_logout">Are you sure you want to logout of Facebook? You will need to login again to continue using Classy Games. You will keep on playing, right? After pressing this button, you will be returned to the Classy Games login screen.</string>
+	<string name="logout_activity_description">Are you sure you want to logout of Facebook? You will need to login again to continue using Classy Games. You will keep on playing, right? After pressing this button, you will be returned to the Classy Games login screen.</string>
 	<string name="logout_activity_title">Logout of Classy Games</string>
 	<string name="logout_of_facebook">Logout of Facebook</string>
 	<string name="main_activity_title">Classy Games</string>

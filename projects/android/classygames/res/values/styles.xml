@@ -2,6 +2,8 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 	<style name="ClassyGames">
 		<item name="android:background">@drawable/bg_bright</item>
+		<item name="android:paddingLeft">4dip</item>
+		<item name="android:paddingRight">4dip</item>
 	</style>
 	<style name="button_facebook">
 		<item name="android:background">@drawable/button_facebook</item>
@@ -9,6 +11,10 @@
 	</style>
 	<style name="button_pink">
 		<item name="android:background">@drawable/button_pink</item>
-		<item name="android:textColor">@color/black</item>
+		<item name="android:textColor">@color/gray_darker</item>
+	</style>
+	<style name="paragraph">
+		<item name="android:lineSpacingExtra">6dip</item>
+		<item name="android:textSize">17sp</item>
 	</style>
 </resources>
