@@ -3,8 +3,12 @@
 	<style name="ClassyGames">
 		<item name="android:background">@drawable/bg_bright</item>
 	</style>
-	<style name="facebook_button">
-		<item name="android:background">@drawable/facebook_button</item>
+	<style name="button_facebook">
+		<item name="android:background">@drawable/button_facebook</item>
 		<item name="android:textColor">@color/facebook_gray</item>
+	</style>
+	<style name="button_pink">
+		<item name="android:background">@drawable/button_pink</item>
+		<item name="android:textColor">@color/black</item>
 	</style>
 </resources>

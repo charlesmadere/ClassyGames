@@ -27,6 +27,6 @@
 			android:layout_height="wrap_content"
 			android:layout_width="fill_parent"
 			android:text="@string/logout_of_facebook"
-			style="@style/facebook_button" />
+			style="@style/button_facebook" />
 	</LinearLayout>
 </LinearLayout>

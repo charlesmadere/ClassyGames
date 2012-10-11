@@ -25,6 +25,6 @@
 			android:layout_height="wrap_content"
 			android:layout_width="fill_parent"
 			android:text="@string/login_with_facebook"
-			style="@style/facebook_button" />
+			style="@style/button_facebook" />
 	</LinearLayout>
 </LinearLayout>
