@@ -3,8 +3,10 @@ package edu.selu.android.classygames;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Shader.TileMode;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.util.Log;
@@ -18,11 +20,19 @@ public class Utilities
 {
 
 
-	public final static String FONTS_BLUE_HIGHWAY_D = "fonts/blue_highway_d.ttf";
-	public final static String FONTS_SNELL_ROUND_HAND_BDSCR = "fonts/snell_round_hand_bdscr.otf";
 	public final static String LOG_TAG = "ClassyGames";
 	public static SharedPreferences sharedPreferences;
 
+	// typeface data below
+	public final static int TYPEFACE_BLUE_HIGHWAY_D = 0;
+	public final static int TYPEFACE_SNELL_ROUND_HAND_BDSCR = 1;
+	private final static String TYPEFACE_BLUE_HIGHWAY_D_PATH = "fonts/blue_highway_d.ttf";
+	private final static String TYPEFACE_SNELL_ROUND_HAND_BDSCR_PATH = "fonts/snell_round_hand_bdscr.otf";
+	private static Typeface typefaceBlueHighwayD;
+	private static Typeface typefaceSnellRoundHandBDSCR;
+	// end typeface data
+
+	// facebook data below
 	private static Facebook facebook;
 	public final static String FACEBOOK_APP_ID = "324400870964487";
 	public final static String FACEBOOK_EXPIRES = "expires_in";
@@ -40,6 +50,7 @@ public class Utilities
 	public final static String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SMALL_SSL = FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SMALL + "&" + FACEBOOK_GRAPH_API_URL_PICTURE_SSL;
 	public final static String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE = FACEBOOK_GRAPH_API_URL_PICTURE + FACEBOOK_GRAPH_API_URL_PICTURE_TYPE + "square";
 	public final static String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE_SSL = FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE + "&" + FACEBOOK_GRAPH_API_URL_PICTURE_SSL;
+	// end facebook data
 
 
 	/**
@@ -133,7 +144,8 @@ public class Utilities
 
 
 	/**
-	 * Use this method to retrieve the global Facebook variable that our app uses. 
+	 * Use this method to retrieve the global Facebook variable that our app uses. This
+	 * method is good to use because it ensures that our Facebook variable isn't null.
 	 */
 	public static Facebook getFacebook()
 	{
@@ -143,6 +155,52 @@ public class Utilities
 		}
 
 		return facebook;
+	}
+
+
+	/**
+	 * <p>Returns to you a Typeface that you request.</p>
+	 * 
+	 * <p><strong>Examples</strong><br />
+	 * Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D);<br />
+	 * Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_SNELL_ROUND_HAND_BDSCR);</p>
+	 * <p><strong>An invalid example</strong><br />
+	 * Utilities.getTypeface(getAssets(), -1);</p>
+	 * 
+	 * @param assetManager
+	 * The getAssets() method. Just pass that sucker in here.
+	 * 
+	 * @param typeface
+	 * The int ID of the Typeface object that you want. This must be a valid int ID, as if
+	 * it's not, this method will return null.
+	 * 
+	 * @return
+	 * Returns the Typeface object that you requested. If an invalid int ID was passed into
+	 * this method, this method will then return null.
+	 */
+	public static Typeface getTypeface(final AssetManager assetManager, final int typeface)
+	{
+		switch (typeface)
+		{
+			case TYPEFACE_BLUE_HIGHWAY_D:
+				if (typefaceBlueHighwayD == null)
+				{
+					typefaceBlueHighwayD = Typeface.createFromAsset(assetManager, TYPEFACE_BLUE_HIGHWAY_D_PATH);
+				}
+
+				return typefaceBlueHighwayD;
+
+			case TYPEFACE_SNELL_ROUND_HAND_BDSCR:
+				if (typefaceSnellRoundHandBDSCR == null)
+				{
+					typefaceSnellRoundHandBDSCR = Typeface.createFromAsset(assetManager, TYPEFACE_SNELL_ROUND_HAND_BDSCR_PATH);
+				}
+
+				return typefaceSnellRoundHandBDSCR;
+
+			default:
+				return null;
+		}
 	}
 
 

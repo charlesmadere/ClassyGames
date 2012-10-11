@@ -1,8 +1,10 @@
 package edu.selu.android.classygames;
 
 
-import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,10 +19,6 @@ public class ConfirmGameActivity extends SherlockActivity
 
 	public final static String INTENT_DATA_PERSON_ID = "id";
 	public final static String INTENT_DATA_PERSON_NAME = "name";
-
-
-	private long id;
-	private String name;
 
 
 	@Override
@@ -48,15 +46,34 @@ public class ConfirmGameActivity extends SherlockActivity
 			}
 			else
 			{
-				this.id = id;
-				this.name = name;
-
 				ImageView personPicture = (ImageView) findViewById(R.id.confirm_game_activity_person_picture);
-				UrlImageViewHelper.setUrlDrawable(personPicture, Utilities.FACEBOOK_GRAPH_API_URL + this.id + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_LARGE_SSL);
+				UrlImageViewHelper.setUrlDrawable(personPicture, Utilities.FACEBOOK_GRAPH_API_URL + id + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_LARGE_SSL);
 
 				TextView personName = (TextView) findViewById(R.id.confirm_game_activity_person_name);
-				personName.setTypeface(Typeface.createFromAsset(getAssets(), Utilities.FONTS_BLUE_HIGHWAY_D));
+				personName.setTypeface(Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D));
 				personName.setText(name);
+
+				Button gameAccept = (Button) findViewById(R.id.confirm_game_activity_button_accept);
+				gameAccept.setTypeface(Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_SNELL_ROUND_HAND_BDSCR));
+				gameAccept.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(final View v)
+					{
+						Utilities.easyToastAndLog(ConfirmGameActivity.this, "YOU'RE WINNER");
+					}
+				});
+
+				Button gameDeny = (Button) findViewById(R.id.confirm_game_activity_button_deny);
+				gameDeny.setTypeface(Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_SNELL_ROUND_HAND_BDSCR));
+				gameDeny.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(View v)
+					{
+						Utilities.easyToastAndLog(ConfirmGameActivity.this, "YOU'RE LOSER");
+					}
+				});
 			}
 		}
 	}

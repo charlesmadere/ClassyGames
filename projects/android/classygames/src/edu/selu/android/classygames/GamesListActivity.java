@@ -178,7 +178,7 @@ public class GamesListActivity extends SherlockListActivity
 			super(context, textViewResourceId, games);
 
 			this.games = games;
-			typeface = Typeface.createFromAsset(getAssets(), Utilities.FONTS_BLUE_HIGHWAY_D);
+			typeface = Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D);
 		}
 
 
@@ -204,7 +204,7 @@ public class GamesListActivity extends SherlockListActivity
 
 				if (typeface == null)
 				{
-					typeface = Typeface.createFromAsset(getAssets(), Utilities.FONTS_BLUE_HIGHWAY_D);
+					typeface = Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D);
 				}
 
 				viewHolder.name = (TextView) convertView.findViewById(R.id.games_list_activity_listview_item_name);
