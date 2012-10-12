@@ -25,11 +25,17 @@ public class Utilities
 
 	// typeface data below
 	public final static int TYPEFACE_BLUE_HIGHWAY_D = 0;
-	public final static int TYPEFACE_SNELL_ROUND_HAND_BDSCR = 1;
+	public final static int TYPEFACE_BLUE_HIGHWAY_RG = 1;
+	public final static int TYPEFACE_SNELL_ROUNDHAND_BDSCR = 10;
+	public final static int TYPEFACE_SNELL_ROUNDHAND_BLKSCR = 11;
 	private final static String TYPEFACE_BLUE_HIGHWAY_D_PATH = "fonts/blue_highway_d.ttf";
-	private final static String TYPEFACE_SNELL_ROUND_HAND_BDSCR_PATH = "fonts/snell_round_hand_bdscr.otf";
+	private final static String TYPEFACE_BLUE_HIGHWAY_RD_PATH = "fonts/blue_highway_rg.ttf";
+	private final static String TYPEFACE_SNELL_ROUNDHAND_BDSCR_PATH = "fonts/snell_roundhand_bdscr.otf";
+	private final static String TYPEFACE_SNELL_ROUNDHAND_BLKSCR_PATH = "fonts/snell_roundhand_blkscr.otf";
 	private static Typeface typefaceBlueHighwayD;
+	private static Typeface typefaceBlueHighwayRG;
 	private static Typeface typefaceSnellRoundHandBDSCR;
+	private static Typeface typefaceSnellRoundHandBLKSCR;
 	// end typeface data
 
 	// facebook data below
@@ -190,13 +196,29 @@ public class Utilities
 
 				return typefaceBlueHighwayD;
 
-			case TYPEFACE_SNELL_ROUND_HAND_BDSCR:
+			case TYPEFACE_BLUE_HIGHWAY_RG:
+				if (typefaceBlueHighwayRG == null)
+				{
+					typefaceBlueHighwayRG = Typeface.createFromAsset(assetManager, TYPEFACE_BLUE_HIGHWAY_RD_PATH);
+				}
+
+				return typefaceBlueHighwayRG;
+
+			case TYPEFACE_SNELL_ROUNDHAND_BDSCR:
 				if (typefaceSnellRoundHandBDSCR == null)
 				{
-					typefaceSnellRoundHandBDSCR = Typeface.createFromAsset(assetManager, TYPEFACE_SNELL_ROUND_HAND_BDSCR_PATH);
+					typefaceSnellRoundHandBDSCR = Typeface.createFromAsset(assetManager, TYPEFACE_SNELL_ROUNDHAND_BDSCR_PATH);
 				}
 
 				return typefaceSnellRoundHandBDSCR;
+
+			case TYPEFACE_SNELL_ROUNDHAND_BLKSCR:
+				if (typefaceSnellRoundHandBLKSCR == null)
+				{
+					typefaceSnellRoundHandBLKSCR = Typeface.createFromAsset(assetManager, TYPEFACE_SNELL_ROUNDHAND_BLKSCR_PATH);
+				}
+
+				return typefaceSnellRoundHandBLKSCR;
 
 			default:
 				return null;

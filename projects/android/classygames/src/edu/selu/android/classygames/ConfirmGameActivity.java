@@ -51,7 +51,7 @@ public class ConfirmGameActivity extends SherlockActivity
 
 				TextView personName = (TextView) findViewById(R.id.confirm_game_activity_person_name);
 				personName.setText(name);
-				personName.setTypeface(Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D));
+				personName.setTypeface(Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_SNELL_ROUNDHAND_BLKSCR));
 
 				Button gameAccept = (Button) findViewById(R.id.confirm_game_activity_button_accept);
 				gameAccept.setTypeface(Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D));
