@@ -50,11 +50,10 @@ public class ConfirmGameActivity extends SherlockActivity
 				UrlImageViewHelper.setUrlDrawable(personPicture, Utilities.FACEBOOK_GRAPH_API_URL + id + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_LARGE_SSL);
 
 				TextView personName = (TextView) findViewById(R.id.confirm_game_activity_person_name);
-				personName.setTypeface(Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D));
 				personName.setText(name);
+				personName.setTypeface(Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D));
 
 				Button gameAccept = (Button) findViewById(R.id.confirm_game_activity_button_accept);
-				gameAccept.setTypeface(Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_SNELL_ROUND_HAND_BDSCR));
 				gameAccept.setOnClickListener(new OnClickListener()
 				{
 					@Override
@@ -65,11 +64,10 @@ public class ConfirmGameActivity extends SherlockActivity
 				});
 
 				Button gameDeny = (Button) findViewById(R.id.confirm_game_activity_button_deny);
-				gameDeny.setTypeface(Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_SNELL_ROUND_HAND_BDSCR));
 				gameDeny.setOnClickListener(new OnClickListener()
 				{
 					@Override
-					public void onClick(View v)
+					public void onClick(final View v)
 					{
 						Utilities.easyToastAndLog(ConfirmGameActivity.this, "YOU'RE LOSER");
 					}
