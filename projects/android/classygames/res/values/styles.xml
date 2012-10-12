@@ -1,19 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
+	<style name="button">
+		<item name="android:paddingBottom">12dip</item>
+		<item name="android:paddingLeft">16dip</item>
+		<item name="android:paddingRight">16dip</item>
+		<item name="android:paddingTop">12dip</item>
+		<item name="android:textColor">@color/gray_darker</item>
+		<item name="android:textSize">22sp</item>
+	</style>
+	<style name="button.blue">
+		<item name="android:background">@drawable/button_blue</item>
+		<item name="android:textColor">@color/gray_light</item>
+	</style>
+	<style name="button.gray">
+		<item name="android:background">@drawable/button_gray</item>
+	</style>
+	<style name="button.pink">
+		<item name="android:background">@drawable/button_pink</item>
+	</style>
 	<style name="ClassyGames">
 		<item name="android:background">@drawable/bg_bright</item>
-		<item name="android:paddingBottom">8dip</item>
-		<item name="android:paddingLeft">4dip</item>
-		<item name="android:paddingRight">4dip</item>
-		<item name="android:paddingTop">8dip</item>
 	</style>
-	<style name="button_facebook">
+	<style name="facebook_button">
 		<item name="android:background">@drawable/button_facebook</item>
 		<item name="android:textColor">@color/facebook_gray</item>
-	</style>
-	<style name="button_pink">
-		<item name="android:background">@drawable/button_pink</item>
-		<item name="android:textColor">@color/gray_darker</item>
+		<item name="android:textSize">20sp</item>
 	</style>
 	<style name="paragraph">
 		<item name="android:lineSpacingExtra">6dip</item>

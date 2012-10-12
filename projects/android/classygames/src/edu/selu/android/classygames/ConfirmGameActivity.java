@@ -54,6 +54,7 @@ public class ConfirmGameActivity extends SherlockActivity
 				personName.setTypeface(Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D));
 
 				Button gameAccept = (Button) findViewById(R.id.confirm_game_activity_button_accept);
+				gameAccept.setTypeface(Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D));
 				gameAccept.setOnClickListener(new OnClickListener()
 				{
 					@Override
@@ -64,12 +65,13 @@ public class ConfirmGameActivity extends SherlockActivity
 				});
 
 				Button gameDeny = (Button) findViewById(R.id.confirm_game_activity_button_deny);
+				gameDeny.setTypeface(Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D));
 				gameDeny.setOnClickListener(new OnClickListener()
 				{
 					@Override
 					public void onClick(final View v)
 					{
-						Utilities.easyToastAndLog(ConfirmGameActivity.this, "YOU'RE LOSER");
+						finish();
 					}
 				});
 			}

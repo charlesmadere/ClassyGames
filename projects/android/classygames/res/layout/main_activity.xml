@@ -3,6 +3,8 @@
 	android:layout_height="fill_parent"
 	android:layout_width="fill_parent"
 	android:orientation="vertical"
+	android:paddingLeft="4dip"
+	android:paddingRight="4dip"
 	style="@style/ClassyGames">
 	<ImageView
 		android:adjustViewBounds="true"
@@ -23,6 +25,6 @@
 			android:layout_height="wrap_content"
 			android:layout_width="fill_parent"
 			android:text="@string/login_with_facebook"
-			style="@style/button_facebook" />
+			style="@style/facebook_button" />
 	</LinearLayout>
 </LinearLayout>
