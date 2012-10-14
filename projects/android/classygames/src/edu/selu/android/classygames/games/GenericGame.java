@@ -10,15 +10,15 @@ public abstract class GenericGame
 {
 
 
-	protected int id;
 	protected Person person;
 	protected SimpleDateFormat lastMoveTime;
+	protected String id;
 	private final static String lastMoveTimeFormat = "MMMM dd, yyyy hh:mm a";
 
 
 	public GenericGame()
 	{
-		id = 0;
+		id = new String();
 		person = new Person();
 		lastMoveTime = new SimpleDateFormat(lastMoveTimeFormat, Locale.US);
 	}
@@ -26,7 +26,7 @@ public abstract class GenericGame
 
 	public GenericGame(final Person person)
 	{
-		id = 0;
+		id = new String();
 		this.person = person;
 		lastMoveTime = new SimpleDateFormat(lastMoveTimeFormat, Locale.US);
 	}
@@ -34,13 +34,13 @@ public abstract class GenericGame
 
 	public GenericGame(final Person person, final SimpleDateFormat lastMoveTime)
 	{
-		id = 0;
+		id = new String();
 		this.person = person;
 		this.lastMoveTime = new SimpleDateFormat(lastMoveTimeFormat, Locale.US);
 	}
 
 
-	public GenericGame(final int id, final Person person)
+	public GenericGame(final String id, final Person person)
 	{
 		this.id = id;
 		this.person = person;
@@ -48,7 +48,7 @@ public abstract class GenericGame
 	}
 
 
-	public GenericGame(final int id, final Person person, final SimpleDateFormat lastMoveTime)
+	public GenericGame(final String id, final Person person, final SimpleDateFormat lastMoveTime)
 	{
 		this.id = id;
 		this.person = person;
@@ -56,16 +56,13 @@ public abstract class GenericGame
 	}
 
 
-//	abstract public void run();
-
-
-	public int getId()
+	public String getId()
 	{
 		return id;
 	}
 
 
-	void setId(final int id)
+	void setId(final String id)
 	{
 		this.id = id;
 	}

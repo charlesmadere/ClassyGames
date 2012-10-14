@@ -1,6 +1,7 @@
 package edu.selu.android.classygames;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,8 +18,8 @@ public class ConfirmGameActivity extends SherlockActivity
 {
 
 
-	public final static String INTENT_DATA_PERSON_ID = "id";
-	public final static String INTENT_DATA_PERSON_NAME = "name";
+	private long id;
+	private String name;
 
 
 	@Override
@@ -37,10 +38,10 @@ public class ConfirmGameActivity extends SherlockActivity
 		}
 		else
 		{
-			final long id = bundle.getLong(INTENT_DATA_PERSON_ID);
-			final String name = bundle.getString(INTENT_DATA_PERSON_NAME);
+			id = bundle.getLong(CheckersGameActivity.INTENT_DATA_PERSON_ID);
+			name = bundle.getString(CheckersGameActivity.INTENT_DATA_PERSON_NAME);
 
-			if (id == 0 || name == null)
+			if (id <= 0  || name == null)
 			{
 				activityHasError();
 			}
@@ -60,7 +61,13 @@ public class ConfirmGameActivity extends SherlockActivity
 					@Override
 					public void onClick(final View v)
 					{
-						Utilities.easyToastAndLog(ConfirmGameActivity.this, "YOU'RE WINNER");
+						Intent intent = new Intent(ConfirmGameActivity.this, CheckersGameActivity.class);
+						intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_ID, id);
+						intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_NAME, name);
+
+						// start the ConfirmGameActivity with a bit of extra data. We're passing it both
+						// the id and the name of the facebook person that the user has decided to challenge
+						startActivity(intent);
 					}
 				});
 
@@ -80,8 +87,8 @@ public class ConfirmGameActivity extends SherlockActivity
 
 
 	private void activityHasError()
-	// something went wrong when the NewGameActivity went to pass this activity some data
 	{
+		Utilities.easyToastAndLogError(ConfirmGameActivity.this, ConfirmGameActivity.this.getString(R.string.confirm_game_activity_data_error));
 		finish();
 	}
 

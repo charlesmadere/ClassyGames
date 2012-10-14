@@ -12,6 +12,8 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 
@@ -19,8 +21,18 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 {
 
 
-	TableLayout layout;
+	public final static String INTENT_DATA_GAME_ID = "GAME_ID";
+	public final static String INTENT_DATA_PERSON_ID = "GAME_PERSON_ID";
+	public final static String INTENT_DATA_PERSON_NAME = "GAME_PERSON_NAME";
+
+
+	private String id;
+	private Long personId;
+	private String personName;
+
+
 	ImageButton[][] buttons;
+	TableLayout layout;
 
 
 	@Override
@@ -29,6 +41,20 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		super.onCreate(savedInstanceState);
 		// setContentView(R.layout.checkers_game_activity);
 		Utilities.styleActionBar(getResources(), getSupportActionBar());
+
+		// retrieve data passed to this activity
+		final Bundle bundle = getIntent().getExtras();
+
+		if (bundle == null)
+		{
+			activityHasError();
+		}
+		else
+		{
+			id = bundle.getString(INTENT_DATA_GAME_ID);
+			personId = bundle.getLong(INTENT_DATA_PERSON_ID);
+			personName = bundle.getString(INTENT_DATA_PERSON_NAME);
+		}
 
 		Display display = getWindowManager().getDefaultDisplay();
 
@@ -92,10 +118,19 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 
 
 	@Override
-	public void onClick(View arg0)
+	public void onClick(final View view)
 	{
-		ImageButton clickedButton = (ImageButton) findViewById(arg0.getId());
+		ImageButton clickedButton = (ImageButton) findViewById(view.getId());
 		clickedButton.setBackgroundColor(Color.CYAN);
+	}
+
+
+	@Override
+	public boolean onCreateOptionsMenu(final Menu menu)
+	{
+		MenuInflater inflater = getSupportMenuInflater();
+		inflater.inflate(R.menu.checkers_game_activity, menu);
+		return super.onCreateOptionsMenu(menu);
 	}
 
 
@@ -108,9 +143,27 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 				finish();
 				return true;
 
+			case R.id.checkers_game_activity_actionbar_send_move:
+				// TODO send this move to the server
+				Utilities.easyToast(CheckersGameActivity.this, "sent");
+				return true;
+
+			case R.id.checkers_game_activity_actionbar_undo_move:
+				// TODO undo the move that the user made on the board. this should not have any
+				// kind of server connectivity
+				Utilities.easyToast(CheckersGameActivity.this, "undone");
+				return true;
+
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+
+	private void activityHasError()
+	{
+		Utilities.easyToastAndLogError(CheckersGameActivity.this, CheckersGameActivity.this.getString(R.string.checkers_game_activity_data_error));
+		finish();
 	}
 
 

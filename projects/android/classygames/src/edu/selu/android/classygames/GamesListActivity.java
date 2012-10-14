@@ -47,15 +47,6 @@ public class GamesListActivity extends SherlockListActivity
 
 
 	@Override
-	public boolean onCreateOptionsMenu(final Menu menu)
-	{
-		MenuInflater inflater = getSupportMenuInflater();
-		inflater.inflate(R.menu.games_list_activity, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
-
-
-	@Override
 	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data)
 	{
 		super.onActivityResult(requestCode, resultCode, data);
@@ -68,24 +59,33 @@ public class GamesListActivity extends SherlockListActivity
 
 
 	@Override
+	public boolean onCreateOptionsMenu(final Menu menu)
+	{
+		MenuInflater inflater = getSupportMenuInflater();
+		inflater.inflate(R.menu.games_list_activity, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+
+	@Override
 	public boolean onOptionsItemSelected(final MenuItem item)
 	{
 		switch (item.getItemId()) 
 		{
-			case R.id.actionbar_about:
+			case R.id.games_list_activity_actionbar_about:
 				startActivity(new Intent(GamesListActivity.this, AboutActivity.class));
 				return true;
 
-			case R.id.actionbar_logout:
+			case R.id.games_list_activity_actionbar_logout:
 				startActivityForResult(new Intent(GamesListActivity.this, LogoutActivity.class), 0);
 				return true;
 
-			case R.id.actionbar_new_game:
+			case R.id.games_list_activity_actionbar_new_game:
 				startActivity(new Intent(GamesListActivity.this, NewGameActivity.class));
 				return true;
 
-			case R.id.actionbar_refresh:
-				startActivity(new Intent(GamesListActivity.this, CheckersGameActivity.class));
+			case R.id.games_list_activity_actionbar_refresh:
+				new AsyncPopulateGamesList().execute();
 				return true;
 
 			default:
@@ -156,7 +156,7 @@ public class GamesListActivity extends SherlockListActivity
 		protected void onPreExecute()
 		{
 			progressDialog = new ProgressDialog(GamesListActivity.this);
-			progressDialog.setMessage("Loading all of your games...");
+			progressDialog.setMessage(GamesListActivity.this.getString(R.string.games_list_activity_progressdialog_message));
 			progressDialog.setTitle(R.string.games_list_activity_progressdialog_title);
 			progressDialog.show();
 		}
@@ -196,6 +196,7 @@ public class GamesListActivity extends SherlockListActivity
 			if (game != null)
 			{
 				ViewHolder viewHolder = new ViewHolder();
+
 				viewHolder.picture = (ImageView) convertView.findViewById(R.id.games_list_activity_listview_item_picture);
 				if (viewHolder.picture != null)
 				{
@@ -225,7 +226,14 @@ public class GamesListActivity extends SherlockListActivity
 					@Override
 					public void onClick(final View v)
 					{
-						Utilities.easyToastAndLog(GamesListActivity.this, "\"" + game.getPerson().getName() + "\" \"" + game.getLastMoveTime().toString() + "\"");
+						Intent intent = new Intent(GamesListActivity.this, CheckersGameActivity.class);
+						intent.putExtra(CheckersGameActivity.INTENT_DATA_GAME_ID, game.getId());
+						intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_ID, game.getPerson().getId());
+						intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_NAME, game.getPerson().getName());
+
+						// start the ConfirmGameActivity with a bit of extra data. We're passing it both
+						// the id and the name of the facebook person that the user clicked on
+						startActivity(intent);
 					}
 				};
 

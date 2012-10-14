@@ -45,7 +45,7 @@ public class Checkers extends GenericGame
 	}
 
 
-	public Checkers(final int id, final Person person, final Resources resources)
+	public Checkers(final String id, final Person person, final Resources resources)
 	{
 		super(id, person);
 
@@ -54,7 +54,7 @@ public class Checkers extends GenericGame
 	}
 
 
-	public Checkers(final int id, final Person person, final SimpleDateFormat lastMoveTime, final Resources resources)
+	public Checkers(final String id, final Person person, final SimpleDateFormat lastMoveTime, final Resources resources)
 	{
 		super(id, person, lastMoveTime);
 

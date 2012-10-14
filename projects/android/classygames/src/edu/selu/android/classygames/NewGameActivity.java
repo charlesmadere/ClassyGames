@@ -123,7 +123,7 @@ public class NewGameActivity extends SherlockListActivity
 		protected void onPreExecute()
 		{
 			progressDialog = new ProgressDialog(NewGameActivity.this);
-			progressDialog.setMessage("Retrieving all of your Facebook friends...");
+			progressDialog.setMessage(NewGameActivity.this.getString(R.string.new_game_activity_progressdialog_message));
 			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 			progressDialog.setTitle(R.string.new_game_activity_progressdialog_title);
 			progressDialog.show();
@@ -209,11 +209,11 @@ public class NewGameActivity extends SherlockListActivity
 					public void onClick(final View v)
 					{
 						Intent intent = new Intent(NewGameActivity.this, ConfirmGameActivity.class);
-						intent.putExtra(ConfirmGameActivity.INTENT_DATA_PERSON_ID, person.getId());
-						intent.putExtra(ConfirmGameActivity.INTENT_DATA_PERSON_NAME, person.getName());
+						intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_ID, person.getId());
+						intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_NAME, person.getName());
 
 						// start the ConfirmGameActivity with a bit of extra data. We're passing it both
-						// the id and name of the facebook person that the user clicked on
+						// the id and the name of the facebook person that the user clicked on
 						startActivity(intent);
 					}
 				};
