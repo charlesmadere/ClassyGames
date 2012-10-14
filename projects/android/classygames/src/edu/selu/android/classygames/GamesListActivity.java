@@ -41,7 +41,7 @@ public class GamesListActivity extends SherlockListActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.games_list_activity);
 		Utilities.styleActionBar(getResources(), getSupportActionBar(), false);
-		
+
 		new AsyncPopulateGamesList().execute();
 	}
 

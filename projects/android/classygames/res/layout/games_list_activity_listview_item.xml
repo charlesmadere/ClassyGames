@@ -18,6 +18,7 @@
 		android:layout_width="48dip"
 		android:src="@drawable/notification" />
 	<TextView
+		android:ellipsize="end"
 		android:gravity="center_vertical"
 		android:id="@+id/games_list_activity_listview_item_name"
 		android:layout_alignParentRight="true"
@@ -30,6 +31,7 @@
 		android:textColor="@color/gray_darker"
 		android:textSize="19sp" />
 	<TextView
+		android:ellipsize="end"
 		android:gravity="center_vertical"
 		android:id="@+id/games_list_activity_listview_item_time"
 		android:layout_alignParentBottom="true"

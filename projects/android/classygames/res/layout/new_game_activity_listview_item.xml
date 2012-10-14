@@ -16,6 +16,7 @@
 		android:layout_height="fill_parent"
 		android:layout_width="48dip" />
 	<TextView
+		android:ellipsize="end"
 		android:id="@+id/new_game_activity_listview_item_name"
 		android:gravity="center_vertical"
 		android:layout_height="fill_parent"
