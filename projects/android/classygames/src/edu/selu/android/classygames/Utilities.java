@@ -1,6 +1,9 @@
 package edu.selu.android.classygames;
 
 
+import java.io.InputStream;
+import java.net.URL;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
@@ -8,6 +11,7 @@ import android.content.res.Resources;
 import android.graphics.Shader.TileMode;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
@@ -277,6 +281,28 @@ public class Utilities
 	public static void styleActionBar(final Resources resources, final ActionBar actionBar)
 	{
 		styleActionBar(resources, actionBar, true);
+	}
+	
+	/**
+	* <p>Simple class that handles pulling an image from a URL<p>
+	* 
+	* <p><strong>Examples</strong><br />
+	* Utilities.LoadImageFRomWebOperations(myURL);<p>
+	* 
+	*/
+	public static Drawable LoadImageFromWebOperations(String url)
+	{
+		try
+		{
+			InputStream is = (InputStream) new URL(url).getContent();
+			Drawable d = Drawable.createFromStream(is, "src");
+			return d;
+		}
+		catch (Exception e)
+		{
+			Log.e(LOG_TAG, "Image Load Failed" + e);
+			return null;
+		}
 	}
 
 

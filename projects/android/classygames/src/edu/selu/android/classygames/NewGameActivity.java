@@ -12,6 +12,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -63,7 +64,7 @@ public class NewGameActivity extends SherlockListActivity
 		}
 	}
 
-
+	
 	private final class AsyncPopulateFacebookFriends extends AsyncTask<Void, Long, ArrayList<Person>>
 	{
 
@@ -189,7 +190,10 @@ public class NewGameActivity extends SherlockListActivity
 				viewHolder.picture = (ImageView) convertView.findViewById(R.id.new_game_activity_listview_item_picture);
 				if (viewHolder.picture != null)
 				{
-					UrlImageViewHelper.setUrlDrawable(viewHolder.picture, Utilities.FACEBOOK_GRAPH_API_URL + person.getId() + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE_SSL);
+					
+					new AsyncPopulatePictures(viewHolder).execute(person);
+					//UrlImageViewHelper.setUrlDrawable(viewHolder.picture, Utilities.FACEBOOK_GRAPH_API_URL + person.getId() + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE_SSL);
+
 				}
 
 				if (typeface == null)
@@ -225,6 +229,41 @@ public class NewGameActivity extends SherlockListActivity
 
 			return convertView;
 		}
+		
+		
+		private final class AsyncPopulatePictures extends AsyncTask<Person, Long ,Drawable>
+		{
+			Drawable drawable;
+			ViewHolder viewHolder;
+			
+			AsyncPopulatePictures(ViewHolder vH)
+			{
+				super();
+				viewHolder = vH;
+			}
+
+			@Override
+			protected Drawable doInBackground(Person... person) 
+			{
+				try
+				{
+					drawable = Utilities.LoadImageFromWebOperations(Utilities.FACEBOOK_GRAPH_API_URL + person[0].getId() + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE_SSL);
+				}
+				catch(Exception e)
+				{
+					Log.e("Classy Games", "Image Load Failed: " + e);
+				}
+				
+				return drawable;
+			} 
+			
+			@Override
+			protected void onPostExecute(Drawable result)
+			{
+				viewHolder.picture.setImageDrawable(result);
+			}
+			
+		}
 
 
 		private class ViewHolder
@@ -258,8 +297,7 @@ public class NewGameActivity extends SherlockListActivity
 			return geo.getName().compareToIgnoreCase(jarrad.getName());
 		}
 
-
 	}
-
+	
 
 }
