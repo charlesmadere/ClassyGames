@@ -126,6 +126,7 @@ public class NewGameActivity extends SherlockListActivity
 			progressDialog.setMessage(NewGameActivity.this.getString(R.string.new_game_activity_progressdialog_message));
 			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 			progressDialog.setTitle(R.string.new_game_activity_progressdialog_title);
+			
 			progressDialog.show();
 		}
 

@@ -9,6 +9,7 @@
 	android:paddingTop="8dip"
 	style="@style/ClassyGames">
 	<ImageView
+		android:adjustViewBounds="true"
 		android:contentDescription="@string/confirm_game_activity_person_picture_description"
 		android:id="@+id/confirm_game_activity_person_picture"
 		android:layout_height="224dip"

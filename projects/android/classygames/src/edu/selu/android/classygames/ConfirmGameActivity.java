@@ -86,13 +86,6 @@ public class ConfirmGameActivity extends SherlockActivity
 	}
 
 
-	private void activityHasError()
-	{
-		Utilities.easyToastAndLogError(ConfirmGameActivity.this, ConfirmGameActivity.this.getString(R.string.confirm_game_activity_data_error));
-		finish();
-	}
-
-
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item)
 	{
@@ -105,6 +98,13 @@ public class ConfirmGameActivity extends SherlockActivity
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+
+	private void activityHasError()
+	{
+		Utilities.easyToastAndLogError(ConfirmGameActivity.this, ConfirmGameActivity.this.getString(R.string.confirm_game_activity_data_error));
+		finish();
 	}
 
 

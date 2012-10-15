@@ -10,12 +10,12 @@
 		android:layout_height="wrap_content"
 		android:layout_width="fill_parent" />
 	<TextView
+		android:gravity="center_vertical"
 		android:id="@android:id/empty"
-		android:layout_height="wrap_content"
+		android:layout_height="fill_parent"
 		android:layout_width="fill_parent"
-		android:lineSpacingExtra="6dip"
 		android:paddingLeft="8dip"
 		android:paddingRight="8dip"
 		android:text="@string/new_game_activity_listview_no_friends"
-		android:textSize="17sp" />
+		style="@style/paragraph" />
 </LinearLayout>
