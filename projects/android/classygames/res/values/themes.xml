@@ -7,5 +7,7 @@
 	<style name="Widget.Styled.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
 		<item name="background">@drawable/bg_actionbar</item>
 		<item name="android:background">@drawable/bg_actionbar</item>
+		<item name="backgroundSplit">@drawable/bg_actionbar</item>
+		<item name="android:backgroundSplit">@drawable/bg_actionbar</item>
 	</style>
 </resources>
