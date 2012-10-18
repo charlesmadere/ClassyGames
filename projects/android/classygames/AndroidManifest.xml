@@ -30,6 +30,12 @@
 			android:theme="@style/Theme.Styled">
 		</activity>
 		<activity
+			android:label="@string/amazon_activity_title"
+			android:name=".AmazonActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/Theme.Styled">
+		</activity>
+		<activity
 			android:label="@string/checkers_game_activity_title" 
 			android:name=".CheckersGameActivity"
 			android:screenOrientation="portrait"

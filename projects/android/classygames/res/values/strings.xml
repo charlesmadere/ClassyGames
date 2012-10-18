@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="about">About</string>
-	<string name="about_activity_title">About</string>
 	<string name="about_activity_about">Classy Games was developed by a team of six students attending Southeastern Louisiana University.</string>
+	<string name="about_activity_title">About</string>
+	<string name="amazon_activity_send_data">Send Data</string>
+	<string name="amazon_activity_title">Amazon Activity</string>
 	<string name="app_name">Classy Games</string>
 	<string name="checkers_game_activity_title">Checkers Game</string>
 	<string name="checkers_game_activity_data_error">Error in instantiating the game.</string>
