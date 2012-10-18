@@ -1,0 +1,81 @@
+<!doctype html>
+
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<style type="text/css">
+			h1, h2, h3
+			{
+				font-family: sans-serif;
+			}
+
+			p.code
+			{
+				font-family: monospace;
+			}
+		</style>
+		<title>eclipse_config</title>
+	</head>
+
+
+	<body>
+		<h1>eclipse_config</h1>
+		<p>I'm working on the beginning stages of getting some integration of our app with Amazon Web Services (AWS). The first step of this is including the AWS Android SDK with our existing Android Eclipse project. However, after doing this I was never able to properly launch our app without Eclipse completely bugging out, locking up, crashing, throwing up tons of error messages... you get the picture.</p>
+		<p>So I've found a fix for this that all of you are almost definitely going to need. It wouldn't hurt to make these configuration changes now so that you'll be ready for when I do finally make some commits of our then AWS enabled code.</p>
+		<p>First off, you'll need to find the eclipse.ini file. It's in the root folder of your eclipse directory. So for me, the file was located at C:\eclipse\eclipse.ini. Anyway you need to open it with notepad and make a few simple changes.</p>
+
+		<h3>Original File</h3>
+		<p class="code">
+			-startup<br />
+			plugins/org.eclipse.equinox.launcher_1.3.0.v20120522-1813.jar<br />
+			--launcher.library<br />
+			plugins/org.eclipse.equinox.launcher.win32.win32.x86_64_1.1.200.v20120522-1813<br />
+			-product<br />
+			org.eclipse.epp.package.jee.product<br />
+			--launcher.defaultAction<br />
+			openFile<br />
+			--launcher.XXMaxPermSize<br />
+			256M<br />
+			-showsplash<br />
+			org.eclipse.platform<br />
+			--launcher.XXMaxPermSize<br />
+			256m<br />
+			--launcher.defaultAction<br />
+			openFile<br />
+			-vmargs<br />
+			-Dosgi.requiredJavaVersion=1.5<br />
+			-Dhelp.lucene.tokenizer=standard<br />
+			-Xms40m<br />
+			-Xmx512m
+		</p>
+
+		<h3>Modified File</h3>
+		<p class="code">
+			-startup<br />
+			plugins/org.eclipse.equinox.launcher_1.3.0.v20120522-1813.jar<br />
+			--launcher.library<br />
+			plugins/org.eclipse.equinox.launcher.win32.win32.x86_64_1.1.200.v20120522-1813<br />
+			-product<br />
+			org.eclipse.epp.package.jee.product<br />
+			--launcher.defaultAction<br />
+			openFile<br />
+			--launcher.XXMaxPermSize<br />
+			1024M<br />
+			-showsplash<br />
+			org.eclipse.platform<br />
+			--launcher.XXMaxPermSize<br />
+			2048m<br />
+			--launcher.defaultAction<br />
+			openFile<br />
+			-vmargs<br />
+			-Dosgi.requiredJavaVersion=1.5<br />
+			-Dhelp.lucene.tokenizer=standard<br />
+			-Xms2048m<br />
+			-Xmx4096m<br />
+		</p>
+
+		<p>The values that I changed (all are bolded) correspond to memory allocations. Basically all that I've done is allow Eclipse to consume more of my system's memory than it does by default. Note that those values are what I set for my laptop, which has 8GB of memory. On my desktop (16GB) I allocated a good bit more in each of those sections. If your system has 4GB you're going to want to cut back a little bit from what I have up there.</p>
+	</body>
+
+</html>
