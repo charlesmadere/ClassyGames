@@ -17,6 +17,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.facebook.android.Facebook;
 
 
@@ -41,6 +43,11 @@ public class Utilities
 	private static Typeface typefaceSnellRoundHandBDSCR;
 	private static Typeface typefaceSnellRoundHandBLKSCR;
 	// end typeface data
+
+	// amazon data below
+	private static AWSCredentials amazonCredentials;
+	public final static String AMAZON_DATABASE_DOMAIN_PLAYERS = "";
+	// end amazon data
 
 	// facebook data below
 	private static Facebook facebook;
@@ -150,6 +157,22 @@ public class Utilities
 	{
 		easyToast(context, message);
 		Log.e(LOG_TAG, message);
+	}
+
+
+	/**
+	 * Use this method to retrieve that global AmazonCredentials variable that our app uses.
+	 * This method is good to use because it ensures that our AmazonCredentials variable
+	 * isn't null.
+	 */
+	public static AWSCredentials getAmazonCredentials()
+	{
+		if (amazonCredentials == null)
+		{
+			amazonCredentials = new BasicAWSCredentials(AmazonConstants.AMAZON_ACCESS_KEY_ID, AmazonConstants.AMAZON_SECRET_KEY);
+		}
+
+		return amazonCredentials;
 	}
 
 
@@ -282,21 +305,23 @@ public class Utilities
 	{
 		styleActionBar(resources, actionBar, true);
 	}
-	
+
+
 	/**
 	* <p>Simple class that handles pulling an image from a URL<p>
 	* 
 	* <p><strong>Examples</strong><br />
 	* Utilities.LoadImageFRomWebOperations(myURL);<p>
 	* 
+	* @param url
+	* The URL to the image you want to download.
 	*/
-	public static Drawable LoadImageFromWebOperations(String url)
+	public static Drawable loadImageFromWebOperations(final String url)
 	{
 		try
 		{
 			InputStream is = (InputStream) new URL(url).getContent();
-			Drawable d = Drawable.createFromStream(is, "src");
-			return d;
+			return Drawable.createFromStream(is, "src");
 		}
 		catch (Exception e)
 		{
