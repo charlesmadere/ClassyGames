@@ -4,12 +4,6 @@
 	android:layout_width="fill_parent"
 	android:orientation="vertical"
 	style="@style/ClassyGames">
-	<ImageView
-		android:adjustViewBounds="true"
-		android:contentDescription="@string/games_list_activity_turn_yours"
-		android:layout_height="wrap_content"
-		android:layout_width="fill_parent"
-		android:src="@drawable/turn_yours" />
 	<ListView
 		android:cacheColorHint="#00000000"
 		android:id="@+id/android:list"

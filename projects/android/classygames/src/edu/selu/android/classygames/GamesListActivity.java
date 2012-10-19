@@ -111,15 +111,17 @@ public class GamesListActivity extends SherlockListActivity
 				// TODO: this code will eventually be replaced by an actual call to our
 				// server. This call will ask the server for a games list
 
-				games.add(new Checkers());
-				games.add(new Checkers(new Person("Bart")));
-				games.add(new Checkers());
-				games.add(new Checkers());
-				games.add(new Checkers());
-				games.add(new Checkers());
-				games.add(new Checkers());
+				games.add(new Checkers(new Person("Your Turn")));
+				games.add(new Checkers(new Person("Charles Madere")));
+				games.add(new Checkers(new Person("Bart Simpson")));
+				games.add(new Checkers(new Person("Tristan Kidder")));
+				games.add(new Checkers(new Person("Geonathon Sena")));
 				games.add(new Checkers());
 				games.add(new Checkers());
+				games.add(new Checkers());
+				games.add(new Checkers());
+				games.add(new Checkers());
+				games.add(new Checkers(new Person("Their Turn")));
 				games.add(new Checkers());
 				games.add(new Checkers());
 				games.add(new Checkers());
@@ -190,54 +192,74 @@ public class GamesListActivity extends SherlockListActivity
 				LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_item, null);
 			}
-
+			
 			final GenericGame game = games.get(position);
-
+			
 			if (game != null)
 			{
+				
+				LayoutInflater layoutInflater = (LayoutInflater) getSystemService( Context.LAYOUT_INFLATER_SERVICE);
 				ViewHolder viewHolder = new ViewHolder();
-
-				viewHolder.picture = (ImageView) convertView.findViewById(R.id.games_list_activity_listview_item_picture);
-				if (viewHolder.picture != null)
+				
+				if( game.getPerson().getName() == "Their Turn" )
 				{
-
+					convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_their_turn, null);
+					viewHolder.picture = (ImageView) convertView.findViewById(R.drawable.turn_theirs);
 				}
-
-				if (typeface == null)
+				else if( game.getPerson().getName() == "Your Turn" )
 				{
-					typeface = Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D);
+					convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_your_turn, null);
+					viewHolder.picture = (ImageView) convertView.findViewById(R.drawable.turn_yours);
 				}
-
-				viewHolder.name = (TextView) convertView.findViewById(R.id.games_list_activity_listview_item_name);
-				if (viewHolder.name != null)
+				else
 				{
-					viewHolder.name.setText(game.getPerson().getName());
-					viewHolder.name.setTypeface(typeface);
-				}
-
-				viewHolder.time = (TextView) convertView.findViewById(R.id.games_list_activity_listview_item_time);
-				if (viewHolder.time != null)
-				{
-					viewHolder.time.setText(game.getLastMoveTime());
-				}
-
-				viewHolder.onClickListener = new OnClickListener()
-				{
-					@Override
-					public void onClick(final View v)
+					layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+					convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_item, null);
+					viewHolder = new ViewHolder();
+					viewHolder.picture = (ImageView) convertView.findViewById(R.id.games_list_activity_listview_item_picture);
+					
+					if (viewHolder.picture != null)
 					{
-						Intent intent = new Intent(GamesListActivity.this, CheckersGameActivity.class);
-						intent.putExtra(CheckersGameActivity.INTENT_DATA_GAME_ID, game.getId());
-						intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_ID, game.getPerson().getId());
-						intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_NAME, game.getPerson().getName());
 
-						// start the ConfirmGameActivity with a bit of extra data. We're passing it both
-						// the id and the name of the facebook person that the user clicked on
-						startActivity(intent);
 					}
-				};
 
-				convertView.setOnClickListener(viewHolder.onClickListener);
+					if (typeface == null)
+					{
+						typeface = Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D);
+					}
+
+					viewHolder.name = (TextView) convertView.findViewById(R.id.games_list_activity_listview_item_name);
+					if (viewHolder.name != null)
+					{
+						viewHolder.name.setText(game.getPerson().getName());
+						viewHolder.name.setTypeface(typeface);
+					}
+
+					viewHolder.time = (TextView) convertView.findViewById(R.id.games_list_activity_listview_item_time);
+					if (viewHolder.time != null)
+					{
+						viewHolder.time.setText(game.getLastMoveTime());
+					}	
+					
+					viewHolder.onClickListener = new OnClickListener()
+					{
+						@Override
+						public void onClick(final View v)
+						{
+							Intent intent = new Intent(GamesListActivity.this, CheckersGameActivity.class);
+							intent.putExtra(CheckersGameActivity.INTENT_DATA_GAME_ID, game.getId());
+							intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_ID, game.getPerson().getId());
+							intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_NAME, game.getPerson().getName());
+
+							// start the ConfirmGameActivity with a bit of extra data. We're passing it both
+							// the id and the name of the facebook person that the user clicked on
+							startActivity(intent);
+						}
+					};
+					
+					convertView.setOnClickListener(viewHolder.onClickListener);
+				}
+
 				convertView.setTag(viewHolder);
 			}
 
