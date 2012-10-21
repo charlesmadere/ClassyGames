@@ -7,7 +7,6 @@ import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
@@ -19,7 +18,12 @@ import com.actionbarsherlock.view.MenuItem;
 
 public class CheckersGameActivity extends SherlockActivity implements OnClickListener
 {
-
+	TableLayout layout;
+    MyButton[][] buttons;
+    
+    MyButton prevButton;
+    int greenPlayer, orangePlayer;
+    
 
 	public final static String INTENT_DATA_GAME_ID = "GAME_ID";
 	public final static String INTENT_DATA_PERSON_ID = "GAME_PERSON_ID";
@@ -29,11 +33,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	private String id;
 	private Long personId;
 	private String personName;
-
-
-	ImageButton[][] buttons;
-	TableLayout layout;
-
+	
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState)
@@ -56,72 +56,132 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			personName = bundle.getString(INTENT_DATA_PERSON_NAME);
 		}
 
-		Display display = getWindowManager().getDefaultDisplay();
+		
 
-		// TODO these values should probably be computed some other way, seeing how these are
-		// deprecated methods. But I do definitely think that this is the right track
-		// ~ charles
+		prevButton = null;
+    	greenPlayer = R.drawable.chkgreen;
+    	orangePlayer = R.drawable.chkorange;
+    	
+        super.onCreate(savedInstanceState);
+        //height width 
+        Display display = getWindowManager().getDefaultDisplay();
+        @SuppressWarnings("deprecation")
 		int width = display.getWidth();
-		int height = display.getHeight();
-
-		TableRow[] rows = new TableRow[8];
-
-		layout = new TableLayout(this);
-		FrameLayout.LayoutParams tableLp = new FrameLayout.LayoutParams(width,width,1);
-		TableLayout.LayoutParams rowLp = new TableLayout.LayoutParams( width,width/8,1);
-		TableRow.LayoutParams cellLp= new TableRow.LayoutParams( width/8,width/8,1);
-
-		for (int i = 0; i < 8; i++)
+       // int height = display.getHeight();
+        
+        TableRow[] rows = new TableRow[8];
+       
+        layout = new TableLayout(this);
+        FrameLayout.LayoutParams tableLp = new FrameLayout.LayoutParams(width,width,1);
+        TableLayout.LayoutParams rowLp = new TableLayout.LayoutParams( width,width/8,1);
+        TableRow.LayoutParams cellLp= new TableRow.LayoutParams( width/8,width/8,1);
+        
+        for (int i = 0; i < 8; i++)
+        {
+        	 rows[i] = new TableRow(this);
+        }
+        buttons = new MyButton[8][8];
+        
+        //load buttons
+        for (int i = 0; i < 8; i++)
+    	{
+    		for (int j = 0; j < 8; j++)
+    		{
+    			buttons[i][j] = new MyButton(this,i,j,true,false);
+    			buttons[i][j].setOnClickListener(this);
+    			buttons[i][j].setId(i*10+j);
+    			
+    			if ((i+j)%2 == 0)
+    			{
+    				buttons[i][j].setBackgroundColor(Color.BLACK);
+    				if (i >= 5)
+					{
+    	    			buttons[i][j].setPlayerGreen(true);//this is Green LOWER IS GREEN
+    	    			buttons[i][j].setEmpty(false);
+						buttons[i][j].setImageResource(greenPlayer);
+					}
+    				if (i <= 2)
+					{
+    	    			buttons[i][j].setPlayerGreen(false);//this is Not Green TOP IS ORANGE
+    	    			buttons[i][j].setEmpty(false);
+						buttons[i][j].setImageResource(orangePlayer);
+					}
+    			}
+    			
+    			else
+    			{
+    				buttons[i][j].setBackgroundColor(Color.RED);
+    				
+    			}
+        		rows[i].addView(buttons[i][j],cellLp);
+        	}
+        }
+        
+        for (int i = 0; i < 8; i++)
+        {
+        	layout.addView(rows[i],rowLp);
+        }
+        
+        setContentView(layout,tableLp);
+    
+    }
+    
+	@Override
+	
+	public void onClick(View arg0)
+	{
+		
+		MyButton clickedButton = (MyButton) findViewById(arg0.getId());
+		//clickedButton.setBackgroundColor(Color.LTGRAY);
+		
+		if (prevButton != null)
 		{
-			rows[i] = new TableRow(this);
-		}
-
-		buttons = new ImageButton[8][8];
-
-		//load buttons
-		for (int i = 0; i < 8; i++)
-		{
-			for (int j = 0; j < 8; j++)
+			if (clickedButton.isEmpty())
 			{
-				buttons[i][j] = new ImageButton(this);
-				buttons[i][j].setOnClickListener(this);
-				buttons[i][j].setId(i*10+j);
-
-				if ((i+j)%2 == 0)
+				if (canMove(clickedButton))
 				{
-					buttons[i][j].setBackgroundColor(Color.RED);
-					if (i >= 5)
-					{
-						buttons[i][j].setImageResource(R.drawable.chkorange);
-					}
+					//change image and data
+					prevButton.setImageResource(0);
+					prevButton.setEmpty(true);
+					
+					//change new button
+					int changeImage = orangePlayer;
+					if (prevButton.isPlayerGreen())
+						changeImage = greenPlayer;
+					clickedButton.setImageResource(changeImage);
+					clickedButton.setEmpty(false);
+					clickedButton.setPlayerGreen(prevButton.isPlayerGreen());
+					
+					prevButton = null;
 				}
-				else
-				{
-					buttons[i][j].setBackgroundColor(Color.BLACK);
-					if (i <= 2)
-					{
-						buttons[i][j].setImageResource(R.drawable.chkgreen);
-					}
-				}
-
-				rows[i].addView(buttons[i][j],cellLp);
+			}
+			
+			else
+			{
+				prevButton = null;
 			}
 		}
-
-		for (int i = 0; i < 8; i++)
+		
+		else
 		{
-			layout.addView(rows[i],rowLp);
+			if (!clickedButton.isEmpty())
+			{
+				prevButton = clickedButton;
+			}
 		}
-
-		setContentView(layout,tableLp);
+	}
+	
+	boolean canMove(MyButton button)
+	{
+		if (abs(button.getPx()-prevButton.getPx()) == 1 && abs(button.getPy()-prevButton.getPy()) == 1)
+			return true;
+		else
+			return false;
 	}
 
-
-	@Override
-	public void onClick(final View view)
-	{
-		ImageButton clickedButton = (ImageButton) findViewById(view.getId());
-		clickedButton.setBackgroundColor(Color.CYAN);
+	private int abs(int i)
+	{	
+		return (i < 0)?-1*i:i;
 	}
 
 
