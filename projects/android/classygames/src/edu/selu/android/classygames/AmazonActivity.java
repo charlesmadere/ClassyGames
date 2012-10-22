@@ -9,9 +9,6 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.services.simpledb.AmazonSimpleDBClient;
-import com.amazonaws.services.simpledb.model.CreateDomainRequest;
 
 import edu.selu.android.classygames.games.Person;
 
@@ -92,8 +89,6 @@ public class AmazonActivity extends SherlockActivity
 	{
 
 
-		private AmazonSimpleDBClient sdbClient;
-		private CreateDomainRequest domainRequest;
 		private ProgressDialog progressDialog;
 
 
@@ -125,10 +120,6 @@ public class AmazonActivity extends SherlockActivity
 			progressDialog.setTitle(R.string.new_game_activity_progressdialog_title);
 
 			progressDialog.show();
-
-			sdbClient = new AmazonSimpleDBClient(Utilities.getAmazonCredentials());
-			domainRequest = new CreateDomainRequest(Utilities.AMAZON_DATABASE_DOMAIN_PLAYERS);
-			sdbClient.createDomain(domainRequest);
 		}
 
 

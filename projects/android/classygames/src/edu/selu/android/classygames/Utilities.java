@@ -17,8 +17,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.BasicAWSCredentials;
 import com.facebook.android.Facebook;
 
 
@@ -45,13 +43,11 @@ public class Utilities
 	// end typeface data
 
 	// amazon data below
-	private static AWSCredentials amazonCredentials;
-	public final static String AMAZON_DATABASE_DOMAIN_PLAYERS = "";
+	public final static String AMAZON_SERVER_ADDRESS = "54.243.141.53";
 	// end amazon data
 
 	// facebook data below
 	private static Facebook facebook;
-	public final static String FACEBOOK_APP_ID = "324400870964487";
 	public final static String FACEBOOK_EXPIRES = "expires_in";
 	public final static String FACEBOOK_TOKEN = "access_token";
 
@@ -161,22 +157,6 @@ public class Utilities
 
 
 	/**
-	 * Use this method to retrieve that global AmazonCredentials variable that our app uses.
-	 * This method is good to use because it ensures that our AmazonCredentials variable
-	 * isn't null.
-	 */
-	public static AWSCredentials getAmazonCredentials()
-	{
-		if (amazonCredentials == null)
-		{
-			amazonCredentials = new BasicAWSCredentials(AmazonConstants.AMAZON_ACCESS_KEY_ID, AmazonConstants.AMAZON_SECRET_KEY);
-		}
-
-		return amazonCredentials;
-	}
-
-
-	/**
 	 * Use this method to retrieve the global Facebook variable that our app uses. This
 	 * method is good to use because it ensures that our Facebook variable isn't null.
 	 */
@@ -184,7 +164,7 @@ public class Utilities
 	{
 		if (facebook == null)
 		{
-			facebook = new Facebook(FACEBOOK_APP_ID);
+			facebook = new Facebook(SecretConstants.FACEBOOK_APP_ID);
 		}
 
 		return facebook;

@@ -13,6 +13,7 @@ import com.actionbarsherlock.view.Window;
 import com.facebook.android.DialogError;
 import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
+import com.google.android.gcm.GCMRegistrar;
 
 
 public class MainActivity extends SherlockActivity
@@ -25,6 +26,12 @@ public class MainActivity extends SherlockActivity
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main_activity);
+
+		// set up Google Cloud Messaging (GCM) Stuff
+		if (GCMRegistrar.getRegistrationId(MainActivity.this).equals(""))
+		{
+			GCMRegistrar.register(this, SecretConstants.GOOGLE_PROJECT_ID);
+		}
 
 		Utilities.sharedPreferences = getPreferences(MODE_PRIVATE);
 		final String access_token = Utilities.sharedPreferences.getString(Utilities.FACEBOOK_TOKEN, null);
