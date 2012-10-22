@@ -4,6 +4,6 @@ CREATE TABLE IF NOT EXISTS `games` (
 	`user_challenged` BIGINT NOT NULL,
 	`board` TEXT NOT NULL,
 	PRIMARY KEY (`id`),
-	FOREIGN KEY (`user_creator`) REFERENCES players(`id`),
-	FOREIGN KEY (`user_challenged`) REFERENCES players(`id`)
+	FOREIGN KEY (`user_creator`) REFERENCES users(`id`),
+	FOREIGN KEY (`user_challenged`) REFERENCES users(`id`)
 );

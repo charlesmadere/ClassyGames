@@ -15,6 +15,8 @@
 	{
 		return;
 	}
+
+	final String title = "Hello from Classy Games Server!";
 %>
 
 <!DOCTYPE html>
@@ -26,15 +28,14 @@
 		<style type="text/css">
 			h1
 			{
-				color: #44BB44;
 				text-align: center;
 			}
 		</style>
-		<title>Hello from Classy Games Server!</title>
+		<title><%= title %></title>
 	</head>
 
 	<body>
-		<h1>Hello from Classy Games Server!</h1>
+		<h1><%= title %></h1>
 	</body>
 
 </html>
