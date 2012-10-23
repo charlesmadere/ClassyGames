@@ -3,7 +3,6 @@ package edu.selu.android.classygames;
 
 import java.util.ArrayList;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
@@ -125,8 +124,8 @@ public class GamesListActivity extends SherlockListActivity
 
 
 		private long id;
+		private ProgressDialog progressDialog;
 		private String name;
-		private String reg_id;
 
 
 		@Override
@@ -143,12 +142,31 @@ public class GamesListActivity extends SherlockListActivity
 			try
 			{
 				final String request = Utilities.getFacebook().request("me");
-				final JSONObject response = Util.parseJson(request);
-				final JSONArray me = response.getJSONArray("data");
+				final JSONObject me = Util.parseJson(request);
+				final long id = me.getLong("id");
+				final String name = me.getString("name");
+
+				if (id >= 0)
+				{
+					this.id = id;
+				}
+				else
+				{
+					this.id = -1;
+				}
+
+				if (name == null || name.equals(""))
+				{
+					this.name = null;
+				}
+				else
+				{
+					this.name = name;
+				}
 			}
 			catch (final Exception e)
 			{
-				Log.e(Utilities.LOG_TAG, "Exception during Facebook request.", e);
+				Log.e(Utilities.LOG_TAG, "Exception during Facebook request or parse.", e);
 			}
 
 			// grab current registration ID. we may not already have one
@@ -174,12 +192,10 @@ public class GamesListActivity extends SherlockListActivity
 				{
 					new AsyncTask<Void, Void, Void>()
 					{
-
-
 						@Override
 						protected Void doInBackground(final Void... params)
 						{
-							if (!Utilities.GCMRegister(GamesListActivity.this, reg_id))
+							if (!Utilities.GCMRegister(GamesListActivity.this, id, name, reg_id))
 							{
 								GCMRegistrar.unregister(GamesListActivity.this);
 							}
@@ -193,13 +209,34 @@ public class GamesListActivity extends SherlockListActivity
 						{
 							registerTask = null;
 						}
-
-
 					}.execute();
 				}
 			}
 
 			return null;
+		}
+
+
+		@Override
+		protected void onPostExecute(final Void result)
+		{
+			if (progressDialog.isShowing())
+			{
+				progressDialog.dismiss();
+			}
+		}
+
+
+		@Override
+		protected void onPreExecute()
+		{
+			progressDialog = new ProgressDialog(GamesListActivity.this);
+			progressDialog.setMessage(GamesListActivity.this.getString(R.string.games_list_activity_init_progressdialog_message));
+			progressDialog.setTitle(R.string.games_list_activity_init_progressdialog_title);
+			progressDialog.setCancelable(false);
+			progressDialog.setCanceledOnTouchOutside(false);
+
+			progressDialog.show();
 		}
 
 
@@ -270,6 +307,9 @@ public class GamesListActivity extends SherlockListActivity
 			progressDialog = new ProgressDialog(GamesListActivity.this);
 			progressDialog.setMessage(GamesListActivity.this.getString(R.string.games_list_activity_progressdialog_message));
 			progressDialog.setTitle(R.string.games_list_activity_progressdialog_title);
+			progressDialog.setCancelable(false);
+			progressDialog.setCanceledOnTouchOutside(false);
+
 			progressDialog.show();
 		}
 
@@ -367,13 +407,13 @@ public class GamesListActivity extends SherlockListActivity
 		}
 
 
-		private class ViewHolder
 		/**
 		 * made this li'l class while trying to optimize our listview. apparently it
 		 * helps performance
 		 * https://developer.android.com/training/improving-layouts/smooth-scrolling.html
 		 *
 		 */
+		private class ViewHolder
 		{
 
 

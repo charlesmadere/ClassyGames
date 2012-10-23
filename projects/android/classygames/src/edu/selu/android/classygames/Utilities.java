@@ -359,7 +359,7 @@ public class Utilities
 	}
 
 
-	public static boolean GCMRegister(final Context context, final String reg_id)
+	public static boolean GCMRegister(final Context context, long id, final String name, String reg_id)
 	{
 		Log.i(LOG_TAG, "Registering device with reg_id of \"" + reg_id + "\" with GCM server.");
 
