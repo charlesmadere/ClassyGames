@@ -1,8 +1,11 @@
 package edu.selu.android.classygames;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,6 +23,9 @@ public class MainActivity extends SherlockActivity
 {
 
 
+	private AsyncTask<Void, Void, Void> registerTask;
+
+
 	@Override
 	public void onCreate(final Bundle savedInstanceState)
 	{
@@ -27,11 +33,60 @@ public class MainActivity extends SherlockActivity
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main_activity);
 
-		// set up Google Cloud Messaging (GCM) Stuff
-		if (GCMRegistrar.getRegistrationId(MainActivity.this).equals(""))
+		/* set up Google Cloud Messaging (GCM) Stuff */
+
+		// make sure that the device ahs the proper dependencies
+		GCMRegistrar.checkDevice(MainActivity.this);
+
+		// make sure that the manifest was properly set
+		GCMRegistrar.checkManifest(MainActivity.this);
+
+		// grab current registration ID. we may not already have one
+		final String regId = GCMRegistrar.getRegistrationId(MainActivity.this);
+
+		if (regId.equals(""))
+		// if we do not have a registration ID then we'll need to register with the server with
+		// the below code
 		{
+			// automatically registers application with GCM on startup
 			GCMRegistrar.register(this, SecretConstants.GOOGLE_PROJECT_ID);
 		}
+		else
+		// if we're here then that means that this device has already been registered with the GCM
+		// server
+		{
+			if (GCMRegistrar.isRegisteredOnServer(MainActivity.this))
+			// check to see if this device is registed on the classy games server
+			{
+
+			}
+			else
+			{
+				registerTask = new AsyncTask<Void, Void, Void>()
+				{
+					@Override
+					protected Void doInBackground(final Void... params)
+					{
+						if (!Utilities.GCMRegister(MainActivity.this, regId))
+						{
+							GCMRegistrar.unregister(MainActivity.this);
+						}
+
+						return null;
+					}
+
+					@Override
+					protected void onPostExecute(final Void result)
+					{
+						registerTask = null;
+					}
+				};
+
+				registerTask.execute();
+			}
+		}
+
+		/* end GCM stuff */
 
 		Utilities.sharedPreferences = getPreferences(MODE_PRIVATE);
 		final String access_token = Utilities.sharedPreferences.getString(Utilities.FACEBOOK_TOKEN, null);
@@ -100,13 +155,6 @@ public class MainActivity extends SherlockActivity
 	}
 
 
-	private void goToGamesList()
-	{
-		startActivity(new Intent(MainActivity.this, GamesListActivity.class));
-		finish();
-	}
-
-
 	@Override
 	public void onActivityResult(final int requestCode, final int resultCode, final Intent data)
 	{
@@ -116,10 +164,41 @@ public class MainActivity extends SherlockActivity
 
 
 	@Override
+	public void onDestroy()
+	{
+		if (registerTask != null)
+		{
+			registerTask.cancel(true);
+		}
+
+		unregisterReceiver(messageReceiver);
+		GCMRegistrar.onDestroy(MainActivity.this);
+		super.onDestroy();
+	}
+
+
+	@Override
 	public void onResume()
 	{
 		super.onResume();
 		Utilities.getFacebook().extendAccessTokenIfNeeded(MainActivity.this, null);
+	}
+
+
+	private final BroadcastReceiver messageReceiver = new BroadcastReceiver()
+	{
+		@Override
+		public void onReceive(final Context context, final Intent intent)
+		{
+			
+		}
+	};
+
+
+	private void goToGamesList()
+	{
+		startActivity(new Intent(MainActivity.this, GamesListActivity.class));
+		finish();
 	}
 
 

@@ -21,7 +21,7 @@ import org.json.simple.parser.ParseException;
 /**
  * Servlet implementation class AddNewRegId
  */
-public class AddNewRegId extends HttpServlet
+public class AddRegId extends HttpServlet
 {
 
 
@@ -31,7 +31,7 @@ public class AddNewRegId extends HttpServlet
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public AddNewRegId()
+	public AddRegId()
 	{
 		super();
 	}
@@ -109,7 +109,7 @@ public class AddNewRegId extends HttpServlet
 					// run the SQL statement
 					sqlStatement.executeUpdate();
 
-					printWriter.print(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_PLAYER_ADDED_TO_DATABASE));
+					printWriter.print(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_USER_ADDED_TO_DATABASE));
 				}
 				catch (final SQLException e)
 				{

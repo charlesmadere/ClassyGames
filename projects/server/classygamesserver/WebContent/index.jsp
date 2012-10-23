@@ -16,10 +16,10 @@
 		return;
 	}
 
-	final String title = "Hello from Classy Games Server!";
+	final String APP_NAME = "Classy Games";
 %>
 
-<!DOCTYPE html>
+<!doctype html>
 
 <html>
 
@@ -28,14 +28,15 @@
 		<style type="text/css">
 			h1
 			{
+				font-family: sans-serif;
 				text-align: center;
 			}
 		</style>
-		<title><%= title %></title>
+		<title><%= APP_NAME %></title>
 	</head>
 
 	<body>
-		<h1><%= title %></h1>
+		<h1>Hello from the <%= APP_NAME %> Server!</h1>
 	</body>
 
 </html>

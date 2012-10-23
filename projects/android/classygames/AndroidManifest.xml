@@ -8,22 +8,33 @@
 		android:minSdkVersion="10"
 		android:targetSdkVersion="16" />
 
-	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission
+		android:name="android.permission.INTERNET" />
 
+	<!--  begin GCM stuff -->
 	<!-- this GCM stuff was taken from this official google tutorial -->
 	<!-- https://developer.android.com/guide/google/gcm/gs.html -->
 
-	<permission android:name="edu.selu.android.classygames.permission.C2D_MESSAGE" android:protectionLevel="signature" />
-	<uses-permission android:name="edu.selu.android.classygames.permission.C2D_MESSAGE" />
+	<permission
+		android:name="edu.selu.android.classygames.permission.C2D_MESSAGE"
+		android:protectionLevel="signature" />
+
+	<uses-permission
+		android:name="edu.selu.android.classygames.permission.C2D_MESSAGE" />
 
 	<!-- App receives GCM messages. -->
-	<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-	<!-- GCM connects to Google Services. -->
-	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission
+		android:name="com.google.android.c2dm.permission.RECEIVE" />
+
 	<!-- GCM requires a Google account. -->
-	<uses-permission android:name="android.permission.GET_ACCOUNTS" />
+	<uses-permission
+		android:name="android.permission.GET_ACCOUNTS" />
+
 	<!-- Keeps the processor from sleeping when a message is received. -->
-	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	<uses-permission
+		android:name="android.permission.WAKE_LOCK" />
+
+	<!-- end most of the GCM stuff -->
 
 	<application
 		android:icon="@drawable/launcher"
@@ -34,12 +45,16 @@
 			android:name="com.google.android.gcm.GCMBroadcastReceiver"
 			android:permission="com.google.android.c2dm.permission.SEND">
 			<intent-filter>
-				<action android:name="com.google.android.c2dm.intent.RECEIVE" />
-				<action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-				<category android:name="edu.selu.android.classygames" />
+				<action
+					android:name="com.google.android.c2dm.intent.RECEIVE" />
+				<action
+					android:name="com.google.android.c2dm.intent.REGISTRATION" />
+				<category
+					android:name="edu.selu.android.classygames" />
 			</intent-filter>
 		</receiver>
-		<service android:name=".GCMIntentService" />
+		<service
+			android:name=".GCMIntentService" />
 
 		<activity
 			android:label="@string/main_activity_title"
@@ -47,22 +62,27 @@
 			android:screenOrientation="portrait"
 			android:theme="@style/Theme.Styled">
 			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
+				<action
+					android:name="android.intent.action.MAIN" />
+				<category
+					android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
+
 		<activity
 			android:label="@string/about_activity_title"
 			android:name=".AboutActivity"
 			android:screenOrientation="portrait"
 			android:theme="@style/Theme.Styled">
 		</activity>
+
 		<activity
 			android:label="@string/amazon_activity_title"
 			android:name=".AmazonActivity"
 			android:screenOrientation="portrait"
 			android:theme="@style/Theme.Styled">
 		</activity>
+
 		<activity
 			android:label="@string/checkers_game_activity_title" 
 			android:name=".CheckersGameActivity"
@@ -70,24 +90,28 @@
 			android:theme="@style/Theme.Styled"
 			android:uiOptions="splitActionBarWhenNarrow">
 		</activity>
+
 		<activity
 			android:label="@string/confirm_game_activity_title"
 			android:name=".ConfirmGameActivity"
 			android:screenOrientation="portrait"
 			android:theme="@style/Theme.Styled">
 		</activity>
+
 		<activity
 			android:label="@string/games_list_activity_title"
 			android:name=".GamesListActivity"
 			android:screenOrientation="portrait"
 			android:theme="@style/Theme.Styled">
 		</activity>
+
 		<activity
 			android:label="@string/logout_activity_title"
 			android:name=".LogoutActivity"
 			android:screenOrientation="portrait"
 			android:theme="@style/Theme.Styled">
 		</activity>
+
 		<activity
 			android:label="@string/new_game_activity_title"
 			android:name=".NewGameActivity"

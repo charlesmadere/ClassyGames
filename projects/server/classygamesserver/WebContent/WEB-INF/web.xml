@@ -29,4 +29,14 @@
     <servlet-name>AddNewRegId</servlet-name>
     <url-pattern>/AddNewRegId</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>RemoveRegId</display-name>
+    <servlet-name>RemoveRegId</servlet-name>
+    <servlet-class>edu.selu.android.classygames.RemoveRegId</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>RemoveRegId</servlet-name>
+    <url-pattern>/RemoveRegId</url-pattern>
+  </servlet-mapping>
 </web-app>

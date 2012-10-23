@@ -4,12 +4,19 @@ package edu.selu.android.classygames;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gcm.GCMBaseIntentService;
 
 
 public class GCMIntentService extends GCMBaseIntentService
 {
+
+
+	public GCMIntentService()
+	{
+		super(SecretConstants.GOOGLE_PROJECT_ID);
+	}
 
 
 	@Override
@@ -31,9 +38,13 @@ public class GCMIntentService extends GCMBaseIntentService
 	{
 		final Bundle bundle = intent.getExtras();
 
-		if (bundle != null)
+		if (bundle == null)
 		{
-			// TODO doSomeMagic(bundle)
+			Log.e(Utilities.LOG_TAG, "GCM message was received but it was malformed.");
+		}
+		else
+		{
+			Log.i(Utilities.LOG_TAG, "GCM message was received.");
 		}
 	}
 
@@ -42,7 +53,7 @@ public class GCMIntentService extends GCMBaseIntentService
 	protected void onRegistered(final Context context, final String regId)
 	{
 		// TODO send the regId variable to the server
-		
+
 	}
 
 

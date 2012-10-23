@@ -36,5 +36,10 @@
 	<string name="new_game_activity_listview_no_friends">Well you don\'t seem to have any Facebook friends. In order to play Classy Games you must have some Facebook friends.</string>
 	<string name="refresh">Refresh</string>
 	<string name="send_move">Send Move</string>
+	<string name="server_registration_attempt">Trying (attempt %1$d) to register device on server.</string>
+	<string name="server_registration_fail">Could not register device on server after %1$d attempts.</string>
+	<string name="server_registration_success">Device successfully registered with server!</string>
+	<string name="server_unregistration_fail">Could not remove device registration from server. (%1$s)</string>
+	<string name="server_unregistration_success">Device successfully removed from server!</string>
 	<string name="undo_move">Undo Move</string>
 </resources>
