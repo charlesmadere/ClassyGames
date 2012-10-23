@@ -3,9 +3,14 @@ package edu.selu.android.classygames;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,6 +27,8 @@ import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.facebook.android.Util;
+import com.google.android.gcm.GCMRegistrar;
 
 import edu.selu.android.classygames.games.GenericGame;
 import edu.selu.android.classygames.games.Person;
@@ -32,6 +39,7 @@ public class GamesListActivity extends SherlockListActivity
 {
 
 
+	private AsyncTask<Void, Void, Void> registerTask;
 	private GamesListAdapter gamesAdapter;
 
 
@@ -42,6 +50,7 @@ public class GamesListActivity extends SherlockListActivity
 		setContentView(R.layout.games_list_activity);
 		Utilities.styleActionBar(getResources(), getSupportActionBar(), false);
 
+		new AsyncGCMRegister().execute();
 		new AsyncPopulateGamesList().execute();
 	}
 
@@ -64,6 +73,20 @@ public class GamesListActivity extends SherlockListActivity
 		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.games_list_activity, menu);
 		return super.onCreateOptionsMenu(menu);
+	}
+
+
+	@Override
+	public void onDestroy()
+	{
+		if (registerTask != null)
+		{
+			registerTask.cancel(true);
+		}
+
+		unregisterReceiver(messageReceiver);
+		GCMRegistrar.onDestroy(GamesListActivity.this);
+		super.onDestroy();
 	}
 
 
@@ -91,6 +114,95 @@ public class GamesListActivity extends SherlockListActivity
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+
+	/**
+	 * set up Google Cloud Messaging (GCM) Stuff
+	 */
+	private final class AsyncGCMRegister extends AsyncTask<Void, Void, Void>
+	{
+
+
+		private long id;
+		private String name;
+		private String reg_id;
+
+
+		@Override
+		protected Void doInBackground(final Void... v)
+		{
+			// make sure that the device ahs the proper dependencies
+			GCMRegistrar.checkDevice(GamesListActivity.this);
+
+			// make sure that the manifest was properly set
+			GCMRegistrar.checkManifest(GamesListActivity.this);
+
+			registerReceiver(messageReceiver, new IntentFilter(Utilities.DISPLAY_MESSAGE_ACTION));
+
+			try
+			{
+				final String request = Utilities.getFacebook().request("me");
+				final JSONObject response = Util.parseJson(request);
+				final JSONArray me = response.getJSONArray("data");
+			}
+			catch (final Exception e)
+			{
+				Log.e(Utilities.LOG_TAG, "Exception during Facebook request.", e);
+			}
+
+			// grab current registration ID. we may not already have one
+			final String reg_id = GCMRegistrar.getRegistrationId(GamesListActivity.this);
+
+			if (reg_id == null || reg_id.equals(""))
+			// if we do not have a registration ID then we'll need to register with the server with
+			// the below code
+			{
+				// automatically registers application with GCM on startup
+				GCMRegistrar.register(GamesListActivity.this, SecretConstants.GOOGLE_PROJECT_ID);
+			}
+			else
+			// if we're here then that means that this device has already been registered with the GCM
+			// server
+			{
+				if (GCMRegistrar.isRegisteredOnServer(GamesListActivity.this))
+				// check to see if this device is registed on the classy games server
+				{
+
+				}
+				else
+				{
+					new AsyncTask<Void, Void, Void>()
+					{
+
+
+						@Override
+						protected Void doInBackground(final Void... params)
+						{
+							if (!Utilities.GCMRegister(GamesListActivity.this, reg_id))
+							{
+								GCMRegistrar.unregister(GamesListActivity.this);
+							}
+
+							return null;
+						}
+
+
+						@Override
+						protected void onPostExecute(final Void result)
+						{
+							registerTask = null;
+						}
+
+
+					}.execute();
+				}
+			}
+
+			return null;
+		}
+
+
 	}
 
 
@@ -163,6 +275,16 @@ public class GamesListActivity extends SherlockListActivity
 
 
 	}
+
+
+	private final BroadcastReceiver messageReceiver = new BroadcastReceiver()
+	{
+		@Override
+		public void onReceive(final Context context, final Intent intent)
+		{
+			
+		}
+	};
 
 
 	private class GamesListAdapter extends ArrayAdapter<GenericGame>
