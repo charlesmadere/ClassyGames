@@ -297,6 +297,7 @@ public class NewGameActivity extends SherlockListActivity
 			return geo.getName().compareToIgnoreCase(jarrad.getName());
 		}
 
+
 	}
 	
 

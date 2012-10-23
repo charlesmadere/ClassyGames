@@ -36,6 +36,8 @@ public class Utilities
 
 
 	public final static String LOG_TAG = "ClassyGames";
+	public final static String DISPLAY_MESSAGE_ACTION = "edu.selu.android.classygames.CONTEXT_BROADCAST";
+
 	public static SharedPreferences sharedPreferences;
 
 	// typeface data below
