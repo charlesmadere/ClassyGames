@@ -53,10 +53,11 @@ public class AddRegId extends HttpServlet
 	 */
 	protected void doPost(final HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
-		// final String jsonData = "{\"id\":\"10443780\", \"name\":\"Charles Madere\", \"reg_id\":\"414931\"}";
+		// JSON data coming into this code should look something like this
+		// {"id":"10443780","name":"Charles Madere","reg_id":"414931"}"
 		final String jsonData = request.getParameter(Utilities.JSON_DATA);
 
-		long id = 0;
+		long id = -1;
 		String name = new String();
 		String reg_id = new String();
 
@@ -75,13 +76,13 @@ public class AddRegId extends HttpServlet
 		response.setContentType(Utilities.MIMETYPE_JSON);
 		PrintWriter printWriter = response.getWriter();
 
-		if (id < 1 || name.equals(Utilities.JSON_DATA_BLANK) || reg_id.equals(Utilities.JSON_DATA_BLANK))
+		if (id < 0 || name.equals(Utilities.JSON_DATA_BLANK) || reg_id.equals(Utilities.JSON_DATA_BLANK))
 		{
 			printWriter.print(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_EMPTY_OR_MALFORMED));
 		}
 		else
 		{
-			Connection connection = null;
+			Connection sqlConnection = null;
 			PreparedStatement sqlStatement = null;
 
 			final String MySQLConnectionString = Utilities.getMySQLConnectionString();
@@ -95,11 +96,11 @@ public class AddRegId extends HttpServlet
 				try
 				{
 					// connect to the MySQL database
-					connection = DriverManager.getConnection(Utilities.getMySQLConnectionString());
+					sqlConnection = DriverManager.getConnection(Utilities.getMySQLConnectionString());
 
 					// prepare a SQL statement to be run on the MySQL database
 					final String sqlStatementString = "INSERT INTO " + Utilities.DATABASE_TABLE_USERS_FORMAT + " " + Utilities.DATABASE_TABLE_USERS + " VALUES (?, '?', '?');";
-					sqlStatement = connection.prepareStatement(sqlStatementString);
+					sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
 
 					// prevent SQL injection by inserting user data this way
 					sqlStatement.setLong(1, id);
@@ -133,18 +134,18 @@ public class AddRegId extends HttpServlet
 						sqlStatement = null;
 					}
 
-					if (connection != null)
+					if (sqlConnection != null)
 					{
 						try
 						{
-							connection.close();
+							sqlConnection.close();
 						}
 						catch (final SQLException e)
 						{
 
 						}
 
-						connection = null;
+						sqlConnection = null;
 					}
 				}
 			}

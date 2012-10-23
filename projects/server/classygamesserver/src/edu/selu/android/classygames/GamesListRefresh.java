@@ -73,7 +73,7 @@ public class GamesListRefresh extends HttpServlet
 
 		if (id >= 1)
 		{
-			Connection connection = null;
+			Connection sqlConnection = null;
 			PreparedStatement sqlStatement = null;
 
 			final String MySQLConnectionString = Utilities.getMySQLConnectionString();
@@ -87,11 +87,11 @@ public class GamesListRefresh extends HttpServlet
 				try
 				{
 					// connect to the MySQL database
-					connection = DriverManager.getConnection(Utilities.getMySQLConnectionString());
+					sqlConnection = DriverManager.getConnection(Utilities.getMySQLConnectionString());
 
 					// prepare a SQL statement to be run on the MySQL database
 					final String sqlStatementString = "SELECT * FROM " + Utilities.DATABASE_TABLE_GAMES + " WHERE " + Utilities.DATABASE_TABLE_GAMES_COLUMN_USER_CREATOR + " = ? OR " + Utilities.DATABASE_TABLE_GAMES_COLUMN_USER_CHALLENGER + " = ?";
-					sqlStatement = connection.prepareStatement(sqlStatementString);
+					sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
 
 					// prevent SQL injection by querying for user data this way (this is safe)
 					sqlStatement.setLong(0, id);
@@ -124,18 +124,18 @@ public class GamesListRefresh extends HttpServlet
 						sqlStatement = null;
 					}
 
-					if (connection != null)
+					if (sqlConnection != null)
 					{
 						try
 						{
-							connection.close();
+							sqlConnection.close();
 						}
 						catch (final SQLException e)
 						{
 
 						}
 
-						connection = null;
+						sqlConnection = null;
 					}
 				}
 			}

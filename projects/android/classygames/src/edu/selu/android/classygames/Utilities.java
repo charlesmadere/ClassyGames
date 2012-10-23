@@ -359,11 +359,21 @@ public class Utilities
 	}
 
 
-	public static boolean GCMRegister(final Context context, long id, final String name, String reg_id)
+	/**
+	 * @param context
+	 * @param id
+	 * @param name
+	 * @param reg_id
+	 * @return
+	 */
+	public static boolean GCMRegister(final Context context, Long id, final String name, String reg_id)
 	{
 		Log.i(LOG_TAG, "Registering device with reg_id of \"" + reg_id + "\" with GCM server.");
 
+		// build the JSON data to be sent to the server
 		Map<String, String> params = new HashMap<String, String>();
+		params.put(JSON_DATA_ID, id.toString());
+		params.put(JSON_DATA_NAME, name);
 		params.put(JSON_DATA_REG_ID, reg_id);
 
 		if (random == null)
@@ -416,6 +426,10 @@ public class Utilities
 	}
 
 
+	/**
+	 * @param context
+	 * @param reg_id
+	 */
 	public static void GCMUnregister(final Context context, final String reg_id)
 	{
 		Log.i(LOG_TAG, "Unregistering device with reg_id of \"" + reg_id + "\" from GCM server.");
