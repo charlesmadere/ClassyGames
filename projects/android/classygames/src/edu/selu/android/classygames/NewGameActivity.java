@@ -22,6 +22,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListActivity;
@@ -188,12 +189,12 @@ public class NewGameActivity extends SherlockListActivity
 			{
 				ViewHolder viewHolder = new ViewHolder();
 				viewHolder.picture = (ImageView) convertView.findViewById(R.id.new_game_activity_listview_item_picture);
-				if (viewHolder.picture != null)
+				//TODO: fix image sizes
+				//viewHolder.picture.setScaleType(ScaleType.CENTER_CROP);
+				viewHolder.picture.setImageResource(R.drawable.facebook_placeholder);
 				{
-					
+					viewHolder.picture.setTag(person.getId());
 					new AsyncPopulatePictures(viewHolder).execute(person);
-					//UrlImageViewHelper.setUrlDrawable(viewHolder.picture, Utilities.FACEBOOK_GRAPH_API_URL + person.getId() + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE_SSL);
-
 				}
 
 				if (typeface == null)
@@ -233,28 +234,38 @@ public class NewGameActivity extends SherlockListActivity
 		
 		private final class AsyncPopulatePictures extends AsyncTask<Person, Long ,Drawable>
 		{
-			Drawable drawable;
-			ViewHolder viewHolder;
+			private Drawable drawable;
+			private ViewHolder viewHolder;
+			private String path;
 			
 			AsyncPopulatePictures(ViewHolder vH)
 			{
 				super();
 				viewHolder = vH;
+				path = viewHolder.picture.getTag().toString();
 			}
 
 			@Override
 			protected Drawable doInBackground(Person... person) 
 			{
-				try
+				if (!viewHolder.picture.getTag().toString().equals(path))
 				{
-					drawable = Utilities.LoadImageFromWebOperations(Utilities.FACEBOOK_GRAPH_API_URL + person[0].getId() + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE_SSL);
+					this.cancel(true);
+					return null;
 				}
-				catch(Exception e)
+				else
 				{
-					Log.e("Classy Games", "Image Load Failed: " + e);
+					try
+					{
+						drawable = Utilities.LoadImageFromWebOperations(Utilities.FACEBOOK_GRAPH_API_URL + person[0].getId() + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE_SSL);
+					}
+					catch(Exception e)
+					{
+						Log.e("Classy Games", "Image Load Failed: " + e);
+					}
+					
+					return drawable;
 				}
-				
-				return drawable;
 			} 
 			
 			@Override
@@ -262,7 +273,6 @@ public class NewGameActivity extends SherlockListActivity
 			{
 				viewHolder.picture.setImageDrawable(result);
 			}
-			
 		}
 
 
@@ -279,7 +289,7 @@ public class NewGameActivity extends SherlockListActivity
 			public ImageView picture;
 			public OnClickListener onClickListener;
 			public TextView name;
-
+			
 
 		}
 
