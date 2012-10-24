@@ -25,18 +25,14 @@
 
 	<head>
 		<meta charset="utf-8" />
-		<style type="text/css">
-			h1
-			{
-				font-family: sans-serif;
-				text-align: center;
-			}
-		</style>
-		<title><%= APP_NAME %></title>
+		<link href="assets/css/main.css" rel="stylesheet" type="text/css" />
+		<title>Classy Games</title>
 	</head>
 
 	<body>
-		<h1>Hello from the <%= APP_NAME %> Server!</h1>
+		<div id="logo"></div>
+		<a href="https://github.com/ScootrNova/ClassyGames"><div id="github"></div></a>
+		<a href="#"><div id="playStore"></div></a>
 	</body>
 
 </html>

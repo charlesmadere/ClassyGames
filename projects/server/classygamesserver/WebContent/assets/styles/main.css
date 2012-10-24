@@ -1,0 +1,53 @@
+html
+{
+	height: 100%;
+}
+
+
+body
+{
+	background-image: url("../img/bg.png");
+	margin: 0px;
+	height: 100%;
+}
+
+
+div#logo
+{
+	background-image: url("../img/logo.png");
+	height: 384px;
+	left: 50%;
+	margin-left: -384px;
+	margin-top: -256px;
+	position: absolute;
+	top: 50%;
+	width: 768px;
+}
+
+
+div#github
+{
+	background-image: url("../img/github.png");
+	bottom: 2%;
+	height: 58px;
+	left: 2%;
+	position: fixed;
+	width: 131px;
+}
+
+
+div#playStore
+{
+	background-image: url("../img/playstore.png");
+	bottom: 2%;
+	height: 68px;
+	position: fixed;
+	right: 2%;
+	width: 192px;
+}
+
+
+div#playStore:hover
+{
+	background-image: url("../img/playstore-hover.png");
+}
