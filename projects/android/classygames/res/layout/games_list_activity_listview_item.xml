@@ -16,7 +16,7 @@
 		android:layout_height="fill_parent"
 		android:layout_marginRight="6dip"
 		android:layout_width="48dip"
-		android:src="@drawable/notification" />
+		android:src="@drawable/fb_placeholder" />
 	<TextView
 		android:ellipsize="end"
 		android:gravity="center_vertical"

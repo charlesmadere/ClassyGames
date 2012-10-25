@@ -35,10 +35,11 @@ public class Utilities
 {
 
 
-	public final static String LOG_TAG = "ClassyGames";
 	public final static String DISPLAY_MESSAGE_ACTION = "edu.selu.android.classygames.CONTEXT_BROADCAST";
+	public final static String LOG_TAG = "ClassyGames";
 
 	public static SharedPreferences sharedPreferences;
+
 
 	// typeface data below
 	public final static int TYPEFACE_BLUE_HIGHWAY_D = 0;
@@ -54,6 +55,7 @@ public class Utilities
 	private static Typeface typefaceSnellRoundHandBDSCR;
 	private static Typeface typefaceSnellRoundHandBLKSCR;
 	// end typeface data
+
 
 	// facebook data below
 	private static Facebook facebook;
@@ -82,9 +84,28 @@ public class Utilities
 
 	public final static String JSON_DATA = "json";
 	public final static String JSON_DATA_BLANK = "";
+	public final static String JSON_DATA_BOARD = "board";
 	public final static String JSON_DATA_ID = "id";
 	public final static String JSON_DATA_NAME = "name";
 	public final static String JSON_DATA_REG_ID = "reg_id";
+	public final static String JSON_DATA_USER_CHALLENGED = "user_challenged";
+	public final static String JSON_DATA_USER_CREATOR = "user_creator";
+
+	public final static String SERVER_ADDRESS = "http://classygames.elasticbeanstalk.com/";
+
+	public final static String SERVER_NEW_GAME = "NewGame";
+	public final static String SERVER_NEW_GAME_ADDRESS = SERVER_ADDRESS + SERVER_NEW_GAME;
+
+	public final static String SERVER_GAMES_LIST_REFRESH = "GamesListRefresh";
+	public final static String SERVER_GAMES_LIST_REFRESH_ADDRESS = SERVER_ADDRESS + SERVER_GAMES_LIST_REFRESH;
+
+	public final static String SERVER_NEW_MOVE = "NewMove";
+	public final static String SERVER_NEW_MOVE_ADDRESS = SERVER_ADDRESS + SERVER_GAMES_LIST_REFRESH;
+
+	public final static String SERVER_NEW_REG_ID = "NewRegId";
+	public final static String SERVER_NEW_REG_ID_ADDRESS = SERVER_ADDRESS + SERVER_NEW_REG_ID;
+	public final static String SERVER_REMOVE_REG_ID = "RemoveRegId";
+	public final static String SERVER_REMOVE_REG_ID_ADDRESS = SERVER_ADDRESS + SERVER_REMOVE_REG_ID;
 
 	private static Random random;
 	// end server data
@@ -390,7 +411,7 @@ public class Utilities
 			try
 			{
 				contextBroadcast(context, context.getString(R.string.server_registration_attempt, i));
-				postToServer(SecretConstants.SERVER_ADD_REG_ID_ADDRESS, params);
+				postToServer(SERVER_NEW_REG_ID_ADDRESS, params);
 				GCMRegistrar.setRegisteredOnServer(context, true);
 				contextBroadcast(context, context.getString(R.string.server_registration_success));
 			}
@@ -439,7 +460,7 @@ public class Utilities
 
 		try
 		{
-			postToServer(SecretConstants.SERVER_REMOVE_REG_ID_ADDRESS, params);
+			postToServer(SERVER_REMOVE_REG_ID_ADDRESS, params);
 			GCMRegistrar.setRegisteredOnServer(context, false);
 			contextBroadcast(context, context.getString(R.string.server_unregistration_success));
 		}

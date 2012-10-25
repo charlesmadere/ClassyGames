@@ -187,7 +187,7 @@ public class NewGameActivity extends SherlockListActivity
 				viewHolder.picture = (ImageView) convertView.findViewById(R.id.new_game_activity_listview_item_picture);
 				//TODO: fix image sizes
 				//viewHolder.picture.setScaleType(ScaleType.CENTER_CROP);
-				viewHolder.picture.setImageResource(R.drawable.facebook_placeholder);
+				viewHolder.picture.setImageResource(R.drawable.fb_placeholder);
 				{
 					viewHolder.picture.setTag(person.getId());
 					new AsyncPopulatePictures(viewHolder).execute(person);
@@ -257,7 +257,7 @@ public class NewGameActivity extends SherlockListActivity
 				{
 					try
 					{
-						drawable = Utilities.LoadImageFromWebOperations(Utilities.FACEBOOK_GRAPH_API_URL + person[0].getId() + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE_SSL);
+						drawable = Utilities.loadImageFromWebOperations(Utilities.FACEBOOK_GRAPH_API_URL + person[0].getId() + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE_SSL);
 					}
 					catch(Exception e)
 					{
