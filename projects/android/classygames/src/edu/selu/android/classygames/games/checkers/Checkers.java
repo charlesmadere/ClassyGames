@@ -4,8 +4,8 @@ package edu.selu.android.classygames.games.checkers;
 import java.text.SimpleDateFormat;
 
 import android.content.res.Resources;
+import edu.selu.android.classygames.data.Person;
 import edu.selu.android.classygames.games.GenericGame;
-import edu.selu.android.classygames.games.Person;
 
 
 public class Checkers extends GenericGame

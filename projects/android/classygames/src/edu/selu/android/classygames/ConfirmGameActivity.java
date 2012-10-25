@@ -13,7 +13,7 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
-import edu.selu.android.classygames.games.Person;
+import edu.selu.android.classygames.data.Person;
 
 
 public class ConfirmGameActivity extends SherlockActivity

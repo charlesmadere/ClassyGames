@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import edu.selu.android.classygames.data.Person;
+
 
 public abstract class GenericGame
 {

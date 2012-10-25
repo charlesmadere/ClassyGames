@@ -27,7 +27,7 @@ import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.facebook.android.Util;
 
-import edu.selu.android.classygames.games.Person;
+import edu.selu.android.classygames.data.Person;
 
 
 public class NewGameActivity extends SherlockListActivity

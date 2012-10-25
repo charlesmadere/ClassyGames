@@ -15,7 +15,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-import edu.selu.android.classygames.games.Person;
+import edu.selu.android.classygames.data.Person;
 
 
 public class CheckersGameActivity extends SherlockActivity implements OnClickListener

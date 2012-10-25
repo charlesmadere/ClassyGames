@@ -28,8 +28,8 @@ import com.actionbarsherlock.view.MenuItem;
 import com.facebook.android.Util;
 import com.google.android.gcm.GCMRegistrar;
 
+import edu.selu.android.classygames.data.Person;
 import edu.selu.android.classygames.games.GenericGame;
-import edu.selu.android.classygames.games.Person;
 import edu.selu.android.classygames.games.checkers.Checkers;
 
 

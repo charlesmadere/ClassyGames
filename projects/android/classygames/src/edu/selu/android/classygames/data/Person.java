@@ -1,4 +1,4 @@
-package edu.selu.android.classygames.games;
+package edu.selu.android.classygames.data;
 
 
 public class Person
