@@ -21,7 +21,7 @@ import org.json.simple.parser.ParseException;
 /**
  * Servlet implementation class AddNewRegId
  */
-public class AddRegId extends HttpServlet
+public class NewRegId extends HttpServlet
 {
 
 
@@ -31,7 +31,7 @@ public class AddRegId extends HttpServlet
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public AddRegId()
+	public NewRegId()
 	{
 		super();
 	}
@@ -52,9 +52,10 @@ public class AddRegId extends HttpServlet
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(final HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	// JSON data coming into this code should look something like this
+	// {"id":"10443780","name":"Charles Madere","reg_id":"414931"}"
+	// long, String, String
 	{
-		// JSON data coming into this code should look something like this
-		// {"id":"10443780","name":"Charles Madere","reg_id":"414931"}"
 		final String jsonData = request.getParameter(Utilities.JSON_DATA);
 
 		long id = -1;

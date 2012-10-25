@@ -52,11 +52,13 @@ public class GamesListRefresh extends HttpServlet
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(final HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	// JSON data coming into this code should look something like this
+	// {"id":"10443780"}"
+	// long
 	{
-		// final String jsonData = "{\"id\":\"10443780\"}";
 		final String jsonData = request.getParameter(Utilities.JSON_DATA);
 
-		long id = 0;
+		long id = -1;
 
 		try
 		{
@@ -71,7 +73,7 @@ public class GamesListRefresh extends HttpServlet
 		response.setContentType(Utilities.MIMETYPE_JSON);
 		PrintWriter printWriter = response.getWriter();
 
-		if (id >= 1)
+		if (id >= 0)
 		{
 			Connection sqlConnection = null;
 			PreparedStatement sqlStatement = null;

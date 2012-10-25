@@ -21,13 +21,13 @@
   </servlet-mapping>
   <servlet>
     <description></description>
-    <display-name>AddNewRegId</display-name>
-    <servlet-name>AddNewRegId</servlet-name>
-    <servlet-class>edu.selu.android.classygames.AddNewRegId</servlet-class>
+    <display-name>NewRegId</display-name>
+    <servlet-name>NewRegId</servlet-name>
+    <servlet-class>edu.selu.android.classygames.NewRegId</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>AddNewRegId</servlet-name>
-    <url-pattern>/AddNewRegId</url-pattern>
+    <servlet-name>NewRegId</servlet-name>
+    <url-pattern>/NewRegId</url-pattern>
   </servlet-mapping>
   <servlet>
     <description></description>
@@ -38,5 +38,25 @@
   <servlet-mapping>
     <servlet-name>RemoveRegId</servlet-name>
     <url-pattern>/RemoveRegId</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>NewGame</display-name>
+    <servlet-name>NewGame</servlet-name>
+    <servlet-class>edu.selu.android.classygames.NewGame</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>NewGame</servlet-name>
+    <url-pattern>/NewGame</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>NewMove</display-name>
+    <servlet-name>NewMove</servlet-name>
+    <servlet-class>edu.selu.android.classygames.NewMove</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>NewMove</servlet-name>
+    <url-pattern>/NewMove</url-pattern>
   </servlet-mapping>
 </web-app>

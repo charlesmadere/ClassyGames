@@ -4,9 +4,7 @@ package edu.selu.android.classygames;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -19,9 +17,9 @@ import org.json.simple.parser.ParseException;
 
 
 /**
- * Servlet implementation class RemoveRegId
+ * Servlet implementation class NewGame
  */
-public class RemoveRegId extends HttpServlet
+public class NewGame extends HttpServlet
 {
 
 
@@ -31,7 +29,7 @@ public class RemoveRegId extends HttpServlet
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public RemoveRegId()
+	public NewGame()
 	{
 		super();
 	}
@@ -53,17 +51,19 @@ public class RemoveRegId extends HttpServlet
 	 */
 	protected void doPost(final HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	// JSON data coming into this code should look something like this
-	// {"id":"10443780"}"
-	// long
+	// {"id":"10443780","id_challenger":"13371337"}"
+	// long, long
 	{
 		final String jsonData = request.getParameter(Utilities.JSON_DATA);
 
 		long id = -1;
+		long id_challenger = -1;
 
 		try
 		{
 			final JSONObject json = (JSONObject) new JSONParser().parse(jsonData);
 			id = Long.parseLong((String) json.get(Utilities.JSON_DATA_ID));
+			id_challenger = Long.parseLong((String) json.get(Utilities.JSON_DATA_ID_CHALLENGER));
 		}
 		catch (final ParseException e)
 		{
@@ -73,7 +73,7 @@ public class RemoveRegId extends HttpServlet
 		response.setContentType(Utilities.MIMETYPE_JSON);
 		PrintWriter printWriter = response.getWriter();
 
-		if (id >= 0)
+		if (id >= 0 && id_challenger >= 0)
 		{
 			Connection sqlConnection = null;
 			PreparedStatement sqlStatement = null;
@@ -86,59 +86,7 @@ public class RemoveRegId extends HttpServlet
 			}
 			else
 			{
-				try
-				{
-					// connect to the MySQL database
-					sqlConnection = DriverManager.getConnection(Utilities.getMySQLConnectionString());
 
-					// parepare a SQL statement to be run on the MySQL database
-					final String sqlStatementString = "DELETE FROM " + Utilities.DATABASE_TABLE_USERS + " WHERE " + Utilities.DATABASE_TABLE_USERS_COLUMN_ID + " = ?";
-					sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
-
-					// prevent SQL injection by inserting user data this way
-					sqlStatement.setLong(1, id);
-
-					// run the SQL statement
-					sqlStatement.executeUpdate();
-
-					printWriter.print(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_USER_REMOVED_FROM_DATABASE));
-				}
-				catch (final SQLException e)
-				{
-
-				}
-				finally
-				// it's best to release SQL resources in reverse order of their creation
-				// https://dev.mysql.com/doc/refman/5.0/en/connector-j-usagenotes-statements.html#connector-j-examples-execute-select
-				{
-					if (sqlStatement != null)
-					{
-						try
-						{
-							sqlStatement.close();
-						}
-						catch (final SQLException e)
-						{
-
-						}
-
-						sqlStatement = null;
-					}
-
-					if (sqlConnection != null)
-					{
-						try
-						{
-							sqlConnection.close();
-						}
-						catch (final SQLException e)
-						{
-
-						}
-
-						sqlConnection = null;
-					}
-				}
 			}
 		}
 		else

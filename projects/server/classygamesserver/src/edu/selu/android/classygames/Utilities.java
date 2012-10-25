@@ -29,6 +29,7 @@ public class Utilities
 	public final static String JSON_DATA = "json";
 	public final static String JSON_DATA_BLANK = "";
 	public final static String JSON_DATA_ID = "id";
+	public final static String JSON_DATA_ID_CHALLENGER = "id_challenger";
 	public final static String JSON_DATA_NAME = "name";
 	public final static String JSON_DATA_REG_ID = "reg_id";
 

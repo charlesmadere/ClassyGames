@@ -45,9 +45,3 @@ div#playStore
 	right: 2%;
 	width: 192px;
 }
-
-
-div#playStore:hover
-{
-	background-image: url("../img/playstore-hover.png");
-}
