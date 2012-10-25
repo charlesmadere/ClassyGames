@@ -24,6 +24,7 @@
 	<head>
 		<meta charset="utf-8" />
 		<link href="assets/css/main.css" rel="stylesheet" type="text/css" />
+		<link href="favicon.ico" hrel="shortcut icon" />
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js" type="text/javascript"></script>
 		<script src="assets/js/main.js" type="text/javascript"></script>
 		<title>Classy Games</title>
