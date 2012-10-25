@@ -15,25 +15,31 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
+import edu.selu.android.classygames.games.Person;
+
 
 public class CheckersGameActivity extends SherlockActivity implements OnClickListener
 {
+
+
 	TableLayout layout;
-    MyButton[][] buttons;
-    
-    MyButton prevButton;
-    int greenPlayer, orangePlayer;
-    
+	MyButton[][] buttons;
+
+	MyButton prevButton;
+	int greenPlayer, orangePlayer;
+
 
 	public final static String INTENT_DATA_GAME_ID = "GAME_ID";
-	public final static String INTENT_DATA_PERSON_ID = "GAME_PERSON_ID";
-	public final static String INTENT_DATA_PERSON_NAME = "GAME_PERSON_NAME";
+	public final static String INTENT_DATA_PERSON_CREATOR_ID = "GAME_PERSON_CREATOR_ID";
+	public final static String INTENT_DATA_PERSON_CREATOR_NAME = "GAME_PERSON_CREATOR_NAME";
+	public final static String INTENT_DATA_PERSON_CHALLENGED_ID = "GAME_PERSON_CHALLENGED_ID";
+	public final static String INTENT_DATA_PERSON_CHALLENGED_NAME = "GAME_PERSON_CHALLENGED_NAME";
 
 
-	private String id;
-	private Long personId;
-	private String personName;
-	
+	private String gameId;
+	private Person personCreator;
+	private Person personChallenged;
+
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState)
@@ -51,12 +57,18 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		}
 		else
 		{
-			id = bundle.getString(INTENT_DATA_GAME_ID);
-			personId = bundle.getLong(INTENT_DATA_PERSON_ID);
-			personName = bundle.getString(INTENT_DATA_PERSON_NAME);
-		}
+			gameId = bundle.getString(INTENT_DATA_GAME_ID);
 
-		
+			personCreator = new Person();
+			personCreator.setId(bundle.getLong(INTENT_DATA_PERSON_CREATOR_ID));
+			personCreator.setName(bundle.getString(INTENT_DATA_PERSON_CREATOR_NAME));
+
+			personChallenged = new Person();
+			personChallenged.setId(bundle.getLong(INTENT_DATA_PERSON_CHALLENGED_ID));
+			personChallenged.setName(bundle.getString(INTENT_DATA_PERSON_CHALLENGED_NAME));
+
+			getSupportActionBar().setTitle(getSupportActionBar().getTitle() + personChallenged.getName());
+		}
 
 		prevButton = null;
     	greenPlayer = R.drawable.chkgreen;

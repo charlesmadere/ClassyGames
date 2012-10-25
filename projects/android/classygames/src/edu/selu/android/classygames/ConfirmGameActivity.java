@@ -13,13 +13,15 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
+import edu.selu.android.classygames.games.Person;
+
 
 public class ConfirmGameActivity extends SherlockActivity
 {
 
 
-	private long id;
-	private String name;
+	private Person personCreator;
+	private Person personChallenged;
 
 
 	@Override
@@ -38,20 +40,25 @@ public class ConfirmGameActivity extends SherlockActivity
 		}
 		else
 		{
-			id = bundle.getLong(CheckersGameActivity.INTENT_DATA_PERSON_ID);
-			name = bundle.getString(CheckersGameActivity.INTENT_DATA_PERSON_NAME);
+			final long creatorId = bundle.getLong(CheckersGameActivity.INTENT_DATA_PERSON_CREATOR_ID);
+			final String creatorName = bundle.getString(CheckersGameActivity.INTENT_DATA_PERSON_CREATOR_NAME);
+			final long challengedId = bundle.getLong(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_ID);
+			final String challengedName = bundle.getString(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_NAME);
 
-			if (id <= 0  || name == null)
+			if (creatorId < 0  || creatorName == null || creatorName.equals("") || challengedId < 0 || challengedName == null || challengedName.equals(""))
 			{
 				activityHasError();
 			}
 			else
 			{
+				personCreator = new Person(creatorId, creatorName);
+				personChallenged = new Person(challengedId, challengedName);
+
 				ImageView personPicture = (ImageView) findViewById(R.id.confirm_game_activity_person_picture);
-				UrlImageViewHelper.setUrlDrawable(personPicture, Utilities.FACEBOOK_GRAPH_API_URL + id + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_LARGE_SSL);
+				UrlImageViewHelper.setUrlDrawable(personPicture, Utilities.FACEBOOK_GRAPH_API_URL + personChallenged.getId() + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_LARGE_SSL);
 
 				TextView personName = (TextView) findViewById(R.id.confirm_game_activity_person_name);
-				personName.setText(name);
+				personName.setText(personChallenged.getName());
 				personName.setTypeface(Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_SNELL_ROUNDHAND_BLKSCR));
 
 				Button gameAccept = (Button) findViewById(R.id.confirm_game_activity_button_accept);
@@ -61,9 +68,11 @@ public class ConfirmGameActivity extends SherlockActivity
 					@Override
 					public void onClick(final View v)
 					{
-						Intent intent = new Intent(ConfirmGameActivity.this, AmazonActivity.class);
-						intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_ID, id);
-						intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_NAME, name);
+						Intent intent = new Intent(ConfirmGameActivity.this, CheckersGameActivity.class);
+						intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CREATOR_ID, personCreator.getId());
+						intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CREATOR_NAME, personCreator.getName());
+						intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_ID, personChallenged.getId());
+						intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_NAME, personChallenged.getName());
 
 						// start the ConfirmGameActivity with a bit of extra data. We're passing it both
 						// the id and the name of the facebook person that the user has decided to challenge

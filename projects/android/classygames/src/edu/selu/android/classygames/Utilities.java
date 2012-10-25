@@ -282,7 +282,7 @@ public class Utilities
 	* <p>Simple class that handles pulling an image from a URL.</p>
 	* 
 	* <p><strong>Examples</strong><br />
-	* Utilities.LoadImageFRomWebOperations(myURL);<p>
+	* Utilities.LoadImageFRomWebOperations(myURL);</p>
 	* 
 	* @param url
 	* The URL to the image that you want to download.

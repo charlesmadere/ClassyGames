@@ -39,6 +39,7 @@ public class GamesListActivity extends SherlockListActivity
 
 	private AsyncTask<Void, Void, Void> registerTask;
 	private GamesListAdapter gamesAdapter;
+	private Person person;
 
 
 	@Override
@@ -102,7 +103,10 @@ public class GamesListActivity extends SherlockListActivity
 				return true;
 
 			case R.id.games_list_activity_actionbar_new_game:
-				startActivity(new Intent(GamesListActivity.this, NewGameActivity.class));
+				Intent intent = new Intent(GamesListActivity.this, NewGameActivity.class);
+				intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CREATOR_ID, person.getId());
+				intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CREATOR_NAME, person.getName());
+				startActivity(intent);
 				return true;
 
 			case R.id.games_list_activity_actionbar_refresh:
@@ -122,9 +126,7 @@ public class GamesListActivity extends SherlockListActivity
 	{
 
 
-		private long id;
 		private ProgressDialog progressDialog;
-		private String name;
 
 
 		@Override
@@ -145,22 +147,13 @@ public class GamesListActivity extends SherlockListActivity
 				final long id = me.getLong("id");
 				final String name = me.getString("name");
 
-				if (id >= 0)
+				if (id < 0 || name == null || name.equals(""))
 				{
-					this.id = id;
+					person = new Person();
 				}
 				else
 				{
-					this.id = -1;
-				}
-
-				if (name == null || name.equals(""))
-				{
-					this.name = null;
-				}
-				else
-				{
-					this.name = name;
+					person = new Person(id, name);
 				}
 			}
 			catch (final Exception e)
@@ -192,9 +185,9 @@ public class GamesListActivity extends SherlockListActivity
 					new AsyncTask<Void, Void, Void>()
 					{
 						@Override
-						protected Void doInBackground(final Void... params)
+						protected Void doInBackground(final Void... v)
 						{
-							if (!Utilities.GCMRegister(GamesListActivity.this, id, name, reg_id))
+							if (!Utilities.GCMRegister(GamesListActivity.this, person.getId(), person.getName(), reg_id))
 							{
 								GCMRegistrar.unregister(GamesListActivity.this);
 							}
@@ -306,8 +299,11 @@ public class GamesListActivity extends SherlockListActivity
 		protected void onPreExecute()
 		{
 			progressDialog = new ProgressDialog(GamesListActivity.this);
-			progressDialog.setMessage(GamesListActivity.this.getString(R.string.games_list_activity_progressdialog_message));
-			progressDialog.setTitle(R.string.games_list_activity_progressdialog_title);
+			progressDialog.setMessage(GamesListActivity.this.getString(R.string.games_list_activity_games_progressdialog_message));
+			progressDialog.setTitle(R.string.games_list_activity_games_progressdialog_title);
+			progressDialog.setCancelable(false);
+			progressDialog.setCanceledOnTouchOutside(false);
+
 			progressDialog.show();
 		}
 
@@ -335,7 +331,6 @@ public class GamesListActivity extends SherlockListActivity
 		public GamesListAdapter(final Context context, final int textViewResourceId, final ArrayList<GenericGame> games)
 		{
 			super(context, textViewResourceId, games);
-
 			this.games = games;
 		}
 
@@ -358,12 +353,12 @@ public class GamesListActivity extends SherlockListActivity
 
 				if (game.getPerson().getName() == "Their Turn")
 				{
-					convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_their_turn, null);
+					convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_turn_theirs, null);
 					viewHolder.picture = (ImageView) convertView.findViewById(R.drawable.turn_theirs);
 				}
 				else if (game.getPerson().getName() == "Your Turn")
 				{
-					convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_your_turn, null);
+					convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_turn_yours, null);
 					viewHolder.picture = (ImageView) convertView.findViewById(R.drawable.turn_yours);
 				}
 				else
@@ -398,8 +393,8 @@ public class GamesListActivity extends SherlockListActivity
 						{
 							Intent intent = new Intent(GamesListActivity.this, CheckersGameActivity.class);
 							intent.putExtra(CheckersGameActivity.INTENT_DATA_GAME_ID, game.getId());
-							intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_ID, game.getPerson().getId());
-							intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_NAME, game.getPerson().getName());
+							intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_ID, game.getPerson().getId());
+							intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_NAME, game.getPerson().getName());
 
 							// start the ConfirmGameActivity with a bit of extra data. We're passing it both
 							// the id and the name of the facebook person that the user clicked on

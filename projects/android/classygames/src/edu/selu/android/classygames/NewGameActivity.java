@@ -11,7 +11,6 @@ import org.json.JSONObject;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,7 +21,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListActivity;
@@ -37,6 +35,7 @@ public class NewGameActivity extends SherlockListActivity
 
 
 	private PeopleAdapter peopleAdapter;
+	private Person personCreator;
 
 
 	@Override
@@ -45,6 +44,28 @@ public class NewGameActivity extends SherlockListActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.new_game_activity);
 		Utilities.styleActionBar(getResources(), getSupportActionBar());
+
+		final Bundle bundle = getIntent().getExtras();
+
+		if (bundle == null)
+		// bundle should NOT equal null
+		{
+			activityHasError();
+		}
+		else
+		{
+			final long id = bundle.getLong(CheckersGameActivity.INTENT_DATA_PERSON_CREATOR_ID);
+			final String name = bundle.getString(CheckersGameActivity.INTENT_DATA_PERSON_CREATOR_NAME);
+
+			if (id < 0 || name == null || name.equals(""))
+			{
+				activityHasError();
+			}
+			else
+			{
+				personCreator = new Person(id, name);
+			}
+		}
 
 		new AsyncPopulateFacebookFriends().execute();
 	}
@@ -62,6 +83,13 @@ public class NewGameActivity extends SherlockListActivity
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+
+	private void activityHasError()
+	{
+		Utilities.easyToastAndLogError(NewGameActivity.this, NewGameActivity.this.getString(R.string.new_game_activity_data_error));
+		finish();
 	}
 
 	
@@ -158,15 +186,12 @@ public class NewGameActivity extends SherlockListActivity
 
 
 		private ArrayList<Person> people;
-		private Typeface typeface;
 
 
 		public PeopleAdapter(final Context context, final int textViewResourceId, final ArrayList<Person> people)
 		{
 			super(context, textViewResourceId, people);
-
 			this.people = people;
-			typeface = Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D);
 		}
 
 
@@ -193,16 +218,11 @@ public class NewGameActivity extends SherlockListActivity
 					new AsyncPopulatePictures(viewHolder).execute(person);
 				}
 
-				if (typeface == null)
-				{
-					typeface = Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D);
-				}
-
 				viewHolder.name = (TextView) convertView.findViewById(R.id.new_game_activity_listview_item_name);
 				if (viewHolder.name != null)
 				{
 					viewHolder.name.setText(person.getName());
-					viewHolder.name.setTypeface(typeface);
+					viewHolder.name.setTypeface(Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D));
 				}
 
 				viewHolder.onClickListener = new OnClickListener()
@@ -211,8 +231,10 @@ public class NewGameActivity extends SherlockListActivity
 					public void onClick(final View v)
 					{
 						Intent intent = new Intent(NewGameActivity.this, ConfirmGameActivity.class);
-						intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_ID, person.getId());
-						intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_NAME, person.getName());
+						intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CREATOR_ID, personCreator.getId());
+						intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CREATOR_NAME, personCreator.getName());
+						intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_ID, person.getId());
+						intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_NAME, person.getName());
 
 						// start the ConfirmGameActivity with a bit of extra data. We're passing it both
 						// the id and the name of the facebook person that the user clicked on
@@ -228,7 +250,7 @@ public class NewGameActivity extends SherlockListActivity
 		}
 
 
-		private final class AsyncPopulatePictures extends AsyncTask<Person, Long ,Drawable>
+		private final class AsyncPopulatePictures extends AsyncTask<Person, Long, Drawable>
 		{
 
 
@@ -259,7 +281,7 @@ public class NewGameActivity extends SherlockListActivity
 					{
 						drawable = Utilities.loadImageFromWebOperations(Utilities.FACEBOOK_GRAPH_API_URL + person[0].getId() + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE_SSL);
 					}
-					catch(Exception e)
+					catch (final Exception e)
 					{
 						Log.e("Classy Games", "Image Load Failed: " + e);
 					}
