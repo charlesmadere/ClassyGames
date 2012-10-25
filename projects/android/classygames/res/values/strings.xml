@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="about">About</string>
-	<string name="about_activity_title">About</string>
 	<string name="about_activity_about">Classy Games was developed by a team of six students attending Southeastern Louisiana University.</string>
+	<string name="about_activity_title">About</string>
+	<string name="amazon_activity_send_data">Send Data</string>
+	<string name="amazon_activity_title">Amazon Activity</string>
 	<string name="app_name">Classy Games</string>
 	<string name="checkers_game_activity_title">Checkers Game</string>
 	<string name="checkers_game_activity_data_error">Error in instantiating the game.</string>
@@ -12,14 +14,16 @@
 	<string name="confirm_game_activity_description">Are you sure that you want to start a game with this person?</string>
 	<string name="confirm_game_activity_person_picture_description">Friend\'s Picture</string>
 	<string name="confirm_game_activity_title">Confirm Game</string>
-	<string name="games_list_activity_turn_theirs">Their Turn</string>
-	<string name="games_list_activity_turn_yours">Your Turn</string>
+	<string name="games_list_activity_init_progressdialog_message">Initializing settings and registering you with our servers&#8230;</string>
+	<string name="games_list_activity_init_progressdialog_title">Classy Games is working&#8230;</string>
 	<string name="games_list_activity_listview_item_picture_description">Friend\'s Picture</string>
 	<string name="games_list_activity_listview_turn_theirs_no_games">You have no pending games for your friends! You should start a new one!</string>
 	<string name="games_list_activity_listview_turn_yours_no_games">None of your friends have sent a move your way. Perhaps you should start a new game?</string>
-	<string name="games_list_activity_title">Games List</string>
 	<string name="games_list_activity_progressdialog_message">Retrieving all of your games&#8230;</string>
 	<string name="games_list_activity_progressdialog_title">Classy Games is working&#8230;</string>
+	<string name="games_list_activity_title">Games List</string>
+	<string name="games_list_activity_turn_theirs">Their Turn</string>
+	<string name="games_list_activity_turn_yours">Your Turn</string>
 	<string name="login_with_facebook">Login with Facebook</string>
 	<string name="logout">Logout</string>
 	<string name="logout_activity_description">Are you sure you want to logout of Facebook? You will need to login again to continue using Classy Games. You will keep on playing, right? After pressing this button, you will be returned to the Classy Games login screen.</string>
@@ -34,5 +38,10 @@
 	<string name="new_game_activity_listview_no_friends">Well you don\'t seem to have any Facebook friends. In order to play Classy Games you must have some Facebook friends.</string>
 	<string name="refresh">Refresh</string>
 	<string name="send_move">Send Move</string>
+	<string name="server_registration_attempt">Trying (attempt %1$d) to register device on server.</string>
+	<string name="server_registration_fail">Could not register device on server after %1$d attempts.</string>
+	<string name="server_registration_success">Device successfully registered with server!</string>
+	<string name="server_unregistration_fail">Could not remove device registration from server. (%1$s)</string>
+	<string name="server_unregistration_success">Device successfully removed from server!</string>
 	<string name="undo_move">Undo Move</string>
 </resources>

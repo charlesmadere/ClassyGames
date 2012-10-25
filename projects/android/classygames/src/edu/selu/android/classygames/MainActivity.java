@@ -93,13 +93,6 @@ public class MainActivity extends SherlockActivity
 	}
 
 
-	private void goToGamesList()
-	{
-		startActivity(new Intent(MainActivity.this, GamesListActivity.class));
-		finish();
-	}
-
-
 	@Override
 	public void onActivityResult(final int requestCode, final int resultCode, final Intent data)
 	{
@@ -113,6 +106,13 @@ public class MainActivity extends SherlockActivity
 	{
 		super.onResume();
 		Utilities.getFacebook().extendAccessTokenIfNeeded(MainActivity.this, null);
+	}
+
+
+	private void goToGamesList()
+	{
+		startActivity(new Intent(MainActivity.this, GamesListActivity.class));
+		finish();
 	}
 
 

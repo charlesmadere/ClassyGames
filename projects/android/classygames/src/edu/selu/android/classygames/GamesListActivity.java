@@ -3,10 +3,13 @@ package edu.selu.android.classygames;
 
 import java.util.ArrayList;
 
+import org.json.JSONObject;
+
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +25,8 @@ import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.facebook.android.Util;
+import com.google.android.gcm.GCMRegistrar;
 
 import edu.selu.android.classygames.games.GenericGame;
 import edu.selu.android.classygames.games.Person;
@@ -32,6 +37,7 @@ public class GamesListActivity extends SherlockListActivity
 {
 
 
+	private AsyncTask<Void, Void, Void> registerTask;
 	private GamesListAdapter gamesAdapter;
 
 
@@ -42,6 +48,7 @@ public class GamesListActivity extends SherlockListActivity
 		setContentView(R.layout.games_list_activity);
 		Utilities.styleActionBar(getResources(), getSupportActionBar(), false);
 
+		new AsyncGCMRegister().execute();
 		new AsyncPopulateGamesList().execute();
 	}
 
@@ -64,6 +71,20 @@ public class GamesListActivity extends SherlockListActivity
 		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.games_list_activity, menu);
 		return super.onCreateOptionsMenu(menu);
+	}
+
+
+	@Override
+	public void onDestroy()
+	{
+		if (registerTask != null)
+		{
+			registerTask.cancel(true);
+		}
+
+		unregisterReceiver(messageReceiver);
+		GCMRegistrar.onDestroy(GamesListActivity.this);
+		super.onDestroy();
 	}
 
 
@@ -91,6 +112,133 @@ public class GamesListActivity extends SherlockListActivity
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+
+	/**
+	 * set up Google Cloud Messaging (GCM) Stuff
+	 */
+	private final class AsyncGCMRegister extends AsyncTask<Void, Void, Void>
+	{
+
+
+		private long id;
+		private ProgressDialog progressDialog;
+		private String name;
+
+
+		@Override
+		protected Void doInBackground(final Void... v)
+		{
+			// make sure that the device ahs the proper dependencies
+			GCMRegistrar.checkDevice(GamesListActivity.this);
+
+			// make sure that the manifest was properly set
+			GCMRegistrar.checkManifest(GamesListActivity.this);
+
+			registerReceiver(messageReceiver, new IntentFilter(Utilities.DISPLAY_MESSAGE_ACTION));
+
+			try
+			{
+				final String request = Utilities.getFacebook().request("me");
+				final JSONObject me = Util.parseJson(request);
+				final long id = me.getLong("id");
+				final String name = me.getString("name");
+
+				if (id >= 0)
+				{
+					this.id = id;
+				}
+				else
+				{
+					this.id = -1;
+				}
+
+				if (name == null || name.equals(""))
+				{
+					this.name = null;
+				}
+				else
+				{
+					this.name = name;
+				}
+			}
+			catch (final Exception e)
+			{
+				Log.e(Utilities.LOG_TAG, "Exception during Facebook request or parse.", e);
+			}
+
+			// grab current registration ID. we may not already have one
+			final String reg_id = GCMRegistrar.getRegistrationId(GamesListActivity.this);
+
+			if (reg_id == null || reg_id.equals(""))
+			// if we do not have a registration ID then we'll need to register with the server with
+			// the below code
+			{
+				// automatically registers application with GCM on startup
+				GCMRegistrar.register(GamesListActivity.this, SecretConstants.GOOGLE_PROJECT_ID);
+			}
+			else
+			// if we're here then that means that this device has already been registered with the GCM
+			// server
+			{
+				if (GCMRegistrar.isRegisteredOnServer(GamesListActivity.this))
+				// check to see if this device is registed on the classy games server
+				{
+
+				}
+				else
+				{
+					new AsyncTask<Void, Void, Void>()
+					{
+						@Override
+						protected Void doInBackground(final Void... params)
+						{
+							if (!Utilities.GCMRegister(GamesListActivity.this, id, name, reg_id))
+							{
+								GCMRegistrar.unregister(GamesListActivity.this);
+							}
+
+							return null;
+						}
+
+
+						@Override
+						protected void onPostExecute(final Void result)
+						{
+							registerTask = null;
+						}
+					}.execute();
+				}
+			}
+
+			return null;
+		}
+
+
+		@Override
+		protected void onPostExecute(final Void result)
+		{
+			if (progressDialog.isShowing())
+			{
+				progressDialog.dismiss();
+			}
+		}
+
+
+		@Override
+		protected void onPreExecute()
+		{
+			progressDialog = new ProgressDialog(GamesListActivity.this);
+			progressDialog.setMessage(GamesListActivity.this.getString(R.string.games_list_activity_init_progressdialog_message));
+			progressDialog.setTitle(R.string.games_list_activity_init_progressdialog_title);
+			progressDialog.setCancelable(false);
+			progressDialog.setCanceledOnTouchOutside(false);
+
+			progressDialog.show();
+		}
+
+
 	}
 
 
@@ -167,12 +315,21 @@ public class GamesListActivity extends SherlockListActivity
 	}
 
 
+	private final BroadcastReceiver messageReceiver = new BroadcastReceiver()
+	{
+		@Override
+		public void onReceive(final Context context, final Intent intent)
+		{
+
+		}
+	};
+
+
 	private class GamesListAdapter extends ArrayAdapter<GenericGame>
 	{
 
 
 		private ArrayList<GenericGame> games;
-		private Typeface typeface;
 
 
 		public GamesListAdapter(final Context context, final int textViewResourceId, final ArrayList<GenericGame> games)
@@ -180,7 +337,6 @@ public class GamesListActivity extends SherlockListActivity
 			super(context, textViewResourceId, games);
 
 			this.games = games;
-			typeface = Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D);
 		}
 
 
@@ -192,21 +348,20 @@ public class GamesListActivity extends SherlockListActivity
 				LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_item, null);
 			}
-			
+
 			final GenericGame game = games.get(position);
-			
+
 			if (game != null)
 			{
-				
 				LayoutInflater layoutInflater = (LayoutInflater) getSystemService( Context.LAYOUT_INFLATER_SERVICE);
 				ViewHolder viewHolder = new ViewHolder();
-				
-				if( game.getPerson().getName() == "Their Turn" )
+
+				if (game.getPerson().getName() == "Their Turn")
 				{
 					convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_their_turn, null);
 					viewHolder.picture = (ImageView) convertView.findViewById(R.drawable.turn_theirs);
 				}
-				else if( game.getPerson().getName() == "Your Turn" )
+				else if (game.getPerson().getName() == "Your Turn")
 				{
 					convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_your_turn, null);
 					viewHolder.picture = (ImageView) convertView.findViewById(R.drawable.turn_yours);
@@ -217,22 +372,17 @@ public class GamesListActivity extends SherlockListActivity
 					convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_item, null);
 					viewHolder = new ViewHolder();
 					viewHolder.picture = (ImageView) convertView.findViewById(R.id.games_list_activity_listview_item_picture);
-					
+
 					if (viewHolder.picture != null)
 					{
 
-					}
-
-					if (typeface == null)
-					{
-						typeface = Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D);
 					}
 
 					viewHolder.name = (TextView) convertView.findViewById(R.id.games_list_activity_listview_item_name);
 					if (viewHolder.name != null)
 					{
 						viewHolder.name.setText(game.getPerson().getName());
-						viewHolder.name.setTypeface(typeface);
+						viewHolder.name.setTypeface(Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D));
 					}
 
 					viewHolder.time = (TextView) convertView.findViewById(R.id.games_list_activity_listview_item_time);
@@ -240,7 +390,7 @@ public class GamesListActivity extends SherlockListActivity
 					{
 						viewHolder.time.setText(game.getLastMoveTime());
 					}	
-					
+
 					viewHolder.onClickListener = new OnClickListener()
 					{
 						@Override
@@ -256,7 +406,7 @@ public class GamesListActivity extends SherlockListActivity
 							startActivity(intent);
 						}
 					};
-					
+
 					convertView.setOnClickListener(viewHolder.onClickListener);
 				}
 
@@ -267,13 +417,12 @@ public class GamesListActivity extends SherlockListActivity
 		}
 
 
-		private class ViewHolder
 		/**
 		 * made this li'l class while trying to optimize our listview. apparently it
 		 * helps performance
 		 * https://developer.android.com/training/improving-layouts/smooth-scrolling.html
-		 *
 		 */
+		private class ViewHolder
 		{
 
 

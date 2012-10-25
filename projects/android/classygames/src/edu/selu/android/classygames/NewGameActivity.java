@@ -28,7 +28,6 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.facebook.android.Util;
-import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 import edu.selu.android.classygames.games.Person;
 
@@ -128,6 +127,8 @@ public class NewGameActivity extends SherlockListActivity
 			progressDialog.setMessage(NewGameActivity.this.getString(R.string.new_game_activity_progressdialog_message));
 			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 			progressDialog.setTitle(R.string.new_game_activity_progressdialog_title);
+			progressDialog.setCancelable(false);
+			progressDialog.setCanceledOnTouchOutside(false);
 			
 			progressDialog.show();
 		}
@@ -144,11 +145,6 @@ public class NewGameActivity extends SherlockListActivity
 
 				case 2:
 					progressDialog.setProgress(l[0].intValue());
-
-					/*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-					{
-						UrlImageViewHelper.loadUrlDrawable(NewGameActivity.this, "https://graph.facebook.com/" + i[1] + "/picture?return_ssl_resources=1");
-					}*/
 					break;
 			}
 		}
@@ -230,23 +226,27 @@ public class NewGameActivity extends SherlockListActivity
 
 			return convertView;
 		}
-		
-		
+
+
 		private final class AsyncPopulatePictures extends AsyncTask<Person, Long ,Drawable>
 		{
+
+
 			private Drawable drawable;
 			private ViewHolder viewHolder;
 			private String path;
-			
-			AsyncPopulatePictures(ViewHolder vH)
+
+
+			AsyncPopulatePictures(final ViewHolder viewHolder)
 			{
 				super();
-				viewHolder = vH;
-				path = viewHolder.picture.getTag().toString();
+				this.viewHolder = viewHolder;
+				path = this.viewHolder.picture.getTag().toString();
 			}
 
+
 			@Override
-			protected Drawable doInBackground(Person... person) 
+			protected Drawable doInBackground(final Person... person) 
 			{
 				if (!viewHolder.picture.getTag().toString().equals(path))
 				{
@@ -263,26 +263,29 @@ public class NewGameActivity extends SherlockListActivity
 					{
 						Log.e("Classy Games", "Image Load Failed: " + e);
 					}
-					
+
 					return drawable;
 				}
-			} 
-			
+			}
+
+
 			@Override
-			protected void onPostExecute(Drawable result)
+			protected void onPostExecute(final Drawable result)
 			{
 				viewHolder.picture.setImageDrawable(result);
 			}
+
+
 		}
 
 
-		private class ViewHolder
 		/**
 		 * made this li'l class while trying to optimize our listview. apparently using
 		 * something like this helps performance
 		 * https://developer.android.com/training/improving-layouts/smooth-scrolling.html
 		 *
 		 */
+		private class ViewHolder
 		{
 
 
@@ -307,7 +310,8 @@ public class NewGameActivity extends SherlockListActivity
 			return geo.getName().compareToIgnoreCase(jarrad.getName());
 		}
 
+
 	}
-	
+
 
 }

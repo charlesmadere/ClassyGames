@@ -61,7 +61,7 @@ public class ConfirmGameActivity extends SherlockActivity
 					@Override
 					public void onClick(final View v)
 					{
-						Intent intent = new Intent(ConfirmGameActivity.this, CheckersGameActivity.class);
+						Intent intent = new Intent(ConfirmGameActivity.this, AmazonActivity.class);
 						intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_ID, id);
 						intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_NAME, name);
 
