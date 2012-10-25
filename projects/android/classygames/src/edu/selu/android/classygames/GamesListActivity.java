@@ -132,7 +132,7 @@ public class GamesListActivity extends SherlockListActivity
 		@Override
 		protected Void doInBackground(final Void... v)
 		{
-			// make sure that the device ahs the proper dependencies
+			// make sure that the device has the proper dependencies
 			GCMRegistrar.checkDevice(GamesListActivity.this);
 
 			// make sure that the manifest was properly set

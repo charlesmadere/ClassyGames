@@ -67,14 +67,20 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			personChallenged.setId(bundle.getLong(INTENT_DATA_PERSON_CHALLENGED_ID));
 			personChallenged.setName(bundle.getString(INTENT_DATA_PERSON_CHALLENGED_NAME));
 
-			getSupportActionBar().setTitle(getSupportActionBar().getTitle() + personChallenged.getName());
+			if (personCreator.getId() < 0 || personChallenged.getId() < 0 || personChallenged.getName().equals(""))
+			{
+				activityHasError();
+			}
+			else
+			{
+				getSupportActionBar().setTitle(getSupportActionBar().getTitle() + " " + personChallenged.getName());
+			}
 		}
 
 		prevButton = null;
     	greenPlayer = R.drawable.chkgreen;
     	orangePlayer = R.drawable.chkorange;
-    	
-        super.onCreate(savedInstanceState);
+
         //height width 
         Display display = getWindowManager().getDefaultDisplay();
         @SuppressWarnings("deprecation")
@@ -217,12 +223,11 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 
 			case R.id.checkers_game_activity_actionbar_send_move:
 				// TODO send this move to the server
-				Utilities.easyToast(CheckersGameActivity.this, "sent");
+				Utilities.easyToast(CheckersGameActivity.this, "sent move with gameId \"" + gameId + "\"");
 				return true;
 
 			case R.id.checkers_game_activity_actionbar_undo_move:
-				// TODO undo the move that the user made on the board. this should not have any
-				// kind of server connectivity
+				// TODO undo the move that the user made on the board
 				Utilities.easyToast(CheckersGameActivity.this, "undone");
 				return true;
 
