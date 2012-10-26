@@ -111,7 +111,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
     			
     			if ((i+j)%2 == 0)
     			{
-    				buttons[i][j].setBackgroundColor(Color.BLACK);
+    				buttons[i][j].setBackgroundColor(Color.WHITE);
     				if (i >= 5)
 					{
     	    			buttons[i][j].setPlayerGreen(true);//this is Green LOWER IS GREEN
@@ -128,7 +128,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
     			
     			else
     			{
-    				buttons[i][j].setBackgroundColor(Color.RED);
+    				buttons[i][j].setBackgroundColor(Color.BLACK);
     				
     			}
         		rows[i].addView(buttons[i][j],cellLp);
@@ -156,7 +156,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		{
 			if (clickedButton.isEmpty())
 			{
-				if (canMove(clickedButton))
+				if (canMove(clickedButton) || canMove2Step(clickedButton))
 				{
 					//change image and data
 					prevButton.setImageResource(0);
@@ -189,6 +189,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		}
 	}
 	
+	
 	boolean canMove(MyButton button)
 	{
 		if (abs(button.getPx()-prevButton.getPx()) == 1 && abs(button.getPy()-prevButton.getPy()) == 1)
@@ -196,6 +197,33 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		else
 			return false;
 	}
+	
+	private boolean canMove2Step(MyButton Button) {
+		if (abs(Button.getPx()-prevButton.getPx()) == 2 && abs(Button.getPy()-prevButton.getPy()) == 2)
+			return true;
+		else
+			return false;
+	}
+	
+	/*
+	private boolean NinjaJump(MyButton cbutton) {
+		//TODO the logic for ninja jump
+		return false;
+		
+	}
+	
+	private boolean theKingPin(MyButton button) {
+		return false;
+		//if orange piece gets to end of rival square, becomes a king and game is over, vice versa
+	}
+	
+	//An algorithm for TURN
+	private boolean yourTurnHomeBoy(MyButton cbutton) {
+		if(cbutton.isPlayerGreen() && cbutton.hasMoved())
+			
+		
+	}
+	*/
 
 	private int abs(int i)
 	{	

@@ -49,5 +49,10 @@ public class MyButton extends ImageButton{
 	public void setPx(int px) {
 		this.px = px;
 	}
+
+	public boolean hasMoved() {
+		// TODO Auto-generated method stub
+		return false;
+	}
   
 }
