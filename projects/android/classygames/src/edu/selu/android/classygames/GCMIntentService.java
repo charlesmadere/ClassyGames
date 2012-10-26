@@ -27,7 +27,7 @@ public class GCMIntentService extends GCMBaseIntentService
 
 
 	@Override
-	protected void onError(final Context context, final String arg1)
+	protected void onError(final Context context, final String errorId)
 	{
 
 	}
@@ -50,15 +50,16 @@ public class GCMIntentService extends GCMBaseIntentService
 
 
 	@Override
-	protected void onRegistered(final Context context, final String regId)
+	protected void onRegistered(final Context context, final String reg_id)
 	{
-		// TODO send the regId variable to the server
-
+		Log.i(Utilities.LOG_TAG, "Device registered with reg_id of \"" + reg_id + "\".");
+		ServerUtilities.contextBroadcast(context, context.getString(R.string.server_registration_success));
+		ServerUtilities.GCMRegister(context, GamesListActivity.person, reg_id);
 	}
 
 
 	@Override
-	protected void onUnregistered(final Context context, final String arg1)
+	protected void onUnregistered(final Context context, final String reg_id)
 	{
 
 	}

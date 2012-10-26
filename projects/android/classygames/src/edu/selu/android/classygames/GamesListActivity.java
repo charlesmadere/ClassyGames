@@ -39,7 +39,7 @@ public class GamesListActivity extends SherlockListActivity
 
 	private AsyncTask<Void, Void, Void> registerTask;
 	private GamesListAdapter gamesAdapter;
-	private Person person;
+	public static Person person;
 
 
 	@Override
@@ -187,7 +187,7 @@ public class GamesListActivity extends SherlockListActivity
 						@Override
 						protected Void doInBackground(final Void... v)
 						{
-							if (!Utilities.GCMRegister(GamesListActivity.this, person.getId(), person.getName(), reg_id))
+							if (!ServerUtilities.GCMRegister(GamesListActivity.this, person, reg_id))
 							{
 								GCMRegistrar.unregister(GamesListActivity.this);
 							}
