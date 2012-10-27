@@ -1,49 +1,44 @@
 $(document).ready(function()
 {
-		var github = "div#github";
-		$(github).mouseenter(function()
-		{
-			bumpUp(github);
-		});
-
-		$(github).mouseleave(function()
-		{
-			bumpDown(github);
-		});
-
-
-		var playStore = "div#playStore";
-		$(playStore).mouseenter(function()
-		{
-			bumpUp(playStore);
-		});
-
-		$(playStore).mouseleave(function()
-		{
-			bumpDown(playStore);
-		});
+	setMouseEvents("div#github");
+	setMouseEvents("div#facebook");
+	setMouseEvents("div#playStore");
 });
 
 
-function bumpUp(id)
+function setMouseEvents(element)
 {
-	$(id).animate
+	$(element).mouseenter(function()
+	{
+		bumpUp(element);
+	});
+
+	$(element).mouseleave(function()
+	{
+		bumpDown(element);
+	});
+}
+
+
+function bumpUp(element)
+{
+	$(element).animate
 	(
 		{
-			marginBottom: "2px"
+			marginBottom: "4px"
 		},
-		128
+		160
 	);
 }
 
 
-function bumpDown(id)
+function bumpDown(element)
 {
-	$(id).animate
+	$(element).animate
 	(
 		{
 			marginBottom: "0px"
 		},
-		128
+		160
 	);
 }

@@ -12,6 +12,18 @@ body
 }
 
 
+a
+{
+	text-decoration: none;
+}
+
+
+img
+{
+	border: 0px;
+}
+
+
 div#logo
 {
 	background-image: url("../img/logo.png");
@@ -33,6 +45,29 @@ div#github
 	left: 2%;
 	position: fixed;
 	width: 131px;
+}
+
+
+div#facebook
+{
+	bottom: 3%;
+	color: #8A9AA1;
+	font-family: "Roboto Slim", "Segoe UI Light", "Segoe UI", sans-serif;
+	font-size: 28pt;
+	height: 48px;
+	left: 50%;
+	letter-spacing: -2pt;
+	margin-left: -240px;
+	position: fixed;
+	text-shadow: 0px 0px 24px #8A9AA1;
+	width: 480px;
+}
+
+
+img#facebookImage
+{
+	margin-right: 10px;
+	vertical-align: middle;
 }
 
 

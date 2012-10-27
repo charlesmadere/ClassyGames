@@ -56,24 +56,16 @@ public class GamesListRefresh extends HttpServlet
 	// {"id":"10443780"}"
 	// long
 	{
-		final String jsonData = request.getParameter(Utilities.JSON_DATA);
-
-		long id = -1;
-
-		try
-		{
-			final JSONObject json = (JSONObject) new JSONParser().parse(jsonData);
-			id = Long.parseLong((String) json.get(Utilities.JSON_DATA_ID));
-		}
-		catch (final ParseException e)
-		{
-
-		}
-
 		response.setContentType(Utilities.MIMETYPE_JSON);
 		PrintWriter printWriter = response.getWriter();
 
-		if (id >= 0)
+		final Long id = new Long(request.getParameter(Utilities.POST_DATA_ID));
+
+		if (id < 0)
+		{
+			printWriter.print(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_MALFORMED));
+		}
+		else
 		{
 			Connection sqlConnection = null;
 			PreparedStatement sqlStatement = null;
@@ -141,10 +133,6 @@ public class GamesListRefresh extends HttpServlet
 					}
 				}
 			}
-		}
-		else
-		{
-			printWriter.print(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_EMPTY_OR_MALFORMED));
 		}
 	}
 

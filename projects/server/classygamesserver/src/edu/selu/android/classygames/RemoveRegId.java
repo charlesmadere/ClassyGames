@@ -13,10 +13,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
 
 /**
  * Servlet implementation class RemoveRegId
@@ -44,7 +40,7 @@ public class RemoveRegId extends HttpServlet
 	{
 		response.setContentType(Utilities.MIMETYPE_JSON);
 		PrintWriter printWriter = response.getWriter();
-		printWriter.print(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_NOT_DETECTED));
+		printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_ERROR_DATA_NOT_DETECTED));
 	}
 
 
@@ -56,33 +52,25 @@ public class RemoveRegId extends HttpServlet
 	// {"id":"10443780"}"
 	// long
 	{
-		final String jsonData = request.getParameter(Utilities.JSON_DATA);
-
-		long id = -1;
-
-		try
-		{
-			final JSONObject json = (JSONObject) new JSONParser().parse(jsonData);
-			id = Long.parseLong((String) json.get(Utilities.JSON_DATA_ID));
-		}
-		catch (final ParseException e)
-		{
-
-		}
-
 		response.setContentType(Utilities.MIMETYPE_JSON);
 		PrintWriter printWriter = response.getWriter();
 
-		if (id >= 0)
+		final Long id = new Long(request.getParameter(Utilities.POST_DATA_ID));
+
+		if (id < 0)
+		{
+			printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_MALFORMED));
+		}
+		else
 		{
 			Connection sqlConnection = null;
 			PreparedStatement sqlStatement = null;
 
 			final String MySQLConnectionString = Utilities.getMySQLConnectionString();
 
-			if (MySQLConnectionString == null)
+			if (MySQLConnectionString == null || MySQLConnectionString.equals(""))
 			{
-				printWriter.print(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CREATE_CONNECTION_STRING));
+				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CREATE_CONNECTION_STRING));
 			}
 			else
 			{
@@ -101,11 +89,11 @@ public class RemoveRegId extends HttpServlet
 					// run the SQL statement
 					sqlStatement.executeUpdate();
 
-					printWriter.print(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_USER_REMOVED_FROM_DATABASE));
+					printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_USER_REMOVED_FROM_DATABASE));
 				}
 				catch (final SQLException e)
 				{
-
+					printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CONNECT));
 				}
 				finally
 				// it's best to release SQL resources in reverse order of their creation
@@ -140,10 +128,6 @@ public class RemoveRegId extends HttpServlet
 					}
 				}
 			}
-		}
-		else
-		{
-			printWriter.print(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_EMPTY_OR_MALFORMED));
 		}
 	}
 

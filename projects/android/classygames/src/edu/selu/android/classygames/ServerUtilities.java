@@ -1,16 +1,21 @@
 package edu.selu.android.classygames;
 
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Random;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
 
 import android.content.Context;
 import android.content.Intent;
@@ -28,14 +33,16 @@ public class ServerUtilities
 	private final static int REGISTER_MAX_ATTEMPTS = 5;
 	private final static long REGISTER_BACKOFF_TIME = 2000; // milliseconds
 
-	public final static String JSON_DATA = "json";
-	public final static String JSON_DATA_BLANK = "";
-	public final static String JSON_DATA_BOARD = "board";
-	public final static String JSON_DATA_ID = "id";
-	public final static String JSON_DATA_NAME = "name";
-	public final static String JSON_DATA_REG_ID = "reg_id";
-	public final static String JSON_DATA_USER_CHALLENGED = "user_challenged";
-	public final static String JSON_DATA_USER_CREATOR = "user_creator";
+	public final static String POST_DATA = "json";
+	public final static String POST_DATA_BLANK = "";
+	public final static String POST_DATA_BOARD = "board";
+	public final static String POST_DATA_ID = "id";
+	public final static String POST_DATA_NAME = "name";
+	public final static String POST_DATA_REG_ID = "reg_id";
+	public final static String POST_DATA_USER_CHALLENGED = "user_challenged";
+	public final static String POST_DATA_USER_CREATOR = "user_creator";
+
+	public final static String MIMETYPE_JSON = "application/json";
 
 	public final static String SERVER_ADDRESS = "http://classygames.net/";
 
@@ -64,92 +71,62 @@ public class ServerUtilities
 	}
 
 
-	private static void postToServer(final String endpoint, final Map<String, String> params) throws IOException
+	private static void postToServer(final String url, final ArrayList<NameValuePair> data) throws IOException
 	{
-		URL url = null;
+		String jsonString = null;
+		InputStream inputStream = null;
+
+		HttpPost httpPost = new HttpPost(url);
+		httpPost.setEntity(new UrlEncodedFormEntity(data));
 
 		try
 		{
-			url = new URL(endpoint);
+			HttpClient httpClient = new DefaultHttpClient();
+			HttpResponse httpResponse = httpClient.execute(httpPost);
+
+			inputStream = httpResponse.getEntity().getContent();
 		}
-		catch (final MalformedURLException e)
+		catch (final Exception e)
 		{
-			throw new IllegalArgumentException("Invalid url: \"" + endpoint + "\"");
+			Log.e(Utilities.LOG_TAG, "Error in HTTP connection.", e);
 		}
 
-		if (url != null)
+		if (inputStream != null)
 		{
-			StringBuilder bodyBuilder = new StringBuilder();
-			Iterator<Entry<String, String>> iterator = params.entrySet().iterator();
-
-			while (iterator.hasNext())
-			// constructs the POST body using the parameters
-			{
-				Entry<String, String> param = iterator.next();
-				bodyBuilder.append(param.getKey()).append('=').append(param.getValue());
-	
-				if (iterator.hasNext())
-				{
-					bodyBuilder.append('&');
-				}
-			}
-
-			final String body = bodyBuilder.toString();
-			Log.d(Utilities.LOG_TAG, "Posting \"" + body + "\" to \"" + url + "\"");
-
-			byte[] bytes = body.getBytes();
-
-			HttpURLConnection connection = null;
-
 			try
 			{
-				connection = (HttpURLConnection) url.openConnection();
-				connection.setDoOutput(true);
-				connection.setUseCaches(false);
-				connection.setFixedLengthStreamingMode(bytes.length);
-				connection.setRequestMethod("POST");
-				connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+				BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, HTTP.ISO_8859_1));
+				StringBuilder stringBuilder = new StringBuilder();
 
-				// send the request via POST
-				OutputStream output = connection.getOutputStream();
-				output.write(bytes);
-				output.close();
-
-				// handle the response
-				final int status = connection.getResponseCode();
-
-				if (status != 200)
+				for (String line = new String(); line != null; line = bufferedReader.readLine())
 				{
-					throw new IOException("POST failed with error code \"" + status + "\"");
+					stringBuilder.append(line);
 				}
+
+				jsonString = new String(stringBuilder.toString());
+				Log.d(Utilities.LOG_TAG, "\"" + jsonString + "\"");
 			}
-			finally
+			catch (final Exception e)
 			{
-				if (connection != null)
-				{
-					connection.disconnect();
-				}
+				Log.e(Utilities.LOG_TAG, "Error converting HTTP POST result from server.", e);
 			}
+		}
+		else
+		{
+
 		}
 	}
 
 
-	/**
-	 * @param context
-	 * @param id
-	 * @param name
-	 * @param reg_id
-	 * @return
-	 */
 	public static boolean GCMRegister(final Context context, final Person person, final String reg_id)
 	{
 		Log.i(Utilities.LOG_TAG, "Registering device with reg_id of \"" + reg_id + "\" with GCM server.");
 
-		// build the JSON data to be sent to the server
-		Map<String, String> params = new HashMap<String, String>();
-		params.put(JSON_DATA_ID, new Long(person.getId()).toString());
-		params.put(JSON_DATA_NAME, person.getName());
-		params.put(JSON_DATA_REG_ID, reg_id);
+		// build the data to be sent to the server
+		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair(POST_DATA_ID, new Long(person.getId()).toString()));
+		nameValuePairs.add(new BasicNameValuePair(POST_DATA_NAME, person.getName()));
+		nameValuePairs.add(new BasicNameValuePair(POST_DATA_REG_ID, reg_id));
 
 		if (random == null)
 		{
@@ -165,9 +142,11 @@ public class ServerUtilities
 			try
 			{
 				contextBroadcast(context, context.getString(R.string.server_registration_attempt, i));
-				postToServer(SERVER_NEW_REG_ID_ADDRESS, params);
+				postToServer(SERVER_NEW_REG_ID_ADDRESS, nameValuePairs);
 				GCMRegistrar.setRegisteredOnServer(context, true);
 				contextBroadcast(context, context.getString(R.string.server_registration_success));
+
+				return true;
 			}
 			catch (final IOException ioe)
 			{
@@ -201,30 +180,24 @@ public class ServerUtilities
 	}
 
 
-	/**
-	 * @param context
-	 * @param reg_id
-	 */
-	public static void GCMUnregister(final Context context, final String reg_id)
+	public static void GCMUnregister(final Context context, final long id, final String reg_id)
 	{
 		Log.i(Utilities.LOG_TAG, "Unregistering device with reg_id of \"" + reg_id + "\" from GCM server.");
 
-		Map<String, String> params = new HashMap<String, String>();
-		params.put(JSON_DATA_REG_ID, reg_id);
+		// build the data to be sent to the server
+		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair(POST_DATA_ID, new Long(id).toString()));
+		nameValuePairs.add(new BasicNameValuePair(POST_DATA_REG_ID, reg_id));
 
 		try
 		{
-			postToServer(SERVER_REMOVE_REG_ID_ADDRESS, params);
+			postToServer(SERVER_REMOVE_REG_ID_ADDRESS, nameValuePairs);
 			GCMRegistrar.setRegisteredOnServer(context, false);
 			contextBroadcast(context, context.getString(R.string.server_unregistration_success));
 		}
-		catch (final IOException e)
-		// At this point the device has been unregistered from GCM but is still registered on
-		// the server. We could try to unregister again but it is not necessary. If the server
-		// tries to send a message to the device, it will get a "NotRegistered" error message
-		// and should unregister the device
+		catch (IOException e)
 		{
-			contextBroadcast(context, context.getString(R.string.server_unregistration_fail, e.getMessage()));
+			contextBroadcast(context, context.getString(R.string.server_unregistration_fail));
 		}
 	}
 

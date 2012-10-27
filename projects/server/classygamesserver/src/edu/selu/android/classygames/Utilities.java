@@ -13,6 +13,10 @@ public class Utilities
 
 	public final static String APP_NAME = "Classy Games";
 
+	public final static String CHARSET_UTF8 = "charset=utf-8";
+	public final static String MIMETYPE_HTML = "text/html; " + CHARSET_UTF8;
+	public final static String MIMETYPE_JSON = "application/json; " + CHARSET_UTF8;
+
 	public final static String DATABASE_TABLE_GAMES = "games";
 	public final static String DATABASE_TABLE_GAMES_COLUMN_ID = "id";
 	public final static String DATABASE_TABLE_GAMES_COLUMN_USER_CREATOR = "user_creator";
@@ -26,17 +30,16 @@ public class Utilities
 	public final static String DATABASE_TABLE_USERS_COLUMN_REG_ID = "reg_id";
 	public final static String DATABASE_TABLE_USERS_FORMAT = "(`" + DATABASE_TABLE_USERS_COLUMN_ID + "`, `" + DATABASE_TABLE_USERS_COLUMN_NAME + "`, `" + DATABASE_TABLE_USERS_COLUMN_REG_ID + "`)";
 
-	public final static String JSON_DATA = "json";
-	public final static String JSON_DATA_BLANK = "";
-	public final static String JSON_DATA_ID = "id";
-	public final static String JSON_DATA_ID_CHALLENGER = "id_challenger";
-	public final static String JSON_DATA_NAME = "name";
-	public final static String JSON_DATA_REG_ID = "reg_id";
+	public final static String POST_DATA_BLANK = "";
+	public final static String POST_DATA_BOARD = "board";
+	public final static String POST_DATA_GAME_ID = "game_id";
+	public final static String POST_DATA_ID = "id";
+	public final static String POST_DATA_ID_CHALLENGER = "id_challenger";
+	public final static String POST_DATA_NAME = "name";
+	public final static String POST_DATA_REG_ID = "reg_id";
 
-	public final static String MIMETYPE_HTML = "text/html; charset=utf-8";
-	public final static String MIMETYPE_JSON = "application/json; charset=utf-8";
-
-	public final static String POST_ERROR_DATA_IS_EMPTY_OR_MALFORMED = "POST data is either empty or malformed.";
+	public final static String POST_ERROR_DATA_IS_EMPTY = "POST data is empty.";
+	public final static String POST_ERROR_DATA_IS_MALFORMED = "POST data is malformed.";
 	public final static String POST_ERROR_DATA_NOT_DETECTED = "No POST data detected.";
 	public final static String POST_ERROR_DATABASE_COULD_NOT_CONNECT = "Database connection was unable to be established.";
 	public final static String POST_ERROR_DATABASE_COULD_NOT_CREATE_CONNECTION_STRING = "Database connection String was unable to be created.";

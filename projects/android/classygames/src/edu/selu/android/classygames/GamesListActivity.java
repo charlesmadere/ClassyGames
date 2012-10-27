@@ -9,7 +9,6 @@ import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -119,6 +118,14 @@ public class GamesListActivity extends SherlockListActivity
 	}
 
 
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		Utilities.getFacebook().extendAccessTokenIfNeeded(GamesListActivity.this, null);
+	}
+
+
 	/**
 	 * set up Google Cloud Messaging (GCM) Stuff
 	 */
@@ -137,8 +144,6 @@ public class GamesListActivity extends SherlockListActivity
 
 			// make sure that the manifest was properly set
 			GCMRegistrar.checkManifest(GamesListActivity.this);
-
-			registerReceiver(messageReceiver, new IntentFilter(Utilities.DISPLAY_MESSAGE_ACTION));
 
 			try
 			{

@@ -13,13 +13,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
 
 /**
- * Servlet implementation class AddNewRegId
+ * Servlet implementation class NewRegId
  */
 public class NewRegId extends HttpServlet
 {
@@ -44,7 +40,7 @@ public class NewRegId extends HttpServlet
 	{
 		response.setContentType(Utilities.MIMETYPE_JSON);
 		PrintWriter printWriter = response.getWriter();
-		printWriter.print(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_NOT_DETECTED));
+		printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_NOT_DETECTED));
 	}
 
 
@@ -56,30 +52,16 @@ public class NewRegId extends HttpServlet
 	// {"id":"10443780","name":"Charles Madere","reg_id":"414931"}"
 	// long, String, String
 	{
-		final String jsonData = request.getParameter(Utilities.JSON_DATA);
-
-		long id = -1;
-		String name = new String();
-		String reg_id = new String();
-
-		try
-		{
-			final JSONObject json = (JSONObject) new JSONParser().parse(jsonData);
-			id = Long.parseLong((String) json.get(Utilities.JSON_DATA_ID));
-			name = (String) json.get(Utilities.JSON_DATA_NAME);
-			reg_id = (String) json.get(Utilities.JSON_DATA_REG_ID);
-		}
-		catch (final ParseException e)
-		{
-
-		}
-
 		response.setContentType(Utilities.MIMETYPE_JSON);
 		PrintWriter printWriter = response.getWriter();
 
-		if (id < 0 || name.equals(Utilities.JSON_DATA_BLANK) || reg_id.equals(Utilities.JSON_DATA_BLANK))
+		final Long id = new Long(request.getParameter(Utilities.POST_DATA_ID));
+		final String name = request.getParameter(Utilities.POST_DATA_NAME);
+		final String reg_id = request.getParameter(Utilities.POST_DATA_REG_ID);
+
+		if (id < 0 || name == null || reg_id == null || name.equals(Utilities.POST_DATA_BLANK) || reg_id.equals(Utilities.POST_DATA_BLANK))
 		{
-			printWriter.print(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_EMPTY_OR_MALFORMED));
+			printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_MALFORMED));
 		}
 		else
 		{
@@ -90,7 +72,7 @@ public class NewRegId extends HttpServlet
 
 			if (MySQLConnectionString == null)
 			{
-				printWriter.print(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CREATE_CONNECTION_STRING));
+				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CREATE_CONNECTION_STRING));
 			}
 			else
 			{
@@ -111,11 +93,11 @@ public class NewRegId extends HttpServlet
 					// run the SQL statement
 					sqlStatement.executeUpdate();
 
-					printWriter.print(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_USER_ADDED_TO_DATABASE));
+					printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_USER_ADDED_TO_DATABASE));
 				}
 				catch (final SQLException e)
 				{
-					printWriter.print(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CONNECT));
+					printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CONNECT));
 				}
 				finally
 				// it's best to release SQL resources in reverse order of their creation
