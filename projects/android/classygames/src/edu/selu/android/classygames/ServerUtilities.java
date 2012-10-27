@@ -16,6 +16,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
@@ -33,16 +35,18 @@ public class ServerUtilities
 	private final static int REGISTER_MAX_ATTEMPTS = 5;
 	private final static long REGISTER_BACKOFF_TIME = 2000; // milliseconds
 
+	public final static String MIMETYPE_JSON = "application/json";
+
 	public final static String POST_DATA = "json";
 	public final static String POST_DATA_BLANK = "";
 	public final static String POST_DATA_BOARD = "board";
+	public final static String POST_DATA_ERROR = "error";
 	public final static String POST_DATA_ID = "id";
 	public final static String POST_DATA_NAME = "name";
 	public final static String POST_DATA_REG_ID = "reg_id";
+	public final static String POST_DATA_SUCCESS = "success";
 	public final static String POST_DATA_USER_CHALLENGED = "user_challenged";
 	public final static String POST_DATA_USER_CREATOR = "user_creator";
-
-	public final static String MIMETYPE_JSON = "application/json";
 
 	public final static String SERVER_ADDRESS = "http://classygames.net/";
 
@@ -65,13 +69,60 @@ public class ServerUtilities
 
 	public static void contextBroadcast(final Context context, final String message)
 	{
+		Log.d(Utilities.LOG_TAG, "Broadcasting message: \"" + message + "\"");
 		Intent intent = new Intent();
 		intent.putExtra("message", message);
 		context.sendBroadcast(intent);
 	}
 
 
-	private static void postToServer(final String url, final ArrayList<NameValuePair> data) throws IOException
+	private static boolean parseServerResults(final String jsonString)
+	{
+		try
+		{
+			final JSONObject jsonData = new JSONObject(jsonString);
+
+			try
+			{
+				final JSONObject jsonResult = new JSONObject(jsonData.getString("result"));
+
+				try
+				{
+					final String successMessage = jsonResult.getString(POST_DATA_SUCCESS);
+					Log.i(Utilities.LOG_TAG, "Server returned success with message: \"" + successMessage + "\".");
+
+					return true;
+				}
+				catch (final JSONException e)
+				{
+					Log.e(Utilities.LOG_TAG, "Data returned from server contained no success message", e);
+
+					try
+					{
+						final String errorMessage = jsonResult.getString(POST_DATA_ERROR);
+						Log.i(Utilities.LOG_TAG, "Server returned error with message: \"" + errorMessage + "\".");
+					}
+					catch (final JSONException e1)
+					{
+						Log.e(Utilities.LOG_TAG, "Data returned from server contained no error message", e1);
+					}
+				}
+			}
+			catch (final JSONException e)
+			{
+				Log.e(Utilities.LOG_TAG, "Server returned message that was unable to be properly parsed", e);
+			}
+		}
+		catch (final JSONException e)
+		{
+			Log.e(Utilities.LOG_TAG, "Server returned message that was unable to be properly parsed", e);
+		}
+
+		return false;
+	}
+
+
+	private static String postToServer(final String url, final ArrayList<NameValuePair> data) throws IOException
 	{
 		String jsonString = null;
 		InputStream inputStream = null;
@@ -104,17 +155,14 @@ public class ServerUtilities
 				}
 
 				jsonString = new String(stringBuilder.toString());
-				Log.d(Utilities.LOG_TAG, "\"" + jsonString + "\"");
 			}
 			catch (final Exception e)
 			{
 				Log.e(Utilities.LOG_TAG, "Error converting HTTP POST result from server.", e);
 			}
 		}
-		else
-		{
 
-		}
+		return jsonString;
 	}
 
 
@@ -134,24 +182,37 @@ public class ServerUtilities
 		}
 
 		long backoffTime = REGISTER_BACKOFF_TIME + random.nextInt(1000);
+		boolean backoff = false;
 
 		for (int i = 1; i <= REGISTER_MAX_ATTEMPTS; ++i)
 		{
 			Log.i(Utilities.LOG_TAG, "GCM register attempt #" + i);
+			contextBroadcast(context, context.getString(R.string.server_registration_attempt, i));
 
 			try
 			{
-				contextBroadcast(context, context.getString(R.string.server_registration_attempt, i));
-				postToServer(SERVER_NEW_REG_ID_ADDRESS, nameValuePairs);
-				GCMRegistrar.setRegisteredOnServer(context, true);
-				contextBroadcast(context, context.getString(R.string.server_registration_success));
+				final String serverResponse = postToServer(SERVER_NEW_REG_ID_ADDRESS, nameValuePairs);
 
-				return true;
+				if (parseServerResults(serverResponse))
+				{
+					GCMRegistrar.setRegisteredOnServer(context, true);
+					contextBroadcast(context, context.getString(R.string.server_registration_success));
+
+					return true;
+				}
+				else
+				{
+					backoff = true;
+				}
 			}
 			catch (final IOException ioe)
 			{
 				Log.e(Utilities.LOG_TAG, "GCM register failure on attempt #" + i, ioe);
+				backoff = true;
+			}
 
+			if (backoff)
+			{
 				if (i <= REGISTER_MAX_ATTEMPTS)
 				{
 					try
@@ -171,6 +232,8 @@ public class ServerUtilities
 					// next GCM registration attempt
 					backoffTime = (backoffTime * 2) + backoffTime;
 				}
+
+				backoff = false;
 			}
 		}
 
@@ -191,11 +254,17 @@ public class ServerUtilities
 
 		try
 		{
-			postToServer(SERVER_REMOVE_REG_ID_ADDRESS, nameValuePairs);
+			final String serverResponse = postToServer(SERVER_REMOVE_REG_ID_ADDRESS, nameValuePairs); 
+
+			if (parseServerResults(serverResponse))
+			{
+				contextBroadcast(context, context.getString(R.string.server_unregistration_fail));
+			}
+
 			GCMRegistrar.setRegisteredOnServer(context, false);
 			contextBroadcast(context, context.getString(R.string.server_unregistration_success));
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			contextBroadcast(context, context.getString(R.string.server_unregistration_fail));
 		}
