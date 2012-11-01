@@ -9,11 +9,13 @@ import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Shader.TileMode;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.Log;
+import android.util.LruCache;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -309,6 +311,21 @@ public class Utilities
 	public static void styleActionBar(final Resources resources, final ActionBar actionBar)
 	{
 		styleActionBar(resources, actionBar, true);
+	}
+	
+	
+	public static void addBitmapToMemoryCache(Long key, Bitmap bitmap, LruCache<Long, Bitmap> imageCache)
+	{	
+		if(getBitmapFromMemCache(key, imageCache) == null)
+		{
+			imageCache.put(key, bitmap);
+		}
+	}
+	
+	
+	public static Bitmap getBitmapFromMemCache(Long key, LruCache<Long, Bitmap> imageCache)
+	{
+		return (Bitmap) imageCache.get(key);
 	}
 
 

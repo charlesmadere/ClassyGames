@@ -13,8 +13,9 @@
 		android:contentDescription="@string/new_game_activity_listview_item_picture_description"
 		android:gravity="center_vertical"
 		android:id="@+id/new_game_activity_listview_item_picture"
-		android:layout_height="fill_parent"
-		android:layout_width="48dip" />
+		android:layout_height="46dip"
+		android:layout_width="46dip"
+		android:scaleType="centerCrop"/>
 	<TextView
 		android:ellipsize="end"
 		android:id="@+id/new_game_activity_listview_item_name"

@@ -8,13 +8,18 @@ import java.util.Comparator;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.annotation.TargetApi;
+import android.app.ActivityManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,14 +35,14 @@ import com.facebook.android.Util;
 import edu.selu.android.classygames.data.Person;
 
 
+@TargetApi(12)
 public class NewGameActivity extends SherlockListActivity
 {
 
-
+	private LruCache<Long, Bitmap> imageCache;
 	private PeopleAdapter peopleAdapter;
 	private Person personCreator;
-
-
+	
 	@Override
 	public void onCreate(final Bundle savedInstanceState)
 	{
@@ -67,6 +72,21 @@ public class NewGameActivity extends SherlockListActivity
 			}
 		}
 
+		// setup cache size for loading drawable images
+		final int memClass = ((ActivityManager) (NewGameActivity.this).getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
+		
+		// currently use 1/8 of available memory for the cache
+		final int cacheSize = 1024 * 1024 * memClass / 8;
+		
+		imageCache = new LruCache<Long, Bitmap> (cacheSize)
+		{
+			protected int sizeOf(Long key, Bitmap bitmap)
+			{
+				// Cache is measured in bytes instead of number of items
+				return bitmap.getByteCount();
+			}
+		};
+		
 		new AsyncPopulateFacebookFriends().execute();
 	}
 
@@ -176,17 +196,14 @@ public class NewGameActivity extends SherlockListActivity
 					break;
 			}
 		}
-
-
+		
+		
 	}
 
 
 	private class PeopleAdapter extends ArrayAdapter<Person>
 	{
-
-
 		private ArrayList<Person> people;
-
 
 		public PeopleAdapter(final Context context, final int textViewResourceId, final ArrayList<Person> people)
 		{
@@ -210,12 +227,19 @@ public class NewGameActivity extends SherlockListActivity
 			{
 				ViewHolder viewHolder = new ViewHolder();
 				viewHolder.picture = (ImageView) convertView.findViewById(R.id.new_game_activity_listview_item_picture);
-				//TODO: fix image sizes
-				//viewHolder.picture.setScaleType(ScaleType.CENTER_CROP);
 				viewHolder.picture.setImageResource(R.drawable.fb_placeholder);
 				{
+					Bitmap image = imageCache.get(person.getId());
 					viewHolder.picture.setTag(person.getId());
-					new AsyncPopulatePictures(viewHolder).execute(person);
+					
+					if(image != null)
+					{
+						viewHolder.picture.setImageBitmap(image);
+					}
+					else
+					{
+						new AsyncPopulatePictures(viewHolder).execute(person);
+					}
 				}
 
 				viewHolder.name = (TextView) convertView.findViewById(R.id.new_game_activity_listview_item_name);
@@ -255,6 +279,7 @@ public class NewGameActivity extends SherlockListActivity
 
 
 			private Drawable drawable;
+			private Bitmap bitmap;
 			private ViewHolder viewHolder;
 			private String path;
 
@@ -279,7 +304,9 @@ public class NewGameActivity extends SherlockListActivity
 				{
 					try
 					{
-						drawable = Utilities.loadImageFromWebOperations(Utilities.FACEBOOK_GRAPH_API_URL + person[0].getId() + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE_SSL);
+							drawable = Utilities.loadImageFromWebOperations(Utilities.FACEBOOK_GRAPH_API_URL + person[0].getId() + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE_SSL);
+							bitmap = ((BitmapDrawable)drawable).getBitmap();
+							Utilities.addBitmapToMemoryCache(person[0].getId(),bitmap, imageCache);
 					}
 					catch (final Exception e)
 					{
@@ -309,31 +336,22 @@ public class NewGameActivity extends SherlockListActivity
 		 */
 		private class ViewHolder
 		{
-
-
 			public ImageView picture;
 			public OnClickListener onClickListener;
 			public TextView name;
-			
-
 		}
-
 
 	}
 
 
 	private class FacebookFriendsSorter implements Comparator<Person>
 	{
-
-
 		@Override
 		public int compare(final Person geo, final Person jarrad)
 		{
 			return geo.getName().compareToIgnoreCase(jarrad.getName());
 		}
-
-
 	}
-
-
+	
+	
 }
