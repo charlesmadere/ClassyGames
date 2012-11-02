@@ -69,6 +69,7 @@ public class NewRegId extends HttpServlet
 			PreparedStatement sqlStatement = null;
 
 			final String MySQLConnectionString = Utilities.getMySQLConnectionString();
+			int part = -1;
 
 			if (MySQLConnectionString == null)
 			{
@@ -78,26 +79,34 @@ public class NewRegId extends HttpServlet
 			{
 				try
 				{
+					part = 0;
 					// connect to the MySQL database
-					sqlConnection = DriverManager.getConnection(Utilities.getMySQLConnectionString());
+					sqlConnection = DriverManager.getConnection(MySQLConnectionString);
+					part = 1;
 
 					// prepare a SQL statement to be run on the MySQL database
 					final String sqlStatementString = "INSERT INTO " + Utilities.DATABASE_TABLE_USERS_FORMAT + " " + Utilities.DATABASE_TABLE_USERS + " VALUES (?, '?', '?');";
+					part = 2;
 					sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
+					part = 3;
 
 					// prevent SQL injection by inserting user data this way
 					sqlStatement.setLong(1, id);
+					part = 4;
 					sqlStatement.setString(2, name);
+					part = 5;
 					sqlStatement.setString(3, reg_id);
+					part = 6;
 
 					// run the SQL statement
 					sqlStatement.executeUpdate();
+					part = 7;
 
-					printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_USER_ADDED_TO_DATABASE));
+					printWriter.write(Utilities.makePostDataSuccess(MySQLConnectionString + " no herror" + part));
 				}
 				catch (final SQLException e)
 				{
-					printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CONNECT));
+					printWriter.write(Utilities.makePostDataError(MySQLConnectionString + " bb " + Utilities.POST_ERROR_DATABASE_COULD_NOT_CONNECT + " herror" + part));
 				}
 				finally
 				// it's best to release SQL resources in reverse order of their creation

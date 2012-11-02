@@ -22,9 +22,9 @@
 <html>
 
 	<head>
-		<meta charset="utf-8" />
 		<link href="assets/css/main.css" rel="stylesheet" type="text/css" />
 		<link href="favicon.ico" rel="shortcut icon" />
+		<meta charset="utf-8" />
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js" type="text/javascript"></script>
 		<script src="assets/js/main.js" type="text/javascript"></script>
 		<title>Classy Games</title>
@@ -33,8 +33,8 @@
 	<body>
 		<div id="logo"></div>
 		<a href="https://github.com/ScootrNova/ClassyGames" target="_blank"><div id="github"></div></a>
-		<a href="https://www.facebook.com/ClassyGamesCommunity" target="_blank"><div id="facebook"><img id="facebookImage" src="assets/img/facebook.png" />/ ClassyGamesCommunity</div></a>
-		<a href="https://play.google.com/store"><div id="playStore"></div></a>
+		<a href="https://www.facebook.com/ClassyGamesCommunity" target="_blank"><div id="facebook"><img alt="Facebook" id="facebookImage" src="assets/img/facebook.png" />/ ClassyGamesCommunity</div></a>
+		<a href="https://play.google.com/store" target="_blank"><div id="playStore"></div></a>
 	</body>
 
 </html>
