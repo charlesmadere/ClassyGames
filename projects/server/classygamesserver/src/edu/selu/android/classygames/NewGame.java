@@ -3,13 +3,15 @@ package edu.selu.android.classygames;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.mysql.jdbc.Connection;
 
 
 /**
@@ -36,7 +38,7 @@ public class NewGame extends HttpServlet
 	 */
 	protected void doGet(final HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
-		response.setContentType(Utilities.MIMETYPE_JSON);
+		response.setContentType(Utilities.CONTENT_TYPE_JSON);
 		PrintWriter printWriter = response.getWriter();
 		printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_ERROR_DATA_NOT_DETECTED));
 	}
@@ -46,11 +48,8 @@ public class NewGame extends HttpServlet
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(final HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-	// JSON data coming into this code should look something like this
-	// {"id":"10443780","id_challenger":"13371337"}"
-	// long, long
 	{
-		response.setContentType(Utilities.MIMETYPE_JSON);
+		response.setContentType(Utilities.CONTENT_TYPE_JSON);
 		PrintWriter printWriter = response.getWriter();
 
 		final Long id = new Long(request.getParameter(Utilities.POST_DATA_ID));
@@ -65,15 +64,39 @@ public class NewGame extends HttpServlet
 			Connection sqlConnection = null;
 			PreparedStatement sqlStatement = null;
 
-			final String MySQLConnectionString = Utilities.getMySQLConnectionString();
-
-			if (MySQLConnectionString == null || MySQLConnectionString.equals(""))
+			try
 			{
-				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CREATE_CONNECTION_STRING));
+				sqlConnection = Utilities.getSQLConnection();
 			}
-			else
+			catch (final SQLException e)
 			{
-				printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_DATABASE_QUERIED));
+				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CONNECT));
+			}
+			finally
+			{
+				if (sqlStatement != null)
+				{
+					try
+					{
+						sqlStatement.close();
+					}
+					catch (final SQLException e)
+					{
+
+					}
+				}
+
+				if (sqlConnection != null)
+				{
+					try
+					{
+						sqlConnection.close();
+					}
+					catch (final SQLException e)
+					{
+
+					}
+				}
 			}
 		}
 	}

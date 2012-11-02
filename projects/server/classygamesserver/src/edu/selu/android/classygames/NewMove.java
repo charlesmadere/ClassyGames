@@ -3,11 +3,15 @@ package edu.selu.android.classygames;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.mysql.jdbc.Connection;
 
 
 /**
@@ -34,7 +38,7 @@ public class NewMove extends HttpServlet
 	 */
 	protected void doGet(final HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
-		response.setContentType(Utilities.MIMETYPE_JSON);
+		response.setContentType(Utilities.CONTENT_TYPE_JSON);
 		PrintWriter printWriter = response.getWriter();
 		printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_ERROR_DATA_NOT_DETECTED));
 	}
@@ -44,11 +48,8 @@ public class NewMove extends HttpServlet
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(final HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-	// JSON data coming into this code should look something like this
-	// 
-	// 
 	{
-		response.setContentType(Utilities.MIMETYPE_JSON);
+		response.setContentType(Utilities.CONTENT_TYPE_JSON);
 		PrintWriter printWriter = response.getWriter();
 
 		final String game_id = request.getParameter(Utilities.POST_DATA_GAME_ID);
@@ -61,7 +62,43 @@ public class NewMove extends HttpServlet
 		}
 		else
 		{
-			printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_GENERIC));
+			Connection sqlConnection = null;
+			PreparedStatement sqlStatement = null;
+
+			try
+			{
+				sqlConnection = Utilities.getSQLConnection();
+			}
+			catch (final SQLException e)
+			{
+				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CONNECT));
+			}
+			finally
+			{
+				if (sqlStatement != null)
+				{
+					try
+					{
+						sqlStatement.close();
+					}
+					catch (final SQLException e)
+					{
+
+					}
+				}
+
+				if (sqlConnection != null)
+				{
+					try
+					{
+						sqlConnection.close();
+					}
+					catch (final SQLException e)
+					{
+
+					}
+				}
+			}
 		}
 	}
 

@@ -1,10 +1,15 @@
 package edu.selu.android.classygames;
 
 
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import org.json.simple.JSONValue;
+
+import com.mysql.jdbc.Connection;
 
 
 public class Utilities
@@ -12,10 +17,13 @@ public class Utilities
 
 
 	public final static String APP_NAME = "Classy Games";
+	public final static String BLANK = "";
 
 	public final static String CHARSET_UTF8 = "charset=utf-8";
-	public final static String MIMETYPE_HTML = "text/html; " + CHARSET_UTF8;
-	public final static String MIMETYPE_JSON = "application/json; " + CHARSET_UTF8;
+	public final static String MIMETYPE_HTML = "text/html";
+	public final static String MIMETYPE_JSON = "application/json";
+	public final static String CONTENT_TYPE_HTML = MIMETYPE_HTML + "; " + CHARSET_UTF8;
+	public final static String CONTENT_TYPE_JSON = MIMETYPE_JSON + "; " + CHARSET_UTF8;
 
 	public final static String DATABASE_TABLE_GAMES = "games";
 	public final static String DATABASE_TABLE_GAMES_COLUMN_ID = "id";
@@ -30,7 +38,6 @@ public class Utilities
 	public final static String DATABASE_TABLE_USERS_COLUMN_REG_ID = "reg_id";
 	public final static String DATABASE_TABLE_USERS_FORMAT = "(`" + DATABASE_TABLE_USERS_COLUMN_ID + "`, `" + DATABASE_TABLE_USERS_COLUMN_NAME + "`, `" + DATABASE_TABLE_USERS_COLUMN_REG_ID + "`)";
 
-	public final static String POST_DATA_BLANK = "";
 	public final static String POST_DATA_BOARD = "board";
 	public final static String POST_DATA_GAME_ID = "game_id";
 	public final static String POST_DATA_ID = "id";
@@ -48,25 +55,35 @@ public class Utilities
 	public final static String POST_SUCCESS_GENERIC = "POST data received.";
 	public final static String POST_SUCCESS_USER_ADDED_TO_DATABASE = "You've been successfully registered with " + APP_NAME + ".";
 	public final static String POST_SUCCESS_USER_REMOVED_FROM_DATABASE = "You've been successfully unregistered from " + APP_NAME + ".";
+	public static String con;
 
 
-	public static String getMySQLConnectionString()
+	public static Connection getSQLConnection() throws SQLException
 	{
-		final String dbName = System.getProperty("RDS_DB_NAME");
-		final String dbUsername = System.getProperty("RDS_USERNAME");
-		final String dbPassword = System.getProperty("RDS_PASSWORD");
+		Properties sqlProperties = new Properties();
+		sqlProperties.put("username", System.getProperty("RDS_USERNAME"));
+		sqlProperties.put("password", System.getProperty("RDS_PASSWORD"));
+
+		return DriverManager.getConnection(getSQLConnectionString(), System.getProperty("username"), System.getProperty("password"));
+	}
+
+
+	private static String getSQLConnectionString()
+	{
 		final String dbHostname = System.getProperty("RDS_HOSTNAME");
 		final String dbPort = System.getProperty("RDS_PORT");
+		final String dbName = System.getProperty("RDS_DB_NAME");
 
-		if (dbName == null || dbUsername == null || dbPassword == null || dbHostname == null || dbPort == null
-			|| dbName.equals("") || dbUsername.equals("") || dbPassword.equals("") || dbHostname.equals("") || dbPort.equals(""))
+		if (dbName == null || dbHostname == null || dbPort == null || dbName.equals("") || dbHostname.equals("") || dbPort.equals(""))
 		{
+			con = null;
 			return null;
 		}
 		else
 		{
+			con = "jdbc:mysql://" + dbHostname + ":" + dbPort + "/" + dbName;
 			// http://docs.amazonwebservices.com/elasticbeanstalk/latest/dg/create_deploy_Java.rds.html
-			return "jdbc:mysql://" + dbHostname + ":" + dbPort + "/" + dbName + "?user=" + dbUsername + "&password=" + dbPassword;
+			return con;
 		}
 	}
 
