@@ -1,6 +1,8 @@
 package edu.selu.android.classygames;
 
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -18,6 +20,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.util.LruCache;
 import android.view.LayoutInflater;
@@ -31,6 +34,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.facebook.android.Util;
+import com.koushikdutta.urlimageviewhelper.DiskLruCache;
 
 import edu.selu.android.classygames.data.Person;
 
@@ -38,8 +42,8 @@ import edu.selu.android.classygames.data.Person;
 @TargetApi(12)
 public class NewGameActivity extends SherlockListActivity
 {
-
-	private LruCache<Long, Bitmap> imageCache;
+	private DiskLruCache diskCache;
+	private LruCache<Long, Bitmap> memoryCache;
 	private PeopleAdapter peopleAdapter;
 	private Person personCreator;
 	
@@ -78,7 +82,7 @@ public class NewGameActivity extends SherlockListActivity
 		// currently use 1/8 of available memory for the cache
 		final int cacheSize = 1024 * 1024 * memClass / 8;
 		
-		imageCache = new LruCache<Long, Bitmap> (cacheSize)
+		memoryCache = new LruCache<Long, Bitmap> (cacheSize)
 		{
 			protected int sizeOf(Long key, Bitmap bitmap)
 			{
@@ -86,6 +90,18 @@ public class NewGameActivity extends SherlockListActivity
 				return bitmap.getByteCount();
 			}
 		};
+		
+		//Try loading diskCache
+		
+		try
+		{
+			File cacheDir = getCacheDir(this, Utilities.DISK_CACHE_SUBDIR);
+			diskCache = DiskLruCache.open(cacheDir, Utilities.APP_VERSION, Utilities.VALUE_COUNT, Utilities.DISK_CACHE_SIZE);
+		} 
+		catch (IOException e) 
+		{
+			Log.e(Utilities.LOG_TAG, "DiskCache instantiate failed: " + e);
+		}
 		
 		new AsyncPopulateFacebookFriends().execute();
 	}
@@ -229,12 +245,17 @@ public class NewGameActivity extends SherlockListActivity
 				viewHolder.picture = (ImageView) convertView.findViewById(R.id.new_game_activity_listview_item_picture);
 				viewHolder.picture.setImageResource(R.drawable.fb_placeholder);
 				{
-					Bitmap image = imageCache.get(person.getId());
+					Bitmap diskImage = Utilities.getBitmapFromDiskCache(person.getId(), diskCache);
+					Bitmap memoryImage = memoryCache.get(person.getId());
 					viewHolder.picture.setTag(person.getId());
 					
-					if(image != null)
+					if(memoryImage != null)
 					{
-						viewHolder.picture.setImageBitmap(image);
+						viewHolder.picture.setImageBitmap(memoryImage);
+					}
+					else if(diskImage != null)
+					{
+						viewHolder.picture.setImageBitmap(diskImage);
 					}
 					else
 					{
@@ -306,7 +327,7 @@ public class NewGameActivity extends SherlockListActivity
 					{
 							drawable = Utilities.loadImageFromWebOperations(Utilities.FACEBOOK_GRAPH_API_URL + person[0].getId() + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE_SSL);
 							bitmap = ((BitmapDrawable)drawable).getBitmap();
-							Utilities.addBitmapToMemoryCache(person[0].getId(),bitmap, imageCache);
+							Utilities.addBitmapToCache(person[0].getId(),bitmap, memoryCache, diskCache);
 					}
 					catch (final Exception e)
 					{
@@ -351,6 +372,15 @@ public class NewGameActivity extends SherlockListActivity
 		{
 			return geo.getName().compareToIgnoreCase(jarrad.getName());
 		}
+	}
+	
+	
+	public static File getCacheDir(Context context, String uniqueName) 
+	{
+		//Check if storage is built in or mounted from sd, try to use mounted first
+	    final String cachePath = Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED || !Environment.isExternalStorageRemovable() ? context.getExternalCacheDir().getPath() : context.getCacheDir().getPath();
+
+	    return new File(cachePath + File.separator + uniqueName);
 	}
 	
 	

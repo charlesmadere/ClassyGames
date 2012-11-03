@@ -2,7 +2,10 @@ package edu.selu.android.classygames;
 
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -11,7 +14,6 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
-import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 import edu.selu.android.classygames.data.Person;
 
@@ -55,7 +57,10 @@ public class ConfirmGameActivity extends SherlockActivity
 				personChallenged = new Person(challengedId, challengedName);
 
 				ImageView personPicture = (ImageView) findViewById(R.id.confirm_game_activity_person_picture);
-				UrlImageViewHelper.setUrlDrawable(personPicture, Utilities.FACEBOOK_GRAPH_API_URL + personChallenged.getId() + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_LARGE_SSL);
+				personPicture.setImageResource(R.drawable.fb_placeholder);
+				new AsyncPopulatePictures(personPicture).execute(personChallenged);
+				
+				//UrlImageViewHelper.setUrlDrawable(personPicture, Utilities.FACEBOOK_GRAPH_API_URL + personChallenged.getId() + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_LARGE_SSL);
 
 				TextView personName = (TextView) findViewById(R.id.confirm_game_activity_person_name);
 				personName.setText(personChallenged.getName());
@@ -114,6 +119,45 @@ public class ConfirmGameActivity extends SherlockActivity
 	{
 		Utilities.easyToastAndLogError(ConfirmGameActivity.this, ConfirmGameActivity.this.getString(R.string.confirm_game_activity_data_error));
 		finish();
+	}
+	
+	
+	private final class AsyncPopulatePictures extends AsyncTask<Person, Long, Drawable>
+	{
+		private Drawable drawable;
+		private ImageView imageView;
+		
+
+		AsyncPopulatePictures(final ImageView imageView)
+		{
+			super();
+			this.imageView = imageView;
+		}
+
+
+		@Override
+		protected Drawable doInBackground(final Person... person) 
+		{
+			try
+			{
+				drawable = Utilities.loadImageFromWebOperations(Utilities.FACEBOOK_GRAPH_API_URL + person[0].getId() + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_LARGE_SSL);
+			}
+			catch (final Exception e)
+			{
+				Log.e("Classy Games", "Image Load Failed: " + e);
+			}
+
+			return drawable;
+		}
+
+
+		@Override
+		protected void onPostExecute(final Drawable result)
+		{
+			imageView.setImageDrawable(result);
+		}
+
+
 	}
 
 
