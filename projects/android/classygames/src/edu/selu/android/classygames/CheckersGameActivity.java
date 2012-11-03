@@ -9,11 +9,11 @@ import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
-
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+
 
 import edu.selu.android.classygames.data.Person;
 
@@ -27,7 +27,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 
 	MyButton prevButton;
 	int greenPlayer, orangePlayer;
-
+	//AlertDialog.Builder dialog = new AlertDialog.Builder(this, R.style.DialogWindowTitle_Sherlock);
 
 	public final static String INTENT_DATA_GAME_ID = "GAME_ID";
 	public final static String INTENT_DATA_PERSON_CREATOR_ID = "GAME_PERSON_CREATOR_ID";
@@ -156,41 +156,76 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		{
 			if (clickedButton.isEmpty())
 			{
-				if (canMove(clickedButton) || canMove2Step(clickedButton))
+				if (canMove(clickedButton))
 				{
-					//change image and data
-					prevButton.setImageResource(0);
-					prevButton.setEmpty(true);
-					
-					//change new button
-					int changeImage = orangePlayer;
-					if (prevButton.isPlayerGreen())
-						changeImage = greenPlayer;
-					clickedButton.setImageResource(changeImage);
-					clickedButton.setEmpty(false);
-					clickedButton.setPlayerGreen(prevButton.isPlayerGreen());
-					
+					Move(clickedButton);
+					if (isKing(clickedButton)){
+						makeKing(clickedButton);
+					}
+				}
+				else if (canJump(clickedButton)){
+					Jump(clickedButton);
+					if (isKing(clickedButton)){
+						makeKing(clickedButton);
+					}
+				}
+				else {
 					prevButton = null;
 				}
 			}
-			
 			else
 			{
 				prevButton = null;
 			}
 		}
-		
 		else
 		{
-			if (!clickedButton.isEmpty())
-			{
-				prevButton = clickedButton;
-			}
+			prevButton = clickedButton;
 		}
 	}
 	
 	
-	boolean canMove(MyButton button)
+	private void makeKing(MyButton clickedButton) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private boolean isKing(MyButton clickedButton) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	private void Jump(MyButton clickedButton) {
+		int changeImage = orangePlayer;
+		if (prevButton.isPlayerGreen())
+			changeImage = greenPlayer;
+		clickedButton.setImageResource(changeImage);
+		clickedButton.setEmpty(false);
+		clickedButton.setPlayerGreen(prevButton.isPlayerGreen());
+		
+		prevButton.setEmpty(true);
+		prevButton.setImageResource(0);
+		
+		prevButton = null;
+	}
+
+	private void Move(MyButton clickedButton) {
+		//change image and data
+		prevButton.setImageResource(0);
+		prevButton.setEmpty(true);
+		
+		//change new button
+		int changeImage = orangePlayer;
+		if (prevButton.isPlayerGreen())
+			changeImage = greenPlayer;
+		clickedButton.setImageResource(changeImage);
+		clickedButton.setEmpty(false);
+		clickedButton.setPlayerGreen(prevButton.isPlayerGreen());
+		
+		prevButton = null;
+	}
+
+	private boolean canMove(MyButton button)
 	{
 		if (abs(button.getPx()-prevButton.getPx()) == 1 && abs(button.getPy()-prevButton.getPy()) == 1)
 			return true;
@@ -198,33 +233,29 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			return false;
 	}
 	
-	private boolean canMove2Step(MyButton Button) {
-		if (abs(Button.getPx()-prevButton.getPx()) == 2 && abs(Button.getPy()-prevButton.getPy()) == 2)
-			return true;
-		else
-			return false;
-	}
-	
-	/*
-	private boolean NinjaJump(MyButton cbutton) {
-		//TODO the logic for ninja jump
-		return false;
-		
-	}
-	
-	private boolean theKingPin(MyButton button) {
-		return false;
-		//if orange piece gets to end of rival square, becomes a king and game is over, vice versa
-	}
-	
-	//An algorithm for TURN
-	private boolean yourTurnHomeBoy(MyButton cbutton) {
-		if(cbutton.isPlayerGreen() && cbutton.hasMoved())
+	private boolean canJump(MyButton cbutton)
+	{
+		if (abs(cbutton.getPx()-prevButton.getPx()) == 2 && abs(cbutton.getPy()-prevButton.getPy()) == 2){
+			int change_In_X = (cbutton.getPx() - prevButton.getPx())/2;
+			int change_In_Y = (cbutton.getPy() - prevButton.getPy())/2;
 			
-		
+			MyButton middleButton = (MyButton)findViewById((prevButton.getPx() + change_In_X) *10 + (prevButton.getPy() + change_In_Y));
+			
+			if (middleButton.isPlayerGreen() != prevButton.isPlayerGreen()){
+				middleButton.setEmpty(true);
+				middleButton.setImageResource(0);
+				
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			 	return false;
+		}
 	}
-	*/
-
+	
 	private int abs(int i)
 	{	
 		return (i < 0)?-1*i:i;
