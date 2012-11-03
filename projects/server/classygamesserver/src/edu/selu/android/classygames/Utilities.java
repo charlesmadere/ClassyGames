@@ -36,8 +36,6 @@ public class Utilities
 	public final static String DATABASE_TABLE_USERS_COLUMN_REG_ID = "reg_id";
 	public final static String DATABASE_TABLE_USERS_FORMAT = "(" + DATABASE_TABLE_USERS_COLUMN_ID + ", " + DATABASE_TABLE_USERS_COLUMN_NAME + ", " + DATABASE_TABLE_USERS_COLUMN_REG_ID + ")";
 
-	public final static String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-
 	public final static String POST_DATA_BOARD = "board";
 	public final static String POST_DATA_ID = "id";
 	public final static String POST_DATA_NAME = "name";
@@ -98,10 +96,22 @@ public class Utilities
 
 
 	public static Connection getSQLConnection() throws ClassNotFoundException, SQLException
+	// I followed this guide to understand how to connect to the MySQL database created when making a new
+	// Amazon Elastic Beanstalk application
 	// http://docs.amazonwebservices.com/elasticbeanstalk/latest/dg/create_deploy_Java.rds.html
 	{
-		Class.forName(Utilities.JDBC_DRIVER);
-		return DriverManager.getConnection("jdbc:mysql://" + SecretConstants.RDS_ENDPOINT + ":" + SecretConstants.RDS_PORT + "/" + SecretConstants.RDS_DATABASE + "?user=" + SecretConstants.RDS_USERNAME + "&password=" + SecretConstants.RDS_PASSWORD);
+		// ensure that the MySQL JDBC Driver has been loaded
+		Class.forName("com.mysql.jdbc.Driver");
+
+		// acquire database credentials
+		final String hostname = System.getProperty("RDS_HOSTNAME");
+		final String port = System.getProperty("RDS_PORT");
+		final String dbName = System.getProperty("RDS_DB_NAME");
+		final String username = System.getProperty("RDS_USERNAME");
+		final String password = System.getProperty("RDS_PASSWORD");
+
+		// return a new connection to the database
+		return DriverManager.getConnection("jdbc:mysql://" + hostname + ":" + port + "/" + dbName + "?user=" + username + "&password=" + password);
 	}
 
 
