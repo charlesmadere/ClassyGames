@@ -1,15 +1,14 @@
 package edu.selu.android.classygames;
 
 
+import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Properties;
 
 import org.json.simple.JSONValue;
-
-import com.mysql.jdbc.Connection;
 
 
 public class Utilities
@@ -31,12 +30,13 @@ public class Utilities
 	public final static String DATABASE_TABLE_GAMES_COLUMN_USER_CHALLENGER = "user_challenger";
 	public final static String DATABASE_TABLE_GAMES_COLUMN_BOARD = "board";
 	public final static String DATABASE_TABLE_GAMES_FORMAT = "(`" + DATABASE_TABLE_GAMES_COLUMN_ID + "`, `" + DATABASE_TABLE_GAMES_COLUMN_USER_CREATOR + "`, `" + DATABASE_TABLE_GAMES_COLUMN_USER_CHALLENGER + "`, `" + DATABASE_TABLE_GAMES_COLUMN_BOARD + "`)";
-
 	public final static String DATABASE_TABLE_USERS = "users";
 	public final static String DATABASE_TABLE_USERS_COLUMN_ID = "id";
 	public final static String DATABASE_TABLE_USERS_COLUMN_NAME = "name";
 	public final static String DATABASE_TABLE_USERS_COLUMN_REG_ID = "reg_id";
 	public final static String DATABASE_TABLE_USERS_FORMAT = "(`" + DATABASE_TABLE_USERS_COLUMN_ID + "`, `" + DATABASE_TABLE_USERS_COLUMN_NAME + "`, `" + DATABASE_TABLE_USERS_COLUMN_REG_ID + "`)";
+
+	public final static String JDBC_DRIVER = "com.mysql.jdbc.Driver";
 
 	public final static String POST_DATA_BOARD = "board";
 	public final static String POST_DATA_GAME_ID = "game_id";
@@ -50,41 +50,58 @@ public class Utilities
 	public final static String POST_ERROR_DATA_NOT_DETECTED = "No POST data detected.";
 	public final static String POST_ERROR_DATABASE_COULD_NOT_CONNECT = "Database connection was unable to be established.";
 	public final static String POST_ERROR_DATABASE_COULD_NOT_CREATE_CONNECTION_STRING = "Database connection String was unable to be created.";
+	public final static String POST_ERROR_DATABASE_COULD_NOT_LOAD = "Database DriverManager could not be loaded.";
 	public final static String POST_ERROR_GENERIC = "POST data received but an error occurred.";
 	public final static String POST_SUCCESS_DATABASE_QUERIED = "Database successfully queried for data.";
 	public final static String POST_SUCCESS_GENERIC = "POST data received.";
 	public final static String POST_SUCCESS_USER_ADDED_TO_DATABASE = "You've been successfully registered with " + APP_NAME + ".";
 	public final static String POST_SUCCESS_USER_REMOVED_FROM_DATABASE = "You've been successfully unregistered from " + APP_NAME + ".";
-	public static String con;
 
 
-	public static Connection getSQLConnection() throws SQLException
+	public static void closeSQL(Connection sqlConnection, PreparedStatement sqlStatement)
 	{
-		Properties sqlProperties = new Properties();
-		sqlProperties.put("username", System.getProperty("RDS_USERNAME"));
-		sqlProperties.put("password", System.getProperty("RDS_PASSWORD"));
-
-		return DriverManager.getConnection(getSQLConnectionString(), System.getProperty("username"), System.getProperty("password"));
+		closeSQLStatement(sqlStatement);
+		closeSQLConnection(sqlConnection);
 	}
 
 
-	private static String getSQLConnectionString()
+	public static void closeSQLConnection(Connection sqlConnection)
 	{
-		final String dbHostname = System.getProperty("RDS_HOSTNAME");
-		final String dbPort = System.getProperty("RDS_PORT");
-		final String dbName = System.getProperty("RDS_DB_NAME");
+		if (sqlConnection != null)
+		{
+			try
+			{
+				sqlConnection.close();
+			}
+			catch (final SQLException e)
+			{
 
-		if (dbName == null || dbHostname == null || dbPort == null || dbName.equals("") || dbHostname.equals("") || dbPort.equals(""))
-		{
-			con = null;
-			return null;
+			}
 		}
-		else
+	}
+
+
+	public static void closeSQLStatement(PreparedStatement sqlStatement)
+	{
+		if (sqlStatement != null)
 		{
-			con = "jdbc:mysql://" + dbHostname + ":" + dbPort + "/" + dbName;
-			// http://docs.amazonwebservices.com/elasticbeanstalk/latest/dg/create_deploy_Java.rds.html
-			return con;
+			try
+			{
+				sqlStatement.close();
+			}
+			catch (final SQLException e)
+			{
+
+			}
 		}
+	}
+
+
+	public static Connection getSQLConnection() throws SQLException, ClassNotFoundException
+	// http://docs.amazonwebservices.com/elasticbeanstalk/latest/dg/create_deploy_Java.rds.html
+	{
+		Class.forName(Utilities.JDBC_DRIVER);
+		return DriverManager.getConnection("jdbc:mysql://" + SecretConstants.RDS_ENDPOINT + ":" + SecretConstants.RDS_PORT + "/" + SecretConstants.RDS_DATABASE + "?user=" + SecretConstants.RDS_USERNAME + "&password=" + SecretConstants.RDS_PASSWORD);
 	}
 
 

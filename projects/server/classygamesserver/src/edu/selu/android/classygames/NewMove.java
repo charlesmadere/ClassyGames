@@ -3,6 +3,7 @@ package edu.selu.android.classygames;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -10,8 +11,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.mysql.jdbc.Connection;
 
 
 /**
@@ -68,6 +67,11 @@ public class NewMove extends HttpServlet
 			try
 			{
 				sqlConnection = Utilities.getSQLConnection();
+				printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_GENERIC));
+			}
+			catch (final ClassNotFoundException e)
+			{
+				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_LOAD));
 			}
 			catch (final SQLException e)
 			{
@@ -75,29 +79,7 @@ public class NewMove extends HttpServlet
 			}
 			finally
 			{
-				if (sqlStatement != null)
-				{
-					try
-					{
-						sqlStatement.close();
-					}
-					catch (final SQLException e)
-					{
-
-					}
-				}
-
-				if (sqlConnection != null)
-				{
-					try
-					{
-						sqlConnection.close();
-					}
-					catch (final SQLException e)
-					{
-
-					}
-				}
+				Utilities.closeSQL(sqlConnection, sqlStatement);
 			}
 		}
 	}

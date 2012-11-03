@@ -3,6 +3,7 @@ package edu.selu.android.classygames;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -10,8 +11,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.mysql.jdbc.Connection;
 
 
 /**
@@ -75,7 +74,7 @@ public class NewRegId extends HttpServlet
 				part = 0;
 
 				// prepare a SQL statement to be run on the MySQL database
-				final String sqlStatementString = "INSERT INTO " + Utilities.DATABASE_TABLE_USERS_FORMAT + " " + Utilities.DATABASE_TABLE_USERS + " VALUES (?, '?', '?');";
+				final String sqlStatementString = "INSERT INTO " + Utilities.DATABASE_TABLE_USERS_FORMAT + " " + Utilities.DATABASE_TABLE_USERS + " VALUES (?, ?, ?);";
 				part = 2;
 				sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
 				part = 3;
@@ -92,43 +91,21 @@ public class NewRegId extends HttpServlet
 				sqlStatement.executeUpdate();
 				part = 7;
 
-				printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_DATABASE_QUERIED + part));
+				printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_DATABASE_QUERIED));
+			}
+			catch (final ClassNotFoundException e)
+			{
+				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_LOAD));
 			}
 			catch (final SQLException e)
 			{
-				printWriter.write(Utilities.makePostDataError(Utilities.con + " " + Utilities.POST_ERROR_DATABASE_COULD_NOT_CONNECT + part));
+				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CONNECT + " part: \"" + part + "\" message: \"" + e.getMessage() + "\" state: \"" + e.getSQLState() + "\" code: \"" + e.getErrorCode() + "\""));
 			}
 			finally
 			// it's best to release SQL resources in reverse order of their creation
 			// https://dev.mysql.com/doc/refman/5.0/en/connector-j-usagenotes-statements.html#connector-j-examples-execute-select
 			{
-				if (sqlStatement != null)
-				{
-					try
-					{
-						sqlStatement.close();
-					}
-					catch (final SQLException e)
-					{
-
-					}
-
-					sqlStatement = null;
-				}
-
-				if (sqlConnection != null)
-				{
-					try
-					{
-						sqlConnection.close();
-					}
-					catch (final SQLException e)
-					{
-
-					}
-
-					sqlConnection = null;
-				}
+				Utilities.closeSQL(sqlConnection, sqlStatement);
 			}
 		}
 	}
