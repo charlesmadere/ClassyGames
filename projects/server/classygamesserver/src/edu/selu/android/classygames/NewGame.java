@@ -20,7 +20,7 @@ public class NewGame extends HttpServlet
 {
 
 
-	private static final long serialVersionUID = 1L;
+	private final static long serialVersionUID = 1L;
 
 
 	/**
@@ -51,10 +51,11 @@ public class NewGame extends HttpServlet
 		response.setContentType(Utilities.CONTENT_TYPE_JSON);
 		PrintWriter printWriter = response.getWriter();
 
-		final Long id = new Long(request.getParameter(Utilities.POST_DATA_ID));
-		final Long id_challenger = new Long(request.getParameter(Utilities.POST_DATA_ID_CHALLENGER));
+		final Long user_challenger = new Long(request.getParameter(Utilities.POST_DATA_USER_CHALLENGER));
+		final Long user_creator = new Long(request.getParameter(Utilities.POST_DATA_USER_CREATOR));
+		final String board = request.getParameter(Utilities.POST_DATA_BOARD);
 
-		if (id < 0 || id_challenger < 0)
+		if (user_challenger < 0 || user_creator < 0 || board == null || board.equals(Utilities.BLANK))
 		{
 			printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_MALFORMED));
 		}
@@ -66,6 +67,7 @@ public class NewGame extends HttpServlet
 			try
 			{
 				sqlConnection = Utilities.getSQLConnection();
+
 				printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_GENERIC));
 			}
 			catch (final ClassNotFoundException e)

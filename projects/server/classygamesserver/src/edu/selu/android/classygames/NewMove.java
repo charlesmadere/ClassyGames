@@ -20,7 +20,7 @@ public class NewMove extends HttpServlet
 {
 
 
-	private static final long serialVersionUID = 1L;
+	private final static long serialVersionUID = 1L;
 
 
 	/**
@@ -51,11 +51,12 @@ public class NewMove extends HttpServlet
 		response.setContentType(Utilities.CONTENT_TYPE_JSON);
 		PrintWriter printWriter = response.getWriter();
 
-		final String game_id = request.getParameter(Utilities.POST_DATA_GAME_ID);
-		final Long id_creator = new Long(request.getParameter(Utilities.POST_DATA_ID));
-		final Long id_challenged = new Long(request.getParameter(Utilities.POST_DATA_ID_CHALLENGER));
+		final String id = request.getParameter(Utilities.POST_DATA_ID);
+		final Long user_creator = new Long(request.getParameter(Utilities.POST_DATA_ID));
+		final Long user_challenged = new Long(request.getParameter(Utilities.POST_DATA_USER_CHALLENGER));
+		final String board = request.getParameter(Utilities.POST_DATA_BOARD);
 
-		if (game_id == null || game_id.equals("") || id_creator < 0 || id_challenged < 0)
+		if (id == null || id.equals(Utilities.BLANK) || user_creator < 0 || user_challenged < 0 || board == null || board.equals(Utilities.BLANK))
 		{
 			printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_EMPTY));
 		}
@@ -67,6 +68,7 @@ public class NewMove extends HttpServlet
 			try
 			{
 				sqlConnection = Utilities.getSQLConnection();
+
 				printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_GENERIC));
 			}
 			catch (final ClassNotFoundException e)

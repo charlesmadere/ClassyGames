@@ -29,21 +29,21 @@ public class Utilities
 	public final static String DATABASE_TABLE_GAMES_COLUMN_USER_CREATOR = "user_creator";
 	public final static String DATABASE_TABLE_GAMES_COLUMN_USER_CHALLENGER = "user_challenger";
 	public final static String DATABASE_TABLE_GAMES_COLUMN_BOARD = "board";
-	public final static String DATABASE_TABLE_GAMES_FORMAT = "(`" + DATABASE_TABLE_GAMES_COLUMN_ID + "`, `" + DATABASE_TABLE_GAMES_COLUMN_USER_CREATOR + "`, `" + DATABASE_TABLE_GAMES_COLUMN_USER_CHALLENGER + "`, `" + DATABASE_TABLE_GAMES_COLUMN_BOARD + "`)";
+	public final static String DATABASE_TABLE_GAMES_FORMAT = "(" + DATABASE_TABLE_GAMES_COLUMN_ID + ", " + DATABASE_TABLE_GAMES_COLUMN_USER_CREATOR + ", " + DATABASE_TABLE_GAMES_COLUMN_USER_CHALLENGER + ", " + DATABASE_TABLE_GAMES_COLUMN_BOARD + ")";
 	public final static String DATABASE_TABLE_USERS = "users";
 	public final static String DATABASE_TABLE_USERS_COLUMN_ID = "id";
 	public final static String DATABASE_TABLE_USERS_COLUMN_NAME = "name";
 	public final static String DATABASE_TABLE_USERS_COLUMN_REG_ID = "reg_id";
-	public final static String DATABASE_TABLE_USERS_FORMAT = "(`" + DATABASE_TABLE_USERS_COLUMN_ID + "`, `" + DATABASE_TABLE_USERS_COLUMN_NAME + "`, `" + DATABASE_TABLE_USERS_COLUMN_REG_ID + "`)";
+	public final static String DATABASE_TABLE_USERS_FORMAT = "(" + DATABASE_TABLE_USERS_COLUMN_ID + ", " + DATABASE_TABLE_USERS_COLUMN_NAME + ", " + DATABASE_TABLE_USERS_COLUMN_REG_ID + ")";
 
 	public final static String JDBC_DRIVER = "com.mysql.jdbc.Driver";
 
 	public final static String POST_DATA_BOARD = "board";
-	public final static String POST_DATA_GAME_ID = "game_id";
 	public final static String POST_DATA_ID = "id";
-	public final static String POST_DATA_ID_CHALLENGER = "id_challenger";
 	public final static String POST_DATA_NAME = "name";
 	public final static String POST_DATA_REG_ID = "reg_id";
+	public final static String POST_DATA_USER_CHALLENGER = "user_challenger";
+	public final static String POST_DATA_USER_CREATOR = "user_creator";
 
 	public final static String POST_ERROR_DATA_IS_EMPTY = "POST data is empty.";
 	public final static String POST_ERROR_DATA_IS_MALFORMED = "POST data is malformed.";
@@ -97,7 +97,7 @@ public class Utilities
 	}
 
 
-	public static Connection getSQLConnection() throws SQLException, ClassNotFoundException
+	public static Connection getSQLConnection() throws ClassNotFoundException, SQLException
 	// http://docs.amazonwebservices.com/elasticbeanstalk/latest/dg/create_deploy_Java.rds.html
 	{
 		Class.forName(Utilities.JDBC_DRIVER);

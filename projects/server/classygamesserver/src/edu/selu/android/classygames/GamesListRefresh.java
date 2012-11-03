@@ -20,7 +20,7 @@ public class GamesListRefresh extends HttpServlet
 {
 
 
-	private static final long serialVersionUID = 1L;
+	private final static long serialVersionUID = 1L;
 
 
 	/**
@@ -71,8 +71,8 @@ public class GamesListRefresh extends HttpServlet
 				sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
 
 				// prevent SQL injection by querying for user data this way (this is safe)
-				sqlStatement.setLong(0, id);
 				sqlStatement.setLong(1, id);
+				sqlStatement.setLong(2, id);
 
 				// run the SQL statement
 				sqlStatement.executeUpdate();
