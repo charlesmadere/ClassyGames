@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
@@ -74,7 +75,7 @@ public class NewRegId extends HttpServlet
 				part = 0;
 
 				// prepare a SQL statement to be run on the MySQL database
-				final String sqlStatementString = "INSERT INTO " + Utilities.DATABASE_TABLE_USERS_FORMAT + " " + Utilities.DATABASE_TABLE_USERS + " VALUES (?, ?, ?);";
+				String sqlStatementString = "SELECT * FROM " + Utilities.DATABASE_TABLE_USERS + " WHERE " + Utilities.DATABASE_TABLE_USERS_COLUMN_ID + " = ?";
 				part = 2;
 				sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
 				part = 3;
@@ -82,24 +83,60 @@ public class NewRegId extends HttpServlet
 				// prevent SQL injection by inserting user data this way
 				sqlStatement.setLong(1, id);
 				part = 4;
-				sqlStatement.setString(2, name);
-				part = 5;
-				sqlStatement.setString(3, reg_id);
-				part = 6;
 
-				// run the SQL statement
-				sqlStatement.executeUpdate();
+				// run the SQL statement and acquire any return information
+				final ResultSet sqlResult = sqlStatement.executeQuery();
 				part = 7;
 
+				if (sqlResult.next())
+				// the id already exists in the table, it's data needs to be updated
+				{
+					part = 71;
+					sqlStatementString = "UPDATE " + Utilities.DATABASE_TABLE_USERS + " SET " + Utilities.DATABASE_TABLE_USERS_COLUMN_ID + " = ?, " + Utilities.DATABASE_TABLE_USERS_COLUMN_NAME + " = ?, " + Utilities.DATABASE_TABLE_USERS_COLUMN_REG_ID + " = ? " + " WHERE " + Utilities.DATABASE_TABLE_USERS_COLUMN_ID + " = ?";
+					part = 72;
+					sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
+					part = 73;
+					sqlStatement.setLong(1, id);
+					part = 74;
+					sqlStatement.setString(2, name);
+					part = 75;
+					sqlStatement.setString(3, reg_id);
+					part = 76;
+					sqlStatement.setLong(4, id);
+					part = 77;
+				}
+				else
+				// id does not already exist in the table. let's insert it
+				{
+					part = 81;
+					sqlStatementString = "INSERT INTO " + Utilities.DATABASE_TABLE_USERS + " " + Utilities.DATABASE_TABLE_USERS_FORMAT + " VALUES (?, ?, ?)";
+					part = 82;
+					sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
+					part = 83;
+					sqlStatement.setLong(1, id);
+					part = 84;
+					sqlStatement.setString(2, name);
+					part = 85;
+					sqlStatement.setString(3, reg_id);
+					part = 86;
+				}
+
+				part = 9;
+				// run the SQL statement and ignore any return information
+				sqlStatement.executeUpdate();
+				part = 10;
 				printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_DATABASE_QUERIED));
+				part = 11;
 			}
 			catch (final ClassNotFoundException e)
 			{
+				part = part - 100;
 				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_LOAD));
 			}
 			catch (final SQLException e)
 			{
-				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CONNECT + " part: \"" + part + "\" message: \"" + e.getMessage() + "\" state: \"" + e.getSQLState() + "\" code: \"" + e.getErrorCode() + "\""));
+				part = part + 1000;
+				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CONNECT + " part: \"" + part + "\" message: \"" + e.getMessage() + "\" state: \"" + e.getSQLState() + "\" code: \"" + e.getErrorCode() + "\" reg_id:\"" + reg_id + "\""));
 			}
 			finally
 			// it's best to release SQL resources in reverse order of their creation

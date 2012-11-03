@@ -96,8 +96,8 @@ public class Utilities
 
 
 	public static Connection getSQLConnection() throws ClassNotFoundException, SQLException
-	// I followed this guide to understand how to connect to the MySQL database created when making a new
-	// Amazon Elastic Beanstalk application
+	// I followed this guide to understand how to connect to the MySQL database that is created when
+	// making a new Amazon Elastic Beanstalk application
 	// http://docs.amazonwebservices.com/elasticbeanstalk/latest/dg/create_deploy_Java.rds.html
 	{
 		// ensure that the MySQL JDBC Driver has been loaded
