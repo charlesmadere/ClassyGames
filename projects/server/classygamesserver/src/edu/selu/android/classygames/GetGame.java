@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
@@ -14,19 +15,19 @@ import javax.servlet.http.HttpServletResponse;
 
 
 /**
- * Servlet implementation class NewMove
+ * Servlet implementation class GetGame
  */
-public class NewMove extends HttpServlet
+public class GetGame extends HttpServlet
 {
 
 
-	private final static long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public NewMove()
+	public GetGame()
 	{
 		super();
 	}
@@ -39,7 +40,7 @@ public class NewMove extends HttpServlet
 	{
 		response.setContentType(Utilities.CONTENT_TYPE_JSON);
 		PrintWriter printWriter = response.getWriter();
-		printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_ERROR_DATA_NOT_DETECTED));
+		printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_NOT_DETECTED));
 	}
 
 
@@ -52,13 +53,11 @@ public class NewMove extends HttpServlet
 		PrintWriter printWriter = response.getWriter();
 
 		final String id = request.getParameter(Utilities.POST_DATA_ID);
-		final Long user_creator = new Long(request.getParameter(Utilities.POST_DATA_ID));
-		final Long user_challenged = new Long(request.getParameter(Utilities.POST_DATA_USER_CHALLENGED));
-		final String board = request.getParameter(Utilities.POST_DATA_BOARD);
 
-		if (id == null || id.equals(Utilities.BLANK) || user_creator < 0 || user_challenged < 0 || board == null || board.equals(Utilities.BLANK))
+		if (id == null || id.equals(Utilities.BLANK))
+		// check for invalid inputs
 		{
-			printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_EMPTY));
+			printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_MALFORMED));
 		}
 		else
 		{
@@ -69,7 +68,26 @@ public class NewMove extends HttpServlet
 			{
 				sqlConnection = Utilities.getSQLConnection();
 
-				printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_GENERIC));
+				// prepare a SQL statement to be run on the database
+				final String sqlStatementString = "SELECT " + Utilities.DATABASE_TABLE_GAMES_COLUMN_BOARD + " FROM " + Utilities.DATABASE_TABLE_GAMES + " WHERE " + Utilities.DATABASE_TABLE_GAMES_COLUMN_ID + " = ?";
+				sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
+
+				// prevent SQL injection by inserting user data this way
+				sqlStatement.setString(1, id);
+
+				// run the SQL statement and acquire any return information
+				final ResultSet sqlResult = sqlStatement.executeQuery();
+
+				if (sqlResult.next())
+				// game with specified id was found in the database, send the board's data to the client
+				{
+					printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_GENERIC));
+				}
+				else
+				// we could not find a game with specified id in the database. this should never happen
+				{
+					printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_FIND_GAME_WITH_SPECIFIED_ID));
+				}
 			}
 			catch (final ClassNotFoundException e)
 			{

@@ -57,6 +57,7 @@ public class NewRegId extends HttpServlet
 		final String reg_id = request.getParameter(Utilities.POST_DATA_REG_ID);
 
 		if (id < 0 || name == null || reg_id == null || name.equals(Utilities.BLANK) || reg_id.equals(Utilities.BLANK))
+		// check for invalid inputs
 		{
 			printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_MALFORMED));
 		}
@@ -74,7 +75,7 @@ public class NewRegId extends HttpServlet
 				sqlConnection = Utilities.getSQLConnection();
 				part = 0;
 
-				// prepare a SQL statement to be run on the MySQL database
+				// prepare a SQL statement to be run on the database
 				String sqlStatementString = "SELECT * FROM " + Utilities.DATABASE_TABLE_USERS + " WHERE " + Utilities.DATABASE_TABLE_USERS_COLUMN_ID + " = ?";
 				part = 2;
 				sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
@@ -89,13 +90,17 @@ public class NewRegId extends HttpServlet
 				part = 7;
 
 				if (sqlResult.next())
-				// the id already exists in the table, it's data needs to be updated
+				// the id already exists in the table therefore it's data needs to be updated
 				{
 					part = 71;
+
+					// prepare a SQL statement to be run on the database
 					sqlStatementString = "UPDATE " + Utilities.DATABASE_TABLE_USERS + " SET " + Utilities.DATABASE_TABLE_USERS_COLUMN_ID + " = ?, " + Utilities.DATABASE_TABLE_USERS_COLUMN_NAME + " = ?, " + Utilities.DATABASE_TABLE_USERS_COLUMN_REG_ID + " = ? " + " WHERE " + Utilities.DATABASE_TABLE_USERS_COLUMN_ID + " = ?";
 					part = 72;
 					sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
 					part = 73;
+
+					// prevent SQL injection by inserting user data this way
 					sqlStatement.setLong(1, id);
 					part = 74;
 					sqlStatement.setString(2, name);
@@ -109,10 +114,13 @@ public class NewRegId extends HttpServlet
 				// id does not already exist in the table. let's insert it
 				{
 					part = 81;
+					// prepare a SQL statement to be run on the database
 					sqlStatementString = "INSERT INTO " + Utilities.DATABASE_TABLE_USERS + " " + Utilities.DATABASE_TABLE_USERS_FORMAT + " VALUES (?, ?, ?)";
 					part = 82;
 					sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
 					part = 83;
+
+					// prevent SQL injection by inserting user data this way
 					sqlStatement.setLong(1, id);
 					part = 84;
 					sqlStatement.setString(2, name);
@@ -122,8 +130,10 @@ public class NewRegId extends HttpServlet
 				}
 
 				part = 9;
-				// run the SQL statement and ignore any return information
+
+				// run the SQL statement
 				sqlStatement.executeUpdate();
+
 				part = 10;
 				printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_DATABASE_QUERIED));
 				part = 11;
@@ -139,7 +149,7 @@ public class NewRegId extends HttpServlet
 				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CONNECT + " part: \"" + part + "\" message: \"" + e.getMessage() + "\" state: \"" + e.getSQLState() + "\" code: \"" + e.getErrorCode() + "\" reg_id:\"" + reg_id + "\""));
 			}
 			finally
-			// it's best to release SQL resources in reverse order of their creation
+			// it's best to release SQL resources in reverse order of their creation as seen here
 			// https://dev.mysql.com/doc/refman/5.0/en/connector-j-usagenotes-statements.html#connector-j-examples-execute-select
 			{
 				Utilities.closeSQL(sqlConnection, sqlStatement);

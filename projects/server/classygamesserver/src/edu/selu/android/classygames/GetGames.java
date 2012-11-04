@@ -14,9 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 
 
 /**
- * Servlet implementation class GamesListRefresh
+ * Servlet implementation class GetGames
  */
-public class GamesListRefresh extends HttpServlet
+public class GetGames extends HttpServlet
 {
 
 
@@ -26,7 +26,7 @@ public class GamesListRefresh extends HttpServlet
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public GamesListRefresh()
+	public GetGames()
 	{
 		super();
 	}
@@ -55,7 +55,7 @@ public class GamesListRefresh extends HttpServlet
 
 		if (id < 0)
 		{
-			printWriter.print(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_MALFORMED));
+			printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_MALFORMED));
 		}
 		else
 		{
@@ -77,15 +77,15 @@ public class GamesListRefresh extends HttpServlet
 				// run the SQL statement
 				sqlStatement.executeUpdate();
 
-				printWriter.print(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_DATABASE_QUERIED));
+				printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_DATABASE_QUERIED));
 			}
 			catch (final ClassNotFoundException e)
 			{
-				printWriter.print(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_LOAD));
+				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_LOAD));
 			}
 			catch (final SQLException e)
 			{
-				printWriter.print(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CONNECT));
+				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CONNECT));
 			}
 			finally
 			// it's best to release SQL resources in reverse order of their creation

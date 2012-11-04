@@ -18,18 +18,31 @@ public class Utilities
 	public final static String APP_NAME = "Classy Games";
 	public final static String BLANK = "";
 
-	public final static String CHARSET_UTF8 = "charset=utf-8";
+	// list of algorithms found here
+	// http://docs.oracle.com/javase/6/docs/technotes/guides/security/StandardNames.html#MessageDigest
+	public final static String MESSAGE_DIGEST_ALGORITHM = "SHA-256";
+	public final static int MESSAGE_DIGEST_LENGTH = 64;
+	public final static int MESSAGE_DIGEST_RADIX = 16;
+
+	public final static String UTF8 = "UTF-8";
+	public final static String CHARSET = "charset=" + UTF8;
 	public final static String MIMETYPE_HTML = "text/html";
 	public final static String MIMETYPE_JSON = "application/json";
-	public final static String CONTENT_TYPE_HTML = MIMETYPE_HTML + "; " + CHARSET_UTF8;
-	public final static String CONTENT_TYPE_JSON = MIMETYPE_JSON + "; " + CHARSET_UTF8;
+	public final static String CONTENT_TYPE_HTML = MIMETYPE_HTML + "; " + CHARSET;
+	public final static String CONTENT_TYPE_JSON = MIMETYPE_JSON + "; " + CHARSET;
 
 	public final static String DATABASE_TABLE_GAMES = "games";
 	public final static String DATABASE_TABLE_GAMES_COLUMN_ID = "id";
 	public final static String DATABASE_TABLE_GAMES_COLUMN_USER_CREATOR = "user_creator";
 	public final static String DATABASE_TABLE_GAMES_COLUMN_USER_CHALLENGER = "user_challenger";
 	public final static String DATABASE_TABLE_GAMES_COLUMN_BOARD = "board";
-	public final static String DATABASE_TABLE_GAMES_FORMAT = "(" + DATABASE_TABLE_GAMES_COLUMN_ID + ", " + DATABASE_TABLE_GAMES_COLUMN_USER_CREATOR + ", " + DATABASE_TABLE_GAMES_COLUMN_USER_CHALLENGER + ", " + DATABASE_TABLE_GAMES_COLUMN_BOARD + ")";
+	public final static String DATABASE_TABLE_GAMES_COLUMN_TURN = "turn";
+	public final static String DATABASE_TABLE_GAMES_COLUMN_FINISHED = "finished";
+	public final static int DATABASE_TABLE_GAMES_TURN_CREATOR = 0;
+	public final static int DATABASE_TABLE_GAMES_TURN_CHALLENGED = 1;
+	public final static int DATABASE_TABLE_GAMES_FINISHED_FALSE = 0;
+	public final static int DATABASE_TABLE_GAMES_FINISHED_TRUE = 1;
+	public final static String DATABASE_TABLE_GAMES_FORMAT = "(" + DATABASE_TABLE_GAMES_COLUMN_ID + ", " + DATABASE_TABLE_GAMES_COLUMN_USER_CREATOR + ", " + DATABASE_TABLE_GAMES_COLUMN_USER_CHALLENGER + ", " + DATABASE_TABLE_GAMES_COLUMN_BOARD + ", " + DATABASE_TABLE_GAMES_COLUMN_TURN + ", " + DATABASE_TABLE_GAMES_COLUMN_FINISHED + ")";
 	public final static String DATABASE_TABLE_USERS = "users";
 	public final static String DATABASE_TABLE_USERS_COLUMN_ID = "id";
 	public final static String DATABASE_TABLE_USERS_COLUMN_NAME = "name";
@@ -37,17 +50,21 @@ public class Utilities
 	public final static String DATABASE_TABLE_USERS_FORMAT = "(" + DATABASE_TABLE_USERS_COLUMN_ID + ", " + DATABASE_TABLE_USERS_COLUMN_NAME + ", " + DATABASE_TABLE_USERS_COLUMN_REG_ID + ")";
 
 	public final static String POST_DATA_BOARD = "board";
+	public final static String POST_DATA_FINISHED = "finished";
 	public final static String POST_DATA_ID = "id";
 	public final static String POST_DATA_NAME = "name";
 	public final static String POST_DATA_REG_ID = "reg_id";
-	public final static String POST_DATA_USER_CHALLENGER = "user_challenger";
+	public final static String POST_DATA_TURN = "turn";
+	public final static String POST_DATA_USER_CHALLENGED = "user_challenged";
 	public final static String POST_DATA_USER_CREATOR = "user_creator";
 
+	public final static String POST_ERROR_COULD_NOT_CREATE_GAME_ID = "Was unable to create a Game ID.";
 	public final static String POST_ERROR_DATA_IS_EMPTY = "POST data is empty.";
 	public final static String POST_ERROR_DATA_IS_MALFORMED = "POST data is malformed.";
 	public final static String POST_ERROR_DATA_NOT_DETECTED = "No POST data detected.";
 	public final static String POST_ERROR_DATABASE_COULD_NOT_CONNECT = "Database connection was unable to be established.";
 	public final static String POST_ERROR_DATABASE_COULD_NOT_CREATE_CONNECTION_STRING = "Database connection String was unable to be created.";
+	public final static String POST_ERROR_DATABASE_COULD_NOT_FIND_GAME_WITH_SPECIFIED_ID = "Game could not be found with specified ID.";
 	public final static String POST_ERROR_DATABASE_COULD_NOT_LOAD = "Database DriverManager could not be loaded.";
 	public final static String POST_ERROR_GENERIC = "POST data received but an error occurred.";
 	public final static String POST_SUCCESS_DATABASE_QUERIED = "Database successfully queried for data.";

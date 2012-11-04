@@ -41,30 +41,34 @@ public class ServerUtilities
 	public final static String POST_DATA_BLANK = "";
 	public final static String POST_DATA_BOARD = "board";
 	public final static String POST_DATA_ERROR = "error";
+	public final static String POST_DATA_FINISHED = "finished";
 	public final static String POST_DATA_ID = "id";
 	public final static String POST_DATA_NAME = "name";
 	public final static String POST_DATA_REG_ID = "reg_id";
+	public final static String POST_DATA_TURN = "turn";
 	public final static String POST_DATA_SUCCESS = "success";
 	public final static String POST_DATA_USER_CHALLENGED = "user_challenged";
 	public final static String POST_DATA_USER_CREATOR = "user_creator";
 
 	public final static String SERVER_ADDRESS = "http://classygames.net/";
 
+	public final static String SERVER_GET_GAME = "GetGame";
+	public final static String SERVER_GET_GAME_ADDRESS = SERVER_ADDRESS + SERVER_GET_GAME;
+
+	public final static String SERVER_GET_GAMES = "GetGames";
+	public final static String SERVER_GET_GAMES_ADDRESS = SERVER_ADDRESS + SERVER_GET_GAMES;
+
 	public final static String SERVER_NEW_GAME = "NewGame";
 	public final static String SERVER_NEW_GAME_ADDRESS = SERVER_ADDRESS + SERVER_NEW_GAME;
 
-	public final static String SERVER_GAMES_LIST_REFRESH = "GamesListRefresh";
-	public final static String SERVER_GAMES_LIST_REFRESH_ADDRESS = SERVER_ADDRESS + SERVER_GAMES_LIST_REFRESH;
-
 	public final static String SERVER_NEW_MOVE = "NewMove";
-	public final static String SERVER_NEW_MOVE_ADDRESS = SERVER_ADDRESS + SERVER_GAMES_LIST_REFRESH;
+	public final static String SERVER_NEW_MOVE_ADDRESS = SERVER_ADDRESS + SERVER_NEW_MOVE;
 
 	public final static String SERVER_NEW_REG_ID = "NewRegId";
 	public final static String SERVER_NEW_REG_ID_ADDRESS = SERVER_ADDRESS + SERVER_NEW_REG_ID;
+
 	public final static String SERVER_REMOVE_REG_ID = "RemoveRegId";
 	public final static String SERVER_REMOVE_REG_ID_ADDRESS = SERVER_ADDRESS + SERVER_REMOVE_REG_ID;
-
-	private static Random random;
 
 
 	public static void contextBroadcast(final Context context, final String message)
@@ -176,11 +180,7 @@ public class ServerUtilities
 		nameValuePairs.add(new BasicNameValuePair(POST_DATA_NAME, person.getName()));
 		nameValuePairs.add(new BasicNameValuePair(POST_DATA_REG_ID, reg_id));
 
-		if (random == null)
-		{
-			random = new Random();
-		}
-
+		Random random = new Random();
 		long backoffTime = REGISTER_BACKOFF_TIME + random.nextInt(1000);
 		boolean backoff = false;
 

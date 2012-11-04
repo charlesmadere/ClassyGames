@@ -13,7 +13,7 @@ $(document).ready(function()
 
 function scrollBackground()
 {
-	var height = 256;
+	var height = 32;
 	var beginning = "rgba(0, 0, 0, 0) ";
 	var image = "url(assets/img/bg.png) ";
 	var middle = "repeat scroll 0px ";
@@ -22,7 +22,7 @@ function scrollBackground()
 	currentBackgroundScrollHeight = (currentBackgroundScrollHeight + 1) % height;
 	$("body").css("background", beginning + image + middle + currentBackgroundScrollHeight + end);
 
-	setTimeout("scrollBackground()", 64);
+	setTimeout("scrollBackground()", 128);
 }
 
 

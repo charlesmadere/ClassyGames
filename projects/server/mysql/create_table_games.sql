@@ -1,8 +1,10 @@
 CREATE TABLE IF NOT EXISTS `games` (
-	`id` INT NOT NULL AUTO_INCREMENT,
+	`id` TINYTEXT NOT NULL AUTO_INCREMENT,
 	`user_creator` BIGINT NOT NULL,
 	`user_challenged` BIGINT NOT NULL,
 	`board` TEXT NOT NULL,
+	`turn` TINYINT NOT NULL,
+	`finished` TINYINT NOT NULL,
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (`user_creator`) REFERENCES users(`id`),
 	FOREIGN KEY (`user_challenged`) REFERENCES users(`id`)
