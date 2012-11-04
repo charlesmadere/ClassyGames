@@ -10,7 +10,6 @@ import java.util.Comparator;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -21,8 +20,8 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.util.LruCache;
 import android.util.Log;
-import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -39,7 +38,6 @@ import com.koushikdutta.urlimageviewhelper.DiskLruCache;
 import edu.selu.android.classygames.data.Person;
 
 
-@TargetApi(12)
 public class NewGameActivity extends SherlockListActivity
 {
 	private DiskLruCache diskCache;
@@ -86,8 +84,7 @@ public class NewGameActivity extends SherlockListActivity
 		{
 			protected int sizeOf(Long key, Bitmap bitmap)
 			{
-				// Cache is measured in bytes instead of number of items
-				return bitmap.getByteCount();
+					return bitmap.getByteCount();
 			}
 		};
 		

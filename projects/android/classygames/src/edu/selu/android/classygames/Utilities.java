@@ -20,8 +20,8 @@ import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.v4.util.LruCache;
 import android.util.Log;
-import android.util.LruCache;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
