@@ -12,12 +12,12 @@
 		android:name="android.permission.INTERNET" />
 	
 	<uses-permission 
-	    android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+		android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	
 	<uses-permission 
-	    android:name="android.permission.READ_EXTERNAL_STORAGE" />
+		android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-	<!--  begin GCM stuff -->
+	<!-- begin GCM stuff -->
 	<!-- this GCM stuff was taken from this official google tutorial -->
 	<!-- https://developer.android.com/guide/google/gcm/gs.html -->
 
@@ -59,6 +59,7 @@
 					android:name="edu.selu.android.classygames" />
 			</intent-filter>
 		</receiver>
+
 		<service
 			android:name=".GCMIntentService" />
 
@@ -79,43 +80,43 @@
 			android:label="@string/about_activity_title"
 			android:name=".AboutActivity"
 			android:screenOrientation="portrait"
-			android:theme="@style/Theme.Styled">
-		</activity>
+			android:theme="@style/Theme.Styled" />
 
 		<activity
 			android:label="@string/checkers_game_activity_title" 
 			android:name=".CheckersGameActivity"
 			android:screenOrientation="portrait"
 			android:theme="@style/Theme.Styled"
-			android:uiOptions="splitActionBarWhenNarrow">
-		</activity>
+			android:uiOptions="splitActionBarWhenNarrow" />
 
 		<activity
 			android:label="@string/confirm_game_activity_title"
 			android:name=".ConfirmGameActivity"
 			android:screenOrientation="portrait"
-			android:theme="@style/Theme.Styled">
-		</activity>
+			android:theme="@style/Theme.Styled" />
 
 		<activity
 			android:label="@string/games_list_activity_title"
 			android:name=".GamesListActivity"
 			android:screenOrientation="portrait"
-			android:theme="@style/Theme.Styled">
-		</activity>
+			android:theme="@style/Theme.Styled" />
 
 		<activity
 			android:label="@string/logout_activity_title"
 			android:name=".LogoutActivity"
 			android:screenOrientation="portrait"
-			android:theme="@style/Theme.Styled">
-		</activity>
+			android:theme="@style/Theme.Styled" />
 
 		<activity
 			android:label="@string/new_game_activity_title"
 			android:name=".NewGameActivity"
 			android:screenOrientation="portrait"
-			android:theme="@style/Theme.Styled">
-		</activity>
+			android:theme="@style/Theme.Styled" />
+
+		<activity
+			android:label="@string/about_activity_title"
+			android:name=".SharkActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/Theme.Styled" />
 	</application>
 </manifest>

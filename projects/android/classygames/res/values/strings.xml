@@ -42,5 +42,7 @@
 	<string name="server_registration_success">Device successfully registered with server!</string>
 	<string name="server_unregistration_fail">Could not remove device registration from server. (%1$s)</string>
 	<string name="server_unregistration_success">Device successfully removed from server!</string>
+	<string name="shark_activity_description">Sharkwork by Tristan Kidder</string>
+	<string name="shark_activity_imageview_description">Sharkwork</string>
 	<string name="undo_move">Undo Move</string>
 </resources>
