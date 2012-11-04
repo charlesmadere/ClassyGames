@@ -11,33 +11,23 @@
   </welcome-file-list>
   <servlet>
     <description></description>
+    <display-name>GetGame</display-name>
+    <servlet-name>GetGame</servlet-name>
+    <servlet-class>edu.selu.android.classygames.GetGame</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GetGame</servlet-name>
+    <url-pattern>/GetGame</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
     <display-name>GetGames</display-name>
     <servlet-name>GetGames</servlet-name>
     <servlet-class>edu.selu.android.classygames.GetGames</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>GamesListRefresh</servlet-name>
-    <url-pattern>/GamesListRefresh</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <description></description>
-    <display-name>NewRegId</display-name>
-    <servlet-name>NewRegId</servlet-name>
-    <servlet-class>edu.selu.android.classygames.NewRegId</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>NewRegId</servlet-name>
-    <url-pattern>/NewRegId</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <description></description>
-    <display-name>RemoveRegId</display-name>
-    <servlet-name>RemoveRegId</servlet-name>
-    <servlet-class>edu.selu.android.classygames.RemoveRegId</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>RemoveRegId</servlet-name>
-    <url-pattern>/RemoveRegId</url-pattern>
+    <servlet-name>GetGames</servlet-name>
+    <url-pattern>/GetGames</url-pattern>
   </servlet-mapping>
   <servlet>
     <description></description>
@@ -61,12 +51,22 @@
   </servlet-mapping>
   <servlet>
     <description></description>
-    <display-name>GetGame</display-name>
-    <servlet-name>GetGame</servlet-name>
-    <servlet-class>edu.selu.android.classygames.GetGame</servlet-class>
+    <display-name>NewRegId</display-name>
+    <servlet-name>NewRegId</servlet-name>
+    <servlet-class>edu.selu.android.classygames.NewRegId</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>GetGame</servlet-name>
-    <url-pattern>/GetGame</url-pattern>
+    <servlet-name>NewRegId</servlet-name>
+    <url-pattern>/NewRegId</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>RemoveRegId</display-name>
+    <servlet-name>RemoveRegId</servlet-name>
+    <servlet-class>edu.selu.android.classygames.RemoveRegId</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>RemoveRegId</servlet-name>
+    <url-pattern>/RemoveRegId</url-pattern>
   </servlet-mapping>
 </web-app>
