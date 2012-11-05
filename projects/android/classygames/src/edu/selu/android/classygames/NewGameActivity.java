@@ -84,7 +84,14 @@ public class NewGameActivity extends SherlockListActivity
 		{
 			protected int sizeOf(Long key, Bitmap bitmap)
 			{
-					return bitmap.getByteCount();
+				if (Integer.valueOf(android.os.Build.VERSION.SDK_INT) >= 12)
+				{
+		            return bitmap.getByteCount();
+				}
+		        else
+		        {
+		            return (bitmap.getRowBytes() * bitmap.getHeight());
+		        }
 			}
 		};
 		
