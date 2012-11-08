@@ -26,14 +26,14 @@ img
 
 div#logo
 {
-	background-image: url("../img/logo.png");
+	background-image: url("../img/logo-512.png");
 	height: 384px;
 	left: 50%;
-	margin-left: -384px;
-	margin-top: -256px;
+	margin-left: -256px;
+	margin-top: -128px;
 	position: absolute;
 	top: 50%;
-	width: 768px;
+	width: 512px;
 }
 
 
@@ -52,14 +52,15 @@ div#facebook
 {
 	bottom: 3%;
 	color: #8A9AA1;
-	font-family: "Roboto Slim", "Segoe UI Light", "Segoe UI", sans-serif;
+	font-family: "Roboto Light", Roboto, "Segoe UI Light", "Segoe UI", sans-serif;
 	font-size: 28pt;
+	font-weight: lighter;
 	height: 48px;
 	left: 50%;
 	letter-spacing: -2pt;
 	margin-left: -240px;
 	position: fixed;
-	text-shadow: 0px 0px 24px #8A9AA1;
+	text-shadow: 0px 0px 24px #717495;
 	width: 480px;
 }
 
