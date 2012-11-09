@@ -115,7 +115,7 @@ public class NewRegId extends HttpServlet
 				{
 					part = 81;
 					// prepare a SQL statement to be run on the database
-					sqlStatementString = "INSERT INTO " + Utilities.DATABASE_TABLE_USERS + " " + Utilities.DATABASE_TABLE_USERS_FORMAT + " VALUES (?, ?, ?)";
+					sqlStatementString = "INSERT INTO " + Utilities.DATABASE_TABLE_USERS + " " + Utilities.DATABASE_TABLE_USERS_FORMAT + " " + Utilities.DATABASE_TABLE_USERS_VALUES;
 					part = 82;
 					sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
 					part = 83;

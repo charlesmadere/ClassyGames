@@ -18,7 +18,7 @@ public class Utilities
 	public final static String APP_NAME = "Classy Games";
 	public final static String BLANK = "";
 
-	// list of algorithms found here
+	// list of digest algorithms found here
 	// http://docs.oracle.com/javase/6/docs/technotes/guides/security/StandardNames.html#MessageDigest
 	public final static String MESSAGE_DIGEST_ALGORITHM = "SHA-256";
 	public final static int MESSAGE_DIGEST_LENGTH = 64;
@@ -34,20 +34,23 @@ public class Utilities
 	public final static String DATABASE_TABLE_GAMES = "games";
 	public final static String DATABASE_TABLE_GAMES_COLUMN_ID = "id";
 	public final static String DATABASE_TABLE_GAMES_COLUMN_USER_CREATOR = "user_creator";
-	public final static String DATABASE_TABLE_GAMES_COLUMN_USER_CHALLENGER = "user_challenger";
+	public final static String DATABASE_TABLE_GAMES_COLUMN_USER_CHALLENGED = "user_challenged";
 	public final static String DATABASE_TABLE_GAMES_COLUMN_BOARD = "board";
 	public final static String DATABASE_TABLE_GAMES_COLUMN_TURN = "turn";
+	public final static String DATABASE_TABLE_GAMES_COLUMN_TIME = "last_move";
 	public final static String DATABASE_TABLE_GAMES_COLUMN_FINISHED = "finished";
-	public final static int DATABASE_TABLE_GAMES_TURN_CREATOR = 0;
-	public final static int DATABASE_TABLE_GAMES_TURN_CHALLENGED = 1;
-	public final static int DATABASE_TABLE_GAMES_FINISHED_FALSE = 0;
-	public final static int DATABASE_TABLE_GAMES_FINISHED_TRUE = 1;
-	public final static String DATABASE_TABLE_GAMES_FORMAT = "(" + DATABASE_TABLE_GAMES_COLUMN_ID + ", " + DATABASE_TABLE_GAMES_COLUMN_USER_CREATOR + ", " + DATABASE_TABLE_GAMES_COLUMN_USER_CHALLENGER + ", " + DATABASE_TABLE_GAMES_COLUMN_BOARD + ", " + DATABASE_TABLE_GAMES_COLUMN_TURN + ", " + DATABASE_TABLE_GAMES_COLUMN_FINISHED + ")";
+	public final static byte DATABASE_TABLE_GAMES_TURN_CREATOR = 0;
+	public final static byte DATABASE_TABLE_GAMES_TURN_CHALLENGED = 1;
+	public final static byte DATABASE_TABLE_GAMES_FINISHED_FALSE = 0;
+	public final static byte DATABASE_TABLE_GAMES_FINISHED_TRUE = 1;
+	public final static String DATABASE_TABLE_GAMES_FORMAT = "(" + DATABASE_TABLE_GAMES_COLUMN_ID + ", " + DATABASE_TABLE_GAMES_COLUMN_USER_CREATOR + ", " + DATABASE_TABLE_GAMES_COLUMN_USER_CHALLENGED + ", " + DATABASE_TABLE_GAMES_COLUMN_BOARD + ", " + DATABASE_TABLE_GAMES_COLUMN_TURN + ", " + DATABASE_TABLE_GAMES_COLUMN_FINISHED + ")";
+	public final static String DATABASE_TABLE_GAMES_VALUES = "VALUES (?, ?, ?, ?, ?, ?)";
 	public final static String DATABASE_TABLE_USERS = "users";
 	public final static String DATABASE_TABLE_USERS_COLUMN_ID = "id";
 	public final static String DATABASE_TABLE_USERS_COLUMN_NAME = "name";
 	public final static String DATABASE_TABLE_USERS_COLUMN_REG_ID = "reg_id";
 	public final static String DATABASE_TABLE_USERS_FORMAT = "(" + DATABASE_TABLE_USERS_COLUMN_ID + ", " + DATABASE_TABLE_USERS_COLUMN_NAME + ", " + DATABASE_TABLE_USERS_COLUMN_REG_ID + ")";
+	public final static String DATABASE_TABLE_USERS_VALUES = "VALUES (?, ?, ?)";
 
 	public final static String POST_DATA_BOARD = "board";
 	public final static String POST_DATA_FINISHED = "finished";

@@ -9,6 +9,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Random;
 
@@ -24,6 +25,10 @@ import javax.servlet.http.HttpServletResponse;
 public class NewGame extends HttpServlet
 {
 
+
+	private final static byte RUN_STATUS_NO_ERROR = 0;
+	private final static byte RUN_STATUS_UNSUPPORTED_ENCODING = 1;
+	private final static byte RUN_STATUS_NO_SUCH_ALGORITHM = 2;
 
 	private final static long serialVersionUID = 1L;
 
@@ -72,36 +77,110 @@ public class NewGame extends HttpServlet
 			try
 			{
 				sqlConnection = Utilities.getSQLConnection();
+				byte runStatus = RUN_STATUS_NO_ERROR;
 
-				// prepare a SQL statement to be run on the database
-				final String sqlStatementString = "INSERT INTO " + Utilities.DATABASE_TABLE_GAMES + " " + Utilities.DATABASE_TABLE_GAMES_FORMAT + " VALUES (?, ?, ?, ?, ?)";
-				sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
-
-				try
+				for (boolean continueToRun = true; continueToRun; )
+				// 
 				{
-					final String digest = createDigest
-					(
-						user_challenged.toString().getBytes(Utilities.UTF8),
-						user_creator.toString().getBytes(Utilities.UTF8),
-						board.toString().getBytes(Utilities.UTF8)
-					);
+					// prepare a String to hold a digest in
+					String digest = null;
 
-					// prevent SQL injection by inserting user data this way
-					sqlStatement.setString(1, digest);
-					sqlStatement.setLong(2, user_creator);
-					sqlStatement.setLong(3, user_challenged);
-					sqlStatement.setString(4, board);
-					sqlStatement.setInt(5, Utilities.DATABASE_TABLE_GAMES_FINISHED_FALSE);
+					try
+					{
+						digest = createDigest
+						(
+							user_challenged.toString().getBytes(Utilities.UTF8),
+							user_creator.toString().getBytes(Utilities.UTF8),
+							board.toString().getBytes(Utilities.UTF8)
+						);
+					}
+					catch (final NoSuchAlgorithmException e)
+					{
+						runStatus = RUN_STATUS_NO_SUCH_ALGORITHM;
+					}
+					catch (final UnsupportedEncodingException e)
+					{
+						runStatus = RUN_STATUS_UNSUPPORTED_ENCODING;
+					}
 
-					printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_GENERIC));
+					if (runStatus != RUN_STATUS_NO_ERROR || digest == null)
+					{
+						continueToRun = false;
+					}
+					else
+					{
+						// prepare a SQL statement to be run on the database
+						String sqlStatementString = "SELECT " + Utilities.DATABASE_TABLE_GAMES_COLUMN_FINISHED + " FROM " + Utilities.DATABASE_TABLE_USERS + " WHERE " + Utilities.DATABASE_TABLE_GAMES_COLUMN_ID + " = ?";
+						sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
+
+						// prevent SQL injection by inserting data this way
+						sqlStatement.setString(1, digest);
+
+						// run the SQL statement and acquire any return information
+						ResultSet sqlResult = sqlStatement.executeQuery();
+
+						if (sqlResult.next())
+						// the digest we created to use as an ID already exists in the games table
+						{
+							if (sqlResult.getByte(Utilities.DATABASE_TABLE_GAMES_COLUMN_FINISHED) == Utilities.DATABASE_TABLE_GAMES_FINISHED_TRUE)
+							// Game with the digest we created already exists, AND has already been finished. Because of this, we
+							// can safely replace that game's data with our new game's data
+							{
+								// close the SQL statement as we are going to reuse it now
+								Utilities.closeSQLStatement(sqlStatement);
+
+								// prepare a SQL statement to be run on the database
+								sqlStatementString = "UPDATE " + Utilities.DATABASE_TABLE_GAMES + " SET " + Utilities.DATABASE_TABLE_GAMES_COLUMN_USER_CREATOR + " = ?, " + Utilities.DATABASE_TABLE_GAMES_COLUMN_USER_CHALLENGED + " = ?, " + Utilities.DATABASE_TABLE_GAMES_COLUMN_BOARD + " = ?, " + Utilities.DATABASE_TABLE_GAMES_COLUMN_TURN + " = ?, " + Utilities.DATABASE_TABLE_GAMES_COLUMN_FINISHED + " = ? WHERE " + Utilities.DATABASE_TABLE_GAMES_COLUMN_ID + " = ?";
+								sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
+
+								// prevent SQL injection by inserting data this way
+								sqlStatement.setLong(1, user_creator);
+								sqlStatement.setLong(2, user_challenged);
+								sqlStatement.setString(3, board);
+								sqlStatement.setByte(4, Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED);
+								sqlStatement.setByte(5, Utilities.DATABASE_TABLE_GAMES_FINISHED_FALSE);
+
+								continueToRun = false;
+							}
+						}
+						else
+						// the digest that we created to use as an ID DOES NOT already exist in the games table. We we can now
+						// just simply insert this new game's data into the table
+						{
+							// close the sql statement as we are going to reuse it now
+							Utilities.closeSQLStatement(sqlStatement);
+
+							// prepare a SQL statement to be run on the database
+							sqlStatementString = "INSERT INTO " + Utilities.DATABASE_TABLE_GAMES + " " + Utilities.DATABASE_TABLE_GAMES_FORMAT + " " + Utilities.DATABASE_TABLE_GAMES_VALUES;
+							sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
+
+							// prevent SQL injection by inserting data this way
+							sqlStatement.setString(1, digest);
+							sqlStatement.setLong(2, user_creator);
+							sqlStatement.setLong(3, user_challenged);
+							sqlStatement.setString(4, board);
+							sqlStatement.setByte(5, Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED);
+							sqlStatement.setInt(6, Utilities.DATABASE_TABLE_GAMES_FINISHED_FALSE);
+
+							continueToRun = false;
+						}
+					}
 				}
-				catch (final NoSuchAlgorithmException e)
+
+				switch (runStatus)
+				// we may have hit an error in the above loop
 				{
-					printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_COULD_NOT_CREATE_GAME_ID));
-				}
-				catch (final UnsupportedEncodingException e)
-				{
-					printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_COULD_NOT_CREATE_GAME_ID));
+					case RUN_STATUS_NO_ERROR:
+						printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_GENERIC));
+						break;
+
+					case RUN_STATUS_NO_SUCH_ALGORITHM:
+						printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_COULD_NOT_CREATE_GAME_ID));
+						break;
+
+					case RUN_STATUS_UNSUPPORTED_ENCODING:
+						printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_COULD_NOT_CREATE_GAME_ID));
+						break;
 				}
 			}
 			catch (final ClassNotFoundException e)
@@ -155,6 +234,7 @@ public class NewGame extends HttpServlet
 			while (nibble < 0);
 
 			switch (nibble)
+			// add a hexadecimal character onto the end of the StringBuilder
 			{
 				case 0:
 					digestBuilder.append('0');
@@ -220,6 +300,14 @@ public class NewGame extends HttpServlet
 					digestBuilder.append('f');
 					break;
 			}
+		}
+
+		while (digestBuilder.length() > Utilities.MESSAGE_DIGEST_LENGTH)
+		// ensure that our digest is only MESSAGE_DIGEST_LENGTH characters long. At the time of this
+		// writing that value is 64. This will delete the very last character from the StringBuilder,
+		// one at a time.
+		{
+			digestBuilder.deleteCharAt(digestBuilder.length() - 1);
 		}
 
 		return digestBuilder.toString();
