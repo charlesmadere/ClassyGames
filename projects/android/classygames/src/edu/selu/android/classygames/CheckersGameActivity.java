@@ -184,15 +184,29 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		}
 	}
 	
-	
+	//Working on this
 	private void makeKing(MyButton clickedButton) {
 		// TODO Auto-generated method stub
-		
+		if(clickedButton.isPlayerGreen())
+		{
+			clickedButton.setImageResource(R.drawable.sharks);
+		}
+		else
+			if (!clickedButton.isPlayerGreen())
+		{
+			clickedButton.setImageResource(R.drawable.sharks);
+		}
 	}
 
+	//Working on this
 	private boolean isKing(MyButton clickedButton) {
 		// TODO Auto-generated method stub
-		return false;
+		if(clickedButton.getId() <= 8)
+		{
+			return true;
+		}
+		else
+			return false;
 	}
 
 	private void Jump(MyButton clickedButton) {
