@@ -73,7 +73,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			}
 			else
 			{
-				getSupportActionBar().setTitle(getSupportActionBar().getTitle() + " " + personChallenged.getName());
+				getSupportActionBar().setTitle(CheckersGameActivity.this.getString(R.string.checkers_game_activity_title) + " " + personChallenged.getName());
 			}
 		}
 
