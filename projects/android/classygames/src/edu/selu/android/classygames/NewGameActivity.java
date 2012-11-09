@@ -51,6 +51,7 @@ public class NewGameActivity extends SherlockListActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.new_game_activity);
 		Utilities.styleActionBar(getResources(), getSupportActionBar());
+		Utilities.getFacebook().extendAccessTokenIfNeeded(NewGameActivity.this, null);
 
 		final Bundle bundle = getIntent().getExtras();
 
@@ -77,14 +78,13 @@ public class NewGameActivity extends SherlockListActivity
 		// setup cache size for loading drawable images
 		final int memClass = ((ActivityManager) (NewGameActivity.this).getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
 		
-		// currently use 1/8 of available memory for the cache
-		final int cacheSize = 1024 * 1024 * memClass / 8;
+		final int cacheSize = ImageCache.getCacheSize(memClass);
 		
 		memoryCache = new LruCache<Long, Bitmap> (cacheSize)
 		{
 			protected int sizeOf(Long key, Bitmap bitmap)
 			{
-				if (Integer.valueOf(android.os.Build.VERSION.SDK_INT) >= 12)
+				if (android.os.Build.VERSION.SDK_INT >= 12)
 				{
 		            return bitmap.getByteCount();
 				}
@@ -99,8 +99,8 @@ public class NewGameActivity extends SherlockListActivity
 		
 		try
 		{
-			File cacheDir = getCacheDir(this, Utilities.DISK_CACHE_SUBDIR);
-			diskCache = DiskLruCache.open(cacheDir, Utilities.APP_VERSION, Utilities.VALUE_COUNT, Utilities.DISK_CACHE_SIZE);
+			File cacheDir = getCacheDir(this, ImageCache.DISK_CACHE_SUBDIR);
+			diskCache = DiskLruCache.open(cacheDir, ImageCache.APP_VERSION, ImageCache.VALUE_COUNT, ImageCache.DISK_CACHE_SIZE);
 		} 
 		catch (IOException e) 
 		{
@@ -108,6 +108,14 @@ public class NewGameActivity extends SherlockListActivity
 		}
 		
 		new AsyncPopulateFacebookFriends().execute();
+	}
+	
+	
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		Utilities.getFacebook().extendAccessTokenIfNeeded(NewGameActivity.this, null);
 	}
 
 
@@ -249,7 +257,7 @@ public class NewGameActivity extends SherlockListActivity
 				viewHolder.picture = (ImageView) convertView.findViewById(R.id.new_game_activity_listview_item_picture);
 				viewHolder.picture.setImageResource(R.drawable.fb_placeholder);
 				{
-					Bitmap diskImage = Utilities.getBitmapFromDiskCache(person.getId(), diskCache);
+					Bitmap diskImage = ImageCache.getBitmapFromDiskCache(person.getId(), diskCache);
 					Bitmap memoryImage = memoryCache.get(person.getId());
 					viewHolder.picture.setTag(person.getId());
 					
@@ -331,7 +339,7 @@ public class NewGameActivity extends SherlockListActivity
 					{
 							drawable = Utilities.loadImageFromWebOperations(Utilities.FACEBOOK_GRAPH_API_URL + person[0].getId() + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE_SSL);
 							bitmap = ((BitmapDrawable)drawable).getBitmap();
-							Utilities.addBitmapToCache(person[0].getId(),bitmap, memoryCache, diskCache);
+							ImageCache.addBitmapToCache(person[0].getId(),bitmap, memoryCache, diskCache);
 					}
 					catch (final Exception e)
 					{

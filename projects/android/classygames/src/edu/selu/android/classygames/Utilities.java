@@ -1,11 +1,7 @@
 package edu.selu.android.classygames;
 
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URL;
 
 import android.content.Context;
@@ -13,21 +9,16 @@ import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap.CompressFormat;
-import android.graphics.BitmapFactory;
 import android.graphics.Shader.TileMode;
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.facebook.android.Facebook;
-import com.koushikdutta.urlimageviewhelper.DiskLruCache;
-import com.koushikdutta.urlimageviewhelper.DiskLruCache.Snapshot;
 
 
 public class Utilities
@@ -328,164 +319,6 @@ public class Utilities
 	public static void styleActionBar(final Resources resources, final ActionBar actionBar)
 	{
 		styleActionBar(resources, actionBar, true);
-	}
-	
-	
-	public static void addBitmapToCache(Long key, Bitmap bitmap, LruCache<Long, Bitmap> memoryCache, DiskLruCache diskCache)
-	{	
-		//Add to memory cache
-		if(getBitmapFromMemCache(key, memoryCache) == null)
-		{
-			memoryCache.put(key, bitmap);
-		}
-		
-		//Add to disk cache as well
-		if(!containsKey(key.toString(), diskCache))
-		{
-			put(key.toString(), bitmap, diskCache);
-		}
-		
-	}
-	
-	
-	public static Bitmap getBitmapFromMemCache(Long key, LruCache<Long, Bitmap> memoryCache)
-	{
-		return (Bitmap) memoryCache.get(key);
-	}
-	
-	
-	public static Bitmap getBitmapFromDiskCache(Long key, DiskLruCache diskCache) 
-	{
-		final InputStream in;
-		final BufferedInputStream bufferIn;
-		Snapshot snapshot = null;
-		Bitmap bitmap = null;
-		
-		try
-		{
-			snapshot = diskCache.get(key.toString());
-			
-			if(snapshot == null)
-			{
-				return null;
-			}
-			
-			in = snapshot.getInputStream(0);
-			
-			if(in != null)
-			{
-				bufferIn = new BufferedInputStream(in, IO_BUFFER_SIZE);
-				bitmap = BitmapFactory.decodeStream(bufferIn);
-			}
-		}
-		catch(IOException e)
-		{
-			Log.e(LOG_TAG, "DiskCache get failed: " + e);
-			return null;
-		}
-		
-		snapshot.close();
-		
-	    return bitmap;
-	}
-
-	
-	public static boolean containsKey(String key, DiskLruCache diskCache) 
-	{
-        boolean contained = false;
-        Snapshot snapshot = null;
-        
-        try 
-        {
-            snapshot = diskCache.get( key );
-            
-            if(snapshot != null)
-            {
-            	contained = true;
-               	snapshot.close();
-            }
-        } 
-        catch (IOException e) 
-        {
-            e.printStackTrace();
-        }
-                  
-
-        return contained;
-    }
-	
-	
-	public static void put(String key,Bitmap data, DiskLruCache diskCache) {
-
-        DiskLruCache.Editor editor = null;
-        
-        try 
-        {
-            editor = diskCache.edit( key );
-            if ( editor == null ) 
-            {
-                return;
-            }
-
-            if(writeBitmapToFile(data, editor)) 
-            {               
-                diskCache.flush();
-                editor.commit();
-                
-                if ( BuildConfig.DEBUG ) 
-                {
-                   Log.d( "cache_test_DISK_", "image put on disk cache " + key );
-                }
-            } 
-            else 
-            {
-                editor.abort();
-                
-                if ( BuildConfig.DEBUG ) 
-                {
-                    Log.d( "cache_test_DISK_", "ERROR on: ibbbbbmage put on disk cache " + key );
-                }
-            }   
-        } 
-        catch (IOException e) 
-        {
-            if ( BuildConfig.DEBUG ) 
-            {
-                Log.d( "cache_test_DISK_", "ERROR on: imaaaaage put on disk cache " + key );
-            }
-            
-            try 
-            {
-                if ( editor != null ) 
-                {
-                    editor.abort();
-                }
-            } 
-            catch (IOException ignored) 
-            {		
-            	//Do nothing
-            }           
-        }
-
-    }
-	
-	
-	public static boolean writeBitmapToFile(Bitmap bitmap, DiskLruCache.Editor editor) throws IOException 
-	{
-		OutputStream out = null;
-	  
-		try
-		{
-			out = new BufferedOutputStream( editor.newOutputStream( 0 ), IO_BUFFER_SIZE );
-			return bitmap.compress( COMPRESS_FORMAT, COMPRESS_QUALITY, out );
-		}
-		finally
-		{
-			if(out != null)
-			{
-				out.close();
-			}
-	    }
 	}
 	
 	

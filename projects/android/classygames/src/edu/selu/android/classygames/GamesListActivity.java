@@ -227,6 +227,8 @@ public class GamesListActivity extends SherlockListActivity
 		@Override
 		protected void onPreExecute()
 		{
+			Utilities.getFacebook().extendAccessTokenIfNeeded(GamesListActivity.this, null);
+
 			progressDialog = new ProgressDialog(GamesListActivity.this);
 			progressDialog.setMessage(GamesListActivity.this.getString(R.string.games_list_activity_init_progressdialog_message));
 			progressDialog.setTitle(R.string.games_list_activity_init_progressdialog_title);
@@ -375,7 +377,11 @@ public class GamesListActivity extends SherlockListActivity
 
 					if (viewHolder.picture != null)
 					{
-
+						/* Insert code to load Images here
+						 	
+						 
+						  
+						 */
 					}
 
 					viewHolder.name = (TextView) convertView.findViewById(R.id.games_list_activity_listview_item_name);
