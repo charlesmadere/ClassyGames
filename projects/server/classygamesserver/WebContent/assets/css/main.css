@@ -67,6 +67,7 @@ div#facebook
 
 img#facebookImage
 {
+	box-shadow: 0px 0px 8px #717495;
 	margin-right: 10px;
 	vertical-align: middle;
 }

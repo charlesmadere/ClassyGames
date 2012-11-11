@@ -135,7 +135,7 @@ public class NewRegId extends HttpServlet
 				sqlStatement.executeUpdate();
 
 				part = 10;
-				printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_DATABASE_QUERIED));
+				printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_GENERIC));
 				part = 11;
 			}
 			catch (final ClassNotFoundException e)

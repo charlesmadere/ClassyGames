@@ -11,7 +11,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Random;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -65,7 +64,7 @@ public class NewGame extends HttpServlet
 		final Long user_creator = new Long(request.getParameter(Utilities.POST_DATA_USER_CREATOR));
 		final String board = request.getParameter(Utilities.POST_DATA_BOARD);
 
-		if (user_challenged < 0 || user_creator < 0 || board == null || board.equals(Utilities.BLANK))
+		if (user_challenged < 0 || user_creator < 0 || board == null || board.isEmpty())
 		{
 			printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_MALFORMED));
 		}
@@ -80,13 +79,22 @@ public class NewGame extends HttpServlet
 				byte runStatus = RUN_STATUS_NO_ERROR;
 
 				for (boolean continueToRun = true; continueToRun; )
-				// 
+				// This loop does a ton of stuff. First a digest is created to be used as this new game's game ID. Then we
+				// check to see if this ID is already in the database. If the ID is already in the database, we check to
+				// see if the game it belongs to is a finished game. If it is a finished game, then we can safely replace
+				// the data from that game with the data from our new game. If it is not a finished game, this whole loop
+				// will have to restart as we're going to have to create a new ID (we somehow managed to create an SHA-256
+				// digest that clashed with another one. The odds of this happening are extremely unlikely but we still
+				// have to check for it.)
+				// But back to the ifs and such: if we created an ID that does not already exist in the database, then we
+				// can simply insert our new game data safely into it.
 				{
 					// prepare a String to hold a digest in
 					String digest = null;
 
 					try
 					{
+						// create a digest to use as the Game ID
 						digest = createDigest
 						(
 							user_challenged.toString().getBytes(Utilities.UTF8),
@@ -95,19 +103,24 @@ public class NewGame extends HttpServlet
 						);
 					}
 					catch (final NoSuchAlgorithmException e)
+					// the algorithm we tried to use to create a digest was invalid
 					{
 						runStatus = RUN_STATUS_NO_SUCH_ALGORITHM;
 					}
 					catch (final UnsupportedEncodingException e)
+					// the character set we tried to use in digest creation was invalid
 					{
 						runStatus = RUN_STATUS_UNSUPPORTED_ENCODING;
 					}
 
 					if (runStatus != RUN_STATUS_NO_ERROR || digest == null)
+					// check to see if we encountered any of the exceptions above
 					{
 						continueToRun = false;
 					}
 					else
+					// no exceptions were encountered. let's continue. Once past this point we no longer have to check on or
+					// modify the runStatus variable
 					{
 						// prepare a SQL statement to be run on the database
 						String sqlStatementString = "SELECT " + Utilities.DATABASE_TABLE_GAMES_COLUMN_FINISHED + " FROM " + Utilities.DATABASE_TABLE_USERS + " WHERE " + Utilities.DATABASE_TABLE_GAMES_COLUMN_ID + " = ?";
@@ -117,14 +130,14 @@ public class NewGame extends HttpServlet
 						sqlStatement.setString(1, digest);
 
 						// run the SQL statement and acquire any return information
-						ResultSet sqlResult = sqlStatement.executeQuery();
+						final ResultSet sqlResult = sqlStatement.executeQuery();
 
 						if (sqlResult.next())
 						// the digest we created to use as an ID already exists in the games table
 						{
 							if (sqlResult.getByte(Utilities.DATABASE_TABLE_GAMES_COLUMN_FINISHED) == Utilities.DATABASE_TABLE_GAMES_FINISHED_TRUE)
-							// Game with the digest we created already exists, AND has already been finished. Because of this, we
-							// can safely replace that game's data with our new game's data
+							// Game with the digest we created already exists, AND has been finished. Because of this, we can
+							// safely replace that game's data with our new game's data
 							{
 								// close the SQL statement as we are going to reuse it now
 								Utilities.closeSQLStatement(sqlStatement);
@@ -139,6 +152,9 @@ public class NewGame extends HttpServlet
 								sqlStatement.setString(3, board);
 								sqlStatement.setByte(4, Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED);
 								sqlStatement.setByte(5, Utilities.DATABASE_TABLE_GAMES_FINISHED_FALSE);
+
+								// run the SQL statement
+								sqlStatement.executeUpdate();
 
 								continueToRun = false;
 							}
@@ -161,6 +177,9 @@ public class NewGame extends HttpServlet
 							sqlStatement.setString(4, board);
 							sqlStatement.setByte(5, Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED);
 							sqlStatement.setInt(6, Utilities.DATABASE_TABLE_GAMES_FINISHED_FALSE);
+
+							// run the SQL statement
+							sqlStatement.executeUpdate();
 
 							continueToRun = false;
 						}
@@ -206,17 +225,12 @@ public class NewGame extends HttpServlet
 		// hash generation algorithm. At the time of this writing it's SHA-256, but plenty more algorithms are available.
 		final MessageDigest digest = MessageDigest.getInstance(Utilities.MESSAGE_DIGEST_ALGORITHM);
 
-		// create a Random object. This will be used to generate some random values to use in the creation of a Game ID.
-		// We're seeding it with the epoch in milliseconds because this will 100% certainly always be a different number
-		// every single time that it's run, guaranteeing a strong seed.
-		Random random = new Random(System.currentTimeMillis());
-
 		// Build the digest. As can be seen, we're using a bunch of different variables here. The more data we use here
 		// the better our digest will be.
 		digest.update(user_challenged_bytes);
 		digest.update(user_creator_bytes);
 		digest.update(board_bytes);
-		digest.update(new Integer(random.nextInt()).toString().getBytes(Utilities.UTF8));
+		digest.update(new Integer(Utilities.getRandom().nextInt()).toString().getBytes(Utilities.UTF8));
 
 		StringBuilder digestBuilder = new StringBuilder(new BigInteger(digest.digest()).abs().toString(Utilities.MESSAGE_DIGEST_RADIX));
 
@@ -229,7 +243,7 @@ public class NewGame extends HttpServlet
 			// we don't want a negative number. keep generating random ints until we get one that's positive
 			{
 				// don't allow the random number we've generated to be above 15
-				nibble = random.nextInt() % 16;
+				nibble = Utilities.getRandom().nextInt() % 16;
 			}
 			while (nibble < 0);
 
@@ -304,8 +318,8 @@ public class NewGame extends HttpServlet
 
 		while (digestBuilder.length() > Utilities.MESSAGE_DIGEST_LENGTH)
 		// ensure that our digest is only MESSAGE_DIGEST_LENGTH characters long. At the time of this
-		// writing that value is 64. This will delete the very last character from the StringBuilder,
-		// one at a time.
+		// writing that value is 64. This will delete the very last character from the StringBuilder
+		// one at a time until we're at a length of 64
 		{
 			digestBuilder.deleteCharAt(digestBuilder.length() - 1);
 		}

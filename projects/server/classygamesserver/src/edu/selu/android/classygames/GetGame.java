@@ -54,7 +54,7 @@ public class GetGame extends HttpServlet
 
 		final String id = request.getParameter(Utilities.POST_DATA_ID);
 
-		if (id == null || id.equals(Utilities.BLANK))
+		if (id == null || id.isEmpty())
 		// check for invalid inputs
 		{
 			printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_MALFORMED));
@@ -72,7 +72,7 @@ public class GetGame extends HttpServlet
 				final String sqlStatementString = "SELECT " + Utilities.DATABASE_TABLE_GAMES_COLUMN_BOARD + " FROM " + Utilities.DATABASE_TABLE_GAMES + " WHERE " + Utilities.DATABASE_TABLE_GAMES_COLUMN_ID + " = ?";
 				sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
 
-				// prevent SQL injection by inserting user data this way
+				// prevent SQL injection by inserting data this way
 				sqlStatement.setString(1, id);
 
 				// run the SQL statement and acquire any return information
@@ -81,7 +81,17 @@ public class GetGame extends HttpServlet
 				if (sqlResult.next())
 				// game with specified id was found in the database, send the board's data to the client
 				{
-					printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_GENERIC));
+					final String board = sqlResult.getString(Utilities.DATABASE_TABLE_GAMES_COLUMN_BOARD);
+
+					if (board == null || board.isEmpty())
+					{
+						printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_GET_BOARD_DATA));
+					}
+					else
+					// return the board's data
+					{
+						printWriter.write(Utilities.makePostDataSuccess(board));
+					}
 				}
 				else
 				// we could not find a game with specified id in the database. this should never happen

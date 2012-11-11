@@ -308,7 +308,7 @@ public class Utilities
 	 * This method should always be run immediately after the setContentView() method is run.</p>
 	 * 
 	 * <p><strong>Examples</strong><br />
-	 * Utiltiles.styleActionBar(getResources(), getSupportActionBar());</p>
+	 * Utilities.styleActionBar(getResources(), getSupportActionBar());</p>
 	 * 
 	 * @param resources
 	 * getResources()
