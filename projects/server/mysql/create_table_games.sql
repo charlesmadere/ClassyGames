@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS games
 (
-	id TINYTEXT NOT NULL,
+	id VARCHAR(255) NOT NULL,
 	user_creator BIGINT NOT NULL,
 	user_challenged BIGINT NOT NULL,
 	board TEXT NOT NULL,
@@ -10,4 +10,4 @@ CREATE TABLE IF NOT EXISTS games
 	PRIMARY KEY (id),
 	FOREIGN KEY (user_creator) REFERENCES users(id),
 	FOREIGN KEY (user_challenged) REFERENCES users(id)
-)
+);

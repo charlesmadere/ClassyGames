@@ -51,9 +51,9 @@ public class RemoveRegId extends HttpServlet
 		response.setContentType(Utilities.CONTENT_TYPE_JSON);
 		PrintWriter printWriter = response.getWriter();
 
-		final Long id = new Long(request.getParameter(Utilities.POST_DATA_ID));
+		final Long user_id = new Long(request.getParameter(Utilities.POST_DATA_ID));
 
-		if (id < 0)
+		if (user_id.longValue() < 0)
 		{
 			printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_MALFORMED));
 		}
@@ -71,7 +71,7 @@ public class RemoveRegId extends HttpServlet
 				sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
 
 				// prevent SQL injection by inserting user data this way
-				sqlStatement.setLong(1, id);
+				sqlStatement.setLong(1, user_id);
 
 				// run the SQL statement
 				sqlStatement.executeUpdate();

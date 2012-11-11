@@ -4,6 +4,7 @@ package edu.selu.android.classygames;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -65,8 +66,8 @@ public class Utilities
 	public final static String POST_DATA_TURN_YOURS = "turn_yours";
 	public final static String POST_DATA_USER_CHALLENGED = DATABASE_TABLE_GAMES_COLUMN_USER_CHALLENGED;
 	public final static String POST_DATA_USER_CREATOR = DATABASE_TABLE_GAMES_COLUMN_USER_CREATOR;
-	public final static String POST_DATA_USER_OPPONENT = "user_opponent";
 
+	public final static String POST_ERROR_BOARD_INVALID = "Invalid board!";
 	public final static String POST_ERROR_COULD_NOT_CREATE_GAME_ID = "Was unable to create a Game ID.";
 	public final static String POST_ERROR_DATABASE_COULD_NOT_GET_BOARD_DATA = "Was unable to acquire board data from the database.";
 	public final static String POST_ERROR_DATABASE_COULD_NOT_GET_GAMES = "Was unable to acquire a list of games from the database";
@@ -79,12 +80,51 @@ public class Utilities
 	public final static String POST_ERROR_DATABASE_COULD_NOT_LOAD = "Database DriverManager could not be loaded.";
 	public final static String POST_ERROR_GAME_IS_ALREADY_OVER = "Attempted to add a new move to a game that has already been completed!";
 	public final static String POST_ERROR_GENERIC = "POST data received but an error occurred.";
+	public final static String POST_ERROR_INVALID_CHALLENGER = "Invalid challenger!";
 	public final static String POST_ERROR_ITS_NOT_YOUR_TURN = "Attempted to make a new move when it wasn't the user's turn!";
 	public final static String POST_SUCCESS_GENERIC = "POST data received.";
 	public final static String POST_SUCCESS_MOVE_ADDED_TO_DATABASE = "Move successfully added to database!";
 	public final static String POST_SUCCESS_NO_ACTIVE_GAMES = "Player has no active games!";
 	public final static String POST_SUCCESS_USER_ADDED_TO_DATABASE = "You've been successfully registered with " + APP_NAME + ".";
 	public final static String POST_SUCCESS_USER_REMOVED_FROM_DATABASE = "You've been successfully unregistered from " + APP_NAME + ".";
+
+
+	/**
+	 * Compares a default board to the given board to see if a valid move has occurred.
+	 * 
+	 * @param board
+	 * The contents of the new board as a String. This should have been pulled from the device
+	 * and then sent here.
+	 * 
+	 * @return
+	 * Returns true if the arrangement of pieces on the board is valid.
+	 */
+	public static boolean checkBoardValidity(final String board)
+	{
+		// TODO
+		return true;
+	}
+
+
+	/**
+	 * Compares the original board to the new board to see if a valid move has occurred.
+	 * 
+	 * @param boardOriginal
+	 * The contents of the original board as a String. This should be pulled from the database
+	 * and then sent here.
+	 * 
+	 * @param boardNew
+	 * The contents of the new board as a String. This should have been pulled from the device
+	 * and then sent here.
+	 * 
+	 * @return
+	 * Returns true if the arrangement of pieces on the board is valid. 
+	 */
+	public static boolean checkBoardValidity(final String boardOriginal, final String boardNew)
+	{
+		// TODO
+		return true;
+	}
 
 
 	public static void closeSQL(Connection sqlConnection, PreparedStatement sqlStatement)
@@ -126,6 +166,20 @@ public class Utilities
 	}
 
 
+	public static Random getRandom()
+	{
+		if (random == null)
+		{
+			// create a Random object. We're seeding it with the epoch in milliseconds because
+			// this will 100% certainly always be a different value every single time that it's
+			// run, guaranteeing a strong seed.
+			random = new Random(System.currentTimeMillis());
+		}
+
+		return random;
+	}
+
+
 	public static Connection getSQLConnection() throws ClassNotFoundException, SQLException
 	// I followed this guide to understand how to connect to the MySQL database that is created when
 	// making a new Amazon Elastic Beanstalk application
@@ -146,17 +200,69 @@ public class Utilities
 	}
 
 
-	public static Random getRandom()
+	/**
+	 * Ensures that a given user exists in the database. If the user already exists in the
+	 * database then this method doesn't do very much. If the user does not already exist in the
+	 * database, then this method will insert them into it.
+	 * 
+	 * @param sqlConnection
+	 * An <strong>already valid</strong> connection to the database. This connection will not be
+	 * closed after we are finished performing operations here.
+	 * 
+	 * @param user_id
+	 * The ID of the user as a long. This is the user's Facebook ID.
+	 * 
+	 * @param user_name
+	 * The name of the user as a String.
+	 * 
+	 * @return
+	 * True if we were able to successfully insert this new user into the database OR if the user
+	 * already exists in the database. False if the user did not exist in the database and we were
+	 * unable to insert him into it.
+	 */
+	public static boolean insertUserIntoDatabase(Connection sqlConnection, final long user_id, final String user_name)
 	{
-		if (random == null)
+		boolean errorFree = true;
+		PreparedStatement sqlStatement = null;
+
+		try
 		{
-			// create a Random object. We're seeding it with the epoch in milliseconds because
-			// this will 100% certainly always be a different value every single time that it's
-			// run, guaranteeing a strong seed.
-			random = new Random(System.currentTimeMillis());
+			// prepare a SQL statement to be run on the database
+			String sqlStatementString = "SELECT * FROM " + DATABASE_TABLE_USERS + " WHERE " + DATABASE_TABLE_USERS_COLUMN_ID + " = ?";
+			sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
+
+			// prevent SQL injection by inserting data this way
+			sqlStatement.setLong(1, user_id);
+
+			// run the SQL statement and acquire any return information
+			final ResultSet sqlResult = sqlStatement.executeQuery();
+
+			if (sqlResult.next())
+			// user exists in the database. no further actions needs to be taken
+			{
+
+			}
+			else
+			// user does not exist in the database. we need to put them in there
+			{
+				// prepare a SQL statement to be run on the database
+				sqlStatementString = "INSERT INTO " + DATABASE_TABLE_USERS + " (" + DATABASE_TABLE_USERS_COLUMN_ID + ", " + DATABASE_TABLE_USERS_COLUMN_NAME + ") VALUES (?, ?)";
+				sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
+
+				// run the SQL statement
+				sqlStatement.executeUpdate();
+			}
+		}
+		catch (final SQLException e)
+		{
+			errorFree = false;
+		}
+		finally
+		{
+			closeSQLStatement(sqlStatement);
 		}
 
-		return random;
+		return errorFree;
 	}
 
 

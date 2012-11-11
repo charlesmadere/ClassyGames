@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -48,6 +47,8 @@ public class GamesListActivity extends SherlockListActivity
 		setContentView(R.layout.games_list_activity);
 		Utilities.styleActionBar(getResources(), getSupportActionBar(), false);
 
+//		GamesListActivity.this.registerReceiver(messageReceiver, new IntentFilter());
+
 		new AsyncGCMRegister().execute();
 		new AsyncPopulateGamesList().execute();
 	}
@@ -82,7 +83,7 @@ public class GamesListActivity extends SherlockListActivity
 			registerTask.cancel(true);
 		}
 
-		unregisterReceiver(messageReceiver);
+//		unregisterReceiver(messageReceiver);
 		GCMRegistrar.onDestroy(GamesListActivity.this);
 		super.onDestroy();
 	}
@@ -318,14 +319,14 @@ public class GamesListActivity extends SherlockListActivity
 	}
 
 
-	private final BroadcastReceiver messageReceiver = new BroadcastReceiver()
-	{
-		@Override
-		public void onReceive(final Context context, final Intent intent)
-		{
-
-		}
-	};
+//	private final BroadcastReceiver messageReceiver = new BroadcastReceiver()
+//	{
+//		@Override
+//		public void onReceive(final Context context, final Intent intent)
+//		{
+//
+//		}
+//	};
 
 
 	private class GamesListAdapter extends ArrayAdapter<GenericGame>

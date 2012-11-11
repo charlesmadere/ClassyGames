@@ -57,7 +57,7 @@ public class GCMIntentService extends GCMBaseIntentService
 		}
 		else
 		{
-			Log.i(Utilities.LOG_TAG, "GCM message was received.");
+			Log.d(Utilities.LOG_TAG, "GCM message was received.");
 		}
 	}
 
@@ -68,8 +68,7 @@ public class GCMIntentService extends GCMBaseIntentService
 	@Override
 	protected void onRegistered(final Context context, final String reg_id)
 	{
-		Log.i(Utilities.LOG_TAG, "Device registered with reg_id of \"" + reg_id + "\".");
-		ServerUtilities.contextBroadcast(context, context.getString(R.string.server_registration_success));
+		Log.d(Utilities.LOG_TAG, "Device registered with reg_id of \"" + reg_id + "\".");
 		ServerUtilities.GCMRegister(context, GamesListActivity.person, reg_id);
 	}
 

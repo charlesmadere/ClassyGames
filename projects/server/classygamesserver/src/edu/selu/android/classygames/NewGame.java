@@ -61,6 +61,7 @@ public class NewGame extends HttpServlet
 		PrintWriter printWriter = response.getWriter();
 
 		final Long user_challenged = new Long(request.getParameter(Utilities.POST_DATA_USER_CHALLENGED));
+		final String user_challenged_name = request.getParameter(Utilities.POST_DATA_NAME);
 		final Long user_creator = new Long(request.getParameter(Utilities.POST_DATA_USER_CREATOR));
 		final String board = request.getParameter(Utilities.POST_DATA_BOARD);
 
@@ -68,7 +69,7 @@ public class NewGame extends HttpServlet
 		{
 			printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_MALFORMED));
 		}
-		else
+		else if (Utilities.checkBoardValidity(board))
 		{
 			Connection sqlConnection = null;
 			PreparedStatement sqlStatement = null;
@@ -76,82 +77,104 @@ public class NewGame extends HttpServlet
 			try
 			{
 				sqlConnection = Utilities.getSQLConnection();
-				byte runStatus = RUN_STATUS_NO_ERROR;
 
-				for (boolean continueToRun = true; continueToRun; )
-				// This loop does a ton of stuff. First a digest is created to be used as this new game's game ID. Then we
-				// check to see if this ID is already in the database. If the ID is already in the database, we check to
-				// see if the game it belongs to is a finished game. If it is a finished game, then we can safely replace
-				// the data from that game with the data from our new game. If it is not a finished game, this whole loop
-				// will have to restart as we're going to have to create a new ID (we somehow managed to create an SHA-256
-				// digest that clashed with another one. The odds of this happening are extremely unlikely but we still
-				// have to check for it.)
-				// But back to the ifs and such: if we created an ID that does not already exist in the database, then we
-				// can simply insert our new game data safely into it.
+				if (Utilities.insertUserIntoDatabase(sqlConnection, user_challenged, user_challenged_name))
 				{
-					// prepare a String to hold a digest in
-					String digest = null;
+					byte runStatus = RUN_STATUS_NO_ERROR;
 
-					try
+					for (boolean continueToRun = true; continueToRun; )
+					// This loop does a ton of stuff. First a digest is created to be used as this new game's game ID. Then we
+					// check to see if this ID is already in the database. If the ID is already in the database, we check to
+					// see if the game it belongs to is a finished game. If it is a finished game, then we can safely replace
+					// the data from that game with the data from our new game. If it is not a finished game, this whole loop
+					// will have to restart as we're going to have to create a new ID (we somehow managed to create an SHA-256
+					// digest that clashed with another one. The odds of this happening are extremely unlikely but we still
+					// have to check for it.)
+					// But back to the ifs and such: if we created an ID that does not already exist in the database, then we
+					// can simply insert our new game data safely into it.
 					{
-						// create a digest to use as the Game ID
-						digest = createDigest
-						(
-							user_challenged.toString().getBytes(Utilities.UTF8),
-							user_creator.toString().getBytes(Utilities.UTF8),
-							board.toString().getBytes(Utilities.UTF8)
-						);
-					}
-					catch (final NoSuchAlgorithmException e)
-					// the algorithm we tried to use to create a digest was invalid
-					{
-						runStatus = RUN_STATUS_NO_SUCH_ALGORITHM;
-					}
-					catch (final UnsupportedEncodingException e)
-					// the character set we tried to use in digest creation was invalid
-					{
-						runStatus = RUN_STATUS_UNSUPPORTED_ENCODING;
-					}
+						// prepare a String to hold a digest in
+						String digest = null;
 
-					if (runStatus != RUN_STATUS_NO_ERROR || digest == null)
-					// check to see if we encountered any of the exceptions above
-					{
-						continueToRun = false;
-					}
-					else
-					// no exceptions were encountered. let's continue. Once past this point we no longer have to check on or
-					// modify the runStatus variable
-					{
-						// prepare a SQL statement to be run on the database
-						String sqlStatementString = "SELECT " + Utilities.DATABASE_TABLE_GAMES_COLUMN_FINISHED + " FROM " + Utilities.DATABASE_TABLE_USERS + " WHERE " + Utilities.DATABASE_TABLE_GAMES_COLUMN_ID + " = ?";
-						sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
-
-						// prevent SQL injection by inserting data this way
-						sqlStatement.setString(1, digest);
-
-						// run the SQL statement and acquire any return information
-						final ResultSet sqlResult = sqlStatement.executeQuery();
-
-						if (sqlResult.next())
-						// the digest we created to use as an ID already exists in the games table
+						try
 						{
-							if (sqlResult.getByte(Utilities.DATABASE_TABLE_GAMES_COLUMN_FINISHED) == Utilities.DATABASE_TABLE_GAMES_FINISHED_TRUE)
-							// Game with the digest we created already exists, AND has been finished. Because of this, we can
-							// safely replace that game's data with our new game's data
-							{
-								// close the SQL statement as we are going to reuse it now
-								Utilities.closeSQLStatement(sqlStatement);
+							// create a digest to use as the Game ID
+							digest = createDigest
+							(
+								user_challenged.toString().getBytes(Utilities.UTF8),
+								user_creator.toString().getBytes(Utilities.UTF8),
+								board.toString().getBytes(Utilities.UTF8)
+							);
+						}
+						catch (final NoSuchAlgorithmException e)
+						// the algorithm we tried to use to create a digest was invalid
+						{
+							runStatus = RUN_STATUS_NO_SUCH_ALGORITHM;
+						}
+						catch (final UnsupportedEncodingException e)
+						// the character set we tried to use in digest creation was invalid
+						{
+							runStatus = RUN_STATUS_UNSUPPORTED_ENCODING;
+						}
 
+						if (runStatus != RUN_STATUS_NO_ERROR || digest == null)
+						// check to see if we encountered any of the exceptions above
+						{
+							continueToRun = false;
+						}
+						else
+						// no exceptions were encountered. let's continue. Once past this point we no longer have to check on or
+						// modify the runStatus variable
+						{
+							// prepare a SQL statement to be run on the database
+							String sqlStatementString = "SELECT " + Utilities.DATABASE_TABLE_GAMES_COLUMN_FINISHED + " FROM " + Utilities.DATABASE_TABLE_USERS + " WHERE " + Utilities.DATABASE_TABLE_GAMES_COLUMN_ID + " = ?";
+							sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
+
+							// prevent SQL injection by inserting data this way
+							sqlStatement.setString(1, digest);
+
+							// run the SQL statement and acquire any return information
+							final ResultSet sqlResult = sqlStatement.executeQuery();
+
+							if (sqlResult.next())
+							// the digest we created to use as an ID already exists in the games table
+							{
+								if (sqlResult.getByte(Utilities.DATABASE_TABLE_GAMES_COLUMN_FINISHED) == Utilities.DATABASE_TABLE_GAMES_FINISHED_TRUE)
+								// Game with the digest we created already exists, AND has been finished. Because of this, we can
+								// safely replace that game's data with our new game's data
+								{
+									// prepare a SQL statement to be run on the database
+									sqlStatementString = "UPDATE " + Utilities.DATABASE_TABLE_GAMES + " SET " + Utilities.DATABASE_TABLE_GAMES_COLUMN_USER_CREATOR + " = ?, " + Utilities.DATABASE_TABLE_GAMES_COLUMN_USER_CHALLENGED + " = ?, " + Utilities.DATABASE_TABLE_GAMES_COLUMN_BOARD + " = ?, " + Utilities.DATABASE_TABLE_GAMES_COLUMN_TURN + " = ?, " + Utilities.DATABASE_TABLE_GAMES_COLUMN_FINISHED + " = ? WHERE " + Utilities.DATABASE_TABLE_GAMES_COLUMN_ID + " = ?";
+									sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
+
+									// prevent SQL injection by inserting data this way
+									sqlStatement.setLong(1, user_creator);
+									sqlStatement.setLong(2, user_challenged);
+									sqlStatement.setString(3, board);
+									sqlStatement.setByte(4, Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED);
+									sqlStatement.setByte(5, Utilities.DATABASE_TABLE_GAMES_FINISHED_FALSE);
+
+									// run the SQL statement
+									sqlStatement.executeUpdate();
+
+									continueToRun = false;
+								}
+							}
+							else
+							// the digest that we created to use as an ID DOES NOT already exist in the games table. We we can now
+							// just simply insert this new game's data into the table
+							{
 								// prepare a SQL statement to be run on the database
-								sqlStatementString = "UPDATE " + Utilities.DATABASE_TABLE_GAMES + " SET " + Utilities.DATABASE_TABLE_GAMES_COLUMN_USER_CREATOR + " = ?, " + Utilities.DATABASE_TABLE_GAMES_COLUMN_USER_CHALLENGED + " = ?, " + Utilities.DATABASE_TABLE_GAMES_COLUMN_BOARD + " = ?, " + Utilities.DATABASE_TABLE_GAMES_COLUMN_TURN + " = ?, " + Utilities.DATABASE_TABLE_GAMES_COLUMN_FINISHED + " = ? WHERE " + Utilities.DATABASE_TABLE_GAMES_COLUMN_ID + " = ?";
+								sqlStatementString = "INSERT INTO " + Utilities.DATABASE_TABLE_GAMES + " " + Utilities.DATABASE_TABLE_GAMES_FORMAT + " " + Utilities.DATABASE_TABLE_GAMES_VALUES;
 								sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
 
 								// prevent SQL injection by inserting data this way
-								sqlStatement.setLong(1, user_creator);
-								sqlStatement.setLong(2, user_challenged);
-								sqlStatement.setString(3, board);
-								sqlStatement.setByte(4, Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED);
-								sqlStatement.setByte(5, Utilities.DATABASE_TABLE_GAMES_FINISHED_FALSE);
+								sqlStatement.setString(1, digest);
+								sqlStatement.setLong(2, user_creator);
+								sqlStatement.setLong(3, user_challenged);
+								sqlStatement.setString(4, board);
+								sqlStatement.setByte(5, Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED);
+								sqlStatement.setInt(6, Utilities.DATABASE_TABLE_GAMES_FINISHED_FALSE);
 
 								// run the SQL statement
 								sqlStatement.executeUpdate();
@@ -159,47 +182,27 @@ public class NewGame extends HttpServlet
 								continueToRun = false;
 							}
 						}
-						else
-						// the digest that we created to use as an ID DOES NOT already exist in the games table. We we can now
-						// just simply insert this new game's data into the table
-						{
-							// close the sql statement as we are going to reuse it now
-							Utilities.closeSQLStatement(sqlStatement);
+					}
 
-							// prepare a SQL statement to be run on the database
-							sqlStatementString = "INSERT INTO " + Utilities.DATABASE_TABLE_GAMES + " " + Utilities.DATABASE_TABLE_GAMES_FORMAT + " " + Utilities.DATABASE_TABLE_GAMES_VALUES;
-							sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
+					switch (runStatus)
+					// we may have hit an error in the above loop
+					{
+						case RUN_STATUS_NO_ERROR:
+							printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_GENERIC));
+							break;
 
-							// prevent SQL injection by inserting data this way
-							sqlStatement.setString(1, digest);
-							sqlStatement.setLong(2, user_creator);
-							sqlStatement.setLong(3, user_challenged);
-							sqlStatement.setString(4, board);
-							sqlStatement.setByte(5, Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED);
-							sqlStatement.setInt(6, Utilities.DATABASE_TABLE_GAMES_FINISHED_FALSE);
+						case RUN_STATUS_NO_SUCH_ALGORITHM:
+							printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_COULD_NOT_CREATE_GAME_ID));
+							break;
 
-							// run the SQL statement
-							sqlStatement.executeUpdate();
-
-							continueToRun = false;
-						}
+						case RUN_STATUS_UNSUPPORTED_ENCODING:
+							printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_COULD_NOT_CREATE_GAME_ID));
+							break;
 					}
 				}
-
-				switch (runStatus)
-				// we may have hit an error in the above loop
+				else
 				{
-					case RUN_STATUS_NO_ERROR:
-						printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_GENERIC));
-						break;
-
-					case RUN_STATUS_NO_SUCH_ALGORITHM:
-						printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_COULD_NOT_CREATE_GAME_ID));
-						break;
-
-					case RUN_STATUS_UNSUPPORTED_ENCODING:
-						printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_COULD_NOT_CREATE_GAME_ID));
-						break;
+					printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_INVALID_CHALLENGER));
 				}
 			}
 			catch (final ClassNotFoundException e)
@@ -214,6 +217,10 @@ public class NewGame extends HttpServlet
 			{
 				Utilities.closeSQL(sqlConnection, sqlStatement);
 			}
+		}
+		else
+		{
+			printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_BOARD_INVALID));
 		}
 	}
 

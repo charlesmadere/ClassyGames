@@ -20,7 +20,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 
 import com.google.android.gcm.GCMRegistrar;
@@ -69,15 +68,6 @@ public class ServerUtilities
 
 	public final static String SERVER_REMOVE_REG_ID = "RemoveRegId";
 	public final static String SERVER_REMOVE_REG_ID_ADDRESS = SERVER_ADDRESS + SERVER_REMOVE_REG_ID;
-
-
-	public static void contextBroadcast(final Context context, final String message)
-	{
-		Log.d(Utilities.LOG_TAG, "Broadcasting message: \"" + message + "\"");
-		Intent intent = new Intent();
-		intent.putExtra("message", message);
-		context.sendBroadcast(intent);
-	}
 
 
 	private static boolean parseServerResults(final String jsonString)
@@ -176,7 +166,7 @@ public class ServerUtilities
 
 		// build the data to be sent to the server
 		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-		nameValuePairs.add(new BasicNameValuePair(POST_DATA_ID, new Long(person.getId()).toString()));
+		nameValuePairs.add(new BasicNameValuePair(POST_DATA_ID, Long.valueOf(person.getId()).toString()));
 		nameValuePairs.add(new BasicNameValuePair(POST_DATA_NAME, person.getName()));
 		nameValuePairs.add(new BasicNameValuePair(POST_DATA_REG_ID, reg_id));
 
@@ -187,7 +177,6 @@ public class ServerUtilities
 		for (int i = 1; i <= REGISTER_MAX_ATTEMPTS; ++i)
 		{
 			Log.i(Utilities.LOG_TAG, "GCM register attempt #" + i);
-			contextBroadcast(context, context.getString(R.string.server_registration_attempt, i));
 
 			try
 			{
@@ -196,7 +185,6 @@ public class ServerUtilities
 				if (parseServerResults(serverResponse))
 				{
 					GCMRegistrar.setRegisteredOnServer(context, true);
-					contextBroadcast(context, context.getString(R.string.server_registration_success));
 
 					return true;
 				}
@@ -237,8 +225,6 @@ public class ServerUtilities
 			}
 		}
 
-		contextBroadcast(context, context.getString(R.string.server_registration_fail, REGISTER_MAX_ATTEMPTS));
-
 		return false;
 	}
 
@@ -249,7 +235,7 @@ public class ServerUtilities
 
 		// build the data to be sent to the server
 		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-		nameValuePairs.add(new BasicNameValuePair(POST_DATA_ID, new Long(id).toString()));
+		nameValuePairs.add(new BasicNameValuePair(POST_DATA_ID, Long.valueOf(id).toString()));
 		nameValuePairs.add(new BasicNameValuePair(POST_DATA_REG_ID, reg_id));
 
 		try
@@ -258,15 +244,14 @@ public class ServerUtilities
 
 			if (parseServerResults(serverResponse))
 			{
-				contextBroadcast(context, context.getString(R.string.server_unregistration_fail));
+
 			}
 
 			GCMRegistrar.setRegisteredOnServer(context, false);
-			contextBroadcast(context, context.getString(R.string.server_unregistration_success));
 		}
 		catch (final IOException e)
 		{
-			contextBroadcast(context, context.getString(R.string.server_unregistration_fail));
+
 		}
 	}
 
