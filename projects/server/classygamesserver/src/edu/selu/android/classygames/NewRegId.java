@@ -56,7 +56,7 @@ public class NewRegId extends HttpServlet
 		final String name = request.getParameter(Utilities.POST_DATA_NAME);
 		final String reg_id = request.getParameter(Utilities.POST_DATA_REG_ID);
 
-		if (id < 0 || name == null || reg_id == null || name.equals(Utilities.BLANK) || reg_id.equals(Utilities.BLANK))
+		if (id < 0 || name == null || name.isEmpty() || reg_id == null || reg_id.isEmpty())
 		// check for invalid inputs
 		{
 			printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_MALFORMED));

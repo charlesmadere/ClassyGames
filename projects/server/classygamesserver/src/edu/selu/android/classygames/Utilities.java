@@ -81,6 +81,7 @@ public class Utilities
 	public final static String POST_ERROR_GENERIC = "POST data received but an error occurred.";
 	public final static String POST_ERROR_ITS_NOT_YOUR_TURN = "Attempted to make a new move when it wasn't the user's turn!";
 	public final static String POST_SUCCESS_GENERIC = "POST data received.";
+	public final static String POST_SUCCESS_MOVE_ADDED_TO_DATABASE = "Move successfully added to database!";
 	public final static String POST_SUCCESS_NO_ACTIVE_GAMES = "Player has no active games!";
 	public final static String POST_SUCCESS_USER_ADDED_TO_DATABASE = "You've been successfully registered with " + APP_NAME + ".";
 	public final static String POST_SUCCESS_USER_REMOVED_FROM_DATABASE = "You've been successfully unregistered from " + APP_NAME + ".";

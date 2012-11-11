@@ -76,7 +76,7 @@ public class NewMove extends HttpServlet
 				// update the data
 
 				// prepare a SQL statement to be run on the database
-				final String sqlStatementString = "SELECT " + Utilities.DATABASE_TABLE_GAMES_COLUMN_FINISHED + ", " + Utilities.DATABASE_TABLE_GAMES_COLUMN_TURN + " FROM " + Utilities.DATABASE_TABLE_GAMES + " WHERE " + Utilities.DATABASE_TABLE_GAMES_COLUMN_ID + " = ?";
+				String sqlStatementString = "SELECT " + Utilities.DATABASE_TABLE_GAMES_COLUMN_FINISHED + ", " + Utilities.DATABASE_TABLE_GAMES_COLUMN_TURN + " FROM " + Utilities.DATABASE_TABLE_GAMES + " WHERE " + Utilities.DATABASE_TABLE_GAMES_COLUMN_ID + " = ?";
 				sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
 
 				// prevent SQL injection by inserting data this way
@@ -96,7 +96,17 @@ public class NewMove extends HttpServlet
 
 						if ((user_id == user_creator && turn == Utilities.DATABASE_TABLE_GAMES_TURN_CREATOR) || (user_id == user_challenged && turn == Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED))
 						{
-							printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_GENERIC));
+							// close the PreparedStatement as it is no longer needed
+							Utilities.closeSQLStatement(sqlStatement);
+
+							// prepare a SQL statement to be run on the database
+							sqlStatementString = "INSERT INTO " + Utilities.DATABASE_TABLE_GAMES + " " + Utilities.DATABASE_TABLE_GAMES_FORMAT + " " + Utilities.DATABASE_TABLE_GAMES_VALUES;
+							sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
+
+							// run the SQL statement
+							sqlStatement.executeUpdate();
+
+							printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_MOVE_ADDED_TO_DATABASE));
 						}
 						else
 						{
