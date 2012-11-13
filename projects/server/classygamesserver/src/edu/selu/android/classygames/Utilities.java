@@ -302,4 +302,56 @@ public class Utilities
 	}
 
 
+	public static void removeUserRegId(Connection sqlConnection, long user_id)
+	{
+		PreparedStatement sqlStatement = null;
+
+		try
+		{
+			// prepare a SQL statement to be run on the database
+			final String sqlStatementString = "UPDATE " + Utilities.DATABASE_TABLE_USERS + " SET " + Utilities.DATABASE_TABLE_USERS_COLUMN_REG_ID + " = null WHERE " + Utilities.DATABASE_TABLE_USERS_COLUMN_ID + " = ?";
+			sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
+
+			// prevent SQL injection by inserting data this way
+			sqlStatement.setLong(1, user_id);
+
+			// run the SQL statement
+			sqlStatement.executeUpdate();
+		}
+		catch (final SQLException e)
+		{
+
+		}
+		finally
+		{
+			closeSQLStatement(sqlStatement);
+		}
+	}
+
+
+	public static void updateUserRegId(Connection sqlConnection, long user_id, String reg_id)
+	{
+		PreparedStatement sqlStatement = null;
+
+		try
+		{
+			// prepare a SQL statement to be run on the database
+			final String sqlStatementString = "UPDATE " + Utilities.DATABASE_TABLE_USERS + " SET " + Utilities.DATABASE_TABLE_USERS_COLUMN_NAME + " = ?, " + Utilities.DATABASE_TABLE_USERS_COLUMN_REG_ID + " = ? WHERE " + Utilities.DATABASE_TABLE_USERS_COLUMN_ID + " = ?";
+			sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
+
+			// prevent SQL injection by inserting user data this way
+			sqlStatement.setString(1, reg_id);
+			sqlStatement.setLong(2, user_id);
+		} 
+		catch (final SQLException e)
+		{
+
+		}
+		finally
+		{
+			closeSQLStatement(sqlStatement);
+		}
+	}
+
+
 }

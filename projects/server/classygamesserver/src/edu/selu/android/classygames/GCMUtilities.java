@@ -1,12 +1,15 @@
 package edu.selu.android.classygames;
 
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.google.android.gcm.server.Constants;
 import com.google.android.gcm.server.Message;
+import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
 
 
@@ -18,34 +21,68 @@ public class GCMUtilities
 
 
 	/**
-	 * Sends a Google Cloud Message (GCM) to the user specified by the user_id parameter.
+	 * Sends a Google Cloud Message(GCM) to the user specified by the user_id parameter.
+	 * Some of the code here was taken from this guide:
+	 * https://developer.android.com/guide/google/gcm/gs.html#server-app
+	 * 
+	 * @param sqlConnection
+	 * An existing connection to the SQL database as this code makes no attempt to either
+	 * open or close the connection.
 	 * 
 	 * @param user_id
-	 * The ID of the user that you want to send the Google Cloud Message to.
+	 * The ID of the user that you want to send a Google Cloud Message to.
 	 */
-	public static void sendMessage(final long user_id)
+	public static void sendMessage(Connection sqlConnection, final long user_id)
 	{
-		final String reg_id = grabUsersRegId(user_id);
+		final String reg_id = grabUserRegId(sqlConnection, user_id);
 
 		if (reg_id != null && !reg_id.isEmpty())
+		// ensure that we were able to grab a valid regId for the user
 		{
 			Sender sender = new Sender(SecretConstants.GOOGLE_API_KEY);
 			Message message = new Message.Builder().build();
-			// TODO
+			try
+			{
+				final Result result = sender.send(message, reg_id, RETRY_ATTEMPTS);
+				final String messageId = result.getMessageId();
+
+				if (messageId != null && !messageId.isEmpty())
+				{
+					final String canonicalRegId = result.getCanonicalRegistrationId();
+
+					if (canonicalRegId != null && !canonicalRegId.isEmpty())
+					// same device has more than one registration ID: update database. Replace
+					// the existing regId with this new one
+					{
+						Utilities.updateUserRegId(sqlConnection, user_id, canonicalRegId);
+					}
+				}
+				else
+				{
+					final String errorCodeName = result.getErrorCodeName();
+
+					if (errorCodeName.equals(Constants.ERROR_NOT_REGISTERED))
+					// application has been removed from device - unregister database
+					{
+						Utilities.removeUserRegId(sqlConnection, user_id);
+					}
+				}
+			}
+			catch (final IOException e)
+			{
+
+			}
 		}
 	}
 
 
-	private static String grabUsersRegId(final long user_id)
+	private static String grabUserRegId(Connection sqlConnection, final long user_id)
 	{
-		Connection sqlConnection = null;
 		PreparedStatement sqlStatement = null;
 		String reg_id = null;
 
 		try
 		{
-			sqlConnection = Utilities.getSQLConnection();
-
 			// prepare a SQL statement to be run on the database
 			final String sqlStatementString = "SELECT " + Utilities.DATABASE_TABLE_USERS_COLUMN_REG_ID + " FROM " + Utilities.DATABASE_TABLE_USERS + " WHERE " + Utilities.DATABASE_TABLE_USERS_COLUMN_ID + " = ?";
 			sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
@@ -62,17 +99,13 @@ public class GCMUtilities
 				reg_id = sqlResult.getString(Utilities.DATABASE_TABLE_USERS_COLUMN_REG_ID);
 			}
 		}
-		catch (final ClassNotFoundException e)
-		{
-
-		}
 		catch (final SQLException e)
 		{
 
 		}
 		finally
 		{
-			Utilities.closeSQL(sqlConnection, sqlStatement);
+			Utilities.closeSQLStatement(sqlStatement);
 		}
 
 		return reg_id;

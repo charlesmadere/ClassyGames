@@ -84,14 +84,13 @@ public class NewRegId extends HttpServlet
 				// the id already exists in the table therefore it's data needs to be updated
 				{
 					// prepare a SQL statement to be run on the database
-					sqlStatementString = "UPDATE " + Utilities.DATABASE_TABLE_USERS + " SET " + Utilities.DATABASE_TABLE_USERS_COLUMN_ID + " = ?, " + Utilities.DATABASE_TABLE_USERS_COLUMN_NAME + " = ?, " + Utilities.DATABASE_TABLE_USERS_COLUMN_REG_ID + " = ? WHERE " + Utilities.DATABASE_TABLE_USERS_COLUMN_ID + " = ?";
+					sqlStatementString = "UPDATE " + Utilities.DATABASE_TABLE_USERS + " SET " + Utilities.DATABASE_TABLE_USERS_COLUMN_NAME + " = ?, " + Utilities.DATABASE_TABLE_USERS_COLUMN_REG_ID + " = ? WHERE " + Utilities.DATABASE_TABLE_USERS_COLUMN_ID + " = ?";
 					sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
 
 					// prevent SQL injection by inserting user data this way
-					sqlStatement.setLong(1, id);
-					sqlStatement.setString(2, name);
-					sqlStatement.setString(3, reg_id);
-					sqlStatement.setLong(4, id);
+					sqlStatement.setString(1, name);
+					sqlStatement.setString(2, reg_id);
+					sqlStatement.setLong(3, id);
 				}
 				else
 				// id does not already exist in the table. let's insert it
