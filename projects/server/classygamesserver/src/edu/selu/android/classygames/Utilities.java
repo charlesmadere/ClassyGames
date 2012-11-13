@@ -220,7 +220,7 @@ public class Utilities
 	 * already exists in the database. False if the user did not exist in the database and we were
 	 * unable to insert him into it.
 	 */
-	public static boolean insertUserIntoDatabase(Connection sqlConnection, final long user_id, final String user_name)
+	public static boolean ensureUserExistsInDatabase(Connection sqlConnection, final long user_id, final String user_name)
 	{
 		boolean errorFree = true;
 		PreparedStatement sqlStatement = null;
@@ -249,6 +249,10 @@ public class Utilities
 				sqlStatementString = "INSERT INTO " + DATABASE_TABLE_USERS + " (" + DATABASE_TABLE_USERS_COLUMN_ID + ", " + DATABASE_TABLE_USERS_COLUMN_NAME + ") VALUES (?, ?)";
 				sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
 
+				// prevent SQL injection by inserting data this way
+				sqlStatement.setLong(1, user_id);
+				sqlStatement.setString(2, user_name);
+
 				// run the SQL statement
 				sqlStatement.executeUpdate();
 			}
@@ -268,7 +272,7 @@ public class Utilities
 
 	private static String makePostData(final Object data, final boolean hasError)
 	{
-		Map<Object, Object> result = new LinkedHashMap<Object, Object>();
+		Map<String, Object> result = new LinkedHashMap<String, Object>();
 
 		if (hasError)
 		{
@@ -279,7 +283,7 @@ public class Utilities
 			result.put("success", data);
 		}
 
-		Map<String, Map<Object, Object>> jsonData = new LinkedHashMap<String, Map<Object, Object>>();
+		Map<String, Map<String, Object>> jsonData = new LinkedHashMap<String, Map<String, Object>>();
 		jsonData.put("result", result);
 
 		return JSONValue.toJSONString(jsonData);

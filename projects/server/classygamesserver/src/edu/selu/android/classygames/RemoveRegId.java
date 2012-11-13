@@ -39,7 +39,7 @@ public class RemoveRegId extends HttpServlet
 	{
 		response.setContentType(Utilities.CONTENT_TYPE_JSON);
 		PrintWriter printWriter = response.getWriter();
-		printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_ERROR_DATA_NOT_DETECTED));
+		printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_NOT_DETECTED));
 	}
 
 
@@ -54,6 +54,7 @@ public class RemoveRegId extends HttpServlet
 		final Long user_id = new Long(request.getParameter(Utilities.POST_DATA_ID));
 
 		if (user_id.longValue() < 0)
+		// check for invalid inputs
 		{
 			printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_MALFORMED));
 		}
@@ -67,10 +68,10 @@ public class RemoveRegId extends HttpServlet
 				sqlConnection = Utilities.getSQLConnection();
 
 				// parepare a SQL statement to be run on the MySQL database
-				final String sqlStatementString = "DELETE FROM " + Utilities.DATABASE_TABLE_USERS + " WHERE " + Utilities.DATABASE_TABLE_USERS_COLUMN_ID + " = ?";
+				final String sqlStatementString = "UPDATE " + Utilities.DATABASE_TABLE_USERS + " SET " + Utilities.DATABASE_TABLE_USERS_COLUMN_REG_ID + " = null WHERE " + Utilities.DATABASE_TABLE_USERS_COLUMN_ID + " = ?";
 				sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
 
-				// prevent SQL injection by inserting user data this way
+				// prevent SQL injection by inserting data this way
 				sqlStatement.setLong(1, user_id);
 
 				// run the SQL statement

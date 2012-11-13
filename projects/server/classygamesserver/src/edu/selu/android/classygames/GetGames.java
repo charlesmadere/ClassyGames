@@ -59,7 +59,8 @@ public class GetGames extends HttpServlet
 
 		final Long id = new Long(request.getParameter(Utilities.POST_DATA_ID));
 
-		if (id < 0)
+		if (id.longValue() < 0)
+		// check for invalid inputs
 		{
 			printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_MALFORMED));
 		}

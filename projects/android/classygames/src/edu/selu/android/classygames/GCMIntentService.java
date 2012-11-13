@@ -10,8 +10,8 @@ import com.google.android.gcm.GCMBaseIntentService;
 
 
 /**
- * <p>For more information on this class please read
- * <a href="https://developer.android.com/guide/google/gcm/client-javadoc/index.html">https://developer.android.com/guide/google/gcm/client-javadoc/index.html</a></p>
+ * For more information on this class please read
+ * https://developer.android.com/guide/google/gcm/client-javadoc/index.html
  */
 public class GCMIntentService extends GCMBaseIntentService
 {

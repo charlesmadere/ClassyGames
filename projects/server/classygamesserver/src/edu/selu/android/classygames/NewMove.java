@@ -40,7 +40,7 @@ public class NewMove extends HttpServlet
 	{
 		response.setContentType(Utilities.CONTENT_TYPE_JSON);
 		PrintWriter printWriter = response.getWriter();
-		printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_ERROR_DATA_NOT_DETECTED));
+		printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_NOT_DETECTED));
 	}
 
 
@@ -58,7 +58,8 @@ public class NewMove extends HttpServlet
 		final String user_opponent_name = request.getParameter(Utilities.POST_DATA_NAME);
 		final String board = request.getParameter(Utilities.POST_DATA_BOARD);
 
-		if (game_id == null || game_id.isEmpty() || user_id < 0 || user_opponent < 0 || board == null || board.isEmpty())
+		if (game_id == null || game_id.isEmpty() || user_id.longValue() < 0 || user_opponent.longValue() < 0 || board == null || board.isEmpty())
+		// check for invalid inputs
 		{
 			printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_EMPTY));
 		}
@@ -71,7 +72,7 @@ public class NewMove extends HttpServlet
 			{
 				sqlConnection = Utilities.getSQLConnection();
 
-				if (Utilities.insertUserIntoDatabase(sqlConnection, user_opponent, user_opponent_name))
+				if (Utilities.ensureUserExistsInDatabase(sqlConnection, user_opponent, user_opponent_name))
 				{
 					// prepare a SQL statement to be run on the database
 					String sqlStatementString = "SELECT " + Utilities.DATABASE_TABLE_GAMES_COLUMN_FINISHED + ", " + Utilities.DATABASE_TABLE_GAMES_COLUMN_TURN + " FROM " + Utilities.DATABASE_TABLE_GAMES + " WHERE " + Utilities.DATABASE_TABLE_GAMES_COLUMN_ID + " = ?";
@@ -119,7 +120,7 @@ public class NewMove extends HttpServlet
 					}
 					else
 					{
-						printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_ERROR_DATABASE_COULD_NOT_FIND_GAME_WITH_SPECIFIED_ID));
+						printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_FIND_GAME_WITH_SPECIFIED_ID));
 					}
 				}
 			}

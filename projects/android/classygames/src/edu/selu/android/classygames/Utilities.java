@@ -24,18 +24,19 @@ import com.facebook.android.Facebook;
 public class Utilities
 {
 
+
 	public final static String DISPLAY_MESSAGE_ACTION = "edu.selu.android.classygames.CONTEXT_BROADCAST";
-	public final static String LOG_TAG = "ClassyGames";
+	public final static String LOG_TAG = "Classy Games";
 	
 	
 	public final static CompressFormat COMPRESS_FORMAT = CompressFormat.PNG;
-    public final static int COMPRESS_QUALITY = 70;
+	public final static int COMPRESS_QUALITY = 70;
 	public final static int APP_VERSION = 1;
 	public final static int VALUE_COUNT = 1;
 	public final static int IO_BUFFER_SIZE = 8 * 1024;
 	public final static int DISK_CACHE_SIZE = 1024 * 1024 * 10;
 	public final static String DISK_CACHE_SUBDIR = "thumbnails";
-	
+
 
 	public static SharedPreferences sharedPreferences;
 
@@ -320,6 +321,6 @@ public class Utilities
 	{
 		styleActionBar(resources, actionBar, true);
 	}
-	
-	
+
+
 }

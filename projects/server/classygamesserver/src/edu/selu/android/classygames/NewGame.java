@@ -48,7 +48,7 @@ public class NewGame extends HttpServlet
 	{
 		response.setContentType(Utilities.CONTENT_TYPE_JSON);
 		PrintWriter printWriter = response.getWriter();
-		printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_ERROR_DATA_NOT_DETECTED));
+		printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_NOT_DETECTED));
 	}
 
 
@@ -65,7 +65,8 @@ public class NewGame extends HttpServlet
 		final Long user_creator = new Long(request.getParameter(Utilities.POST_DATA_USER_CREATOR));
 		final String board = request.getParameter(Utilities.POST_DATA_BOARD);
 
-		if (user_challenged < 0 || user_creator < 0 || board == null || board.isEmpty())
+		if (user_challenged.longValue() < 0 || user_creator.longValue() < 0 || board == null || board.isEmpty())
+		// check for invalid inputs
 		{
 			printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_MALFORMED));
 		}
@@ -78,7 +79,7 @@ public class NewGame extends HttpServlet
 			{
 				sqlConnection = Utilities.getSQLConnection();
 
-				if (Utilities.insertUserIntoDatabase(sqlConnection, user_challenged, user_challenged_name))
+				if (Utilities.ensureUserExistsInDatabase(sqlConnection, user_challenged, user_challenged_name))
 				{
 					byte runStatus = RUN_STATUS_NO_ERROR;
 
@@ -117,7 +118,7 @@ public class NewGame extends HttpServlet
 							runStatus = RUN_STATUS_UNSUPPORTED_ENCODING;
 						}
 
-						if (runStatus != RUN_STATUS_NO_ERROR || digest == null)
+						if (runStatus != RUN_STATUS_NO_ERROR || digest == null || digest.isEmpty())
 						// check to see if we encountered any of the exceptions above
 						{
 							continueToRun = false;
@@ -187,16 +188,16 @@ public class NewGame extends HttpServlet
 					switch (runStatus)
 					// we may have hit an error in the above loop
 					{
-						case RUN_STATUS_NO_ERROR:
-							printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_GENERIC));
-							break;
-
 						case RUN_STATUS_NO_SUCH_ALGORITHM:
 							printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_COULD_NOT_CREATE_GAME_ID));
 							break;
 
 						case RUN_STATUS_UNSUPPORTED_ENCODING:
 							printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_COULD_NOT_CREATE_GAME_ID));
+							break;
+
+						default:
+							printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_GENERIC));
 							break;
 					}
 				}
