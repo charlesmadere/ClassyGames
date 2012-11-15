@@ -50,28 +50,24 @@ public class ServerUtilities
 	public final static String POST_DATA_USER_CREATOR = "user_creator";
 
 	public final static String SERVER_ADDRESS = "http://classygames.net/";
-
 	public final static String SERVER_GET_GAME = "GetGame";
 	public final static String SERVER_GET_GAME_ADDRESS = SERVER_ADDRESS + SERVER_GET_GAME;
-
 	public final static String SERVER_GET_GAMES = "GetGames";
 	public final static String SERVER_GET_GAMES_ADDRESS = SERVER_ADDRESS + SERVER_GET_GAMES;
-
 	public final static String SERVER_NEW_GAME = "NewGame";
 	public final static String SERVER_NEW_GAME_ADDRESS = SERVER_ADDRESS + SERVER_NEW_GAME;
-
 	public final static String SERVER_NEW_MOVE = "NewMove";
 	public final static String SERVER_NEW_MOVE_ADDRESS = SERVER_ADDRESS + SERVER_NEW_MOVE;
-
 	public final static String SERVER_NEW_REG_ID = "NewRegId";
 	public final static String SERVER_NEW_REG_ID_ADDRESS = SERVER_ADDRESS + SERVER_NEW_REG_ID;
-
 	public final static String SERVER_REMOVE_REG_ID = "RemoveRegId";
 	public final static String SERVER_REMOVE_REG_ID_ADDRESS = SERVER_ADDRESS + SERVER_REMOVE_REG_ID;
 
 
-	private static boolean parseServerResults(final String jsonString)
+	private static boolean GCMParseServerResults(final String jsonString)
 	{
+		boolean returnValue = false;
+
 		try
 		{
 			final JSONObject jsonData = new JSONObject(jsonString);
@@ -85,7 +81,7 @@ public class ServerUtilities
 					final String successMessage = jsonResult.getString(POST_DATA_SUCCESS);
 					Log.d(Utilities.LOG_TAG, "Server returned success with message: \"" + successMessage + "\".");
 
-					return true;
+					returnValue = true;
 				}
 				catch (final JSONException e)
 				{
@@ -112,57 +108,13 @@ public class ServerUtilities
 			Log.e(Utilities.LOG_TAG, "Server returned message that was unable to be properly parsed", e);
 		}
 
-		return false;
-	}
-
-
-	private static String postToServer(final String url, final ArrayList<NameValuePair> data) throws IOException
-	{
-		String jsonString = null;
-		InputStream inputStream = null;
-
-		HttpPost httpPost = new HttpPost(url);
-		httpPost.setEntity(new UrlEncodedFormEntity(data));
-
-		try
-		{
-			HttpClient httpClient = new DefaultHttpClient();
-			HttpResponse httpResponse = httpClient.execute(httpPost);
-
-			inputStream = httpResponse.getEntity().getContent();
-		}
-		catch (final Exception e)
-		{
-			Log.e(Utilities.LOG_TAG, "Error in HTTP connection.", e);
-		}
-
-		if (inputStream != null)
-		{
-			try
-			{
-				BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, HTTP.ISO_8859_1));
-				StringBuilder stringBuilder = new StringBuilder();
-
-				for (String line = new String(); line != null; line = bufferedReader.readLine())
-				{
-					stringBuilder.append(line);
-				}
-
-				jsonString = new String(stringBuilder.toString());
-			}
-			catch (final Exception e)
-			{
-				Log.e(Utilities.LOG_TAG, "Error converting HTTP POST result from server.", e);
-			}
-		}
-
-		return jsonString;
+		return returnValue;
 	}
 
 
 	public static boolean GCMRegister(final Context context, final Person person, final String reg_id)
 	{
-		Log.i(Utilities.LOG_TAG, "Registering device with reg_id of \"" + reg_id + "\" with GCM server.");
+		Log.d(Utilities.LOG_TAG, "Registering device with reg_id of \"" + reg_id + "\" with GCM server.");
 
 		// build the data to be sent to the server
 		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
@@ -182,7 +134,7 @@ public class ServerUtilities
 			{
 				final String serverResponse = postToServer(SERVER_NEW_REG_ID_ADDRESS, nameValuePairs);
 
-				if (parseServerResults(serverResponse))
+				if (GCMParseServerResults(serverResponse))
 				{
 					GCMRegistrar.setRegisteredOnServer(context, true);
 
@@ -231,7 +183,7 @@ public class ServerUtilities
 
 	public static void GCMUnregister(final Context context, final long id, final String reg_id)
 	{
-		Log.i(Utilities.LOG_TAG, "Unregistering device with reg_id of \"" + reg_id + "\" from GCM server.");
+		Log.d(Utilities.LOG_TAG, "Unregistering device with reg_id of \"" + reg_id + "\" from GCM server.");
 
 		// build the data to be sent to the server
 		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
@@ -242,7 +194,7 @@ public class ServerUtilities
 		{
 			final String serverResponse = postToServer(SERVER_REMOVE_REG_ID_ADDRESS, nameValuePairs); 
 
-			if (parseServerResults(serverResponse))
+			if (GCMParseServerResults(serverResponse))
 			{
 
 			}
@@ -253,6 +205,71 @@ public class ServerUtilities
 		{
 
 		}
+	}
+
+
+	/**
+	 * Use this method to send data to and then receive a response from the server.
+	 * 
+	 * <p><strong>Examples</strong><br />
+	 * ServerUtilities.postToServer(ServerUtilities.SERVER_NEW_MOVE_ADDRESS, postData);<br />
+	 * ServerUtilities.postToServer(ServerUtilities.SERVER_GET_GAMES_ADDRESS, postData);</p>
+	 * 
+	 * @param url
+	 * The URL that you want to send your data to. This should be formulated using the URLs found
+	 * in this class.
+	 * 
+	 * @param data
+	 * Data to be sent to the server using HTTP POST. This ArrayList will need to be constructed
+	 * outside of this method.
+	 * <p><strong>Example of data creation</strong><br />
+	 * ArrayList&#60;NameValuePair&#62; postData = new ArrayList&#60;NameValuePair&#62;();<br />
+	 * postData.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, Long.valueOf(id).toString());<br />
+	 * postData.add(new BasicNameValuePair(ServerUtilities.POST_DATA_REG_ID, reg_id);<br />
+	 * Note that both values in the BasicNameValuePair <strong>must</strong> be a String.</p>
+	 * 
+	 * @return
+	 * The server's response as a String. This will need to be parsed as it is JSON data.
+	 * <strong>There is a slight possibility that the data String returned from this method will be
+	 * null.</strong> Please check for that <strong>as well as</strong> if the String is empty.
+	 */
+	public static String postToServer(final String url, final ArrayList<NameValuePair> data) throws IOException
+	{
+		Log.d(Utilities.LOG_TAG, "Posting data to server at " + url);
+
+		String jsonString = null;
+		InputStream inputStream = null;
+
+		HttpPost httpPost = new HttpPost(url);
+		httpPost.setEntity(new UrlEncodedFormEntity(data));
+
+		try
+		{
+			HttpClient httpClient = new DefaultHttpClient();
+			HttpResponse httpResponse = httpClient.execute(httpPost);
+
+			inputStream = httpResponse.getEntity().getContent();
+		}
+		catch (final Exception e)
+		{
+			Log.e(Utilities.LOG_TAG, "Error in HTTP connection.", e);
+		}
+
+		if (inputStream != null)
+		{
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, HTTP.UTF_8));
+			StringBuilder stringBuilder = new StringBuilder();
+
+			for (String line = new String(); line != null; line = bufferedReader.readLine())
+			{
+				stringBuilder.append(line);
+			}
+
+			jsonString = new String(stringBuilder.toString());
+			Log.d(Utilities.LOG_TAG, "Parsed result from server: " + jsonString);
+		}
+
+		return jsonString;
 	}
 
 

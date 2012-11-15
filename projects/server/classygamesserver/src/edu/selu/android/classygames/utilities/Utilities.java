@@ -84,6 +84,7 @@ public class Utilities
 	public final static String POST_ERROR_GENERIC = "POST data received but an error occurred.";
 	public final static String POST_ERROR_INVALID_CHALLENGER = "Invalid challenger!";
 	public final static String POST_ERROR_ITS_NOT_YOUR_TURN = "Attempted to make a new move when it wasn't the user's turn!";
+	public final static String POST_SUCCESS_GAME_ADDED_TO_DATABASE = "Game successfully added to database!";
 	public final static String POST_SUCCESS_GENERIC = "POST data received.";
 	public final static String POST_SUCCESS_MOVE_ADDED_TO_DATABASE = "Move successfully added to database!";
 	public final static String POST_SUCCESS_NO_ACTIVE_GAMES = "Player has no active games!";

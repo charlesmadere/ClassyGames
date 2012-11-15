@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.selu.android.classygames.utilities.GCMUtilities;
 import edu.selu.android.classygames.utilities.GameUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
 
@@ -110,6 +111,7 @@ public class NewMove extends HttpServlet
 									// run the SQL statement
 									sqlStatement.executeUpdate();
 
+									GCMUtilities.sendMessage(sqlConnection, user_opponent.longValue(), "new move!!!!");
 									printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_MOVE_ADDED_TO_DATABASE));
 								}
 								else

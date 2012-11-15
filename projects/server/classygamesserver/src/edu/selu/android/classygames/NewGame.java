@@ -123,7 +123,7 @@ public class NewGame extends HttpServlet
 						}
 
 						if (runStatus != RUN_STATUS_NO_ERROR || digest == null || digest.isEmpty())
-						// check to see if we encountered any of the exceptions above
+						// check to see if we encountered any of the exceptions above or if our digest is broken
 						{
 							continueToRun = false;
 						}
@@ -202,7 +202,7 @@ public class NewGame extends HttpServlet
 
 						default:
 							GCMUtilities.sendMessage(sqlConnection, user_challenged, Utilities.NOTIFICATION_ITS_YOUR_TURN + " " + user_challenged_name);
-							printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_GENERIC));
+							printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_GAME_ADDED_TO_DATABASE));
 							break;
 					}
 				}

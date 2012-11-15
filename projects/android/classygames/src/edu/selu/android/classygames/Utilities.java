@@ -90,7 +90,6 @@ public class Utilities
 	 * 
 	 * @param message
 	 * The String that you want to be shown as a toast message.
-	 * 
 	 */
 	public static void easyToast(final Context context, final String message)
 	{
