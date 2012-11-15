@@ -1,4 +1,4 @@
-package edu.selu.android.classygames;
+package edu.selu.android.classygames.utilities;
 
 
 import java.io.IOException;
@@ -12,6 +12,7 @@ import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.Message.Builder;
 import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
+
 
 
 public class GCMUtilities

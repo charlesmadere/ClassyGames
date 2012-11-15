@@ -5,33 +5,39 @@ public abstract class GenericPosition
 {
 
 
-	protected final static byte PIECE_NONE = 0;
-	protected byte hasPiece;
 	protected Coordinate coordinate;
+	protected GenericPiece piece;
 
 
 	protected GenericPosition()
 	{
 		coordinate = new Coordinate();
-		hasPiece = PIECE_NONE;
+		piece = null;
 	}
 
 
 	protected GenericPosition(final Coordinate coordinate)
 	{
 		this.coordinate = coordinate;
+		piece = null;
 	}
 
 
-	Coordinate getCoordinate()
+	GenericPiece getPiece()
 	{
-		return coordinate;
+		return piece;
 	}
 
 
-	boolean hasNoPiece()
+	/**
+	 * Test and see if this Position object has a Piece associated with it.
+	 * 
+	 * @return
+	 * True if this Position object has a Piece.
+	 */
+	public boolean hasPiece()
 	{
-		return hasPiece == PIECE_NONE;
+		return piece != null;
 	}
 
 

@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.selu.android.classygames.utilities.Utilities;
+
 
 /**
  * Servlet implementation class GetGames
@@ -88,9 +90,9 @@ public class GetGames extends HttpServlet
 				if (sqlResult.next())
 				// check to see that we got some SQL return data
 				{
-					Map<Object, Object> jsonData = new LinkedHashMap<Object, Object>();
-					List<Map<Object, Object>> turnYours = new LinkedList<Map<Object, Object>>();
-					List<Map<Object, Object>> turnTheirs = new LinkedList<Map<Object, Object>>();
+					Map<String, Object> jsonData = new LinkedHashMap<String, Object>();
+					List<Map<String, Object>> turnYours = new LinkedList<Map<String, Object>>();
+					List<Map<String, Object>> turnTheirs = new LinkedList<Map<String, Object>>();
 
 					do
 					// loop through all of SQL return data
@@ -102,7 +104,7 @@ public class GetGames extends HttpServlet
 
 						// initialize a JSONObject. All of the current game's data will be stored here. At the end of this
 						// loop iteration this JSONObject will be added to one of the above JSONArrays
-						Map<Object, Object> game = new LinkedHashMap<Object, Object>();
+						Map<String, Object> game = new LinkedHashMap<String, Object>();
 
 						Long user_id = new Long(0);
 						String user_name = null;

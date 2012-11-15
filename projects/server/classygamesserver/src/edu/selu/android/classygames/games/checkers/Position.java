@@ -9,14 +9,9 @@ public class Position extends GenericPosition
 {
 
 
-	private final static byte PIECE_NORMAL = 1;
-	private final static byte PIECE_KING = 2;
-
-
 	public Position()
 	{
-		coordinate = new Coordinate();
-		hasPiece = PIECE_NONE;
+		super();
 	}
 
 
@@ -26,36 +21,11 @@ public class Position extends GenericPosition
 	}
 
 
-	public Position(final Coordinate coordinate, final byte piece)
+	public Position(final Coordinate coordinate, final byte pieceTeam, final byte pieceType)
 	{
-		this(coordinate);
+		super(coordinate);
 
-		switch (piece)
-		{
-			case PIECE_NORMAL:
-				hasPiece = PIECE_NORMAL;
-				break;
-
-			case PIECE_KING:
-				hasPiece = PIECE_KING;
-				break;
-
-			default:
-				hasPiece = PIECE_NONE;
-				break;
-		}
-	}
-
-
-	boolean hasPieceNormal()
-	{
-		return hasPiece == PIECE_NORMAL;
-	}
-
-
-	boolean hasPieceKing()
-	{
-		return hasPiece == PIECE_KING;
+		piece = new Piece(pieceTeam, pieceType);
 	}
 
 

@@ -83,7 +83,7 @@ public class ServerUtilities
 				try
 				{
 					final String successMessage = jsonResult.getString(POST_DATA_SUCCESS);
-					Log.i(Utilities.LOG_TAG, "Server returned success with message: \"" + successMessage + "\".");
+					Log.d(Utilities.LOG_TAG, "Server returned success with message: \"" + successMessage + "\".");
 
 					return true;
 				}
@@ -94,7 +94,7 @@ public class ServerUtilities
 					try
 					{
 						final String errorMessage = jsonResult.getString(POST_DATA_ERROR);
-						Log.i(Utilities.LOG_TAG, "Server returned error with message: \"" + errorMessage + "\".");
+						Log.d(Utilities.LOG_TAG, "Server returned error with message: \"" + errorMessage + "\".");
 					}
 					catch (final JSONException e1)
 					{

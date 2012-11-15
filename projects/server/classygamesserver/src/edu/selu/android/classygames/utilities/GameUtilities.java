@@ -1,4 +1,4 @@
-package edu.selu.android.classygames;
+package edu.selu.android.classygames.utilities;
 
 
 import edu.selu.android.classygames.games.checkers.Board;

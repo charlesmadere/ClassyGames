@@ -23,7 +23,7 @@ public class Coordinate
 	}
 
 
-	byte getX()
+	public byte getX()
 	{
 		return x;
 	}
@@ -35,7 +35,7 @@ public class Coordinate
 	}
 
 
-	byte getY()
+	public byte getY()
 	{
 		return y;
 	}

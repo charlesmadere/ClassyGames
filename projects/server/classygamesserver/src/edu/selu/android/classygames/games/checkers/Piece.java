@@ -1,7 +1,6 @@
 package edu.selu.android.classygames.games.checkers;
 
 
-import edu.selu.android.classygames.games.Coordinate;
 import edu.selu.android.classygames.games.GenericPiece;
 
 
@@ -9,6 +8,8 @@ public class Piece extends GenericPiece
 {
 
 
+	private final static byte TEAM_USER = 0;
+	private final static byte TEAM_CHALLENGED = 1;
 	private final static byte TYPE_NORMAL = 0;
 	private final static byte TYPE_KING = 1;
 
@@ -19,27 +20,47 @@ public class Piece extends GenericPiece
 	}
 
 
-	public Piece(final Coordinate coordinate)
+	public Piece(final byte team, final byte type)
 	{
-		super(coordinate, TYPE_NORMAL);
+		super();
+
+		if (checkIfTeamIsValid(team))
+		{
+			this.team = team;
+		}
+
+		if (checkIfTypeIsValid(type))
+		{
+			this.type = type;
+		}
 	}
 
 
-	boolean isTypeNormal()
+	public static boolean checkIfTeamIsValid(final byte team)
 	{
-		return type == TYPE_NORMAL;
+		switch (team)
+		{
+			case TEAM_USER:
+			case TEAM_CHALLENGED:
+				return true;
+
+			default:
+				return false;
+		}
 	}
 
 
-	boolean isTypeKing()
+	public static boolean checkIfTypeIsValid(final byte type)
 	{
-		return type == TYPE_KING;
-	}
+		switch (type)
+		{
+			case TYPE_NORMAL:
+			case TYPE_KING:
+				return true;
 
-
-	void setToKing()
-	{
-		type = TYPE_KING;
+			default:
+				return false;
+		}
 	}
 
 

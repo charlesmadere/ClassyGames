@@ -17,6 +17,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.selu.android.classygames.utilities.GCMUtilities;
+import edu.selu.android.classygames.utilities.GameUtilities;
+import edu.selu.android.classygames.utilities.Utilities;
+
 
 /**
  * Servlet implementation class NewGame
@@ -65,7 +69,7 @@ public class NewGame extends HttpServlet
 		final Long user_creator = new Long(request.getParameter(Utilities.POST_DATA_USER_CREATOR));
 		final String board = request.getParameter(Utilities.POST_DATA_BOARD);
 
-		if (user_challenged.longValue() < 0 || user_creator.longValue() < 0 || board == null || board.isEmpty())
+		if (user_challenged.longValue() < 0 || user_challenged_name == null || user_challenged_name.isEmpty() || user_creator.longValue() < 0 || board == null || board.isEmpty())
 		// check for invalid inputs
 		{
 			printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_MALFORMED));
@@ -197,7 +201,7 @@ public class NewGame extends HttpServlet
 							break;
 
 						default:
-							GCMUtilities.sendMessage(sqlConnection, user_challenged, Utilities.NOTIFICATION_OF_TURN + " " + user_challenged_name);
+							GCMUtilities.sendMessage(sqlConnection, user_challenged, Utilities.NOTIFICATION_ITS_YOUR_TURN + " " + user_challenged_name);
 							printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_GENERIC));
 							break;
 					}
