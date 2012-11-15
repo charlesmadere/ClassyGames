@@ -5,7 +5,7 @@ import android.graphics.ColorFilter;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
-class WrapperDrawable extends Drawable {
+public class WrapperDrawable extends Drawable {
     public WrapperDrawable(BitmapDrawable drawable) {
         mDrawable = drawable;
     }
@@ -48,7 +48,14 @@ class WrapperDrawable extends Drawable {
     
     @Override
     public int getIntrinsicWidth() {
-        // TODO Auto-generated method stub
         return mDrawable.getIntrinsicWidth();
+    }
+    
+    /**
+     * Returns the underlying {@link BitmapDrawable}.
+     * @return An instance of {@link BitmapDrawable}
+     */
+    public BitmapDrawable toBitmapDrawable() {
+    	return mDrawable;
     }
 }

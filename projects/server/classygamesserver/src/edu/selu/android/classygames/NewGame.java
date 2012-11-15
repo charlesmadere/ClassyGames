@@ -70,7 +70,7 @@ public class NewGame extends HttpServlet
 		{
 			printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_MALFORMED));
 		}
-		else if (Utilities.checkBoardValidity(board))
+		else if (GameUtilities.checkBoardValidity(board))
 		{
 			Connection sqlConnection = null;
 			PreparedStatement sqlStatement = null;
@@ -197,6 +197,7 @@ public class NewGame extends HttpServlet
 							break;
 
 						default:
+							GCMUtilities.sendMessage(sqlConnection, user_challenged, Utilities.NOTIFICATION_OF_TURN + " " + user_challenged_name);
 							printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_GENERIC));
 							break;
 					}

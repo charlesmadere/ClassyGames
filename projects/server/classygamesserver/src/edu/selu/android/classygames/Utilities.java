@@ -54,6 +54,8 @@ public class Utilities
 	public final static String DATABASE_TABLE_USERS_FORMAT = "(" + DATABASE_TABLE_USERS_COLUMN_ID + ", " + DATABASE_TABLE_USERS_COLUMN_NAME + ", " + DATABASE_TABLE_USERS_COLUMN_REG_ID + ")";
 	public final static String DATABASE_TABLE_USERS_VALUES = "VALUES (?, ?, ?)";
 
+	public final static String NOTIFICATION_OF_TURN = "It's your turn against";
+
 	public final static String POST_DATA_BOARD = DATABASE_TABLE_GAMES_COLUMN_BOARD;
 	public final static String POST_DATA_FINISHED = DATABASE_TABLE_GAMES_COLUMN_FINISHED;
 	public final static String POST_DATA_ID = DATABASE_TABLE_USERS_COLUMN_ID;
@@ -90,43 +92,9 @@ public class Utilities
 
 
 	/**
-	 * Compares a default board to the given board to see if a valid move has occurred.
-	 * 
-	 * @param board
-	 * The contents of the new board as a String. This should have been pulled from the device
-	 * and then sent here.
-	 * 
-	 * @return
-	 * Returns true if the arrangement of pieces on the board is valid.
+	 * it's best to release SQL resources in reverse order of their creation
+	 * https://dev.mysql.com/doc/refman/5.0/en/connector-j-usagenotes-statements.html#connector-j-examples-execute-select
 	 */
-	public static boolean checkBoardValidity(final String board)
-	{
-		// TODO
-		return true;
-	}
-
-
-	/**
-	 * Compares the original board to the new board to see if a valid move has occurred.
-	 * 
-	 * @param boardOriginal
-	 * The contents of the original board as a String. This should be pulled from the database
-	 * and then sent here.
-	 * 
-	 * @param boardNew
-	 * The contents of the new board as a String. This should have been pulled from the device
-	 * and then sent here.
-	 * 
-	 * @return
-	 * Returns true if the arrangement of pieces on the board is valid. 
-	 */
-	public static boolean checkBoardValidity(final String boardOriginal, final String boardNew)
-	{
-		// TODO
-		return true;
-	}
-
-
 	public static void closeSQL(Connection sqlConnection, PreparedStatement sqlStatement)
 	{
 		closeSQLStatement(sqlStatement);

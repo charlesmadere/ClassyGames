@@ -8,49 +8,49 @@ import java.util.Locale;
 import edu.selu.android.classygames.data.Person;
 
 
-public abstract class GenericGame
+public class Game
 {
 
 
 	protected Person person;
 	protected SimpleDateFormat lastMoveTime;
 	protected String id;
-	private final static String lastMoveTimeFormat = "MMMM dd, yyyy hh:mm a";
+	private final static String LAST_MOVE_TIME_FORMAT = "MMMM dd, yyyy hh:mm a";
 
 
-	public GenericGame()
+	public Game()
 	{
 		id = new String();
 		person = new Person();
-		lastMoveTime = new SimpleDateFormat(lastMoveTimeFormat, Locale.US);
+		lastMoveTime = new SimpleDateFormat(LAST_MOVE_TIME_FORMAT, Locale.US);
 	}
 
 
-	public GenericGame(final Person person)
+	public Game(final Person person)
 	{
 		id = new String();
 		this.person = person;
-		lastMoveTime = new SimpleDateFormat(lastMoveTimeFormat, Locale.US);
+		lastMoveTime = new SimpleDateFormat(LAST_MOVE_TIME_FORMAT, Locale.US);
 	}
 
 
-	public GenericGame(final Person person, final SimpleDateFormat lastMoveTime)
+	public Game(final Person person, final SimpleDateFormat lastMoveTime)
 	{
 		id = new String();
 		this.person = person;
-		this.lastMoveTime = new SimpleDateFormat(lastMoveTimeFormat, Locale.US);
+		this.lastMoveTime = new SimpleDateFormat(LAST_MOVE_TIME_FORMAT, Locale.US);
 	}
 
 
-	public GenericGame(final String id, final Person person)
+	public Game(final String id, final Person person)
 	{
 		this.id = id;
 		this.person = person;
-		lastMoveTime = new SimpleDateFormat(lastMoveTimeFormat, Locale.US);
+		lastMoveTime = new SimpleDateFormat(LAST_MOVE_TIME_FORMAT, Locale.US);
 	}
 
 
-	public GenericGame(final String id, final Person person, final SimpleDateFormat lastMoveTime)
+	public Game(final String id, final Person person, final SimpleDateFormat lastMoveTime)
 	{
 		this.id = id;
 		this.person = person;

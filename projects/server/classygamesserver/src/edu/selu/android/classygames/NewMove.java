@@ -75,47 +75,54 @@ public class NewMove extends HttpServlet
 				if (Utilities.ensureUserExistsInDatabase(sqlConnection, user_opponent, user_opponent_name))
 				{
 					// prepare a SQL statement to be run on the database
-					String sqlStatementString = "SELECT " + Utilities.DATABASE_TABLE_GAMES_COLUMN_FINISHED + ", " + Utilities.DATABASE_TABLE_GAMES_COLUMN_TURN + " FROM " + Utilities.DATABASE_TABLE_GAMES + " WHERE " + Utilities.DATABASE_TABLE_GAMES_COLUMN_ID + " = ?";
+					String sqlStatementString = "SELECT " + Utilities.DATABASE_TABLE_GAMES_COLUMN_BOARD + ", " + Utilities.DATABASE_TABLE_GAMES_COLUMN_FINISHED + ", " + Utilities.DATABASE_TABLE_GAMES_COLUMN_TURN + " FROM " + Utilities.DATABASE_TABLE_GAMES + " WHERE " + Utilities.DATABASE_TABLE_GAMES_COLUMN_ID + " = ?";
 					sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
-	
+
 					// prevent SQL injection by inserting data this way
 					sqlStatement.setString(1, game_id);
-	
+
 					// run the SQL statement and acquire any return information
 					final ResultSet sqlResult = sqlStatement.executeQuery();
-	
+
 					if (sqlResult.next())
 					{
-						if (sqlResult.getByte(Utilities.DATABASE_TABLE_GAMES_COLUMN_FINISHED) == Utilities.DATABASE_TABLE_GAMES_FINISHED_FALSE)
-						// make sure that the game has not been finished
+						if (GameUtilities.checkBoardValidity(sqlResult.getString(Utilities.DATABASE_TABLE_GAMES_COLUMN_BOARD), board))
 						{
-							final long user_creator = sqlResult.getLong(Utilities.DATABASE_TABLE_GAMES_COLUMN_USER_CREATOR);
-							final long user_challenged = sqlResult.getLong(Utilities.DATABASE_TABLE_GAMES_COLUMN_USER_CHALLENGED);
-							final byte turn = sqlResult.getByte(Utilities.DATABASE_TABLE_GAMES_COLUMN_TURN);
-	
-							if ((user_id == user_creator && turn == Utilities.DATABASE_TABLE_GAMES_TURN_CREATOR) || (user_id == user_challenged && turn == Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED))
+							if (sqlResult.getByte(Utilities.DATABASE_TABLE_GAMES_COLUMN_FINISHED) == Utilities.DATABASE_TABLE_GAMES_FINISHED_FALSE)
+							// make sure that the game has not been finished
 							{
-								// close the PreparedStatement as it is no longer needed
-								Utilities.closeSQLStatement(sqlStatement);
-	
-								// prepare a SQL statement to be run on the database
-								sqlStatementString = "INSERT INTO " + Utilities.DATABASE_TABLE_GAMES + " " + Utilities.DATABASE_TABLE_GAMES_FORMAT + " " + Utilities.DATABASE_TABLE_GAMES_VALUES;
-								sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
-	
-								// run the SQL statement
-								sqlStatement.executeUpdate();
-	
-								printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_MOVE_ADDED_TO_DATABASE));
+								final long user_creator = sqlResult.getLong(Utilities.DATABASE_TABLE_GAMES_COLUMN_USER_CREATOR);
+								final long user_challenged = sqlResult.getLong(Utilities.DATABASE_TABLE_GAMES_COLUMN_USER_CHALLENGED);
+								final byte turn = sqlResult.getByte(Utilities.DATABASE_TABLE_GAMES_COLUMN_TURN);
+
+								if ((user_id == user_creator && turn == Utilities.DATABASE_TABLE_GAMES_TURN_CREATOR) || (user_id == user_challenged && turn == Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED))
+								{
+									// close the PreparedStatement as it is no longer needed
+									Utilities.closeSQLStatement(sqlStatement);
+
+									// prepare a SQL statement to be run on the database
+									sqlStatementString = "INSERT INTO " + Utilities.DATABASE_TABLE_GAMES + " " + Utilities.DATABASE_TABLE_GAMES_FORMAT + " " + Utilities.DATABASE_TABLE_GAMES_VALUES;
+									sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
+
+									// run the SQL statement
+									sqlStatement.executeUpdate();
+
+									printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_MOVE_ADDED_TO_DATABASE));
+								}
+								else
+								{
+									printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_ITS_NOT_YOUR_TURN));
+								}
 							}
 							else
+							// we are trying to add a new move to a game that is already finished. this should never happen
 							{
-								printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_ITS_NOT_YOUR_TURN));
+								printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_GAME_IS_ALREADY_OVER));
 							}
 						}
 						else
-						// we are trying to add a new move to a game that is already finished. this should never happen
 						{
-							printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_GAME_IS_ALREADY_OVER));
+							printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_BOARD_INVALID));
 						}
 					}
 					else

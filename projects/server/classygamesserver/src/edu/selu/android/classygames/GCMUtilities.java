@@ -9,6 +9,7 @@ import java.sql.SQLException;
 
 import com.google.android.gcm.server.Constants;
 import com.google.android.gcm.server.Message;
+import com.google.android.gcm.server.Message.Builder;
 import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
 
@@ -17,7 +18,7 @@ public class GCMUtilities
 {
 
 
-	public final static int RETRY_ATTEMPTS = 5;
+	private final static int RETRY_ATTEMPTS = 5;
 
 
 	/**
@@ -31,16 +32,28 @@ public class GCMUtilities
 	 * 
 	 * @param user_id
 	 * The ID of the user that you want to send a Google Cloud Message to.
+	 * 
+	 * @param messageData
+	 * The message that you want the user to see.
+	 * 
 	 */
-	public static void sendMessage(Connection sqlConnection, final long user_id)
+	public static void sendMessage(Connection sqlConnection, final long user_id, final String messageData)
 	{
 		final String reg_id = grabUserRegId(sqlConnection, user_id);
 
 		if (reg_id != null && !reg_id.isEmpty())
 		// ensure that we were able to grab a valid regId for the user
 		{
-			Sender sender = new Sender(SecretConstants.GOOGLE_API_KEY);
-			Message message = new Message.Builder().build();
+			final Sender sender = new Sender(SecretConstants.GOOGLE_API_KEY);
+
+			// build data for the message that will be sent to the client
+			Builder builder = new Message.Builder();
+			builder.addData("Hello", messageData);
+			builder.delayWhileIdle(true);
+
+			// build the message from the data
+			final Message message = builder.build();
+
 			try
 			{
 				final Result result = sender.send(message, reg_id, RETRY_ATTEMPTS);
@@ -76,6 +89,26 @@ public class GCMUtilities
 	}
 
 
+	public static void sendMessage(Connection sqlConnection, final long user_id)
+	{
+		sendMessage(sqlConnection, user_id, "World!");
+	}
+
+
+	/**
+	 * Finds and then returns a user's reg_id. 
+	 * 
+	 * @param sqlConnection
+	 * An existing connection to the database. This method will make no attempt to either
+	 * open or close the connection.
+	 * 
+	 * @param user_id
+	 * ID of the user that you want to find a reg_id for.
+	 * 
+	 * @return
+	 * Returns the reg_id of the user that you want as a String. If the user could not be
+	 * found, null is returned.
+	 */
 	private static String grabUserRegId(Connection sqlConnection, final long user_id)
 	{
 		PreparedStatement sqlStatement = null;

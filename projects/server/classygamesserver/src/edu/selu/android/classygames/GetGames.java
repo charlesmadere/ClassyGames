@@ -173,8 +173,6 @@ public class GetGames extends HttpServlet
 				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CONNECT));
 			}
 			finally
-			// it's best to release SQL resources in reverse order of their creation
-			// https://dev.mysql.com/doc/refman/5.0/en/connector-j-usagenotes-statements.html#connector-j-examples-execute-select
 			{
 				Utilities.closeSQL(sqlConnection, sqlStatement);
 			}
@@ -183,7 +181,7 @@ public class GetGames extends HttpServlet
 
 
 	/**
-	 * <p>Query the database for a user who's ID matches the input's.</p>
+	 * Query the database for a user who's ID matches the input's.
 	 * 
 	 * @param sqlConnection
 	 * Your existing database Connection object. Must already be connected, as this method makes no attempt

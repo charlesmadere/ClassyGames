@@ -87,7 +87,7 @@ public class NewRegId extends HttpServlet
 					sqlStatementString = "UPDATE " + Utilities.DATABASE_TABLE_USERS + " SET " + Utilities.DATABASE_TABLE_USERS_COLUMN_NAME + " = ?, " + Utilities.DATABASE_TABLE_USERS_COLUMN_REG_ID + " = ? WHERE " + Utilities.DATABASE_TABLE_USERS_COLUMN_ID + " = ?";
 					sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
 
-					// prevent SQL injection by inserting user data this way
+					// prevent SQL injection by inserting data this way
 					sqlStatement.setString(1, name);
 					sqlStatement.setString(2, reg_id);
 					sqlStatement.setLong(3, id);
@@ -99,7 +99,7 @@ public class NewRegId extends HttpServlet
 					sqlStatementString = "INSERT INTO " + Utilities.DATABASE_TABLE_USERS + " " + Utilities.DATABASE_TABLE_USERS_FORMAT + " " + Utilities.DATABASE_TABLE_USERS_VALUES;
 					sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
 
-					// prevent SQL injection by inserting user data this way
+					// prevent SQL injection by inserting data this way
 					sqlStatement.setLong(1, id);
 					sqlStatement.setString(2, name);
 					sqlStatement.setString(3, reg_id);
@@ -116,11 +116,9 @@ public class NewRegId extends HttpServlet
 			}
 			catch (final SQLException e)
 			{
-				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CONNECT + "\" message: \"" + e.getMessage() + "\" state: \"" + e.getSQLState() + "\" code: \"" + e.getErrorCode() + "\" reg_id:\"" + reg_id + "\""));
+				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CONNECT));
 			}
 			finally
-			// it's best to release SQL resources in reverse order of their creation as seen here
-			// https://dev.mysql.com/doc/refman/5.0/en/connector-j-usagenotes-statements.html#connector-j-examples-execute-select
 			{
 				Utilities.closeSQL(sqlConnection, sqlStatement);
 			}

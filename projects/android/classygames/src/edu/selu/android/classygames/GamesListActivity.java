@@ -27,8 +27,7 @@ import com.facebook.android.Util;
 import com.google.android.gcm.GCMRegistrar;
 
 import edu.selu.android.classygames.data.Person;
-import edu.selu.android.classygames.games.GenericGame;
-import edu.selu.android.classygames.games.checkers.Checkers;
+import edu.selu.android.classygames.games.Game;
 
 
 public class GamesListActivity extends SherlockListActivity
@@ -243,7 +242,7 @@ public class GamesListActivity extends SherlockListActivity
 	}
 
 
-	private final class AsyncPopulateGamesList extends AsyncTask<Void, Void, ArrayList<GenericGame>>
+	private final class AsyncPopulateGamesList extends AsyncTask<Void, Void, ArrayList<Game>>
 	{
 
 
@@ -251,32 +250,32 @@ public class GamesListActivity extends SherlockListActivity
 
 
 		@Override
-		protected ArrayList<GenericGame> doInBackground(final Void... v)
+		protected ArrayList<Game> doInBackground(final Void... v)
 		{
-			ArrayList<GenericGame> games = new ArrayList<GenericGame>();
+			ArrayList<Game> games = new ArrayList<Game>();
 
 			try
 			{
 				// TODO: this code will eventually be replaced by an actual call to our
 				// server. This call will ask the server for a games list
 
-				games.add(new Checkers(new Person("Your Turn")));
-				games.add(new Checkers(new Person("Charles Madere")));
-				games.add(new Checkers(new Person("Bart Simpson")));
-				games.add(new Checkers(new Person("Tristan Kidder")));
-				games.add(new Checkers(new Person("Geonathon Sena")));
-				games.add(new Checkers());
-				games.add(new Checkers());
-				games.add(new Checkers());
-				games.add(new Checkers());
-				games.add(new Checkers());
-				games.add(new Checkers(new Person("Their Turn")));
-				games.add(new Checkers());
-				games.add(new Checkers());
-				games.add(new Checkers());
-				games.add(new Checkers());
-				games.add(new Checkers());
-				games.add(new Checkers());
+				games.add(new Game(new Person("Your Turn")));
+				games.add(new Game(new Person("Charles Madere")));
+				games.add(new Game(new Person("Bart Simpson")));
+				games.add(new Game(new Person("Tristan Kidder")));
+				games.add(new Game(new Person("Geonathon Sena")));
+				games.add(new Game());
+				games.add(new Game());
+				games.add(new Game());
+				games.add(new Game());
+				games.add(new Game());
+				games.add(new Game(new Person("Their Turn")));
+				games.add(new Game());
+				games.add(new Game());
+				games.add(new Game());
+				games.add(new Game());
+				games.add(new Game());
+				games.add(new Game());
 
 				games.trimToSize();
 			}
@@ -290,7 +289,7 @@ public class GamesListActivity extends SherlockListActivity
 
 
 		@Override
-		protected void onPostExecute(final ArrayList<GenericGame> games)
+		protected void onPostExecute(final ArrayList<Game> games)
 		{
 			gamesAdapter = new GamesListAdapter(GamesListActivity.this, R.layout.new_game_activity_listview_item, games);
 			setListAdapter(gamesAdapter);
@@ -329,14 +328,14 @@ public class GamesListActivity extends SherlockListActivity
 //	};
 
 
-	private class GamesListAdapter extends ArrayAdapter<GenericGame>
+	private class GamesListAdapter extends ArrayAdapter<Game>
 	{
 
 
-		private ArrayList<GenericGame> games;
+		private ArrayList<Game> games;
 
 
-		public GamesListAdapter(final Context context, final int textViewResourceId, final ArrayList<GenericGame> games)
+		public GamesListAdapter(final Context context, final int textViewResourceId, final ArrayList<Game> games)
 		{
 			super(context, textViewResourceId, games);
 			this.games = games;
@@ -352,22 +351,22 @@ public class GamesListActivity extends SherlockListActivity
 				convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_item, null);
 			}
 
-			final GenericGame game = games.get(position);
+			final Game game = games.get(position);
 
 			if (game != null)
 			{
 				LayoutInflater layoutInflater = (LayoutInflater) getSystemService( Context.LAYOUT_INFLATER_SERVICE);
 				ViewHolder viewHolder = new ViewHolder();
 
-				if (game.getPerson().getName() == "Their Turn")
-				{
-					convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_turn_theirs, null);
-					viewHolder.picture = (ImageView) convertView.findViewById(R.drawable.turn_theirs);
-				}
-				else if (game.getPerson().getName() == "Your Turn")
+				if (game.getPerson().getName().equalsIgnoreCase("Your Turn"))
 				{
 					convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_turn_yours, null);
 					viewHolder.picture = (ImageView) convertView.findViewById(R.drawable.turn_yours);
+				}
+				else if (game.getPerson().getName().equalsIgnoreCase("Their Turn"))
+				{
+					convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_turn_theirs, null);
+					viewHolder.picture = (ImageView) convertView.findViewById(R.drawable.turn_theirs);
 				}
 				else
 				{
@@ -378,11 +377,8 @@ public class GamesListActivity extends SherlockListActivity
 
 					if (viewHolder.picture != null)
 					{
-						/* Insert code to load Images here
-						 	
-						 
-						  
-						 */
+						// TODO
+						// insert code to load Images here
 					}
 
 					viewHolder.name = (TextView) convertView.findViewById(R.id.games_list_activity_listview_item_name);

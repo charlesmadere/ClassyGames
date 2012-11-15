@@ -76,8 +76,6 @@ public class RemoveRegId extends HttpServlet
 				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CONNECT));
 			}
 			finally
-			// it's best to release SQL resources in reverse order of their creation
-			// https://dev.mysql.com/doc/refman/5.0/en/connector-j-usagenotes-statements.html#connector-j-examples-execute-select
 			{
 				Utilities.closeSQLConnection(sqlConnection);
 			}
