@@ -9,11 +9,11 @@ import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-
 
 import edu.selu.android.classygames.data.Person;
 
@@ -81,11 +81,31 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
     	greenPlayer = R.drawable.chkgreen;
     	orangePlayer = R.drawable.chkorange;
 
-        //height width 
         Display display = getWindowManager().getDefaultDisplay();
+        
+        //NEED TO MOVE CODE TO THIS TO FIX THAT DEPRECATED METHOD
+        
+        /* 
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+        {
+            //do stuff pertaining to this version here
+        	Point size = new Point();
+        	display.getSize(size);
+        	int screen_width = size.x;
+       		int screen_height = size.y;	
+        	
+        }
+        else
+        {
+            //other versions
+                int width = display.getWidth();
+         		int height = display.getHeight();
+        }
+        */
+        
         @SuppressWarnings("deprecation")
 		int width = display.getWidth();
-       // int height = display.getHeight();
+       
         
         TableRow[] rows = new TableRow[8];
        
@@ -114,13 +134,14 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
     				buttons[i][j].setBackgroundColor(Color.WHITE);
     				if (i >= 5)
 					{
-    	    			buttons[i][j].setPlayerGreen(true);//this is Green LOWER IS GREEN
+    	    			buttons[i][j].setPlayerGreen(true); 
     	    			buttons[i][j].setEmpty(false);
 						buttons[i][j].setImageResource(greenPlayer);
 					}
+    				
     				if (i <= 2)
 					{
-    	    			buttons[i][j].setPlayerGreen(false);//this is Not Green TOP IS ORANGE
+    	    			buttons[i][j].setPlayerGreen(false);
     	    			buttons[i][j].setEmpty(false);
 						buttons[i][j].setImageResource(orangePlayer);
 					}
@@ -159,17 +180,21 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 				if (canMove(clickedButton))
 				{
 					Move(clickedButton);
-					if (isKing(clickedButton)){
+					if (isKing(clickedButton))
+					{
 						makeKing(clickedButton);
 					}
 				}
-				else if (canJump(clickedButton)){
+				else if (canJump(clickedButton))
+				{
 					Jump(clickedButton);
-					if (isKing(clickedButton)){
+					if (isKing(clickedButton))
+					{
 						makeKing(clickedButton);
 					}
 				}
-				else {
+				else 
+				{
 					prevButton = null;
 				}
 			}
@@ -184,32 +209,38 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		}
 	}
 	
-	//Working on this
-	private void makeKing(MyButton clickedButton) {
-		// TODO Auto-generated method stub
+	
+	private void makeKing(MyButton clickedButton)
+	{
 		if(clickedButton.isPlayerGreen())
 		{
-			clickedButton.setImageResource(R.drawable.sharks);
+			clickedButton.setImageResource(R.drawable.kinged_green);
 		}
 		else
 			if (!clickedButton.isPlayerGreen())
 		{
-			clickedButton.setImageResource(R.drawable.sharks);
+			clickedButton.setImageResource(R.drawable.kinged_orange);
 		}
 	}
 
-	//Working on this
-	private boolean isKing(MyButton clickedButton) {
-		// TODO Auto-generated method stub
-		if(clickedButton.getId() <= 8)
-		{
-			return true;
-		}
-		else
-			return false;
+	private boolean isKing(MyButton clickedButton) 
+	{
+		
+			if(clickedButton.getPx() == 7 || clickedButton.getPx() == 0)
+			{
+				//i++;
+				return true;
+			}
+			
+			else
+			{
+				return false;
+			}
+		
 	}
 
-	private void Jump(MyButton clickedButton) {
+	private void Jump(MyButton clickedButton) 
+	{
 		int changeImage = orangePlayer;
 		if (prevButton.isPlayerGreen())
 			changeImage = greenPlayer;
@@ -223,7 +254,8 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		prevButton = null;
 	}
 
-	private void Move(MyButton clickedButton) {
+	private void Move(MyButton clickedButton) 
+	{
 		//change image and data
 		prevButton.setImageResource(0);
 		prevButton.setEmpty(true);
@@ -249,24 +281,30 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	
 	private boolean canJump(MyButton cbutton)
 	{
-		if (abs(cbutton.getPx()-prevButton.getPx()) == 2 && abs(cbutton.getPy()-prevButton.getPy()) == 2){
+		if (abs(cbutton.getPx()-prevButton.getPx()) == 2 && abs(cbutton.getPy()-prevButton.getPy()) == 2)
+		{
 			int change_In_X = (cbutton.getPx() - prevButton.getPx())/2;
 			int change_In_Y = (cbutton.getPy() - prevButton.getPy())/2;
 			
 			MyButton middleButton = (MyButton)findViewById((prevButton.getPx() + change_In_X) *10 + (prevButton.getPy() + change_In_Y));
 			
-			if (middleButton.isPlayerGreen() != prevButton.isPlayerGreen()){
+			if (middleButton.isPlayerGreen() != prevButton.isPlayerGreen())
+			{
 				middleButton.setEmpty(true);
 				middleButton.setImageResource(0);
 				
 				return true;
 			}
-			else {
+			
+			else 
+			{
 				return false;
 			}
 		}
-		else {
-			 	return false;
+		
+		else 
+		{
+			return false;
 		}
 	}
 	
@@ -319,117 +357,3 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 
 }
 
-
-/*
-	//Testing
-	GridView gridview = (GridView) findViewById(R.id.gridView1);
-	gridview.setAdapter(new ImageAdapter(this));
-
-	gridview.setOnItemClickListener(new OnItemClickListener()
-	{
-		@Override
-		public void onItemClick(AdapterView<?> parent, View v, int position, long id)
-		{
-			Toast.makeText(CheckersGameActivity.this,""+ position, Toast.LENGTH_SHORT).show();
-		}
-	});
-*/
-
-
-/*
- * this stuff is from the board branch
-
-package edu.selu.android.classygames;
-
-
-import android.content.Context;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.MenuItem;
-
-import edu.selu.android.classygames.views.CheckersBoardSquareView;
-
-
-public class CheckersGameActivity extends SherlockActivity
-{
-
-
-	@Override
-	public void onCreate(final Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.checkers_game_activity);
-		Utilities.styleActionBar(getResources(), getSupportActionBar());
-	}
-
-
-	@Override
-	public boolean onOptionsItemSelected(final MenuItem item)
-	{
-		switch (item.getItemId())
-		{
-			case android.R.id.home:
-				finish();
-				return true;
-
-			default:
-				return super.onOptionsItemSelected(item);
-		}
-	}
-
-
-	private class CheckersGameAdapter extends BaseAdapter
-	{
-
-
-		private Context context;
-
-
-		@Override
-		public int getCount()
-		{
-			return 0;
-		}
-
-
-		@Override
-		public Object getItem(final int item)
-		{
-			return null;
-		}
-
-
-		@Override
-		public long getItemId(final int item)
-		{
-			return 0;
-		}
-
-
-		@Override
-		public View getView(final int position, View convertView, final ViewGroup parent)
-		{
-			if (convertView == null)
-			{
-				convertView = new View(context);
-				LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				convertView = layoutInflater.inflate(R.layout.checkers_game_activity_gridview_item, parent, false);
-			}
-
-			CheckersBoardSquareView checkersBoardSquareView = (CheckersBoardSquareView) convertView.findViewById(R.id.checkers_game_activity_gridview_item_square);
-			checkersBoardSquareView.setImageResource(R.drawable.bg_subtlegrey);
-
-			return convertView;
-		}
-
-
-	}
-
-
-}
-*/
