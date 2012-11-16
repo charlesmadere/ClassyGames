@@ -77,7 +77,7 @@ public class ServerUtilities
 		{
 			Log.d(Utilities.LOG_TAG, "Parsing JSON data: " + jsonString);
 			final JSONObject jsonData = new JSONObject(jsonString);
-			final JSONObject jsonResult = new JSONObject(jsonData.getString(POST_DATA_RESULT));
+			final JSONObject jsonResult = jsonData.getJSONObject(POST_DATA_RESULT);
 
 			try
 			{
@@ -88,8 +88,6 @@ public class ServerUtilities
 			}
 			catch (final JSONException e)
 			{
-				Log.d(Utilities.LOG_TAG, "Data returned from server contained no success message.", e);
-
 				try
 				{
 					final String errorMessage = jsonResult.getString(POST_DATA_ERROR);
@@ -112,8 +110,6 @@ public class ServerUtilities
 
 	public static boolean GCMRegister(final Context context, final Person person, final String reg_id)
 	{
-		Log.d(Utilities.LOG_TAG, "Registering device with reg_id of \"" + reg_id + "\" with GCM server.");
-
 		// build the data to be sent to the server
 		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 		nameValuePairs.add(new BasicNameValuePair(POST_DATA_ID, Long.valueOf(person.getId()).toString()));

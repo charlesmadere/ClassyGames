@@ -69,7 +69,7 @@ public class GCMIntentService extends GCMBaseIntentService
 	protected void onRegistered(final Context context, final String reg_id)
 	{
 		Log.d(Utilities.LOG_TAG, "Device registered with reg_id of \"" + reg_id + "\".");
-		ServerUtilities.GCMRegister(context, GamesListActivity.person, reg_id);
+		ServerUtilities.GCMRegister(context, GamesListActivity.getWhoAmI(), reg_id);
 	}
 
 

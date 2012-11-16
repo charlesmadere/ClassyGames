@@ -40,7 +40,7 @@ public class GamesListActivity extends SherlockListActivity
 
 //	private AsyncTask<Void, Void, Void> registerTask;
 	private GamesListAdapter gamesAdapter;
-	public static Person person;
+	private static Person whoAmI;
 
 
 	@Override
@@ -106,8 +106,8 @@ public class GamesListActivity extends SherlockListActivity
 
 			case R.id.games_list_activity_actionbar_new_game:
 				Intent intent = new Intent(GamesListActivity.this, NewGameActivity.class);
-				intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CREATOR_ID, person.getId());
-				intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CREATOR_NAME, person.getName());
+				intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CREATOR_ID, getWhoAmI().getId());
+				intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CREATOR_NAME, getWhoAmI().getName());
 				startActivity(intent);
 				return true;
 
@@ -148,31 +148,10 @@ public class GamesListActivity extends SherlockListActivity
 			// make sure that the manifest was properly set
 			GCMRegistrar.checkManifest(GamesListActivity.this);
 
-			try
-			{
-				final String request = Utilities.getFacebook().request("me");
-				final JSONObject me = Util.parseJson(request);
-				final long id = me.getLong("id");
-				final String name = me.getString("name");
-
-				if (id < 0 || name == null || name.isEmpty())
-				{
-					person = new Person();
-				}
-				else
-				{
-					person = new Person(id, name);
-				}
-			}
-			catch (final Exception e)
-			{
-				Log.e(Utilities.LOG_TAG, "Exception during Facebook request or parse.", e);
-			}
-
 			// grab current registration ID. we may not already have one
 			final String reg_id = GCMRegistrar.getRegistrationId(GamesListActivity.this);
 
-			if (reg_id == null || reg_id.equals(""))
+			if (reg_id == null || reg_id.isEmpty())
 			// if we do not have a registration ID then we'll need to register with the server with
 			// the below code
 			{
@@ -195,7 +174,7 @@ public class GamesListActivity extends SherlockListActivity
 						@Override
 						protected Void doInBackground(final Void... v)
 						{
-							if (!ServerUtilities.GCMRegister(GamesListActivity.this, person, reg_id))
+							if (!ServerUtilities.GCMRegister(GamesListActivity.this, getWhoAmI(), reg_id))
 							{
 								GCMRegistrar.unregister(GamesListActivity.this);
 							}
@@ -218,7 +197,7 @@ public class GamesListActivity extends SherlockListActivity
 				progressDialog.dismiss();
 			}
 
-			new AsyncPopulateGamesList().execute(person.getId());
+			new AsyncPopulateGamesList().execute();
 		}
 
 
@@ -233,13 +212,43 @@ public class GamesListActivity extends SherlockListActivity
 			progressDialog.setCancelable(true);
 			progressDialog.setCanceledOnTouchOutside(false);
 			progressDialog.show();
+
+			new AsyncTask<Void, Void, Void>()
+			{
+				@Override
+				protected Void doInBackground(final Void... v)
+				{
+					try
+					{
+						final String request = Utilities.getFacebook().request("me");
+						final JSONObject me = Util.parseJson(request);
+						final long id = me.getLong("id");
+						final String name = me.getString("name");
+
+						if (id < 0 || name == null || name.isEmpty())
+						{
+							whoAmI = new Person();
+						}
+						else
+						{
+							whoAmI = new Person(id, name);
+						}
+					}
+					catch (final Exception e)
+					{
+						Log.e(Utilities.LOG_TAG, "Exception during Facebook request or parse.", e);
+					}
+
+					return null;
+				}
+			}.execute();
 		}
 
 
 	}
 
 
-	private final class AsyncPopulateGamesList extends AsyncTask<Long, Void, ArrayList<Game>>
+	private final class AsyncPopulateGamesList extends AsyncTask<Void, Void, ArrayList<Game>>
 	{
 
 
@@ -247,14 +256,14 @@ public class GamesListActivity extends SherlockListActivity
 
 
 		@Override
-		protected ArrayList<Game> doInBackground(final Long... id)
+		protected ArrayList<Game> doInBackground(final Void... v)
 		{
 			ArrayList<Game> games = new ArrayList<Game>();
 
 			try
 			{
 				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, id[0].toString()));
+				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, Long.valueOf(getWhoAmI().getId()).toString()));
 
 				// make a call to the server and grab the return JSON result
 				final String jsonString = ServerUtilities.postToServer(ServerUtilities.SERVER_GET_GAMES_ADDRESS, nameValuePairs);
@@ -291,7 +300,6 @@ public class GamesListActivity extends SherlockListActivity
 			progressDialog.setTitle(R.string.games_list_activity_games_progressdialog_title);
 			progressDialog.setCancelable(true);
 			progressDialog.setCanceledOnTouchOutside(false);
-
 			progressDialog.show();
 		}
 
@@ -305,15 +313,13 @@ public class GamesListActivity extends SherlockListActivity
 			{
 				final JSONObject jsonData = new JSONObject(jsonString);
 				final JSONObject jsonResult = jsonData.getJSONObject(ServerUtilities.POST_DATA_RESULT);
+				final JSONObject gameData = jsonResult.optJSONObject(ServerUtilities.POST_DATA_SUCCESS);
 
-				try
+				if (gameData != null)
 				{
-					final JSONObject successMessage = jsonData.getJSONObject(ServerUtilities.POST_DATA_SUCCESS);
-					Log.d(Utilities.LOG_TAG, "Server returned success with message: " + successMessage);
-
 					try
 					{
-						final JSONArray turnYours = successMessage.getJSONArray(ServerUtilities.POST_DATA_TURN_YOURS);
+						final JSONArray turnYours = gameData.getJSONArray(ServerUtilities.POST_DATA_TURN_YOURS);
 						games.add(new Game(new Person("Your Turn")));
 						final int turnYoursSize = turnYours.length();
 
@@ -343,7 +349,7 @@ public class GamesListActivity extends SherlockListActivity
 
 					try
 					{
-						final JSONArray turnTheirs = successMessage.getJSONArray(ServerUtilities.POST_DATA_TURN_THEIRS);
+						final JSONArray turnTheirs = gameData.getJSONArray(ServerUtilities.POST_DATA_TURN_THEIRS);
 						games.add(new Game(new Person("Their Turn")));
 						final int turnTheirsSize = turnTheirs.length();
 
@@ -371,18 +377,18 @@ public class GamesListActivity extends SherlockListActivity
 						Log.d(Utilities.LOG_TAG, "Player has no games that are the other person's turn.");
 					}
 				}
-				catch (final JSONException e)
+				else
 				{
-					Log.d(Utilities.LOG_TAG, "Data returned from server contained no success message.", e);
+					final String successMessage = jsonResult.optString(ServerUtilities.POST_DATA_SUCCESS);
 
-					try
+					if (successMessage != null)
+					{
+						Log.d(Utilities.LOG_TAG, "Server returned successful message: " + successMessage);
+					}
+					else
 					{
 						final String errorMessage = jsonResult.getString(ServerUtilities.POST_DATA_ERROR);
-						Log.d(Utilities.LOG_TAG, "Server returned error with message: " + errorMessage);
-					}
-					catch (final JSONException e1)
-					{
-						Log.e(Utilities.LOG_TAG, "Data returned from server contained no error message.", e);
+						Log.d(Utilities.LOG_TAG, "Server returned error message: " + errorMessage);
 					}
 				}
 			}
@@ -530,6 +536,12 @@ public class GamesListActivity extends SherlockListActivity
 		}
 
 
+	}
+
+
+	public static Person getWhoAmI()
+	{
+		return whoAmI;
 	}
 
 
