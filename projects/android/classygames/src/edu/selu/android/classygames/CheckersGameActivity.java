@@ -4,7 +4,6 @@ package edu.selu.android.classygames;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.View;
@@ -67,16 +66,10 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		else
 		{
 			gameId = bundle.getString(INTENT_DATA_GAME_ID);
+			personCreator = new Person(bundle.getLong(INTENT_DATA_PERSON_CREATOR_ID) ,bundle.getString(INTENT_DATA_PERSON_CREATOR_NAME));
+			personChallenged = new Person(bundle.getLong(INTENT_DATA_PERSON_CHALLENGED_ID), bundle.getString(INTENT_DATA_PERSON_CHALLENGED_NAME));
 
-			personCreator = new Person();
-			personCreator.setId(bundle.getLong(INTENT_DATA_PERSON_CREATOR_ID));
-			personCreator.setName(bundle.getString(INTENT_DATA_PERSON_CREATOR_NAME));
-
-			personChallenged = new Person();
-			personChallenged.setId(bundle.getLong(INTENT_DATA_PERSON_CHALLENGED_ID));
-			personChallenged.setName(bundle.getString(INTENT_DATA_PERSON_CHALLENGED_NAME));
-
-			if (personCreator.getId() < 0 || personChallenged.getId() < 0 || personChallenged.getName().equals(""))
+			if (personCreator.getId() < 0 || personChallenged.getId() < 0 || personChallenged.getName().isEmpty())
 			{
 				activityHasError();
 			}
@@ -93,7 +86,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
         Display display = getWindowManager().getDefaultDisplay();
         
         
-        if (Integer.valueOf(android.os.Build.VERSION.SDK_INT) > 13 )
+        if (android.os.Build.VERSION.SDK_INT >= 13)
         {
             //do stuff pertaining to this version here
         	Point size = new Point();

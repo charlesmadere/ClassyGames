@@ -17,8 +17,7 @@
 	<string name="games_list_activity_init_progressdialog_message">Initializing settings and registering you with our servers&#8230;</string>
 	<string name="games_list_activity_init_progressdialog_title">Classy Games is working&#8230;</string>
 	<string name="games_list_activity_listview_item_picture_description">Friend\'s Picture</string>
-	<string name="games_list_activity_listview_turn_theirs_no_games">You have no pending games for your friends! You should start a new one!</string>
-	<string name="games_list_activity_listview_turn_yours_no_games">None of your friends have sent a move your way. Perhaps you should start a new game?</string>
+	<string name="games_list_activity_listview_no_games">You have no games! Perhaps you should start a new game?</string>
 	<string name="games_list_activity_title">Games List</string>
 	<string name="games_list_activity_turn_theirs">Their Turn</string>
 	<string name="games_list_activity_turn_yours">Your Turn</string>

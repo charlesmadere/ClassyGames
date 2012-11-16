@@ -10,24 +10,10 @@
 		android:layout_height="wrap_content"
 		android:layout_width="fill_parent" />
 	<TextView
+		android:gravity="center"
 		android:id="@android:id/empty"
 		android:layout_height="wrap_content"
 		android:layout_width="fill_parent"
-		android:text="@string/games_list_activity_listview_turn_yours_no_games" />
-	<ImageView
-		android:adjustViewBounds="true"
-		android:contentDescription="@string/games_list_activity_turn_theirs"
-		android:layout_height="wrap_content"
-		android:layout_width="fill_parent"
-		android:src="@drawable/turn_theirs" />
-	<ListView
-		android:cacheColorHint="#00000000"
-		android:id="@+id/games_list_activity_listview_turn_theirs"
-		android:layout_height="wrap_content"
-		android:layout_width="fill_parent" />
-	<TextView
-		android:id="@android:id/empty"
-		android:layout_height="wrap_content"
-		android:layout_width="fill_parent"
-		android:text="@string/games_list_activity_listview_turn_theirs_no_games" />
+		android:text="@string/games_list_activity_listview_no_games"
+		style="@style/paragraph" />
 </LinearLayout>

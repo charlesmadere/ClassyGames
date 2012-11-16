@@ -53,7 +53,6 @@ public class GamesListActivity extends SherlockListActivity
 //		GamesListActivity.this.registerReceiver(messageReceiver, new IntentFilter());
 
 		new AsyncGCMRegister().execute();
-//		new AsyncPopulateGamesList().execute();
 	}
 
 
@@ -202,13 +201,6 @@ public class GamesListActivity extends SherlockListActivity
 							}
 
 							return null;
-						}
-
-
-						@Override
-						protected void onPostExecute(final Void result)
-						{
-//							registerTask = null;
 						}
 					}.execute();
 				}
@@ -426,16 +418,6 @@ public class GamesListActivity extends SherlockListActivity
 
 
 	}
-
-
-//	private final BroadcastReceiver messageReceiver = new BroadcastReceiver()
-//	{
-//		@Override
-//		public void onReceive(final Context context, final Intent intent)
-//		{
-//
-//		}
-//	};
 
 
 	private class GamesListAdapter extends ArrayAdapter<Game>

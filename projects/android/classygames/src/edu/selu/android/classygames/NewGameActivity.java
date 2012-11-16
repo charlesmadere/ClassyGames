@@ -40,11 +40,14 @@ import edu.selu.android.classygames.data.Person;
 
 public class NewGameActivity extends SherlockListActivity
 {
+
+
 	private DiskLruCache diskCache;
 	private LruCache<Long, Bitmap> memoryCache;
 	private PeopleAdapter peopleAdapter;
 	private Person personCreator;
-	
+
+
 	@Override
 	public void onCreate(final Bundle savedInstanceState)
 	{
@@ -65,7 +68,7 @@ public class NewGameActivity extends SherlockListActivity
 			final long id = bundle.getLong(CheckersGameActivity.INTENT_DATA_PERSON_CREATOR_ID);
 			final String name = bundle.getString(CheckersGameActivity.INTENT_DATA_PERSON_CREATOR_NAME);
 
-			if (id < 0 || name == null || name.equals(""))
+			if (id < 0 || name == null || name.isEmpty())
 			{
 				activityHasError();
 			}
@@ -90,13 +93,13 @@ public class NewGameActivity extends SherlockListActivity
 				}
 		        else
 		        {
-		            return (bitmap.getRowBytes() * bitmap.getHeight());
+		            return bitmap.getRowBytes() * bitmap.getHeight();
 		        }
 			}
 		};
-		
+
 		//Try loading diskCache
-		
+
 		try
 		{
 			File cacheDir = getCacheDir(this, ImageCache.DISK_CACHE_SUBDIR);
@@ -106,7 +109,7 @@ public class NewGameActivity extends SherlockListActivity
 		{
 			Log.e(Utilities.LOG_TAG, "DiskCache instantiate failed: " + e);
 		}
-		
+
 		new AsyncPopulateFacebookFriends().execute();
 	}
 	
@@ -385,8 +388,8 @@ public class NewGameActivity extends SherlockListActivity
 			return geo.getName().compareToIgnoreCase(jarrad.getName());
 		}
 	}
-	
-	
+
+
 	public static File getCacheDir(Context context, String uniqueName) 
 	{
 		//Check if storage is built in or mounted from sd, try to use mounted first
