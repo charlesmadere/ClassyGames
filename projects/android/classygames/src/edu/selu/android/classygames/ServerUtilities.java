@@ -41,15 +41,20 @@ public class ServerUtilities
 	public final static String POST_DATA_BOARD = "board";
 	public final static String POST_DATA_ERROR = "error";
 	public final static String POST_DATA_FINISHED = "finished";
+	public final static String POST_DATA_GAME_ID = "game_id";
 	public final static String POST_DATA_ID = "id";
+	public final static String POST_DATA_LAST_MOVE = "last_move";
 	public final static String POST_DATA_NAME = "name";
 	public final static String POST_DATA_REG_ID = "reg_id";
+	public final static String POST_DATA_RESULT = "result";
 	public final static String POST_DATA_TURN = "turn";
+	public final static String POST_DATA_TURN_THEIRS = "turn_theirs";
+	public final static String POST_DATA_TURN_YOURS = "turn_yours";
 	public final static String POST_DATA_SUCCESS = "success";
 	public final static String POST_DATA_USER_CHALLENGED = "user_challenged";
 	public final static String POST_DATA_USER_CREATOR = "user_creator";
 
-	public final static String SERVER_ADDRESS = "http://classygames.net/";
+	public final static String SERVER_ADDRESS = "http://classygames.elasticbeanstalk.com/";
 	public final static String SERVER_GET_GAME = "GetGame";
 	public final static String SERVER_GET_GAME_ADDRESS = SERVER_ADDRESS + SERVER_GET_GAME;
 	public final static String SERVER_GET_GAMES = "GetGames";
@@ -70,42 +75,35 @@ public class ServerUtilities
 
 		try
 		{
+			Log.d(Utilities.LOG_TAG, "Parsing JSON data: " + jsonString);
 			final JSONObject jsonData = new JSONObject(jsonString);
+			final JSONObject jsonResult = new JSONObject(jsonData.getString(POST_DATA_RESULT));
 
 			try
 			{
-				final JSONObject jsonResult = new JSONObject(jsonData.getString("result"));
+				final String successMessage = jsonResult.getString(POST_DATA_SUCCESS);
+				Log.d(Utilities.LOG_TAG, "Server returned success with message: " + successMessage);
 
-				try
-				{
-					final String successMessage = jsonResult.getString(POST_DATA_SUCCESS);
-					Log.d(Utilities.LOG_TAG, "Server returned success with message: \"" + successMessage + "\".");
-
-					returnValue = true;
-				}
-				catch (final JSONException e)
-				{
-					Log.e(Utilities.LOG_TAG, "Data returned from server contained no success message", e);
-
-					try
-					{
-						final String errorMessage = jsonResult.getString(POST_DATA_ERROR);
-						Log.d(Utilities.LOG_TAG, "Server returned error with message: \"" + errorMessage + "\".");
-					}
-					catch (final JSONException e1)
-					{
-						Log.e(Utilities.LOG_TAG, "Data returned from server contained no error message", e1);
-					}
-				}
+				returnValue = true;
 			}
 			catch (final JSONException e)
 			{
-				Log.e(Utilities.LOG_TAG, "Server returned message that was unable to be properly parsed", e);
+				Log.d(Utilities.LOG_TAG, "Data returned from server contained no success message.", e);
+
+				try
+				{
+					final String errorMessage = jsonResult.getString(POST_DATA_ERROR);
+					Log.d(Utilities.LOG_TAG, "Server returned error with message: " + errorMessage);
+				}
+				catch (final JSONException e1)
+				{
+					Log.e(Utilities.LOG_TAG, "Data returned from server contained no error message.", e1);
+				}
 			}
 		}
 		catch (final JSONException e)
 		{
-			Log.e(Utilities.LOG_TAG, "Server returned message that was unable to be properly parsed", e);
+			Log.e(Utilities.LOG_TAG, "Server returned message that was unable to be properly parsed.", e);
 		}
 
 		return returnValue;

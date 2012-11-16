@@ -3,6 +3,10 @@ package edu.selu.android.classygames;
 
 import java.util.ArrayList;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
@@ -34,7 +38,7 @@ public class GamesListActivity extends SherlockListActivity
 {
 
 
-	private AsyncTask<Void, Void, Void> registerTask;
+//	private AsyncTask<Void, Void, Void> registerTask;
 	private GamesListAdapter gamesAdapter;
 	public static Person person;
 
@@ -49,7 +53,7 @@ public class GamesListActivity extends SherlockListActivity
 //		GamesListActivity.this.registerReceiver(messageReceiver, new IntentFilter());
 
 		new AsyncGCMRegister().execute();
-		new AsyncPopulateGamesList().execute();
+//		new AsyncPopulateGamesList().execute();
 	}
 
 
@@ -77,10 +81,10 @@ public class GamesListActivity extends SherlockListActivity
 	@Override
 	public void onDestroy()
 	{
-		if (registerTask != null)
-		{
-			registerTask.cancel(true);
-		}
+//		if (registerTask != null)
+//		{
+//			registerTask.cancel(true);
+//		}
 
 //		unregisterReceiver(messageReceiver);
 		GCMRegistrar.onDestroy(GamesListActivity.this);
@@ -152,7 +156,7 @@ public class GamesListActivity extends SherlockListActivity
 				final long id = me.getLong("id");
 				final String name = me.getString("name");
 
-				if (id < 0 || name == null || name.equals(""))
+				if (id < 0 || name == null || name.isEmpty())
 				{
 					person = new Person();
 				}
@@ -204,7 +208,7 @@ public class GamesListActivity extends SherlockListActivity
 						@Override
 						protected void onPostExecute(final Void result)
 						{
-							registerTask = null;
+//							registerTask = null;
 						}
 					}.execute();
 				}
@@ -221,6 +225,8 @@ public class GamesListActivity extends SherlockListActivity
 			{
 				progressDialog.dismiss();
 			}
+
+			new AsyncPopulateGamesList().execute(person.getId());
 		}
 
 
@@ -232,9 +238,8 @@ public class GamesListActivity extends SherlockListActivity
 			progressDialog = new ProgressDialog(GamesListActivity.this);
 			progressDialog.setMessage(GamesListActivity.this.getString(R.string.games_list_activity_init_progressdialog_message));
 			progressDialog.setTitle(R.string.games_list_activity_init_progressdialog_title);
-			progressDialog.setCancelable(false);
+			progressDialog.setCancelable(true);
 			progressDialog.setCanceledOnTouchOutside(false);
-
 			progressDialog.show();
 		}
 
@@ -242,7 +247,7 @@ public class GamesListActivity extends SherlockListActivity
 	}
 
 
-	private final class AsyncPopulateGamesList extends AsyncTask<Void, Void, ArrayList<Game>>
+	private final class AsyncPopulateGamesList extends AsyncTask<Long, Void, ArrayList<Game>>
 	{
 
 
@@ -250,34 +255,18 @@ public class GamesListActivity extends SherlockListActivity
 
 
 		@Override
-		protected ArrayList<Game> doInBackground(final Void... v)
+		protected ArrayList<Game> doInBackground(final Long... id)
 		{
 			ArrayList<Game> games = new ArrayList<Game>();
 
 			try
 			{
-				// TODO: this code will eventually be replaced by an actual call to our
-				// server. This call will ask the server for a games list
+				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, id[0].toString()));
 
-				games.add(new Game(new Person("Your Turn")));
-				games.add(new Game(new Person("Charles Madere")));
-				games.add(new Game(new Person("Bart Simpson")));
-				games.add(new Game(new Person("Tristan Kidder")));
-				games.add(new Game(new Person("Geonathon Sena")));
-				games.add(new Game());
-				games.add(new Game());
-				games.add(new Game());
-				games.add(new Game());
-				games.add(new Game());
-				games.add(new Game(new Person("Their Turn")));
-				games.add(new Game());
-				games.add(new Game());
-				games.add(new Game());
-				games.add(new Game());
-				games.add(new Game());
-				games.add(new Game());
-
-				games.trimToSize();
+				// make a call to the server and grab the return JSON result
+				final String jsonString = ServerUtilities.postToServer(ServerUtilities.SERVER_GET_GAMES_ADDRESS, nameValuePairs);
+				games = parseServerResults(jsonString);
 			}
 			catch (final Exception e)
 			{
@@ -308,10 +297,131 @@ public class GamesListActivity extends SherlockListActivity
 			progressDialog = new ProgressDialog(GamesListActivity.this);
 			progressDialog.setMessage(GamesListActivity.this.getString(R.string.games_list_activity_games_progressdialog_message));
 			progressDialog.setTitle(R.string.games_list_activity_games_progressdialog_title);
-			progressDialog.setCancelable(false);
+			progressDialog.setCancelable(true);
 			progressDialog.setCanceledOnTouchOutside(false);
 
 			progressDialog.show();
+		}
+
+
+		private ArrayList<Game> parseServerResults(final String jsonString)
+		{
+			Log.d(Utilities.LOG_TAG, "Parsing JSON data: " + jsonString);
+			ArrayList<Game> games = new ArrayList<Game>();
+
+			try
+			{
+				final JSONObject jsonData = new JSONObject(jsonString);
+				final JSONObject jsonResult = jsonData.getJSONObject(ServerUtilities.POST_DATA_RESULT);
+
+				try
+				{
+					final JSONObject successMessage = jsonData.getJSONObject(ServerUtilities.POST_DATA_SUCCESS);
+					Log.d(Utilities.LOG_TAG, "Server returned success with message: " + successMessage);
+
+					try
+					{
+						final JSONArray turnYours = successMessage.getJSONArray(ServerUtilities.POST_DATA_TURN_YOURS);
+						games.add(new Game(new Person("Your Turn")));
+						final int turnYoursSize = turnYours.length();
+
+						for (int i = 0; i < turnYoursSize; ++i)
+						{
+							try
+							{
+								// grab the current game's JSONObject
+								final JSONObject jsonGame = turnYours.getJSONObject(i);
+								final Game game = parseGame(jsonGame);
+
+								if (game != null)
+								{
+									games.add(game);
+								}
+							}
+							catch (final JSONException e)
+							{
+
+							}
+						}
+					}
+					catch (final JSONException e)
+					{
+						Log.d(Utilities.LOG_TAG, "Player has no games that are his own turn.");
+					}
+
+					try
+					{
+						final JSONArray turnTheirs = successMessage.getJSONArray(ServerUtilities.POST_DATA_TURN_THEIRS);
+						games.add(new Game(new Person("Their Turn")));
+						final int turnTheirsSize = turnTheirs.length();
+
+						for (int i = 0; i < turnTheirsSize; ++i)
+						{
+							try
+							{
+								// grab the current game's JSONObject
+								final JSONObject jsonGame = turnTheirs.getJSONObject(i);
+								final Game game = parseGame(jsonGame);
+
+								if (game != null)
+								{
+									games.add(game);
+								}
+							}
+							catch (final JSONException e)
+							{
+
+							}
+						}
+					}
+					catch (final JSONException e)
+					{
+						Log.d(Utilities.LOG_TAG, "Player has no games that are the other person's turn.");
+					}
+				}
+				catch (final JSONException e)
+				{
+					Log.d(Utilities.LOG_TAG, "Data returned from server contained no success message.", e);
+
+					try
+					{
+						final String errorMessage = jsonResult.getString(ServerUtilities.POST_DATA_ERROR);
+						Log.d(Utilities.LOG_TAG, "Server returned error with message: " + errorMessage);
+					}
+					catch (final JSONException e1)
+					{
+						Log.e(Utilities.LOG_TAG, "Data returned from server contained no error message.", e);
+					}
+				}
+			}
+			catch (final JSONException e)
+			{
+				Log.e(Utilities.LOG_TAG, "Server returned message that was unable to be properly parsed.", e);
+			}
+
+			games.trimToSize();
+			return games;
+		}
+
+
+		private Game parseGame(final JSONObject game)
+		{
+			try
+			{
+				final long id = game.getLong(ServerUtilities.POST_DATA_ID); // id of the user that we're challenging
+				final String name = game.getString(ServerUtilities.POST_DATA_NAME); // name of the user that we're challenging
+				final String gameId = game.getString(ServerUtilities.POST_DATA_GAME_ID); // id of the game that we're playing
+				final long timestamp = game.getLong(ServerUtilities.POST_DATA_LAST_MOVE); // time of this game's last move
+
+				// create a game from this data
+				return new Game(timestamp, new Person(id, name), gameId);
+			}
+			catch (final JSONException e)
+			{
+
+			}
+
+			return null;
 		}
 
 

@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
+
 /**
  * Servlet implementation class NewRegId
  */
@@ -58,7 +59,7 @@ public class NewRegId extends HttpServlet
 		final String name = request.getParameter(Utilities.POST_DATA_NAME);
 		final String reg_id = request.getParameter(Utilities.POST_DATA_REG_ID);
 
-		if (id < 0 || name == null || name.isEmpty() || reg_id == null || reg_id.isEmpty())
+		if (id.longValue() < 0 || name == null || name.isEmpty() || reg_id == null || reg_id.isEmpty())
 		// check for invalid inputs
 		{
 			printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_MALFORMED));
@@ -77,7 +78,7 @@ public class NewRegId extends HttpServlet
 				sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
 
 				// prevent SQL injection by inserting data this way
-				sqlStatement.setLong(1, id);
+				sqlStatement.setLong(1, id.longValue());
 
 				// run the SQL statement and acquire any return information
 				final ResultSet sqlResult = sqlStatement.executeQuery();
@@ -92,7 +93,7 @@ public class NewRegId extends HttpServlet
 					// prevent SQL injection by inserting data this way
 					sqlStatement.setString(1, name);
 					sqlStatement.setString(2, reg_id);
-					sqlStatement.setLong(3, id);
+					sqlStatement.setLong(3, id.longValue());
 				}
 				else
 				// id does not already exist in the table. let's insert it
@@ -102,7 +103,7 @@ public class NewRegId extends HttpServlet
 					sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
 
 					// prevent SQL injection by inserting data this way
-					sqlStatement.setLong(1, id);
+					sqlStatement.setLong(1, id.longValue());
 					sqlStatement.setString(2, name);
 					sqlStatement.setString(3, reg_id);
 				}

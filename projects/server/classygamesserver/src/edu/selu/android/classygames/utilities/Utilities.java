@@ -161,11 +161,14 @@ public class Utilities
 		final String hostname = System.getProperty("RDS_HOSTNAME");
 		final String port = System.getProperty("RDS_PORT");
 		final String dbName = System.getProperty("RDS_DB_NAME");
-		final String username = System.getProperty("RDS_USERNAME");
+		final String userName = System.getProperty("RDS_USERNAME");
 		final String password = System.getProperty("RDS_PASSWORD");
 
+		// create the connection string
+		final String connection = "jdbc:mysql://" + hostname + ":" + port + "/" + dbName + "?user=" + userName + "&password=" + password;
+
 		// return a new connection to the database
-		return DriverManager.getConnection("jdbc:mysql://" + hostname + ":" + port + "/" + dbName + "?user=" + username + "&password=" + password);
+		return DriverManager.getConnection(connection);
 	}
 
 

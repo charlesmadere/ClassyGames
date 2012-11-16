@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
+
 /**
  * Servlet implementation class GetGames
  */
@@ -81,8 +82,8 @@ public class GetGames extends HttpServlet
 
 				// prevent SQL injection by inserting data this way
 				sqlStatement.setByte(1, Utilities.DATABASE_TABLE_GAMES_FINISHED_FALSE);
-				sqlStatement.setLong(2, id);
-				sqlStatement.setLong(3, id);
+				sqlStatement.setLong(2, id.longValue());
+				sqlStatement.setLong(3, id.longValue());
 
 				// run the SQL statement and acquire any return information
 				final ResultSet sqlResult = sqlStatement.executeQuery();
@@ -106,23 +107,17 @@ public class GetGames extends HttpServlet
 						// loop iteration this JSONObject will be added to one of the above JSONArrays
 						Map<String, Object> game = new LinkedHashMap<String, Object>();
 
-						Long user_id = new Long(0);
-						String user_name = null;
-
-						if (user_creator.longValue() == id)
+						if (user_creator.longValue() == id.longValue())
 						{
-							user_id = user_challenged;
-							user_name = findUserName(sqlConnection, user_challenged);
+							game.put(Utilities.POST_DATA_ID, user_challenged);
+							game.put(Utilities.POST_DATA_NAME, findUserName(sqlConnection, user_challenged));
 						}
 						else
 						{
-							user_id = user_creator;
-							user_name = findUserName(sqlConnection, user_creator);
+							game.put(Utilities.POST_DATA_ID, user_creator);
+							game.put(Utilities.POST_DATA_NAME, findUserName(sqlConnection, user_creator));
 						}
 
-						// create JSON data that will be sent back to the client device
-						game.put(Utilities.POST_DATA_ID, user_id);
-						game.put(Utilities.POST_DATA_NAME, user_name);
 						game.put(Utilities.POST_DATA_GAME_ID, game_id);
 						game.put(Utilities.POST_DATA_LAST_MOVE, last_move.getTime() / 1000);
 
@@ -130,7 +125,7 @@ public class GetGames extends HttpServlet
 						{
 							case Utilities.DATABASE_TABLE_GAMES_TURN_CREATOR:
 							// it's the creator's turn
-								if (user_creator.longValue() == id)
+								if (user_creator.longValue() == id.longValue())
 								{
 									turnYours.add(game);
 								}
@@ -142,7 +137,7 @@ public class GetGames extends HttpServlet
 
 							case Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED:
 							// it's the challenger's turn
-								if (user_challenged.longValue() == id)
+								if (user_challenged.longValue() == id.longValue())
 								{
 									turnYours.add(game);
 								}
@@ -163,7 +158,7 @@ public class GetGames extends HttpServlet
 				else
 				// we did not get any SQL return data
 				{
-					printWriter.write(Utilities.makePostDataError(Utilities.POST_SUCCESS_NO_ACTIVE_GAMES));
+					printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_NO_ACTIVE_GAMES));
 				}
 			}
 			catch (final ClassNotFoundException e)

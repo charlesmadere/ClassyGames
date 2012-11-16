@@ -175,8 +175,8 @@ public class NewGame extends HttpServlet
 
 								// prevent SQL injection by inserting data this way
 								sqlStatement.setString(1, digest);
-								sqlStatement.setLong(2, user_creator);
-								sqlStatement.setLong(3, user_challenged);
+								sqlStatement.setLong(2, user_creator.longValue());
+								sqlStatement.setLong(3, user_challenged.longValue());
 								sqlStatement.setString(4, board);
 								sqlStatement.setByte(5, Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED);
 								sqlStatement.setInt(6, Utilities.DATABASE_TABLE_GAMES_FINISHED_FALSE);

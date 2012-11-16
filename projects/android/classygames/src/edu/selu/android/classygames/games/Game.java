@@ -12,49 +12,37 @@ public class Game
 {
 
 
-	protected Person person;
-	protected SimpleDateFormat lastMoveTime;
-	protected String id;
+	private long timestamp;
+	private Person person;
+	private SimpleDateFormat lastMoveTime;
+	private String id;
 	private final static String LAST_MOVE_TIME_FORMAT = "MMMM dd, yyyy hh:mm a";
 
 
 	public Game()
 	{
-		id = new String();
+		timestamp = 0;
 		person = new Person();
+		id = new String();
 		lastMoveTime = new SimpleDateFormat(LAST_MOVE_TIME_FORMAT, Locale.US);
 	}
 
 
 	public Game(final Person person)
 	{
-		id = new String();
+		timestamp = 0;
 		this.person = person;
+		id = new String();
 		lastMoveTime = new SimpleDateFormat(LAST_MOVE_TIME_FORMAT, Locale.US);
 	}
 
 
-	public Game(final Person person, final SimpleDateFormat lastMoveTime)
+	public Game(final long timestamp, final Person person, final String id)
 	{
-		id = new String();
+		this.timestamp = timestamp;
 		this.person = person;
-		this.lastMoveTime = new SimpleDateFormat(LAST_MOVE_TIME_FORMAT, Locale.US);
-	}
-
-
-	public Game(final String id, final Person person)
-	{
 		this.id = id;
-		this.person = person;
 		lastMoveTime = new SimpleDateFormat(LAST_MOVE_TIME_FORMAT, Locale.US);
-	}
-
-
-	public Game(final String id, final Person person, final SimpleDateFormat lastMoveTime)
-	{
-		this.id = id;
-		this.person = person;
-		this.lastMoveTime = lastMoveTime;
 	}
 
 
@@ -85,6 +73,18 @@ public class Game
 	void setPerson(final Person person)
 	{
 		this.person = person;
+	}
+
+
+	long getTimestamp()
+	{
+		return timestamp;
+	}
+
+
+	String getTimestampFormatted()
+	{
+		return "time: " + timestamp;
 	}
 
 
