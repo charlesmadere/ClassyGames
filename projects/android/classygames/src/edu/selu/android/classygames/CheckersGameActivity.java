@@ -1,7 +1,10 @@
 package edu.selu.android.classygames;
 
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
+import android.graphics.Point;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.View;
@@ -24,7 +27,12 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 
 	TableLayout layout;
 	MyButton[][] buttons;
-
+	
+	FrameLayout.LayoutParams tableLp;
+	TableLayout.LayoutParams rowLp;
+	TableRow.LayoutParams cellLp;
+	TableRow[] rows;
+	 
 	MyButton prevButton;
 	int greenPlayer, orangePlayer;
 	//AlertDialog.Builder dialog = new AlertDialog.Builder(this, R.style.DialogWindowTitle_Sherlock);
@@ -41,6 +49,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	private Person personChallenged;
 
 
+	@SuppressLint("NewApi")
 	@Override
 	public void onCreate(final Bundle savedInstanceState)
 	{
@@ -83,37 +92,38 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 
         Display display = getWindowManager().getDefaultDisplay();
         
-        //NEED TO MOVE CODE TO THIS TO FIX THAT DEPRECATED METHOD
         
-        /* 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+        if (Integer.valueOf(android.os.Build.VERSION.SDK_INT) > 13 )
         {
             //do stuff pertaining to this version here
         	Point size = new Point();
         	display.getSize(size);
         	int screen_width = size.x;
-       		int screen_height = size.y;	
+       		
+        	layout = new TableLayout(this);
+        	tableLp = new FrameLayout.LayoutParams(screen_width,screen_width,1);
+        	rowLp = new TableLayout.LayoutParams( screen_width,screen_width/8,1);
+         	cellLp= new TableRow.LayoutParams( screen_width/8,screen_width/8,1);
+        
         	
         }
         else
         {
             //other versions
+              	@SuppressWarnings("deprecation")
                 int width = display.getWidth();
-         		int height = display.getHeight();
-        }
-        */
+         		
+              	layout = new TableLayout(this);
+              	tableLp = new FrameLayout.LayoutParams(width,width,1);
+              	rowLp = new TableLayout.LayoutParams( width,width/8,1);
+              	cellLp= new TableRow.LayoutParams( width/8,width/8,1);
         
-        @SuppressWarnings("deprecation")
-		int width = display.getWidth();
+        }
        
         
         TableRow[] rows = new TableRow[8];
        
-        layout = new TableLayout(this);
-        FrameLayout.LayoutParams tableLp = new FrameLayout.LayoutParams(width,width,1);
-        TableLayout.LayoutParams rowLp = new TableLayout.LayoutParams( width,width/8,1);
-        TableRow.LayoutParams cellLp= new TableRow.LayoutParams( width/8,width/8,1);
-        
+       
         for (int i = 0; i < 8; i++)
         {
         	 rows[i] = new TableRow(this);
@@ -180,6 +190,8 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 				if (canMove(clickedButton))
 				{
 					Move(clickedButton);
+					//DontBack(clickedButton);
+					
 					if (isKing(clickedButton))
 					{
 						makeKing(clickedButton);
@@ -228,7 +240,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		
 			if(clickedButton.getPx() == 7 || clickedButton.getPx() == 0)
 			{
-				//i++;
+				
 				return true;
 			}
 			
@@ -307,6 +319,32 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			return false;
 		}
 	}
+	
+	//Working on these now
+	/*
+	private boolean NoBackTrack(MyButton clickedButton)
+	{
+		if(canJump(clickedButton) || canMove(clickedButton))
+			return false;
+		else 
+			return true;
+	}
+	
+	
+	private boolean DontBack(MyButton clickedButton)
+	{
+		if(canMove(clickedButton))
+		{
+			prevButton.setImageResource(0);
+			prevButton.setEmpty(true);
+			clickedButton.setEmpty(false);
+			
+			return true;
+		}
+		else 
+			return false;
+	}
+	*/
 	
 	private int abs(int i)
 	{	
