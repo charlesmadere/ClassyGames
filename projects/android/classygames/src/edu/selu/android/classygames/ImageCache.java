@@ -15,6 +15,8 @@ import android.util.Log;
 import com.koushikdutta.urlimageviewhelper.DiskLruCache;
 import com.koushikdutta.urlimageviewhelper.DiskLruCache.Snapshot;
 
+import edu.selu.android.classygames.utilities.Utilities;
+
 public class ImageCache
 {
 	

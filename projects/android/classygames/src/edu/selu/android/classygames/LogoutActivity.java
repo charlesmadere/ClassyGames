@@ -18,6 +18,8 @@ import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.AsyncFacebookRunner.RequestListener;
 import com.facebook.android.FacebookError;
 
+import edu.selu.android.classygames.utilities.Utilities;
+
 
 public class LogoutActivity extends SherlockActivity
 {
@@ -45,7 +47,7 @@ public class LogoutActivity extends SherlockActivity
 					public void onComplete(final String response, final Object state)
 					{
 						SharedPreferences.Editor editor = Utilities.sharedPreferences.edit();
-						editor.putString(Utilities.FACEBOOK_TOKEN, Utilities.getFacebook().getAccessToken());
+						editor.putString(Utilities.FACEBOOK_ACCESS_TOKEN, Utilities.getFacebook().getAccessToken());
 						editor.putLong(Utilities.FACEBOOK_EXPIRES, Utilities.getFacebook().getAccessExpires());
 						editor.commit();
 

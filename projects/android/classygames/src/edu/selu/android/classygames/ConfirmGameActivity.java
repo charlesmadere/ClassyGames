@@ -16,6 +16,7 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 
 import edu.selu.android.classygames.data.Person;
+import edu.selu.android.classygames.utilities.Utilities;
 
 
 public class ConfirmGameActivity extends SherlockActivity

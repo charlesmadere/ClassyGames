@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 
+import edu.selu.android.classygames.utilities.Utilities;
+
 
 public class AboutActivity extends SherlockActivity
 {

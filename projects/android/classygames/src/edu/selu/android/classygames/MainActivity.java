@@ -14,6 +14,8 @@ import com.facebook.android.DialogError;
 import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
 
+import edu.selu.android.classygames.utilities.Utilities;
+
 
 public class MainActivity extends SherlockActivity
 {
@@ -27,7 +29,7 @@ public class MainActivity extends SherlockActivity
 		setContentView(R.layout.main_activity);
 
 		Utilities.sharedPreferences = getPreferences(MODE_PRIVATE);
-		final String access_token = Utilities.sharedPreferences.getString(Utilities.FACEBOOK_TOKEN, null);
+		final String access_token = Utilities.sharedPreferences.getString(Utilities.FACEBOOK_ACCESS_TOKEN, null);
 		final long expires = Utilities.sharedPreferences.getLong(Utilities.FACEBOOK_EXPIRES, 0);
 
 		if (access_token != null)
@@ -60,7 +62,7 @@ public class MainActivity extends SherlockActivity
 						public void onComplete(final Bundle values)
 						{
 							SharedPreferences.Editor editor = Utilities.sharedPreferences.edit();
-							editor.putString(Utilities.FACEBOOK_TOKEN, Utilities.getFacebook().getAccessToken());
+							editor.putString(Utilities.FACEBOOK_ACCESS_TOKEN, Utilities.getFacebook().getAccessToken());
 							editor.putLong(Utilities.FACEBOOK_EXPIRES, Utilities.getFacebook().getAccessExpires());
 							editor.commit();
 							goToGamesList();

@@ -32,6 +32,7 @@ import com.google.android.gcm.GCMRegistrar;
 
 import edu.selu.android.classygames.data.Person;
 import edu.selu.android.classygames.games.Game;
+import edu.selu.android.classygames.utilities.Utilities;
 
 
 public class GamesListActivity extends SherlockListActivity
@@ -40,7 +41,6 @@ public class GamesListActivity extends SherlockListActivity
 
 //	private AsyncTask<Void, Void, Void> registerTask;
 	private GamesListAdapter gamesAdapter;
-	private static Person whoAmI;
 
 
 	@Override
@@ -105,10 +105,7 @@ public class GamesListActivity extends SherlockListActivity
 				return true;
 
 			case R.id.games_list_activity_actionbar_new_game:
-				Intent intent = new Intent(GamesListActivity.this, NewGameActivity.class);
-				intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CREATOR_ID, getWhoAmI().getId());
-				intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CREATOR_NAME, getWhoAmI().getName());
-				startActivity(intent);
+				startActivity(new Intent(GamesListActivity.this, NewGameActivity.class));
 				return true;
 
 			case R.id.games_list_activity_actionbar_refresh:
@@ -174,12 +171,60 @@ public class GamesListActivity extends SherlockListActivity
 						@Override
 						protected Void doInBackground(final Void... v)
 						{
-							if (!ServerUtilities.GCMRegister(GamesListActivity.this, getWhoAmI(), reg_id))
+							if (!ServerUtilities.GCMRegister(GamesListActivity.this, Utilities.getWhoAmI(), reg_id))
 							{
 								GCMRegistrar.unregister(GamesListActivity.this);
 							}
 
 							return null;
+						}
+
+
+						@Override
+						protected void onPreExecute()
+						{
+							new AsyncTask<Void, Void, Person>()
+							{
+								@Override
+								protected Person doInBackground(final Void... v)
+								{
+									Person person = new Person();
+
+									try
+									{
+										final String request = Utilities.getFacebook().request("me");
+										final JSONObject me = Util.parseJson(request);
+										final long id = me.getLong("id");
+										final String name = me.getString("name");
+
+										if (id >= 0 && name != null && !name.isEmpty())
+										{
+											person.setId(id);
+											person.setName(name);
+										}
+									}
+									catch (final Exception e)
+									{
+										Log.e(Utilities.LOG_TAG, "Exception during Facebook request or parse.", e);
+									}
+
+									return person;
+								}
+
+
+								@Override
+								protected void onPostExecute(final Person person)
+								{
+									Utilities.setWhoAmI(person);
+								}
+
+
+								@Override
+								protected void onPreExecute()
+								{
+									Utilities.getFacebook().extendAccessTokenIfNeeded(GamesListActivity.this, null);
+								}
+							}.execute();
 						}
 					}.execute();
 				}
@@ -204,44 +249,12 @@ public class GamesListActivity extends SherlockListActivity
 		@Override
 		protected void onPreExecute()
 		{
-			Utilities.getFacebook().extendAccessTokenIfNeeded(GamesListActivity.this, null);
-
 			progressDialog = new ProgressDialog(GamesListActivity.this);
 			progressDialog.setMessage(GamesListActivity.this.getString(R.string.games_list_activity_init_progressdialog_message));
 			progressDialog.setTitle(R.string.games_list_activity_init_progressdialog_title);
 			progressDialog.setCancelable(true);
 			progressDialog.setCanceledOnTouchOutside(false);
 			progressDialog.show();
-
-			new AsyncTask<Void, Void, Void>()
-			{
-				@Override
-				protected Void doInBackground(final Void... v)
-				{
-					try
-					{
-						final String request = Utilities.getFacebook().request("me");
-						final JSONObject me = Util.parseJson(request);
-						final long id = me.getLong("id");
-						final String name = me.getString("name");
-
-						if (id < 0 || name == null || name.isEmpty())
-						{
-							whoAmI = new Person();
-						}
-						else
-						{
-							whoAmI = new Person(id, name);
-						}
-					}
-					catch (final Exception e)
-					{
-						Log.e(Utilities.LOG_TAG, "Exception during Facebook request or parse.", e);
-					}
-
-					return null;
-				}
-			}.execute();
 		}
 
 
@@ -263,7 +276,7 @@ public class GamesListActivity extends SherlockListActivity
 			try
 			{
 				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, Long.valueOf(getWhoAmI().getId()).toString()));
+				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, Long.valueOf(Utilities.getWhoAmI().getId()).toString()));
 
 				// make a call to the server and grab the return JSON result
 				final String jsonString = ServerUtilities.postToServer(ServerUtilities.SERVER_GET_GAMES_ADDRESS, nameValuePairs);
@@ -306,7 +319,6 @@ public class GamesListActivity extends SherlockListActivity
 
 		private ArrayList<Game> parseServerResults(final String jsonString)
 		{
-			Log.d(Utilities.LOG_TAG, "Parsing JSON data: " + jsonString);
 			ArrayList<Game> games = new ArrayList<Game>();
 
 			try
@@ -320,7 +332,7 @@ public class GamesListActivity extends SherlockListActivity
 					try
 					{
 						final JSONArray turnYours = gameData.getJSONArray(ServerUtilities.POST_DATA_TURN_YOURS);
-						games.add(new Game(new Person("Your Turn")));
+						games.add(new Game(Game.TURN_YOURS, Game.TYPE_SEPARATOR));
 						final int turnYoursSize = turnYours.length();
 
 						for (int i = 0; i < turnYoursSize; ++i)
@@ -350,7 +362,7 @@ public class GamesListActivity extends SherlockListActivity
 					try
 					{
 						final JSONArray turnTheirs = gameData.getJSONArray(ServerUtilities.POST_DATA_TURN_THEIRS);
-						games.add(new Game(new Person("Their Turn")));
+						games.add(new Game(Game.TURN_THEIRS, Game.TYPE_SEPARATOR));
 						final int turnTheirsSize = turnTheirs.length();
 
 						for (int i = 0; i < turnTheirsSize; ++i)
@@ -456,17 +468,7 @@ public class GamesListActivity extends SherlockListActivity
 				LayoutInflater layoutInflater = (LayoutInflater) getSystemService( Context.LAYOUT_INFLATER_SERVICE);
 				ViewHolder viewHolder = new ViewHolder();
 
-				if (game.getPerson().getName().equalsIgnoreCase("Your Turn"))
-				{
-					convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_turn_yours, null);
-					viewHolder.picture = (ImageView) convertView.findViewById(R.drawable.turn_yours);
-				}
-				else if (game.getPerson().getName().equalsIgnoreCase("Their Turn"))
-				{
-					convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_turn_theirs, null);
-					viewHolder.picture = (ImageView) convertView.findViewById(R.drawable.turn_theirs);
-				}
-				else
+				if (game.isTypeGame())
 				{
 					layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 					convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_item, null);
@@ -510,6 +512,19 @@ public class GamesListActivity extends SherlockListActivity
 
 					convertView.setOnClickListener(viewHolder.onClickListener);
 				}
+				else
+				{
+					if (game.isTurnYours())
+					{
+						convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_turn_yours, null);
+						viewHolder.picture = (ImageView) convertView.findViewById(R.drawable.turn_yours);
+					}
+					else
+					{
+						convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_turn_theirs, null);
+						viewHolder.picture = (ImageView) convertView.findViewById(R.drawable.turn_theirs);
+					}
+				}
 
 				convertView.setTag(viewHolder);
 			}
@@ -536,12 +551,6 @@ public class GamesListActivity extends SherlockListActivity
 		}
 
 
-	}
-
-
-	public static Person getWhoAmI()
-	{
-		return whoAmI;
 	}
 
 

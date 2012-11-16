@@ -36,6 +36,7 @@ import com.facebook.android.Util;
 import com.koushikdutta.urlimageviewhelper.DiskLruCache;
 
 import edu.selu.android.classygames.data.Person;
+import edu.selu.android.classygames.utilities.Utilities;
 
 
 public class NewGameActivity extends SherlockListActivity

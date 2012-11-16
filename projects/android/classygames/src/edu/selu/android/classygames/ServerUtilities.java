@@ -25,6 +25,7 @@ import android.util.Log;
 import com.google.android.gcm.GCMRegistrar;
 
 import edu.selu.android.classygames.data.Person;
+import edu.selu.android.classygames.utilities.Utilities;
 
 
 public class ServerUtilities

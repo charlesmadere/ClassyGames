@@ -8,6 +8,8 @@ import android.util.Log;
 
 import com.google.android.gcm.GCMBaseIntentService;
 
+import edu.selu.android.classygames.utilities.Utilities;
+
 
 /**
  * For more information on this class please read
@@ -24,7 +26,7 @@ public class GCMIntentService extends GCMBaseIntentService
 
 
 	/**
-	 * <p>Called when the GCM server tells pending messages have been deleted because the device was idle.</p>
+	 * Called when the GCM server tells pending messages have been deleted because the device was idle.
 	 */
 	@Override
 	protected void onDeletedMessages(final Context context, final int total)
@@ -34,7 +36,7 @@ public class GCMIntentService extends GCMBaseIntentService
 
 
 	/**
-	 * <p>Called on registration or unregistration error.</p>
+	 * Called on registration or unregistration error.
 	 */
 	@Override
 	protected void onError(final Context context, final String errorId)
@@ -44,14 +46,14 @@ public class GCMIntentService extends GCMBaseIntentService
 
 
 	/**
-	 * <p>Called when a cloud message has been received.</p>
+	 * Called when a cloud message has been received.
 	 */
 	@Override
 	protected void onMessage(final Context context, final Intent intent)
 	{
 		final Bundle bundle = intent.getExtras();
 
-		if (bundle == null)
+		if (bundle == null || bundle.isEmpty())
 		{
 			Log.e(Utilities.LOG_TAG, "GCM message was received but it was malformed.");
 		}
@@ -63,18 +65,18 @@ public class GCMIntentService extends GCMBaseIntentService
 
 
 	/**
-	 * <p>Called after a device has been registered.</p>
+	 * Called after a device has been registered.
 	 */
 	@Override
 	protected void onRegistered(final Context context, final String reg_id)
 	{
 		Log.d(Utilities.LOG_TAG, "Device registered with reg_id of \"" + reg_id + "\".");
-		ServerUtilities.GCMRegister(context, GamesListActivity.getWhoAmI(), reg_id);
+		ServerUtilities.GCMRegister(context, Utilities.getWhoAmI(), reg_id);
 	}
 
 
 	/**
-	 * <p>Called after a device has been unregistered.</p>
+	 * Called after a device has been unregistered.
 	 */
 	@Override
 	protected void onUnregistered(final Context context, final String reg_id)

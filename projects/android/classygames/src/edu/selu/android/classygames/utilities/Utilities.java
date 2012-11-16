@@ -1,4 +1,4 @@
-package edu.selu.android.classygames;
+package edu.selu.android.classygames.utilities;
 
 
 import java.io.InputStream;
@@ -20,6 +20,11 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.facebook.android.Facebook;
 
+import edu.selu.android.classygames.R;
+import edu.selu.android.classygames.SecretConstants;
+import edu.selu.android.classygames.R.drawable;
+import edu.selu.android.classygames.data.Person;
+
 
 public class Utilities
 {
@@ -27,6 +32,8 @@ public class Utilities
 
 	public final static String DISPLAY_MESSAGE_ACTION = "edu.selu.android.classygames.CONTEXT_BROADCAST";
 	public final static String LOG_TAG = "Classy Games";
+	private static Person whoAmI;
+	public static SharedPreferences sharedPreferences;
 	
 	
 	public final static CompressFormat COMPRESS_FORMAT = CompressFormat.PNG;
@@ -36,9 +43,6 @@ public class Utilities
 	public final static int IO_BUFFER_SIZE = 8 * 1024;
 	public final static int DISK_CACHE_SIZE = 1024 * 1024 * 10;
 	public final static String DISK_CACHE_SUBDIR = "thumbnails";
-
-
-	public static SharedPreferences sharedPreferences;
 
 
 	// typeface data below
@@ -60,8 +64,10 @@ public class Utilities
 	// facebook data below
 	private static Facebook facebook;
 
-	public final static String FACEBOOK_EXPIRES = "expires_in";
-	public final static String FACEBOOK_TOKEN = "access_token";
+	public final static String FACEBOOK_ACCESS_TOKEN = "facebook_access_token";
+	public final static String FACEBOOK_EXPIRES = "facebook_expires_in";
+	public final static String FACEBOOK_MY_ID = "facebook_my_id";
+	public final static String FACEBOOK_MY_NAME = "facebook_my_name";
 
 	public final static String FACEBOOK_GRAPH_API_URL = "https://graph.facebook.com/";
 	public final static String FACEBOOK_GRAPH_API_URL_PICTURE = "/picture";
@@ -245,7 +251,28 @@ public class Utilities
 
 
 	/**
-	* <p>Simple class that handles pulling an image from a URL.</p>
+	 * @return
+	 * A Person object representing your Facebook identity.
+	 */
+	public static Person getWhoAmI()
+	{
+		if (whoAmI == null)
+		{
+			whoAmI = new Person();
+		}
+
+		return whoAmI;
+	}
+
+
+	public static void setWhoAmI(final Person facebookIdentity)
+	{
+		whoAmI = facebookIdentity;
+	}
+
+
+	/**
+	* <p>Simple method that handles pulling an image from a URL.</p>
 	* 
 	* <p><strong>Examples</strong><br />
 	* Utilities.LoadImageFRomWebOperations(myURL);</p>
@@ -260,7 +287,7 @@ public class Utilities
 			InputStream is = (InputStream) new URL(url).getContent();
 			return Drawable.createFromStream(is, "src");
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			Log.e(LOG_TAG, "Image Load Failed" + e);
 			return null;
