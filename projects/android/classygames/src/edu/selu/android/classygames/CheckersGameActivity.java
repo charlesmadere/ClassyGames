@@ -103,13 +103,13 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
         else
         {
             //other versions
-              	@SuppressWarnings("deprecation")
-                int width = display.getWidth();
+              @SuppressWarnings("deprecation")
+              int width = display.getWidth();
          		
-              	layout = new TableLayout(this);
-              	tableLp = new FrameLayout.LayoutParams(width,width,1);
-              	rowLp = new TableLayout.LayoutParams( width,width/8,1);
-              	cellLp= new TableRow.LayoutParams( width/8,width/8,1);
+              layout = new TableLayout(this);
+              tableLp = new FrameLayout.LayoutParams(width,width,1);
+              rowLp = new TableLayout.LayoutParams( width,width/8,1);
+              cellLp= new TableRow.LayoutParams( width/8,width/8,1);
         
         }
        
@@ -183,8 +183,6 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 				if (canMove(clickedButton))
 				{
 					Move(clickedButton);
-					//DontBack(clickedButton);
-					
 					if (isKing(clickedButton))
 					{
 						makeKing(clickedButton);
@@ -312,32 +310,6 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			return false;
 		}
 	}
-	
-	//Working on these now
-	/*
-	private boolean NoBackTrack(MyButton clickedButton)
-	{
-		if(canJump(clickedButton) || canMove(clickedButton))
-			return false;
-		else 
-			return true;
-	}
-	
-	
-	private boolean DontBack(MyButton clickedButton)
-	{
-		if(canMove(clickedButton))
-		{
-			prevButton.setImageResource(0);
-			prevButton.setEmpty(true);
-			clickedButton.setEmpty(false);
-			
-			return true;
-		}
-		else 
-			return false;
-	}
-	*/
 	
 	private int abs(int i)
 	{	
