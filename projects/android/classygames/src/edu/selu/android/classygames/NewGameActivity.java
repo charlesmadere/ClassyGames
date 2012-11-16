@@ -46,7 +46,6 @@ public class NewGameActivity extends SherlockListActivity
 	private DiskLruCache diskCache;
 	private LruCache<Long, Bitmap> memoryCache;
 	private PeopleAdapter peopleAdapter;
-	private Person personCreator;
 
 
 	@Override
@@ -56,28 +55,6 @@ public class NewGameActivity extends SherlockListActivity
 		setContentView(R.layout.new_game_activity);
 		Utilities.styleActionBar(getResources(), getSupportActionBar());
 		Utilities.getFacebook().extendAccessTokenIfNeeded(NewGameActivity.this, null);
-
-		final Bundle bundle = getIntent().getExtras();
-
-		if (bundle == null)
-		// bundle should NOT equal null
-		{
-			activityHasError();
-		}
-		else
-		{
-			final long id = bundle.getLong(CheckersGameActivity.INTENT_DATA_PERSON_CREATOR_ID);
-			final String name = bundle.getString(CheckersGameActivity.INTENT_DATA_PERSON_CREATOR_NAME);
-
-			if (id < 0 || name == null || name.isEmpty())
-			{
-				activityHasError();
-			}
-			else
-			{
-				personCreator = new Person(id, name);
-			}
-		}
 
 		// setup cache size for loading drawable images
 		final int memClass = ((ActivityManager) (NewGameActivity.this).getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
@@ -135,13 +112,6 @@ public class NewGameActivity extends SherlockListActivity
 			default:
 				return super.onOptionsItemSelected(item);
 		}
-	}
-
-
-	private void activityHasError()
-	{
-		Utilities.easyToastAndLogError(NewGameActivity.this, NewGameActivity.this.getString(R.string.new_game_activity_data_error));
-		finish();
 	}
 
 	
@@ -292,8 +262,6 @@ public class NewGameActivity extends SherlockListActivity
 					public void onClick(final View v)
 					{
 						Intent intent = new Intent(NewGameActivity.this, ConfirmGameActivity.class);
-						intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CREATOR_ID, personCreator.getId());
-						intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CREATOR_NAME, personCreator.getName());
 						intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_ID, person.getId());
 						intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_NAME, person.getName());
 

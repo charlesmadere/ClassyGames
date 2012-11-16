@@ -465,7 +465,7 @@ public class GamesListActivity extends SherlockListActivity
 
 			if (game != null)
 			{
-				LayoutInflater layoutInflater = (LayoutInflater) getSystemService( Context.LAYOUT_INFLATER_SERVICE);
+				LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				ViewHolder viewHolder = new ViewHolder();
 
 				if (game.isTypeGame())

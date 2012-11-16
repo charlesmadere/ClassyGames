@@ -37,15 +37,13 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	int greenPlayer, orangePlayer;
 	//AlertDialog.Builder dialog = new AlertDialog.Builder(this, R.style.DialogWindowTitle_Sherlock);
 
+
 	public final static String INTENT_DATA_GAME_ID = "GAME_ID";
-	public final static String INTENT_DATA_PERSON_CREATOR_ID = "GAME_PERSON_CREATOR_ID";
-	public final static String INTENT_DATA_PERSON_CREATOR_NAME = "GAME_PERSON_CREATOR_NAME";
 	public final static String INTENT_DATA_PERSON_CHALLENGED_ID = "GAME_PERSON_CHALLENGED_ID";
 	public final static String INTENT_DATA_PERSON_CHALLENGED_NAME = "GAME_PERSON_CHALLENGED_NAME";
 
 
 	private String gameId;
-	private Person personCreator;
 	private Person personChallenged;
 
 
@@ -60,22 +58,23 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		// retrieve data passed to this activity
 		final Bundle bundle = getIntent().getExtras();
 
-		if (bundle == null)
+		if (bundle == null || bundle.isEmpty())
 		{
 			activityHasError();
 		}
 		else
 		{
 			gameId = bundle.getString(INTENT_DATA_GAME_ID);
-			personCreator = new Person(bundle.getLong(INTENT_DATA_PERSON_CREATOR_ID) ,bundle.getString(INTENT_DATA_PERSON_CREATOR_NAME));
-			personChallenged = new Person(bundle.getLong(INTENT_DATA_PERSON_CHALLENGED_ID), bundle.getString(INTENT_DATA_PERSON_CHALLENGED_NAME));
+			final long challengedId = bundle.getLong(INTENT_DATA_PERSON_CHALLENGED_ID);
+			final String challengedName = bundle.getString(INTENT_DATA_PERSON_CHALLENGED_NAME);
 
-			if (personCreator.getId() < 0 || personChallenged.getId() < 0 || personChallenged.getName().isEmpty())
+			if (challengedId < 0 || challengedName == null || challengedName.isEmpty())
 			{
 				activityHasError();
 			}
 			else
 			{
+				personChallenged = new Person(challengedId, challengedName);
 				getSupportActionBar().setTitle(CheckersGameActivity.this.getString(R.string.checkers_game_activity_title) + " " + personChallenged.getName());
 			}
 		}
