@@ -22,7 +22,6 @@ import com.facebook.android.Facebook;
 
 import edu.selu.android.classygames.R;
 import edu.selu.android.classygames.SecretConstants;
-import edu.selu.android.classygames.R.drawable;
 import edu.selu.android.classygames.data.Person;
 
 

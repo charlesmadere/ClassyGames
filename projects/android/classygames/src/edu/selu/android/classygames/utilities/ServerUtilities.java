@@ -1,4 +1,4 @@
-package edu.selu.android.classygames;
+package edu.selu.android.classygames.utilities;
 
 
 import java.io.BufferedReader;
@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Random;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -19,26 +18,20 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
 import android.util.Log;
-
-import com.google.android.gcm.GCMRegistrar;
-
-import edu.selu.android.classygames.data.Person;
-import edu.selu.android.classygames.utilities.Utilities;
 
 
 public class ServerUtilities
 {
 
-
-	private final static int REGISTER_MAX_ATTEMPTS = 5;
-	private final static long REGISTER_BACKOFF_TIME = 2000; // milliseconds
-
 	public final static String MIMETYPE_JSON = "application/json";
 
+	public final static int GCM_NOTIFICATION_ID = 0;
+	public final static String GCM_TYPE = "type";
+	public final static int GCM_TYPE_NEW_GAME = 1;
+	public final static int GCM_TYPE_NEW_MOVE = 2;
+
 	public final static String POST_DATA = "json";
-	public final static String POST_DATA_BLANK = "";
 	public final static String POST_DATA_BOARD = "board";
 	public final static String POST_DATA_ERROR = "error";
 	public final static String POST_DATA_FINISHED = "finished";
@@ -109,92 +102,42 @@ public class ServerUtilities
 	}
 
 
-	public static boolean GCMRegister(final Context context, final Person person, final String reg_id)
+	public static void GCMRegister(final String reg_id)
 	{
+		Log.d(Utilities.LOG_TAG, "Registering device with reg_id of \"" + reg_id + "\" from GCM server.");
+
 		// build the data to be sent to the server
 		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-		nameValuePairs.add(new BasicNameValuePair(POST_DATA_ID, Long.valueOf(person.getId()).toString()));
-		nameValuePairs.add(new BasicNameValuePair(POST_DATA_NAME, person.getName()));
+		nameValuePairs.add(new BasicNameValuePair(POST_DATA_ID, Long.valueOf(Utilities.getWhoAmI().getId()).toString()));
+		nameValuePairs.add(new BasicNameValuePair(POST_DATA_NAME, Utilities.getWhoAmI().getName()));
 		nameValuePairs.add(new BasicNameValuePair(POST_DATA_REG_ID, reg_id));
 
-		Random random = new Random();
-		long backoffTime = REGISTER_BACKOFF_TIME + random.nextInt(1000);
-		boolean backoff = false;
-
-		for (int i = 1; i <= REGISTER_MAX_ATTEMPTS; ++i)
+		try
 		{
-			Log.i(Utilities.LOG_TAG, "GCM register attempt #" + i);
-
-			try
+			if (GCMParseServerResults(postToServer(SERVER_NEW_REG_ID_ADDRESS, nameValuePairs)))
 			{
-				final String serverResponse = postToServer(SERVER_NEW_REG_ID_ADDRESS, nameValuePairs);
-
-				if (GCMParseServerResults(serverResponse))
-				{
-					GCMRegistrar.setRegisteredOnServer(context, true);
-
-					return true;
-				}
-				else
-				{
-					backoff = true;
-				}
-			}
-			catch (final IOException ioe)
-			{
-				Log.e(Utilities.LOG_TAG, "GCM register failure on attempt #" + i, ioe);
-				backoff = true;
-			}
-
-			if (backoff)
-			{
-				if (i <= REGISTER_MAX_ATTEMPTS)
-				{
-					try
-					{
-						Log.d(Utilities.LOG_TAG, "Sleeping for " + backoffTime + "ms before next GCM register attempt.");
-						Thread.sleep(backoffTime);
-					}
-					catch (final InterruptedException ie)
-					{
-						Log.e(Utilities.LOG_TAG, "GCM register thread interrupted! Aborting registration attempt");
-						Thread.currentThread().interrupt();
-
-						return false;
-					}
-
-					// exponentially increase backoffTime so that we wait a bit longer before our
-					// next GCM registration attempt
-					backoffTime = (backoffTime * 2) + backoffTime;
-				}
-
-				backoff = false;
+				Log.d(Utilities.LOG_TAG, "Server successfully completed all the reg_id stuff.");
 			}
 		}
+		catch (final IOException e)
+		{
 
-		return false;
+		}
 	}
 
 
-	public static void GCMUnregister(final Context context, final long id, final String reg_id)
+	public static void GCMUnregister(final String reg_id)
 	{
 		Log.d(Utilities.LOG_TAG, "Unregistering device with reg_id of \"" + reg_id + "\" from GCM server.");
 
 		// build the data to be sent to the server
 		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-		nameValuePairs.add(new BasicNameValuePair(POST_DATA_ID, Long.valueOf(id).toString()));
+		nameValuePairs.add(new BasicNameValuePair(POST_DATA_ID, Long.valueOf(Utilities.getWhoAmI().getId()).toString()));
 		nameValuePairs.add(new BasicNameValuePair(POST_DATA_REG_ID, reg_id));
 
 		try
 		{
-			final String serverResponse = postToServer(SERVER_REMOVE_REG_ID_ADDRESS, nameValuePairs); 
-
-			if (GCMParseServerResults(serverResponse))
-			{
-
-			}
-
-			GCMRegistrar.setRegisteredOnServer(context, false);
+			postToServer(SERVER_REMOVE_REG_ID_ADDRESS, nameValuePairs);
 		}
 		catch (final IOException e)
 		{

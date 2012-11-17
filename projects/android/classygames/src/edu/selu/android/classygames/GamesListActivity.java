@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -28,10 +29,10 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.facebook.android.Util;
-import com.google.android.gcm.GCMRegistrar;
 
 import edu.selu.android.classygames.data.Person;
 import edu.selu.android.classygames.games.Game;
+import edu.selu.android.classygames.utilities.ServerUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
@@ -39,7 +40,6 @@ public class GamesListActivity extends SherlockListActivity
 {
 
 
-//	private AsyncTask<Void, Void, Void> registerTask;
 	private GamesListAdapter gamesAdapter;
 
 
@@ -50,9 +50,7 @@ public class GamesListActivity extends SherlockListActivity
 		setContentView(R.layout.games_list_activity);
 		Utilities.styleActionBar(getResources(), getSupportActionBar(), false);
 
-//		GamesListActivity.this.registerReceiver(messageReceiver, new IntentFilter());
-
-		new AsyncGCMRegister().execute();
+		new AsyncGetFacebookIdentificationAndGCMRegister().execute();
 	}
 
 
@@ -80,13 +78,6 @@ public class GamesListActivity extends SherlockListActivity
 	@Override
 	public void onDestroy()
 	{
-//		if (registerTask != null)
-//		{
-//			registerTask.cancel(true);
-//		}
-
-//		unregisterReceiver(messageReceiver);
-		GCMRegistrar.onDestroy(GamesListActivity.this);
 		super.onDestroy();
 	}
 
@@ -126,10 +117,7 @@ public class GamesListActivity extends SherlockListActivity
 	}
 
 
-	/**
-	 * set up Google Cloud Messaging (GCM) Stuff
-	 */
-	private final class AsyncGCMRegister extends AsyncTask<Void, Void, Void>
+	private final class AsyncGetFacebookIdentificationAndGCMRegister extends AsyncTask<Void, Void, Person>
 	{
 
 
@@ -137,106 +125,44 @@ public class GamesListActivity extends SherlockListActivity
 
 
 		@Override
-		protected Void doInBackground(final Void... v)
+		protected Person doInBackground(final Void... v)
 		{
-			// make sure that the device has the proper dependencies
-			GCMRegistrar.checkDevice(GamesListActivity.this);
+			Utilities.getFacebook().extendAccessTokenIfNeeded(GamesListActivity.this, null);
+			Person facebookIdentity = new Person();
 
-			// make sure that the manifest was properly set
-			GCMRegistrar.checkManifest(GamesListActivity.this);
-
-			// grab current registration ID. we may not already have one
-			final String reg_id = GCMRegistrar.getRegistrationId(GamesListActivity.this);
-
-			if (reg_id == null || reg_id.isEmpty())
-			// if we do not have a registration ID then we'll need to register with the server with
-			// the below code
+			try
 			{
-				// automatically registers application with GCM on startup
-				GCMRegistrar.register(GamesListActivity.this, SecretConstants.GOOGLE_PROJECT_ID);
-			}
-			else
-			// if we're here then that means that this device has already been registered with the GCM
-			// server
-			{
-				if (GCMRegistrar.isRegisteredOnServer(GamesListActivity.this))
-				// check to see if this device is registed on the classy games server
+				final String request = Utilities.getFacebook().request("me");
+				final JSONObject me = Util.parseJson(request);
+				final long id = me.getLong("id");
+				final String name = me.getString("name");
+
+				if (id >= 0 && name != null && !name.isEmpty())
 				{
-
-				}
-				else
-				{
-					new AsyncTask<Void, Void, Void>()
-					{
-						@Override
-						protected Void doInBackground(final Void... v)
-						{
-							if (!ServerUtilities.GCMRegister(GamesListActivity.this, Utilities.getWhoAmI(), reg_id))
-							{
-								GCMRegistrar.unregister(GamesListActivity.this);
-							}
-
-							return null;
-						}
-
-
-						@Override
-						protected void onPreExecute()
-						{
-							new AsyncTask<Void, Void, Person>()
-							{
-								@Override
-								protected Person doInBackground(final Void... v)
-								{
-									Person person = new Person();
-
-									try
-									{
-										final String request = Utilities.getFacebook().request("me");
-										final JSONObject me = Util.parseJson(request);
-										final long id = me.getLong("id");
-										final String name = me.getString("name");
-
-										if (id >= 0 && name != null && !name.isEmpty())
-										{
-											person.setId(id);
-											person.setName(name);
-										}
-									}
-									catch (final Exception e)
-									{
-										Log.e(Utilities.LOG_TAG, "Exception during Facebook request or parse.", e);
-									}
-
-									return person;
-								}
-
-
-								@Override
-								protected void onPostExecute(final Person person)
-								{
-									Utilities.setWhoAmI(person);
-								}
-
-
-								@Override
-								protected void onPreExecute()
-								{
-									Utilities.getFacebook().extendAccessTokenIfNeeded(GamesListActivity.this, null);
-								}
-							}.execute();
-						}
-					}.execute();
+					facebookIdentity.setId(id);
+					facebookIdentity.setName(name);
 				}
 			}
+			catch (final Exception e)
+			{
+				Log.e(Utilities.LOG_TAG, "Exception during Facebook request or parse.", e);
+			}
 
-			return null;
+			return facebookIdentity;
 		}
 
 
 		@Override
-		protected void onPostExecute(final Void result)
+		protected void onPostExecute(final Person facebookIdentity)
 		{
+			Utilities.setWhoAmI(facebookIdentity);
+
+			// register for GCM
+			Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
+			registrationIntent.putExtra("app", PendingIntent.getBroadcast(GamesListActivity.this, 0, new Intent(), 0));
+			registrationIntent.putExtra("sender", SecretConstants.GOOGLE_PROJECT_ID);
+			GamesListActivity.this.startService(registrationIntent);
+
 			if (progressDialog.isShowing())
 			{
 				progressDialog.dismiss();

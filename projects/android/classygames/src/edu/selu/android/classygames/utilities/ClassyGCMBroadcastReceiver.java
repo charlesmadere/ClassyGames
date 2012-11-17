@@ -11,14 +11,14 @@ import android.content.Intent;
  * Much of this was taken from the official Android documentation.
  * https://developer.android.com/guide/google/gcm/gcm.html#receiving
  */
-public class GCMBroadcastReceiver extends BroadcastReceiver
+public class ClassyGCMBroadcastReceiver extends BroadcastReceiver
 {
 
 
 	@Override
 	public final void onReceive(final Context context, final Intent intent)
 	{
-		GCMIntentService.runIntentInService(context, intent);
+		ClassyGCMIntentService.runIntentInService(context, intent);
 		setResult(Activity.RESULT_OK, null, null);
 	}
 

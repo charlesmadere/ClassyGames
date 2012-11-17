@@ -1,5 +1,6 @@
 package edu.selu.android.classygames;
 
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -17,13 +18,14 @@ import com.koushikdutta.urlimageviewhelper.DiskLruCache.Snapshot;
 
 import edu.selu.android.classygames.utilities.Utilities;
 
+
 public class ImageCache
 {
-	
-	
+
+
 	public DiskLruCache mDiskCache;
 	public LruCache<Long, Bitmap> mMemoryCache;
-	
+
 	public final static CompressFormat COMPRESS_FORMAT = CompressFormat.PNG;
     public final static int COMPRESS_QUALITY = 70;
 	public final static int APP_VERSION = 1;
@@ -31,8 +33,8 @@ public class ImageCache
 	public final static int IO_BUFFER_SIZE = 8 * 1024;
 	public final static int DISK_CACHE_SIZE = 1024 * 1024 * 10;
 	public final static String DISK_CACHE_SUBDIR = "thumbnails";
-	
-	
+
+
 	public static int getCacheSize(int memClass)
 	{
 		// currently use 1/8 of available memory for the cache
@@ -126,10 +128,10 @@ public class ImageCache
     }
 	
 	
-	public static void put(String key,Bitmap data, DiskLruCache diskCache) {
+	public static void put(String key,Bitmap data, DiskLruCache diskCache)
+	{
+		DiskLruCache.Editor editor = null;
 
-        DiskLruCache.Editor editor = null;
-        
         try 
         {
             editor = diskCache.edit( key );
@@ -177,10 +179,9 @@ public class ImageCache
             	//Do nothing
             }           
         }
-
     }
-	
-	
+
+
 	public static boolean writeBitmapToFile(Bitmap bitmap, DiskLruCache.Editor editor) throws IOException 
 	{
 		OutputStream out = null;
@@ -198,6 +199,6 @@ public class ImageCache
 			}
 	    }
 	}
-		
-	
+
+
 }

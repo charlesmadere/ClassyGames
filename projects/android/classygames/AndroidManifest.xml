@@ -10,21 +10,17 @@
 
 	<uses-permission
 		android:name="android.permission.INTERNET" />
-	
-	<uses-permission 
-		android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	
 	<uses-permission 
 		android:name="android.permission.READ_EXTERNAL_STORAGE" />
+	<uses-permission 
+		android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 	<!-- begin GCM stuff -->
 	<!-- this GCM stuff was taken from this official google tutorial -->
 	<!-- https://developer.android.com/guide/google/gcm/gs.html -->
-
 	<permission
 		android:name="edu.selu.android.classygames.permission.C2D_MESSAGE"
 		android:protectionLevel="signature" />
-
 	<uses-permission
 		android:name="edu.selu.android.classygames.permission.C2D_MESSAGE" />
 
@@ -39,7 +35,6 @@
 	<!-- Keeps the processor from sleeping when a message is received. -->
 	<uses-permission
 		android:name="android.permission.WAKE_LOCK" />
-
 	<!-- end most of the GCM stuff -->
 
 	<application
@@ -49,7 +44,7 @@
 
 		<!-- more GCM stuff -->
 		<receiver
-			android:name="com.google.android.gcm.GCMBroadcastReceiver"
+			android:name=".utilities.ClassyGCMBroadcastReceiver"
 			android:permission="com.google.android.c2dm.permission.SEND">
 			<intent-filter>
 				<action
@@ -60,9 +55,9 @@
 					android:name="edu.selu.android.classygames" />
 			</intent-filter>
 		</receiver>
-
 		<service
-			android:name=".GCMIntentService" />
+			android:name=".utilities.ClassyGCMIntentService" />
+		<!--  end more GCM stuff -->
 
 		<activity
 			android:label="@string/main_activity_title"
@@ -115,7 +110,7 @@
 			android:theme="@style/Theme.Styled" />
 
 		<activity
-			android:label="@string/about_activity_title"
+			android:label="@string/shark_activity_title"
 			android:name=".SharkActivity"
 			android:screenOrientation="portrait"
 			android:theme="@style/Theme.Styled" />
