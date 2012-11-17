@@ -54,7 +54,6 @@ public class NewGameActivity extends SherlockListActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.new_game_activity);
 		Utilities.styleActionBar(getResources(), getSupportActionBar());
-		Utilities.getFacebook().extendAccessTokenIfNeeded(NewGameActivity.this, null);
 
 		// setup cache size for loading drawable images
 		final int memClass = ((ActivityManager) (NewGameActivity.this).getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
@@ -173,6 +172,9 @@ public class NewGameActivity extends SherlockListActivity
 		@Override
 		protected void onPreExecute()
 		{
+			
+			Utilities.getFacebook().extendAccessTokenIfNeeded(NewGameActivity.this, null);
+			
 			progressDialog = new ProgressDialog(NewGameActivity.this);
 			progressDialog.setMessage(NewGameActivity.this.getString(R.string.new_game_activity_progressdialog_message));
 			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
