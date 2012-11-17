@@ -111,7 +111,9 @@ public class NewMove extends HttpServlet
 									// run the SQL statement
 									sqlStatement.executeUpdate();
 
-									GCMUtilities.sendMessage(sqlConnection, user_opponent.longValue(), "new move!!!!");
+									// TODO
+									// change to send message instead to user_opponent.longValue()
+									GCMUtilities.sendMessage(sqlConnection, game_id, user_id.longValue(), user_opponent_name, Utilities.POST_DATA_TYPE_NEW_MOVE);
 									printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_MOVE_ADDED_TO_DATABASE));
 								}
 								else

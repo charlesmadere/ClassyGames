@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.selu.android.classygames.utilities.GCMUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
@@ -112,6 +113,9 @@ public class NewRegId extends HttpServlet
 				sqlStatement.executeUpdate();
 
 				printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_GENERIC));
+
+				// TODO
+				GCMUtilities.sendMessage(sqlConnection, id, name);
 			}
 			catch (final ClassNotFoundException e)
 			{

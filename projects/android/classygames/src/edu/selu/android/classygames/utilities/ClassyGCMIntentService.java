@@ -68,10 +68,10 @@ public class ClassyGCMIntentService extends IntentService
 	private void handleMessage(final Intent intent)
 	{
 		final String gameId = intent.getStringExtra(ServerUtilities.POST_DATA_GAME_ID);
-		final long personId = intent.getLongExtra(ServerUtilities.POST_DATA_ID, -1);
+		final Long personId = Long.valueOf(intent.getStringExtra(ServerUtilities.POST_DATA_ID));
 		final String personName = intent.getStringExtra(ServerUtilities.POST_DATA_NAME);
 
-		if (personId >= 0 && personName != null && !personName.isEmpty())
+		if (personId.longValue() >= 0 && personName != null && !personName.isEmpty())
 		{
 			Person person = new Person(personId, personName);
 
@@ -81,7 +81,7 @@ public class ClassyGCMIntentService extends IntentService
 			builder.setContentTitle(ClassyGCMIntentService.this.getString(R.string.notification_title));
 			builder.setLargeIcon(BitmapFactory.decodeResource(ClassyGCMIntentService.this.getResources(), R.drawable.notification));
 
-			switch (intent.getIntExtra(ServerUtilities.GCM_TYPE, ServerUtilities.GCM_TYPE_NEW_GAME))
+			switch (Byte.valueOf(intent.getStringExtra(ServerUtilities.GCM_TYPE)))
 			{
 				case ServerUtilities.GCM_TYPE_NEW_GAME:
 					builder.setContentText(ClassyGCMIntentService.this.getString(R.string.notification_new_game_text, person.getName()));

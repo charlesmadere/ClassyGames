@@ -35,6 +35,8 @@ public class NewGame extends HttpServlet
 
 	private final static long serialVersionUID = 1L;
 
+	private String digest;
+
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -99,7 +101,7 @@ public class NewGame extends HttpServlet
 					// can simply insert our new game data safely into it.
 					{
 						// prepare a String to hold a digest in
-						String digest = null;
+						digest = null;
 
 						try
 						{
@@ -201,7 +203,9 @@ public class NewGame extends HttpServlet
 							break;
 
 						default:
-							GCMUtilities.sendMessage(sqlConnection, user_challenged, Utilities.NOTIFICATION_ITS_YOUR_TURN + " " + user_challenged_name);
+							// TODO
+							// change this to send a message instead to user_challenged.longValue()
+							GCMUtilities.sendMessage(sqlConnection, digest, user_creator.longValue(), user_challenged_name, Utilities.POST_DATA_TYPE_NEW_GAME);
 							printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_GAME_ADDED_TO_DATABASE));
 							break;
 					}

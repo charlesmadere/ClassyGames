@@ -28,8 +28,8 @@ public class ServerUtilities
 
 	public final static int GCM_NOTIFICATION_ID = 0;
 	public final static String GCM_TYPE = "type";
-	public final static int GCM_TYPE_NEW_GAME = 1;
-	public final static int GCM_TYPE_NEW_MOVE = 2;
+	public final static byte GCM_TYPE_NEW_GAME = 1;
+	public final static byte GCM_TYPE_NEW_MOVE = 2;
 
 	public final static String POST_DATA = "json";
 	public final static String POST_DATA_BOARD = "board";

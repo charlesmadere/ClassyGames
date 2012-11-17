@@ -63,6 +63,9 @@ public class Utilities
 	public final static String POST_DATA_LAST_MOVE = DATABASE_TABLE_GAMES_COLUMN_LAST_MOVE;
 	public final static String POST_DATA_NAME = DATABASE_TABLE_USERS_COLUMN_NAME;
 	public final static String POST_DATA_REG_ID = DATABASE_TABLE_USERS_COLUMN_REG_ID;
+	public final static String POST_DATA_TYPE = "type";
+	public final static byte POST_DATA_TYPE_NEW_GAME = 1;
+	public final static byte POST_DATA_TYPE_NEW_MOVE = 2;
 	public final static String POST_DATA_TURN = DATABASE_TABLE_GAMES_COLUMN_TURN;
 	public final static String POST_DATA_TURN_THEIRS = "turn_theirs";
 	public final static String POST_DATA_TURN_YOURS = "turn_yours";
@@ -301,14 +304,14 @@ public class Utilities
 	}
 
 
-	public static void updateUserRegId(Connection sqlConnection, long user_id, String reg_id)
+	public static void updateUserRegId(Connection sqlConnection, String reg_id, long user_id)
 	{
 		PreparedStatement sqlStatement = null;
 
 		try
 		{
 			// prepare a SQL statement to be run on the database
-			final String sqlStatementString = "UPDATE " + Utilities.DATABASE_TABLE_USERS + " SET " + Utilities.DATABASE_TABLE_USERS_COLUMN_NAME + " = ?, " + Utilities.DATABASE_TABLE_USERS_COLUMN_REG_ID + " = ? WHERE " + Utilities.DATABASE_TABLE_USERS_COLUMN_ID + " = ?";
+			final String sqlStatementString = "UPDATE " + Utilities.DATABASE_TABLE_USERS + " SET " + Utilities.DATABASE_TABLE_USERS_COLUMN_REG_ID + " = ? WHERE " + Utilities.DATABASE_TABLE_USERS_COLUMN_ID + " = ?";
 			sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
 
 			// prevent SQL injection by inserting user data this way

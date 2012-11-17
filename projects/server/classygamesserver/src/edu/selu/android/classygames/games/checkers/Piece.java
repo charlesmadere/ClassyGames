@@ -8,10 +8,10 @@ public class Piece extends GenericPiece
 {
 
 
-	private final static byte TEAM_USER = 0;
-	private final static byte TEAM_CHALLENGED = 1;
-	private final static byte TYPE_NORMAL = 0;
-	private final static byte TYPE_KING = 1;
+	public final static byte TEAM_USER = 1;
+	public final static byte TEAM_CHALLENGED = 2;
+	public final static byte TYPE_NORMAL = 1;
+	public final static byte TYPE_KING = 2;
 
 
 	public Piece()

@@ -9,11 +9,8 @@ import java.sql.SQLException;
 
 import com.google.android.gcm.server.Constants;
 import com.google.android.gcm.server.Message;
-import com.google.android.gcm.server.Message.Builder;
 import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
-
-
 
 
 public class GCMUtilities
@@ -24,7 +21,7 @@ public class GCMUtilities
 
 
 	/**
-	 * Sends a Google Cloud Message(GCM) to the user specified by the user_id parameter.
+	 * Sends a Google Cloud Message (GCM) to the user specified by the user_id parameter.
 	 * Some of the code here was taken from this guide:
 	 * https://developer.android.com/guide/google/gcm/gs.html#server-app
 	 * 
@@ -35,11 +32,9 @@ public class GCMUtilities
 	 * @param user_id
 	 * The ID of the user that you want to send a Google Cloud Message to.
 	 * 
-	 * @param messageData
-	 * The message that you want the user to see.
 	 * 
 	 */
-	public static void sendMessage(Connection sqlConnection, final long user_id, final String messageData)
+	public static void sendMessage(final Connection sqlConnection, final String game_id, final Long user_id, final String user_name, final Byte gameType)
 	{
 		final String reg_id = grabUserRegId(sqlConnection, user_id);
 
@@ -48,13 +43,14 @@ public class GCMUtilities
 		{
 			final Sender sender = new Sender(SecretConstants.GOOGLE_API_KEY);
 
-			// build data for the message that will be sent to the client
-			Builder builder = new Message.Builder();
-			builder.addData("Hello", messageData);
-			builder.delayWhileIdle(true);
-
-			// build the message from the data
-			final Message message = builder.build();
+			// build the message that will be sent to the client device
+			// https://developer.android.com/guide/google/gcm/server-javadoc/index.html
+			final Message message = new Message.Builder()
+				.addData(Utilities.POST_DATA_GAME_ID, game_id)
+				.addData(Utilities.POST_DATA_ID, user_id.toString())
+				.addData(Utilities.POST_DATA_NAME, user_name)
+				.addData(Utilities.POST_DATA_TYPE, gameType.toString())
+				.build();
 
 			try
 			{
@@ -69,7 +65,7 @@ public class GCMUtilities
 					// same device has more than one registration ID: update database. Replace
 					// the existing regId with this new one
 					{
-						Utilities.updateUserRegId(sqlConnection, user_id, canonicalRegId);
+						Utilities.updateUserRegId(sqlConnection, reg_id, user_id.longValue());
 					}
 				}
 				else
@@ -91,9 +87,13 @@ public class GCMUtilities
 	}
 
 
-	public static void sendMessage(Connection sqlConnection, final long user_id)
+	/**
+	 * Test method. This shouldn't be used once development is complete. Directly sends a bad GCM
+	 * message to the given user.
+	 */
+	public static void sendMessage(final Connection sqlConnection, final Long user_id, final String user_name)
 	{
-		sendMessage(sqlConnection, user_id, "World!");
+		sendMessage(sqlConnection, "abcd", user_id, user_name, Utilities.POST_DATA_TYPE_NEW_GAME);
 	}
 
 
@@ -111,7 +111,7 @@ public class GCMUtilities
 	 * Returns the reg_id of the user that you want as a String. If the user could not be
 	 * found, null is returned.
 	 */
-	private static String grabUserRegId(Connection sqlConnection, final long user_id)
+	private static String grabUserRegId(final Connection sqlConnection, final Long user_id)
 	{
 		PreparedStatement sqlStatement = null;
 		String reg_id = null;
@@ -123,7 +123,7 @@ public class GCMUtilities
 			sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
 
 			// prevent SQL injection by inserting data this way
-			sqlStatement.setLong(1, user_id);
+			sqlStatement.setLong(1, user_id.longValue());
 
 			// run the SQL statement and acquire any return information
 			final ResultSet sqlResult = sqlStatement.executeQuery();
