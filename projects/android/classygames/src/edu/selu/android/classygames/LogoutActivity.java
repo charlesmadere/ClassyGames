@@ -46,21 +46,30 @@ public class LogoutActivity extends SherlockActivity
 					@Override
 					public void onComplete(final String response, final Object state)
 					{
-						SharedPreferences.Editor editor = Utilities.sharedPreferences.edit();
-						editor.putString(Utilities.FACEBOOK_ACCESS_TOKEN, Utilities.getFacebook().getAccessToken());
-						editor.putLong(Utilities.FACEBOOK_EXPIRES, Utilities.getFacebook().getAccessExpires());
+						// token expiring code taken mainly from the facebook documentation
+						// https://developers.facebook.com/docs/mobile/android/build/#logout
+						SharedPreferences.Editor editor = getSharedPreferences(Utilities.SHARED_PREFERENCES_NAME, MODE_PRIVATE).edit();
+						editor.remove(Utilities.FACEBOOK_ACCESS_TOKEN);
+						editor.remove(Utilities.FACEBOOK_EXPIRES);
 						editor.commit();
 
 						setResult(LOGGED_OUT);
-						startActivity(new Intent(LogoutActivity.this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+
+						Intent intent = new Intent(LogoutActivity.this, MainActivity.class);
+						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+						intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+						startActivity(intent);
+
 						finish();
 					}
 
+
 					@Override
-					public void onIOException(final IOException e, final Object state)
+					public void onFacebookError(final FacebookError e, final Object state)
 					{
 
 					}
+
 
 					@Override
 					public void onFileNotFoundException(final FileNotFoundException e, final Object state)
@@ -68,14 +77,16 @@ public class LogoutActivity extends SherlockActivity
 
 					}
 
+
 					@Override
-					public void onMalformedURLException(final MalformedURLException e, final Object state)
+					public void onIOException(final IOException e, final Object state)
 					{
 
 					}
 
+
 					@Override
-					public void onFacebookError(final FacebookError e, final Object state)
+					public void onMalformedURLException(final MalformedURLException e, final Object state)
 					{
 
 					}

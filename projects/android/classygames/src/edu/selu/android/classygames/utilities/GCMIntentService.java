@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
@@ -22,15 +23,19 @@ import edu.selu.android.classygames.data.Person;
  * Much of this was taken from the official Android documentation.
  * https://developer.android.com/guide/google/gcm/gcm.html#receiving
  */
-public class ClassyGCMIntentService extends IntentService
+public class GCMIntentService extends IntentService
 {
 
 
-	private static final Object LOCK = ClassyGCMIntentService.class;
+	private final static Object LOCK = GCMIntentService.class;
 	private static PowerManager.WakeLock wakeLock;
 
+	private final static String PREFERENCES = "PREFERENCES";
+	private final static String PREFERENCES_FILE = PREFERENCES + "_GCMIntentService";
+	private final static String PREFERENCES_REG_ID = PREFERENCES + "_REG_ID";
 
-	public ClassyGCMIntentService()
+
+	public GCMIntentService()
 	{
 		super(SecretConstants.GOOGLE_API_KEY);
 	}
@@ -76,23 +81,23 @@ public class ClassyGCMIntentService extends IntentService
 			Person person = new Person(personId, personName);
 
 			// build a notification to show to the user
-			NotificationCompat.Builder builder = new NotificationCompat.Builder(ClassyGCMIntentService.this);
+			NotificationCompat.Builder builder = new NotificationCompat.Builder(GCMIntentService.this);
 			builder.setSmallIcon(R.drawable.notification);
-			builder.setContentTitle(ClassyGCMIntentService.this.getString(R.string.notification_title));
-			builder.setLargeIcon(BitmapFactory.decodeResource(ClassyGCMIntentService.this.getResources(), R.drawable.notification));
+			builder.setContentTitle(GCMIntentService.this.getString(R.string.notification_title));
+			builder.setLargeIcon(BitmapFactory.decodeResource(GCMIntentService.this.getResources(), R.drawable.notification));
 
 			switch (Byte.valueOf(intent.getStringExtra(ServerUtilities.GCM_TYPE)))
 			{
 				case ServerUtilities.GCM_TYPE_NEW_GAME:
-					builder.setContentText(ClassyGCMIntentService.this.getString(R.string.notification_new_game_text, person.getName()));
+					builder.setContentText(GCMIntentService.this.getString(R.string.notification_new_game_text, person.getName()));
 					break;
 
 				case ServerUtilities.GCM_TYPE_NEW_MOVE:
-					builder.setContentText(ClassyGCMIntentService.this.getString(R.string.notification_new_move_text, person.getName()));
+					builder.setContentText(GCMIntentService.this.getString(R.string.notification_new_move_text, person.getName()));
 					break;
 			}
 
-			TaskStackBuilder stackBuilder = TaskStackBuilder.create(ClassyGCMIntentService.this);
+			TaskStackBuilder stackBuilder = TaskStackBuilder.create(GCMIntentService.this);
 			stackBuilder.addParentStack(GamesListActivity.class);
 
 			Intent gameIntent = new Intent(this, CheckersGameActivity.class);
@@ -117,26 +122,47 @@ public class ClassyGCMIntentService extends IntentService
 
 	private void handleRegistration(final Intent intent)
 	{
-		final String reg_id = intent.getStringExtra("registration_id");
-		final String error = intent.getStringExtra("error");
-		final String unregistered = intent.getStringExtra("unregistered");
-
-		if (reg_id != null && !reg_id.isEmpty())
+		final String regId = intent.getStringExtra("registration_id");
+		if (regId != null && !regId.isEmpty())
 		// registration succeeded
 		{
-			// store registration ID in shared preferences
-			// notify 3rd party server about the registered ID
-			ServerUtilities.GCMRegister(reg_id);
+			SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES_FILE, MODE_PRIVATE);
+
+			// get old registration ID from shared preferences
+			final String preferencesRegId = sharedPreferences.getString(PREFERENCES_REG_ID, null);
+
+			if (preferencesRegId == null || !preferencesRegId.equals(regId))
+			// the two regIds are not the the same. replace the existing stored regId
+			// with this new regId
+			{
+				// store new regId
+				SharedPreferences.Editor editor = sharedPreferences.edit();
+				editor.putString(PREFERENCES_REG_ID, regId);
+				editor.commit();
+
+				// notify 3rd party server about the new regId
+				ServerUtilities.GCMRegister(regId);
+			}
 		}
 
+		final String unregistered = intent.getStringExtra("unregistered");
 		if (unregistered != null && !unregistered.isEmpty())
 		// unregistration succeeded
 		{
+			SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES_FILE, MODE_PRIVATE);
+
 			// get old registration ID from shared preferences
-			// notify 3rd party server about the unregistered ID
-			ServerUtilities.GCMUnregister(reg_id);
+			final String preferencesRegId = sharedPreferences.getString(PREFERENCES_REG_ID, null);
+
+			if (preferencesRegId != null && !preferencesRegId.isEmpty())
+			// ensure that the String we obtained from shared preferences contains text
+			{
+				// notify 3rd party server about the unregistered ID
+				ServerUtilities.GCMUnregister(preferencesRegId);
+			}
 		}
 
+		final String error = intent.getStringExtra("error");
 		if (error != null && !error.isEmpty())
 		// last operation (registration or unregistration) returned an error
 		{
@@ -148,7 +174,7 @@ public class ClassyGCMIntentService extends IntentService
 			else
 			{
 				// unrecoverable error, log it
-				Log.d(Utilities.LOG_TAG, "Received error: " + error);
+				Log.e(Utilities.LOG_TAG, "Received error: " + error);
 			}
 		}
 	}
@@ -166,7 +192,7 @@ public class ClassyGCMIntentService extends IntentService
 		}
 
 		wakeLock.acquire();
-		intent.setClassName(context, ClassyGCMIntentService.class.getName());
+		intent.setClassName(context, GCMIntentService.class.getName());
 		context.startService(intent);
 	}
 

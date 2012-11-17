@@ -44,7 +44,7 @@
 
 		<!-- more GCM stuff -->
 		<receiver
-			android:name=".utilities.ClassyGCMBroadcastReceiver"
+			android:name="edu.selu.android.classygames.utilities.GCMBroadcastReceiver"
 			android:permission="com.google.android.c2dm.permission.SEND">
 			<intent-filter>
 				<action
@@ -56,7 +56,7 @@
 			</intent-filter>
 		</receiver>
 		<service
-			android:name=".utilities.ClassyGCMIntentService" />
+			android:name="edu.selu.android.classygames.utilities.GCMIntentService" />
 		<!--  end more GCM stuff -->
 
 		<activity
@@ -75,8 +75,13 @@
 		<activity
 			android:label="@string/about_activity_title"
 			android:name=".AboutActivity"
+			android:parentActivityName=".GamesListActivity"
 			android:screenOrientation="portrait"
-			android:theme="@style/Theme.Styled" />
+			android:theme="@style/Theme.Styled">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".GamesListActivity" />
+		</activity>
 
 		<activity
 			android:label="@string/checkers_game_activity_title" 
@@ -88,8 +93,13 @@
 		<activity
 			android:label="@string/confirm_game_activity_title"
 			android:name=".ConfirmGameActivity"
+			android:parentActivityName=".NewGameActivity"
 			android:screenOrientation="portrait"
-			android:theme="@style/Theme.Styled" />
+			android:theme="@style/Theme.Styled">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".NewGameActivity" />
+		</activity>
 
 		<activity
 			android:label="@string/games_list_activity_title"
@@ -100,19 +110,34 @@
 		<activity
 			android:label="@string/logout_activity_title"
 			android:name=".LogoutActivity"
+			android:parentActivityName=".GamesListActivity"
 			android:screenOrientation="portrait"
-			android:theme="@style/Theme.Styled" />
+			android:theme="@style/Theme.Styled">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".GamesListActivity" />
+		</activity>
 
 		<activity
 			android:label="@string/new_game_activity_title"
 			android:name=".NewGameActivity"
+			android:parentActivityName=".GamesListActivity"
 			android:screenOrientation="portrait"
-			android:theme="@style/Theme.Styled" />
+			android:theme="@style/Theme.Styled">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".GamesListActivity" />
+		</activity>
 
 		<activity
 			android:label="@string/shark_activity_title"
 			android:name=".SharkActivity"
+			android:parentActivityName=".AboutActivity"
 			android:screenOrientation="portrait"
-			android:theme="@style/Theme.Styled" />
+			android:theme="@style/Theme.Styled">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".AboutActivity" />
+		</activity>
 	</application>
 </manifest>

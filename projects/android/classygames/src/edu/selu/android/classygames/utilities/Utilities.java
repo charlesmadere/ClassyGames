@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.net.URL;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap.CompressFormat;
@@ -29,12 +28,12 @@ public class Utilities
 {
 
 
-	public final static String DISPLAY_MESSAGE_ACTION = "edu.selu.android.classygames.CONTEXT_BROADCAST";
 	public final static String LOG_TAG = "Classy Games";
+	public final static String SHARED_PREFERENCES_NAME = "CLASSY_PREFERENCES";
+
 	private static Person whoAmI;
-	public static SharedPreferences sharedPreferences;
-	
-	
+
+
 	public final static CompressFormat COMPRESS_FORMAT = CompressFormat.PNG;
 	public final static int COMPRESS_QUALITY = 70;
 	public final static int APP_VERSION = 1;

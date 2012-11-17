@@ -172,17 +172,15 @@ public class NewGameActivity extends SherlockListActivity
 		@Override
 		protected void onPreExecute()
 		{
-			
-			Utilities.getFacebook().extendAccessTokenIfNeeded(NewGameActivity.this, null);
-			
 			progressDialog = new ProgressDialog(NewGameActivity.this);
 			progressDialog.setMessage(NewGameActivity.this.getString(R.string.new_game_activity_progressdialog_message));
 			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 			progressDialog.setTitle(R.string.new_game_activity_progressdialog_title);
-			progressDialog.setCancelable(false);
+			progressDialog.setCancelable(true);
 			progressDialog.setCanceledOnTouchOutside(false);
-			
 			progressDialog.show();
+
+			Utilities.getFacebook().extendAccessTokenIfNeeded(NewGameActivity.this, null);
 		}
 
 

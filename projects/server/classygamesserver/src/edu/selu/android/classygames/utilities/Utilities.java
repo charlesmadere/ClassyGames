@@ -54,8 +54,6 @@ public class Utilities
 	public final static String DATABASE_TABLE_USERS_FORMAT = "(" + DATABASE_TABLE_USERS_COLUMN_ID + ", " + DATABASE_TABLE_USERS_COLUMN_NAME + ", " + DATABASE_TABLE_USERS_COLUMN_REG_ID + ")";
 	public final static String DATABASE_TABLE_USERS_VALUES = "VALUES (?, ?, ?)";
 
-	public final static String NOTIFICATION_ITS_YOUR_TURN = "It's your turn against";
-
 	public final static String POST_DATA_BOARD = DATABASE_TABLE_GAMES_COLUMN_BOARD;
 	public final static String POST_DATA_FINISHED = DATABASE_TABLE_GAMES_COLUMN_FINISHED;
 	public final static String POST_DATA_ID = DATABASE_TABLE_USERS_COLUMN_ID;

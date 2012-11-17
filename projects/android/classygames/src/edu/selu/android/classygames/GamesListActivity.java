@@ -398,13 +398,12 @@ public class GamesListActivity extends SherlockListActivity
 				{
 					layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 					convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_item, null);
-					viewHolder = new ViewHolder();
-					viewHolder.picture = (ImageView) convertView.findViewById(R.id.games_list_activity_listview_item_picture);
 
+					viewHolder.picture = (ImageView) convertView.findViewById(R.id.games_list_activity_listview_item_picture);
 					if (viewHolder.picture != null)
 					{
 						// TODO
-						// insert code to load Images here
+						// insert code to load images here
 					}
 
 					viewHolder.name = (TextView) convertView.findViewById(R.id.games_list_activity_listview_item_name);

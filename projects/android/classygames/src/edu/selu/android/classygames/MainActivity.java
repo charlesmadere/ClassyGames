@@ -21,6 +21,9 @@ public class MainActivity extends SherlockActivity
 {
 
 
+	SharedPreferences sharedPreferences;
+
+
 	@Override
 	public void onCreate(final Bundle savedInstanceState)
 	{
@@ -28,11 +31,11 @@ public class MainActivity extends SherlockActivity
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main_activity);
 
-		Utilities.sharedPreferences = getPreferences(MODE_PRIVATE);
-		final String access_token = Utilities.sharedPreferences.getString(Utilities.FACEBOOK_ACCESS_TOKEN, null);
-		final long expires = Utilities.sharedPreferences.getLong(Utilities.FACEBOOK_EXPIRES, 0);
+		sharedPreferences = getSharedPreferences(Utilities.SHARED_PREFERENCES_NAME, MODE_PRIVATE);
+		final String access_token = sharedPreferences.getString(Utilities.FACEBOOK_ACCESS_TOKEN, null);
+		final long expires = sharedPreferences.getLong(Utilities.FACEBOOK_EXPIRES, 0);
 
-		if (access_token != null)
+		if (access_token != null && !access_token.isEmpty())
 		{
 			Utilities.getFacebook().setAccessToken(access_token);
 		}
@@ -61,7 +64,7 @@ public class MainActivity extends SherlockActivity
 						@Override
 						public void onComplete(final Bundle values)
 						{
-							SharedPreferences.Editor editor = Utilities.sharedPreferences.edit();
+							SharedPreferences.Editor editor = sharedPreferences.edit();
 							editor.putString(Utilities.FACEBOOK_ACCESS_TOKEN, Utilities.getFacebook().getAccessToken());
 							editor.putLong(Utilities.FACEBOOK_EXPIRES, Utilities.getFacebook().getAccessExpires());
 							editor.commit();
@@ -113,6 +116,7 @@ public class MainActivity extends SherlockActivity
 
 	private void goToGamesList()
 	{
+		Utilities.getFacebook().extendAccessTokenIfNeeded(MainActivity.this, null);
 		startActivity(new Intent(MainActivity.this, GamesListActivity.class));
 		finish();
 	}
