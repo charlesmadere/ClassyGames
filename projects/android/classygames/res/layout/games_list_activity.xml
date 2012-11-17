@@ -10,7 +10,7 @@
 		android:layout_height="wrap_content"
 		android:layout_width="fill_parent" />
 	<TextView
-		android:gravity="center"
+		android:gravity="center_vertical"
 		android:id="@android:id/empty"
 		android:layout_height="wrap_content"
 		android:layout_width="fill_parent"

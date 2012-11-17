@@ -138,10 +138,6 @@ public class NewMove extends HttpServlet
 					}
 				}
 			}
-			catch (final ClassNotFoundException e)
-			{
-				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_LOAD));
-			}
 			catch (final SQLException e)
 			{
 				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CONNECT));

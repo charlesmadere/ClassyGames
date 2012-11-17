@@ -215,10 +215,6 @@ public class NewGame extends HttpServlet
 					printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_INVALID_CHALLENGER));
 				}
 			}
-			catch (final ClassNotFoundException e)
-			{
-				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_LOAD));
-			}
 			catch (final SQLException e)
 			{
 				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CONNECT));

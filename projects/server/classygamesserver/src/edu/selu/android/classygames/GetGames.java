@@ -161,10 +161,6 @@ public class GetGames extends HttpServlet
 					printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_NO_ACTIVE_GAMES));
 				}
 			}
-			catch (final ClassNotFoundException e)
-			{
-				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_LOAD));
-			}
 			catch (final SQLException e)
 			{
 				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CONNECT));

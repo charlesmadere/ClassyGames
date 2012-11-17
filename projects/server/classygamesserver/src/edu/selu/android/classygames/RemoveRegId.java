@@ -70,10 +70,6 @@ public class RemoveRegId extends HttpServlet
 				Utilities.removeUserRegId(sqlConnection, user_id);
 				printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_USER_REMOVED_FROM_DATABASE));
 			}
-			catch (final ClassNotFoundException e)
-			{
-				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_LOAD));
-			}
 			catch (final SQLException e)
 			{
 				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CONNECT));

@@ -99,6 +99,7 @@ public class ClassyGCMIntentService extends IntentService
 			gameIntent.putExtra(CheckersGameActivity.INTENT_DATA_GAME_ID, gameId);
 			gameIntent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_ID, person.getId());
 			gameIntent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_NAME, person.getName());
+			stackBuilder.addNextIntent(gameIntent);
 
 			final PendingIntent gamePendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_CANCEL_CURRENT);
 			builder.setContentIntent(gamePendingIntent);

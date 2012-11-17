@@ -152,26 +152,35 @@ public class Utilities
 	}
 
 
-	public static Connection getSQLConnection() throws ClassNotFoundException, SQLException
+	public static Connection getSQLConnection() throws SQLException
 	// I followed this guide to understand how to connect to the MySQL database that is created when
 	// making a new Amazon Elastic Beanstalk application
 	// http://docs.amazonwebservices.com/elasticbeanstalk/latest/dg/create_deploy_Java.rds.html
 	{
-		// ensure that the MySQL JDBC Driver has been loaded
-		Class.forName("com.mysql.jdbc.Driver");
+		try
+		{
+			// ensure that the MySQL JDBC Driver has been loaded
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+		}
+		catch (final Exception e)
+		{
+
+		}
 
 		// acquire database credentials from Amazon Web Services
 		final String hostname = System.getProperty("RDS_HOSTNAME");
 		final String port = System.getProperty("RDS_PORT");
+//		final int port = 3306;
 		final String dbName = System.getProperty("RDS_DB_NAME");
-		final String userName = System.getProperty("RDS_USERNAME");
+		final String username = System.getProperty("RDS_USERNAME");
 		final String password = System.getProperty("RDS_PASSWORD");
 
 		// create the connection string
-		final String connection = "jdbc:mysql://" + hostname + ":" + port + "/" + dbName + "?user=" + userName + "&password=" + password;
+		String connectionString = "jdbc:mysql://" + hostname + ":" + port + "/" + dbName + "?user=" + username + "&password=" + password;
+		//  + "&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&maxReconnects=10";
 
 		// return a new connection to the database
-		return DriverManager.getConnection(connection);
+		return DriverManager.getConnection(connectionString);
 	}
 
 
