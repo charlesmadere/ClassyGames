@@ -1,15 +1,20 @@
-
 package edu.selu.android.classygames;
+
 
 import android.content.Context;
 import android.widget.ImageButton;
 
-public class MyButton extends ImageButton{
-	private int px, py;
+
+public class MyButton extends ImageButton
+{
+
+
 	private boolean isEmpty;
 	private boolean playerGreen;
-	
-	public MyButton(Context view, int x, int y, boolean isEmpty, boolean playerGreen)//add other params
+	private int px, py;
+
+
+	public MyButton(final Context view, final int x, final int y, final boolean isEmpty, final boolean playerGreen)//add other params
 	{
 		super(view);
 		px = x;
@@ -17,37 +22,54 @@ public class MyButton extends ImageButton{
 		this.isEmpty = isEmpty;
 		this.playerGreen = playerGreen;
 	}
-	
-	public int getPy() {
+
+
+	public int getPy()
+	{
 		return py;
 	}
 
-	public void setPy(int py) {
+
+	public void setPy(final int py)
+	{
 		this.py = py;
 	}
 
-	public boolean isEmpty() {
+
+	public boolean isEmpty()
+	{
 		return isEmpty;
 	}
 
-	public void setEmpty(boolean isEmpty) {
+
+	public void setEmpty(final boolean isEmpty)
+	{
 		this.isEmpty = isEmpty;
 	}
 
-	public boolean isPlayerGreen() {
+
+	public boolean isPlayerGreen()
+	{
 		return playerGreen;
 	}
 
-	public void setPlayerGreen(boolean playerGreen) {
+
+	public void setPlayerGreen(final boolean playerGreen)
+	{
 		this.playerGreen = playerGreen;
 	}
 
-	public int getPx() {
+
+	public int getPx()
+	{
 		return px;
 	}
 
-	public void setPx(int px) {
+
+	public void setPx(final int px)
+	{
 		this.px = px;
 	}
-  
+
+
 }

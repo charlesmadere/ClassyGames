@@ -362,9 +362,9 @@ public class NewGameActivity extends SherlockListActivity
 	public static File getCacheDir(Context context, String uniqueName) 
 	{
 		//Check if storage is built in or mounted from sd, try to use mounted first
-	    final String cachePath = Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED || !Environment.isExternalStorageRemovable() ? context.getExternalCacheDir().getPath() : context.getCacheDir().getPath();
+		final String cachePath = Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED || !Environment.isExternalStorageRemovable() ? context.getExternalCacheDir().getPath() : context.getCacheDir().getPath();
 
-	    return new File(cachePath + File.separator + uniqueName);
+		return new File(cachePath + File.separator + uniqueName);
 	}
 	
 	

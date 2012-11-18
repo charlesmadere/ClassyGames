@@ -44,6 +44,10 @@
 	<string name="notification_new_game_text">New game from %1$s!</string>
 	<string name="notification_new_move_text">New move from %1$s!</string>
 	<string name="notification_title">Classy Games</string>
+	<string name="piece_checkers_green_normal">Normal Green Piece</string>
+	<string name="piece_checkers_green_king">Kinged Green Piece</string>
+	<string name="piece_checkers_orange_normal">Normal Orange Piece</string>
+	<string name="piece_checkers_orange_king">Kinged Orange Piece</string>
 	<string name="refresh">Refresh</string>
 	<string name="send_move">Send Move</string>
 	<string name="server_registration_attempt">Trying (attempt %1$d) to register device on server.</string>

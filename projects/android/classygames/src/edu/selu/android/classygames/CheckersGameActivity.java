@@ -1,14 +1,15 @@
 package edu.selu.android.classygames;
 
 
-import android.annotation.SuppressLint;
-import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
@@ -47,12 +48,11 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	private Person personChallenged;
 
 
-	@SuppressLint("NewApi")
 	@Override
 	public void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		// setContentView(R.layout.checkers_game_activity);
+		setContentView(R.layout.checkers_game_activity);
 		Utilities.styleActionBar(getResources(), getSupportActionBar());
 
 		// retrieve data passed to this activity
@@ -80,8 +80,8 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		}
 
 		prevButton = null;
-    	greenPlayer = R.drawable.chkgreen;
-    	orangePlayer = R.drawable.chkorange;
+		greenPlayer = R.drawable.piece_checkers_green_normal;
+		orangePlayer = R.drawable.piece_checkers_orange_normal;
 
         Display display = getWindowManager().getDefaultDisplay();
         
@@ -122,59 +122,75 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
         	 rows[i] = new TableRow(this);
         }
         buttons = new MyButton[8][8];
-        
-        //load buttons
-        for (int i = 0; i < 8; i++)
-    	{
-    		for (int j = 0; j < 8; j++)
-    		{
-    			buttons[i][j] = new MyButton(this,i,j,true,false);
-    			buttons[i][j].setOnClickListener(this);
-    			buttons[i][j].setId(i*10+j);
-    			
-    			if ((i+j)%2 == 0)
-    			{
-    				buttons[i][j].setBackgroundColor(Color.WHITE);
-    				if (i >= 5)
+
+		//load buttons
+		for (int i = 0; i < 8; i++)
+		{
+			for (int j = 0; j < 8; j++)
+			{
+				buttons[i][j] = new MyButton(this, i, j, true, false);
+				buttons[i][j].setOnClickListener(this);
+				buttons[i][j].setId(i * 10 + j);
+
+				if ((i + j) % 2 == 0)
+				{
+//					buttons[i][j].setBackgroundColor(Color.WHITE);
+					setBackground(R.drawable.bg_board_bright, buttons[i][j]);
+
+					if (i >= 5)
 					{
-    	    			buttons[i][j].setPlayerGreen(true); 
-    	    			buttons[i][j].setEmpty(false);
+						buttons[i][j].setEmpty(false);
+						buttons[i][j].setPlayerGreen(true);
 						buttons[i][j].setImageResource(greenPlayer);
 					}
-    				
-    				if (i <= 2)
+
+					if (i <= 2)
 					{
-    	    			buttons[i][j].setPlayerGreen(false);
-    	    			buttons[i][j].setEmpty(false);
+						buttons[i][j].setEmpty(false);
+						buttons[i][j].setPlayerGreen(false);
 						buttons[i][j].setImageResource(orangePlayer);
 					}
-    			}
-    			
-    			else
-    			{
-    				buttons[i][j].setBackgroundColor(Color.BLACK);
-    				
-    			}
-        		rows[i].addView(buttons[i][j],cellLp);
-        	}
-        }
-        
-        for (int i = 0; i < 8; i++)
-        {
-        	layout.addView(rows[i],rowLp);
-        }
-        
-        setContentView(layout,tableLp);
-    
-    }
-    
+
+					buttons[i][j].setScaleType(ImageView.ScaleType.CENTER_CROP);
+				}
+				else
+				{
+//					buttons[i][j].setBackgroundColor(Color.BLACK);
+					setBackground(R.drawable.bg_board_dark, buttons[i][j]);
+				}
+
+				rows[i].addView(buttons[i][j], cellLp);
+			}
+		}
+
+		for (int i = 0; i < 8; i++)
+		{
+			layout.addView(rows[i],rowLp);
+		}
+
+		// finds the linearlayout in the checkers_game_activity.xml file and adds our
+		// checkers board to it. Because of properties set in that file, the checkers
+		// board will be automatically centered
+		LinearLayout linearLayout = (LinearLayout) findViewById(R.id.checkers_game_activity_linearlayout);
+		linearLayout.addView(layout);
+
+		// I don't believe this line is necessary with our new layout style
+//		setContentView(layout, tableLp);
+	}
+
+
 	@Override
-	
 	public void onClick(View arg0)
 	{
 		
 		MyButton clickedButton = (MyButton) findViewById(arg0.getId());
 		//clickedButton.setBackgroundColor(Color.LTGRAY);
+
+		// TODO
+		// I like this setBackground function here as it changes the background image
+		// of a position that I tap on... but it never changes itself back!
+		// try it for yourself!
+		// setBackground(R.drawable.bg_board_bright_selected, clickedButton);
 		
 		if (prevButton != null)
 		{
@@ -217,12 +233,12 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	{
 		if(clickedButton.isPlayerGreen())
 		{
-			clickedButton.setImageResource(R.drawable.kinged_green);
+			clickedButton.setImageResource(R.drawable.piece_checkers_green_king);
 		}
 		else
 			if (!clickedButton.isPlayerGreen())
 		{
-			clickedButton.setImageResource(R.drawable.kinged_orange);
+			clickedButton.setImageResource(R.drawable.piece_checkers_orange_king);
 		}
 	}
 
@@ -355,6 +371,24 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	{
 		Utilities.easyToastAndLogError(CheckersGameActivity.this, CheckersGameActivity.this.getString(R.string.checkers_game_activity_data_error));
 		finish();
+	}
+
+
+	@SuppressWarnings("deprecation")
+	private void setBackground(final int resource, final View view)
+	{
+		final Drawable drawable = getResources().getDrawable(resource);
+
+		if (android.os.Build.VERSION.SDK_INT >= 16)
+		// if the version of Android running this code is API Level 16 and higher (JellyBean 4.1 and up)
+		// https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels
+		{
+			view.setBackground(drawable);
+		}
+		else
+		{
+			view.setBackgroundDrawable(drawable);
+		}
 	}
 
 
