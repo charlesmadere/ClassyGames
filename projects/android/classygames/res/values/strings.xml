@@ -14,6 +14,7 @@
 	<string name="confirm_game_activity_title">Confirm Game</string>
 	<string name="games_list_activity_games_progressdialog_message">Retrieving all of your games&#8230;</string>
 	<string name="games_list_activity_games_progressdialog_title">Classy Games is working&#8230;</string>
+	<string name="games_list_activity_games_error">Server was unable to respond with a list of games. Please try again later!</string>
 	<string name="games_list_activity_init_progressdialog_message">Initializing settings and registering you with our servers&#8230;</string>
 	<string name="games_list_activity_init_progressdialog_title">Classy Games is working&#8230;</string>
 	<string name="games_list_activity_listview_item_picture_description">Friend\'s Picture</string>
@@ -21,11 +22,16 @@
 	<string name="games_list_activity_title">Games List</string>
 	<string name="games_list_activity_turn_theirs">Their Turn</string>
 	<string name="games_list_activity_turn_yours">Your Turn</string>
+	<string name="game_over_activity_title">Game Over</string>
+	<string name="game_over_activity_button_return">Return to Games List</string>
+	<string name="game_over_activity_description">You %1$s the game! You should play another round!</string>
+	<string name="game_over_activity_person_picture_description">Friend\'s Picture</string>
 	<string name="login_with_facebook">Login with Facebook</string>
 	<string name="logout">Logout</string>
 	<string name="logout_activity_description">Are you sure you want to logout of Facebook? You will need to login again to continue using Classy Games. You will keep on playing, right? After pressing this button, you will be returned to the Classy Games login screen.</string>
 	<string name="logout_activity_title">Logout of Classy Games</string>
 	<string name="logout_of_facebook">Logout of Facebook</string>
+	<string name="lost">lost</string>
 	<string name="main_activity_title">Classy Games</string>
 	<string name="new_game">New Game</string>
 	<string name="new_game_activity_data_error">Error in trying to gather your Facebook data.</string>
@@ -34,6 +40,7 @@
 	<string name="new_game_activity_progressdialog_message">Retrieving all of your Facebook friends&#8230;</string>
 	<string name="new_game_activity_progressdialog_title">Facebook is working&#8230;</string>
 	<string name="new_game_activity_title">New Game</string>
+	<string name="notification_game_over_text">Game with %1$s is now over!</string>
 	<string name="notification_new_game_text">New game from %1$s!</string>
 	<string name="notification_new_move_text">New move from %1$s!</string>
 	<string name="notification_title">Classy Games</string>
@@ -48,4 +55,5 @@
 	<string name="shark_activity_imageview_description">Sharkwork</string>
 	<string name="shark_activity_title">Sharkwork</string>
 	<string name="undo_move">Undo Move</string>
+	<string name="won">won</string>
 </resources>

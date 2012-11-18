@@ -29,12 +29,19 @@ public class GCMUtilities
 	 * An existing connection to the SQL database as this code makes no attempt to either
 	 * open or close the connection.
 	 * 
+	 * @param game_id
+	 * 
+	 * 
 	 * @param user_id
 	 * The ID of the user that you want to send a Google Cloud Message to.
 	 * 
+	 * @param user_name
+	 * The actual name of the person that you want to send a Google Cloud Message to.
+	 * 
+	 * @param game_type
 	 * 
 	 */
-	public static void sendMessage(final Connection sqlConnection, final String game_id, final Long user_id, final String user_name, final Byte gameType)
+	public static void sendMessage(final Connection sqlConnection, final String game_id, final Long user_id, final String user_name, final Byte game_type)
 	{
 		final String reg_id = grabUserRegId(sqlConnection, user_id);
 
@@ -49,7 +56,7 @@ public class GCMUtilities
 				.addData(Utilities.POST_DATA_GAME_ID, game_id)
 				.addData(Utilities.POST_DATA_ID, user_id.toString())
 				.addData(Utilities.POST_DATA_NAME, user_name)
-				.addData(Utilities.POST_DATA_TYPE, gameType.toString())
+				.addData(Utilities.POST_DATA_TYPE, game_type.toString())
 				.build();
 
 			try

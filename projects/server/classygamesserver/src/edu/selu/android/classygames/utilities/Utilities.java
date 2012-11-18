@@ -61,12 +61,14 @@ public class Utilities
 	public final static String POST_DATA_LAST_MOVE = DATABASE_TABLE_GAMES_COLUMN_LAST_MOVE;
 	public final static String POST_DATA_NAME = DATABASE_TABLE_USERS_COLUMN_NAME;
 	public final static String POST_DATA_REG_ID = DATABASE_TABLE_USERS_COLUMN_REG_ID;
-	public final static String POST_DATA_TYPE = "type";
-	public final static byte POST_DATA_TYPE_NEW_GAME = 1;
-	public final static byte POST_DATA_TYPE_NEW_MOVE = 2;
 	public final static String POST_DATA_TURN = DATABASE_TABLE_GAMES_COLUMN_TURN;
 	public final static String POST_DATA_TURN_THEIRS = "turn_theirs";
 	public final static String POST_DATA_TURN_YOURS = "turn_yours";
+	public final static String POST_DATA_TYPE = "type";
+	public final static byte POST_DATA_TYPE_NEW_GAME = 1;
+	public final static byte POST_DATA_TYPE_NEW_MOVE = 2;
+	public final static byte POST_DATA_TYPE_GAME_OVER_LOSE = 7;
+	public final static byte POST_DATA_TYPE_GAME_OVER_WIN = 15;
 	public final static String POST_DATA_USER_CHALLENGED = DATABASE_TABLE_GAMES_COLUMN_USER_CHALLENGED;
 	public final static String POST_DATA_USER_CREATOR = DATABASE_TABLE_GAMES_COLUMN_USER_CREATOR;
 
@@ -91,6 +93,11 @@ public class Utilities
 	public final static String POST_SUCCESS_NO_ACTIVE_GAMES = "Player has no active games!";
 	public final static String POST_SUCCESS_USER_ADDED_TO_DATABASE = "You've been successfully registered with " + APP_NAME + ".";
 	public final static String POST_SUCCESS_USER_REMOVED_FROM_DATABASE = "You've been successfully unregistered from " + APP_NAME + ".";
+
+	public final static byte BOARD_INVALID = 1;
+	public final static byte BOARD_VALID = 2;
+	public final static byte BOARD_LOSE = POST_DATA_TYPE_GAME_OVER_LOSE;
+	public final static byte BOARD_WIN = POST_DATA_TYPE_GAME_OVER_WIN;
 
 
 	/**
@@ -332,6 +339,22 @@ public class Utilities
 		finally
 		{
 			closeSQLStatement(sqlStatement);
+		}
+	}
+
+
+	public static boolean validBoardValue(final byte boardValue)
+	{
+		switch (boardValue)
+		{
+			case BOARD_INVALID:
+			case BOARD_VALID:
+			case BOARD_LOSE:
+			case BOARD_WIN:
+				return true;
+
+			default:
+				return false;
 		}
 	}
 

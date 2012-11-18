@@ -13,6 +13,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import edu.selu.android.classygames.CheckersGameActivity;
+import edu.selu.android.classygames.GameOverActivity;
 import edu.selu.android.classygames.GamesListActivity;
 import edu.selu.android.classygames.R;
 import edu.selu.android.classygames.SecretConstants;
@@ -75,10 +76,11 @@ public class GCMIntentService extends IntentService
 		final String gameId = intent.getStringExtra(ServerUtilities.POST_DATA_GAME_ID);
 		final Long personId = Long.valueOf(intent.getStringExtra(ServerUtilities.POST_DATA_ID));
 		final String personName = intent.getStringExtra(ServerUtilities.POST_DATA_NAME);
+		final Byte gameType = Byte.valueOf(intent.getStringExtra(ServerUtilities.POST_DATA_TYPE));
 
-		if (personId.longValue() >= 0 && personName != null && !personName.isEmpty())
+		if (personId.longValue() >= 0 && personName != null && !personName.isEmpty() && ServerUtilities.validGameTypeValue(gameType.byteValue()))
 		{
-			Person person = new Person(personId, personName);
+			final Person person = new Person(personId, personName);
 
 			// build a notification to show to the user
 			NotificationCompat.Builder builder = new NotificationCompat.Builder(GCMIntentService.this);
@@ -86,25 +88,36 @@ public class GCMIntentService extends IntentService
 			builder.setContentTitle(GCMIntentService.this.getString(R.string.notification_title));
 			builder.setLargeIcon(BitmapFactory.decodeResource(GCMIntentService.this.getResources(), R.drawable.notification));
 
-			switch (Byte.valueOf(intent.getStringExtra(ServerUtilities.GCM_TYPE)))
-			{
-				case ServerUtilities.GCM_TYPE_NEW_GAME:
-					builder.setContentText(GCMIntentService.this.getString(R.string.notification_new_game_text, person.getName()));
-					break;
-
-				case ServerUtilities.GCM_TYPE_NEW_MOVE:
-					builder.setContentText(GCMIntentService.this.getString(R.string.notification_new_move_text, person.getName()));
-					break;
-			}
-
 			TaskStackBuilder stackBuilder = TaskStackBuilder.create(GCMIntentService.this);
 			stackBuilder.addParentStack(GamesListActivity.class);
 
-			Intent gameIntent = new Intent(this, CheckersGameActivity.class);
-			gameIntent.putExtra(CheckersGameActivity.INTENT_DATA_GAME_ID, gameId);
-			gameIntent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_ID, person.getId());
-			gameIntent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_NAME, person.getName());
-			stackBuilder.addNextIntent(gameIntent);
+			if (gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_NEW_GAME || gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_NEW_MOVE)
+			{
+				Intent gameIntent = new Intent(this, CheckersGameActivity.class);
+				gameIntent.putExtra(CheckersGameActivity.INTENT_DATA_GAME_ID, gameId);
+				gameIntent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_ID, person.getId());
+				gameIntent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_NAME, person.getName());
+				stackBuilder.addNextIntent(gameIntent);
+
+				if (gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_NEW_GAME)
+				{
+					builder.setContentText(GCMIntentService.this.getString(R.string.notification_new_game_text, person.getName()));
+				}
+				else if (gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_NEW_MOVE)
+				{
+					builder.setContentText(GCMIntentService.this.getString(R.string.notification_new_move_text, person.getName()));
+				}
+			}
+			else if (ServerUtilities.validWinOrLoseValue(gameType.byteValue()))
+			// it's a GAME_OVER byte
+			{
+				Intent gameOverIntent = new Intent(this, GameOverActivity.class);
+				gameOverIntent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_ID, person.getId());
+				gameOverIntent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_NAME, person.getName());
+				stackBuilder.addNextIntent(gameOverIntent);
+
+				builder.setContentText(GCMIntentService.this.getString(R.string.notification_game_over_text, person.getName()));
+			}
 
 			final PendingIntent gamePendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_CANCEL_CURRENT);
 			builder.setContentIntent(gamePendingIntent);

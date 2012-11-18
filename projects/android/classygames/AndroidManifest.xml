@@ -108,6 +108,17 @@
 			android:theme="@style/Theme.Styled" />
 
 		<activity
+			android:label="@string/game_over_activity_title"
+			android:name=".GameOverActivity"
+			android:parentActivityName=".GamesListActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/Theme.Styled">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".GamesListActivity" />
+		</activity>
+
+		<activity
 			android:label="@string/logout_activity_title"
 			android:name=".LogoutActivity"
 			android:parentActivityName=".GamesListActivity"

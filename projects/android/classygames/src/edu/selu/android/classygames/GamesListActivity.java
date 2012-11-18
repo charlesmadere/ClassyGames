@@ -1,6 +1,7 @@
 package edu.selu.android.classygames;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.http.NameValuePair;
@@ -208,7 +209,7 @@ public class GamesListActivity extends SherlockListActivity
 				final String jsonString = ServerUtilities.postToServer(ServerUtilities.SERVER_GET_GAMES_ADDRESS, nameValuePairs);
 				games = parseServerResults(jsonString);
 			}
-			catch (final Exception e)
+			catch (final IOException e)
 			{
 				Log.e(Utilities.LOG_TAG, e.getMessage());
 			}
@@ -326,7 +327,8 @@ public class GamesListActivity extends SherlockListActivity
 					else
 					{
 						final String errorMessage = jsonResult.getString(ServerUtilities.POST_DATA_ERROR);
-						Log.d(Utilities.LOG_TAG, "Server returned error message: " + errorMessage);
+						Utilities.easyToastAndLog(GamesListActivity.this, GamesListActivity.this.getString(R.string.games_list_activity_games_error));
+						Log.e(Utilities.LOG_TAG, "Server returned error message: " + errorMessage);
 					}
 				}
 			}

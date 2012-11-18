@@ -24,12 +24,10 @@ import android.util.Log;
 public class ServerUtilities
 {
 
+
 	public final static String MIMETYPE_JSON = "application/json";
 
 	public final static int GCM_NOTIFICATION_ID = 0;
-	public final static String GCM_TYPE = "type";
-	public final static byte GCM_TYPE_NEW_GAME = 1;
-	public final static byte GCM_TYPE_NEW_MOVE = 2;
 
 	public final static String POST_DATA = "json";
 	public final static String POST_DATA_BOARD = "board";
@@ -44,11 +42,16 @@ public class ServerUtilities
 	public final static String POST_DATA_TURN = "turn";
 	public final static String POST_DATA_TURN_THEIRS = "turn_theirs";
 	public final static String POST_DATA_TURN_YOURS = "turn_yours";
+	public final static String POST_DATA_TYPE = "type";
+	public final static byte POST_DATA_TYPE_NEW_GAME = 1;
+	public final static byte POST_DATA_TYPE_NEW_MOVE = 2;
+	public final static byte POST_DATA_TYPE_GAME_OVER_LOSE = 7;
+	public final static byte POST_DATA_TYPE_GAME_OVER_WIN = 15;
 	public final static String POST_DATA_SUCCESS = "success";
 	public final static String POST_DATA_USER_CHALLENGED = "user_challenged";
 	public final static String POST_DATA_USER_CREATOR = "user_creator";
 
-	public final static String SERVER_ADDRESS = "http://classygames.net/";
+	public final static String SERVER_ADDRESS = "http://classygames.elasticbeanstalk.com/";
 	public final static String SERVER_GET_GAME = "GetGame";
 	public final static String SERVER_GET_GAME_ADDRESS = SERVER_ADDRESS + SERVER_GET_GAME;
 	public final static String SERVER_GET_GAMES = "GetGames";
@@ -208,6 +211,36 @@ public class ServerUtilities
 		}
 
 		return jsonString;
+	}
+
+
+	public static boolean validGameTypeValue(final byte gameType)
+	{
+		switch (gameType)
+		{
+			case POST_DATA_TYPE_NEW_GAME:
+			case POST_DATA_TYPE_NEW_MOVE:
+			case POST_DATA_TYPE_GAME_OVER_LOSE:
+			case POST_DATA_TYPE_GAME_OVER_WIN:
+				return true;
+
+			default:
+				return false;
+		}
+	}
+
+
+	public static boolean validWinOrLoseValue(final byte winOrLose)
+	{
+		switch (winOrLose)
+		{
+			case POST_DATA_TYPE_GAME_OVER_LOSE:
+			case POST_DATA_TYPE_GAME_OVER_WIN:
+				return true;
+
+			default:
+				return false;
+		}
 	}
 
 

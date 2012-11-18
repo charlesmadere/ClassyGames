@@ -1,7 +1,6 @@
 package edu.selu.android.classygames;
 
 
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,10 +15,11 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 
 import edu.selu.android.classygames.data.Person;
+import edu.selu.android.classygames.utilities.ServerUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
-public class ConfirmGameActivity extends SherlockActivity
+public class GameOverActivity extends SherlockActivity
 {
 
 
@@ -27,22 +27,22 @@ public class ConfirmGameActivity extends SherlockActivity
 	public void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.confirm_game_activity);
+		setContentView(R.layout.game_over_activity);
 		Utilities.styleActionBar(getResources(), getSupportActionBar());
 
 		final Bundle bundle = getIntent().getExtras();
 
 		if (bundle == null || bundle.isEmpty())
-		// bundle should NOT equal null
 		{
 			activityHasError();
 		}
 		else
 		{
+			final byte winOrLose = bundle.getByte(ServerUtilities.POST_DATA_TYPE);
 			final long challengedId = bundle.getLong(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_ID);
 			final String challengedName = bundle.getString(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_NAME);
 
-			if (challengedId < 0 || challengedName == null || challengedName.isEmpty())
+			if (!ServerUtilities.validWinOrLoseValue(winOrLose) || challengedId < 0 || challengedName == null || challengedName.isEmpty())
 			{
 				activityHasError();
 			}
@@ -50,34 +50,30 @@ public class ConfirmGameActivity extends SherlockActivity
 			{
 				final Person personChallenged = new Person(challengedId, challengedName);
 
-				ImageView personPicture = (ImageView) findViewById(R.id.confirm_game_activity_person_picture);
+				ImageView personPicture = (ImageView) findViewById(R.id.game_over_activity_person_picture);
 				personPicture.setImageResource(R.drawable.fb_placeholder);
 				new AsyncPopulatePicture(personPicture).execute(personChallenged);
 
-				TextView personName = (TextView) findViewById(R.id.confirm_game_activity_person_name);
+				TextView personName = (TextView) findViewById(R.id.game_over_activity_person_name);
 				personName.setText(personChallenged.getName());
 				personName.setTypeface(Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_SNELL_ROUNDHAND_BLKSCR));
 
-				Button gameAccept = (Button) findViewById(R.id.confirm_game_activity_button_accept);
-				gameAccept.setTypeface(Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D));
-				gameAccept.setOnClickListener(new OnClickListener()
+				TextView text = (TextView) findViewById(R.id.game_over_activity_text);
+
+				switch (winOrLose)
 				{
-					@Override
-					public void onClick(final View v)
-					{
-						Intent intent = new Intent(ConfirmGameActivity.this, CheckersGameActivity.class);
-						intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_ID, personChallenged.getId());
-						intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_NAME, personChallenged.getName());
+					case ServerUtilities.POST_DATA_TYPE_GAME_OVER_LOSE:
+						text.setText(GameOverActivity.this.getString(R.string.game_over_activity_description, GameOverActivity.this.getString(R.string.lost)));
+						break;
 
-						// start the ConfirmGameActivity with a bit of extra data. We're passing it both
-						// the id and the name of the facebook person that the user has decided to challenge
-						startActivity(intent);
-					}
-				});
+					case ServerUtilities.POST_DATA_TYPE_GAME_OVER_WIN:
+						text.setText(GameOverActivity.this.getString(R.string.game_over_activity_description, GameOverActivity.this.getString(R.string.won)));
+						break;
+				}
 
-				Button gameDeny = (Button) findViewById(R.id.confirm_game_activity_button_deny);
-				gameDeny.setTypeface(Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D));
-				gameDeny.setOnClickListener(new OnClickListener()
+				Button buttonReturn = (Button) findViewById(R.id.game_over_activity_button_return);
+				buttonReturn.setTypeface(Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D));
+				buttonReturn.setOnClickListener(new OnClickListener()
 				{
 					@Override
 					public void onClick(final View v)
@@ -107,11 +103,10 @@ public class ConfirmGameActivity extends SherlockActivity
 
 	private void activityHasError()
 	{
-		Utilities.easyToastAndLogError(ConfirmGameActivity.this, ConfirmGameActivity.this.getString(R.string.confirm_game_activity_data_error));
 		finish();
 	}
-	
-	
+
+
 	private final class AsyncPopulatePicture extends AsyncTask<Person, Void, Drawable>
 	{
 
