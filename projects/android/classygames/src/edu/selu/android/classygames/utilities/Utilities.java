@@ -276,8 +276,13 @@ public class Utilities
 	}
 
 
-	public static void setWhoAmI(final Person facebookIdentity)
+	public static void setWhoAmI(final Context context, final Person facebookIdentity)
 	{
+		SharedPreferences.Editor editor = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).edit();
+		editor.putLong(WHO_AM_I_ID, facebookIdentity.getId());
+		editor.putString(WHO_AM_I_NAME, facebookIdentity.getName());
+		editor.commit();
+
 		whoAmI = facebookIdentity;
 	}
 

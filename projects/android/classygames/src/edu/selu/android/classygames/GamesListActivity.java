@@ -156,7 +156,7 @@ public class GamesListActivity extends SherlockListActivity
 		@Override
 		protected void onPostExecute(final Person facebookIdentity)
 		{
-			Utilities.setWhoAmI(facebookIdentity);
+			Utilities.setWhoAmI(GamesListActivity.this, facebookIdentity);
 
 			// register for GCM
 			Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
