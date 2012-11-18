@@ -86,9 +86,14 @@
 		<activity
 			android:label="@string/checkers_game_activity_title" 
 			android:name=".CheckersGameActivity"
+			android:parentActivityName=".GamesListActivity"
 			android:screenOrientation="portrait"
 			android:theme="@style/Theme.Styled"
-			android:uiOptions="splitActionBarWhenNarrow" />
+			android:uiOptions="splitActionBarWhenNarrow">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".GamesListActivity" />
+		</activity>
 
 		<activity
 			android:label="@string/confirm_game_activity_title"

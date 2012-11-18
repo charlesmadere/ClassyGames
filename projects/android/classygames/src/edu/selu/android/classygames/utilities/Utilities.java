@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap.CompressFormat;
@@ -32,7 +33,8 @@ public class Utilities
 	public final static String SHARED_PREFERENCES_NAME = "CLASSY_PREFERENCES";
 
 	private static Person whoAmI;
-
+	private final static String WHO_AM_I_ID = "WHO_AM_I_ID";
+	private final static String WHO_AM_I_NAME = "WHO_AM_I_NAME";
 
 	public final static CompressFormat COMPRESS_FORMAT = CompressFormat.PNG;
 	public final static int COMPRESS_QUALITY = 70;
@@ -252,11 +254,22 @@ public class Utilities
 	 * @return
 	 * A Person object representing your Facebook identity.
 	 */
-	public static Person getWhoAmI()
+	public static Person getWhoAmI(final Context context)
 	{
 		if (whoAmI == null)
 		{
-			whoAmI = new Person();
+			SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+			final long id = sharedPreferences.getLong(WHO_AM_I_ID, -1);
+			final String name = sharedPreferences.getString(WHO_AM_I_NAME, null);
+
+			if (id < 0 || name == null || name.isEmpty())
+			{
+				whoAmI = new Person();
+			}
+			else
+			{
+				whoAmI = new Person(id, name);
+			}
 		}
 
 		return whoAmI;

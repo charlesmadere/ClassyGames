@@ -7,14 +7,12 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import edu.selu.android.classygames.CheckersGameActivity;
 import edu.selu.android.classygames.GameOverActivity;
-import edu.selu.android.classygames.GamesListActivity;
 import edu.selu.android.classygames.R;
 import edu.selu.android.classygames.SecretConstants;
 import edu.selu.android.classygames.data.Person;
@@ -84,12 +82,11 @@ public class GCMIntentService extends IntentService
 
 			// build a notification to show to the user
 			NotificationCompat.Builder builder = new NotificationCompat.Builder(GCMIntentService.this);
-			builder.setSmallIcon(R.drawable.notification);
+			builder.setAutoCancel(true);
 			builder.setContentTitle(GCMIntentService.this.getString(R.string.notification_title));
-			builder.setLargeIcon(BitmapFactory.decodeResource(GCMIntentService.this.getResources(), R.drawable.notification));
+			builder.setSmallIcon(R.drawable.notification);
 
 			TaskStackBuilder stackBuilder = TaskStackBuilder.create(GCMIntentService.this);
-			stackBuilder.addParentStack(GamesListActivity.class);
 
 			if (gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_NEW_GAME || gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_NEW_MOVE)
 			{
@@ -97,7 +94,7 @@ public class GCMIntentService extends IntentService
 				gameIntent.putExtra(CheckersGameActivity.INTENT_DATA_GAME_ID, gameId);
 				gameIntent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_ID, person.getId());
 				gameIntent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_NAME, person.getName());
-				stackBuilder.addNextIntent(gameIntent);
+				stackBuilder.addNextIntentWithParentStack(gameIntent);
 
 				if (gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_NEW_GAME)
 				{
@@ -114,7 +111,7 @@ public class GCMIntentService extends IntentService
 				Intent gameOverIntent = new Intent(this, GameOverActivity.class);
 				gameOverIntent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_ID, person.getId());
 				gameOverIntent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_NAME, person.getName());
-				stackBuilder.addNextIntent(gameOverIntent);
+				stackBuilder.addNextIntentWithParentStack(gameOverIntent);
 
 				builder.setContentText(GCMIntentService.this.getString(R.string.notification_game_over_text, person.getName()));
 			}
@@ -154,7 +151,7 @@ public class GCMIntentService extends IntentService
 				editor.commit();
 
 				// notify 3rd party server about the new regId
-				ServerUtilities.GCMRegister(regId);
+				ServerUtilities.GCMRegister(regId, GCMIntentService.this);
 			}
 		}
 
@@ -171,7 +168,7 @@ public class GCMIntentService extends IntentService
 			// ensure that the String we obtained from shared preferences contains text
 			{
 				// notify 3rd party server about the unregistered ID
-				ServerUtilities.GCMUnregister(preferencesRegId);
+				ServerUtilities.GCMUnregister(preferencesRegId, GCMIntentService.this);
 			}
 		}
 

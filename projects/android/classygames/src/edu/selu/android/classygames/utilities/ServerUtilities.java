@@ -18,6 +18,7 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.util.Log;
 
 
@@ -105,14 +106,14 @@ public class ServerUtilities
 	}
 
 
-	public static void GCMRegister(final String reg_id)
+	public static void GCMRegister(final String reg_id, final Context context)
 	{
 		Log.d(Utilities.LOG_TAG, "Registering device with reg_id of \"" + reg_id + "\" from GCM server.");
 
 		// build the data to be sent to the server
 		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-		nameValuePairs.add(new BasicNameValuePair(POST_DATA_ID, Long.valueOf(Utilities.getWhoAmI().getId()).toString()));
-		nameValuePairs.add(new BasicNameValuePair(POST_DATA_NAME, Utilities.getWhoAmI().getName()));
+		nameValuePairs.add(new BasicNameValuePair(POST_DATA_ID, Long.valueOf(Utilities.getWhoAmI(context).getId()).toString()));
+		nameValuePairs.add(new BasicNameValuePair(POST_DATA_NAME, Utilities.getWhoAmI(context).getName()));
 		nameValuePairs.add(new BasicNameValuePair(POST_DATA_REG_ID, reg_id));
 
 		try
@@ -129,13 +130,13 @@ public class ServerUtilities
 	}
 
 
-	public static void GCMUnregister(final String reg_id)
+	public static void GCMUnregister(final String reg_id, final Context context)
 	{
 		Log.d(Utilities.LOG_TAG, "Unregistering device with reg_id of \"" + reg_id + "\" from GCM server.");
 
 		// build the data to be sent to the server
 		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-		nameValuePairs.add(new BasicNameValuePair(POST_DATA_ID, Long.valueOf(Utilities.getWhoAmI().getId()).toString()));
+		nameValuePairs.add(new BasicNameValuePair(POST_DATA_ID, Long.valueOf(Utilities.getWhoAmI(context).getId()).toString()));
 		nameValuePairs.add(new BasicNameValuePair(POST_DATA_REG_ID, reg_id));
 
 		try
