@@ -17,7 +17,6 @@ import edu.selu.android.classygames.utilities.GCMUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
-
 /**
  * Servlet implementation class NewRegId
  */
@@ -26,7 +25,6 @@ public class NewRegId extends HttpServlet
 
 
 	private final static long serialVersionUID = 1L;
-	private static int part = 0;
 
 
 	/**
@@ -41,7 +39,7 @@ public class NewRegId extends HttpServlet
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(final HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	protected void doGet(final HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{
 		response.setContentType(Utilities.CONTENT_TYPE_JSON);
 		PrintWriter printWriter = response.getWriter();
@@ -52,101 +50,91 @@ public class NewRegId extends HttpServlet
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(final HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	protected void doPost(final HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{
 		response.setContentType(Utilities.CONTENT_TYPE_JSON);
 		PrintWriter printWriter = response.getWriter();
 
-		final Long id = new Long(request.getParameter(Utilities.POST_DATA_ID));
+		final String id_parameter = request.getParameter(Utilities.POST_DATA_ID);
 		final String name = request.getParameter(Utilities.POST_DATA_NAME);
 		final String reg_id = request.getParameter(Utilities.POST_DATA_REG_ID);
 
-		if (id.longValue() < 0 || name == null || name.isEmpty() || reg_id == null || reg_id.isEmpty())
+		if (id_parameter == null || id_parameter.isEmpty() || name == null || name.isEmpty()
+			|| reg_id == null || reg_id.isEmpty())
 		// check for invalid inputs
 		{
 			printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_MALFORMED));
 		}
 		else
 		{
-			Connection sqlConnection = null;
-			PreparedStatement sqlStatement = null;
+			final Long id = Long.valueOf(id_parameter);
 
-			try
+			if (id.longValue() < 0)
+			// check for invalid inputs
 			{
-				part = 0;
-				sqlConnection = Utilities.getSQLConnection();
-				part = 1;
+				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_MALFORMED));
+			}
+			else
+			{
+				Connection sqlConnection = null;
+				PreparedStatement sqlStatement = null;
 
-				// prepare a SQL statement to be run on the database
-				String sqlStatementString = "SELECT * FROM " + Utilities.DATABASE_TABLE_USERS + " WHERE " + Utilities.DATABASE_TABLE_USERS_COLUMN_ID + " = ?";
-				part = 2;
-				sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
-				part = 3;
-
-				// prevent SQL injection by inserting data this way
-				sqlStatement.setLong(1, id.longValue());
-				part = 4;
-
-				// run the SQL statement and acquire any return information
-				final ResultSet sqlResult = sqlStatement.executeQuery();
-				part = 5;
-
-				if (sqlResult.next())
-				// the id already exists in the table therefore it's data needs to be updated
+				try
 				{
-					part = 6;
-					// prepare a SQL statement to be run on the database
-					sqlStatementString = "UPDATE " + Utilities.DATABASE_TABLE_USERS + " SET " + Utilities.DATABASE_TABLE_USERS_COLUMN_NAME + " = ?, " + Utilities.DATABASE_TABLE_USERS_COLUMN_REG_ID + " = ? WHERE " + Utilities.DATABASE_TABLE_USERS_COLUMN_ID + " = ?";
-					part = 7;
-					sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
-					part = 8;
+					sqlConnection = Utilities.getSQLConnection();
 
-					// prevent SQL injection by inserting data this way
-					sqlStatement.setString(1, name);
-					part = 9;
-					sqlStatement.setString(2, reg_id);
-					part = 10;
-					sqlStatement.setLong(3, id.longValue());
-					part = 11;
-				}
-				else
-				// id does not already exist in the table. let's insert it
-				{
-					part = 12;
 					// prepare a SQL statement to be run on the database
-					sqlStatementString = "INSERT INTO " + Utilities.DATABASE_TABLE_USERS + " " + Utilities.DATABASE_TABLE_USERS_FORMAT + " " + Utilities.DATABASE_TABLE_USERS_VALUES;
-					part = 13;
+					String sqlStatementString = "SELECT * FROM " + Utilities.DATABASE_TABLE_USERS + " WHERE " + Utilities.DATABASE_TABLE_USERS_COLUMN_ID + " = ?";
 					sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
-					part = 14;
 
 					// prevent SQL injection by inserting data this way
 					sqlStatement.setLong(1, id.longValue());
-					part = 15;
-					sqlStatement.setString(2, name);
-					part = 16;
-					sqlStatement.setString(3, reg_id);
-					part = 17;
+
+					// run the SQL statement and acquire any return information
+					final ResultSet sqlResult = sqlStatement.executeQuery();
+
+					if (sqlResult.next())
+					// the id already exists in the table therefore it's data needs to be updated
+					{
+						// prepare a SQL statement to be run on the database
+						sqlStatementString = "UPDATE " + Utilities.DATABASE_TABLE_USERS + " SET " + Utilities.DATABASE_TABLE_USERS_COLUMN_NAME + " = ?, " + Utilities.DATABASE_TABLE_USERS_COLUMN_REG_ID + " = ? WHERE " + Utilities.DATABASE_TABLE_USERS_COLUMN_ID + " = ?";
+						sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
+
+						// prevent SQL injection by inserting data this way
+						sqlStatement.setString(1, name);
+						sqlStatement.setString(2, reg_id);
+						sqlStatement.setLong(3, id.longValue());
+					}
+					else
+					// id does not already exist in the table. let's insert it
+					{
+						// prepare a SQL statement to be run on the database
+						sqlStatementString = "INSERT INTO " + Utilities.DATABASE_TABLE_USERS + " " + Utilities.DATABASE_TABLE_USERS_FORMAT + " " + Utilities.DATABASE_TABLE_USERS_VALUES;
+						sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
+
+						// prevent SQL injection by inserting data this way
+						sqlStatement.setLong(1, id.longValue());
+						sqlStatement.setString(2, name);
+						sqlStatement.setString(3, reg_id);
+					}
+
+					// run the SQL statement
+					sqlStatement.executeUpdate();
+
+					printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_USER_ADDED_TO_DATABASE));
+
+					// TODO
+					// remove this soon
+					GCMUtilities.sendMessage(sqlConnection, id, name);
 				}
-
-				part = 18;
-				// run the SQL statement
-				sqlStatement.executeUpdate();
-				part = 19;
-
-				printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_GENERIC));
-				part = 20;
-
-				// TODO
-				// remove this soon
-				GCMUtilities.sendMessage(sqlConnection, id, name);
-			}
-			catch (final SQLException e)
-			{
-				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CONNECT + " p: " + part + " " + e.getMessage()));
-			}
-			finally
-			{
-				Utilities.closeSQL(sqlConnection, sqlStatement);
+				catch (final SQLException e)
+				{
+					printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CONNECT));
+				}
+				finally
+				{
+					Utilities.closeSQL(sqlConnection, sqlStatement);
+				}
 			}
 		}
 	}

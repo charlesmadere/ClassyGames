@@ -94,8 +94,9 @@ public class Utilities
 	public final static String POST_SUCCESS_USER_ADDED_TO_DATABASE = "You've been successfully registered with " + APP_NAME + ".";
 	public final static String POST_SUCCESS_USER_REMOVED_FROM_DATABASE = "You've been successfully unregistered from " + APP_NAME + ".";
 
-	public final static byte BOARD_INVALID = 1;
-	public final static byte BOARD_VALID = 2;
+	public final static byte BOARD_INVALID = -1;
+	public final static byte BOARD_NEW_GAME = POST_DATA_TYPE_NEW_GAME;
+	public final static byte BOARD_NEW_MOVE = POST_DATA_TYPE_NEW_MOVE;
 	public final static byte BOARD_LOSE = POST_DATA_TYPE_GAME_OVER_LOSE;
 	public final static byte BOARD_WIN = POST_DATA_TYPE_GAME_OVER_WIN;
 
@@ -143,52 +144,6 @@ public class Utilities
 	}
 
 
-	public static Random getRandom()
-	{
-		if (random == null)
-		{
-			// create a Random object. We're seeding it with the epoch in milliseconds because
-			// this will 100% certainly always be a different value every single time that it's
-			// run, guaranteeing a strong seed.
-			random = new Random(System.currentTimeMillis());
-		}
-
-		return random;
-	}
-
-
-	public static Connection getSQLConnection() throws SQLException
-	// I followed this guide to understand how to connect to the MySQL database that is created when
-	// making a new Amazon Elastic Beanstalk application
-	// http://docs.amazonwebservices.com/elasticbeanstalk/latest/dg/create_deploy_Java.rds.html
-	{
-		try
-		{
-			// ensure that the MySQL JDBC Driver has been loaded
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-		}
-		catch (final Exception e)
-		{
-
-		}
-
-		// acquire database credentials from Amazon Web Services
-		final String hostname = System.getProperty("RDS_HOSTNAME");
-		final String port = System.getProperty("RDS_PORT");
-//		final int port = 3306;
-		final String dbName = System.getProperty("RDS_DB_NAME");
-		final String username = System.getProperty("RDS_USERNAME");
-		final String password = System.getProperty("RDS_PASSWORD");
-
-		// create the connection string
-		String connectionString = "jdbc:mysql://" + hostname + ":" + port + "/" + dbName + "?user=" + username + "&password=" + password;
-		//  + "&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&maxReconnects=10";
-
-		// return a new connection to the database
-		return DriverManager.getConnection(connectionString);
-	}
-
-
 	/**
 	 * Ensures that a given user exists in the database. If the user already exists in the
 	 * database then this method doesn't do very much. If the user does not already exist in the
@@ -209,7 +164,7 @@ public class Utilities
 	 * already exists in the database. False if the user did not exist in the database and we were
 	 * unable to insert him into it.
 	 */
-	public static boolean ensureUserExistsInDatabase(Connection sqlConnection, final long user_id, final String user_name)
+	public static boolean ensureUserExistsInDatabase(final Connection sqlConnection, final long user_id, final String user_name)
 	{
 		boolean errorFree = true;
 		PreparedStatement sqlStatement = null;
@@ -259,6 +214,52 @@ public class Utilities
 	}
 
 
+	public static Random getRandom()
+	{
+		if (random == null)
+		{
+			// create a Random object. We're seeding it with the epoch in milliseconds because
+			// this will 100% certainly always be a different value every single time that it's
+			// run, guaranteeing a strong seed.
+			random = new Random(System.currentTimeMillis());
+		}
+
+		return random;
+	}
+
+
+	public static Connection getSQLConnection() throws SQLException
+	// I followed this guide to understand how to connect to the MySQL database that is created when
+	// making a new Amazon Elastic Beanstalk application
+	// http://docs.amazonwebservices.com/elasticbeanstalk/latest/dg/create_deploy_Java.rds.html
+	{
+		try
+		{
+			// ensure that the MySQL JDBC Driver has been loaded
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+		}
+		catch (final Exception e)
+		{
+
+		}
+
+		// acquire database credentials from Amazon Web Services
+		final String hostname = System.getProperty("RDS_HOSTNAME");
+		final String port = System.getProperty("RDS_PORT");
+//		final int port = 3306;
+		final String dbName = System.getProperty("RDS_DB_NAME");
+		final String username = System.getProperty("RDS_USERNAME");
+		final String password = System.getProperty("RDS_PASSWORD");
+
+		// create the connection string
+		String connectionString = "jdbc:mysql://" + hostname + ":" + port + "/" + dbName + "?user=" + username + "&password=" + password;
+		//  + "&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&maxReconnects=10";
+
+		// return a new connection to the database
+		return DriverManager.getConnection(connectionString);
+	}
+
+
 	private static String makePostData(final Object data, final boolean hasError)
 	{
 		Map<String, Object> result = new LinkedHashMap<String, Object>();
@@ -291,7 +292,7 @@ public class Utilities
 	}
 
 
-	public static void removeUserRegId(Connection sqlConnection, long user_id)
+	public static void removeUserRegId(final Connection sqlConnection, final long user_id)
 	{
 		PreparedStatement sqlStatement = null;
 
@@ -318,7 +319,7 @@ public class Utilities
 	}
 
 
-	public static void updateUserRegId(Connection sqlConnection, String reg_id, long user_id)
+	public static void updateUserRegId(final Connection sqlConnection, final String reg_id, final long user_id)
 	{
 		PreparedStatement sqlStatement = null;
 
@@ -343,12 +344,13 @@ public class Utilities
 	}
 
 
-	public static boolean validBoardValue(final byte boardValue)
+	public static boolean validGameTypeValue(final byte gameType)
 	{
-		switch (boardValue)
+		switch (gameType)
 		{
 			case BOARD_INVALID:
-			case BOARD_VALID:
+			case BOARD_NEW_GAME:
+			case BOARD_NEW_MOVE:
 			case BOARD_LOSE:
 			case BOARD_WIN:
 				return true;

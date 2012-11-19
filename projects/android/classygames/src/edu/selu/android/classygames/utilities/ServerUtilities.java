@@ -28,8 +28,6 @@ public class ServerUtilities
 
 	public final static String MIMETYPE_JSON = "application/json";
 
-	public final static int GCM_NOTIFICATION_ID = 0;
-
 	public final static String POST_DATA = "json";
 	public final static String POST_DATA_BOARD = "board";
 	public final static String POST_DATA_ERROR = "error";

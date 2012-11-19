@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
-
 /**
  * Servlet implementation class GetGame
  */
@@ -39,7 +38,7 @@ public class GetGame extends HttpServlet
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(final HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	protected void doGet(final HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{
 		response.setContentType(Utilities.CONTENT_TYPE_JSON);
 		PrintWriter printWriter = response.getWriter();
@@ -50,7 +49,7 @@ public class GetGame extends HttpServlet
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(final HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	protected void doPost(final HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{
 		response.setContentType(Utilities.CONTENT_TYPE_JSON);
 		PrintWriter printWriter = response.getWriter();

@@ -7,6 +7,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
@@ -28,6 +30,11 @@ public class GCMIntentService extends IntentService
 
 	private final static Object LOCK = GCMIntentService.class;
 	private static PowerManager.WakeLock wakeLock;
+
+	public final static int GCM_NOTIFICATION_ID = 0;
+	public final static int GCM_NOTIFICATION_LIGHTS = 0xEDB3C900;
+	public final static int GCM_NOTIFICATION_LIGHTS_ON = 1000; // milliseconds
+	public final static int GCM_NOTIFICATION_LIGHTS_OFF = 16000; // milliseconds
 
 	private final static String PREFERENCES = "PREFERENCES";
 	private final static String PREFERENCES_FILE = PREFERENCES + "_GCMIntentService";
@@ -72,56 +79,78 @@ public class GCMIntentService extends IntentService
 	private void handleMessage(final Intent intent)
 	{
 		final String gameId = intent.getStringExtra(ServerUtilities.POST_DATA_GAME_ID);
-		final Long personId = Long.valueOf(intent.getStringExtra(ServerUtilities.POST_DATA_ID));
 		final String personName = intent.getStringExtra(ServerUtilities.POST_DATA_NAME);
-		final Byte gameType = Byte.valueOf(intent.getStringExtra(ServerUtilities.POST_DATA_TYPE));
+		final String personIdParameter = intent.getStringExtra(ServerUtilities.POST_DATA_ID);
+		final String gameTypeParameter = intent.getStringExtra(ServerUtilities.POST_DATA_TYPE);
 
-		if (personId.longValue() >= 0 && personName != null && !personName.isEmpty() && ServerUtilities.validGameTypeValue(gameType.byteValue()))
+		if (gameId != null && !gameId.isEmpty() && personName != null && !personName.isEmpty()
+			&& personIdParameter != null && !personIdParameter.isEmpty()
+			&& gameTypeParameter != null && !gameTypeParameter.isEmpty())
 		{
-			final Person person = new Person(personId, personName);
+			final Long personId = Long.valueOf(personIdParameter);
+			final Byte gameType = Byte.valueOf(gameTypeParameter);
 
-			// build a notification to show to the user
-			NotificationCompat.Builder builder = new NotificationCompat.Builder(GCMIntentService.this);
-			builder.setAutoCancel(true);
-			builder.setContentTitle(GCMIntentService.this.getString(R.string.notification_title));
-			builder.setSmallIcon(R.drawable.notification);
-
-			TaskStackBuilder stackBuilder = TaskStackBuilder.create(GCMIntentService.this);
-
-			if (gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_NEW_GAME || gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_NEW_MOVE)
+			if (personId.longValue() >= 0 && ServerUtilities.validGameTypeValue(gameType.byteValue()))
 			{
-				Intent gameIntent = new Intent(this, CheckersGameActivity.class);
-				gameIntent.putExtra(CheckersGameActivity.INTENT_DATA_GAME_ID, gameId);
-				gameIntent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_ID, person.getId());
-				gameIntent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_NAME, person.getName());
-				stackBuilder.addNextIntentWithParentStack(gameIntent);
+				final Person person = new Person(personId, personName);
 
-				if (gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_NEW_GAME)
+				// build a notification to show to the user
+				NotificationCompat.Builder builder = new NotificationCompat.Builder(GCMIntentService.this);
+				builder.setAutoCancel(true);
+				builder.setContentTitle(GCMIntentService.this.getString(R.string.notification_title));
+				builder.setLargeIcon(BitmapFactory.decodeResource(GCMIntentService.this.getResources(), R.drawable.notification_raw));
+				builder.setLights(GCM_NOTIFICATION_LIGHTS, GCM_NOTIFICATION_LIGHTS_ON, GCM_NOTIFICATION_LIGHTS_OFF);
+				builder.setOnlyAlertOnce(true);
+				builder.setSmallIcon(R.drawable.notification_small);
+
+				TaskStackBuilder stackBuilder = TaskStackBuilder.create(GCMIntentService.this);
+
+				if (gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_NEW_GAME || gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_NEW_MOVE)
 				{
-					builder.setContentText(GCMIntentService.this.getString(R.string.notification_new_game_text, person.getName()));
+					Intent gameIntent = new Intent(this, CheckersGameActivity.class);
+					gameIntent.putExtra(CheckersGameActivity.INTENT_DATA_GAME_ID, gameId);
+					gameIntent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_ID, person.getId());
+					gameIntent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_NAME, person.getName());
+					stackBuilder.addNextIntentWithParentStack(gameIntent);
+
+					builder.setTicker(GCMIntentService.this.getString(R.string.notification_sent_some_class, person.getName()));
+
+					if (gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_NEW_GAME)
+					{
+						builder.setContentText(GCMIntentService.this.getString(R.string.notification_new_game_text, person.getName()));
+					}
+					else if (gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_NEW_MOVE)
+					{
+						builder.setContentText(GCMIntentService.this.getString(R.string.notification_new_move_text, person.getName()));
+					}
 				}
-				else if (gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_NEW_MOVE)
+				else if (ServerUtilities.validWinOrLoseValue(gameType.byteValue()))
+				// it's a GAME_OVER byte
 				{
-					builder.setContentText(GCMIntentService.this.getString(R.string.notification_new_move_text, person.getName()));
+					Intent gameOverIntent = new Intent(this, GameOverActivity.class);
+					gameOverIntent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_ID, person.getId());
+					gameOverIntent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_NAME, person.getName());
+					stackBuilder.addNextIntentWithParentStack(gameOverIntent);
+
+					builder.setTicker(GCMIntentService.this.getString(R.string.notification_game_over_text, person.getName()));
+
+					if (gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_GAME_OVER_LOSE)
+					{
+						builder.setContentText(GCMIntentService.this.getString(R.string.notification_game_over_lose_text, person.getName()));
+					}
+					else if (gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_GAME_OVER_WIN)
+					{
+						builder.setContentText(GCMIntentService.this.getString(R.string.notification_game_over_win_text, person.getName()));
+					}
 				}
+
+				final PendingIntent gamePendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_CANCEL_CURRENT);
+				builder.setContentIntent(gamePendingIntent);
+
+				// show the notification
+				NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+				notificationManager.notify(GCM_NOTIFICATION_ID, builder.build());
 			}
-			else if (ServerUtilities.validWinOrLoseValue(gameType.byteValue()))
-			// it's a GAME_OVER byte
-			{
-				Intent gameOverIntent = new Intent(this, GameOverActivity.class);
-				gameOverIntent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_ID, person.getId());
-				gameOverIntent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_NAME, person.getName());
-				stackBuilder.addNextIntentWithParentStack(gameOverIntent);
-
-				builder.setContentText(GCMIntentService.this.getString(R.string.notification_game_over_text, person.getName()));
-			}
-
-			final PendingIntent gamePendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_CANCEL_CURRENT);
-			builder.setContentIntent(gamePendingIntent);
-
-			// show the notification
-			NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-			notificationManager.notify(ServerUtilities.GCM_NOTIFICATION_ID, builder.build());
 		}
 		else
 		{

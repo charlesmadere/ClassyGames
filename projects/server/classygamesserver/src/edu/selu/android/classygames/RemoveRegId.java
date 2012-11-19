@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
-
 /**
  * Servlet implementation class RemoveRegId
  */
@@ -37,7 +36,7 @@ public class RemoveRegId extends HttpServlet
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(final HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	protected void doGet(final HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{
 		response.setContentType(Utilities.CONTENT_TYPE_JSON);
 		PrintWriter printWriter = response.getWriter();
@@ -48,35 +47,45 @@ public class RemoveRegId extends HttpServlet
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(final HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	protected void doPost(final HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{
 		response.setContentType(Utilities.CONTENT_TYPE_JSON);
 		PrintWriter printWriter = response.getWriter();
 
-		final Long user_id = new Long(request.getParameter(Utilities.POST_DATA_ID));
+		final String user_id_parameter = request.getParameter(Utilities.POST_DATA_ID);
 
-		if (user_id.longValue() < 0)
+		if (user_id_parameter == null || user_id_parameter.isEmpty())
 		// check for invalid inputs
 		{
 			printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_MALFORMED));
 		}
 		else
 		{
-			Connection sqlConnection = null;
+			final Long user_id = Long.valueOf(user_id_parameter);
 
-			try
+			if (user_id.longValue() < 0)
+			// check for invalid inputs
 			{
-				sqlConnection = Utilities.getSQLConnection();
-				Utilities.removeUserRegId(sqlConnection, user_id);
-				printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_USER_REMOVED_FROM_DATABASE));
+				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_MALFORMED));
 			}
-			catch (final SQLException e)
+			else
 			{
-				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CONNECT));
-			}
-			finally
-			{
-				Utilities.closeSQLConnection(sqlConnection);
+				Connection sqlConnection = null;
+
+				try
+				{
+					sqlConnection = Utilities.getSQLConnection();
+					Utilities.removeUserRegId(sqlConnection, user_id.longValue());
+					printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_USER_REMOVED_FROM_DATABASE));
+				}
+				catch (final SQLException e)
+				{
+					printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CONNECT));
+				}
+				finally
+				{
+					Utilities.closeSQLConnection(sqlConnection);
+				}
 			}
 		}
 	}

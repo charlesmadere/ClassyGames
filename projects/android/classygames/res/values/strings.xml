@@ -41,8 +41,11 @@
 	<string name="new_game_activity_progressdialog_title">Facebook is working&#8230;</string>
 	<string name="new_game_activity_title">New Game</string>
 	<string name="notification_game_over_text">Game with %1$s is now over!</string>
+	<string name="notification_game_over_lose_text">You lost the game with %1$s!</string>
+	<string name="notification_game_over_win_text">You won the game with %1$s!</string>
 	<string name="notification_new_game_text">New game from %1$s!</string>
 	<string name="notification_new_move_text">New move from %1$s!</string>
+	<string name="notification_sent_some_class">Ol\' %1$s sent you some class.</string>
 	<string name="notification_title">Classy Games</string>
 	<string name="piece_checkers_green_normal">Normal Green Piece</string>
 	<string name="piece_checkers_green_king">Kinged Green Piece</string>

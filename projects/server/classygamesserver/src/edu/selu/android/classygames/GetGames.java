@@ -21,7 +21,6 @@ import javax.servlet.http.HttpServletResponse;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
-
 /**
  * Servlet implementation class GetGames
  */
@@ -44,7 +43,7 @@ public class GetGames extends HttpServlet
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(final HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	protected void doGet(final HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{
 		response.setContentType(Utilities.CONTENT_TYPE_JSON);
 		PrintWriter printWriter = response.getWriter();
@@ -55,119 +54,129 @@ public class GetGames extends HttpServlet
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(final HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	protected void doPost(final HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{
 		response.setContentType(Utilities.CONTENT_TYPE_JSON);
 		PrintWriter printWriter = response.getWriter();
 
-		final Long id = new Long(request.getParameter(Utilities.POST_DATA_ID));
+		final String id_parameter = request.getParameter(Utilities.POST_DATA_ID);
 
-		if (id.longValue() < 0)
+		if (id_parameter == null || id_parameter.isEmpty())
 		// check for invalid inputs
 		{
 			printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_MALFORMED));
 		}
 		else
 		{
-			Connection sqlConnection = null;
-			PreparedStatement sqlStatement = null;
+			final Long id = Long.valueOf(id_parameter);
 
-			try
+			if (id.longValue() < 0)
+			// check for invalid inputs
 			{
-				sqlConnection = Utilities.getSQLConnection();
+				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_MALFORMED));
+			}
+			else
+			{
+				Connection sqlConnection = null;
+				PreparedStatement sqlStatement = null;
 
-				// prepare a SQL statement to be run on the MySQL database
-				String sqlStatementString = "SELECT * FROM " + Utilities.DATABASE_TABLE_GAMES + " WHERE " + Utilities.DATABASE_TABLE_GAMES_COLUMN_FINISHED + " = ? AND (" + Utilities.DATABASE_TABLE_GAMES_COLUMN_USER_CREATOR + " = ? OR " + Utilities.DATABASE_TABLE_GAMES_COLUMN_USER_CHALLENGED + " = ?)";
-				sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
-
-				// prevent SQL injection by inserting data this way
-				sqlStatement.setByte(1, Utilities.DATABASE_TABLE_GAMES_FINISHED_FALSE);
-				sqlStatement.setLong(2, id.longValue());
-				sqlStatement.setLong(3, id.longValue());
-
-				// run the SQL statement and acquire any return information
-				final ResultSet sqlResult = sqlStatement.executeQuery();
-
-				if (sqlResult.next())
-				// check to see that we got some SQL return data
+				try
 				{
-					Map<String, Object> jsonData = new LinkedHashMap<String, Object>();
-					List<Map<String, Object>> turnYours = new LinkedList<Map<String, Object>>();
-					List<Map<String, Object>> turnTheirs = new LinkedList<Map<String, Object>>();
+					sqlConnection = Utilities.getSQLConnection();
 
-					do
-					// loop through all of SQL return data
+					// prepare a SQL statement to be run on the MySQL database
+					String sqlStatementString = "SELECT * FROM " + Utilities.DATABASE_TABLE_GAMES + " WHERE " + Utilities.DATABASE_TABLE_GAMES_COLUMN_FINISHED + " = ? AND (" + Utilities.DATABASE_TABLE_GAMES_COLUMN_USER_CREATOR + " = ? OR " + Utilities.DATABASE_TABLE_GAMES_COLUMN_USER_CHALLENGED + " = ?)";
+					sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
+
+					// prevent SQL injection by inserting data this way
+					sqlStatement.setByte(1, Utilities.DATABASE_TABLE_GAMES_FINISHED_FALSE);
+					sqlStatement.setLong(2, id.longValue());
+					sqlStatement.setLong(3, id.longValue());
+
+					// run the SQL statement and acquire any return information
+					final ResultSet sqlResult = sqlStatement.executeQuery();
+
+					if (sqlResult.next())
+					// check to see that we got some SQL return data
 					{
-						final String game_id = sqlResult.getString(Utilities.DATABASE_TABLE_GAMES_COLUMN_ID);
-						final Long user_creator = sqlResult.getLong(Utilities.DATABASE_TABLE_GAMES_COLUMN_USER_CREATOR);
-						final Long user_challenged = sqlResult.getLong(Utilities.DATABASE_TABLE_GAMES_COLUMN_USER_CHALLENGED);
-						final Timestamp last_move = sqlResult.getTimestamp(Utilities.DATABASE_TABLE_GAMES_COLUMN_LAST_MOVE);
+						Map<String, Object> jsonData = new LinkedHashMap<String, Object>();
+						List<Map<String, Object>> turnYours = new LinkedList<Map<String, Object>>();
+						List<Map<String, Object>> turnTheirs = new LinkedList<Map<String, Object>>();
 
-						// initialize a JSONObject. All of the current game's data will be stored here. At the end of this
-						// loop iteration this JSONObject will be added to one of the above JSONArrays
-						Map<String, Object> game = new LinkedHashMap<String, Object>();
-
-						if (user_creator.longValue() == id.longValue())
+						do
+						// loop through all of SQL return data
 						{
-							game.put(Utilities.POST_DATA_ID, user_challenged);
-							game.put(Utilities.POST_DATA_NAME, findUserName(sqlConnection, user_challenged));
-						}
-						else
-						{
-							game.put(Utilities.POST_DATA_ID, user_creator);
-							game.put(Utilities.POST_DATA_NAME, findUserName(sqlConnection, user_creator));
-						}
+							final String game_id = sqlResult.getString(Utilities.DATABASE_TABLE_GAMES_COLUMN_ID);
+							final Long user_creator = sqlResult.getLong(Utilities.DATABASE_TABLE_GAMES_COLUMN_USER_CREATOR);
+							final Long user_challenged = sqlResult.getLong(Utilities.DATABASE_TABLE_GAMES_COLUMN_USER_CHALLENGED);
+							final Timestamp last_move = sqlResult.getTimestamp(Utilities.DATABASE_TABLE_GAMES_COLUMN_LAST_MOVE);
 
-						game.put(Utilities.POST_DATA_GAME_ID, game_id);
-						game.put(Utilities.POST_DATA_LAST_MOVE, last_move.getTime() / 1000);
+							// initialize a JSONObject. All of the current game's data will be stored here. At the end of this
+							// loop iteration this JSONObject will be added to one of the above JSONArrays
+							Map<String, Object> game = new LinkedHashMap<String, Object>();
 
-						switch (sqlResult.getByte(Utilities.DATABASE_TABLE_GAMES_COLUMN_TURN))
-						{
-							case Utilities.DATABASE_TABLE_GAMES_TURN_CREATOR:
-							// it's the creator's turn
-								if (user_creator.longValue() == id.longValue())
-								{
-									turnYours.add(game);
-								}
-								else
-								{
-									turnTheirs.add(game);
-								}
-								break;
+							if (user_creator.longValue() == id.longValue())
+							{
+								game.put(Utilities.POST_DATA_ID, user_challenged);
+								game.put(Utilities.POST_DATA_NAME, findUserName(sqlConnection, user_challenged));
+							}
+							else
+							{
+								game.put(Utilities.POST_DATA_ID, user_creator);
+								game.put(Utilities.POST_DATA_NAME, findUserName(sqlConnection, user_creator));
+							}
 
-							case Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED:
-							// it's the challenger's turn
-								if (user_challenged.longValue() == id.longValue())
-								{
-									turnYours.add(game);
-								}
-								else
-								{
-									turnTheirs.add(game);
-								}
-								break;
+							game.put(Utilities.POST_DATA_GAME_ID, game_id);
+							game.put(Utilities.POST_DATA_LAST_MOVE, last_move.getTime() / 1000);
+
+							switch (sqlResult.getByte(Utilities.DATABASE_TABLE_GAMES_COLUMN_TURN))
+							{
+								case Utilities.DATABASE_TABLE_GAMES_TURN_CREATOR:
+								// it's the creator's turn
+									if (user_creator.longValue() == id.longValue())
+									{
+										turnYours.add(game);
+									}
+									else
+									{
+										turnTheirs.add(game);
+									}
+									break;
+
+								case Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED:
+								// it's the challenger's turn
+									if (user_challenged.longValue() == id.longValue())
+									{
+										turnYours.add(game);
+									}
+									else
+									{
+										turnTheirs.add(game);
+									}
+									break;
+							}
 						}
+						while (sqlResult.next());
+
+						jsonData.put(Utilities.POST_DATA_TURN_YOURS, turnYours);
+						jsonData.put(Utilities.POST_DATA_TURN_THEIRS, turnTheirs);
+
+						printWriter.write(Utilities.makePostDataSuccess(jsonData));
 					}
-					while (sqlResult.next());
-
-					jsonData.put(Utilities.POST_DATA_TURN_YOURS, turnYours);
-					jsonData.put(Utilities.POST_DATA_TURN_THEIRS, turnTheirs);
-
-					printWriter.write(Utilities.makePostDataSuccess(jsonData));
+					else
+					// we did not get any SQL return data
+					{
+						printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_NO_ACTIVE_GAMES));
+					}
 				}
-				else
-				// we did not get any SQL return data
+				catch (final SQLException e)
 				{
-					printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_NO_ACTIVE_GAMES));
+					printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CONNECT));
 				}
-			}
-			catch (final SQLException e)
-			{
-				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CONNECT));
-			}
-			finally
-			{
-				Utilities.closeSQL(sqlConnection, sqlStatement);
+				finally
+				{
+					Utilities.closeSQL(sqlConnection, sqlStatement);
+				}
 			}
 		}
 	}
