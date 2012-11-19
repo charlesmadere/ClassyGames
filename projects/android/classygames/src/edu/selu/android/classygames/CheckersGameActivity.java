@@ -1,6 +1,7 @@
 package edu.selu.android.classygames;
 
 
+import android.annotation.SuppressLint;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -48,6 +49,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	private Person personChallenged;
 
 
+	@SuppressLint("NewApi")
 	@Override
 	public void onCreate(final Bundle savedInstanceState)
 	{
@@ -292,39 +294,82 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 
 	private boolean canMove(MyButton button)
 	{
-		if (abs(button.getPx()-prevButton.getPx()) == 1 && abs(button.getPy()-prevButton.getPy()) == 1)
-			return true;
+		if (prevButton.isPlayerGreen())
+		{
+			if (button.getPx()-prevButton.getPx() == -1 && abs(button.getPy()-prevButton.getPy()) == 1)
+				return true;
+			else
+				return false;
+		}
+		
 		else
-			return false;
+		{
+			if (button.getPx()-prevButton.getPx() == 1 && abs(button.getPy()-prevButton.getPy()) == 1)
+				return true;
+			else
+				return false;
+		}
 	}
 	
 	private boolean canJump(MyButton cbutton)
 	{
-		if (abs(cbutton.getPx()-prevButton.getPx()) == 2 && abs(cbutton.getPy()-prevButton.getPy()) == 2)
-		{
-			int change_In_X = (cbutton.getPx() - prevButton.getPx())/2;
-			int change_In_Y = (cbutton.getPy() - prevButton.getPy())/2;
-			
-			MyButton middleButton = (MyButton)findViewById((prevButton.getPx() + change_In_X) *10 + (prevButton.getPy() + change_In_Y));
-			
-			if (middleButton.isPlayerGreen() != prevButton.isPlayerGreen())
-			{
-				middleButton.setEmpty(true);
-				middleButton.setImageResource(0);
+		if(prevButton.isPlayerGreen())
+		  {
+			  if (cbutton.getPx()-prevButton.getPx() == -2 && abs(cbutton.getPy()-prevButton.getPy()) == 2)
+			  {
+				  	int change_In_X = (cbutton.getPx() - prevButton.getPx())/2;
+					int change_In_Y = (cbutton.getPy() - prevButton.getPy())/2;
 				
-				return true;
-			}
-			
-			else 
-			{
+				MyButton middleButton = (MyButton)findViewById((prevButton.getPx() + change_In_X) *10 + (prevButton.getPy() + change_In_Y));
+				
+					if (middleButton.isPlayerGreen() != prevButton.isPlayerGreen())
+					{
+						middleButton.setEmpty(true);
+						middleButton.setImageResource(0);
+					
+						return true;
+					}
+				
+					else 
+					{
+						return false;
+					}
+					
+			 }
+			  
+			  else 
+			  {
+				  return false;
+			  }
+		  }
+		  
+		  else
+		  {
+			  if (cbutton.getPx()-prevButton.getPx() == 2 && abs(cbutton.getPy()-prevButton.getPy()) == 2)
+			  {
+				int change_In_X = (cbutton.getPx() - prevButton.getPx())/2;
+				int change_In_Y = (cbutton.getPy() - prevButton.getPy())/2;
+				
+				MyButton middleButton = (MyButton)findViewById((prevButton.getPx() + change_In_X) *10 + (prevButton.getPy() + change_In_Y));
+				
+					if (middleButton.isPlayerGreen() != prevButton.isPlayerGreen())
+					{
+						middleButton.setEmpty(true);
+						middleButton.setImageResource(0);
+						return true;
+					}
+				
+					else 
+					{
+						return false;
+					}
+			  }
+			  
+			 else 
+			 {
 				return false;
-			}
-		}
-		
-		else 
-		{
-			return false;
-		}
+			 }
+		 } 
 	}
 	
 	private int abs(int i)
@@ -374,6 +419,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	}
 
 
+	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
 	private void setBackground(final int resource, final View view)
 	{
