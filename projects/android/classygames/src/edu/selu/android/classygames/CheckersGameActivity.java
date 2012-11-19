@@ -23,6 +23,7 @@ import edu.selu.android.classygames.data.Person;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
+@SuppressLint("NewApi")
 public class CheckersGameActivity extends SherlockActivity implements OnClickListener
 {
 
@@ -192,7 +193,8 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		// I like this setBackground function here as it changes the background image
 		// of a position that I tap on... but it never changes itself back!
 		// try it for yourself!
-		// setBackground(R.drawable.bg_board_bright_selected, clickedButton);
+		if(!clickedButton.isEmpty())
+		 setBackground(R.drawable.bg_board_bright_selected, clickedButton);
 		
 		if (prevButton != null)
 		{
@@ -271,6 +273,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		
 		prevButton.setEmpty(true);
 		prevButton.setImageResource(0);
+		setBackground(R.drawable.bg_board_bright, prevButton);
 		
 		prevButton = null;
 	}
@@ -280,6 +283,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		//change image and data
 		prevButton.setImageResource(0);
 		prevButton.setEmpty(true);
+		setBackground(R.drawable.bg_board_bright, prevButton);
 		
 		//change new button
 		int changeImage = orangePlayer;
