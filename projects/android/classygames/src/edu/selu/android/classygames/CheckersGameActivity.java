@@ -298,6 +298,14 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 
 	private boolean canMove(MyButton button)
 	{
+		if(isKing(button))
+		{
+			if(abs(button.getPx()-prevButton.getPx()) == 1 && abs(button.getPy()-prevButton.getPy()) == 1)
+				return true;
+			else 
+				return false;
+		}
+			
 		if (prevButton.isPlayerGreen())
 		{
 			if (button.getPx()-prevButton.getPx() == -1 && abs(button.getPy()-prevButton.getPy()) == 1)
