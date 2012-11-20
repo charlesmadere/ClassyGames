@@ -176,37 +176,35 @@ public class ServerUtilities
 	public static String postToServer(final String url, final ArrayList<NameValuePair> data) throws IOException
 	{
 		Log.d(Utilities.LOG_TAG, "Posting data to server at " + url);
-
 		String jsonString = null;
-		InputStream inputStream = null;
-
-		HttpPost httpPost = new HttpPost(url);
-		httpPost.setEntity(new UrlEncodedFormEntity(data));
 
 		try
 		{
+			HttpPost httpPost = new HttpPost(url);
+			httpPost.setEntity(new UrlEncodedFormEntity(data));
+
 			HttpClient httpClient = new DefaultHttpClient();
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			inputStream = httpResponse.getEntity().getContent();
+			InputStream inputStream = httpResponse.getEntity().getContent();
+
+			if (inputStream != null)
+			{
+				BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, HTTP.UTF_8));
+				StringBuilder stringBuilder = new StringBuilder();
+
+				for (String line = new String(); line != null; line = bufferedReader.readLine())
+				{
+					stringBuilder.append(line);
+				}
+
+				jsonString = new String(stringBuilder.toString());
+				Log.d(Utilities.LOG_TAG, "Parsed result from server: " + jsonString);
+			}
 		}
-		catch (final Exception e)
+		catch (final IllegalArgumentException e)
 		{
 			Log.e(Utilities.LOG_TAG, "Error in HTTP connection.", e);
-		}
-
-		if (inputStream != null)
-		{
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, HTTP.UTF_8));
-			StringBuilder stringBuilder = new StringBuilder();
-
-			for (String line = new String(); line != null; line = bufferedReader.readLine())
-			{
-				stringBuilder.append(line);
-			}
-
-			jsonString = new String(stringBuilder.toString());
-			Log.d(Utilities.LOG_TAG, "Parsed result from server: " + jsonString);
 		}
 
 		return jsonString;
