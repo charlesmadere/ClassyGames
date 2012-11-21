@@ -31,6 +31,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.facebook.android.Util;
 import com.koushikdutta.urlimageviewhelper.DiskLruCache;
@@ -56,26 +58,27 @@ public class NewGameActivity extends SherlockListActivity
 		Utilities.styleActionBar(getResources(), getSupportActionBar());
 
 		// setup cache size for loading drawable images
-		final int memClass = ((ActivityManager) (NewGameActivity.this).getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
-		
+		final int memClass = ((ActivityManager) NewGameActivity.this.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
+
 		final int cacheSize = ImageCache.getCacheSize(memClass);
-		
+
 		memoryCache = new LruCache<Long, Bitmap> (cacheSize)
 		{
-			protected int sizeOf(Long key, Bitmap bitmap)
+			protected int sizeOf(final Long key, final Bitmap bitmap)
 			{
 				if (android.os.Build.VERSION.SDK_INT >= 12)
+				// if the running version of Android is 3.1 (Honeycomb) or later
 				{
-		            return bitmap.getByteCount();
+					return bitmap.getByteCount();
 				}
-		        else
-		        {
-		            return bitmap.getRowBytes() * bitmap.getHeight();
-		        }
+				else
+				{
+					return bitmap.getRowBytes() * bitmap.getHeight();
+				}
 			}
 		};
 
-		//Try loading diskCache
+		// try loading diskCache
 
 		try
 		{
@@ -89,13 +92,14 @@ public class NewGameActivity extends SherlockListActivity
 
 		new AsyncPopulateFacebookFriends().execute();
 	}
-	
-	
+
+
 	@Override
-	public void onResume()
+	public boolean onCreateOptionsMenu(final Menu menu)
 	{
-		super.onResume();
-		Utilities.getFacebook().extendAccessTokenIfNeeded(NewGameActivity.this, null);
+		MenuInflater inflater = getSupportMenuInflater();
+		inflater.inflate(R.menu.new_game_activity, menu);
+		return super.onCreateOptionsMenu(menu);
 	}
 
 
@@ -108,12 +112,24 @@ public class NewGameActivity extends SherlockListActivity
 				finish();
 				return true;
 
+			case R.id.new_game_activity_actionbar_refresh:
+				new AsyncPopulateFacebookFriends().execute();
+				return true;
+
 			default:
 				return super.onOptionsItemSelected(item);
 		}
 	}
 
-	
+
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		Utilities.getFacebook().extendAccessTokenIfNeeded(NewGameActivity.this, null);
+	}
+
+
 	private final class AsyncPopulateFacebookFriends extends AsyncTask<Void, Long, ArrayList<Person>>
 	{
 
@@ -198,14 +214,17 @@ public class NewGameActivity extends SherlockListActivity
 					break;
 			}
 		}
-		
-		
+
+
 	}
 
 
 	private class PeopleAdapter extends ArrayAdapter<Person>
 	{
+
+
 		private ArrayList<Person> people;
+
 
 		public PeopleAdapter(final Context context, final int textViewResourceId, final ArrayList<Person> people)
 		{
@@ -346,6 +365,7 @@ public class NewGameActivity extends SherlockListActivity
 			public TextView name;
 		}
 
+
 	}
 
 
@@ -366,6 +386,6 @@ public class NewGameActivity extends SherlockListActivity
 
 		return new File(cachePath + File.separator + uniqueName);
 	}
-	
-	
+
+
 }
