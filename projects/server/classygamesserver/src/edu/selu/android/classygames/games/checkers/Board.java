@@ -124,4 +124,59 @@ public class Board extends GenericBoard
 	}
 
 
+	@SuppressWarnings("unchecked")
+	public static String flipTeams(final String board)
+	{
+		String flippedBoard = null;
+
+		try
+		{
+			final Map<String, Object> data = (Map<String, Object>) new JSONParser().parse(board);
+			final Map<String, Object> boardData = (Map<String, Object>) data.get("board");
+			final List<Object> teamData = (List<Object>) boardData.get("teams");
+
+			// flip the teams
+			final Object team0 = teamData.get(0);
+			final Object team1 = teamData.get(1);
+			teamData.set(0, team1);
+			teamData.set(1, team0);
+
+			final byte teamsSize = (byte) teamData.size();
+
+			for (byte i = 0; i < teamsSize; ++i)
+			// loop through each team
+			{
+				final List<Object> team = (List<Object>) teamData.get(i);;
+				final byte teamSize = (byte) team.size();
+
+				for (byte j = 0; j < teamSize; ++j)
+				// flip the team's piece's coordinates
+				{
+					final Map<String, Object> piece = (Map<String, Object>) team.get(j);
+					final List<Long> coordinate = (List<Long>) piece.get("coordinate");
+
+					Byte x = coordinate.get(0).byteValue();
+					Byte y = coordinate.get(1).byteValue();
+
+					x = Byte.valueOf((byte) (LENGTH_HORIZONTAL - 1 - x));
+					y = Byte.valueOf((byte) (LENGTH_VERTICAL - 1 - y));
+
+					coordinate.set(0, x.longValue());
+					coordinate.set(1, y.longValue());
+				}
+
+				teamData.set(i, team);
+			}
+
+			flippedBoard = data.toString();
+		}
+		catch (final ParseException e)
+		{
+
+		}
+
+		return flippedBoard;
+	}
+
+
 }

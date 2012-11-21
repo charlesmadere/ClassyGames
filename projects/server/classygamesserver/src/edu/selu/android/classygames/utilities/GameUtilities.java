@@ -88,4 +88,19 @@ public class GameUtilities
 	}
 
 
+	/**
+	 * Flips team coordinate systems.
+	 * 
+	 * @param boardJSONData
+	 * String containing teams that you want to flip.
+	 * 
+	 * @return
+	 * A new JSON String with the teams flipped.
+	 */
+	public static String flipTeams(final String board)
+	{
+		return Board.flipTeams(board);
+	}
+
+
 }
