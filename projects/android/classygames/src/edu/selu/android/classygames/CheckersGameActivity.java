@@ -27,7 +27,6 @@ import edu.selu.android.classygames.utilities.Utilities;
 public class CheckersGameActivity extends SherlockActivity implements OnClickListener
 {
 
-
 	TableLayout layout;
 	MyButton[][] buttons;
 	
@@ -249,17 +248,14 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	private boolean isKing(MyButton clickedButton) 
 	{
 		
-			if(clickedButton.getPx() == 7 || clickedButton.getPx() == 0)
-			{
-				
-				return true;
-			}
-			
-			else
-			{
-				return false;
-			}
-		
+		if(clickedButton.getPx() == 7 || clickedButton.getPx() == 0)
+		{	
+			return true;
+		}
+		else
+		{
+			return false;
+		}	
 	}
 
 	private void Jump(MyButton clickedButton) 
@@ -298,15 +294,15 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 
 	private boolean canMove(MyButton button)
 	{
-		if(isKing(button))
+		if (isKing(button))
 		{
-			if(abs(button.getPx()-prevButton.getPx()) == 1 && abs(button.getPy()-prevButton.getPy()) == 1)
+			if (abs(button.getPx()-prevButton.getPx()) == 1 && abs(button.getPy()-prevButton.getPy()) == 1)
 				return true;
-			else 
+			else
 				return false;
 		}
-			
-		if (prevButton.isPlayerGreen())
+		
+		else if (prevButton.isPlayerGreen())
 		{
 			if (button.getPx()-prevButton.getPx() == -1 && abs(button.getPy()-prevButton.getPy()) == 1)
 				return true;
@@ -314,7 +310,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 				return false;
 		}
 		
-		else
+		else 
 		{
 			if (button.getPx()-prevButton.getPx() == 1 && abs(button.getPy()-prevButton.getPy()) == 1)
 				return true;
