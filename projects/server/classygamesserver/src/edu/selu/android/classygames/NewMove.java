@@ -60,7 +60,7 @@ public class NewMove extends HttpServlet
 		final String user_id_parameter = request.getParameter(Utilities.POST_DATA_ID);
 		final String user_opponent_parameter = request.getParameter(Utilities.POST_DATA_USER_CHALLENGED);
 		final String user_opponent_name = request.getParameter(Utilities.POST_DATA_NAME);
-		final String board = request.getParameter(Utilities.POST_DATA_BOARD);
+		String board = request.getParameter(Utilities.POST_DATA_BOARD);
 
 		if (game_id == null || game_id.isEmpty() || user_id_parameter == null || user_id_parameter.isEmpty()
 			|| user_opponent_parameter == null || user_opponent_parameter.isEmpty()
@@ -112,49 +112,60 @@ public class NewMove extends HttpServlet
 								if ((user_id.longValue() == user_creator && turn == Utilities.DATABASE_TABLE_GAMES_TURN_CREATOR)
 									|| (user_id.longValue() == user_challenged && turn == Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED))
 								{
-									final Byte board_validation_result = Byte.valueOf(GameUtilities.checkBoardValidityAndStatus(sqlResult.getString(Utilities.DATABASE_TABLE_GAMES_COLUMN_BOARD), board, Utilities.BOARD_NEW_MOVE));
+									board = GameUtilities.flipTeams(board);
 
-									if (board_validation_result.byteValue() == Utilities.BOARD_NEW_MOVE || board_validation_result.byteValue() == Utilities.BOARD_WIN)
+									if (board == null || board.isEmpty())
 									{
-										// close the PreparedStatement as it is no longer needed
-										Utilities.closeSQLStatement(sqlStatement);
+										printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_ERROR_BOARD_INVALID));
+									}
+									else
+									{
+										final Byte board_validation_result = Byte.valueOf(GameUtilities.checkBoardValidityAndStatus(sqlResult.getString(Utilities.DATABASE_TABLE_GAMES_COLUMN_BOARD), board, Utilities.BOARD_NEW_MOVE));
 
-										// prepare a SQL statement to be run on the database
-										sqlStatementString = "INSERT INTO " + Utilities.DATABASE_TABLE_GAMES + " (" + Utilities.DATABASE_TABLE_GAMES_COLUMN_BOARD + ", " + Utilities.DATABASE_TABLE_GAMES_COLUMN_TURN + ", " + Utilities.DATABASE_TABLE_GAMES_COLUMN_FINISHED + ") VALUES (?, ?, ?)";
-										sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
-
-										// prevent SQL injection by inserting data this way
-										sqlStatement.setString(1, board);
-
-										switch (turn)
+										if (board_validation_result.byteValue() == Utilities.BOARD_NEW_MOVE || board_validation_result.byteValue() == Utilities.BOARD_WIN)
 										{
-											case Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED:
-												sqlStatement.setByte(2, Utilities.DATABASE_TABLE_GAMES_TURN_CREATOR);
-												break;
+											// close the PreparedStatement as it is no longer needed
+											Utilities.closeSQLStatement(sqlStatement);
 
-											case Utilities.DATABASE_TABLE_GAMES_TURN_CREATOR:
-												sqlStatement.setByte(2, Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED);
-												break;
+											// prepare a SQL statement to be run on the database
+											sqlStatementString = "INSERT INTO " + Utilities.DATABASE_TABLE_GAMES + " (" + Utilities.DATABASE_TABLE_GAMES_COLUMN_BOARD + ", " + Utilities.DATABASE_TABLE_GAMES_COLUMN_TURN + ", " + Utilities.DATABASE_TABLE_GAMES_COLUMN_FINISHED + ") VALUES (?, ?, ?)";
+											sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
+
+											// prevent SQL injection by inserting data this way
+											sqlStatement.setString(1, board);
+
+											switch (turn)
+											{
+												case Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED:
+													sqlStatement.setByte(2, Utilities.DATABASE_TABLE_GAMES_TURN_CREATOR);
+													break;
+
+												case Utilities.DATABASE_TABLE_GAMES_TURN_CREATOR:
+													sqlStatement.setByte(2, Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED);
+													break;
+											}
+
+											switch (board_validation_result.byteValue())
+											{
+												case Utilities.BOARD_NEW_MOVE:
+													sqlStatement.setByte(3, Utilities.DATABASE_TABLE_GAMES_FINISHED_FALSE);
+													break;
+
+												case Utilities.BOARD_WIN:
+													sqlStatement.setByte(3, Utilities.DATABASE_TABLE_GAMES_FINISHED_TRUE);
+													break;
+											}
+
+											// run the SQL statement
+											sqlStatement.executeUpdate();
+
+											GCMUtilities.sendMessage(sqlConnection, game_id, user_opponent.longValue(), user_opponent_name, board_validation_result);
+											printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_MOVE_ADDED_TO_DATABASE));
 										}
-
-										switch (board_validation_result.byteValue())
+										else
 										{
-											case Utilities.BOARD_NEW_MOVE:
-												sqlStatement.setByte(3, Utilities.DATABASE_TABLE_GAMES_FINISHED_FALSE);
-												break;
-
-											case Utilities.BOARD_WIN:
-												sqlStatement.setByte(3, Utilities.DATABASE_TABLE_GAMES_FINISHED_TRUE);
-												break;
+											printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_ERROR_BOARD_INVALID));
 										}
-
-										// run the SQL statement
-										sqlStatement.executeUpdate();
-
-										// TODO
-										// change to send message instead to user_opponent.longValue()
-										GCMUtilities.sendMessage(sqlConnection, game_id, user_id.longValue(), user_opponent_name, board_validation_result);
-										printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_MOVE_ADDED_TO_DATABASE));
 									}
 								}
 								else
@@ -172,6 +183,10 @@ public class NewMove extends HttpServlet
 						{
 							printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_FIND_GAME_WITH_SPECIFIED_ID));
 						}
+					}
+					else
+					{
+						printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_INVALID_CHALLENGER));
 					}
 				}
 				catch (final SQLException e)
