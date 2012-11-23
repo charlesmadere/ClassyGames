@@ -117,7 +117,7 @@ public class NewGameActivity extends SherlockListActivity
 				return true;
 
 			case R.id.new_game_activity_actionbar_refresh:
-				// clear the friends list as the user decided to manually refresh his friends list
+				// clear the cached friends list as the user decided to manually refresh his friends list
 				NewGameActivity.this.getPreferences(MODE_PRIVATE).edit().clear().commit();
 
 				new AsyncPopulateFacebookFriends().execute();
@@ -137,7 +137,7 @@ public class NewGameActivity extends SherlockListActivity
 	}
 
 
-	private final class AsyncPopulateFacebookFriends extends AsyncTask<Void, Long, ArrayList<Person>>
+	private final class AsyncPopulateFacebookFriends extends AsyncTask<Void, Integer, ArrayList<Person>>
 	{
 
 
@@ -164,7 +164,7 @@ public class NewGameActivity extends SherlockListActivity
 					final JSONObject response = Util.parseJson(request);
 					final JSONArray friends = response.getJSONArray("data");
 					final int friendsLength = friends.length();
-					publishProgress((long) friendsLength);
+					publishProgress(friendsLength);
 
 					for (int i = 0; i < friendsLength; ++i)
 					{
@@ -172,7 +172,7 @@ public class NewGameActivity extends SherlockListActivity
 						final long id = friend.getLong("id");
 						people.add(new Person(id, friend.getString("name")));
 
-						publishProgress((long) i, (long) 0);
+						publishProgress(i, 0);
 					}
 				}
 				catch (final Exception e)
@@ -184,7 +184,7 @@ public class NewGameActivity extends SherlockListActivity
 			// there was a cached list of friends
 			{
 				final Set<String> set = map.keySet();
-				publishProgress((long) map.size());
+				publishProgress(map.size());
 
 				int count = 0;
 				for (Iterator<String> i = set.iterator(); i.hasNext(); ++count)
@@ -197,7 +197,7 @@ public class NewGameActivity extends SherlockListActivity
 						people.add(person);
 					}
 
-					publishProgress((long) count, (long) 0);
+					publishProgress(count, 0);
 				}
 			}
 
@@ -244,11 +244,11 @@ public class NewGameActivity extends SherlockListActivity
 		protected void onPreExecute()
 		{
 			progressDialog = new ProgressDialog(NewGameActivity.this);
+			progressDialog.setCancelable(true);
+			progressDialog.setCanceledOnTouchOutside(false);
 			progressDialog.setMessage(NewGameActivity.this.getString(R.string.new_game_activity_progressdialog_message));
 			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 			progressDialog.setTitle(R.string.new_game_activity_progressdialog_title);
-			progressDialog.setCancelable(true);
-			progressDialog.setCanceledOnTouchOutside(false);
 			progressDialog.show();
 
 			Utilities.getFacebook().extendAccessTokenIfNeeded(NewGameActivity.this, null);
@@ -256,16 +256,16 @@ public class NewGameActivity extends SherlockListActivity
 
 
 		@Override
-		protected void onProgressUpdate(final Long... l)
+		protected void onProgressUpdate(final Integer... i)
 		{
-			switch (l.length)
+			switch (i.length)
 			{
 				case 1:
-					progressDialog.setMax(l[0].intValue());
+					progressDialog.setMax(i[0].intValue());
 					break;
 
 				case 2:
-					progressDialog.setProgress(l[0].intValue());
+					progressDialog.setProgress(i[0].intValue());
 					break;
 			}
 		}

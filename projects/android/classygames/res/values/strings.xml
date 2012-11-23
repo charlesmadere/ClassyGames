@@ -12,9 +12,10 @@
 	<string name="confirm_game_activity_description">Are you sure that you want to start a game with this person?</string>
 	<string name="confirm_game_activity_person_picture_description">Friend\'s Picture</string>
 	<string name="confirm_game_activity_title">Confirm Game</string>
-	<string name="games_list_activity_games_progressdialog_message">Retrieving all of your games&#8230;</string>
-	<string name="games_list_activity_games_progressdialog_title">Classy Games is working&#8230;</string>
-	<string name="games_list_activity_games_error">Server was unable to respond with a list of games. Please try again later!</string>
+	<string name="games_list_activity_getgames_error">Server was unable to respond with a list of games. Please try again later!</string>
+	<string name="games_list_activity_getgames_no_games">You have no active games!</string>
+	<string name="games_list_activity_getgames_progressdialog_message">Retrieving all of your games&#8230;</string>
+	<string name="games_list_activity_getgames_progressdialog_title">Classy Games is working&#8230;</string>
 	<string name="games_list_activity_init_progressdialog_message">Initializing settings and registering you with our servers&#8230;</string>
 	<string name="games_list_activity_init_progressdialog_title">Classy Games is working&#8230;</string>
 	<string name="games_list_activity_listview_item_picture_description">Friend\'s Picture</string>

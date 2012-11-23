@@ -183,10 +183,16 @@ public class GamesListActivity extends SherlockListActivity
 	}
 
 
-	private final class AsyncPopulateGamesList extends AsyncTask<Void, Void, ArrayList<Game>>
+	private final class AsyncPopulateGamesList extends AsyncTask<Void, Integer, ArrayList<Game>>
 	{
 
 
+		private byte toastToShow;
+		private final static byte TOAST_NONE = 0;
+		private final static byte TOAST_NO_GAMES = 1;
+		private final static byte TOAST_SERVER_ERROR = 2;
+
+		private int progress;
 		private ProgressDialog progressDialog;
 
 
@@ -224,6 +230,17 @@ public class GamesListActivity extends SherlockListActivity
 			{
 				progressDialog.dismiss();
 			}
+
+			switch (toastToShow)
+			{
+				case TOAST_NO_GAMES:
+					Utilities.easyToast(GamesListActivity.this, GamesListActivity.this.getString(R.string.games_list_activity_getgames_no_games));
+					break;
+
+				case TOAST_SERVER_ERROR:
+					Utilities.easyToast(GamesListActivity.this, GamesListActivity.this.getString(R.string.games_list_activity_getgames_error));
+					break;
+			}
 		}
 
 
@@ -231,11 +248,30 @@ public class GamesListActivity extends SherlockListActivity
 		protected void onPreExecute()
 		{
 			progressDialog = new ProgressDialog(GamesListActivity.this);
-			progressDialog.setMessage(GamesListActivity.this.getString(R.string.games_list_activity_games_progressdialog_message));
-			progressDialog.setTitle(R.string.games_list_activity_games_progressdialog_title);
 			progressDialog.setCancelable(true);
 			progressDialog.setCanceledOnTouchOutside(false);
+			progressDialog.setMessage(GamesListActivity.this.getString(R.string.games_list_activity_getgames_progressdialog_message));
+			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+			progressDialog.setTitle(R.string.games_list_activity_getgames_progressdialog_title);
 			progressDialog.show();
+
+			toastToShow = TOAST_NONE;
+		}
+
+
+		@Override
+		protected void onProgressUpdate(final Integer... i)
+		{
+			switch (i.length)
+			{
+				case 1:
+					progressDialog.setMax(i[0].intValue());
+					break;
+
+				case 2:
+					progressDialog.setProgress(i[0].intValue());
+					break;
+			}
 		}
 
 
@@ -251,6 +287,9 @@ public class GamesListActivity extends SherlockListActivity
 
 				if (gameData != null)
 				{
+					publishProgress(gameData.length());
+					progress = 0;
+
 					ArrayList<Game> turn = parseTurn(gameData, ServerUtilities.POST_DATA_TURN_YOURS);
 					if (turn != null && !turn.isEmpty())
 					{
@@ -269,18 +308,25 @@ public class GamesListActivity extends SherlockListActivity
 
 					if (successMessage != null && !successMessage.isEmpty())
 					{
+						toastToShow = TOAST_NO_GAMES;
 						Log.d(Utilities.LOG_TAG, "Server returned successful message: " + successMessage);
 					}
 					else
 					{
+						Utilities.easyToast(GamesListActivity.this, GamesListActivity.this.getString(R.string.games_list_activity_getgames_error));
 						final String errorMessage = jsonResult.getString(ServerUtilities.POST_DATA_ERROR);
-						Utilities.easyToastAndLog(GamesListActivity.this, GamesListActivity.this.getString(R.string.games_list_activity_games_error));
-						Log.e(Utilities.LOG_TAG, "Server returned error message: " + errorMessage);
+
+						if (errorMessage != null && !errorMessage.isEmpty())
+						{
+							toastToShow = TOAST_SERVER_ERROR;
+							Log.e(Utilities.LOG_TAG, "Server returned error message: " + errorMessage);
+						}
 					}
 				}
 			}
 			catch (final JSONException e)
 			{
+				toastToShow = TOAST_SERVER_ERROR;
 				Log.e(Utilities.LOG_TAG, "Server returned message that was unable to be properly parsed.", e);
 			}
 
@@ -323,6 +369,9 @@ public class GamesListActivity extends SherlockListActivity
 
 					turnGames.trimToSize();
 					Collections.sort(turnGames, new GamesListSorter());
+
+					++progress;
+					publishProgress(progress, 0);
 
 					return turnGames;
 				}
