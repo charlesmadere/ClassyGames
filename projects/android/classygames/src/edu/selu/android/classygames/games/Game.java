@@ -4,7 +4,6 @@ package edu.selu.android.classygames.games;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
 import edu.selu.android.classygames.data.Person;
 
 
@@ -22,10 +21,8 @@ public class Game
 
 	private long timestamp;
 	private Person person;
-	private SimpleDateFormat lastMoveTime;
 	private String id;
-	private final static String LAST_MOVE_TIME_FORMAT = "MMMM dd, yyyy hh:mm a";
-
+	private String timestampFormatted;
 
 	public Game()
 	{
@@ -34,7 +31,7 @@ public class Game
 		timestamp = 0;
 		person = new Person();
 		id = new String();
-		lastMoveTime = new SimpleDateFormat(LAST_MOVE_TIME_FORMAT, Locale.US);
+		
 	}
 
 
@@ -45,7 +42,7 @@ public class Game
 		timestamp = 0;
 		this.person = person;
 		id = new String();
-		lastMoveTime = new SimpleDateFormat(LAST_MOVE_TIME_FORMAT, Locale.US);
+		
 	}
 
 
@@ -56,7 +53,6 @@ public class Game
 		this.timestamp = timestamp;
 		this.person = person;
 		this.id = id;
-		lastMoveTime = new SimpleDateFormat(LAST_MOVE_TIME_FORMAT, Locale.US);
 	}
 
 
@@ -67,7 +63,6 @@ public class Game
 		this.timestamp = timestamp;
 		this.person = person;
 		this.id = id;
-		lastMoveTime = new SimpleDateFormat(LAST_MOVE_TIME_FORMAT, Locale.US);
 	}
 
 
@@ -100,12 +95,6 @@ public class Game
 	}
 
 
-	public String getLastMoveTime()
-	{
-		return lastMoveTime.format(new Date());
-	}
-
-
 	public Person getPerson()
 	{
 		return person;
@@ -126,7 +115,103 @@ public class Game
 
 	String getTimestampFormatted()
 	{
-		return "time: " + timestamp;
+		if (timestampFormatted == null || timestampFormatted.isEmpty())
+		{
+			long timeNow = System.currentTimeMillis() / 1000;
+			long timeofGame = timeNow - timestamp;
+			int weeksAgo = (int) (timeofGame / 604800);
+			
+			if (weeksAgo > 0)
+			{
+				switch (weeksAgo) 
+				{
+					case 1:
+						timestampFormatted = "1 week ago";
+						break;
+
+					case 2:
+						timestampFormatted = "2 weeks ago";
+						break;
+						
+					default:
+						timestampFormatted = "more than 2 weeks ago";
+						break;
+				}
+			} 
+			else
+			{
+				int daysAgo = (int) (timeofGame / 86400);
+				
+				if (daysAgo >= 1)
+				{
+					switch (daysAgo) 
+					{
+						case 1:
+							timestampFormatted = "1 day ago";
+							break;
+							
+						case 2:
+							timestampFormatted = "15 days ago";
+							break;
+							
+						default:
+							timestampFormatted = " a month ago";
+							break;
+					}
+				}
+				else
+				{
+					int hoursAgo =(int) (timeofGame / 3600);
+					if (hoursAgo >= 1)
+					{
+						switch (hoursAgo) 
+						{
+							case 1:
+								timestampFormatted = "1 hour ago";
+								break;
+
+							case 2:
+								timestampFormatted = "10 hours ago";
+								break;
+								
+							default:
+								timestampFormatted = " a half day ago";
+								break;
+						}
+						
+					}
+					else
+					{
+						int minutesAgo = (int) (timeofGame / 60);
+						if (minutesAgo >= 2)
+						{
+							switch (minutesAgo) 
+							{
+								case 1:
+									timestampFormatted = "5 minutes ago";
+									break;
+
+								case 2:
+									timestampFormatted = "30 minutes ago";
+									break;
+									
+								default:
+									timestampFormatted = "1 hour ago";
+									break;
+							}
+							
+						}
+						else
+						{
+							timestampFormatted = "just now";
+						}
+					}
+				}
+			}
+		}
+		
+		
+		return timestampFormatted;		
 	}
 
 
