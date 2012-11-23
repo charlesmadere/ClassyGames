@@ -107,13 +107,13 @@ public class Game
 	}
 
 
-	long getTimestamp()
+	public long getTimestamp()
 	{
 		return timestamp;
 	}
 
 
-	String getTimestampFormatted()
+	public String getTimestampFormatted()
 	{
 		if (timestampFormatted == null || timestampFormatted.isEmpty())
 		{
