@@ -3,6 +3,8 @@ package edu.selu.android.classygames;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -73,13 +75,6 @@ public class GamesListActivity extends SherlockListActivity
 		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.games_list_activity, menu);
 		return super.onCreateOptionsMenu(menu);
-	}
-
-
-	@Override
-	public void onDestroy()
-	{
-		super.onDestroy();
 	}
 
 
@@ -179,7 +174,7 @@ public class GamesListActivity extends SherlockListActivity
 			progressDialog = new ProgressDialog(GamesListActivity.this);
 			progressDialog.setMessage(GamesListActivity.this.getString(R.string.games_list_activity_init_progressdialog_message));
 			progressDialog.setTitle(R.string.games_list_activity_init_progressdialog_title);
-			progressDialog.setCancelable(true);
+			progressDialog.setCancelable(false);
 			progressDialog.setCanceledOnTouchOutside(false);
 			progressDialog.show();
 		}
@@ -224,7 +219,7 @@ public class GamesListActivity extends SherlockListActivity
 			gamesAdapter = new GamesListAdapter(GamesListActivity.this, R.layout.new_game_activity_listview_item, games);
 			setListAdapter(gamesAdapter);
 			gamesAdapter.notifyDataSetChanged();
-			
+
 			if (progressDialog.isShowing())
 			{
 				progressDialog.dismiss();
@@ -256,71 +251,23 @@ public class GamesListActivity extends SherlockListActivity
 
 				if (gameData != null)
 				{
-					try
+					ArrayList<Game> turn = parseTurn(gameData, ServerUtilities.POST_DATA_TURN_YOURS);
+					if (turn != null && !turn.isEmpty())
 					{
-						final JSONArray turnYours = gameData.getJSONArray(ServerUtilities.POST_DATA_TURN_YOURS);
-						games.add(new Game(Game.TURN_YOURS, Game.TYPE_SEPARATOR));
-						final int turnYoursSize = turnYours.length();
-
-						for (int i = 0; i < turnYoursSize; ++i)
-						{
-							try
-							{
-								// grab the current game's JSONObject
-								final JSONObject jsonGame = turnYours.getJSONObject(i);
-								final Game game = parseGame(jsonGame);
-
-								if (game != null)
-								{
-									games.add(game);
-								}
-							}
-							catch (final JSONException e)
-							{
-
-							}
-						}
-					}
-					catch (final JSONException e)
-					{
-						Log.d(Utilities.LOG_TAG, "Player has no games that are his own turn.");
+						games.addAll(turn);
 					}
 
-					try
+					turn = parseTurn(gameData, ServerUtilities.POST_DATA_TURN_THEIRS);
+					if (turn != null && !turn.isEmpty())
 					{
-						final JSONArray turnTheirs = gameData.getJSONArray(ServerUtilities.POST_DATA_TURN_THEIRS);
-						games.add(new Game(Game.TURN_THEIRS, Game.TYPE_SEPARATOR));
-						final int turnTheirsSize = turnTheirs.length();
-
-						for (int i = 0; i < turnTheirsSize; ++i)
-						{
-							try
-							{
-								// grab the current game's JSONObject
-								final JSONObject jsonGame = turnTheirs.getJSONObject(i);
-								final Game game = parseGame(jsonGame);
-
-								if (game != null)
-								{
-									games.add(game);
-								}
-							}
-							catch (final JSONException e)
-							{
-
-							}
-						}
-					}
-					catch (final JSONException e)
-					{
-						Log.d(Utilities.LOG_TAG, "Player has no games that are the other person's turn.");
+						games.addAll(turn);
 					}
 				}
 				else
 				{
 					final String successMessage = jsonResult.optString(ServerUtilities.POST_DATA_SUCCESS);
 
-					if (successMessage != null)
+					if (successMessage != null && !successMessage.isEmpty())
 					{
 						Log.d(Utilities.LOG_TAG, "Server returned successful message: " + successMessage);
 					}
@@ -342,6 +289,53 @@ public class GamesListActivity extends SherlockListActivity
 		}
 
 
+		private ArrayList<Game> parseTurn(final JSONObject gameData, final String postDataTurn)
+		{
+			try
+			{
+				final JSONArray turn = gameData.getJSONArray(postDataTurn);
+				final int turnSize = turn.length();
+
+				if (turnSize >= 1)
+				// ensure that we have at least one game in this list
+				{
+					ArrayList<Game> turnGames = new ArrayList<Game>();
+					turnGames.add(new Game(Game.TURN_YOURS, Game.TYPE_SEPARATOR));
+
+					for (int i = 0; i < turnSize; ++i)
+					{
+						try
+						{
+							// grab the current game's JSONObject
+							final JSONObject jsonGame = turn.getJSONObject(i);
+							final Game game = parseGame(jsonGame);
+
+							if (game != null)
+							{
+								turnGames.add(game);
+							}
+						}
+						catch (final JSONException e)
+						{
+							Log.e(Utilities.LOG_TAG, "Error parsing turn game data!");
+						}
+					}
+
+					turnGames.trimToSize();
+					Collections.sort(turnGames, new GamesListSorter());
+
+					return turnGames;
+				}
+			}
+			catch (final JSONException e)
+			{
+				Log.d(Utilities.LOG_TAG, "Player has no games that are his own turn.");
+			}
+
+			return null;
+		}
+
+
 		private Game parseGame(final JSONObject game)
 		{
 			try
@@ -356,7 +350,7 @@ public class GamesListActivity extends SherlockListActivity
 			}
 			catch (final JSONException e)
 			{
-
+				Log.e(Utilities.LOG_TAG, "Error parsing individual game data!");
 			}
 
 			return null;
@@ -418,7 +412,7 @@ public class GamesListActivity extends SherlockListActivity
 					viewHolder.time = (TextView) convertView.findViewById(R.id.games_list_activity_listview_item_time);
 					if (viewHolder.time != null)
 					{
-						viewHolder.time.setText(game.getLastMoveTime());
+						viewHolder.time.setText(game.getTimestampFormatted());
 					}	
 
 					viewHolder.onClickListener = new OnClickListener()
@@ -478,6 +472,16 @@ public class GamesListActivity extends SherlockListActivity
 		}
 
 
+	}
+
+
+	private class GamesListSorter implements Comparator<Game>
+	{
+		@Override
+		public int compare(final Game one, final Game two)
+		{
+			return (int) (two.getTimestamp() - one.getTimestamp());
+		}
 	}
 
 

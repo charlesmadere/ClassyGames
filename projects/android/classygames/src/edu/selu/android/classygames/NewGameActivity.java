@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,6 +17,7 @@ import android.app.ActivityManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -113,6 +117,9 @@ public class NewGameActivity extends SherlockListActivity
 				return true;
 
 			case R.id.new_game_activity_actionbar_refresh:
+				// clear the friends list as the user decided to manually refresh his friends list
+				NewGameActivity.this.getPreferences(MODE_PRIVATE).edit().clear().commit();
+
 				new AsyncPopulateFacebookFriends().execute();
 				return true;
 
@@ -142,30 +149,60 @@ public class NewGameActivity extends SherlockListActivity
 		{
 			ArrayList<Person> people = new ArrayList<Person>();
 
-			try
-			{
-				final String request = Utilities.getFacebook().request("me/friends");
-				final JSONObject response = Util.parseJson(request);
-				final JSONArray friends = response.getJSONArray("data");
-				final int friendsLength = friends.length();
-				publishProgress((long) friendsLength);
+			// attempt to acquire the cached list of friends
+			final SharedPreferences preferences = NewGameActivity.this.getPreferences(MODE_PRIVATE);
 
-				for (int i = 0; i < friendsLength; ++i)
+			@SuppressWarnings("unchecked")
+			final Map<String, Long> map = (Map<String, Long>) preferences.getAll();
+
+			if (map == null || map.isEmpty())
+			// there was no cached list of friends
+			{
+				try
 				{
-					final JSONObject friend = friends.getJSONObject(i);
-					final long id = friend.getLong("id");
-					people.add(new Person(id, friend.getString("name")));
+					final String request = Utilities.getFacebook().request("me/friends");
+					final JSONObject response = Util.parseJson(request);
+					final JSONArray friends = response.getJSONArray("data");
+					final int friendsLength = friends.length();
+					publishProgress((long) friendsLength);
 
-					publishProgress((long) i, id);
+					for (int i = 0; i < friendsLength; ++i)
+					{
+						final JSONObject friend = friends.getJSONObject(i);
+						final long id = friend.getLong("id");
+						people.add(new Person(id, friend.getString("name")));
+
+						publishProgress((long) i, (long) 0);
+					}
 				}
-
-				people.trimToSize();
-				Collections.sort(people, new FacebookFriendsSorter());
+				catch (final Exception e)
+				{
+					Log.e(Utilities.LOG_TAG, e.getMessage());
+				}
 			}
-			catch (final Exception e)
+			else
+			// there was a cached list of friends
 			{
-				Log.e(Utilities.LOG_TAG, e.getMessage());
+				final Set<String> set = map.keySet();
+				publishProgress((long) map.size());
+
+				int count = 0;
+				for (Iterator<String> i = set.iterator(); i.hasNext(); ++count)
+				{
+					final String name = i.next();
+
+					if (name != null && !name.isEmpty())
+					{
+						final Person person = new Person(map.get(name).longValue(), name);
+						people.add(person);
+					}
+
+					publishProgress((long) count, (long) 0);
+				}
 			}
+
+			people.trimToSize();
+			Collections.sort(people, new FacebookFriendsSorter());
 
 			return people;
 		}
@@ -177,6 +214,24 @@ public class NewGameActivity extends SherlockListActivity
 			peopleAdapter = new PeopleAdapter(NewGameActivity.this, R.layout.new_game_activity_listview_item, people);
 			setListAdapter(peopleAdapter);
 			peopleAdapter.notifyDataSetChanged();
+
+			final int peopleSize = people.size();
+			if (peopleSize >= 1)
+			{
+				// cache friends list
+				SharedPreferences.Editor editor = NewGameActivity.this.getPreferences(MODE_PRIVATE).edit();
+
+				// make sure to clear out the existing friends list
+				editor.clear();
+
+				for (int i = 0; i < peopleSize; ++i)
+				{
+					final Person person = people.get(i);
+					editor.putLong(person.getName(), person.getId());
+				}
+
+				editor.commit();
+			}
 
 			if (progressDialog.isShowing())
 			{
@@ -302,10 +357,10 @@ public class NewGameActivity extends SherlockListActivity
 		{
 
 
-			private Drawable drawable;
 			private Bitmap bitmap;
-			private ViewHolder viewHolder;
+			private Drawable drawable;
 			private String path;
+			private ViewHolder viewHolder;
 
 
 			AsyncPopulatePictures(final ViewHolder viewHolder)
@@ -329,7 +384,7 @@ public class NewGameActivity extends SherlockListActivity
 					try
 					{
 							drawable = Utilities.loadImageFromWebOperations(Utilities.FACEBOOK_GRAPH_API_URL + person[0].getId() + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE_SSL);
-							bitmap = ((BitmapDrawable)drawable).getBitmap();
+							bitmap = ((BitmapDrawable) drawable).getBitmap();
 							ImageCache.addBitmapToCache(person[0].getId(),bitmap, memoryCache, diskCache);
 					}
 					catch (final Exception e)
