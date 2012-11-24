@@ -1,9 +1,6 @@
 package edu.selu.android.classygames.games;
 
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 import edu.selu.android.classygames.data.Person;
 
 
@@ -23,6 +20,7 @@ public class Game
 	private Person person;
 	private String id;
 	private String timestampFormatted;
+
 
 	public Game()
 	{
@@ -116,90 +114,97 @@ public class Game
 	public String getTimestampFormatted()
 	{
 		if (timestampFormatted == null || timestampFormatted.isEmpty())
+		// check to see if we've already created a formatted timestamp String
+		// for this game object
 		{
-			long timeNow = System.currentTimeMillis() / 1000;
-			long timeofGame = timeNow - timestamp;
-			int weeksAgo = (int) (timeofGame / 604800);
-			
-			if (weeksAgo > 0)
-			{
-				switch (weeksAgo) 
-				{
-					case 1:
-						timestampFormatted = "1 week ago";
-						break;
+			// find out the between the time NOW versus the time of this game's
+			// last move
+			final long timeDifference = (System.currentTimeMillis() / 1000) - timestamp;
 
-					case 2:
-						timestampFormatted = "2 weeks ago";
-						break;
-						
-					default:
-						timestampFormatted = "more than 2 weeks ago";
-						break;
+			// calculate the number of weeks in the difference between the two times
+			long timeAgo = timeDifference / 604800;
+
+			if (timeAgo >= 1)
+			{
+				if (timeAgo == 1)
+				{
+					timestampFormatted = "1 week ago";
 				}
-			} 
+				else if (timeAgo == 2)
+				{
+					timestampFormatted = "2 weeks ago";
+				}
+				else
+				{
+					timestampFormatted = "more than 2 weeks ago";
+				}
+			}
 			else
 			{
-				int daysAgo = (int) (timeofGame / 86400);
-				
-				if (daysAgo >= 1)
+				// calculate the number of days in the difference between the
+				// two times
+				timeAgo = timeDifference / 86400;
+
+				if (timeAgo >= 1)
 				{
-					switch (daysAgo) 
+					if (timeAgo == 1)
 					{
-						case 1:
-							timestampFormatted = "1 day ago";
-							break;
-							
-						case 2:
-							timestampFormatted = "15 days ago";
-							break;
-							
-						default:
-							timestampFormatted = " a month ago";
-							break;
+						timestampFormatted = "1 day ago";
+					}
+					else if (timeAgo >= 2 && timeAgo <= 5)
+					{
+						timestampFormatted = timeAgo + " days ago";
+					}
+					else
+					{
+						timestampFormatted = "almost a week ago";
 					}
 				}
 				else
 				{
-					int hoursAgo =(int) (timeofGame / 3600);
-					if (hoursAgo >= 1)
-					{
-						switch (hoursAgo) 
-						{
-							case 1:
-								timestampFormatted = "1 hour ago";
-								break;
+					// calculate the number of hours in the difference
+					// between the two times
+					timeAgo = timeDifference / 3600;
 
-							case 2:
-								timestampFormatted = "10 hours ago";
-								break;
-								
-							default:
-								timestampFormatted = " a half day ago";
-								break;
+					if (timeAgo >= 1)
+					{
+						if (timeAgo == 1)
+						{
+							timestampFormatted = "1 hour ago";
 						}
-						
+						else if (timeAgo >= 2 && timeAgo <= 12)
+						{
+							timestampFormatted = timeAgo + " hours ago";
+						}
+						else if (timeAgo > 12 && timeAgo <= 18)
+						{
+							timestampFormatted = "about half a day ago";
+						}
+						else
+						{
+							timestampFormatted = "almost a day ago";
+						}
 					}
 					else
 					{
-						int minutesAgo = (int) (timeofGame / 60);
-						if (minutesAgo >= 2)
-						{
-							switch (minutesAgo) 
-							{
-								case 1:
-									timestampFormatted = "5 minutes ago";
-									break;
+						// calculate the number of minutes in the
+						// difference between the two times
+						timeAgo = timeDifference / 60;
 
-								case 2:
-									timestampFormatted = "30 minutes ago";
-									break;
-									
-								default:
-									timestampFormatted = "1 hour ago";
-									break;
+						if (timeAgo >= 1)
+						{
+							if (timeAgo == 1)
+							{
+								timestampFormatted = "1 minute ago";
 							}
-							
+							else if (timeAgo >= 2 && timeAgo <= 45)
+							{
+								timestampFormatted = timeAgo + " minutes ago";
+							}
+							else
+							{
+								timestampFormatted = "almost an hour ago";
+							}
 						}
 						else
 						{
@@ -209,9 +214,8 @@ public class Game
 				}
 			}
 		}
-		
-		
-		return timestampFormatted;		
+
+		return timestampFormatted;
 	}
 
 
