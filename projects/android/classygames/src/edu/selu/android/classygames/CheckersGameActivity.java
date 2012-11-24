@@ -95,6 +95,16 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			{
 				personChallenged = new Person(challengedId, challengedName);
 				getSupportActionBar().setTitle(CheckersGameActivity.this.getString(R.string.checkers_game_activity_title) + " " + personChallenged.getName());
+			
+				if( gameId != null && !gameId.isEmpty() )
+				{
+					new AsyncGetGame().execute();
+				}
+				else
+				{
+					new AsyncSendMove().execute();
+				}
+			
 			}
 		}
 
