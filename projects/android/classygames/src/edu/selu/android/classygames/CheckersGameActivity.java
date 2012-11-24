@@ -1,10 +1,25 @@
 package edu.selu.android.classygames;
 
 
+import java.util.ArrayList;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,6 +35,8 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 import edu.selu.android.classygames.data.Person;
+import edu.selu.android.classygames.games.Game;
+import edu.selu.android.classygames.utilities.ServerUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
@@ -179,6 +196,233 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		// I don't believe this line is necessary with our new layout style
 //		setContentView(layout, tableLp);
 	}
+	
+	
+	
+/***************************/
+	
+	private final class AsyncGetGame extends AsyncTask<Void, Void, Game>
+	{
+
+		private ProgressDialog progressDialog;
+		ServerUtilities ServerUtilities = new ServerUtilities();
+
+		@Override
+		protected Game doInBackground(final Void... v)
+		{
+			
+			HttpClient client = new DefaultHttpClient();
+		    HttpGet httpGet = new HttpGet(ServerUtilities.SERVER_GET_GAME_ADDRESS);
+			
+		    JSONObject object = new JSONObject();
+		    
+		    ArrayList<NameValuePair> nameValuePair = new ArrayList<NameValuePair>();
+		    
+		    final Bundle bundle = getIntent().getExtras();
+		    gameId = bundle.getString(INTENT_DATA_GAME_ID);
+		    
+			try
+			{
+				nameValuePair.add(new BasicNameValuePair(ServerUtilities.POST_DATA_GAME_ID, gameId));
+				
+				final String jsonString;
+				
+				// make a call to the server and grab the return JSON result
+				if( gameId != null && !gameId.isEmpty() )
+				{
+					jsonString = ServerUtilities.postToServer(ServerUtilities.SERVER_NEW_MOVE_ADDRESS, nameValuePair );
+				}
+				else
+				{
+					jsonString = ServerUtilities.postToServer( ServerUtilities.SERVER_NEW_GAME_ADDRESS, nameValuePair );
+				}
+				nameValuePair = parseServerResults(jsonString);
+				
+				System.out.println( object );
+			}
+			catch( final Exception e )
+			{
+				Log.e(Utilities.LOG_TAG, e.getMessage());
+			}
+			
+			return null;
+		}
+
+		protected void onPostExecute(final Void result)
+		{
+			if (progressDialog.isShowing())
+			{
+				progressDialog.dismiss();
+			}
+		}
+
+		@Override
+		protected void onPreExecute()
+		{
+			System.out.println( "Progress Dialog creation starting");
+			progressDialog = new ProgressDialog(CheckersGameActivity.this);
+			progressDialog.setMessage(CheckersGameActivity.this.getString(R.string.games_list_activity_init_progressdialog_message));
+			progressDialog.setTitle(R.string.games_list_activity_init_progressdialog_title);
+			progressDialog.setCancelable(false);
+			progressDialog.setCanceledOnTouchOutside(false);
+			
+			System.out.println( "Progress Dialog creation complete, now showing" );
+
+			progressDialog.show();
+			
+			System.out.println( "Showing progress dialog");
+		}
+
+	}
+	
+	private final class AsyncSendMove extends AsyncTask<Void, Void, Void>
+	{
+
+		private ProgressDialog progressDialog;
+		ServerUtilities ServerUtilities = new ServerUtilities();
+		
+		@Override
+		protected Void doInBackground(final Void... v)
+		{
+
+			HttpClient client = new DefaultHttpClient();
+		    HttpPost httpPostNewGame = new HttpPost(ServerUtilities.SERVER_NEW_GAME_ADDRESS);
+		    HttpPost httpPostNewMove = new HttpPost(ServerUtilities.SERVER_NEW_MOVE_ADDRESS);
+		    
+		    JSONArray jarray = new JSONArray();
+			
+		    JSONObject object = new JSONObject();
+		    JSONObject teams = new JSONObject();		    
+		    
+		    for( int i = 0; i < 8; i++ )
+		    {
+		    	for( int j = 0; j < 8; j++ )
+			    {
+		    		String coordinate = "[" + i + "," + j + "]";
+			    	try
+			    	{
+			    		JSONObject coordinates = new JSONObject();
+			    		JSONObject type = new JSONObject();
+					    JSONArray miniArray = new JSONArray();
+					    JSONArray miniCoords = new JSONArray();
+					    JSONArray midArray = new JSONArray();
+					    JSONObject miniObject = new JSONObject();
+					    
+					    /*********Coords JSONArray*********/
+					    miniCoords.put(i);
+					    miniCoords.put(j);
+					   /**********End Coords JSON*******/
+			    		
+					    coordinates.put("coordinate", miniCoords);
+						type.put("type", 1);
+						
+						miniArray.put(coordinates);
+						miniArray.put(type);
+						
+						jarray.put(miniArray);
+					} 
+			    	catch (JSONException e)
+			    	{
+						e.printStackTrace();
+					}
+			    }
+		    }
+		    
+		    try
+		    {
+		    	teams.put("teams", jarray);
+			}
+		    catch (JSONException e2)
+			{
+				e2.printStackTrace();
+			}
+		    
+		    try
+		    {
+				object.put("board", teams);
+			}
+		    catch (JSONException e1)
+			{
+				e1.printStackTrace();
+			}
+		    
+		    System.out.println( object.toString() );
+		    ArrayList<NameValuePair> nameValuePair = new ArrayList<NameValuePair>();
+		    
+		    final Bundle bundle = getIntent().getExtras();
+		    gameId = bundle.getString(INTENT_DATA_GAME_ID);
+		    final long challengedId = bundle.getLong(INTENT_DATA_PERSON_CHALLENGED_ID);
+			final String challengedName = bundle.getString(INTENT_DATA_PERSON_CHALLENGED_NAME);
+			
+			try
+			{
+				nameValuePair.add(new BasicNameValuePair(ServerUtilities.POST_DATA_BOARD, object.toString()));
+				nameValuePair.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CHALLENGED, personChallenged.getName()));
+				nameValuePair.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CHALLENGED, Long.valueOf(personChallenged.getId()).toString()));
+				nameValuePair.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CREATOR, Long.valueOf(Utilities.getWhoAmI(CheckersGameActivity.this).getId()).toString()));
+				
+				final String jsonString;
+				
+				if( gameId != null && !gameId.isEmpty() )
+				{
+					nameValuePair.add(new BasicNameValuePair(ServerUtilities.POST_DATA_GAME_ID, gameId));
+					jsonString = ServerUtilities.postToServer(ServerUtilities.SERVER_NEW_MOVE_ADDRESS, nameValuePair );
+					System.out.println( "Hitting new move address");
+				}
+				else
+				{
+					jsonString = ServerUtilities.postToServer( ServerUtilities.SERVER_NEW_GAME_ADDRESS, nameValuePair );
+					System.out.println( "Hitting this method");
+				}
+				nameValuePair = parseServerResults(jsonString);
+				
+			}
+			catch( final Exception e )
+			{	
+				Log.e(Utilities.LOG_TAG, e.getMessage());
+			}
+			
+			//if( gameId )
+			//TODO: if( no game id send to newgame )
+			//      else( send to newmove )
+			//      -add gameid as parameter
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(final Void result)
+		{
+			if (progressDialog.isShowing())
+			{
+				progressDialog.dismiss();
+			}
+		}
+
+		@Override
+		protected void onPreExecute()
+		{
+			System.out.println( "Progress Dialog creation starting");
+			progressDialog = new ProgressDialog(CheckersGameActivity.this);
+			progressDialog.setMessage(CheckersGameActivity.this.getString(R.string.games_list_activity_init_progressdialog_message));
+			progressDialog.setTitle(R.string.games_list_activity_init_progressdialog_title);
+			progressDialog.setCancelable(false);
+			progressDialog.setCanceledOnTouchOutside(false);
+			
+			System.out.println( "Progress Dialog creation complete, now showing" );
+
+			progressDialog.show();
+			
+			System.out.println( "Showing progress dialog");
+		}
+
+	}
+	
+	private ArrayList<NameValuePair> parseServerResults(final String jsonString)
+	{
+		return null;
+	}
+	
+	/********************************/
 
 
 	@Override
