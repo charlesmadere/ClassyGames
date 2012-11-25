@@ -226,7 +226,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			}
 			catch (IOException e)
 			{
-				Log.e(Utilities.LOG_TAG, "Error in HTTP POST to http://classygames.elasticbeanstalk.com/GetGame", e);
+				Log.e(Utilities.LOG_TAG, "Error in HTTP POST to " + ServerUtilities.SERVER_GET_GAME_ADDRESS, e);
 			}
 			
 			return null;
@@ -256,12 +256,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			progressDialog.setTitle(R.string.games_list_activity_init_progressdialog_title);
 			progressDialog.setCancelable(false);
 			progressDialog.setCanceledOnTouchOutside(false);
-			
-			System.out.println( "Progress Dialog creation complete, now showing" );
-
 			progressDialog.show();
-			
-			System.out.println( "Showing progress dialog");
 		}
 		
 		private void parseBoard(final String jsonString)
@@ -353,12 +348,10 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 				{
 					nameValuePair.add(new BasicNameValuePair(ServerUtilities.POST_DATA_GAME_ID, gameId));
 					jsonString = ServerUtilities.postToServer(ServerUtilities.SERVER_NEW_MOVE_ADDRESS, nameValuePair );
-					System.out.println( "Hitting new move address");
 				}
 				else
 				{
 					jsonString = ServerUtilities.postToServer( ServerUtilities.SERVER_NEW_GAME_ADDRESS, nameValuePair );
-					System.out.println( "Hitting this method");
 				}
 				parseServerResults(jsonString);
 				
@@ -382,18 +375,12 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		@Override
 		protected void onPreExecute()
 		{
-			System.out.println( "Progress Dialog creation starting");
 			progressDialog = new ProgressDialog(CheckersGameActivity.this);
 			progressDialog.setMessage(CheckersGameActivity.this.getString(R.string.games_list_activity_init_progressdialog_message));
 			progressDialog.setTitle(R.string.games_list_activity_init_progressdialog_title);
 			progressDialog.setCancelable(false);
 			progressDialog.setCanceledOnTouchOutside(false);
-			
-			System.out.println( "Progress Dialog creation complete, now showing" );
-
 			progressDialog.show();
-			
-			System.out.println( "Showing progress dialog");
 		}
 
 		private void parseServerResults(final String jsonString)
