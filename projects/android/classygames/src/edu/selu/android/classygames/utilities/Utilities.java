@@ -99,7 +99,7 @@ public class Utilities
 	 */
 	public static void easyToast(final Context context, final String message)
 	{
-		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+		Toast.makeText(context, message, Toast.LENGTH_LONG).show();
 	}
 
 

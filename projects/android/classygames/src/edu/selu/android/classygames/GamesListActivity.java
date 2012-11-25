@@ -172,10 +172,10 @@ public class GamesListActivity extends SherlockListActivity
 		protected void onPreExecute()
 		{
 			progressDialog = new ProgressDialog(GamesListActivity.this);
-			progressDialog.setMessage(GamesListActivity.this.getString(R.string.games_list_activity_init_progressdialog_message));
-			progressDialog.setTitle(R.string.games_list_activity_init_progressdialog_title);
 			progressDialog.setCancelable(false);
 			progressDialog.setCanceledOnTouchOutside(false);
+			progressDialog.setMessage(GamesListActivity.this.getString(R.string.games_list_activity_init_progressdialog_message));
+			progressDialog.setTitle(R.string.games_list_activity_init_progressdialog_title);
 			progressDialog.show();
 		}
 
@@ -217,6 +217,8 @@ public class GamesListActivity extends SherlockListActivity
 				toastToShow = TOAST_SERVER_RESPONSE_ERROR;
 			}
 
+			publishProgress(2);
+
 			return games;
 		}
 
@@ -256,6 +258,7 @@ public class GamesListActivity extends SherlockListActivity
 			progressDialog = new ProgressDialog(GamesListActivity.this);
 			progressDialog.setCancelable(true);
 			progressDialog.setCanceledOnTouchOutside(false);
+			progressDialog.setMax(2);
 			progressDialog.setMessage(GamesListActivity.this.getString(R.string.games_list_activity_getgames_progressdialog_message));
 			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 			progressDialog.setTitle(R.string.games_list_activity_getgames_progressdialog_title);
@@ -268,16 +271,7 @@ public class GamesListActivity extends SherlockListActivity
 		@Override
 		protected void onProgressUpdate(final Integer... i)
 		{
-			switch (i.length)
-			{
-				case 1:
-					progressDialog.setMax(i[0].intValue());
-					break;
-
-				case 2:
-					progressDialog.setProgress(i[0].intValue());
-					break;
-			}
+			progressDialog.setProgress(i[0].intValue());
 		}
 
 
@@ -377,7 +371,7 @@ public class GamesListActivity extends SherlockListActivity
 					Collections.sort(turnGames, new GamesListSorter());
 
 					++progress;
-					publishProgress(progress, 0);
+					publishProgress(progress);
 
 					return turnGames;
 				}
