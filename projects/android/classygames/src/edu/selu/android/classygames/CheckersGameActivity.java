@@ -61,6 +61,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	private Person personChallenged;
 
 
+	@SuppressLint("NewApi")
 	@Override
 	public void onCreate(final Bundle savedInstanceState)
 	{
@@ -355,9 +356,9 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 					return ServerUtilities.postToServer(ServerUtilities.SERVER_NEW_MOVE_ADDRESS, nameValuePairs);
 				}
 			}
-			catch (final Exception e)
+			catch (final IOException e)
 			{
-				Log.e(Utilities.LOG_TAG, e.getMessage());
+				Log.e(Utilities.LOG_TAG, "Error in HTTP POST to server", e);
 			}
 
 			return null;
