@@ -249,10 +249,8 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		{
 			System.out.println( "Progress Dialog creation starting");
 			progressDialog = new ProgressDialog(CheckersGameActivity.this);
-			// TODO
-			// set the two below setMessage and setTitle lines to actually show something relevant to this class
-			progressDialog.setMessage(CheckersGameActivity.this.getString(R.string.games_list_activity_init_progressdialog_message));
-			progressDialog.setTitle(R.string.games_list_activity_init_progressdialog_title);
+			progressDialog.setMessage(CheckersGameActivity.this.getString(R.string.checkers_game_activity_getgame_progressdialog_message));
+			progressDialog.setTitle(R.string.checkers_game_activity_getgame_progressdialog_title);
 			progressDialog.setCancelable(false);
 			progressDialog.setCanceledOnTouchOutside(false);
 			progressDialog.show();
@@ -340,10 +338,8 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			progressDialog = new ProgressDialog(CheckersGameActivity.this);
 			progressDialog.setCancelable(false);
 			progressDialog.setCanceledOnTouchOutside(false);
-			// TODO
-			// set the two below setMessage and setTitle lines to actually show something relevant to this class
-			progressDialog.setMessage(CheckersGameActivity.this.getString(R.string.games_list_activity_init_progressdialog_message));
-			progressDialog.setTitle(R.string.games_list_activity_init_progressdialog_title);
+			progressDialog.setMessage(CheckersGameActivity.this.getString(R.string.checkers_game_activity_sendmove_progressdialog_message));
+			progressDialog.setTitle(R.string.checkers_game_activity_sendmove_progressdialog_title);
 			progressDialog.show();
 		}
 
@@ -380,10 +376,15 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 
 							JSONObject piece = new JSONObject();
 							piece.put("coordinate", coordinate);
-							piece.put("type", 1);
 
-							// TODO
-							// use some code to see if this piece is a normal one or a king
+							if( isKing(buttons[x][y]) == true )
+							{
+								piece.put("type", 2);
+							}
+							else
+							{
+								piece.put("type", 1);
+							}
 
 							team.put(piece);
 						}
