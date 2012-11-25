@@ -32,12 +32,10 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 import edu.selu.android.classygames.data.Person;
-import edu.selu.android.classygames.games.Game;
 import edu.selu.android.classygames.utilities.ServerUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
-@SuppressLint("NewApi")
 public class CheckersGameActivity extends SherlockActivity implements OnClickListener
 {
 
@@ -63,7 +61,6 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	private Person personChallenged;
 
 
-	@SuppressLint("NewApi")
 	@Override
 	public void onCreate(final Bundle savedInstanceState)
 	{
@@ -202,50 +199,48 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		// I don't believe this line is necessary with our new layout style
 //		setContentView(layout, tableLp);
 	}
-	
-	
-	
+
+
 /***************************/
-	
+
+
 	private final class AsyncGetGame extends AsyncTask<Void, Void, String>
 	{
 
+
 		private ProgressDialog progressDialog;
+
 
 		@Override
 		protected String doInBackground(final Void... v)
 		{
-		    
-		    ArrayList<NameValuePair> nameValuePair = new ArrayList<NameValuePair>();
-		    
-			nameValuePair.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, gameId));
-			
+			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+			nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, gameId));
+
 			try
 			{
-				return ServerUtilities.postToServer( ServerUtilities.SERVER_GET_GAME_ADDRESS, nameValuePair );
+				return ServerUtilities.postToServer( ServerUtilities.SERVER_GET_GAME_ADDRESS, nameValuePairs );
 			}
-			catch (IOException e)
+			catch (final IOException e)
 			{
 				Log.e(Utilities.LOG_TAG, "Error in HTTP POST to " + ServerUtilities.SERVER_GET_GAME_ADDRESS, e);
 			}
 			
 			return null;
-			
 		}
+
 
 		@Override
 		protected void onPostExecute(final String board)
 		{
-			if( board != null && !board.isEmpty() )
-			{
 			parseBoard(board);
-			}
-			
+
 			if (progressDialog.isShowing())
 			{
 				progressDialog.dismiss();
 			}
 		}
+
 
 		@Override
 		protected void onPreExecute()
@@ -258,119 +253,128 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			progressDialog.setCanceledOnTouchOutside(false);
 			progressDialog.show();
 		}
-		
+
+
 		private void parseBoard(final String jsonString)
 		{
-			
+			if (jsonString != null && !jsonString.isEmpty())
+			{
+				// TODO
+				// write an algorithm that parses this json string and sets the board
+				// accordingly
+			}
 		}
-		
+
 
 	}
-	
-	private final class AsyncSendMove extends AsyncTask<Void, Void, Void>
+
+
+	private final class AsyncSendMove extends AsyncTask<Void, Void, String>
 	{
 
+
 		private ProgressDialog progressDialog;
-		
+
+
 		@Override
-		protected Void doInBackground(final Void... v)
+		protected String doInBackground(final Void... v)
 		{
-		    
-		    JSONArray jarray = new JSONArray();
+			JSONArray jarray = new JSONArray();
 			
-		    JSONObject object = new JSONObject();
-		    JSONObject teams = new JSONObject();		    
-		    
-		    for( int i = 0; i < 8; i++ )
-		    {
-		    	for( int j = 0; j < 8; j++ )
-			    {
-			    	try
-			    	{
-			    		JSONObject coordinates = new JSONObject();
-			    		JSONObject type = new JSONObject();
-					    JSONArray miniArray = new JSONArray();
-					    JSONArray miniCoords = new JSONArray();
-					    JSONArray midArray = new JSONArray();
-					    JSONObject miniObject = new JSONObject();
-					    
-					    /*********Coords JSONArray*********/
-					    miniCoords.put(i);
-					    miniCoords.put(j);
-					   /**********End Coords JSON*******/
-			    		
-					    coordinates.put("coordinate", miniCoords);
+			JSONObject object = new JSONObject();
+			JSONObject teams = new JSONObject();
+			
+			for( int i = 0; i < 8; i++ )
+			{
+				for( int j = 0; j < 8; j++ )
+				{
+					try
+					{
+						JSONObject coordinates = new JSONObject();
+						JSONObject type = new JSONObject();
+						JSONArray miniArray = new JSONArray();
+						JSONArray miniCoords = new JSONArray();
+						JSONArray midArray = new JSONArray();
+						JSONObject miniObject = new JSONObject();
+
+						/*********Coords JSONArray*********/
+						miniCoords.put(i);
+						miniCoords.put(j);
+						/**********End Coords JSON*******/
+
+						coordinates.put("coordinate", miniCoords);
 						type.put("type", 1);
-						
+
 						miniArray.put(coordinates);
 						miniArray.put(type);
-						
+
 						jarray.put(miniArray);
-					} 
-			    	catch (JSONException e)
-			    	{
+					}
+					catch (final JSONException e)
+					{
 						e.printStackTrace();
 					}
-			    }
-		    }
-		    
-		    try
-		    {
-		    	teams.put("teams", jarray);
+				}
 			}
-		    catch (JSONException e2)
+
+			try
+			{
+				teams.put("teams", jarray);
+			}
+			catch (final JSONException e2)
 			{
 				e2.printStackTrace();
 			}
-		    
-		    try
-		    {
+
+			try
+			{
 				object.put("board", teams);
 			}
-		    catch (JSONException e1)
+			catch (JSONException e1)
 			{
 				e1.printStackTrace();
 			}
-		    
-		    System.out.println( object.toString() );
-		    ArrayList<NameValuePair> nameValuePair = new ArrayList<NameValuePair>();
-			
+
+			System.out.println( object.toString() );
+			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+
 			try
 			{
-				nameValuePair.add(new BasicNameValuePair(ServerUtilities.POST_DATA_BOARD, object.toString()));
-				nameValuePair.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CHALLENGED, personChallenged.getName()));
-				nameValuePair.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CHALLENGED, Long.valueOf(personChallenged.getId()).toString()));
-				nameValuePair.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CREATOR, Long.valueOf(Utilities.getWhoAmI(CheckersGameActivity.this).getId()).toString()));
-				
-				final String jsonString;
-				
-				if( gameId != null && !gameId.isEmpty() )
+				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CHALLENGED, Long.valueOf(personChallenged.getId()).toString()));
+				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_NAME, personChallenged.getName()));
+				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CREATOR, Long.valueOf(Utilities.getWhoAmI(CheckersGameActivity.this).getId()).toString()));
+				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_BOARD, object.toString()));
+
+				if (gameId == null || gameId.isEmpty())
 				{
-					nameValuePair.add(new BasicNameValuePair(ServerUtilities.POST_DATA_GAME_ID, gameId));
-					jsonString = ServerUtilities.postToServer(ServerUtilities.SERVER_NEW_MOVE_ADDRESS, nameValuePair );
+					return ServerUtilities.postToServer(ServerUtilities.SERVER_NEW_GAME_ADDRESS, nameValuePairs);
 				}
 				else
 				{
-					jsonString = ServerUtilities.postToServer( ServerUtilities.SERVER_NEW_GAME_ADDRESS, nameValuePair );
+					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_GAME_ID, gameId));
+					return ServerUtilities.postToServer(ServerUtilities.SERVER_NEW_MOVE_ADDRESS, nameValuePairs);
 				}
-				parseServerResults(jsonString);
-				
 			}
-			catch( final Exception e )
-			{	
+			catch (final Exception e)
+			{
 				Log.e(Utilities.LOG_TAG, e.getMessage());
 			}
+
 			return null;
 		}
 
+
 		@Override
-		protected void onPostExecute(final Void result)
+		protected void onPostExecute(final String serverResponse)
 		{
+			parseServerResponse(serverResponse);
+
 			if (progressDialog.isShowing())
 			{
 				progressDialog.dismiss();
 			}
 		}
+
 
 		@Override
 		protected void onPreExecute()
@@ -383,19 +387,27 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			progressDialog.show();
 		}
 
-		private void parseServerResults(final String jsonString)
+
+		private void parseServerResponse(final String jsonString)
 		{
-			
+			if (jsonString != null && !jsonString.isEmpty())
+			{
+				// TODO
+				// write an algorithm that parses this json string makes a toast
+				// response to the user informing them of the server's response
+			}
 		}
+
+
 	}
-	
+
+
 	/********************************/
 
 
 	@Override
 	public void onClick(View arg0)
 	{
-		
 		MyButton clickedButton = (MyButton) findViewById(arg0.getId());
 		//clickedButton.setBackgroundColor(Color.LTGRAY);
 
@@ -616,9 +628,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 				return true;
 
 			case R.id.checkers_game_activity_actionbar_send_move:
-				// TODO send this move to the server
 				new AsyncSendMove().execute();
-				Utilities.easyToast(CheckersGameActivity.this, "sent move with gameId \"" + gameId + "\"");
 				return true;
 
 			case R.id.checkers_game_activity_actionbar_undo_move:

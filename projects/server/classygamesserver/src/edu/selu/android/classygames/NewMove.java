@@ -56,11 +56,11 @@ public class NewMove extends HttpServlet
 		response.setContentType(Utilities.CONTENT_TYPE_JSON);
 		PrintWriter printWriter = response.getWriter();
 
-		final String game_id = request.getParameter(Utilities.POST_DATA_GAME_ID);
-		final String user_id_parameter = request.getParameter(Utilities.POST_DATA_ID);
 		final String user_opponent_parameter = request.getParameter(Utilities.POST_DATA_USER_CHALLENGED);
 		final String user_opponent_name = request.getParameter(Utilities.POST_DATA_NAME);
+		final String user_id_parameter = request.getParameter(Utilities.POST_DATA_USER_CREATOR);
 		String board = request.getParameter(Utilities.POST_DATA_BOARD);
+		final String game_id = request.getParameter(Utilities.POST_DATA_GAME_ID);
 
 		if (game_id == null || game_id.isEmpty() || user_id_parameter == null || user_id_parameter.isEmpty()
 			|| user_opponent_parameter == null || user_opponent_parameter.isEmpty()
