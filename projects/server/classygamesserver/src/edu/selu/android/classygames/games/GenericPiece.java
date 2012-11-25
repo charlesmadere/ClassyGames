@@ -17,6 +17,14 @@ public abstract class GenericPiece
 		team = TEAM_NULL;
 		type = TYPE_NULL;
 	}
-
-
+	
+	
+	public byte getTeam()
+	{
+		return team;
+	}
+	
+	public abstract boolean isTypeNormal();
+	
+	
 }

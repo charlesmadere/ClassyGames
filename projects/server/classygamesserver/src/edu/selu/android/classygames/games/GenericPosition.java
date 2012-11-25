@@ -23,7 +23,7 @@ public abstract class GenericPosition
 	}
 
 
-	protected GenericPiece getPiece()
+	public GenericPiece getPiece()
 	{
 		return piece;
 	}
@@ -35,7 +35,7 @@ public abstract class GenericPosition
 	 * @return
 	 * True if this Position object has a Piece.
 	 */
-	protected boolean hasPiece()
+	public boolean hasPiece()
 	{
 		return piece != null;
 	}
