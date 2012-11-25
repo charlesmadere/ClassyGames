@@ -11,16 +11,18 @@ public class MyButton extends ImageButton
 
 	private boolean isEmpty;
 	private boolean playerGreen;
+	private boolean crown;
 	private int px, py;
 
 
-	public MyButton(final Context view, final int x, final int y, final boolean isEmpty, final boolean playerGreen)//add other params
+	public MyButton(final Context view, final int x, final int y, final boolean isEmpty, final boolean playerGreen,final boolean crown)//add other params
 	{
 		super(view);
 		px = x;
 		py = y;
 		this.isEmpty = isEmpty;
 		this.playerGreen = playerGreen;
+		this.setCrown(crown);
 	}
 
 
@@ -69,6 +71,18 @@ public class MyButton extends ImageButton
 	public void setPx(final int px)
 	{
 		this.px = px;
+	}
+
+
+	public boolean isCrown() 
+	{
+		return crown;
+	}
+
+
+	public void setCrown(boolean crown)
+	{
+		this.crown = crown;
 	}
 
 

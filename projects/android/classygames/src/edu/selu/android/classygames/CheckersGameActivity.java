@@ -49,7 +49,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	TableRow[] rows;
 	 
 	MyButton prevButton;
-	int greenPlayer, orangePlayer;
+	int greenPlayer, orangePlayer,greenking,orangeking;
 	//AlertDialog.Builder dialog = new AlertDialog.Builder(this, R.style.DialogWindowTitle_Sherlock);
 
 
@@ -106,6 +106,8 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		prevButton = null;
 		greenPlayer = R.drawable.piece_checkers_green_normal;
 		orangePlayer = R.drawable.piece_checkers_orange_normal;
+		greenking = R.drawable.piece_checkers_green_king;
+		orangeking = R.drawable.piece_checkers_orange_king;
 
         Display display = getWindowManager().getDefaultDisplay();
         
@@ -145,6 +147,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
         {
         	 rows[i] = new TableRow(this);
         }
+        
         buttons = new MyButton[8][8];
 
 		//load buttons
@@ -152,19 +155,19 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		{
 			for (int j = 0; j < 8; j++)
 			{
-				buttons[i][j] = new MyButton(this, i, j, true, false);
+				buttons[i][j] = new MyButton(this, i, j, true, false, false);
 				buttons[i][j].setOnClickListener(this);
 				buttons[i][j].setId(i * 10 + j);
 
 				if ((i + j) % 2 == 0)
 				{
-//					buttons[i][j].setBackgroundColor(Color.WHITE);
 					setBackground(R.drawable.bg_board_bright, buttons[i][j]);
 
 					if (i >= 5)
 					{
 						buttons[i][j].setEmpty(false);
 						buttons[i][j].setPlayerGreen(true);
+						buttons[i][j].setCrown(false);
 						buttons[i][j].setImageResource(greenPlayer);
 					}
 
@@ -172,6 +175,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 					{
 						buttons[i][j].setEmpty(false);
 						buttons[i][j].setPlayerGreen(false);
+						buttons[i][j].setCrown(false);
 						buttons[i][j].setImageResource(orangePlayer);
 					}
 
@@ -192,14 +196,10 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			layout.addView(rows[i],rowLp);
 		}
 
-		// finds the linearlayout in the checkers_game_activity.xml file and adds our
-		// checkers board to it. Because of properties set in that file, the checkers
-		// board will be automatically centered
 		LinearLayout linearLayout = (LinearLayout) findViewById(R.id.checkers_game_activity_linearlayout);
 		linearLayout.addView(layout);
 
-		// I don't believe this line is necessary with our new layout style
-//		setContentView(layout, tableLp);
+
 	}
 
 
@@ -425,15 +425,11 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	@Override
 	public void onClick(View arg0)
 	{
+		
 		MyButton clickedButton = (MyButton) findViewById(arg0.getId());
-		//clickedButton.setBackgroundColor(Color.LTGRAY);
-
-		// TODO
-		// I like this setBackground function here as it changes the background image
-		// of a position that I tap on... but it never changes itself back!
-		// try it for yourself!
-		if(!clickedButton.isEmpty())
-		 setBackground(R.drawable.bg_board_bright_selected, clickedButton);
+		
+		//if(!clickedButton.isEmpty() && prevButton == null)
+		 
 		
 		if (prevButton != null)
 		{
@@ -442,64 +438,78 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 				if (canMove(clickedButton))
 				{
 					Move(clickedButton);
-					if (isKing(clickedButton))
-					{
+					
+					if (canBeKing(clickedButton)){
 						makeKing(clickedButton);
 					}
 				}
 				else if (canJump(clickedButton))
 				{
 					Jump(clickedButton);
-					if (isKing(clickedButton))
+					if (canBeKing(clickedButton))
 					{
 						makeKing(clickedButton);
 					}
 				}
 				else 
 				{
+					setBackground(R.drawable.bg_board_bright, prevButton);
 					prevButton = null;
 				}
 			}
 			else
 			{
+				setBackground(R.drawable.bg_board_bright, prevButton);
 				prevButton = null;
 			}
 		}
 		else
 		{
-			prevButton = clickedButton;
-		}
-	}
-	
-	
-	private void makeKing(MyButton clickedButton)
-	{
-		if(clickedButton.isPlayerGreen())
-		{
-			clickedButton.setImageResource(R.drawable.piece_checkers_green_king);
-		}
-		else
-			if (!clickedButton.isPlayerGreen())
-		{
-			clickedButton.setImageResource(R.drawable.piece_checkers_orange_king);
+			if (!clickedButton.isEmpty()){
+				prevButton = clickedButton;
+				setBackground(R.drawable.bg_board_bright_selected, clickedButton);
+			}
 		}
 	}
 
-	private boolean isKing(MyButton clickedButton) 
-	{
-		
-		if(clickedButton.getPx() == 7 || clickedButton.getPx() == 0)
-		{	
+	private boolean canBeKing (MyButton pbutton) {
+		if(pbutton.isPlayerGreen() && pbutton.getPx() == 0)
+		{
+			return true;
+		}
+		else if(!pbutton.isPlayerGreen() && pbutton.getPx() == 7)
+		{
 			return true;
 		}
 		else
-		{
 			return false;
-		}	
+	}
+
+
+	private void makeKing(MyButton pButton)
+	{
+		if(pButton.isPlayerGreen())
+		{
+			pButton.setImageResource(R.drawable.piece_checkers_green_king);
+		}
+		else if (!pButton.isPlayerGreen())
+		{
+			pButton.setImageResource(R.drawable.piece_checkers_orange_king);
+		}
+		pButton.setCrown(true);
+	}
+
+		private boolean isKing(MyButton pButton) 
+	{		
+		if(pButton.isCrown())
+			return true;
+		else
+			return false;
 	}
 
 	private void Jump(MyButton clickedButton) 
 	{
+		
 		int changeImage = orangePlayer;
 		if (prevButton.isPlayerGreen())
 			changeImage = greenPlayer;
@@ -519,112 +529,124 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		//change image and data
 		prevButton.setImageResource(0);
 		prevButton.setEmpty(true);
+
 		setBackground(R.drawable.bg_board_bright, prevButton);
 		
-		//change new button
-		int changeImage = orangePlayer;
-		if (prevButton.isPlayerGreen())
-			changeImage = greenPlayer;
-		clickedButton.setImageResource(changeImage);
+		if(prevButton.isPlayerGreen() && isKing(prevButton))
+		{
+			clickedButton.setImageResource(greenking);
+			clickedButton.setCrown(true);
+			clickedButton.setPlayerGreen(true);
+		}
+		
+		else if (!prevButton.isPlayerGreen() && isKing(prevButton))
+		{
+			clickedButton.setImageResource(orangeking);
+			clickedButton.setCrown(true);
+			clickedButton.setPlayerGreen(false);
+		}
+		
+		else if (prevButton.isPlayerGreen())
+		{
+			clickedButton.setImageResource(greenPlayer);
+			clickedButton.setPlayerGreen(true);
+		}
+		
+		else{
+			clickedButton.setImageResource(orangePlayer);
+			clickedButton.setPlayerGreen(false);
+		}
+		
 		clickedButton.setEmpty(false);
-		clickedButton.setPlayerGreen(prevButton.isPlayerGreen());
+		prevButton.setCrown(false);
 		
 		prevButton = null;
 	}
 
 	private boolean canMove(MyButton button)
-	{
-		if (isKing(button))
-		{
-			if (abs(button.getPx()-prevButton.getPx()) == 1 && abs(button.getPy()-prevButton.getPy()) == 1)
+	{	
+		if (prevButton.isCrown()){
+			if(abs(button.getPx()-prevButton.getPx()) == 1 && abs(button.getPy()- prevButton.getPy()) == 1)
 				return true;
-			else
+			else 
 				return false;
 		}
-		
-		else if (prevButton.isPlayerGreen())
-		{
-			if (button.getPx()-prevButton.getPx() == -1 && abs(button.getPy()-prevButton.getPy()) == 1)
-				return true;
-			else
-				return false;
-		}
-		
-		else 
-		{
-			if (button.getPx()-prevButton.getPx() == 1 && abs(button.getPy()-prevButton.getPy()) == 1)
-				return true;
-			else
-				return false;
+		else {
+			if (!prevButton.isPlayerGreen()){
+				if(button.getPx()-prevButton.getPx() == 1 && abs(button.getPy()- prevButton.getPy()) == 1)
+					return true;
+				else 
+					return false;
+			}
+			else {
+				if (button.getPx()-prevButton.getPx() == -1 && abs(button.getPy()-prevButton.getPy()) == 1)
+					return true;
+				else
+					return false;
+			}
 		}
 	}
 	
 	private boolean canJump(MyButton cbutton)
 	{
-		if(prevButton.isPlayerGreen())
-		  {
-			  if (cbutton.getPx()-prevButton.getPx() == -2 && abs(cbutton.getPy()-prevButton.getPy()) == 2)
+		if (!prevButton.isCrown()){
+			
+			int change_In_X = (cbutton.getPx() - prevButton.getPx())/2;
+			int change_In_Y = (cbutton.getPy() - prevButton.getPy())/2;
+			
+			MyButton middleButton = (MyButton)findViewById((prevButton.getPx() + change_In_X) *10 + (prevButton.getPy() + change_In_Y));
+			
+			if(prevButton.isPlayerGreen())
 			  {
-				  	int change_In_X = (cbutton.getPx() - prevButton.getPx())/2;
-					int change_In_Y = (cbutton.getPy() - prevButton.getPy())/2;
-				
-				MyButton middleButton = (MyButton)findViewById((prevButton.getPx() + change_In_X) *10 + (prevButton.getPy() + change_In_Y));
-				
-					if (middleButton.isPlayerGreen() != prevButton.isPlayerGreen())
-					{
-						middleButton.setEmpty(true);
-						middleButton.setImageResource(0);
-					
-						return true;
+				  if (cbutton.getPx()-prevButton.getPx() == -2 && abs(cbutton.getPy()-prevButton.getPy()) == 2)
+				  {
+						if (middleButton.isPlayerGreen() != prevButton.isPlayerGreen())
+						{
+							middleButton.setEmpty(true);
+							middleButton.setImageResource(0);
+							return true;
+						}
+						else 
+						{
+							return false;
+						}
 					}
-				
-					else 
-					{
-						return false;
-					}
-					
-			 }
-			  
-			  else 
-			  {
-				  return false;
+				  	else 
+				  	{
+				  		return false;
+				  	}
 			  }
-		  }
-		  
-		  else
-		  {
-			  if (cbutton.getPx()-prevButton.getPx() == 2 && abs(cbutton.getPy()-prevButton.getPy()) == 2)
+			  else
 			  {
-				int change_In_X = (cbutton.getPx() - prevButton.getPx())/2;
-				int change_In_Y = (cbutton.getPy() - prevButton.getPy())/2;
-				
-				MyButton middleButton = (MyButton)findViewById((prevButton.getPx() + change_In_X) *10 + (prevButton.getPy() + change_In_Y));
-				
-					if (middleButton.isPlayerGreen() != prevButton.isPlayerGreen())
-					{
-						middleButton.setEmpty(true);
-						middleButton.setImageResource(0);
-						return true;
-					}
-				
-					else 
-					{
-						return false;
-					}
-			  }
-			  
-			 else 
-			 {
-				return false;
-			 }
-		 } 
+				  if (cbutton.getPx()-prevButton.getPx() == 2 && abs(cbutton.getPy()-prevButton.getPy()) == 2)
+				  {
+						if (middleButton.isPlayerGreen() != prevButton.isPlayerGreen())
+						{
+							middleButton.setEmpty(true);
+							middleButton.setImageResource(0);
+							return true;
+						}
+					
+						else 
+						{
+							return false;
+						}
+				  }
+				  else 
+				  {
+					  return false;
+				  }
+			 } 
+		}
+		else {
+			return false;
+		}
 	}
 	
 	private int abs(int i)
 	{	
 		return (i < 0)?-1*i:i;
 	}
-
 
 	@Override
 	public boolean onCreateOptionsMenu(final Menu menu)
