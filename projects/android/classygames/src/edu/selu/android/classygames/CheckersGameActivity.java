@@ -39,6 +39,7 @@ import edu.selu.android.classygames.utilities.Utilities;
 public class CheckersGameActivity extends SherlockActivity implements OnClickListener
 {
 
+
 	TableLayout layout;
 	MyButton[][] buttons;
 	
@@ -248,6 +249,8 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		{
 			System.out.println( "Progress Dialog creation starting");
 			progressDialog = new ProgressDialog(CheckersGameActivity.this);
+			// TODO
+			// set the two below setMessage and setTitle lines to actually show something relevant to this class
 			progressDialog.setMessage(CheckersGameActivity.this.getString(R.string.games_list_activity_init_progressdialog_message));
 			progressDialog.setTitle(R.string.games_list_activity_init_progressdialog_title);
 			progressDialog.setCancelable(false);
@@ -280,85 +283,39 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		@Override
 		protected String doInBackground(final Void... v)
 		{
-			JSONArray jarray = new JSONArray();
-			
-			JSONObject object = new JSONObject();
-			JSONObject teams = new JSONObject();
-			
-			for( int i = 0; i < 8; i++ )
+			try
 			{
-				for( int j = 0; j < 8; j++ )
+				JSONArray teams = createJSONTeams();
+				JSONObject board = new JSONObject();
+				board.put("teams", teams);
+
+				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+
+				try
 				{
-					try
+					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CHALLENGED, Long.valueOf(personChallenged.getId()).toString()));
+					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_NAME, personChallenged.getName()));
+					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CREATOR, Long.valueOf(Utilities.getWhoAmI(CheckersGameActivity.this).getId()).toString()));
+					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_BOARD, board.toString()));
+
+					if (gameId == null || gameId.isEmpty())
 					{
-						JSONObject coordinates = new JSONObject();
-						JSONObject type = new JSONObject();
-						JSONArray miniArray = new JSONArray();
-						JSONArray miniCoords = new JSONArray();
-						JSONArray midArray = new JSONArray();
-						JSONObject miniObject = new JSONObject();
-
-						/*********Coords JSONArray*********/
-						miniCoords.put(i);
-						miniCoords.put(j);
-						/**********End Coords JSON*******/
-
-						coordinates.put("coordinate", miniCoords);
-						type.put("type", 1);
-
-						miniArray.put(coordinates);
-						miniArray.put(type);
-
-						jarray.put(miniArray);
+						return ServerUtilities.postToServer(ServerUtilities.SERVER_NEW_GAME_ADDRESS, nameValuePairs);
 					}
-					catch (final JSONException e)
+					else
 					{
-						e.printStackTrace();
+						nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_GAME_ID, gameId));
+						return ServerUtilities.postToServer(ServerUtilities.SERVER_NEW_MOVE_ADDRESS, nameValuePairs);
 					}
 				}
-			}
-
-			try
-			{
-				teams.put("teams", jarray);
-			}
-			catch (final JSONException e2)
-			{
-				e2.printStackTrace();
-			}
-
-			try
-			{
-				object.put("board", teams);
-			}
-			catch (JSONException e1)
-			{
-				e1.printStackTrace();
-			}
-
-			System.out.println( object.toString() );
-			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-
-			try
-			{
-				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CHALLENGED, Long.valueOf(personChallenged.getId()).toString()));
-				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_NAME, personChallenged.getName()));
-				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CREATOR, Long.valueOf(Utilities.getWhoAmI(CheckersGameActivity.this).getId()).toString()));
-				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_BOARD, object.toString()));
-
-				if (gameId == null || gameId.isEmpty())
+				catch (final IOException e)
 				{
-					return ServerUtilities.postToServer(ServerUtilities.SERVER_NEW_GAME_ADDRESS, nameValuePairs);
-				}
-				else
-				{
-					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_GAME_ID, gameId));
-					return ServerUtilities.postToServer(ServerUtilities.SERVER_NEW_MOVE_ADDRESS, nameValuePairs);
+					Log.e(Utilities.LOG_TAG, "Error in HTTP POST to server.", e);
 				}
 			}
-			catch (final IOException e)
+			catch (final JSONException e)
 			{
-				Log.e(Utilities.LOG_TAG, "Error in HTTP POST to server", e);
+				Log.e(Utilities.LOG_TAG, "Error in creating JSON data to send to server.", e);
 			}
 
 			return null;
@@ -381,11 +338,64 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		protected void onPreExecute()
 		{
 			progressDialog = new ProgressDialog(CheckersGameActivity.this);
-			progressDialog.setMessage(CheckersGameActivity.this.getString(R.string.games_list_activity_init_progressdialog_message));
-			progressDialog.setTitle(R.string.games_list_activity_init_progressdialog_title);
 			progressDialog.setCancelable(false);
 			progressDialog.setCanceledOnTouchOutside(false);
+			// TODO
+			// set the two below setMessage and setTitle lines to actually show something relevant to this class
+			progressDialog.setMessage(CheckersGameActivity.this.getString(R.string.games_list_activity_init_progressdialog_message));
+			progressDialog.setTitle(R.string.games_list_activity_init_progressdialog_title);
 			progressDialog.show();
+		}
+
+
+		private JSONArray createJSONTeams()
+		{
+			JSONArray teamGreen = createJSONTeam(true);
+			JSONArray teamOrange = createJSONTeam(false);
+
+			JSONArray teams = new JSONArray();
+			teams.put(teamGreen);
+			teams.put(teamOrange);
+
+			return teams;
+		}
+
+
+		private JSONArray createJSONTeam(final boolean isPlayerGreen)
+		{
+			JSONArray team = new JSONArray();
+
+			for (int x = 0; x < 8; ++x)
+			{
+				for (int y = 0; y < 8; ++y)
+				{
+					if (!buttons[x][y].isEmpty() && buttons[x][y].isPlayerGreen() == isPlayerGreen)
+					// this position has a piece in it that is of the given team color
+					{
+						try
+						{
+							JSONArray coordinate = new JSONArray();
+							coordinate.put(x);
+							coordinate.put(y);
+
+							JSONObject piece = new JSONObject();
+							piece.put("coordinate", coordinate);
+							piece.put("type", 1);
+
+							// TODO
+							// use some code to see if this piece is a normal one or a king
+
+							team.put(piece);
+						}
+						catch (final JSONException e)
+						{
+
+						}
+					}
+				}
+			}
+
+			return team;
 		}
 
 
