@@ -2,6 +2,7 @@ package edu.selu.android.classygames.games.checkers;
 
 
 import edu.selu.android.classygames.games.Coordinate;
+import edu.selu.android.classygames.games.GenericPiece;
 import edu.selu.android.classygames.games.GenericPosition;
 
 
