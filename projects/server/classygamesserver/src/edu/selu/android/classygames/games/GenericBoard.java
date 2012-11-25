@@ -21,7 +21,7 @@ public abstract class GenericBoard
 	 * @return
 	 * True if the board is valid.
 	 */
-	public abstract boolean checkValidity();
+	public abstract byte checkValidity();
 
 
 	/**
@@ -34,7 +34,7 @@ public abstract class GenericBoard
 	 * @return
 	 * True if the boards are valid.
 	 */
-	public abstract boolean checkValidity(final String boardJSONData);
+	public abstract byte checkValidity(final String boardJSONData);
 
 
 	public abstract GenericPosition getPosition(final byte x, final byte y);
