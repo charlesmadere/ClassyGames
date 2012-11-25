@@ -85,7 +85,7 @@ public class NewGame extends HttpServlet
 			{
 				printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATA_IS_MALFORMED));
 			}
-			else if (GameUtilities.checkBoardValidity(board))
+			else if (GameUtilities.checkBoardValidityAndStatus(board) == Utilities.BOARD_NEW_GAME)
 			{
 				Connection sqlConnection = null;
 				PreparedStatement sqlStatement = null;
@@ -223,9 +223,7 @@ public class NewGame extends HttpServlet
 										break;
 
 									default:
-										// TODO
-										// change this to send a message instead to user_challenged.longValue()
-										GCMUtilities.sendMessage(sqlConnection, digest, user_creator.longValue(), user_challenged_name, Utilities.POST_DATA_TYPE_NEW_GAME);
+										GCMUtilities.sendMessage(sqlConnection, digest, user_challenged.longValue(), user_challenged_name, Utilities.POST_DATA_TYPE_NEW_GAME);
 										printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_GAME_ADDED_TO_DATABASE));
 										break;
 								}

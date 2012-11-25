@@ -75,7 +75,14 @@ public class GameUtilities
 	 */
 	public static byte checkBoardValidityAndStatus(final String boardJSONData)
 	{
-		return Utilities.BOARD_NEW_GAME;
+		if (boardJSONData == null || boardJSONData.isEmpty())
+		{
+			return Utilities.BOARD_INVALID;
+		}
+		else
+		{
+			return Utilities.BOARD_NEW_GAME;
+		}
 	}
 
 
@@ -101,7 +108,15 @@ public class GameUtilities
 	 */
 	public static byte checkBoardValidityAndStatus(final String boardJSONDataOriginal, final String boardJSONDataNew, final byte status)
 	{
-		return status;
+		if (boardJSONDataOriginal == null || boardJSONDataOriginal.isEmpty()
+			|| boardJSONDataNew == null || boardJSONDataNew.isEmpty())
+		{
+			return Utilities.BOARD_INVALID;
+		}
+		else
+		{
+			return status;
+		}
 	}
 
 
@@ -116,7 +131,14 @@ public class GameUtilities
 	 */
 	public static String flipTeams(final String board)
 	{
-		return Board.flipTeams(board);
+		if (board == null || board.isEmpty())
+		{
+			return null;
+		}
+		else
+		{
+			return Board.flipTeams(board);
+		}
 	}
 
 

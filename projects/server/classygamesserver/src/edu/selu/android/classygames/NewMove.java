@@ -112,60 +112,53 @@ public class NewMove extends HttpServlet
 								if ((user_id.longValue() == user_creator && turn == Utilities.DATABASE_TABLE_GAMES_TURN_CREATOR)
 									|| (user_id.longValue() == user_challenged && turn == Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED))
 								{
-									board = GameUtilities.flipTeams(board);
+									final Byte board_validation_result = Byte.valueOf(GameUtilities.checkBoardValidityAndStatus(sqlResult.getString(Utilities.DATABASE_TABLE_GAMES_COLUMN_BOARD), board, Utilities.BOARD_NEW_MOVE));
 
-									if (board == null || board.isEmpty())
+									if (board_validation_result.byteValue() == Utilities.BOARD_NEW_MOVE || board_validation_result.byteValue() == Utilities.BOARD_WIN)
 									{
-										printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_ERROR_BOARD_INVALID));
+										board = GameUtilities.flipTeams(board);
+
+										// close the PreparedStatement as it is no longer needed
+										Utilities.closeSQLStatement(sqlStatement);
+
+										// prepare a SQL statement to be run on the database
+										sqlStatementString = "INSERT INTO " + Utilities.DATABASE_TABLE_GAMES + " (" + Utilities.DATABASE_TABLE_GAMES_COLUMN_BOARD + ", " + Utilities.DATABASE_TABLE_GAMES_COLUMN_TURN + ", " + Utilities.DATABASE_TABLE_GAMES_COLUMN_FINISHED + ") VALUES (?, ?, ?)";
+										sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
+
+										// prevent SQL injection by inserting data this way
+										sqlStatement.setString(1, board);
+
+										switch (turn)
+										{
+											case Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED:
+												sqlStatement.setByte(2, Utilities.DATABASE_TABLE_GAMES_TURN_CREATOR);
+												break;
+
+											case Utilities.DATABASE_TABLE_GAMES_TURN_CREATOR:
+												sqlStatement.setByte(2, Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED);
+												break;
+										}
+
+										switch (board_validation_result.byteValue())
+										{
+											case Utilities.BOARD_NEW_MOVE:
+												sqlStatement.setByte(3, Utilities.DATABASE_TABLE_GAMES_FINISHED_FALSE);
+												break;
+
+											case Utilities.BOARD_WIN:
+												sqlStatement.setByte(3, Utilities.DATABASE_TABLE_GAMES_FINISHED_TRUE);
+												break;
+										}
+
+										// run the SQL statement
+										sqlStatement.executeUpdate();
+
+										GCMUtilities.sendMessage(sqlConnection, game_id, user_opponent.longValue(), user_opponent_name, board_validation_result);
+										printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_MOVE_ADDED_TO_DATABASE));
 									}
 									else
 									{
-										final Byte board_validation_result = Byte.valueOf(GameUtilities.checkBoardValidityAndStatus(sqlResult.getString(Utilities.DATABASE_TABLE_GAMES_COLUMN_BOARD), board, Utilities.BOARD_NEW_MOVE));
-
-										if (board_validation_result.byteValue() == Utilities.BOARD_NEW_MOVE || board_validation_result.byteValue() == Utilities.BOARD_WIN)
-										{
-											// close the PreparedStatement as it is no longer needed
-											Utilities.closeSQLStatement(sqlStatement);
-
-											// prepare a SQL statement to be run on the database
-											sqlStatementString = "INSERT INTO " + Utilities.DATABASE_TABLE_GAMES + " (" + Utilities.DATABASE_TABLE_GAMES_COLUMN_BOARD + ", " + Utilities.DATABASE_TABLE_GAMES_COLUMN_TURN + ", " + Utilities.DATABASE_TABLE_GAMES_COLUMN_FINISHED + ") VALUES (?, ?, ?)";
-											sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
-
-											// prevent SQL injection by inserting data this way
-											sqlStatement.setString(1, board);
-
-											switch (turn)
-											{
-												case Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED:
-													sqlStatement.setByte(2, Utilities.DATABASE_TABLE_GAMES_TURN_CREATOR);
-													break;
-
-												case Utilities.DATABASE_TABLE_GAMES_TURN_CREATOR:
-													sqlStatement.setByte(2, Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED);
-													break;
-											}
-
-											switch (board_validation_result.byteValue())
-											{
-												case Utilities.BOARD_NEW_MOVE:
-													sqlStatement.setByte(3, Utilities.DATABASE_TABLE_GAMES_FINISHED_FALSE);
-													break;
-
-												case Utilities.BOARD_WIN:
-													sqlStatement.setByte(3, Utilities.DATABASE_TABLE_GAMES_FINISHED_TRUE);
-													break;
-											}
-
-											// run the SQL statement
-											sqlStatement.executeUpdate();
-
-											GCMUtilities.sendMessage(sqlConnection, game_id, user_opponent.longValue(), user_opponent_name, board_validation_result);
-											printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_MOVE_ADDED_TO_DATABASE));
-										}
-										else
-										{
-											printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_ERROR_BOARD_INVALID));
-										}
+										printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_ERROR_BOARD_INVALID));
 									}
 								}
 								else
