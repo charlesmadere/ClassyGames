@@ -112,7 +112,7 @@ public class NewMove extends HttpServlet
 								if ((user_id.longValue() == user_creator && turn == Utilities.DATABASE_TABLE_GAMES_TURN_CREATOR)
 									|| (user_id.longValue() == user_challenged && turn == Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED))
 								{
-									final Byte board_validation_result = Byte.valueOf(GameUtilities.checkBoardValidityAndStatus(sqlResult.getString(Utilities.DATABASE_TABLE_GAMES_COLUMN_BOARD), board, Utilities.BOARD_NEW_MOVE));
+									final Byte board_validation_result = Byte.valueOf(GameUtilities.checkBoardValidityAndStatus(sqlResult.getString(Utilities.DATABASE_TABLE_GAMES_COLUMN_BOARD), board));
 
 									if (board_validation_result.byteValue() == Utilities.BOARD_NEW_MOVE || board_validation_result.byteValue() == Utilities.BOARD_WIN)
 									{

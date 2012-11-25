@@ -9,59 +9,6 @@ public class GameUtilities
 
 
 	/**
-	 * Compares a default board to the given board to see if a valid move has occurred.
-	 * 
-	 * @param board
-	 * The contents of the new board as a JSON String. This should have been pulled from the device
-	 * and then sent here.
-	 * 
-	 * @return
-	 * Returns true if the arrangement of pieces on the board is valid.
-	 */
-	@Deprecated
-	public static boolean checkBoardValidity(final String boardJSONData)
-	{
-		if (boardJSONData == null || boardJSONData.isEmpty())
-		{
-			return false;
-		}
-		else
-		{
-			return new Board(boardJSONData).checkValidity();
-		}
-	}
-
-
-	/**
-	 * Compares the original board to the new board to see if a valid move has occurred.
-	 * 
-	 * @param boardOriginal
-	 * The contents of the original board as a JSON String. This should be pulled from the database
-	 * and then sent here.
-	 * 
-	 * @param boardNew
-	 * The contents of the new board as a JSON String. This should have been pulled from the device
-	 * and then sent here.
-	 * 
-	 * @return
-	 * Returns true if the arrangement of pieces on the board is valid. 
-	 */
-	@Deprecated
-	public static boolean checkBoardValidity(final String boardJSONDataOriginal, final String boardJSONDataNew)
-	{
-		if (boardJSONDataOriginal == null || boardJSONDataOriginal.isEmpty()
-			|| boardJSONDataNew == null || boardJSONDataNew.isEmpty())
-		{
-			return false;
-		}
-		else
-		{
-			return new Board(boardJSONDataOriginal).checkValidity(boardJSONDataNew);
-		}
-	}
-
-
-	/**
 	 * Compares a completely default version of the board to the new one that we just gathered
 	 * from the player.
 	 * 
@@ -81,7 +28,7 @@ public class GameUtilities
 		}
 		else
 		{
-			return Utilities.BOARD_NEW_GAME;
+			return new Board(boardJSONData).checkValidity();
 		}
 	}
 
@@ -106,7 +53,7 @@ public class GameUtilities
 	 * this is is the winner. If the board is detected as being invalid, Utilities.BOARD_INVALID
 	 * will be returned.
 	 */
-	public static byte checkBoardValidityAndStatus(final String boardJSONDataOriginal, final String boardJSONDataNew, final byte status)
+	public static byte checkBoardValidityAndStatus(final String boardJSONDataOriginal, final String boardJSONDataNew)
 	{
 		if (boardJSONDataOriginal == null || boardJSONDataOriginal.isEmpty()
 			|| boardJSONDataNew == null || boardJSONDataNew.isEmpty())
@@ -115,7 +62,7 @@ public class GameUtilities
 		}
 		else
 		{
-			return status;
+			return new Board(boardJSONDataOriginal).checkValidity(boardJSONDataNew);
 		}
 	}
 
