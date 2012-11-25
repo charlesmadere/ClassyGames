@@ -226,7 +226,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			}
 			catch (IOException e)
 			{
-				Log.e(Utilities.LOG_TAG, "Error in HTTP POST to SERVER_GET_GAME_ADDRESS", e);
+				Log.e(Utilities.LOG_TAG, "Error in HTTP POST to http://classygames.elasticbeanstalk.com/GetGame", e);
 			}
 			
 			return null;
@@ -236,7 +236,10 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		@Override
 		protected void onPostExecute(final String board)
 		{
+			if( board != null && !board.isEmpty() )
+			{
 			parseBoard(board);
+			}
 			
 			if (progressDialog.isShowing())
 			{
