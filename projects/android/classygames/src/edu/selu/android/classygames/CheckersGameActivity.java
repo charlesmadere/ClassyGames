@@ -1,6 +1,7 @@
 package edu.selu.android.classygames;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.http.NameValuePair;
@@ -31,6 +32,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 import edu.selu.android.classygames.data.Person;
+import edu.selu.android.classygames.games.Game;
 import edu.selu.android.classygames.utilities.ServerUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
 
@@ -213,34 +215,29 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		@Override
 		protected String doInBackground(final Void... v)
 		{
-			
-		    JSONObject object = new JSONObject();
 		    
 		    ArrayList<NameValuePair> nameValuePair = new ArrayList<NameValuePair>();
 		    
+			nameValuePair.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, gameId));
+			
 			try
 			{
-				nameValuePair.add(new BasicNameValuePair(ServerUtilities.POST_DATA_GAME_ID, gameId));
-				
-				final String jsonString;
-				
-				// make a call to the server and grab the return JSON result
-				jsonString = ServerUtilities.postToServer( ServerUtilities.SERVER_GET_GAME_ADDRESS, nameValuePair );
-				nameValuePair = parseServerResults(jsonString);
-				
-				System.out.println( object );
+				return ServerUtilities.postToServer( ServerUtilities.SERVER_GET_GAME_ADDRESS, nameValuePair );
 			}
-			catch( final Exception e )
+			catch (IOException e)
 			{
-				Log.e(Utilities.LOG_TAG, e.getMessage());
+				Log.e(Utilities.LOG_TAG, "Error in HTTP POST to SERVER_GET_GAME_ADDRESS", e);
 			}
 			
 			return null;
+			
 		}
 
 		@Override
 		protected void onPostExecute(final String board)
 		{
+			parseBoard(board);
+			
 			if (progressDialog.isShowing())
 			{
 				progressDialog.dismiss();
@@ -263,6 +260,12 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			
 			System.out.println( "Showing progress dialog");
 		}
+		
+		private void parseBoard(final String jsonString)
+		{
+			
+		}
+		
 
 	}
 	
@@ -354,18 +357,13 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 					jsonString = ServerUtilities.postToServer( ServerUtilities.SERVER_NEW_GAME_ADDRESS, nameValuePair );
 					System.out.println( "Hitting this method");
 				}
-				nameValuePair = parseServerResults(jsonString);
+				parseServerResults(jsonString);
 				
 			}
 			catch( final Exception e )
 			{	
 				Log.e(Utilities.LOG_TAG, e.getMessage());
 			}
-			
-			//if( gameId )
-			//TODO: if( no game id send to newgame )
-			//      else( send to newmove )
-			//      -add gameid as parameter
 			return null;
 		}
 
@@ -395,11 +393,10 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			System.out.println( "Showing progress dialog");
 		}
 
-	}
-	
-	private ArrayList<NameValuePair> parseServerResults(final String jsonString)
-	{
-		return null;
+		private void parseServerResults(final String jsonString)
+		{
+			
+		}
 	}
 	
 	/********************************/
