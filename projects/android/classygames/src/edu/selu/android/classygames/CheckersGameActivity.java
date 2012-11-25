@@ -221,9 +221,6 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		protected Game doInBackground(final Void... v)
 		{
 			
-			HttpClient client = new DefaultHttpClient();
-		    HttpGet httpGet = new HttpGet(ServerUtilities.SERVER_GET_GAME_ADDRESS);
-			
 		    JSONObject object = new JSONObject();
 		    
 		    ArrayList<NameValuePair> nameValuePair = new ArrayList<NameValuePair>();
@@ -294,10 +291,6 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		@Override
 		protected Void doInBackground(final Void... v)
 		{
-
-			HttpClient client = new DefaultHttpClient();
-		    HttpPost httpPostNewGame = new HttpPost(ServerUtilities.SERVER_NEW_GAME_ADDRESS);
-		    HttpPost httpPostNewMove = new HttpPost(ServerUtilities.SERVER_NEW_MOVE_ADDRESS);
 		    
 		    JSONArray jarray = new JSONArray();
 			
@@ -308,7 +301,6 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		    {
 		    	for( int j = 0; j < 8; j++ )
 			    {
-		    		String coordinate = "[" + i + "," + j + "]";
 			    	try
 			    	{
 			    		JSONObject coordinates = new JSONObject();
@@ -361,8 +353,6 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		    
 		    final Bundle bundle = getIntent().getExtras();
 		    gameId = bundle.getString(INTENT_DATA_GAME_ID);
-		    final long challengedId = bundle.getLong(INTENT_DATA_PERSON_CHALLENGED_ID);
-			final String challengedName = bundle.getString(INTENT_DATA_PERSON_CHALLENGED_NAME);
 			
 			try
 			{
