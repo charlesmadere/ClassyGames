@@ -325,11 +325,18 @@ public class Board extends GenericBoard
 			final byte pieceTeam = Long.valueOf((Long) piece.get("team")).byteValue();
 			final List<Long> unparsedCoordinate = (List<Long>) piece.get("coordinate");
 			
-			final Byte x = unparsedCoordinate.get(0).byteValue();
-			final Byte y = unparsedCoordinate.get(1).byteValue();
+			final byte x = unparsedCoordinate.get(0).byteValue();
+			final byte y = unparsedCoordinate.get(1).byteValue();
 
-			final Coordinate coordinate = new Coordinate(x, y);
-			positions[coordinate.getX()][coordinate.getY()] = new Position(coordinate, pieceTeam, pieceType);
+			if ((x >= 0 && x < LENGTH_HORIZONTAL) && (y >= 0 && y < LENGTH_VERTICAL))
+			{
+				final Coordinate coordinate = new Coordinate(x, y);
+
+				if (!positions[coordinate.getX()][coordinate.getY()].hasPiece())
+				{
+					positions[coordinate.getX()][coordinate.getY()] = new Position(coordinate, pieceTeam, pieceType);
+				}
+			}
 		}
 	}
 
