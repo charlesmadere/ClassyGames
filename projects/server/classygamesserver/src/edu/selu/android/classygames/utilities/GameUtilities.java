@@ -18,9 +18,17 @@ public class GameUtilities
 	 * @return
 	 * Returns true if the arrangement of pieces on the board is valid.
 	 */
+	@Deprecated
 	public static boolean checkBoardValidity(final String boardJSONData)
 	{
-		return new Board(boardJSONData).checkValidity();
+		if (boardJSONData == null || boardJSONData.isEmpty())
+		{
+			return false;
+		}
+		else
+		{
+			return new Board(boardJSONData).checkValidity();
+		}
 	}
 
 
@@ -38,9 +46,18 @@ public class GameUtilities
 	 * @return
 	 * Returns true if the arrangement of pieces on the board is valid. 
 	 */
+	@Deprecated
 	public static boolean checkBoardValidity(final String boardJSONDataOriginal, final String boardJSONDataNew)
 	{
-		return new Board(boardJSONDataOriginal).checkValidity(boardJSONDataNew);
+		if (boardJSONDataOriginal == null || boardJSONDataOriginal.isEmpty()
+			|| boardJSONDataNew == null || boardJSONDataNew.isEmpty())
+		{
+			return false;
+		}
+		else
+		{
+			return new Board(boardJSONDataOriginal).checkValidity(boardJSONDataNew);
+		}
 	}
 
 
