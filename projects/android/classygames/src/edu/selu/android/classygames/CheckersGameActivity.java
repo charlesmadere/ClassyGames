@@ -31,7 +31,6 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 import edu.selu.android.classygames.data.Person;
-import edu.selu.android.classygames.games.Game;
 import edu.selu.android.classygames.utilities.ServerUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
 
@@ -98,7 +97,6 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 				}
 				else
 				{
-					new AsyncSendMove().execute();
 				}
 			
 			}
@@ -207,22 +205,18 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	
 /***************************/
 	
-	private final class AsyncGetGame extends AsyncTask<Void, Void, Game>
+	private final class AsyncGetGame extends AsyncTask<Void, Void, String>
 	{
 
 		private ProgressDialog progressDialog;
-		ServerUtilities ServerUtilities = new ServerUtilities();
 
 		@Override
-		protected Game doInBackground(final Void... v)
+		protected String doInBackground(final Void... v)
 		{
 			
 		    JSONObject object = new JSONObject();
 		    
 		    ArrayList<NameValuePair> nameValuePair = new ArrayList<NameValuePair>();
-		    
-		    final Bundle bundle = getIntent().getExtras();
-		    gameId = bundle.getString(INTENT_DATA_GAME_ID);
 		    
 			try
 			{
@@ -231,14 +225,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 				final String jsonString;
 				
 				// make a call to the server and grab the return JSON result
-				if( gameId != null && !gameId.isEmpty() )
-				{
-					jsonString = ServerUtilities.postToServer(ServerUtilities.SERVER_NEW_MOVE_ADDRESS, nameValuePair );
-				}
-				else
-				{
-					jsonString = ServerUtilities.postToServer( ServerUtilities.SERVER_NEW_GAME_ADDRESS, nameValuePair );
-				}
+				jsonString = ServerUtilities.postToServer( ServerUtilities.SERVER_GET_GAME_ADDRESS, nameValuePair );
 				nameValuePair = parseServerResults(jsonString);
 				
 				System.out.println( object );
@@ -251,7 +238,8 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			return null;
 		}
 
-		protected void onPostExecute(final Void result)
+		@Override
+		protected void onPostExecute(final String board)
 		{
 			if (progressDialog.isShowing())
 			{
@@ -282,7 +270,6 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	{
 
 		private ProgressDialog progressDialog;
-		ServerUtilities ServerUtilities = new ServerUtilities();
 		
 		@Override
 		protected Void doInBackground(final Void... v)
@@ -346,9 +333,6 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		    
 		    System.out.println( object.toString() );
 		    ArrayList<NameValuePair> nameValuePair = new ArrayList<NameValuePair>();
-		    
-		    final Bundle bundle = getIntent().getExtras();
-		    gameId = bundle.getString(INTENT_DATA_GAME_ID);
 			
 			try
 			{
@@ -646,6 +630,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 
 			case R.id.checkers_game_activity_actionbar_send_move:
 				// TODO send this move to the server
+				new AsyncSendMove().execute();
 				Utilities.easyToast(CheckersGameActivity.this, "sent move with gameId \"" + gameId + "\"");
 				return true;
 
