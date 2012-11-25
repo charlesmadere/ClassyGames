@@ -62,6 +62,12 @@ public class Piece extends GenericPiece
 				return false;
 		}
 	}
-
+	
+	
+	@Override
+	public boolean isTypeNormal()
+	{
+		return type == TYPE_NORMAL;
+	}
 
 }
