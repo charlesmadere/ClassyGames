@@ -191,6 +191,7 @@ public class GamesListActivity extends SherlockListActivity
 		private final static byte TOAST_NONE = 0;
 		private final static byte TOAST_NO_GAMES = 1;
 		private final static byte TOAST_SERVER_ERROR = 2;
+		private final static byte TOAST_SERVER_RESPONSE_ERROR = 3;
 
 		private int progress;
 		private ProgressDialog progressDialog;
@@ -213,6 +214,7 @@ public class GamesListActivity extends SherlockListActivity
 			catch (final IOException e)
 			{
 				Log.e(Utilities.LOG_TAG, e.getMessage());
+				toastToShow = TOAST_SERVER_RESPONSE_ERROR;
 			}
 
 			return games;
@@ -239,6 +241,10 @@ public class GamesListActivity extends SherlockListActivity
 
 				case TOAST_SERVER_ERROR:
 					Utilities.easyToast(GamesListActivity.this, GamesListActivity.this.getString(R.string.games_list_activity_getgames_error));
+					break;
+
+				case TOAST_SERVER_RESPONSE_ERROR:
+					Utilities.easyToast(GamesListActivity.this, GamesListActivity.this.getString(R.string.games_list_activity_getgames_response_error));
 					break;
 			}
 		}
