@@ -285,7 +285,12 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			{
 				JSONArray teams = createJSONTeams();
 				JSONObject board = new JSONObject();
+				JSONObject object = new JSONObject();
+				
 				board.put("teams", teams);
+				object.put("board", board);
+				
+				System.out.println( object.toString());
 
 				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 
