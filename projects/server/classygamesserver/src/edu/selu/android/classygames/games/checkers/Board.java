@@ -68,10 +68,9 @@ public class Board extends GenericBoard
 	@Override
 	public byte checkValidity()
 	{
-		
 		byte userCount = 0;
 		byte challengedCount = 0;
-		
+
 		for (byte x = 0; x < LENGTH_HORIZONTAL; ++x)
 		{
 			for (byte y = 0; y < LENGTH_VERTICAL; ++y)
@@ -85,7 +84,7 @@ public class Board extends GenericBoard
 						return BOARD_INVALID;
 					}
 				}
-				
+
 				//Check to make sure all pieces are in their proper place.
 				if (((y % 2 == 0) && (x % 2 != 0)) || ((y % 2 != 0) && (x % 2 == 0)))
 				{
