@@ -51,6 +51,8 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	 
 	MyButton prevButton;
 	int greenPlayer, orangePlayer,greenking,orangeking;
+	
+	boolean boardLocked = false;
 	//AlertDialog.Builder dialog = new AlertDialog.Builder(this, R.style.DialogWindowTitle_Sherlock);
 
 	public final static String INTENT_DATA_GAME_ID = "GAME_ID";
@@ -202,6 +204,22 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 
 	}
 
+	@Override
+    public boolean onPrepareOptionsMenu(final Menu menu)
+    {
+            if (boardLocked)
+            {
+            	menu.findItem(R.id.checkers_game_activity_actionbar_send_move).setEnabled(true);
+                menu.findItem(R.id.checkers_game_activity_actionbar_undo_move).setEnabled(true);
+            }
+            else
+            {
+            	menu.findItem(R.id.checkers_game_activity_actionbar_send_move).setEnabled(false);
+                menu.findItem(R.id.checkers_game_activity_actionbar_undo_move).setEnabled(false);
+            }
+
+            return true;
+    }
 
 /***************************/
 
@@ -422,6 +440,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	/********************************/
 
 
+	@SuppressLint("NewApi")
 	@Override
 	public void onClick(View arg0)
 	{
@@ -430,26 +449,38 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		
 		//if(!clickedButton.isEmpty() && prevButton == null)
 
-		if (prevButton != null)
+		if( !boardLocked )
 		{
-			if (clickedButton.isEmpty())
+			if (prevButton != null)
 			{
-				if (canMove(clickedButton))
+				if (clickedButton.isEmpty())
 				{
-					Move(clickedButton);			
-					if (canBeKing(clickedButton)){
-						makeKing(clickedButton);
-					}
-				}
-				else if (canJump(clickedButton))
-				{
-					Move(clickedButton);
-					if (canBeKing(clickedButton))
+					if (canMove(clickedButton))
 					{
-						makeKing(clickedButton);
+						Move(clickedButton);
+						boardLocked = true;
+						this.invalidateOptionsMenu();
+						if (canBeKing(clickedButton)){
+							makeKing(clickedButton);
+						}
+					}
+					else if (canJump(clickedButton))
+					{
+						Move(clickedButton);
+						boardLocked = true;
+						this.invalidateOptionsMenu();
+						if (canBeKing(clickedButton))
+						{
+							makeKing(clickedButton);
+						}
+					}
+					else 
+					{
+						setBackground(R.drawable.bg_board_bright, prevButton);
+						prevButton = null;
 					}
 				}
-				else 
+				else
 				{
 					setBackground(R.drawable.bg_board_bright, prevButton);
 					prevButton = null;
@@ -457,17 +488,13 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			}
 			else
 			{
-				setBackground(R.drawable.bg_board_bright, prevButton);
-				prevButton = null;
+				if (!clickedButton.isEmpty()){
+					prevButton = clickedButton;
+					setBackground(R.drawable.bg_board_bright_selected, clickedButton);
+				}
 			}
 		}
-		else
-		{
-			if (!clickedButton.isEmpty()){
-				prevButton = clickedButton;
-				setBackground(R.drawable.bg_board_bright_selected, clickedButton);
-			}
-		}
+	
 	}
 
 	
@@ -689,6 +716,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	}
 
 
+	@SuppressLint("NewApi")
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item)
 	{
@@ -704,6 +732,8 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 
 			case R.id.checkers_game_activity_actionbar_undo_move:
 				// TODO undo the move that the user made on the board
+				boardLocked = false;
+				this.invalidateOptionsMenu();
 				Utilities.easyToast(CheckersGameActivity.this, "undone");
 				return true;
 
