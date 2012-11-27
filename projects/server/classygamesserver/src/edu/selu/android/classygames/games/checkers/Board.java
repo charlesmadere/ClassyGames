@@ -9,16 +9,12 @@ import org.json.simple.parser.ParseException;
 
 import edu.selu.android.classygames.games.Coordinate;
 import edu.selu.android.classygames.games.GenericBoard;
+import edu.selu.android.classygames.utilities.Utilities;
 
 
 public class Board extends GenericBoard
 {
 
-
-	public final static byte BOARD_INVALID = -1;
-	public final static byte BOARD_NEW_GAME = 1;
-	public final static byte BOARD_NEW_MOVE = 2;
-	public final static byte BOARD_WIN = 15;
 
 	private final static byte LENGTH_HORIZONTAL = 8;
 	private final static byte LENGTH_VERTICAL = 8;
@@ -81,7 +77,7 @@ public class Board extends GenericBoard
 				{
 					if (getPosition(x, y).hasPiece())
 					{
-						return BOARD_INVALID;
+						return Utilities.BOARD_INVALID;
 					}
 				}
 
@@ -93,18 +89,18 @@ public class Board extends GenericBoard
 						//Check if piece is missing.
 						if (!getPosition(x, y).hasPiece())
 						{
-							return BOARD_INVALID;
+							return Utilities.BOARD_INVALID;
 						}
 
 						//Make sure this piece belongs to the challenged team.
 						if (getPosition(x,y).getPiece().getTeam() != Piece.TEAM_CHALLENGED)
 						{
-							return BOARD_INVALID;
+							return Utilities.BOARD_INVALID;
 						}
 
 						if (!getPosition(x,y).getPiece().isTypeNormal())
 						{
-							return BOARD_INVALID;
+							return Utilities.BOARD_INVALID;
 						}
 
 						challengedCount++;
@@ -115,18 +111,18 @@ public class Board extends GenericBoard
 						//Check if piece is missing.
 						if (!getPosition(x, y).hasPiece())
 						{
-							return BOARD_INVALID;
+							return Utilities.BOARD_INVALID;
 						}
 
 						//Make sure this piece belongs to the user team.
 						if (getPosition(x,y).getPiece().getTeam() != Piece.TEAM_USER)
 						{
-							return BOARD_INVALID;
+							return Utilities.BOARD_INVALID;
 						}
 
 						if (!getPosition(x,y).getPiece().isTypeNormal())
 						{
-							return BOARD_INVALID;
+							return Utilities.BOARD_INVALID;
 						}
 
 						userCount++;
@@ -139,12 +135,12 @@ public class Board extends GenericBoard
 							//Make sure this piece belongs to the user team.
 							if (getPosition(x,y).getPiece().getTeam() != Piece.TEAM_USER)
 							{
-								return BOARD_INVALID;
+								return Utilities.BOARD_INVALID;
 							}
 
 							if (!getPosition(x,y).getPiece().isTypeNormal())
 							{
-								return BOARD_INVALID;
+								return Utilities.BOARD_INVALID;
 							}
 
 							userCount++;
@@ -157,7 +153,7 @@ public class Board extends GenericBoard
 				{
 					if (!getPosition(x,y).hasPiece())
 					{
-						return BOARD_INVALID;
+						return Utilities.BOARD_INVALID;
 					}
 				}
 
@@ -171,7 +167,7 @@ public class Board extends GenericBoard
 						{
 							if (getPosition((byte)(x+1),(byte)(y-1)).hasPiece())
 							{
-								return BOARD_INVALID;
+								return Utilities.BOARD_INVALID;
 							}
 
 							userCount++;
@@ -184,12 +180,12 @@ public class Board extends GenericBoard
 						{
 							if (getPosition((byte)(x+1),(byte)(y-1)).hasPiece() && getPosition((byte)(x-1),(byte)(y-1)).hasPiece())
 							{
-								return BOARD_INVALID;
+								return Utilities.BOARD_INVALID;
 							}
 
 							if (!getPosition((byte)(x+1),(byte)(y-1)).hasPiece() && !getPosition((byte)(x-1),(byte)(y-1)).hasPiece())
 							{
-								return BOARD_INVALID;
+								return Utilities.BOARD_INVALID;
 							}
 
 							userCount++;
@@ -202,10 +198,10 @@ public class Board extends GenericBoard
 
 		if(challengedCount != maxTeamSize || userCount != maxTeamSize)
 		{
-			return BOARD_INVALID;
+			return Utilities.BOARD_INVALID;
 		}
 
-		return BOARD_NEW_GAME;
+		return Utilities.BOARD_NEW_GAME;
 	}
 
 
@@ -216,9 +212,9 @@ public class Board extends GenericBoard
 		{
 			final Board boardNew = new Board(boardJSONData);
 			
-			byte userCount = 0;
+//			byte userCount = 0;
 			byte challengedCount = 0;
-			byte challangedKings = 0;
+//			byte challangedKings = 0;
 			byte userKings = 0;
 
 			for (byte x = 0; x < LENGTH_HORIZONTAL; ++x)
@@ -231,7 +227,7 @@ public class Board extends GenericBoard
 					{
 						if (boardNew.getPosition(x, y).hasPiece())
 						{
-							return BOARD_INVALID;
+							return Utilities.BOARD_INVALID;
 						}
 					}
 
@@ -244,7 +240,7 @@ public class Board extends GenericBoard
 						}
 						else
 						{
-							userCount++;
+//							userCount++;
 						}
 					}
 
@@ -265,20 +261,20 @@ public class Board extends GenericBoard
 			//Check for illegal amount of kings.
 			if (userKings > 1)
 			{
-				return BOARD_INVALID;
+				return Utilities.BOARD_INVALID;
 			}
 
 			//WIN CONDITION: Check if challenged user is out of pieces.
 			if (challengedCount == 0)
 			{
-				return BOARD_WIN;
+				return Utilities.BOARD_WIN;
 			}
 
-			return BOARD_NEW_MOVE;
+			return Utilities.BOARD_NEW_MOVE;
 		}
 		else
 		{
-			return BOARD_INVALID;
+			return Utilities.BOARD_INVALID;
 		}
 	}
 
