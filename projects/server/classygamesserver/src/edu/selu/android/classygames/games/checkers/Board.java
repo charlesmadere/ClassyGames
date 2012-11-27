@@ -117,7 +117,6 @@ public class Board extends GenericBoard
 						//Make sure this piece belongs to the user team.
 						if (getPosition(x,y).getPiece().getTeam() != Piece.TEAM_USER)
 						{
-							byte z = getPosition(x,y).getPiece().getTeam();
 							return Utilities.BOARD_INVALID;
 						}
 
@@ -128,7 +127,7 @@ public class Board extends GenericBoard
 
 						userCount++;
 					}
-					
+
 					if (y == 2)
 					{
 						if(getPosition(x,y).hasPiece())
@@ -136,7 +135,6 @@ public class Board extends GenericBoard
 							//Make sure this piece belongs to the user team.
 							if (getPosition(x,y).getPiece().getTeam() != Piece.TEAM_USER)
 							{
-								byte z = getPosition(x,y).getPiece().getTeam();
 								return Utilities.BOARD_INVALID;
 							}
 
