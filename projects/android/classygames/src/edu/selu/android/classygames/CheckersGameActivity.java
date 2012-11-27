@@ -20,7 +20,6 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -317,7 +316,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CHALLENGED, Long.valueOf(personChallenged.getId()).toString()));
 					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_NAME, personChallenged.getName()));
 					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CREATOR, Long.valueOf(Utilities.getWhoAmI(CheckersGameActivity.this).getId()).toString()));
-					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_BOARD, board.toString()));
+					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_BOARD, object.toString()));
 
 					if (gameId == null || gameId.isEmpty())
 					{
@@ -497,7 +496,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	
 	}
 
-	
+
 	private boolean canBeKing (MyButton pbutton) {
 		if(pbutton.isPlayerGreen() && pbutton.getPx() == 0)
 		{
@@ -534,7 +533,6 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			return false;
 	}
 
-	
 
 	private void Move(MyButton clickedButton) 
 	{

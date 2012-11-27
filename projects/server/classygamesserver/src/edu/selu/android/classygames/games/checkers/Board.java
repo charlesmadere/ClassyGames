@@ -321,9 +321,8 @@ public class Board extends GenericBoard
 		{
 			final Map<String, Object> piece = (Map<String, Object>) team.get(i);
 			final byte pieceType = Long.valueOf((Long) piece.get("type")).byteValue();
-			final byte pieceTeam = Long.valueOf((Long) piece.get("team")).byteValue();
 			final List<Long> unparsedCoordinate = (List<Long>) piece.get("coordinate");
-			
+
 			final byte x = unparsedCoordinate.get(0).byteValue();
 			final byte y = unparsedCoordinate.get(1).byteValue();
 
@@ -333,7 +332,7 @@ public class Board extends GenericBoard
 
 				if (!positions[coordinate.getX()][coordinate.getY()].hasPiece())
 				{
-					positions[coordinate.getX()][coordinate.getY()] = new Position(coordinate, pieceTeam, pieceType);
+					positions[coordinate.getX()][coordinate.getY()] = new Position(coordinate, i, pieceType);
 				}
 			}
 		}
