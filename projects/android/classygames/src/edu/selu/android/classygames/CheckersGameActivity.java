@@ -20,7 +20,6 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -40,17 +39,13 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 {
 
 
-	TableLayout layout;
-	MyButton[][] buttons;
+	private MyButton prevButton = null;
+	private MyButton[][] buttons;
 
-	FrameLayout.LayoutParams tableLp;
-	TableLayout.LayoutParams rowLp;
-	TableRow.LayoutParams cellLp;
-	TableRow[] rows;
-
-
-	private MyButton prevButton;
-	int greenPlayer, orangePlayer,greenking,orangeking;
+	private int greenNormal;
+	private int greenKing;
+	private int orangeNormal;
+	private int orangeKing;
 
 	public final static String INTENT_DATA_GAME_ID = "GAME_ID";
 	public final static String INTENT_DATA_PERSON_CHALLENGED_ID = "GAME_PERSON_CHALLENGED_ID";
@@ -92,102 +87,173 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 				personChallenged = new Person(challengedId, challengedName);
 				getSupportActionBar().setTitle(CheckersGameActivity.this.getString(R.string.checkers_game_activity_title) + " " + personChallenged.getName());
 
-				prevButton = null;
-				greenPlayer = R.drawable.piece_checkers_green_normal;
-				orangePlayer = R.drawable.piece_checkers_orange_normal;
-				greenking = R.drawable.piece_checkers_green_king;
-				orangeking = R.drawable.piece_checkers_orange_king;
-
-				Display display = getWindowManager().getDefaultDisplay();
-
-				if (android.os.Build.VERSION.SDK_INT >= 13)
-				{
-					// do stuff pertaining to this version here
-					Point size = new Point();
-					display.getSize(size);
-					int screen_width = size.x;
-
-					layout = new TableLayout(this);
-					tableLp = new FrameLayout.LayoutParams(screen_width, screen_width, 1);
-					rowLp = new TableLayout.LayoutParams(screen_width, screen_width / 8, 1);
-					cellLp = new TableRow.LayoutParams(screen_width / 8, screen_width / 8, 1);
-				}
-				else
-				{
-					//other versions
-					@SuppressWarnings("deprecation")
-					int width = display.getWidth();
-
-					layout = new TableLayout(this);
-					tableLp = new FrameLayout.LayoutParams(width, width, 1);
-					rowLp = new TableLayout.LayoutParams(width, width / 8, 1);
-					cellLp = new TableRow.LayoutParams(width / 8, width / 8, 1);
-				}
-
-				TableRow[] rows = new TableRow[8];
-
-				for (int i = 0; i < 8; i++)
-				{
-					rows[i] = new TableRow(this);
-				}
-
-				buttons = new MyButton[8][8];
-
-				for (int y = 0; y < 8; ++y)
-				{
-					for (int x = 0; x < 8; ++x)
-					{
-						buttons[x][y] = new MyButton(this, x, y, true, false, false);
-						buttons[x][y].setOnClickListener(this);
-						buttons[x][y].setId(x * 10 + y);
-
-						if ((x + y) % 2 == 1)
-						{
-							buttons[x][y].setScaleType(ImageView.ScaleType.CENTER_CROP);
-							setBackground(R.drawable.bg_board_bright, buttons[x][y]);
-
-							if (y <= 2 || y >= 5)
-							{
-								buttons[x][y].setEmpty(false);
-								buttons[x][y].setCrown(false);
-
-								if (y <= 2)
-								{
-									buttons[x][y].setPlayerGreen(true);
-									buttons[x][y].setImageResource(greenPlayer);
-								}
-								else
-								{
-									buttons[x][y].setPlayerGreen(false);
-									buttons[x][y].setImageResource(orangePlayer);
-								}
-							}
-						}
-						else
-						{
-							setBackground(R.drawable.bg_board_dark, buttons[x][y]);
-						}
-
-						rows[y].addView(buttons[x][y], cellLp);
-					}
-				}
-
-				for (int i = 7; i >= 0; --i)
-				{
-					layout.addView(rows[i], rowLp);
-				}
-
-				LinearLayout linearLayout = (LinearLayout) findViewById(R.id.checkers_game_activity_linearlayout);
-				linearLayout.addView(layout);
+				initBoard();
 
 				if (gameId == null || gameId.isEmpty())
 				{
-					// TODO
-					// init default board
+					initPieces();
 				}
 				else
 				{
 					new AsyncGetGame().execute();
+				}
+			}
+		}
+	}
+
+
+	@Override
+	public boolean onCreateOptionsMenu(final Menu menu)
+	{
+		MenuInflater inflater = getSupportMenuInflater();
+		inflater.inflate(R.menu.checkers_game_activity, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+
+	@SuppressLint("NewApi")
+	@Override
+	public boolean onOptionsItemSelected(final MenuItem item)
+	{
+		switch (item.getItemId())
+		{
+			case android.R.id.home:
+				finish();
+				return true;
+
+			case R.id.checkers_game_activity_actionbar_send_move:
+				new AsyncSendMove().execute();
+				return true;
+
+			case R.id.checkers_game_activity_actionbar_undo_move:
+				undo();
+				return true;
+
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
+
+
+	@Override
+	public boolean onPrepareOptionsMenu(final Menu menu)
+	{
+		if (boardLocked)
+		{
+			menu.findItem(R.id.checkers_game_activity_actionbar_send_move).setEnabled(true);
+			menu.findItem(R.id.checkers_game_activity_actionbar_undo_move).setEnabled(true);
+		}
+		else
+		{
+			menu.findItem(R.id.checkers_game_activity_actionbar_send_move).setEnabled(false);
+			menu.findItem(R.id.checkers_game_activity_actionbar_undo_move).setEnabled(false);
+		}
+
+		return true;
+	}
+
+
+	@SuppressWarnings("deprecation")
+	private void initBoard()
+	{
+		prevButton = null;
+		greenNormal = R.drawable.piece_checkers_green_normal;
+		greenKing = R.drawable.piece_checkers_green_king;
+		orangeNormal = R.drawable.piece_checkers_orange_normal;
+		orangeKing = R.drawable.piece_checkers_orange_king;
+
+		Display display = getWindowManager().getDefaultDisplay();
+
+		TableLayout layout;
+		TableLayout.LayoutParams rowLp;
+		TableRow.LayoutParams cellLp;
+
+		if (android.os.Build.VERSION.SDK_INT >= 13)
+		// if the version of Android running this code is API Level 13 and higher (Honeycomb 3.2 and up)
+		// https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels
+		{
+			Point size = new Point();
+			display.getSize(size);
+			final int screen_width = size.x;
+
+			layout = new TableLayout(this);
+			rowLp = new TableLayout.LayoutParams(screen_width, screen_width / 8, 1);
+			cellLp = new TableRow.LayoutParams(screen_width / 8, screen_width / 8, 1);
+		}
+		else
+		{
+			final int screen_width = display.getWidth();
+
+			layout = new TableLayout(this);
+			rowLp = new TableLayout.LayoutParams(screen_width, screen_width / 8, 1);
+			cellLp = new TableRow.LayoutParams(screen_width / 8, screen_width / 8, 1);
+		}
+
+		TableRow[] rows = new TableRow[8];
+
+		for (int i = 0; i < 8; i++)
+		{
+			rows[i] = new TableRow(this);
+		}
+
+		buttons = new MyButton[8][8];
+
+		for (int y = 0; y < 8; ++y)
+		{
+			for (int x = 0; x < 8; ++x)
+			{
+				buttons[x][y] = new MyButton(this, x, y, true, false, false);
+				buttons[x][y].setId(x * 10 + y);
+				buttons[x][y].setOnClickListener(this);
+				buttons[x][y].setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+				if ((x + y) % 2 == 1)
+				{
+					setBackground(R.drawable.bg_board_bright, buttons[x][y]);
+				}
+				else
+				{
+					setBackground(R.drawable.bg_board_dark, buttons[x][y]);
+				}
+
+				rows[y].addView(buttons[x][y], cellLp);
+			}
+		}
+
+		for (int i = 7; i >= 0; --i)
+		{
+			layout.addView(rows[i], rowLp);
+		}
+
+		LinearLayout linearLayout = (LinearLayout) findViewById(R.id.checkers_game_activity_linearlayout);
+		linearLayout.addView(layout);
+	}
+
+
+	private void initPieces()
+	{
+		for (int x = 0; x < 8; ++x)
+		{
+			for (int y = 0; y < 8; ++y)
+			{
+				if ((y + x) % 2 == 1)
+				{
+					if (y <= 2 || y >= 5)
+					{
+						buttons[x][y].setEmpty(false);
+						buttons[x][y].setCrown(false);
+
+						if (y <= 2)
+						{
+							buttons[x][y].setPlayerGreen(true);
+							buttons[x][y].setImageResource(greenNormal);
+						}
+						else
+						{
+							buttons[x][y].setPlayerGreen(false);
+							buttons[x][y].setImageResource(orangeNormal);
+						}
+					}
 				}
 			}
 		}
@@ -553,24 +619,24 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		
 		if (prevButton.isPlayerGreen() && isKing(prevButton))
 		{
-			clickedButton.setImageResource(greenking);
+			clickedButton.setImageResource(greenKing);
 			clickedButton.setCrown(true);
 			clickedButton.setPlayerGreen(true);
 		}
 		else if (!prevButton.isPlayerGreen() && isKing(prevButton))
 		{
-			clickedButton.setImageResource(orangeking);
+			clickedButton.setImageResource(orangeKing);
 			clickedButton.setCrown(true);
 			clickedButton.setPlayerGreen(false);
 		}
 		else if (prevButton.isPlayerGreen())
 		{
-			clickedButton.setImageResource(greenPlayer);
+			clickedButton.setImageResource(greenNormal);
 			clickedButton.setPlayerGreen(true);
 		}
 		else
 		{
-			clickedButton.setImageResource(orangePlayer);
+			clickedButton.setImageResource(orangeNormal);
 			clickedButton.setPlayerGreen(false);
 		}
 
@@ -728,57 +794,6 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	{
 		boardLocked = false;
 		CheckersGameActivity.this.invalidateOptionsMenu();
-	}
-
-
-	@Override
-	public boolean onCreateOptionsMenu(final Menu menu)
-	{
-		MenuInflater inflater = getSupportMenuInflater();
-		inflater.inflate(R.menu.checkers_game_activity, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
-
-
-	@SuppressLint("NewApi")
-	@Override
-	public boolean onOptionsItemSelected(final MenuItem item)
-	{
-		switch (item.getItemId())
-		{
-			case android.R.id.home:
-				finish();
-				return true;
-
-			case R.id.checkers_game_activity_actionbar_send_move:
-				new AsyncSendMove().execute();
-				return true;
-
-			case R.id.checkers_game_activity_actionbar_undo_move:
-				undo();
-				return true;
-
-			default:
-				return super.onOptionsItemSelected(item);
-		}
-	}
-
-
-	@Override
-	public boolean onPrepareOptionsMenu(final Menu menu)
-	{
-		if (boardLocked)
-		{
-			menu.findItem(R.id.checkers_game_activity_actionbar_send_move).setEnabled(true);
-			menu.findItem(R.id.checkers_game_activity_actionbar_undo_move).setEnabled(true);
-		}
-		else
-		{
-			menu.findItem(R.id.checkers_game_activity_actionbar_send_move).setEnabled(false);
-			menu.findItem(R.id.checkers_game_activity_actionbar_undo_move).setEnabled(false);
-		}
-
-		return true;
 	}
 
 
