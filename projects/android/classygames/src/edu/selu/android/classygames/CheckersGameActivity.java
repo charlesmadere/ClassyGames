@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -51,7 +52,6 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	MyButton prevButton;
 	int greenPlayer, orangePlayer,greenking,orangeking;
 	//AlertDialog.Builder dialog = new AlertDialog.Builder(this, R.style.DialogWindowTitle_Sherlock);
-
 
 	public final static String INTENT_DATA_GAME_ID = "GAME_ID";
 	public final static String INTENT_DATA_PERSON_CHALLENGED_ID = "GAME_PERSON_CHALLENGED_ID";
@@ -429,16 +429,14 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		MyButton clickedButton = (MyButton) findViewById(arg0.getId());
 		
 		//if(!clickedButton.isEmpty() && prevButton == null)
-		 
-		
+
 		if (prevButton != null)
 		{
 			if (clickedButton.isEmpty())
 			{
 				if (canMove(clickedButton))
 				{
-					Move(clickedButton);
-					
+					Move(clickedButton);			
 					if (canBeKing(clickedButton)){
 						makeKing(clickedButton);
 					}
