@@ -174,6 +174,7 @@ public class NewGame extends HttpServlet
 											sqlStatement.setString(3, board);
 											sqlStatement.setByte(4, Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED);
 											sqlStatement.setByte(5, Utilities.DATABASE_TABLE_GAMES_FINISHED_FALSE);
+											sqlStatement.setString(6, digest);
 
 											// run the SQL statement
 											sqlStatement.executeUpdate();
@@ -195,7 +196,7 @@ public class NewGame extends HttpServlet
 										sqlStatement.setLong(3, user_challenged.longValue());
 										sqlStatement.setString(4, board);
 										sqlStatement.setByte(5, Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED);
-										sqlStatement.setInt(6, Utilities.DATABASE_TABLE_GAMES_FINISHED_FALSE);
+										sqlStatement.setByte(6, Utilities.DATABASE_TABLE_GAMES_FINISHED_FALSE);
 
 										// run the SQL statement
 										sqlStatement.executeUpdate();
