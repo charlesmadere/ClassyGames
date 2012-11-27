@@ -50,7 +50,7 @@ public class Board extends GenericBoard
 				final int teamsSize = teams.size();
 				for (byte i = 0; i < teamsSize; ++i)
 				{
-					parseTeamData((List<Object>) teams.get(i));
+					parseTeamData((List<Object>) teams.get(i), i);
 				}
 			}
 			catch (final ParseException e)
@@ -117,6 +117,7 @@ public class Board extends GenericBoard
 						//Make sure this piece belongs to the user team.
 						if (getPosition(x,y).getPiece().getTeam() != Piece.TEAM_USER)
 						{
+							byte z = getPosition(x,y).getPiece().getTeam();
 							return Utilities.BOARD_INVALID;
 						}
 
@@ -135,6 +136,7 @@ public class Board extends GenericBoard
 							//Make sure this piece belongs to the user team.
 							if (getPosition(x,y).getPiece().getTeam() != Piece.TEAM_USER)
 							{
+								byte z = getPosition(x,y).getPiece().getTeam();
 								return Utilities.BOARD_INVALID;
 							}
 
@@ -309,7 +311,7 @@ public class Board extends GenericBoard
 
 
 	@SuppressWarnings("unchecked")
-	private void parseTeamData(final List<Object> team)
+	private void parseTeamData(final List<Object> team, final byte pieceTeam)
 	{
 		final byte teamSize = (byte) team.size();
 
@@ -328,7 +330,7 @@ public class Board extends GenericBoard
 
 				if (!positions[coordinate.getX()][coordinate.getY()].hasPiece())
 				{
-					positions[coordinate.getX()][coordinate.getY()] = new Position(coordinate, i, pieceType);
+					positions[coordinate.getX()][coordinate.getY()] = new Position(coordinate, (byte) (pieceTeam + 1), pieceType);
 				}
 			}
 		}
