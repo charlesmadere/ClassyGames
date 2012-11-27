@@ -381,16 +381,9 @@ public class NewGameActivity extends SherlockListActivity
 				}
 				else
 				{
-					try
-					{
-							drawable = Utilities.loadImageFromWebOperations(Utilities.FACEBOOK_GRAPH_API_URL + person[0].getId() + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE_SSL);
-							bitmap = ((BitmapDrawable) drawable).getBitmap();
-							ImageCache.addBitmapToCache(person[0].getId(),bitmap, memoryCache, diskCache);
-					}
-					catch (final Exception e)
-					{
-						Log.e("Classy Games", "Image Load Failed: " + e);
-					}
+					drawable = Utilities.loadImageFromWebOperations(Utilities.FACEBOOK_GRAPH_API_URL + person[0].getId() + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE_SSL);
+					bitmap = ((BitmapDrawable) drawable).getBitmap();
+					ImageCache.addBitmapToCache(person[0].getId(),bitmap, memoryCache, diskCache);
 
 					return drawable;
 				}

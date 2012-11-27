@@ -4,7 +4,6 @@ package edu.selu.android.classygames;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -111,7 +110,6 @@ public class GameOverActivity extends SherlockActivity
 	{
 
 
-		private Drawable drawable;
 		private ImageView imageView;
 
 
@@ -125,16 +123,7 @@ public class GameOverActivity extends SherlockActivity
 		@Override
 		protected Drawable doInBackground(final Person... person) 
 		{
-			try
-			{
-				drawable = Utilities.loadImageFromWebOperations(Utilities.FACEBOOK_GRAPH_API_URL + person[0].getId() + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_LARGE_SSL);
-			}
-			catch (final Exception e)
-			{
-				Log.e("Classy Games", "Image Load Failed: " + e);
-			}
-
-			return drawable;
+			return Utilities.loadImageFromWebOperations(Utilities.FACEBOOK_GRAPH_API_URL + person[0].getId() + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_LARGE_SSL);
 		}
 
 

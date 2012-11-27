@@ -1,7 +1,9 @@
 package edu.selu.android.classygames.utilities;
 
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import android.content.Context;
@@ -303,11 +305,16 @@ public class Utilities
 			InputStream is = (InputStream) new URL(url).getContent();
 			return Drawable.createFromStream(is, "src");
 		}
-		catch (final Exception e)
+		catch (final MalformedURLException e)
 		{
-			Log.e(LOG_TAG, "Image Load Failed" + e);
-			return null;
+			Log.e(Utilities.LOG_TAG, "MalformedURLException while trying to create drawable from url: " + url, e);
 		}
+		catch (final IOException e)
+		{
+			Log.e(Utilities.LOG_TAG, "IOException while trying to create drawable from url: " + url, e);
+		}
+
+		return null;
 	}
 
 
