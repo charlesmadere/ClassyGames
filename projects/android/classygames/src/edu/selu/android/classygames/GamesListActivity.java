@@ -1,6 +1,7 @@
 package edu.selu.android.classygames;
 
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,12 +13,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ActivityManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +38,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.facebook.android.Util;
+import com.koushikdutta.urlimageviewhelper.DiskLruCache;
 
 import edu.selu.android.classygames.data.Person;
 import edu.selu.android.classygames.games.Game;
@@ -42,7 +49,8 @@ import edu.selu.android.classygames.utilities.Utilities;
 public class GamesListActivity extends SherlockListActivity
 {
 
-
+	private DiskLruCache diskCache;
+	private LruCache<Long, Bitmap> memoryCache;
 	private GamesListAdapter gamesAdapter;
 
 
@@ -52,6 +60,38 @@ public class GamesListActivity extends SherlockListActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.games_list_activity);
 		Utilities.styleActionBar(getResources(), getSupportActionBar(), false);
+		
+		// setup cache size for loading drawable images
+		final int memClass = ((ActivityManager) GamesListActivity.this.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
+
+		final int cacheSize = ImageCache.getCacheSize(memClass);
+
+		memoryCache = new LruCache<Long, Bitmap> (cacheSize)
+		{
+			protected int sizeOf(final Long key, final Bitmap bitmap)
+			{
+				// Check if the running version of Android is 3.1 (Honeycomb) or later
+				if (android.os.Build.VERSION.SDK_INT >= 12)
+				{
+					return bitmap.getByteCount();
+				}
+				else
+				{
+					return bitmap.getRowBytes() * bitmap.getHeight();
+				}
+			}
+		};
+
+		// try loading diskCache
+		try
+		{
+			File cacheDir = getCacheDir();
+			diskCache = DiskLruCache.open(cacheDir, ImageCache.APP_VERSION, ImageCache.VALUE_COUNT, ImageCache.DISK_CACHE_SIZE);
+		} 
+		catch (IOException e) 
+		{
+			Log.e(Utilities.LOG_TAG, "DiskCache instantiate failed: " + e);
+		}
 
 		new AsyncGetFacebookIdentificationAndGCMRegister().execute();
 	}
@@ -443,12 +483,25 @@ public class GamesListActivity extends SherlockListActivity
 				{
 					layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 					convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_item, null);
-
+					
+					//TODO: GET PERSON ID 
+					Bitmap diskImage = ImageCache.getBitmapFromDiskCache(game.getPerson().getId(), diskCache);
+					Bitmap memoryImage = memoryCache.get(game.getPerson().getId());
 					viewHolder.picture = (ImageView) convertView.findViewById(R.id.games_list_activity_listview_item_picture);
 					if (viewHolder.picture != null)
 					{
-						// TODO
-						// insert code to load images here
+						if(memoryImage != null)
+						{
+							viewHolder.picture.setImageBitmap(memoryImage);
+						}
+						else if(diskImage != null)
+						{
+							viewHolder.picture.setImageBitmap(diskImage);
+						}
+						else
+						{
+							new AsyncPopulatePictures(viewHolder).execute(game.getPerson());
+						}
 					}
 
 					viewHolder.name = (TextView) convertView.findViewById(R.id.games_list_activity_listview_item_name);
@@ -519,7 +572,43 @@ public class GamesListActivity extends SherlockListActivity
 
 
 		}
+		
+		private final class AsyncPopulatePictures extends AsyncTask<Person, Long, Drawable>
+		{
 
+
+			private Bitmap bitmap;
+			private Drawable drawable;
+			private String path;
+			private ViewHolder viewHolder;
+
+
+			AsyncPopulatePictures(final ViewHolder viewHolder)
+			{
+				super();
+				this.viewHolder = viewHolder;
+				path = this.viewHolder.picture.getTag().toString();
+			}
+
+
+			@Override
+			protected Drawable doInBackground(final Person... person) 
+			{
+				if (!viewHolder.picture.getTag().toString().equals(path))
+				{
+					this.cancel(true);
+					return null;
+				}
+				else
+				{
+					drawable = Utilities.loadImageFromWebOperations(Utilities.FACEBOOK_GRAPH_API_URL + person[0].getId() + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE_SSL);
+					bitmap = ((BitmapDrawable) drawable).getBitmap();
+					ImageCache.addBitmapToCache(person[0].getId(),bitmap, memoryCache, diskCache);
+
+					return drawable;
+				}
+			}
+		}
 
 	}
 
@@ -533,5 +622,5 @@ public class GamesListActivity extends SherlockListActivity
 		}
 	}
 
-
+	
 }
