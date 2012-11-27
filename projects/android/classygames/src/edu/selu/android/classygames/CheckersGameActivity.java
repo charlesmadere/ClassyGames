@@ -55,6 +55,10 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	private boolean boardLocked = false;
 	private String gameId = null;
 	private Person personChallenged = null;
+
+	/**
+	 * JSON String downloaded from the server that represents the board
+	 */
 	private String board = null;
 
 
@@ -264,8 +268,9 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		{
 			for (int y = 0; y < 8; ++y)
 			{
-				// TODO
-				// clear out the buttons array with default values
+				buttons[x][y].setEmpty(true);
+				buttons[x][y].setCrown(false);
+				buttons[x][y].setImageResource(0);
 			}
 		}
 	}
