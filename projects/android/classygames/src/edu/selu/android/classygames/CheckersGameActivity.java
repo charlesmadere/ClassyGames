@@ -53,8 +53,9 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 
 
 	private boolean boardLocked = false;
-	private String gameId;
-	private Person personChallenged;
+	private String gameId = null;
+	private Person personChallenged = null;
+	private String board = null;
 
 
 	@SuppressLint("NewApi")
@@ -236,25 +237,35 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		{
 			for (int y = 0; y < 8; ++y)
 			{
-				if ((y + x) % 2 == 1)
+				if (((y + x) % 2 == 1) && (y <= 2 || y >= 5))
 				{
-					if (y <= 2 || y >= 5)
-					{
-						buttons[x][y].setEmpty(false);
-						buttons[x][y].setCrown(false);
+					buttons[x][y].setEmpty(false);
+					buttons[x][y].setCrown(false);
 
-						if (y <= 2)
-						{
-							buttons[x][y].setPlayerGreen(true);
-							buttons[x][y].setImageResource(greenNormal);
-						}
-						else
-						{
-							buttons[x][y].setPlayerGreen(false);
-							buttons[x][y].setImageResource(orangeNormal);
-						}
+					if (y <= 2)
+					{
+						buttons[x][y].setPlayerGreen(true);
+						buttons[x][y].setImageResource(greenNormal);
+					}
+					else
+					{
+						buttons[x][y].setPlayerGreen(false);
+						buttons[x][y].setImageResource(orangeNormal);
 					}
 				}
+			}
+		}
+	}
+
+
+	private void clearPieces()
+	{
+		for (int x = 0; x < 8; ++x)
+		{
+			for (int y = 0; y < 8; ++y)
+			{
+				// TODO
+				// clear out the buttons array with default values
 			}
 		}
 	}
@@ -287,9 +298,10 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 
 
 		@Override
-		protected void onPostExecute(final String board)
+		protected void onPostExecute(final String serverResponse)
 		{
-			parseBoard(board);
+			board = parseServerResponse(board);
+			buildBoard();
 
 			if (progressDialog.isShowing())
 			{
@@ -308,17 +320,6 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			progressDialog.setCancelable(false);
 			progressDialog.setCanceledOnTouchOutside(false);
 			progressDialog.show();
-		}
-
-
-		private void parseBoard(final String jsonString)
-		{
-			if (jsonString != null && !jsonString.isEmpty())
-			{
-				// TODO
-				// write an algorithm that parses this json string and sets the board
-				// accordingly
-			}
 		}
 
 
@@ -459,49 +460,63 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		}
 
 
-		private void parseServerResponse(final String jsonString)
+	}
+
+
+	private String parseServerResponse(final String jsonString)
+	{
+		if (jsonString == null || jsonString.isEmpty())
 		{
-			if (jsonString == null || jsonString.isEmpty())
+			Log.e(Utilities.LOG_TAG, "Empty string received from server on send move!");
+		}
+		else
+		{
+			try
 			{
-				Log.e(Utilities.LOG_TAG, "Empty string received from server on send move!");
-			}
-			else
-			{
+				Log.d(Utilities.LOG_TAG, "Parsing JSON data: " + jsonString);
+				final JSONObject jsonData = new JSONObject(jsonString);
+				final JSONObject jsonResult = jsonData.getJSONObject(ServerUtilities.POST_DATA_RESULT);
+
 				try
 				{
-					Log.d(Utilities.LOG_TAG, "Parsing JSON data: " + jsonString);
-					final JSONObject jsonData = new JSONObject(jsonString);
-					final JSONObject jsonResult = jsonData.getJSONObject(ServerUtilities.POST_DATA_RESULT);
+					final String successData = jsonResult.getString(ServerUtilities.POST_DATA_SUCCESS);
+					Log.d(Utilities.LOG_TAG, "Server returned successful message: " + successData);
 
-					try
-					{
-						final String successData = jsonResult.getString(ServerUtilities.POST_DATA_SUCCESS);
-						Log.d(Utilities.LOG_TAG, "Server returned successful message: " + successData);
-
-						// TODO
-						// parse board data. it's stored in the successData String
-					}
-					catch (final JSONException e)
-					{
-						try
-						{
-							final String errorMessage = jsonResult.getString(ServerUtilities.POST_DATA_ERROR);
-							Log.d(Utilities.LOG_TAG, "Server responded with error: " + errorMessage);
-						}
-						catch (final JSONException e1)
-						{
-							Log.e(Utilities.LOG_TAG, "Data returned from server contained no error message.");
-						}
-					}
+					return successData;
 				}
 				catch (final JSONException e)
 				{
-					Log.e(Utilities.LOG_TAG, "Couldn't grab result object from server response.");
+					try
+					{
+						final String errorMessage = jsonResult.getString(ServerUtilities.POST_DATA_ERROR);
+						Log.d(Utilities.LOG_TAG, "Server responded with error: " + errorMessage);
+
+						return errorMessage;
+					}
+					catch (final JSONException e1)
+					{
+						Log.e(Utilities.LOG_TAG, "Data returned from server contained no error message.");
+					}
 				}
+			}
+			catch (final JSONException e)
+			{
+				Log.e(Utilities.LOG_TAG, "Couldn't grab result object from server response.");
 			}
 		}
 
+		return null;
+	}
 
+
+	private void buildBoard()
+	{
+		if (board != null && !board.isEmpty())
+		{
+			// TODO
+			// write an algorithm that parses this json string and sets the board
+			// accordingly
+		}
 	}
 
 
@@ -790,8 +805,19 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 
 
 	private void undo()
-	// TODO
 	{
+		if (board == null || board.isEmpty())
+		// simply re instantiate the default board
+		{
+			clearPieces();
+			initPieces();
+		}
+		else
+		// re parse the board string that we downloaded
+		{
+			buildBoard();
+		}
+
 		boardLocked = false;
 		CheckersGameActivity.this.invalidateOptionsMenu();
 	}
