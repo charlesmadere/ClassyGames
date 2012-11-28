@@ -144,7 +144,7 @@ public class GamesListActivity extends SherlockListActivity
 				return true;
 
 			case R.id.games_list_activity_actionbar_new_game:
-				startActivity(new Intent(GamesListActivity.this, NewGameActivity.class));
+				startActivityForResult(new Intent(GamesListActivity.this, NewGameActivity.class), 0);
 				return true;
 
 			case R.id.games_list_activity_actionbar_refresh:
@@ -245,7 +245,6 @@ public class GamesListActivity extends SherlockListActivity
 		private final static byte TOAST_SERVER_ERROR = 2;
 		private final static byte TOAST_SERVER_RESPONSE_ERROR = 3;
 
-		private int progress;
 		private ProgressDialog progressDialog;
 
 
@@ -256,7 +255,7 @@ public class GamesListActivity extends SherlockListActivity
 			{
 				try
 				{
-					Thread.sleep(2000);
+					Thread.sleep(1000);
 				}
 				catch (final InterruptedException e)
 				{
@@ -275,6 +274,8 @@ public class GamesListActivity extends SherlockListActivity
 
 				// make a call to the server and grab the return JSON result
 				final String jsonString = ServerUtilities.postToServer(ServerUtilities.SERVER_GET_GAMES_ADDRESS, nameValuePairs);
+
+				publishProgress(1);
 				games = parseServerResults(jsonString);
 			}
 			catch (final IOException e)
@@ -283,7 +284,7 @@ public class GamesListActivity extends SherlockListActivity
 				toastToShow = TOAST_SERVER_RESPONSE_ERROR;
 			}
 
-			publishProgress(2);
+			publishProgress(4);
 
 			return games;
 		}
@@ -324,7 +325,7 @@ public class GamesListActivity extends SherlockListActivity
 			progressDialog = new ProgressDialog(GamesListActivity.this);
 			progressDialog.setCancelable(true);
 			progressDialog.setCanceledOnTouchOutside(false);
-			progressDialog.setMax(2);
+			progressDialog.setMax(4);
 			progressDialog.setMessage(GamesListActivity.this.getString(R.string.games_list_activity_getgames_progressdialog_message));
 			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 			progressDialog.setTitle(R.string.games_list_activity_getgames_progressdialog_title);
@@ -353,20 +354,21 @@ public class GamesListActivity extends SherlockListActivity
 
 				if (gameData != null)
 				{
-					publishProgress(gameData.length());
-					progress = 0;
-
 					ArrayList<Game> turn = parseTurn(gameData, ServerUtilities.POST_DATA_TURN_YOURS, Game.TURN_YOURS);
 					if (turn != null && !turn.isEmpty())
 					{
 						games.addAll(turn);
 					}
 
+					publishProgress(2);
+
 					turn = parseTurn(gameData, ServerUtilities.POST_DATA_TURN_THEIRS, Game.TURN_THEIRS);
 					if (turn != null && !turn.isEmpty())
 					{
 						games.addAll(turn);
 					}
+
+					publishProgress(3);
 				}
 				else
 				{
@@ -435,9 +437,6 @@ public class GamesListActivity extends SherlockListActivity
 
 					turnGames.trimToSize();
 					Collections.sort(turnGames, new GamesListSorter());
-
-					++progress;
-					publishProgress(progress);
 
 					return turnGames;
 				}
