@@ -83,7 +83,7 @@ public class GetGame extends HttpServlet
 				if (sqlResult.next())
 				// game with specified id was found in the database, send the board's data to the client
 				{
-					final String board = sqlResult.getString(Utilities.DATABASE_TABLE_GAMES_COLUMN_BOARD);
+					String board = sqlResult.getString(Utilities.DATABASE_TABLE_GAMES_COLUMN_BOARD);
 
 					if (board == null || board.isEmpty())
 					{
@@ -92,6 +92,7 @@ public class GetGame extends HttpServlet
 					else
 					// return the board's data
 					{
+						board = Utilities.stripStringOfBackSlashes(board);
 						printWriter.write(Utilities.makePostDataSuccess(board));
 					}
 				}

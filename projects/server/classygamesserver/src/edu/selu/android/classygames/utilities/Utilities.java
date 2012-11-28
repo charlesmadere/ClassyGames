@@ -319,6 +319,20 @@ public class Utilities
 	}
 
 
+	public static String stripStringOfBackSlashes(String string)
+	{
+		if (string == null || string.isEmpty())
+		{
+			return null;
+		}
+		else
+		{
+			// replace all \ characters with nothing
+			return string.replace("\\", "");
+		}
+	}
+
+
 	public static void updateUserRegId(final Connection sqlConnection, final String reg_id, final long user_id)
 	{
 		PreparedStatement sqlStatement = null;

@@ -212,12 +212,20 @@ public class GetGames extends HttpServlet
 			// run the SQL statement and acquire any return information
 			final ResultSet sqlResult = sqlStatement.executeQuery();
 
-			// grab the user's name from the SQL query
-			username = new String(sqlResult.getString(Utilities.DATABASE_TABLE_USERS_COLUMN_NAME));
+			if (sqlResult.next())
+			// check to see that we got some SQL return data
+			{
+				// grab the user's name from the SQL query
+				username = sqlResult.getString(Utilities.DATABASE_TABLE_USERS_COLUMN_NAME);
+			}
+			else
+			{
+				username = Utilities.APP_NAME;
+			}
 		}
 		catch (final SQLException e)
 		{
-			username = Utilities.APP_NAME;
+
 		}
 		finally
 		{
