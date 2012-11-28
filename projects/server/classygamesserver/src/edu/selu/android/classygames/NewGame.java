@@ -218,7 +218,7 @@ public class NewGame extends HttpServlet
 									break;
 
 								default:
-									GCMUtilities.sendMessage(sqlConnection, digest, user_challenged.longValue(), user_challenged_name, Utilities.POST_DATA_TYPE_NEW_GAME);
+									GCMUtilities.sendMessage(sqlConnection, digest, user_creator, user_challenged, Utilities.BOARD_NEW_GAME);
 									printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_GAME_ADDED_TO_DATABASE));
 									break;
 							}

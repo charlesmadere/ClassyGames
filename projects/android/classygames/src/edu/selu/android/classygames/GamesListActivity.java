@@ -50,6 +50,7 @@ public class GamesListActivity extends SherlockListActivity
 {
 
 
+	private boolean justReturnedHere = false;
 	private DiskLruCache diskCache;
 	private LruCache<Long, Bitmap> memoryCache;
 	private GamesListAdapter gamesAdapter;
@@ -64,7 +65,7 @@ public class GamesListActivity extends SherlockListActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.games_list_activity);
 		Utilities.styleActionBar(getResources(), getSupportActionBar(), false);
-		
+
 		// setup cache size for loading drawable images
 		final int memClass = ((ActivityManager) GamesListActivity.this.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
 
@@ -109,6 +110,7 @@ public class GamesListActivity extends SherlockListActivity
 		switch (resultCode)
 		{
 			case NEED_TO_REFRESH:
+				justReturnedHere = true;
 				new AsyncPopulateGamesList().execute();
 				break;
 
@@ -250,6 +252,20 @@ public class GamesListActivity extends SherlockListActivity
 		@Override
 		protected ArrayList<Game> doInBackground(final Void... v)
 		{
+			if (justReturnedHere)
+			{
+				try
+				{
+					Thread.sleep(2000);
+				}
+				catch (final InterruptedException e)
+				{
+					Log.e(Utilities.LOG_TAG, "AsyncPopulateGamesList interrupted!", e);
+				}
+
+				justReturnedHere = false;
+			}
+
 			ArrayList<Game> games = new ArrayList<Game>();
 
 			try

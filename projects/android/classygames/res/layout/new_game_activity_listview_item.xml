@@ -16,7 +16,8 @@
 		android:layout_height="46dip"
 		android:layout_marginRight="24dip"
 		android:layout_width="46dip"
-		android:scaleType="centerCrop" />
+		android:scaleType="centerCrop"
+		android:src="@drawable/fb_placeholder" />
 	<TextView
 		android:ellipsize="end"
 		android:id="@+id/new_game_activity_listview_item_name"

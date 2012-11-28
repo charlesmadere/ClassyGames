@@ -246,14 +246,12 @@ public class Utilities
 		// acquire database credentials from Amazon Web Services
 		final String hostname = System.getProperty("RDS_HOSTNAME");
 		final String port = System.getProperty("RDS_PORT");
-//		final int port = 3306;
 		final String dbName = System.getProperty("RDS_DB_NAME");
 		final String username = System.getProperty("RDS_USERNAME");
 		final String password = System.getProperty("RDS_PASSWORD");
 
 		// create the connection string
 		String connectionString = "jdbc:mysql://" + hostname + ":" + port + "/" + dbName + "?user=" + username + "&password=" + password;
-		//  + "&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&maxReconnects=10";
 
 		// return a new connection to the database
 		return DriverManager.getConnection(connectionString);

@@ -146,17 +146,18 @@ public class NewMove extends HttpServlet
 										{
 											case Utilities.BOARD_WIN:
 												sqlStatement.setByte(3, Utilities.DATABASE_TABLE_GAMES_FINISHED_TRUE);
+												GCMUtilities.sendMessages(sqlConnection, game_id, user_id, user_opponent, board_validation_result, user_opponent_name);
 												break;
 
 											default:
 												sqlStatement.setByte(3, Utilities.DATABASE_TABLE_GAMES_FINISHED_FALSE);
+												GCMUtilities.sendMessage(sqlConnection, game_id, user_id, user_opponent, board_validation_result);
 												break;
 										}
 
 										// run the SQL statement
 										sqlStatement.executeUpdate();
 
-										GCMUtilities.sendMessage(sqlConnection, game_id, user_opponent.longValue(), user_opponent_name, board_validation_result);
 										printWriter.write(Utilities.makePostDataSuccess(Utilities.POST_SUCCESS_MOVE_ADDED_TO_DATABASE));
 									}
 									else
