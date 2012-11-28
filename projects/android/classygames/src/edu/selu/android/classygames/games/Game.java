@@ -46,6 +46,7 @@ public class Game
 	{
 		this.turn = turn;
 		this.type = type;
+		timestamp = (System.currentTimeMillis() / 1000) + 7200;
 	}
 
 

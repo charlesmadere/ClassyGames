@@ -501,15 +501,15 @@ public class GamesListActivity extends SherlockListActivity
 					{
 						if (memoryImage != null)
 						{
-							viewHolder.picture.setImageBitmap(memoryImage);
+//							viewHolder.picture.setImageBitmap(memoryImage);
 						}
 						else if (diskImage != null)
 						{
-							viewHolder.picture.setImageBitmap(diskImage);
+//							viewHolder.picture.setImageBitmap(diskImage);
 						}
 						else
 						{
-							new AsyncPopulatePictures(viewHolder).execute(game.getPerson());
+//							new AsyncPopulatePictures(viewHolder).execute(game.getPerson());
 						}
 					}
 
@@ -621,6 +621,8 @@ public class GamesListActivity extends SherlockListActivity
 					return drawable;
 				}
 			}
+
+
 		}
 
 	}

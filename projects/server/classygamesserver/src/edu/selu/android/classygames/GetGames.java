@@ -197,13 +197,14 @@ public class GetGames extends HttpServlet
 	 */
 	private String findUserName(final Connection sqlConnection, final long user)
 	{
-		String username = Utilities.APP_NAME;
+		PreparedStatement sqlStatement = null;
+		String username = null;
 
 		try
 		{
 			// prepare a SQL statement to be run on the MySQL database
 			final String sqlStatementString = "SELECT " + Utilities.DATABASE_TABLE_USERS_COLUMN_NAME + " FROM " + Utilities.DATABASE_TABLE_USERS + " WHERE " + Utilities.DATABASE_TABLE_USERS_COLUMN_ID + " = ?";
-			PreparedStatement sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
+			sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
 
 			// prevent SQL injection by inserting data this way
 			sqlStatement.setLong(1, user);
@@ -212,14 +213,15 @@ public class GetGames extends HttpServlet
 			final ResultSet sqlResult = sqlStatement.executeQuery();
 
 			// grab the user's name from the SQL query
-			username = sqlResult.getString(Utilities.DATABASE_TABLE_USERS_COLUMN_NAME);
-
-			// close this PreparedStatement as it's no longer needed
-			Utilities.closeSQLStatement(sqlStatement);
+			username = new String(sqlResult.getString(Utilities.DATABASE_TABLE_USERS_COLUMN_NAME));
 		}
 		catch (final SQLException e)
 		{
-
+			username = Utilities.APP_NAME;
+		}
+		finally
+		{
+			Utilities.closeSQLStatement(sqlStatement);
 		}
 
 		return username;
