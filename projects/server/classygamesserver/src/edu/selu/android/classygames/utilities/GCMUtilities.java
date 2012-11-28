@@ -118,15 +118,19 @@ public class GCMUtilities
 	 */
 	public static void sendMessages(final Connection sqlConnection, final String game_id, final Long user_id, final String user_name, final Byte game_type, final Long opponent_id)
 	{
-		sendMessage(sqlConnection, game_id, user_id, user_name, game_type);
-
 		final String opponent_name = grabUserName(sqlConnection, opponent_id.longValue());
 		if (opponent_name != null && !opponent_name.isEmpty())
 		{
+			sendMessage(sqlConnection, game_id, user_id, opponent_name, game_type);
+
 			if (game_type == Utilities.BOARD_WIN)
 			{
-				sendMessage(sqlConnection, game_id, opponent_id, opponent_name, Utilities.BOARD_LOSE);
+				sendMessage(sqlConnection, game_id, opponent_id, user_name, Utilities.BOARD_LOSE);
 			}
+		}
+		else
+		{
+			sendMessage(sqlConnection, game_id, user_id, "buddy", game_type);
 		}
 	}
 

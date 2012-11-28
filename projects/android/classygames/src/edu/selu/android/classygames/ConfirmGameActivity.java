@@ -71,7 +71,7 @@ public class ConfirmGameActivity extends SherlockActivity
 
 						// start the ConfirmGameActivity with a bit of extra data. We're passing it both
 						// the id and the name of the facebook person that the user has decided to challenge
-						startActivity(intent);
+						startActivityForResult(intent, 0);
 					}
 				});
 
@@ -86,6 +86,21 @@ public class ConfirmGameActivity extends SherlockActivity
 					}
 				});
 			}
+		}
+	}
+
+
+	@Override
+	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data)
+	{
+		super.onActivityResult(requestCode, resultCode, data);
+
+		switch (resultCode)
+		{
+			case GamesListActivity.NEED_TO_REFRESH:
+				setResult(GamesListActivity.NEED_TO_REFRESH);
+				finish();
+				break;
 		}
 	}
 

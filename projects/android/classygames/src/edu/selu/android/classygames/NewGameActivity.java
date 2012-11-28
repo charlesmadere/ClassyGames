@@ -356,7 +356,7 @@ public class NewGameActivity extends SherlockListActivity
 
 						// start the ConfirmGameActivity with a bit of extra data. We're passing it both
 						// the id and the name of the facebook person that the user clicked on
-						startActivity(intent);
+						startActivityForResult(intent, 0);
 					}
 				};
 
