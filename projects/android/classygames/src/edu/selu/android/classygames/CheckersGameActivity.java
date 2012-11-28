@@ -159,6 +159,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	}
 
 
+	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
 	private void initBoard()
 	{
@@ -814,6 +815,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	}
 
 
+	@SuppressLint("NewApi")
 	private void undo()
 	{
 		if (board == null || board.isEmpty())
