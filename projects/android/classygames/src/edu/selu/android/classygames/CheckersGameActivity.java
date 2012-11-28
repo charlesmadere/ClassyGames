@@ -56,6 +56,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	private String gameId = null;
 	private Person personChallenged = null;
 
+
 	/**
 	 * JSON String downloaded from the server that represents the board
 	 */
@@ -394,6 +395,8 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			{
 				progressDialog.dismiss();
 			}
+
+			finish();
 		}
 
 
@@ -406,6 +409,8 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			progressDialog.setMessage(CheckersGameActivity.this.getString(R.string.checkers_game_activity_sendmove_progressdialog_message));
 			progressDialog.setTitle(R.string.checkers_game_activity_sendmove_progressdialog_title);
 			progressDialog.show();
+
+			CheckersGameActivity.this.setResult(GamesListActivity.NEED_TO_REFRESH);
 		}
 
 

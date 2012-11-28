@@ -96,16 +96,6 @@ public class GCMUtilities
 
 
 	/**
-	 * Test method. This shouldn't be used once development is complete. Directly sends a bad GCM
-	 * message to the given user.
-	 */
-	public static void sendMessage(final Connection sqlConnection, final Long user_id, final String user_name)
-	{
-		sendMessage(sqlConnection, "abcd", user_id, user_name, Utilities.POST_DATA_TYPE_NEW_GAME);
-	}
-
-
-	/**
 	 * Sends a GCM message to two different users. This should really only be used in the case that
 	 * one person has now lost, which means that the other person has now won. Verification runs at
 	 * the very beginning of this method to ensure that that was the case.
@@ -180,7 +170,7 @@ public class GCMUtilities
 		}
 		catch (final SQLException e)
 		{
-			
+
 		}
 		finally
 		{

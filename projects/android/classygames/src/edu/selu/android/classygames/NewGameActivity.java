@@ -99,6 +99,21 @@ public class NewGameActivity extends SherlockListActivity
 
 
 	@Override
+	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data)
+	{
+		super.onActivityResult(requestCode, resultCode, data);
+
+		switch (resultCode)
+		{
+			case GamesListActivity.NEED_TO_REFRESH:
+				setResult(GamesListActivity.NEED_TO_REFRESH);
+				finish();
+				break;
+		}
+	}
+
+
+	@Override
 	public boolean onCreateOptionsMenu(final Menu menu)
 	{
 		MenuInflater inflater = getSupportMenuInflater();

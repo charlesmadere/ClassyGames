@@ -65,8 +65,8 @@
 	<string name="shark_activity_title">Sharkwork</string>
 	<string name="undo_move">Undo Move</string>
 	<string name="won">won</string>
-	<string name="checkers_game_activity_getgame_progressdialog_message">Retrieving your game....</string>
-	<string name="checkers_game_activity_getgame_progressdialog_title">Classy Game is working....</string>
-	<string name="checkers_game_activity_sendmove_progressdialog_message">Sending your move to our server, the hamsters will process it shortly!</string>
+	<string name="checkers_game_activity_getgame_progressdialog_message">Retrieving your game&#8230;</string>
+	<string name="checkers_game_activity_getgame_progressdialog_title">Classy Games is working&#8230;</string>
+	<string name="checkers_game_activity_sendmove_progressdialog_message">Sending your class to our server, the hamsters will process it shortly!</string>
 	<string name="checkers_game_activity_sendmove_progressdialog_title">Classy Hamsters are working diligently!</string>
 </resources>

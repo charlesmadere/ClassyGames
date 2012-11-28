@@ -22,38 +22,6 @@ public class Game
 	private String timestampFormatted;
 
 
-	public Game()
-	{
-		turn = TURN_YOURS;
-		type = TYPE_GAME;
-		timestamp = 0;
-		person = new Person();
-		id = new String();
-		
-	}
-
-
-	public Game(final Person person)
-	{
-		turn = TURN_YOURS;
-		type = TYPE_GAME;
-		timestamp = 0;
-		this.person = person;
-		id = new String();
-		
-	}
-
-
-	public Game(final long timestamp, final Person person, final String id)
-	{
-		turn = TURN_YOURS;
-		type = TYPE_GAME;
-		this.timestamp = timestamp;
-		this.person = person;
-		this.id = id;
-	}
-
-
 	public Game(final long timestamp, final Person person, final String id, final boolean turn)
 	{
 		this.turn = turn;

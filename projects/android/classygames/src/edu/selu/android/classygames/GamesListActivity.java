@@ -49,9 +49,13 @@ import edu.selu.android.classygames.utilities.Utilities;
 public class GamesListActivity extends SherlockListActivity
 {
 
+
 	private DiskLruCache diskCache;
 	private LruCache<Long, Bitmap> memoryCache;
 	private GamesListAdapter gamesAdapter;
+
+
+	public final static int NEED_TO_REFRESH = 1;
 
 
 	@Override
@@ -88,7 +92,7 @@ public class GamesListActivity extends SherlockListActivity
 			File cacheDir = getCacheDir();
 			diskCache = DiskLruCache.open(cacheDir, ImageCache.APP_VERSION, ImageCache.VALUE_COUNT, ImageCache.DISK_CACHE_SIZE);
 		} 
-		catch (IOException e) 
+		catch (final IOException e) 
 		{
 			Log.e(Utilities.LOG_TAG, "DiskCache instantiate failed: " + e);
 		}
@@ -102,9 +106,15 @@ public class GamesListActivity extends SherlockListActivity
 	{
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (resultCode == LogoutActivity.LOGGED_OUT)
+		switch (resultCode)
 		{
-			finish();
+			case NEED_TO_REFRESH:
+				new AsyncPopulateGamesList().execute();
+				break;
+
+			case LogoutActivity.LOGGED_OUT:
+				finish();
+				break;
 		}
 	}
 
@@ -330,13 +340,13 @@ public class GamesListActivity extends SherlockListActivity
 					publishProgress(gameData.length());
 					progress = 0;
 
-					ArrayList<Game> turn = parseTurn(gameData, ServerUtilities.POST_DATA_TURN_YOURS);
+					ArrayList<Game> turn = parseTurn(gameData, ServerUtilities.POST_DATA_TURN_YOURS, Game.TURN_YOURS);
 					if (turn != null && !turn.isEmpty())
 					{
 						games.addAll(turn);
 					}
 
-					turn = parseTurn(gameData, ServerUtilities.POST_DATA_TURN_THEIRS);
+					turn = parseTurn(gameData, ServerUtilities.POST_DATA_TURN_THEIRS, Game.TURN_THEIRS);
 					if (turn != null && !turn.isEmpty())
 					{
 						games.addAll(turn);
@@ -375,7 +385,7 @@ public class GamesListActivity extends SherlockListActivity
 		}
 
 
-		private ArrayList<Game> parseTurn(final JSONObject gameData, final String postDataTurn)
+		private ArrayList<Game> parseTurn(final JSONObject gameData, final String postDataTurn, final boolean whichTurn)
 		{
 			try
 			{
@@ -386,7 +396,7 @@ public class GamesListActivity extends SherlockListActivity
 				// ensure that we have at least one game in this list
 				{
 					ArrayList<Game> turnGames = new ArrayList<Game>();
-					turnGames.add(new Game(Game.TURN_YOURS, Game.TYPE_SEPARATOR));
+					turnGames.add(new Game(whichTurn, Game.TYPE_SEPARATOR));
 
 					for (int i = 0; i < turnSize; ++i)
 					{
@@ -394,7 +404,7 @@ public class GamesListActivity extends SherlockListActivity
 						{
 							// grab the current game's JSONObject
 							final JSONObject jsonGame = turn.getJSONObject(i);
-							final Game game = parseGame(jsonGame);
+							final Game game = parseGame(jsonGame, whichTurn);
 
 							if (game != null)
 							{
@@ -425,7 +435,7 @@ public class GamesListActivity extends SherlockListActivity
 		}
 
 
-		private Game parseGame(final JSONObject game)
+		private Game parseGame(final JSONObject game, final boolean whichTurn)
 		{
 			try
 			{
@@ -435,7 +445,7 @@ public class GamesListActivity extends SherlockListActivity
 				final long timestamp = game.getLong(ServerUtilities.POST_DATA_LAST_MOVE); // time of this game's last move
 
 				// create a game from this data
-				return new Game(timestamp, new Person(id, name), gameId);
+				return new Game(timestamp, new Person(id, name), gameId, whichTurn);
 			}
 			catch (final JSONException e)
 			{
@@ -483,18 +493,17 @@ public class GamesListActivity extends SherlockListActivity
 				{
 					layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 					convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_item, null);
-					
-					//TODO: GET PERSON ID 
+
 					Bitmap diskImage = ImageCache.getBitmapFromDiskCache(game.getPerson().getId(), diskCache);
 					Bitmap memoryImage = memoryCache.get(game.getPerson().getId());
 					viewHolder.picture = (ImageView) convertView.findViewById(R.id.games_list_activity_listview_item_picture);
 					if (viewHolder.picture != null)
 					{
-						if(memoryImage != null)
+						if (memoryImage != null)
 						{
 							viewHolder.picture.setImageBitmap(memoryImage);
 						}
-						else if(diskImage != null)
+						else if (diskImage != null)
 						{
 							viewHolder.picture.setImageBitmap(diskImage);
 						}
@@ -515,25 +524,28 @@ public class GamesListActivity extends SherlockListActivity
 					if (viewHolder.time != null)
 					{
 						viewHolder.time.setText(game.getTimestampFormatted());
-					}	
+					}
 
-					viewHolder.onClickListener = new OnClickListener()
+					if (game.isTurnYours())
 					{
-						@Override
-						public void onClick(final View v)
+						viewHolder.onClickListener = new OnClickListener()
 						{
-							Intent intent = new Intent(GamesListActivity.this, CheckersGameActivity.class);
-							intent.putExtra(CheckersGameActivity.INTENT_DATA_GAME_ID, game.getId());
-							intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_ID, game.getPerson().getId());
-							intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_NAME, game.getPerson().getName());
+							@Override
+							public void onClick(final View v)
+							{
+								Intent intent = new Intent(GamesListActivity.this, CheckersGameActivity.class);
+								intent.putExtra(CheckersGameActivity.INTENT_DATA_GAME_ID, game.getId());
+								intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_ID, game.getPerson().getId());
+								intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_NAME, game.getPerson().getName());
+	
+								// start the ConfirmGameActivity with a bit of extra data. We're passing it both
+								// the id and the name of the facebook person that the user clicked on
+								startActivityForResult(intent, 0);
+							}
+						};
 
-							// start the ConfirmGameActivity with a bit of extra data. We're passing it both
-							// the id and the name of the facebook person that the user clicked on
-							startActivity(intent);
-						}
-					};
-
-					convertView.setOnClickListener(viewHolder.onClickListener);
+						convertView.setOnClickListener(viewHolder.onClickListener);
+					}
 				}
 				else
 				{
@@ -572,7 +584,8 @@ public class GamesListActivity extends SherlockListActivity
 
 
 		}
-		
+
+
 		private final class AsyncPopulatePictures extends AsyncTask<Person, Long, Drawable>
 		{
 
@@ -622,5 +635,5 @@ public class GamesListActivity extends SherlockListActivity
 		}
 	}
 
-	
+
 }

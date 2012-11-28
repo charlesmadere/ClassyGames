@@ -116,10 +116,10 @@ public class NewMove extends HttpServlet
 
 									if (board_validation_result.byteValue() == Utilities.BOARD_NEW_MOVE || board_validation_result.byteValue() == Utilities.BOARD_WIN)
 									{
-										board = GameUtilities.flipTeams(board);
-
 										// close the PreparedStatement as it is no longer needed
 										Utilities.closeSQLStatement(sqlStatement);
+
+										board = GameUtilities.flipTeams(board);
 
 										// prepare a SQL statement to be run on the database
 										sqlStatementString = "INSERT INTO " + Utilities.DATABASE_TABLE_GAMES + " (" + Utilities.DATABASE_TABLE_GAMES_COLUMN_BOARD + ", " + Utilities.DATABASE_TABLE_GAMES_COLUMN_TURN + ", " + Utilities.DATABASE_TABLE_GAMES_COLUMN_FINISHED + ") VALUES (?, ?, ?)";
@@ -141,12 +141,12 @@ public class NewMove extends HttpServlet
 
 										switch (board_validation_result.byteValue())
 										{
-											case Utilities.BOARD_NEW_MOVE:
-												sqlStatement.setByte(3, Utilities.DATABASE_TABLE_GAMES_FINISHED_FALSE);
-												break;
-
 											case Utilities.BOARD_WIN:
 												sqlStatement.setByte(3, Utilities.DATABASE_TABLE_GAMES_FINISHED_TRUE);
+												break;
+
+											default:
+												sqlStatement.setByte(3, Utilities.DATABASE_TABLE_GAMES_FINISHED_FALSE);
 												break;
 										}
 

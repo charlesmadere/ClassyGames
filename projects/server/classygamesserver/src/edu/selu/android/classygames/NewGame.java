@@ -148,7 +148,7 @@ public class NewGame extends HttpServlet
 								// modify the runStatus variable
 								{
 									// prepare a SQL statement to be run on the database
-									String sqlStatementString = "SELECT " + Utilities.DATABASE_TABLE_GAMES_COLUMN_FINISHED + " FROM " + Utilities.DATABASE_TABLE_USERS + " WHERE " + Utilities.DATABASE_TABLE_GAMES_COLUMN_ID + " = ?";
+									String sqlStatementString = "SELECT " + Utilities.DATABASE_TABLE_GAMES_COLUMN_FINISHED + " FROM " + Utilities.DATABASE_TABLE_GAMES + " WHERE " + Utilities.DATABASE_TABLE_GAMES_COLUMN_ID + " = ?";
 									sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
 
 									// prevent SQL injection by inserting data this way
@@ -169,8 +169,8 @@ public class NewGame extends HttpServlet
 											sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
 
 											// prevent SQL injection by inserting data this way
-											sqlStatement.setLong(1, user_creator);
-											sqlStatement.setLong(2, user_challenged);
+											sqlStatement.setLong(1, user_creator.longValue());
+											sqlStatement.setLong(2, user_challenged.longValue());
 											sqlStatement.setString(3, board);
 											sqlStatement.setByte(4, Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED);
 											sqlStatement.setByte(5, Utilities.DATABASE_TABLE_GAMES_FINISHED_FALSE);
