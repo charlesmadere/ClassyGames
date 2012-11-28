@@ -309,7 +309,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		@Override
 		protected void onPostExecute(final String serverResponse)
 		{
-			board = parseServerResponse(board);
+			board = parseServerResponse(serverResponse);
 			buildBoard();
 
 			if (progressDialog.isShowing())
@@ -476,7 +476,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	}
 
 
-	private String parseServerResponse(final String jsonString)
+	private String parseServerResponse(String jsonString)
 	{
 		if (jsonString == null || jsonString.isEmpty())
 		{
@@ -484,6 +484,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		}
 		else
 		{
+			//jsonString = jsonString.replace("\\", "");
 			try
 			{
 				Log.d(Utilities.LOG_TAG, "Parsing JSON data: " + jsonString);
@@ -524,36 +525,14 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 
 	private void buildBoard()
 	{
-		board = "{\"result\":{\"success\":{\"board\":{\"teams\":[[{\"coordinate\":[7,2],\"type\":1},{\"coordinate\":[7,0],\"type\":1},{\"coordinate\":[6,1],\"type\":1},{\"coordinate\":[5,2],\"type\":1},{\"coordinate\":[5,0],\"type\":1},{\"coordinate\":[4,1],\"type\":1},{\"coordinate\":[3,2],\"type\":1},{\"coordinate\":[3,0],\"type\":1},{\"coordinate\":[2,1],\"type\":1},{\"coordinate\":[1,2],\"type\":1},{\"coordinate\":[1,0],\"type\":1},{\"coordinate\":[0,1],\"type\":1}],[{\"coordinate\":[7,6],\"type\":1},{\"coordinate\":[6,7],\"type\":1},{\"coordinate\":[6,5],\"type\":1},{\"coordinate\":[5,6],\"type\":1},{\"coordinate\":[4,7],\"type\":1},{\"coordinate\":[3,6],\"type\":1},{\"coordinate\":[3,4],\"type\":1},{\"coordinate\":[2,7],\"type\":1},{\"coordinate\":[2,5],\"type\":1},{\"coordinate\":[1,6],\"type\":1},{\"coordinate\":[0,7],\"type\":1},{\"coordinate\":[0,5],\"type\":1}]]}}}}";
-		
-		if (board != null && !board.isEmpty())
-		{
 			if (board != null && !board.isEmpty())
 			{
-				JSONObject obj = new JSONObject();
-				JSONObject result = new JSONObject();
-				JSONObject success = new JSONObject();
-				JSONObject boardJSON = new JSONObject();
-				
-				try
-				{
-					obj = new JSONObject( board.replace("\\", "") );
-					result = obj.getJSONObject("result");
-				}
-				catch (JSONException e)
-				{
-					Log.e("Object", "Could not get result");
-				}
-				
-				if( result.has("success") )
-				{
-					JSONArray array = new JSONArray();
-										
 					try
 					{
-						success = result.getJSONObject("success");
-						boardJSON = success.getJSONObject("board");
-						array = boardJSON.getJSONArray("teams");
+						//success = result.getJSONObject("success");
+						JSONObject JSON = new JSONObject(board);
+						JSONObject boardJSON = JSON.getJSONObject("board");
+						JSONArray array = boardJSON.getJSONArray("teams");
 						
 						for( int i = 0; i < array.length(); i++ )
 						{
@@ -563,7 +542,6 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 								JSONObject piece = team.getJSONObject(j);
 								int type = piece.getInt("type");
 								JSONArray coordinates = piece.getJSONArray("coordinate");
-								System.out.println(type + " " + coordinates);
 								
 								if( coordinates.length() == 2 )
 								{
@@ -602,22 +580,6 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 									}
 								}
 								
-								//if( i = 0 ) team 1 etc etc for color
-								//TODO: place checkers piece
-								/*buttons[x][y].setEmpty(false);
-								buttons[x][y].setCrown(false);
-
-								if (y <= 2)
-								{
-								buttons[x][y].setPlayerGreen(true);
-								buttons[x][y].setImageResource(greenNormal);
-								}
-								else
-								{
-								buttons[x][y].setPlayerGreen(false);
-								buttons[x][y].setImageResource(orangeNormal);
-								}*/
-								
 							}
 						}						
 						
@@ -627,18 +589,11 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 						Log.e("Array", "Could not get board for array");
 					}
 					
-				}
-				else if( result.has("error") )
-				{
-					System.out.println( "error" );
-				}
-				
 			}
 			else
 			{
 				Log.e("Server Result", "placeholder");
 			}
-		}
 
 	}
 
