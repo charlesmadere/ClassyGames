@@ -3,12 +3,14 @@ package edu.selu.android.classygames;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONStringer;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -522,12 +524,122 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 
 	private void buildBoard()
 	{
+		board = "{\"result\":{\"success\":{\"board\":{\"teams\":[[{\"coordinate\":[7,2],\"type\":1},{\"coordinate\":[7,0],\"type\":1},{\"coordinate\":[6,1],\"type\":1},{\"coordinate\":[5,2],\"type\":1},{\"coordinate\":[5,0],\"type\":1},{\"coordinate\":[4,1],\"type\":1},{\"coordinate\":[3,2],\"type\":1},{\"coordinate\":[3,0],\"type\":1},{\"coordinate\":[2,1],\"type\":1},{\"coordinate\":[1,2],\"type\":1},{\"coordinate\":[1,0],\"type\":1},{\"coordinate\":[0,1],\"type\":1}],[{\"coordinate\":[7,6],\"type\":1},{\"coordinate\":[6,7],\"type\":1},{\"coordinate\":[6,5],\"type\":1},{\"coordinate\":[5,6],\"type\":1},{\"coordinate\":[4,7],\"type\":1},{\"coordinate\":[3,6],\"type\":1},{\"coordinate\":[3,4],\"type\":1},{\"coordinate\":[2,7],\"type\":1},{\"coordinate\":[2,5],\"type\":1},{\"coordinate\":[1,6],\"type\":1},{\"coordinate\":[0,7],\"type\":1},{\"coordinate\":[0,5],\"type\":1}]]}}}}";
+		
 		if (board != null && !board.isEmpty())
 		{
-			// TODO
-			// write an algorithm that parses this json string and sets the board
-			// accordingly
+			if (board != null && !board.isEmpty())
+			{
+				JSONObject obj = new JSONObject();
+				JSONObject result = new JSONObject();
+				JSONObject success = new JSONObject();
+				JSONObject boardJSON = new JSONObject();
+				
+				try
+				{
+					obj = new JSONObject( board.replace("\\", "") );
+					result = obj.getJSONObject("result");
+				}
+				catch (JSONException e)
+				{
+					Log.e("Object", "Could not get result");
+				}
+				
+				if( result.has("success") )
+				{
+					JSONArray array = new JSONArray();
+										
+					try
+					{
+						success = result.getJSONObject("success");
+						boardJSON = success.getJSONObject("board");
+						array = boardJSON.getJSONArray("teams");
+						
+						for( int i = 0; i < array.length(); i++ )
+						{
+							JSONArray team = array.getJSONArray(i);
+							for (int j = 0; j < team.length(); ++j)
+							{
+								JSONObject piece = team.getJSONObject(j);
+								int type = piece.getInt("type");
+								JSONArray coordinates = piece.getJSONArray("coordinate");
+								System.out.println(type + " " + coordinates);
+								
+								if( coordinates.length() == 2 )
+								{
+									int x = coordinates.getInt(0);
+									int y = coordinates.getInt(1);
+									
+									buttons[x][y].setEmpty(false);
+									
+									if( i == 0 )
+									{
+										buttons[x][y].setPlayerGreen(true);
+										buttons[x][y].setImageResource(greenNormal);
+										
+										if( type == 1 )
+										{
+											buttons[x][y].setCrown(false);
+										}
+										else
+										{
+											buttons[x][y].setCrown(true);
+										}
+									}
+									else
+									{
+										buttons[x][y].setPlayerGreen(false);
+										buttons[x][y].setImageResource(orangeNormal);
+										
+										if( type == 1 )
+										{
+											buttons[x][y].setCrown(false);
+										}
+										else
+										{
+											buttons[x][y].setCrown(true);
+										}
+									}
+								}
+								
+								//if( i = 0 ) team 1 etc etc for color
+								//TODO: place checkers piece
+								/*buttons[x][y].setEmpty(false);
+								buttons[x][y].setCrown(false);
+
+								if (y <= 2)
+								{
+								buttons[x][y].setPlayerGreen(true);
+								buttons[x][y].setImageResource(greenNormal);
+								}
+								else
+								{
+								buttons[x][y].setPlayerGreen(false);
+								buttons[x][y].setImageResource(orangeNormal);
+								}*/
+								
+							}
+						}						
+						
+					}
+					catch (JSONException e1)
+					{
+						Log.e("Array", "Could not get board for array");
+					}
+					
+				}
+				else if( result.has("error") )
+				{
+					System.out.println( "error" );
+				}
+				
+			}
+			else
+			{
+				Log.e("Server Result", "placeholder");
+			}
 		}
+
 	}
 
 
