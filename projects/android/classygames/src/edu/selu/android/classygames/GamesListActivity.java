@@ -23,6 +23,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -75,8 +76,8 @@ public class GamesListActivity extends SherlockListActivity
 		{
 			protected int sizeOf(final Long key, final Bitmap bitmap)
 			{
-				// Check if the running version of Android is 3.1 (Honeycomb) or later
 				if (android.os.Build.VERSION.SDK_INT >= 12)
+				// if the running version of Android is 3.1 (Honeycomb) or later
 				{
 					return bitmap.getByteCount();
 				}
@@ -88,9 +89,10 @@ public class GamesListActivity extends SherlockListActivity
 		};
 
 		// try loading diskCache
+
 		try
 		{
-			File cacheDir = getCacheDir();
+			File cacheDir = getCacheDir(this, ImageCache.DISK_CACHE_SUBDIR);
 			diskCache = DiskLruCache.open(cacheDir, ImageCache.APP_VERSION, ImageCache.VALUE_COUNT, ImageCache.DISK_CACHE_SIZE);
 		} 
 		catch (final IOException e) 
@@ -491,12 +493,6 @@ public class GamesListActivity extends SherlockListActivity
 		@Override
 		public View getView(final int position, View convertView, final ViewGroup parent)
 		{
-			if (convertView == null)
-			{
-				LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_item, null);
-			}
-
 			final Game game = games.get(position);
 
 			if (game != null)
@@ -506,25 +502,28 @@ public class GamesListActivity extends SherlockListActivity
 
 				if (game.isTypeGame())
 				{
-					layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 					convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_item, null);
 
 					Bitmap diskImage = ImageCache.getBitmapFromDiskCache(game.getPerson().getId(), diskCache);
 					Bitmap memoryImage = memoryCache.get(game.getPerson().getId());
+
 					viewHolder.picture = (ImageView) convertView.findViewById(R.id.games_list_activity_listview_item_picture);
 					if (viewHolder.picture != null)
 					{
+						viewHolder.picture.setImageResource(R.drawable.fb_placeholder);
+						viewHolder.picture.setTag(game.getPerson().getId());
+
 						if (memoryImage != null)
 						{
-//							viewHolder.picture.setImageBitmap(memoryImage);
+							viewHolder.picture.setImageBitmap(memoryImage);
 						}
 						else if (diskImage != null)
 						{
-//							viewHolder.picture.setImageBitmap(diskImage);
+							viewHolder.picture.setImageBitmap(diskImage);
 						}
 						else
 						{
-//							new AsyncPopulatePictures(viewHolder).execute(game.getPerson());
+							new AsyncPopulatePictures(viewHolder).execute(game.getPerson());
 						}
 					}
 
@@ -571,7 +570,7 @@ public class GamesListActivity extends SherlockListActivity
 					}
 					else
 					{
-						convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_turn_theirs, null);
+						convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_turn_yours, null);
 						viewHolder.picture = (ImageView) convertView.findViewById(R.drawable.turn_theirs);
 					}
 				}
@@ -638,6 +637,13 @@ public class GamesListActivity extends SherlockListActivity
 			}
 
 
+			@Override
+			protected void onPostExecute(final Drawable result)
+			{
+				viewHolder.picture.setImageDrawable(result);
+			}
+
+
 		}
 
 	}
@@ -650,6 +656,15 @@ public class GamesListActivity extends SherlockListActivity
 		{
 			return (int) (two.getTimestamp() - one.getTimestamp());
 		}
+	}
+
+
+	public static File getCacheDir(Context context, String uniqueName) 
+	{
+		//Check if storage is built in or mounted from sd, try to use mounted first
+		final String cachePath = Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED || !Environment.isExternalStorageRemovable() ? context.getExternalCacheDir().getPath() : context.getCacheDir().getPath();
+
+		return new File(cachePath + File.separator + uniqueName);
 	}
 
 

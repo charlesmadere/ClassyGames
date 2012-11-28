@@ -89,7 +89,7 @@ public class NewGameActivity extends SherlockListActivity
 			File cacheDir = getCacheDir(this, ImageCache.DISK_CACHE_SUBDIR);
 			diskCache = DiskLruCache.open(cacheDir, ImageCache.APP_VERSION, ImageCache.VALUE_COUNT, ImageCache.DISK_CACHE_SIZE);
 		} 
-		catch (IOException e) 
+		catch (final IOException e) 
 		{
 			Log.e(Utilities.LOG_TAG, "DiskCache instantiate failed: " + e);
 		}
@@ -317,18 +317,21 @@ public class NewGameActivity extends SherlockListActivity
 			if (person != null)
 			{
 				ViewHolder viewHolder = new ViewHolder();
+
+				Bitmap diskImage = ImageCache.getBitmapFromDiskCache(person.getId(), diskCache);
+				Bitmap memoryImage = memoryCache.get(person.getId());
+
 				viewHolder.picture = (ImageView) convertView.findViewById(R.id.new_game_activity_listview_item_picture);
-				viewHolder.picture.setImageResource(R.drawable.fb_placeholder);
+				if (viewHolder.picture != null)
 				{
-					Bitmap diskImage = ImageCache.getBitmapFromDiskCache(person.getId(), diskCache);
-					Bitmap memoryImage = memoryCache.get(person.getId());
+					viewHolder.picture.setImageResource(R.drawable.fb_placeholder);
 					viewHolder.picture.setTag(person.getId());
-					
-					if(memoryImage != null)
+
+					if (memoryImage != null)
 					{
 						viewHolder.picture.setImageBitmap(memoryImage);
 					}
-					else if(diskImage != null)
+					else if (diskImage != null)
 					{
 						viewHolder.picture.setImageBitmap(diskImage);
 					}
