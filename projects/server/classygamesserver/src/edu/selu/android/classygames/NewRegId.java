@@ -124,7 +124,7 @@ public class NewRegId extends HttpServlet
 				}
 				catch (final SQLException e)
 				{
-					printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CONNECT));
+					printWriter.write(Utilities.makePostDataError(Utilities.POST_ERROR_DATABASE_COULD_NOT_CONNECT + e.getMessage()));
 				}
 				finally
 				{

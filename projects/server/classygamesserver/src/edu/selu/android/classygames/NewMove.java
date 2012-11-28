@@ -109,19 +109,13 @@ public class NewMove extends HttpServlet
 								final long user_challenged = sqlResult.getLong(Utilities.DATABASE_TABLE_GAMES_COLUMN_USER_CHALLENGED);
 								final byte turn = sqlResult.getByte(Utilities.DATABASE_TABLE_GAMES_COLUMN_TURN);
 
-								if ((user_id.longValue() == user_creator && turn == Utilities.DATABASE_TABLE_GAMES_TURN_CREATOR)
-									|| (user_id.longValue() == user_challenged && turn == Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED))
+								if ((user_id.longValue() == user_creator && turn == Utilities.DATABASE_TABLE_GAMES_TURN_CREATOR) || (user_id.longValue() == user_challenged && turn == Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED))
 								{
-									String oldBoard = sqlResult.getString(Utilities.DATABASE_TABLE_GAMES_COLUMN_BOARD);
-									oldBoard = Utilities.stripStringOfBackSlashes(oldBoard);
-
+									final String oldBoard = sqlResult.getString(Utilities.DATABASE_TABLE_GAMES_COLUMN_BOARD);
 									final Byte board_validation_result = Byte.valueOf(GameUtilities.checkBoardValidityAndStatus(oldBoard, board));
 
 									if (board_validation_result.byteValue() == Utilities.BOARD_NEW_MOVE || board_validation_result.byteValue() == Utilities.BOARD_WIN)
 									{
-										// close the PreparedStatement as it is no longer needed
-										Utilities.closeSQLStatement(sqlStatement);
-
 										board = GameUtilities.flipTeams(board);
 
 										// prepare a SQL statement to be run on the database
@@ -137,7 +131,7 @@ public class NewMove extends HttpServlet
 												sqlStatement.setByte(2, Utilities.DATABASE_TABLE_GAMES_TURN_CREATOR);
 												break;
 
-											case Utilities.DATABASE_TABLE_GAMES_TURN_CREATOR:
+											default:
 												sqlStatement.setByte(2, Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED);
 												break;
 										}

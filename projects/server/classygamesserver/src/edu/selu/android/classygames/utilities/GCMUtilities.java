@@ -85,7 +85,7 @@ public class GCMUtilities
 	 */
 	public static void sendMessage(final Connection sqlConnection, final String game_id, final Long userIdToShow, final Long userIdOfReceiver, final Byte game_type)
 	{
-		sendMessage(sqlConnection, game_id, userIdToShow, grabUserName(sqlConnection, userIdToShow.longValue()), userIdOfReceiver, game_type);
+		sendMessage(sqlConnection, game_id, userIdToShow, Utilities.grabUserName(sqlConnection, userIdToShow.longValue()), userIdOfReceiver, game_type);
 	}
 
 
@@ -97,7 +97,7 @@ public class GCMUtilities
 	 */
 	public static void sendMessages(final Connection sqlConnection, final String game_id, final Long userIdToShow, final Long userIdOfReceiver, final Byte game_type, final String userNameOfReceiver)
 	{
-		final String userNameToShow = grabUserName(sqlConnection, userIdToShow.longValue());
+		final String userNameToShow = Utilities.grabUserName(sqlConnection, userIdToShow.longValue());
 
 		sendMessage(sqlConnection, game_id, userIdToShow, userNameToShow, userIdOfReceiver, game_type);
 
@@ -159,56 +159,6 @@ public class GCMUtilities
 		}
 
 		return reg_id;
-	}
-
-
-	/**
-	 * Finds and then returns a user's name.
-	 * 
-	 * @param sqlConnection
-	 * An existing connection to the database. This method will make no attempt to either
-	 * open or close the connection.
-	 * 
-	 * @param user_id
-	 * ID of the user that you want to find a name for.
-	 * 
-	 * @return
-	 * Returns the name of the user that you want as a String. If the user could not be
-	 * found, null is returned.
-	 */
-	private static String grabUserName(final Connection sqlConnection, final long user_id)
-	{
-		PreparedStatement sqlStatement = null;
-		String name = null;
-
-		try
-		{
-			// prepare a SQL statement to be run on the database
-			final String sqlStatementString = "SELECT " + Utilities.DATABASE_TABLE_USERS_COLUMN_NAME + " FROM " + Utilities.DATABASE_TABLE_USERS + " WHERE " + Utilities.DATABASE_TABLE_USERS_COLUMN_ID + " = ?";
-			sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
-
-			// prevent SQL injection by inserting data this way
-			sqlStatement.setLong(1, user_id);
-
-			// run the SQL statement and acquire any return information
-			final ResultSet sqlResult = sqlStatement.executeQuery();
-
-			if (sqlResult.next())
-			// user with specified id was found in the database
-			{
-				name = sqlResult.getString(Utilities.DATABASE_TABLE_USERS_COLUMN_NAME);
-			}
-		}
-		catch (final SQLException e)
-		{
-			name = "buddy";
-		}
-		finally
-		{
-			Utilities.closeSQLStatement(sqlStatement);
-		}
-
-		return name;
 	}
 
 

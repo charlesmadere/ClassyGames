@@ -92,7 +92,6 @@ public class GetGame extends HttpServlet
 					else
 					// return the board's data
 					{
-						board = Utilities.stripStringOfBackSlashes(board);
 						printWriter.write(Utilities.makePostDataSuccess(board));
 					}
 				}

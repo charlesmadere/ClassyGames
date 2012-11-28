@@ -214,6 +214,60 @@ public class Utilities
 	}
 
 
+	/**
+	 * Query the database for a user who's ID matches the input's.
+	 * 
+	 * @param sqlConnection
+	 * Your existing database Connection object. Must already be connected, as this method makes no attempt
+	 * at doing so.
+	 * 
+	 * @param user
+	 * The ID of the user you're searching for as a long.
+	 * 
+	 * @return
+	 * The name of the user that you queried for as a String.
+	 */
+	public static String grabUserName(final Connection sqlConnection, final long user)
+	{
+		PreparedStatement sqlStatement = null;
+		String username = null;
+
+		try
+		{
+			// prepare a SQL statement to be run on the MySQL database
+			final String sqlStatementString = "SELECT " + Utilities.DATABASE_TABLE_USERS_COLUMN_NAME + " FROM " + Utilities.DATABASE_TABLE_USERS + " WHERE " + Utilities.DATABASE_TABLE_USERS_COLUMN_ID + " = ?";
+			sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
+
+			// prevent SQL injection by inserting data this way
+			sqlStatement.setLong(1, user);
+
+			// run the SQL statement and acquire any return information
+			final ResultSet sqlResult = sqlStatement.executeQuery();
+
+			if (sqlResult.next())
+			// check to see that we got some SQL return data
+			{
+				// grab the user's name from the SQL query
+				username = sqlResult.getString(Utilities.DATABASE_TABLE_USERS_COLUMN_NAME);
+			}
+			else
+			{
+				username = Utilities.APP_NAME;
+			}
+		}
+		catch (final SQLException e)
+		{
+
+		}
+		finally
+		{
+			Utilities.closeSQLStatement(sqlStatement);
+		}
+
+		return username;
+	}
+
+
 	public static Random getRandom()
 	{
 		if (random == null)
@@ -313,20 +367,6 @@ public class Utilities
 		finally
 		{
 			closeSQLStatement(sqlStatement);
-		}
-	}
-
-
-	public static String stripStringOfBackSlashes(String string)
-	{
-		if (string == null || string.isEmpty())
-		{
-			return null;
-		}
-		else
-		{
-			// replace all \ characters with nothing
-			return string.replace("\\", "");
 		}
 	}
 
