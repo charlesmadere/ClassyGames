@@ -261,6 +261,11 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 				}
 			}
 		}
+		
+		/*buttons[6][3].setPlayerGreen(false);
+		buttons[6][3].setImageResource(orangeNormal);
+		buttons[6][3].setEmpty(false);
+		buttons[6][3].setCrown(false);*/
 	}
 
 
@@ -527,7 +532,6 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			{
 					try
 					{
-						//success = result.getJSONObject("success");
 						JSONObject JSON = new JSONObject(board);
 						JSONObject boardJSON = JSON.getJSONObject("board");
 						JSONArray array = boardJSON.getJSONArray("teams");
@@ -546,36 +550,47 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 									int x = coordinates.getInt(0);
 									int y = coordinates.getInt(1);
 									
-									buttons[x][y].setEmpty(false);
+									if( x >= 0 && x <= 7 )
+									{
+										if( y >= 0 && y <= 7 )
+										{
+											buttons[x][y].setEmpty(false);
+											
+											if( i == 0 )
+											{
+												buttons[x][y].setPlayerGreen(true);
+												buttons[x][y].setImageResource(greenNormal);
+												
+												if( type == 1 )
+												{
+													buttons[x][y].setCrown(false);
+												}
+												else
+												{
+													buttons[x][y].setCrown(true);
+												}
+											}
+											else
+											{
+												buttons[x][y].setPlayerGreen(false);
+												buttons[x][y].setImageResource(orangeNormal);
+												
+												if( type == 1 )
+												{
+													buttons[x][y].setCrown(false);
+												}
+												else
+												{
+													buttons[x][y].setCrown(true);
+												}
+											}
+										}
+										else
+										{
+											Log.e(Utilities.LOG_TAG, "Coordinate outside proper range");
+										}
+									}
 									
-									if( i == 0 )
-									{
-										buttons[x][y].setPlayerGreen(true);
-										buttons[x][y].setImageResource(greenNormal);
-										
-										if( type == 1 )
-										{
-											buttons[x][y].setCrown(false);
-										}
-										else
-										{
-											buttons[x][y].setCrown(true);
-										}
-									}
-									else
-									{
-										buttons[x][y].setPlayerGreen(false);
-										buttons[x][y].setImageResource(orangeNormal);
-										
-										if( type == 1 )
-										{
-											buttons[x][y].setCrown(false);
-										}
-										else
-										{
-											buttons[x][y].setCrown(true);
-										}
-									}
 								}
 								
 							}
@@ -621,8 +636,9 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 
 						boardLocked = true;
 						this.invalidateOptionsMenu();
+						
 					}
-					else if (canJump(clickedButton))
+					else if (canJump(clickedButton) )
 					{
 						Move(clickedButton);
 
@@ -630,6 +646,19 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 						{
 							makeKing(clickedButton);
 						}
+						
+						/*while( canJump(clickedButton) )
+						{
+							if( canJump(clickedButton) )
+							{
+								Move(clickedButton);
+								
+								if( canBeKing( clickedButton ) )
+								{
+									makeKing( clickedButton );
+								}
+							}
+						}*/
 
 						boardLocked = true;
 						this.invalidateOptionsMenu();
