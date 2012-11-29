@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
@@ -74,6 +75,7 @@ public class GamesListActivity extends SherlockListActivity
 
 		memoryCache = new LruCache<Long, Bitmap> (cacheSize)
 		{
+			@SuppressLint("NewApi")
 			protected int sizeOf(final Long key, final Bitmap bitmap)
 			{
 				if (android.os.Build.VERSION.SDK_INT >= 12)
@@ -642,7 +644,6 @@ public class GamesListActivity extends SherlockListActivity
 			{
 				viewHolder.picture.setImageDrawable(result);
 			}
-
 
 		}
 
