@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -334,6 +335,9 @@ public class GamesListActivity extends SherlockListActivity
 			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 			progressDialog.setTitle(R.string.games_list_activity_getgames_progressdialog_title);
 			progressDialog.show();
+
+			// cancel all notifications
+			((NotificationManager) GamesListActivity.this.getSystemService(NOTIFICATION_SERVICE)).cancelAll();
 
 			toastToShow = TOAST_NONE;
 		}
