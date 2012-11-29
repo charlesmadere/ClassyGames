@@ -562,6 +562,10 @@ public class GamesListActivity extends SherlockListActivity
 
 						convertView.setOnClickListener(viewHolder.onClickListener);
 					}
+					else if( !game.isTurnYours() )
+					{
+						convertView.setOnClickListener(null);
+					}
 				}
 				else
 				{
