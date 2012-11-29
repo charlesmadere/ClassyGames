@@ -119,7 +119,7 @@ public class NewMove extends HttpServlet
 										board = GameUtilities.flipTeams(board);
 
 										// prepare a SQL statement to be run on the database
-										sqlStatementString = "UPDATE " + Utilities.DATABASE_TABLE_GAMES + " SET " + Utilities.DATABASE_TABLE_GAMES_COLUMN_BOARD + " = ?, " + Utilities.DATABASE_TABLE_GAMES_COLUMN_TURN + " = ?, " + Utilities.DATABASE_TABLE_GAMES_COLUMN_FINISHED + " = ? WHERE " + Utilities.DATABASE_TABLE_GAMES_COLUMN_ID + " = ?";
+										sqlStatementString = "UPDATE " + Utilities.DATABASE_TABLE_GAMES + " SET " + Utilities.DATABASE_TABLE_GAMES_COLUMN_BOARD + " = ?, " + Utilities.DATABASE_TABLE_GAMES_COLUMN_TURN + " = ?, " + Utilities.DATABASE_TABLE_GAMES_COLUMN_FINISHED + " = ?, " + Utilities.DATABASE_TABLE_GAMES_COLUMN_LAST_MOVE + " = NOW() WHERE " + Utilities.DATABASE_TABLE_GAMES_COLUMN_ID + " = ?";
 										sqlStatement = sqlConnection.prepareStatement(sqlStatementString);
 
 										// prevent SQL injection by inserting data this way
