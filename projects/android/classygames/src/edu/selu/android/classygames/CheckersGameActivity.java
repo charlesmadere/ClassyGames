@@ -262,10 +262,10 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			}
 		}
 		
-		buttons[6][3].setPlayerGreen(false);
+		/*buttons[6][3].setPlayerGreen(false);
 		buttons[6][3].setImageResource(orangeNormal);
 		buttons[6][3].setEmpty(false);
-		buttons[6][3].setCrown(false);
+		buttons[6][3].setCrown(false);*/
 	}
 
 
@@ -638,7 +638,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 						this.invalidateOptionsMenu();
 						
 					}
-					else if (canJump(clickedButton))
+					else if (canJump(clickedButton) )
 					{
 						Move(clickedButton);
 
@@ -646,6 +646,19 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 						{
 							makeKing(clickedButton);
 						}
+						
+						/*while( canJump(clickedButton) )
+						{
+							if( canJump(clickedButton) )
+							{
+								Move(clickedButton);
+								
+								if( canBeKing( clickedButton ) )
+								{
+									makeKing( clickedButton );
+								}
+							}
+						}*/
 
 						boardLocked = true;
 						this.invalidateOptionsMenu();
