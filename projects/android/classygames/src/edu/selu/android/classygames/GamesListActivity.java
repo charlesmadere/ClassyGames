@@ -103,6 +103,7 @@ public class GamesListActivity extends SherlockListActivity
 			Log.e(Utilities.LOG_TAG, "DiskCache instantiate failed: " + e);
 		}
 
+		Utilities.getFacebook().extendAccessTokenIfNeeded(GamesListActivity.this, null);
 		new AsyncGetFacebookIdentificationAndGCMRegister().execute();
 	}
 
@@ -234,6 +235,8 @@ public class GamesListActivity extends SherlockListActivity
 			progressDialog.setMessage(GamesListActivity.this.getString(R.string.games_list_activity_init_progressdialog_message));
 			progressDialog.setTitle(R.string.games_list_activity_init_progressdialog_title);
 			progressDialog.show();
+
+			Utilities.getFacebook().extendAccessTokenIfNeeded(GamesListActivity.this, null);
 		}
 
 

@@ -797,7 +797,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			  {
 				  if (abs(cbutton.getPx()-prevButton.getPx()) == 2 && (cbutton.getPy()-prevButton.getPy()) == 2)
 				  {
-						if (middleButton.isPlayerGreen() != prevButton.isPlayerGreen())
+						if (middleButton.isPlayerGreen() != prevButton.isPlayerGreen() && !middleButton.isEmpty())
 						{
 							middleButton.setEmpty(true);
 							middleButton.setImageResource(0);
@@ -817,7 +817,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			  {
 				  if (abs(cbutton.getPx()-prevButton.getPx()) == 2 && (cbutton.getPy()-prevButton.getPy()) == -2)
 				  {
-						if (middleButton.isPlayerGreen() != prevButton.isPlayerGreen())
+						if (middleButton.isPlayerGreen() != prevButton.isPlayerGreen() && !middleButton.isEmpty())
 						{
 							middleButton.setEmpty(true);
 							middleButton.setImageResource(0);
@@ -847,7 +847,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			  {
 				  if (abs(cbutton.getPx()-prevButton.getPx()) == 2 && abs(cbutton.getPy()-prevButton.getPy()) == 2)
 				  {
-						if (middleButton.isPlayerGreen() != prevButton.isPlayerGreen())
+						if (middleButton.isPlayerGreen() != prevButton.isPlayerGreen() && !middleButton.isEmpty())
 						{
 							middleButton.setEmpty(true);
 							middleButton.setImageResource(0);
@@ -867,7 +867,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			  {
 				  if (abs(cbutton.getPx()-prevButton.getPx()) == 2 && abs(cbutton.getPy()-prevButton.getPy()) == 2)
 				  {
-						if (middleButton.isPlayerGreen() != prevButton.isPlayerGreen())
+						if (middleButton.isPlayerGreen() != prevButton.isPlayerGreen() && !middleButton.isEmpty())
 						{
 							middleButton.setEmpty(true);
 							middleButton.setImageResource(0);
