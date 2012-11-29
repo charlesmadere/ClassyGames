@@ -912,10 +912,10 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	@SuppressLint("NewApi")
 	private void undo()
 	{
+		clearPieces();
 		if (board == null || board.isEmpty())
 		// simply re instantiate the default board
 		{
-			clearPieces();
 			initPieces();
 		}
 		else
