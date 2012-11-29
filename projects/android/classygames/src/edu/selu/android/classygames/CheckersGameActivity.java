@@ -55,7 +55,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	private boolean boardLocked = false;
 	private String gameId = null;
 	private Person personChallenged = null;
-	boolean hasMoved=false;
+
 
 	/**
 	 * JSON String downloaded from the server that represents the board
@@ -759,7 +759,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		if (prevButton.isCrown()){
 			if(abs(button.getPx()-prevButton.getPx()) == 1 && abs(button.getPy()- prevButton.getPy()) == 1)
 			{
-				hasMoved = true;
+			
 				return true;
 			}
 			else 
@@ -775,7 +775,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			else {
 				if (abs(button.getPx()-prevButton.getPx()) == 1 && (button.getPy()-prevButton.getPy()) == 1)
 				{
-					hasMoved = true;
+				
 					return true;
 				}
 				else
