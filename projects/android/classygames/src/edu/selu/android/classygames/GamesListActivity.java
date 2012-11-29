@@ -166,7 +166,15 @@ public class GamesListActivity extends SherlockListActivity
 	public void onResume()
 	{
 		super.onResume();
-		new AsyncGetFacebookIdentificationAndGCMRegister().execute();
+
+		if (Utilities.getWhoAmI(this) == null)
+		{
+			new AsyncGetFacebookIdentificationAndGCMRegister().execute();
+		}
+		else
+		{
+			Utilities.getFacebook().extendAccessTokenIfNeeded(GamesListActivity.this, null);
+		}
 	}
 
 

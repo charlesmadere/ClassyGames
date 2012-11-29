@@ -264,11 +264,7 @@ public class Utilities
 			final long id = sharedPreferences.getLong(WHO_AM_I_ID, -1);
 			final String name = sharedPreferences.getString(WHO_AM_I_NAME, null);
 
-			if (id < 0 || name == null || name.isEmpty())
-			{
-				whoAmI = new Person();
-			}
-			else
+			if (id >= 0 && name != null && !name.isEmpty())
 			{
 				whoAmI = new Person(id, name);
 			}

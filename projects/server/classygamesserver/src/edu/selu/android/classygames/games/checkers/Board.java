@@ -352,9 +352,7 @@ public class Board extends GenericBoard
 				teamData.set(0, team1);
 				teamData.set(1, team0);
 
-				final byte teamsSize = (byte) teamData.size();
-
-				for (byte i = 0; i < teamsSize; ++i)
+				for (byte i = 0; i < 2; ++i)
 				// loop through each team
 				{
 					final List<Object> team = (List<Object>) teamData.get(i);;
@@ -365,13 +363,8 @@ public class Board extends GenericBoard
 					{
 						final Map<String, Object> piece = (Map<String, Object>) team.get(j);
 						final List<Long> coordinate = (List<Long>) piece.get("coordinate");
-						Byte x = coordinate.get(0).byteValue();
-						Byte y = coordinate.get(1).byteValue();
-						x = Byte.valueOf((byte) (LENGTH_HORIZONTAL - 1 - x));
-						y = Byte.valueOf((byte) (LENGTH_VERTICAL - 1 - y));
-
-						coordinate.set(0, x.longValue());
-						coordinate.set(1, y.longValue());
+						coordinate.set(0, (long) (LENGTH_HORIZONTAL - 1 - coordinate.get(0).byteValue()));
+						coordinate.set(1, (long) (LENGTH_VERTICAL - 1 - coordinate.get(1).byteValue()));
 					}
 
 					teamData.set(i, team);
