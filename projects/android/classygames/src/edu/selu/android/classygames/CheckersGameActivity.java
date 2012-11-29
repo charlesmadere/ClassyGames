@@ -621,39 +621,33 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 
 		if (!boardLocked)
 		{
-
 			if (prevButton != null)
 			{
-				if (clickedButton.isEmpty())
+			if (clickedButton.isEmpty())
+			{
+				if (canMove(clickedButton))
 				{
-					if (canMove(clickedButton))
-					{
-						Move(clickedButton);
-						
-						if (canBeKing(clickedButton)){
-							makeKing(clickedButton);
-						}
-						
-						boardLocked = true;
-						this.invalidateOptionsMenu();
+					Move(clickedButton);
+					
+					if (canBeKing(clickedButton)){
+						makeKing(clickedButton);
 					}
-					else if (canJump(clickedButton))
-					{
-						Move(clickedButton);
-						if (canBeKing(clickedButton))
-						{
-							makeKing(clickedButton);
-						}
-						boardLocked = true;
-						this.invalidateOptionsMenu();
-					}
-					else 
-					{
-						setBackground(R.drawable.bg_board_bright, prevButton);
-						prevButton = null;
-					}
+					
+					boardLocked = true;
+					this.invalidateOptionsMenu();
 				}
-				else
+				else if (canJump(clickedButton))
+				{
+					Move(clickedButton);
+					if (canBeKing(clickedButton))
+					{
+						makeKing(clickedButton);
+					}
+					
+					boardLocked = true;
+					this.invalidateOptionsMenu();
+				}
+				else 
 				{
 					setBackground(R.drawable.bg_board_bright, prevButton);
 					prevButton = null;
@@ -661,60 +655,58 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			}
 			else
 			{
-				if (!clickedButton.isEmpty()){
-					prevButton = clickedButton;
-					setBackground(R.drawable.bg_board_bright_selected, clickedButton);
-				}
+				setBackground(R.drawable.bg_board_bright, prevButton);
+				prevButton = null;
+			}
+		}
+		else
+		{
+			if (!clickedButton.isEmpty()){
+				prevButton = clickedButton;
+				setBackground(R.drawable.bg_board_bright_selected, clickedButton);
 			}
 		}
 	}
+}
+
 	
-
-
-	private boolean canBeKing(MyButton pbutton)
-	{
-		if(pbutton.isPlayerGreen() && pbutton.getPy() == 0)
+	private boolean canBeKing (MyButton pbutton) {
+		if(pbutton.isPlayerGreen() && pbutton.getPx() == 0)
 		{
 			return true;
 		}
-		else if (!pbutton.isPlayerGreen() && pbutton.getPy() == 7)
+		else if(!pbutton.isPlayerGreen() && pbutton.getPx() == 7)
 		{
 			return true;
 		}
 		else
-		{
 			return false;
-		}
 	}
 
 
 	private void makeKing(MyButton pButton)
 	{
-		if (pButton.isPlayerGreen())
+		if(pButton.isPlayerGreen())
 		{
 			pButton.setImageResource(R.drawable.piece_checkers_green_king);
 		}
-		else
+		else if (!pButton.isPlayerGreen())
 		{
 			pButton.setImageResource(R.drawable.piece_checkers_orange_king);
 		}
-
 		pButton.setCrown(true);
 	}
-
+	
 
 	private boolean isKing(MyButton pButton) 
 	{		
-		if (pButton.isCrown())
-		{
+		if(pButton.isCrown())
 			return true;
-		}
 		else
-		{
 			return false;
-		}
 	}
 
+	
 
 	private void Move(MyButton clickedButton) 
 	{
@@ -754,8 +746,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		
 		prevButton = null;
 	}
-	
-	
+
 	private boolean canMove(MyButton button)
 	{	
 		if (prevButton.isCrown()){
@@ -766,13 +757,13 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		}
 		else {
 			if (!prevButton.isPlayerGreen()){
-				if(button.getPx()-prevButton.getPx() == -1 && abs(button.getPy()- prevButton.getPy()) == 1)
+				if(button.getPx()-prevButton.getPx() == 1 && abs(button.getPy()- prevButton.getPy()) == 1)
 					return true;
 				else 
 					return false;
 			}
 			else {
-				if (button.getPx()-prevButton.getPx() == 1 && abs(button.getPy()-prevButton.getPy()) == 1)
+				if (button.getPx()-prevButton.getPx() == -1 && abs(button.getPy()-prevButton.getPy()) == 1)
 					return true;
 				else
 					return false;
@@ -780,8 +771,6 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		}
 	}
 	
-	
-
 	private boolean canJump(MyButton cbutton)
 	{
 		if (!prevButton.isCrown())
@@ -793,7 +782,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			
 			if(prevButton.isPlayerGreen())
 			  {
-				  if (cbutton.getPx()-prevButton.getPx() == 2 && abs(cbutton.getPy()-prevButton.getPy()) == 2)
+				  if (cbutton.getPx()-prevButton.getPx() == -2 && abs(cbutton.getPy()-prevButton.getPy()) == 2)
 				  {
 						if (middleButton.isPlayerGreen() != prevButton.isPlayerGreen())
 						{
@@ -813,7 +802,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			  }
 			  else
 			  {
-				  if (cbutton.getPx()-prevButton.getPx() == -2 && abs(cbutton.getPy()-prevButton.getPy()) == 2)
+				  if (cbutton.getPx()-prevButton.getPx() == 2 && abs(cbutton.getPy()-prevButton.getPy()) == 2)
 				  {
 						if (middleButton.isPlayerGreen() != prevButton.isPlayerGreen())
 						{
@@ -884,7 +873,6 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			 } 
 		}
 	}
-
 
 	private int abs(int i)
 	{
