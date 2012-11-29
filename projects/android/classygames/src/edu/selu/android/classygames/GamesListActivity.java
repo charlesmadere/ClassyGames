@@ -359,7 +359,7 @@ public class GamesListActivity extends SherlockListActivity
 				if (gameData != null)
 				{
 					ArrayList<Game> turn = parseTurn(gameData, ServerUtilities.POST_DATA_TURN_YOURS, Game.TURN_YOURS);
-					if (turn != null && !turn.isEmpty())
+					if (turn != null && !turn.isEmpty() && turn.size() >= 1)
 					{
 						games.addAll(turn);
 					}
@@ -367,7 +367,7 @@ public class GamesListActivity extends SherlockListActivity
 					publishProgress(2);
 
 					turn = parseTurn(gameData, ServerUtilities.POST_DATA_TURN_THEIRS, Game.TURN_THEIRS);
-					if (turn != null && !turn.isEmpty())
+					if (turn != null && !turn.isEmpty() && turn.size() >= 1)
 					{
 						games.addAll(turn);
 					}
@@ -553,7 +553,7 @@ public class GamesListActivity extends SherlockListActivity
 								intent.putExtra(CheckersGameActivity.INTENT_DATA_GAME_ID, game.getId());
 								intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_ID, game.getPerson().getId());
 								intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_NAME, game.getPerson().getName());
-	
+
 								// start the ConfirmGameActivity with a bit of extra data. We're passing it both
 								// the id and the name of the facebook person that the user clicked on
 								startActivityForResult(intent, 0);
@@ -572,7 +572,7 @@ public class GamesListActivity extends SherlockListActivity
 					}
 					else
 					{
-						convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_turn_yours, null);
+						convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_turn_theirs, null);
 						viewHolder.picture = (ImageView) convertView.findViewById(R.drawable.turn_theirs);
 					}
 				}
