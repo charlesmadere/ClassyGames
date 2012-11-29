@@ -568,6 +568,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 												else
 												{
 													buttons[x][y].setCrown(true);
+													buttons[x][y].setImageResource(greenKing);
 												}
 											}
 											else
@@ -582,6 +583,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 												else
 												{
 													buttons[x][y].setCrown(true);
+													buttons[x][y].setImageResource(orangeKing);
 												}
 											}
 										}
