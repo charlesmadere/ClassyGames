@@ -125,31 +125,27 @@ public class NewMove extends HttpServlet
 										// prevent SQL injection by inserting data this way
 										sqlStatement.setString(1, board);
 
-										switch (turn)
+										if (turn == Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED)
 										{
-											case Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED:
-												sqlStatement.setByte(2, Utilities.DATABASE_TABLE_GAMES_TURN_CREATOR);
-												break;
-
-											default:
-												sqlStatement.setByte(2, Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED);
-												break;
+											sqlStatement.setByte(2, Utilities.DATABASE_TABLE_GAMES_TURN_CREATOR);
+										}
+										else if (turn == Utilities.DATABASE_TABLE_GAMES_TURN_CREATOR)
+										{
+											sqlStatement.setByte(2, Utilities.DATABASE_TABLE_GAMES_TURN_CHALLENGED);
 										}
 
-										switch (board_validation_result.byteValue())
+										if (board_validation_result.byteValue() == Utilities.BOARD_WIN)
 										{
-											case Utilities.BOARD_WIN:
-												sqlStatement.setByte(3, Utilities.DATABASE_TABLE_GAMES_FINISHED_TRUE);
-												GCMUtilities.sendMessages(sqlConnection, game_id, user_id, user_opponent, board_validation_result, user_opponent_name);
-												break;
-
-											default:
-												sqlStatement.setByte(3, Utilities.DATABASE_TABLE_GAMES_FINISHED_FALSE);
-												GCMUtilities.sendMessage(sqlConnection, game_id, user_id, user_opponent, board_validation_result);
-												break;
+											sqlStatement.setByte(3, Utilities.DATABASE_TABLE_GAMES_FINISHED_TRUE);
+											GCMUtilities.sendMessages(sqlConnection, game_id, user_id, user_opponent, board_validation_result, user_opponent_name);
+										}
+										else if (board_validation_result.byteValue() == Utilities.BOARD_NEW_MOVE)
+										{
+											sqlStatement.setByte(3, Utilities.DATABASE_TABLE_GAMES_FINISHED_FALSE);
+											GCMUtilities.sendMessage(sqlConnection, game_id, user_id, user_opponent, board_validation_result);
 										}
 
-										sqlStatement.setString(4, board);
+										sqlStatement.setString(4, game_id);
 
 										// run the SQL statement
 										sqlStatement.executeUpdate();
