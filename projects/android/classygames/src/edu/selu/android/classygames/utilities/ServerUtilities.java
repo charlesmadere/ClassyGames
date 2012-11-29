@@ -50,7 +50,7 @@ public class ServerUtilities
 	public final static String POST_DATA_USER_CHALLENGED = "user_challenged";
 	public final static String POST_DATA_USER_CREATOR = "user_creator";
 
-	public final static String SERVER_ADDRESS = "http://classygames.com/";
+	public final static String SERVER_ADDRESS = "http://classygames.elasticbeanstalk.com/";
 	public final static String SERVER_GET_GAME = "GetGame";
 	public final static String SERVER_GET_GAME_ADDRESS = SERVER_ADDRESS + SERVER_GET_GAME;
 	public final static String SERVER_GET_GAMES = "GetGames";
