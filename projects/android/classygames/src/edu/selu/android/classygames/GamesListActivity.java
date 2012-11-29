@@ -569,11 +569,13 @@ public class GamesListActivity extends SherlockListActivity
 					{
 						convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_turn_yours, null);
 						viewHolder.picture = (ImageView) convertView.findViewById(R.drawable.turn_yours);
+						convertView.setOnClickListener(null);
 					}
 					else
 					{
 						convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_turn_theirs, null);
 						viewHolder.picture = (ImageView) convertView.findViewById(R.drawable.turn_theirs);
+						convertView.setOnClickListener(null);
 					}
 				}
 
