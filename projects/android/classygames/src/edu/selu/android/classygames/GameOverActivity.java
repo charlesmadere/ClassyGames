@@ -77,6 +77,7 @@ public class GameOverActivity extends SherlockActivity
 					@Override
 					public void onClick(final View v)
 					{
+						setResult(GamesListActivity.NEED_TO_REFRESH);
 						finish();
 					}
 				});

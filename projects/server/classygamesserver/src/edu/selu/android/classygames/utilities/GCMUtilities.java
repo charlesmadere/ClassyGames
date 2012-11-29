@@ -99,16 +99,8 @@ public class GCMUtilities
 	{
 		final String userNameToShow = Utilities.grabUserName(sqlConnection, userIdToShow.longValue());
 
-		sendMessage(sqlConnection, game_id, userIdToShow, userNameToShow, userIdOfReceiver, game_type);
-
-		if (game_type.byteValue() == Utilities.BOARD_WIN)
-		{
-			sendMessage(sqlConnection, game_id, userIdOfReceiver, userNameOfReceiver, userIdToShow, Utilities.BOARD_LOSE);
-		}
-		else
-		{
-			sendMessage(sqlConnection, game_id, userIdOfReceiver, userNameOfReceiver, userIdToShow, game_type);
-		}
+		sendMessage(sqlConnection, game_id, userIdToShow, userNameToShow, userIdOfReceiver, Utilities.BOARD_LOSE);
+		sendMessage(sqlConnection, game_id, userIdOfReceiver, userNameOfReceiver, userIdToShow, Utilities.BOARD_WIN);
 	}
 
 

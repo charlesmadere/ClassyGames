@@ -127,6 +127,7 @@ public class GCMIntentService extends IntentService
 				// it's a GAME_OVER byte
 				{
 					Intent gameOverIntent = new Intent(this, GameOverActivity.class);
+					gameOverIntent.putExtra(ServerUtilities.POST_DATA_TYPE, gameType.byteValue());
 					gameOverIntent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_ID, person.getId());
 					gameOverIntent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_NAME, person.getName());
 					stackBuilder.addNextIntentWithParentStack(gameOverIntent);

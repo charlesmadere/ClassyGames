@@ -103,7 +103,6 @@ public class GamesListActivity extends SherlockListActivity
 			Log.e(Utilities.LOG_TAG, "DiskCache instantiate failed: " + e);
 		}
 
-		Utilities.getFacebook().extendAccessTokenIfNeeded(GamesListActivity.this, null);
 		new AsyncGetFacebookIdentificationAndGCMRegister().execute();
 	}
 
@@ -167,7 +166,7 @@ public class GamesListActivity extends SherlockListActivity
 	public void onResume()
 	{
 		super.onResume();
-		Utilities.getFacebook().extendAccessTokenIfNeeded(GamesListActivity.this, null);
+		new AsyncGetFacebookIdentificationAndGCMRegister().execute();
 	}
 
 
@@ -181,7 +180,6 @@ public class GamesListActivity extends SherlockListActivity
 		@Override
 		protected Person doInBackground(final Void... v)
 		{
-			Utilities.getFacebook().extendAccessTokenIfNeeded(GamesListActivity.this, null);
 			Person facebookIdentity = new Person();
 
 			try
