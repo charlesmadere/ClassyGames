@@ -768,7 +768,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 					return false;
 			}
 			else {
-				if (abs(button.getPx()-prevButton.getPx()) == 1 && (button.getPy()-prevButton.getPy()) == -1)
+				if (abs(button.getPx()-prevButton.getPx()) == 1 && (button.getPy()-prevButton.getPy()) == 1)
 					return true;
 				else
 					return false;
@@ -787,7 +787,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			
 			if(prevButton.isPlayerGreen())
 			  {
-				  if (abs(cbutton.getPx()-prevButton.getPx()) == 2 && (cbutton.getPy()-prevButton.getPy()) == -2)
+				  if (abs(cbutton.getPx()-prevButton.getPx()) == 2 && (cbutton.getPy()-prevButton.getPy()) == 2)
 				  {
 						if (middleButton.isPlayerGreen() != prevButton.isPlayerGreen())
 						{
