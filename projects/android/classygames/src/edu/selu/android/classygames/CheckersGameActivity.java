@@ -766,13 +766,13 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		}
 		else {
 			if (!prevButton.isPlayerGreen()){
-				if(button.getPx()-prevButton.getPx() == 1 && abs(button.getPy()- prevButton.getPy()) == 1)
+				if(button.getPx()-prevButton.getPx() == -1 && abs(button.getPy()- prevButton.getPy()) == 1)
 					return true;
 				else 
 					return false;
 			}
 			else {
-				if (button.getPx()-prevButton.getPx() == -1 && abs(button.getPy()-prevButton.getPy()) == 1)
+				if (button.getPx()-prevButton.getPx() == 1 && abs(button.getPy()-prevButton.getPy()) == 1)
 					return true;
 				else
 					return false;
@@ -793,7 +793,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			
 			if(prevButton.isPlayerGreen())
 			  {
-				  if (cbutton.getPx()-prevButton.getPx() == -2 && abs(cbutton.getPy()-prevButton.getPy()) == 2)
+				  if (cbutton.getPx()-prevButton.getPx() == 2 && abs(cbutton.getPy()-prevButton.getPy()) == 2)
 				  {
 						if (middleButton.isPlayerGreen() != prevButton.isPlayerGreen())
 						{
@@ -813,7 +813,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			  }
 			  else
 			  {
-				  if (cbutton.getPx()-prevButton.getPx() == 2 && abs(cbutton.getPy()-prevButton.getPy()) == 2)
+				  if (cbutton.getPx()-prevButton.getPx() == -2 && abs(cbutton.getPy()-prevButton.getPy()) == 2)
 				  {
 						if (middleButton.isPlayerGreen() != prevButton.isPlayerGreen())
 						{
