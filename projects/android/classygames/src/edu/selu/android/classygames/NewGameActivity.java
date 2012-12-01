@@ -418,20 +418,20 @@ public class NewGameActivity extends SherlockListActivity
 		}
 
 
-		/**
-		 * made this li'l class while trying to optimize our listview. apparently using
-		 * something like this helps performance
-		 * https://developer.android.com/training/improving-layouts/smooth-scrolling.html
-		 *
-		 */
-		private class ViewHolder
-		{
-			public ImageView picture;
-			public OnClickListener onClickListener;
-			public TextView name;
-		}
+	}
 
 
+	/**
+	 * made this li'l class while trying to optimize our listview. apparently using
+	 * something like this helps performance
+	 * https://developer.android.com/training/improving-layouts/smooth-scrolling.html
+	 *
+	 */
+	static class ViewHolder
+	{
+		public ImageView picture;
+		public OnClickListener onClickListener;
+		public TextView name;
 	}
 
 

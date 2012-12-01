@@ -310,6 +310,15 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 
 
 		@Override
+		protected void onCancelled()
+		{
+			super.onCancelled();
+
+			finish();
+		}
+
+
+		@Override
 		protected void onPostExecute(final String serverResponse)
 		{
 			board = parseServerResponse(serverResponse);
@@ -329,7 +338,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			progressDialog = new ProgressDialog(CheckersGameActivity.this);
 			progressDialog.setMessage(CheckersGameActivity.this.getString(R.string.checkers_game_activity_getgame_progressdialog_message));
 			progressDialog.setTitle(R.string.checkers_game_activity_getgame_progressdialog_title);
-			progressDialog.setCancelable(false);
+			progressDialog.setCancelable(true);
 			progressDialog.setCanceledOnTouchOutside(false);
 			progressDialog.show();
 		}
@@ -528,88 +537,81 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 
 	private void buildBoard()
 	{
-			if (board != null && !board.isEmpty())
+		if (board != null && !board.isEmpty())
+		{
+			try
 			{
-					try
-					{
-						JSONObject JSON = new JSONObject(board);
-						JSONObject boardJSON = JSON.getJSONObject("board");
-						JSONArray array = boardJSON.getJSONArray("teams");
-						
-						for( int i = 0; i < array.length(); i++ )
-						{
-							JSONArray team = array.getJSONArray(i);
-							for (int j = 0; j < team.length(); ++j)
-							{
-								JSONObject piece = team.getJSONObject(j);
-								int type = piece.getInt("type");
-								JSONArray coordinates = piece.getJSONArray("coordinate");
-								
-								if( coordinates.length() == 2 )
-								{
-									int x = coordinates.getInt(0);
-									int y = coordinates.getInt(1);
-									
-									if( x >= 0 && x <= 7 )
-									{
-										if( y >= 0 && y <= 7 )
-										{
-											buttons[x][y].setEmpty(false);
-											
-											if( i == 0 )
-											{
-												buttons[x][y].setPlayerGreen(true);
-												buttons[x][y].setImageResource(greenNormal);
-												
-												if( type == 1 )
-												{
-													buttons[x][y].setCrown(false);
-												}
-												else
-												{
-													buttons[x][y].setCrown(true);
-													buttons[x][y].setImageResource(greenKing);
-												}
-											}
-											else
-											{
-												buttons[x][y].setPlayerGreen(false);
-												buttons[x][y].setImageResource(orangeNormal);
-												
-												if( type == 1 )
-												{
-													buttons[x][y].setCrown(false);
-												}
-												else
-												{
-													buttons[x][y].setCrown(true);
-													buttons[x][y].setImageResource(orangeKing);
-												}
-											}
-										}
-										else
-										{
-											Log.e(Utilities.LOG_TAG, "Coordinate outside proper range");
-										}
-									}
-									
-								}
-								
-							}
-						}						
-						
-					}
-					catch (JSONException e1)
-					{
-						Log.e("Array", "Could not get board for array");
-					}
-					
-			}
-			else
-			{
-				Log.e("Server Result", "placeholder");
-			}
+				JSONObject JSON = new JSONObject(board);
+				JSONObject boardJSON = JSON.getJSONObject("board");
+				JSONArray array = boardJSON.getJSONArray("teams");
 
+				for( int i = 0; i < array.length(); i++ )
+				{
+					JSONArray team = array.getJSONArray(i);
+
+					for (int j = 0; j < team.length(); ++j)
+					{
+						JSONObject piece = team.getJSONObject(j);
+						int type = piece.getInt("type");
+						JSONArray coordinates = piece.getJSONArray("coordinate");
+
+						if( coordinates.length() == 2 )
+						{
+							int x = coordinates.getInt(0);
+							int y = coordinates.getInt(1);
+
+							if( y >= 0 && y <= 7 )
+							{
+								buttons[x][y].setEmpty(false);
+								
+								if( i == 0 )
+								{
+									buttons[x][y].setPlayerGreen(true);
+									buttons[x][y].setImageResource(greenNormal);
+									
+									if( type == 1 )
+									{
+										buttons[x][y].setCrown(false);
+									}
+									else
+									{
+										buttons[x][y].setCrown(true);
+										buttons[x][y].setImageResource(greenKing);
+									}
+								}
+								else
+								{
+									buttons[x][y].setPlayerGreen(false);
+									buttons[x][y].setImageResource(orangeNormal);
+									
+									if( type == 1 )
+									{
+										buttons[x][y].setCrown(false);
+									}
+									else
+									{
+										buttons[x][y].setCrown(true);
+										buttons[x][y].setImageResource(orangeKing);
+									}
+								}
+							}
+							else
+							{
+								Log.e(Utilities.LOG_TAG, "Coordinate outside proper range");
+							}
+						}
+					}
+				}
+			}
+			catch (JSONException e1)
+			{
+				Log.e("Array", "Could not get board for array");
+			}
+		}
+		else
+		{
+			Log.e("Server Result", "placeholder");
+		}
 	}
 
 

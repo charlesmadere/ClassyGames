@@ -20,6 +20,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.util.Log;
+import edu.selu.android.classygames.data.Person;
 
 
 public class ServerUtilities
@@ -108,22 +109,26 @@ public class ServerUtilities
 	{
 		Log.d(Utilities.LOG_TAG, "Registering device with reg_id of \"" + reg_id + "\" from GCM server.");
 
-		// build the data to be sent to the server
-		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-		nameValuePairs.add(new BasicNameValuePair(POST_DATA_ID, Long.valueOf(Utilities.getWhoAmI(context).getId()).toString()));
-		nameValuePairs.add(new BasicNameValuePair(POST_DATA_NAME, Utilities.getWhoAmI(context).getName()));
-		nameValuePairs.add(new BasicNameValuePair(POST_DATA_REG_ID, reg_id));
-
-		try
+		final Person whoAmI = Utilities.getWhoAmI(context);
+		if (whoAmI != null && whoAmI.getId() >= 0 && !whoAmI.getName().isEmpty())
 		{
-			if (GCMParseServerResults(postToServer(SERVER_NEW_REG_ID_ADDRESS, nameValuePairs)))
+			// build the data to be sent to the server
+			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+			nameValuePairs.add(new BasicNameValuePair(POST_DATA_ID, Long.valueOf(whoAmI.getId()).toString()));
+			nameValuePairs.add(new BasicNameValuePair(POST_DATA_NAME, whoAmI.getName()));
+			nameValuePairs.add(new BasicNameValuePair(POST_DATA_REG_ID, reg_id));
+
+			try
 			{
-				Log.d(Utilities.LOG_TAG, "Server successfully completed all the reg_id stuff.");
+				if (GCMParseServerResults(postToServer(SERVER_NEW_REG_ID_ADDRESS, nameValuePairs)))
+				{
+					Log.d(Utilities.LOG_TAG, "Server successfully completed all the reg_id stuff.");
+				}
 			}
-		}
-		catch (final IOException e)
-		{
-
+			catch (final IOException e)
+			{
+				Log.e(Utilities.LOG_TAG, "IOException when trying to post GCM reg_id to server!");
+			}
 		}
 	}
 

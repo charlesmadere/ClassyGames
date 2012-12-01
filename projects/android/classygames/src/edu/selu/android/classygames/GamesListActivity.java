@@ -3,6 +3,7 @@ package edu.selu.android.classygames;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -100,10 +101,8 @@ public class GamesListActivity extends SherlockListActivity
 		} 
 		catch (final IOException e) 
 		{
-			Log.e(Utilities.LOG_TAG, "DiskCache instantiate failed: " + e);
+			Log.e(Utilities.LOG_TAG, "DiskCache instantiate failed.", e);
 		}
-
-		new AsyncGetFacebookIdentificationAndGCMRegister().execute();
 	}
 
 
@@ -116,7 +115,6 @@ public class GamesListActivity extends SherlockListActivity
 		{
 			case NEED_TO_REFRESH:
 				justReturnedHere = true;
-				new AsyncPopulateGamesList().execute();
 				break;
 
 			case LogoutActivity.LOGGED_OUT:
@@ -171,6 +169,11 @@ public class GamesListActivity extends SherlockListActivity
 		{
 			new AsyncGetFacebookIdentificationAndGCMRegister().execute();
 		}
+		else if (justReturnedHere || gamesAdapter == null || gamesAdapter.isEmpty())
+		{
+			justReturnedHere = false;
+			new AsyncPopulateGamesList().execute();
+		}
 		else
 		{
 			Utilities.getFacebook().extendAccessTokenIfNeeded(GamesListActivity.this, null);
@@ -203,9 +206,17 @@ public class GamesListActivity extends SherlockListActivity
 					facebookIdentity.setName(name);
 				}
 			}
-			catch (final Exception e)
+			catch (final JSONException e)
 			{
-				Log.e(Utilities.LOG_TAG, "Exception during Facebook request or parse.", e);
+				Log.e(Utilities.LOG_TAG, "JSONException during Facebook request or parse.", e);
+			}
+			catch (final MalformedURLException e)
+			{
+				Log.e(Utilities.LOG_TAG, "MalformedURLException during Facebook request or parse.", e);
+			}
+			catch (final IOException e)
+			{
+				Log.e(Utilities.LOG_TAG, "IOException during Facebook request or parse.", e);
 			}
 
 			return facebookIdentity;
@@ -265,18 +276,13 @@ public class GamesListActivity extends SherlockListActivity
 		@Override
 		protected ArrayList<Game> doInBackground(final Void... v)
 		{
-			if (justReturnedHere)
+			try
 			{
-				try
-				{
-					Thread.sleep(1000);
-				}
-				catch (final InterruptedException e)
-				{
-					Log.e(Utilities.LOG_TAG, "AsyncPopulateGamesList interrupted!", e);
-				}
-
-				justReturnedHere = false;
+				Thread.sleep(1000);
+			}
+			catch (final InterruptedException e)
+			{
+				Log.e(Utilities.LOG_TAG, "AsyncPopulateGamesList interrupted when trying to sleep!", e);
 			}
 
 			ArrayList<Game> games = new ArrayList<Game>();
@@ -603,22 +609,7 @@ public class GamesListActivity extends SherlockListActivity
 		}
 
 
-		/**
-		 * made this li'l class while trying to optimize our listview. apparently it
-		 * helps performance
-		 * https://developer.android.com/training/improving-layouts/smooth-scrolling.html
-		 */
-		private class ViewHolder
-		{
 
-
-			ImageView picture;
-			OnClickListener onClickListener;
-			TextView name;
-			TextView time;
-
-
-		}
 
 
 		private final class AsyncPopulatePictures extends AsyncTask<Person, Long, Drawable>
@@ -665,6 +656,24 @@ public class GamesListActivity extends SherlockListActivity
 			}
 
 		}
+
+	}
+
+
+	/**
+	 * made this li'l class while trying to optimize our listview. apparently it
+	 * helps performance
+	 * https://developer.android.com/training/improving-layouts/smooth-scrolling.html
+	 */
+	static class ViewHolder
+	{
+
+
+		ImageView picture;
+		OnClickListener onClickListener;
+		TextView name;
+		TextView time;
+
 
 	}
 
