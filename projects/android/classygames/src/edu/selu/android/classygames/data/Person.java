@@ -9,20 +9,15 @@ public class Person
 	private String name;
 
 
-	public Person()
-	{
-		id = 0;
-		name = "Classy Games";
-	}
-
-
-	public Person(final String name)
-	{
-		id = 0;
-		this.name = name;
-	}
-
-
+	/**
+	 * Creates a Person object.
+	 * 
+	 * @param id
+	 * The Facebook ID of the user.
+	 * 
+	 * @param name
+	 * The name of the user. This should probably be taken from Facebook.
+	 */
 	public Person(final long id, final String name)
 	{
 		this.id = id;
@@ -36,21 +31,9 @@ public class Person
 	}
 
 
-	public void setId(final long id)
-	{
-		this.id = id;
-	}
-
-
 	public String getName()
 	{
 		return name;
-	}
-
-
-	public void setName(final String name)
-	{
-		this.name = name;
 	}
 
 

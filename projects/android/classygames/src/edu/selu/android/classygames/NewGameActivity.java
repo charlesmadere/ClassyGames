@@ -144,14 +144,6 @@ public class NewGameActivity extends SherlockListActivity
 	}
 
 
-	@Override
-	public void onResume()
-	{
-		super.onResume();
-		Utilities.getFacebook().extendAccessTokenIfNeeded(NewGameActivity.this, null);
-	}
-
-
 	private final class AsyncPopulateFacebookFriends extends AsyncTask<Void, Integer, ArrayList<Person>>
 	{
 
@@ -171,7 +163,7 @@ public class NewGameActivity extends SherlockListActivity
 			final Map<String, Long> map = (Map<String, Long>) preferences.getAll();
 
 			if (map == null || map.isEmpty())
-			// there was no cached list of friends
+			// there was no cached list of friends. let's download a list from Facebook
 			{
 				try
 				{

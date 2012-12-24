@@ -15,7 +15,6 @@ import android.util.Log;
 import edu.selu.android.classygames.CheckersGameActivity;
 import edu.selu.android.classygames.GameOverActivity;
 import edu.selu.android.classygames.R;
-import edu.selu.android.classygames.SecretConstants;
 import edu.selu.android.classygames.data.Person;
 
 

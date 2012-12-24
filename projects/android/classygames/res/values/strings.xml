@@ -3,6 +3,7 @@
 	<string name="about">About</string>
 	<string name="about_activity_about">Classy Games was developed by a team of five students attending Southeastern Louisiana University.</string>
 	<string name="about_activity_title">About</string>
+	<string name="app_id">324400870964487</string>
 	<string name="app_name">Classy Games</string>
 	<string name="checkers_game_activity_data_error">Error while trying to instantiate the game.</string>
 	<string name="checkers_game_activity_title">Checkers with</string>

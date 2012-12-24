@@ -304,7 +304,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			{
 				Log.e(Utilities.LOG_TAG, "Error in HTTP POST to " + ServerUtilities.SERVER_GET_GAME_ADDRESS, e);
 			}
-			
+
 			return null;
 		}
 
@@ -475,7 +475,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 						}
 						catch (final JSONException e)
 						{
-
+							Log.e(Utilities.LOG_TAG, "Error in createJSONTeam, x = " + x + ", y = " + y);
 						}
 					}
 				}

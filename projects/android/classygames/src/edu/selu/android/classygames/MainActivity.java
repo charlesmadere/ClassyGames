@@ -2,28 +2,54 @@ package edu.selu.android.classygames;
 
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.view.Window;
 
 import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Window;
-import com.facebook.android.DialogError;
-import com.facebook.android.Facebook.DialogListener;
-import com.facebook.android.FacebookError;
-
-import edu.selu.android.classygames.utilities.Utilities;
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.model.GraphUser;
 
 
 public class MainActivity extends SherlockActivity
 {
 
 
-	SharedPreferences sharedPreferences;
+	@Override
+	public void onCreate(final Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setContentView(R.layout.main_activity);
+
+		Session.openActiveSession(MainActivity.this, true, new Session.StatusCallback()
+		{
+			@Override
+			public void call(final Session session, final SessionState state, final Exception exception)
+			{
+				if (session.isOpened())
+				{
+					// make request to the /me API
+					Request.executeMeRequestAsync(session, new Request.GraphUserCallback()
+					{
+						@Override
+						public void onCompleted(final GraphUser user, final Response response)
+						{
+							if (user != null)
+							{
+								goToGamesList();
+							}
+						}
+					});
+				}
+			}
+		});
+	}
 
 
+/*
 	@Override
 	public void onCreate(final Bundle savedInstanceState)
 	{
@@ -96,27 +122,19 @@ public class MainActivity extends SherlockActivity
 			});
 		}
 	}
+*/
 
 
 	@Override
 	public void onActivityResult(final int requestCode, final int resultCode, final Intent data)
 	{
 		super.onActivityResult(requestCode, resultCode, data);
-		Utilities.getFacebook().authorizeCallback(requestCode, resultCode, data);
-	}
-
-
-	@Override
-	public void onResume()
-	{
-		super.onResume();
-		Utilities.getFacebook().extendAccessTokenIfNeeded(MainActivity.this, null);
+		Session.getActiveSession().onActivityResult(MainActivity.this, requestCode, resultCode, data);;
 	}
 
 
 	private void goToGamesList()
 	{
-		Utilities.getFacebook().extendAccessTokenIfNeeded(MainActivity.this, null);
 		startActivity(new Intent(MainActivity.this, GamesListActivity.class));
 		finish();
 	}

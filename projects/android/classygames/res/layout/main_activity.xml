@@ -15,16 +15,16 @@
 		android:src="@drawable/logo" />
 	<LinearLayout
 		android:gravity="top"
+		android:layout_gravity="center_horizontal"
 		android:layout_height="fill_parent"
 		android:layout_weight="5"
 		android:layout_width="fill_parent"
 		android:paddingLeft="20dip"
 		android:paddingRight="20dip">
-		<Button
+		<com.facebook.widget.LoginButton
 			android:id="@+id/main_activity_button_login_with_facebook"
+			android:gravity="center_horizontal"
 			android:layout_height="wrap_content"
-			android:layout_width="fill_parent"
-			android:text="@string/login_with_facebook"
-			style="@style/facebook_button" />
+			android:layout_width="wrap_content" />
 	</LinearLayout>
 </LinearLayout>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="edu.selu.android.classygames"
-	android:versionCode="6"
-	android:versionName="1.1.1">
+	android:versionCode="7"
+	android:versionName="1.1.2">
 
 	<uses-sdk
 		android:minSdkVersion="10"
@@ -14,6 +14,11 @@
 		android:name="android.permission.READ_EXTERNAL_STORAGE" />
 	<uses-permission 
 		android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+	<!-- some Facebook v3.0 stuff -->
+	<meta-data
+		android:name="com.facebook.sdk.ApplicationId"
+		android:value="@string/app_id" />
 
 	<!-- begin GCM stuff -->
 	<!-- this GCM stuff was taken from this official google tutorial -->

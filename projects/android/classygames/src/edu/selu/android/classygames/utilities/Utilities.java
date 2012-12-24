@@ -20,10 +20,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.facebook.UiLifecycleHelper;
 import com.facebook.android.Facebook;
 
 import edu.selu.android.classygames.R;
-import edu.selu.android.classygames.SecretConstants;
 import edu.selu.android.classygames.data.Person;
 
 

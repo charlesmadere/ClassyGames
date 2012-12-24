@@ -44,8 +44,9 @@ import com.actionbarsherlock.view.MenuItem;
 import com.facebook.android.Util;
 import com.koushikdutta.urlimageviewhelper.DiskLruCache;
 
+import edu.selu.android.classygames.data.Game;
 import edu.selu.android.classygames.data.Person;
-import edu.selu.android.classygames.games.Game;
+import edu.selu.android.classygames.utilities.SecretConstants;
 import edu.selu.android.classygames.utilities.ServerUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
 

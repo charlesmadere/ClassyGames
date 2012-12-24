@@ -9,13 +9,17 @@ public class Coordinate
 	private byte y;
 
 
-	public Coordinate()
-	{
-		x = 0;
-		y = 0;
-	}
-
-
+	/**
+	 * Creates a Coordinate object. Think of this object as an ordered pair. So
+	 * it should look like this: (x, y). If x were to be 5 and y were to be 7,
+	 * then the ordered pair would be this: (5, 7).
+	 * 
+	 * @param x
+	 * The X value for this coordinate.
+	 * 
+	 * @param y
+	 * The Y value for this coordinate.
+	 */
 	public Coordinate(final byte x, final byte y)
 	{
 		this.x = x;
@@ -29,28 +33,16 @@ public class Coordinate
 	}
 
 
-	void setX(final byte x)
-	{
-		this.x = x;
-	}
-
-
 	public byte getY()
 	{
 		return y;
 	}
 
 
-	void setY(final byte y)
+	@Override
+	public String toString()
 	{
-		this.y = y;
-	}
-
-
-	void set(final byte x, final byte y)
-	{
-		this.x = x;
-		this.y = y;
+		return "(" + x + ", " + y + ")";
 	}
 
 
