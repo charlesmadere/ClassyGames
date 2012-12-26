@@ -78,7 +78,7 @@
 		</activity>
 
 		<activity
-			android:label="@string/about_activity_title"
+			android:label="@string/about_fragment_title"
 			android:name=".AboutActivity"
 			android:parentActivityName=".GamesListActivity"
 			android:screenOrientation="portrait"
@@ -89,7 +89,7 @@
 		</activity>
 
 		<activity
-			android:label="@string/checkers_game_activity_title" 
+			android:label="@string/checkers_game_fragment_title" 
 			android:name=".CheckersGameActivity"
 			android:parentActivityName=".GamesListActivity"
 			android:screenOrientation="portrait"
@@ -129,7 +129,7 @@
 		</activity>
 
 		<activity
-			android:label="@string/logout_activity_title"
+			android:label="@string/logout_fragment_title"
 			android:name=".LogoutActivity"
 			android:parentActivityName=".GamesListActivity"
 			android:screenOrientation="portrait"
@@ -151,7 +151,7 @@
 		</activity>
 
 		<activity
-			android:label="@string/shark_activity_title"
+			android:label="@string/shark_fragment_title"
 			android:name=".SharkActivity"
 			android:parentActivityName=".AboutActivity"
 			android:screenOrientation="portrait"

@@ -20,7 +20,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.facebook.UiLifecycleHelper;
 import com.facebook.android.Facebook;
 
 import edu.selu.android.classygames.R;
@@ -334,6 +333,8 @@ public class Utilities
 	public static void styleActionBar(final Resources resources, final ActionBar actionBar, final boolean backArrow)
 	{
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+		// if the running version of Android is lower than API Level 14 (below Ice Cream Sandwich 4.0)
+		// https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels
 		{
 			final BitmapDrawable bg = (BitmapDrawable) resources.getDrawable(R.drawable.bg_actionbar);
 			bg.setDither(true);

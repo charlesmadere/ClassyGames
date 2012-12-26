@@ -25,6 +25,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.util.LruCache;
@@ -81,8 +82,9 @@ public class GamesListActivity extends SherlockListActivity
 			@SuppressLint("NewApi")
 			protected int sizeOf(final Long key, final Bitmap bitmap)
 			{
-				if (android.os.Build.VERSION.SDK_INT >= 12)
-				// if the running version of Android is 3.1 (Honeycomb) or later
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1)
+				// if the running version of Android is API Level 12 and higher (Honeycomb 3.1 and up)
+				// https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels
 				{
 					return bitmap.getByteCount();
 				}
@@ -175,10 +177,6 @@ public class GamesListActivity extends SherlockListActivity
 			justReturnedHere = false;
 			new AsyncPopulateGamesList().execute();
 		}
-		else
-		{
-			Utilities.getFacebook().extendAccessTokenIfNeeded(GamesListActivity.this, null);
-		}
 	}
 
 
@@ -192,7 +190,8 @@ public class GamesListActivity extends SherlockListActivity
 		@Override
 		protected Person doInBackground(final Void... v)
 		{
-			Person facebookIdentity = new Person();
+			// TODO
+			// convert the below facebook call into the new, non deprecated stuff
 
 			try
 			{
@@ -203,8 +202,7 @@ public class GamesListActivity extends SherlockListActivity
 
 				if (id >= 0 && name != null && !name.isEmpty())
 				{
-					facebookIdentity.setId(id);
-					facebookIdentity.setName(name);
+					return new Person(id, name);
 				}
 			}
 			catch (final JSONException e)
@@ -220,7 +218,7 @@ public class GamesListActivity extends SherlockListActivity
 				Log.e(Utilities.LOG_TAG, "IOException during Facebook request or parse.", e);
 			}
 
-			return facebookIdentity;
+			return null;
 		}
 
 

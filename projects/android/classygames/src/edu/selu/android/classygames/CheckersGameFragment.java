@@ -15,27 +15,31 @@ import android.app.ProgressDialog;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 import edu.selu.android.classygames.data.Person;
+import edu.selu.android.classygames.games.checkers.Board;
 import edu.selu.android.classygames.utilities.ServerUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
-public class CheckersGameActivity extends SherlockActivity implements OnClickListener
+public class CheckersGameFragment extends SherlockFragment implements OnClickListener
 {
 
 
@@ -47,10 +51,10 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	private int orangeNormal;
 	private int orangeKing;
 
+
 	public final static String INTENT_DATA_GAME_ID = "GAME_ID";
 	public final static String INTENT_DATA_PERSON_CHALLENGED_ID = "GAME_PERSON_CHALLENGED_ID";
 	public final static String INTENT_DATA_PERSON_CHALLENGED_NAME = "GAME_PERSON_CHALLENGED_NAME";
-
 
 	private boolean boardLocked = false;
 	private String gameId = null;
@@ -63,6 +67,49 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	private String board = null;
 
 
+	@Override
+	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
+	{
+		// retrieve data passed to this activity
+		final Bundle bundle = 
+
+		if (bundle == null || bundle.isEmpty())
+		{
+			activityHasError();
+		}
+		else
+		{
+			gameId = bundle.getString(INTENT_DATA_GAME_ID);
+			final long challengedId = bundle.getLong(INTENT_DATA_PERSON_CHALLENGED_ID);
+			final String challengedName = bundle.getString(INTENT_DATA_PERSON_CHALLENGED_NAME);
+
+			if (challengedId < 0 || challengedName == null || challengedName.isEmpty())
+			{
+				activityHasError();
+			}
+			else
+			{
+				personChallenged = new Person(challengedId, challengedName);
+				getSupportActionBar().setTitle(CheckersGameActivity.this.getString(R.string.checkers_game_activity_title) + " " + personChallenged.getName());
+
+				initBoard();
+
+				if (gameId == null || gameId.isEmpty())
+				{
+					initPieces();
+				}
+				else
+				{
+					new AsyncGetGame().execute();
+				}
+			}
+		}
+
+		return inflater.inflate(R.layout.checkers_game_fragment, container, false);
+	}
+
+
+/*
 	@SuppressLint("NewApi")
 	@Override
 	public void onCreate(final Bundle savedInstanceState)
@@ -106,6 +153,7 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 			}
 		}
 	}
+*/
 
 
 	@Override
@@ -175,8 +223,8 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		TableLayout.LayoutParams rowLp;
 		TableRow.LayoutParams cellLp;
 
-		if (android.os.Build.VERSION.SDK_INT >= 13)
-		// if the version of Android running this code is API Level 13 and higher (Honeycomb 3.2 and up)
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2)
+		// if the running version of Android is API Level 13 and higher (Honeycomb 3.2 and up)
 		// https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels
 		{
 			Point size = new Point();
@@ -205,9 +253,9 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 
 		buttons = new MyButton[8][8];
 
-		for (int y = 0; y < 8; ++y)
+		for (int y = Board.LENGTH_VERTICAL; y < 8; ++y)
 		{
-			for (int x = 0; x < 8; ++x)
+			for (int x = Board.LENGTH_HORIZONTAL; x < 8; ++x)
 			{
 				buttons[x][y] = new MyButton(this, x, y, true, false, false);
 				buttons[x][y].setId(x * 10 + y);
@@ -239,9 +287,9 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 
 	private void initPieces()
 	{
-		for (int x = 0; x < 8; ++x)
+		for (int x = 0; x < Board.LENGTH_HORIZONTAL; ++x)
 		{
-			for (int y = 0; y < 8; ++y)
+			for (int y = 0; y < Board.LENGTH_VERTICAL; ++y)
 			{
 				if (((y + x) % 2 == 1) && (y <= 2 || y >= 5))
 				{
@@ -271,9 +319,9 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 
 	private void clearPieces()
 	{
-		for (int x = 0; x < 8; ++x)
+		for (int x = 0; x < Board.LENGTH_HORIZONTAL; ++x)
 		{
-			for (int y = 0; y < 8; ++y)
+			for (int y = 0; y < Board.LENGTH_VERTICAL; ++y)
 			{
 				buttons[x][y].setEmpty(true);
 				buttons[x][y].setCrown(false);
@@ -446,9 +494,9 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 		{
 			JSONArray team = new JSONArray();
 
-			for (int x = 0; x < 8; ++x)
+			for (int x = 0; x < Board.LENGTH_HORIZONTAL; ++x)
 			{
-				for (int y = 0; y < 8; ++y)
+				for (int y = 0; y < Board.LENGTH_VERTICAL; ++y)
 				{
 					if (!buttons[x][y].isEmpty() && buttons[x][y].isPlayerGreen() == isPlayerGreen)
 					// this position has a piece in it that is of the given team color
@@ -928,8 +976,8 @@ public class CheckersGameActivity extends SherlockActivity implements OnClickLis
 	{
 		final Drawable drawable = getResources().getDrawable(resource);
 
-		if (android.os.Build.VERSION.SDK_INT >= 16)
-		// if the version of Android running this code is API Level 16 and higher (JellyBean 4.1 and up)
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+		// if the running version of Android is API Level 16 and higher (JellyBean 4.1 and up)
 		// https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels
 		{
 			view.setBackground(drawable);

@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="about">About</string>
-	<string name="about_activity_about">Classy Games was developed by a team of five students attending Southeastern Louisiana University.</string>
-	<string name="about_activity_title">About</string>
+	<string name="about_fragment_about">Classy Games was developed by a team of five students attending Southeastern Louisiana University.</string>
+	<string name="about_fragment_title">About</string>
 	<string name="app_id">324400870964487</string>
 	<string name="app_name">Classy Games</string>
-	<string name="checkers_game_activity_data_error">Error while trying to instantiate the game.</string>
-	<string name="checkers_game_activity_title">Checkers with</string>
+	<string name="checkers_game_fragment_data_error">Error while trying to instantiate the game.</string>
+	<string name="checkers_game_fragment_getgame_progressdialog_message">Retrieving your game&#8230;</string>
+	<string name="checkers_game_fragment_getgame_progressdialog_title">Classy Games is working&#8230;</string>
+	<string name="checkers_game_fragment_sendmove_progressdialog_message">Sending your class to our server, the hamsters will process it shortly!</string>
+	<string name="checkers_game_fragment_sendmove_progressdialog_title">Classy Hamsters are working diligently!</string>
+	<string name="checkers_game_fragment_title">Checkers with</string>
 	<string name="confirm_game_activity_button_accept">Start Game!</string>
 	<string name="confirm_game_activity_button_deny">Nevermind&#8230;</string>
 	<string name="confirm_game_activity_data_error">Error in trying to store the data for the Facebook user that you selected.</string>
@@ -31,8 +35,8 @@
 	<string name="game_over_activity_person_picture_description">Friend\'s Picture</string>
 	<string name="login_with_facebook">Login with Facebook</string>
 	<string name="logout">Logout</string>
-	<string name="logout_activity_description">Are you sure you want to logout of Facebook? You will need to login again to continue using Classy Games. You will keep on playing, right? After pressing this button, you will be returned to the Classy Games login screen.</string>
-	<string name="logout_activity_title">Logout of Classy Games</string>
+	<string name="logout_fragment_description">Are you sure you want to logout of Facebook? You will need to login again to continue using Classy Games. You will keep on playing, right? After pressing this button, you will be returned to the Classy Games login screen.</string>
+	<string name="logout_fragment_title">Logout of Classy Games</string>
 	<string name="logout_of_facebook">Logout of Facebook</string>
 	<string name="lost">lost</string>
 	<string name="main_activity_title">Classy Games</string>
@@ -61,13 +65,9 @@
 	<string name="server_registration_success">Device successfully registered with server!</string>
 	<string name="server_unregistration_fail">Could not remove device registration from server. (%1$s)</string>
 	<string name="server_unregistration_success">Device successfully removed from server!</string>
-	<string name="shark_activity_description">Sharkwork by Tristan Kidder</string>
-	<string name="shark_activity_imageview_description">Sharkwork</string>
-	<string name="shark_activity_title">Sharkwork</string>
+	<string name="shark_fragment_description">Sharkwork by Tristan Kidder</string>
+	<string name="shark_fragment_imageview_description">Sharkwork</string>
+	<string name="shark_fragment_title">Sharkwork</string>
 	<string name="undo_move">Undo Move</string>
 	<string name="won">won</string>
-	<string name="checkers_game_activity_getgame_progressdialog_message">Retrieving your game&#8230;</string>
-	<string name="checkers_game_activity_getgame_progressdialog_title">Classy Games is working&#8230;</string>
-	<string name="checkers_game_activity_sendmove_progressdialog_message">Sending your class to our server, the hamsters will process it shortly!</string>
-	<string name="checkers_game_activity_sendmove_progressdialog_title">Classy Hamsters are working diligently!</string>
 </resources>

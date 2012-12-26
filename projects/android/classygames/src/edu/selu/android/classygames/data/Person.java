@@ -16,11 +16,27 @@ public class Person
 	 * The Facebook ID of the user.
 	 * 
 	 * @param name
-	 * The name of the user. This should probably be taken from Facebook.
+	 * The name of the user. This should also be taken from Facebook.
 	 */
 	public Person(final long id, final String name)
 	{
 		this.id = id;
+		this.name = name;
+	}
+
+
+	/**
+	 * Creates a Person object.
+	 * 
+	 * @param id
+	 * The Facebook ID of the user.
+	 * 
+	 * @param name
+	 * The name of the user. This should also be taken from Facebook.
+	 */
+	public Person(final String id, final String name)
+	{
+		this.id = Long.parseLong(id);
 		this.name = name;
 	}
 

@@ -5,15 +5,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
 
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.model.GraphUser;
 
+import edu.selu.android.classygames.data.Person;
+import edu.selu.android.classygames.utilities.Utilities;
 
-public class MainActivity extends SherlockActivity
+
+public class MainActivity extends SherlockFragmentActivity
 {
 
 
@@ -39,6 +42,10 @@ public class MainActivity extends SherlockActivity
 						{
 							if (user != null)
 							{
+								// store this user's data (their real name and facebook ID)
+								final Person facebookIdentity = new Person(user.getId(), user.getName());
+								Utilities.setWhoAmI(MainActivity.this, facebookIdentity);
+
 								goToGamesList();
 							}
 						}

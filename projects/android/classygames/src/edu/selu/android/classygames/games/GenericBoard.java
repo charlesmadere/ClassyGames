@@ -8,9 +8,22 @@ public abstract class GenericBoard
 	protected Position[][] positions;
 
 
-	protected GenericBoard()
+	protected GenericBoard(final byte lengthHorizontal, final byte lengthVertical)
 	{
-		initializeBoard();
+		positions = new Position[lengthHorizontal][lengthVertical];
+		initializeBoard(lengthHorizontal, lengthVertical);
+	}
+
+
+	private void initializeBoard(final byte lengthHorizontal, final byte lengthVertical)
+	{
+		for (byte x = 0; x < lengthHorizontal; ++x)
+		{
+			for (byte y = 0; y < lengthVertical; ++y)
+			{
+				positions[x][y] = new Position(x, y);
+			}
+		}
 	}
 
 
@@ -18,9 +31,6 @@ public abstract class GenericBoard
 	{
 		return positions[x][y];
 	}
-
-
-	protected abstract void initializeBoard();
 
 
 }

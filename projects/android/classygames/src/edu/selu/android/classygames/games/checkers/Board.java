@@ -2,7 +2,6 @@ package edu.selu.android.classygames.games.checkers;
 
 
 import edu.selu.android.classygames.games.GenericBoard;
-import edu.selu.android.classygames.games.Position;
 
 
 public class Board extends GenericBoard
@@ -15,22 +14,7 @@ public class Board extends GenericBoard
 
 	public Board()
 	{
-		super();
-
-		positions = new Position[LENGTH_HORIZONTAL][LENGTH_VERTICAL];
-	}
-
-
-	@Override
-	protected void initializeBoard()
-	{
-		for (byte x = 0; x < LENGTH_HORIZONTAL; ++x)
-		{
-			for (byte y = 0; y < LENGTH_VERTICAL; ++y)
-			{
-				positions[x][y] = new Position(x, y);
-			}
-		}
+		super(LENGTH_HORIZONTAL, LENGTH_VERTICAL);
 	}
 
 

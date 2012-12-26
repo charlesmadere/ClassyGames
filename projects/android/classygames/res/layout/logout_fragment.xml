@@ -13,7 +13,7 @@
 		android:layout_width="fill_parent"
 		android:paddingLeft="4dip"
 		android:paddingRight="4dip"
-		android:text="@string/logout_activity_description"
+		android:text="@string/logout_fragment_description"
 		style="@style/paragraph" />
 	<LinearLayout
 		android:gravity="top"
@@ -24,7 +24,7 @@
 		android:paddingRight="20dip"
 		android:orientation="vertical">
 		<Button
-			android:id="@+id/logout_activity_button_logout_of_facebook"
+			android:id="@+id/logout_fragment_button_logout_of_facebook"
 			android:layout_height="wrap_content"
 			android:layout_width="fill_parent"
 			android:text="@string/logout_of_facebook"
