@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.app.SherlockActivity;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -16,7 +16,7 @@ import edu.selu.android.classygames.data.Person;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
-public class MainActivity extends SherlockFragmentActivity
+public class MainActivity extends SherlockActivity
 {
 
 
@@ -142,7 +142,7 @@ public class MainActivity extends SherlockFragmentActivity
 
 	private void goToGamesList()
 	{
-		startActivity(new Intent(MainActivity.this, GamesListActivity.class));
+		startActivity(new Intent(MainActivity.this, GamesListFragmentActivity.class));
 		finish();
 	}
 

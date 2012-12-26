@@ -7,13 +7,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.MenuItem;
 
 import edu.selu.android.classygames.utilities.Utilities;
 
 
-public class AboutActivity extends SherlockActivity
+public class AboutFragment extends SherlockFragment
 {
 
 
@@ -21,16 +21,16 @@ public class AboutActivity extends SherlockActivity
 	public void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.about_activity);
+		setContentView(R.layout.about_fragment);
 		Utilities.styleActionBar(getResources(), getSupportActionBar());
 
-		ImageView logo = (ImageView) findViewById(R.id.about_activity_imageview_logo);
+		ImageView logo = (ImageView) findViewById(R.id.about_fragment_imageview_logo);
 		logo.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(final View v)
 			{
-				startActivity(new Intent(AboutActivity.this, SharkActivity.class));
+				startActivity(new Intent(AboutFragment.this, SharkFragment.class));
 			}
 		});
 	}

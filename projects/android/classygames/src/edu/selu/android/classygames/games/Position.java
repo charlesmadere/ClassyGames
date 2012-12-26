@@ -22,12 +22,6 @@ public class Position
 	}
 
 
-	public GenericPiece getPiece()
-	{
-		return piece;
-	}
-
-
 	/**
 	 * Check and see if this GenericPosition object has a GenericPiece.
 	 * 
@@ -37,6 +31,21 @@ public class Position
 	public boolean hasPiece()
 	{
 		return piece != null;
+	}
+
+
+	/**
+	 * Removes the GenericPiece object from this Position.
+	 */
+	public void removePiece()
+	{
+		piece = null;
+	}
+
+
+	public GenericPiece getPiece()
+	{
+		return piece;
 	}
 
 

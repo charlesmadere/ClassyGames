@@ -3,13 +3,13 @@ package edu.selu.android.classygames;
 
 import android.os.Bundle;
 
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.MenuItem;
 
 import edu.selu.android.classygames.utilities.Utilities;
 
 
-public class SharkActivity extends SherlockActivity
+public class SharkFragment extends SherlockFragment
 {
 
 
@@ -17,7 +17,7 @@ public class SharkActivity extends SherlockActivity
 	public void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.shark_activity);
+		setContentView(R.layout.shark_fragment);
 		Utilities.styleActionBar(getResources(), getSupportActionBar());
 	}
 

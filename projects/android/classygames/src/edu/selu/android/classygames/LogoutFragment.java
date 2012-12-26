@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.MenuItem;
 import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.AsyncFacebookRunner.RequestListener;
@@ -21,7 +21,7 @@ import com.facebook.android.FacebookError;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
-public class LogoutActivity extends SherlockActivity
+public class LogoutFragment extends SherlockFragment
 {
 
 
@@ -32,16 +32,16 @@ public class LogoutActivity extends SherlockActivity
 	public void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.logout_activity);
+		setContentView(R.layout.logout_fragment);
 		Utilities.styleActionBar(getResources(), getSupportActionBar());
 
-		Button logoutOfFacebook = (Button) findViewById(R.id.logout_activity_button_logout_of_facebook);
+		Button logoutOfFacebook = (Button) findViewById(R.id.logout_fragment_button_logout_of_facebook);
 		logoutOfFacebook.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(final View v)
 			{
-				new AsyncFacebookRunner(Utilities.getFacebook()).logout(LogoutActivity.this, new RequestListener()
+				new AsyncFacebookRunner(Utilities.getFacebook()).logout(LogoutFragment.this, new RequestListener()
 				{
 					@Override
 					public void onComplete(final String response, final Object state)
@@ -55,7 +55,7 @@ public class LogoutActivity extends SherlockActivity
 
 						setResult(LOGGED_OUT);
 
-						Intent intent = new Intent(LogoutActivity.this, MainActivity.class);
+						Intent intent = new Intent(LogoutFragment.this, MainActivity.class);
 						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 						intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 						startActivity(intent);

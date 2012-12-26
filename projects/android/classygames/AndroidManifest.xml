@@ -112,13 +112,13 @@
 		</activity>
 
 		<activity
-			android:label="@string/games_list_activity_title"
+			android:label="@string/games_list_fragment_activity_title"
 			android:name=".GamesListActivity"
 			android:screenOrientation="portrait"
 			android:theme="@style/Theme.Styled" />
 
 		<activity
-			android:label="@string/game_over_activity_title"
+			android:label="@string/game_over_fragment_title"
 			android:name=".GameOverActivity"
 			android:parentActivityName=".GamesListActivity"
 			android:screenOrientation="portrait"

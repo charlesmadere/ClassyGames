@@ -8,18 +8,38 @@ public class Piece extends GenericPiece
 {
 
 
-	private final static byte TYPE_NORMAL = 1;
-	private final static byte TYPE_KING = 2;
+	public final static byte TYPE_NORMAL = 1;
+	public final static byte TYPE_KING = 2;
 
 
+	/**
+	 * Creates a Piece object.
+	 * 
+	 * @param team
+	 * What team is this Piece on? Use one of this class's public members for
+	 * this parameter. So that'd be either TEAM_OPPONENT or TEAM_PLAYER.
+	 * 
+	 * @param type
+	 * What type of Piece is this? Use one of this class's public members for
+	 * this parameter. So that'd be either TYPE_NORMAL or TYPE_KING.
+	 */
 	public Piece(final byte team, final byte type)
 	{
 		super(team, type);
 	}
 
 
+	/**
+	 * Crowns a Piece object. This Piece object is now a King.
+	 */
+	public void ascendToKing()
+	{
+		type = TYPE_KING;
+	}
+
+
 	@Override
-	public boolean checkIfTypeIsValid(final byte type)
+	protected boolean checkIfTypeIsValid(final byte type)
 	{
 		switch (type)
 		{

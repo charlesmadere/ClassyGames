@@ -39,7 +39,7 @@ import edu.selu.android.classygames.utilities.ServerUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
-public class CheckersGameFragment extends SherlockFragment implements OnClickListener
+public class CheckersGameFragment extends GameFragment
 {
 
 
@@ -50,21 +50,6 @@ public class CheckersGameFragment extends SherlockFragment implements OnClickLis
 	private int greenKing;
 	private int orangeNormal;
 	private int orangeKing;
-
-
-	public final static String INTENT_DATA_GAME_ID = "GAME_ID";
-	public final static String INTENT_DATA_PERSON_CHALLENGED_ID = "GAME_PERSON_CHALLENGED_ID";
-	public final static String INTENT_DATA_PERSON_CHALLENGED_NAME = "GAME_PERSON_CHALLENGED_NAME";
-
-	private boolean boardLocked = false;
-	private String gameId = null;
-	private Person personChallenged = null;
-
-
-	/**
-	 * JSON String downloaded from the server that represents the board
-	 */
-	private String board = null;
 
 
 	@Override
@@ -209,7 +194,8 @@ public class CheckersGameFragment extends SherlockFragment implements OnClickLis
 
 	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
-	private void initBoard()
+	@Override
+	protected void initBoard()
 	{
 		prevButton = null;
 		greenNormal = R.drawable.piece_checkers_green_normal;
@@ -285,7 +271,8 @@ public class CheckersGameFragment extends SherlockFragment implements OnClickLis
 	}
 
 
-	private void initPieces()
+	@Override
+	protected void initPieces()
 	{
 		for (int x = 0; x < Board.LENGTH_HORIZONTAL; ++x)
 		{
@@ -369,7 +356,7 @@ public class CheckersGameFragment extends SherlockFragment implements OnClickLis
 		@Override
 		protected void onPostExecute(final String serverResponse)
 		{
-			board = parseServerResponse(serverResponse);
+			boardJSON = parseServerResponse(serverResponse);
 			buildBoard();
 
 			if (progressDialog.isShowing())
@@ -383,9 +370,9 @@ public class CheckersGameFragment extends SherlockFragment implements OnClickLis
 		protected void onPreExecute()
 		{
 			System.out.println( "Progress Dialog creation starting");
-			progressDialog = new ProgressDialog(CheckersGameActivity.this);
-			progressDialog.setMessage(CheckersGameActivity.this.getString(R.string.checkers_game_activity_getgame_progressdialog_message));
-			progressDialog.setTitle(R.string.checkers_game_activity_getgame_progressdialog_title);
+			progressDialog = new ProgressDialog(CheckersGameFragment.this);
+			progressDialog.setMessage(CheckersGameFragment.this.getString(R.string.checkers_game_fragment_getgame_progressdialog_message));
+			progressDialog.setTitle(R.string.checkers_game_fragment_getgame_progressdialog_title);
 			progressDialog.setCancelable(true);
 			progressDialog.setCanceledOnTouchOutside(false);
 			progressDialog.show();
@@ -422,7 +409,7 @@ public class CheckersGameFragment extends SherlockFragment implements OnClickLis
 				{
 					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CHALLENGED, Long.valueOf(personChallenged.getId()).toString()));
 					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_NAME, personChallenged.getName()));
-					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CREATOR, Long.valueOf(Utilities.getWhoAmI(CheckersGameActivity.this).getId()).toString()));
+					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CREATOR, Long.valueOf(Utilities.getWhoAmI(CheckersGameFragment.this).getId()).toString()));
 					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_BOARD, object.toString()));
 
 					if (gameId == null || gameId.isEmpty())
@@ -466,14 +453,14 @@ public class CheckersGameFragment extends SherlockFragment implements OnClickLis
 		@Override
 		protected void onPreExecute()
 		{
-			progressDialog = new ProgressDialog(CheckersGameActivity.this);
+			progressDialog = new ProgressDialog(CheckersGameFragment.this);
 			progressDialog.setCancelable(false);
 			progressDialog.setCanceledOnTouchOutside(false);
-			progressDialog.setMessage(CheckersGameActivity.this.getString(R.string.checkers_game_activity_sendmove_progressdialog_message));
-			progressDialog.setTitle(R.string.checkers_game_activity_sendmove_progressdialog_title);
+			progressDialog.setMessage(CheckersGameFragment.this.getString(R.string.checkers_game_fragment_sendmove_progressdialog_message));
+			progressDialog.setTitle(R.string.checkers_game_fragment_sendmove_progressdialog_title);
 			progressDialog.show();
 
-			CheckersGameActivity.this.setResult(GamesListActivity.NEED_TO_REFRESH);
+			CheckersGameFragment.this.setResult(GamesListActivity.NEED_TO_REFRESH);
 		}
 
 
@@ -544,7 +531,6 @@ public class CheckersGameFragment extends SherlockFragment implements OnClickLis
 		}
 		else
 		{
-			//jsonString = jsonString.replace("\\", "");
 			try
 			{
 				Log.d(Utilities.LOG_TAG, "Parsing JSON data: " + jsonString);
@@ -585,11 +571,11 @@ public class CheckersGameFragment extends SherlockFragment implements OnClickLis
 
 	private void buildBoard()
 	{
-		if (board != null && !board.isEmpty())
+		if (boardJSON != null && !boardJSON.isEmpty())
 		{
 			try
 			{
-				JSONObject JSON = new JSONObject(board);
+				JSONObject JSON = new JSONObject(boardJSON);
 				JSONObject boardJSON = JSON.getJSONObject("board");
 				JSONArray array = boardJSON.getJSONArray("teams");
 
@@ -608,7 +594,7 @@ public class CheckersGameFragment extends SherlockFragment implements OnClickLis
 							int x = coordinates.getInt(0);
 							int y = coordinates.getInt(1);
 
-							if( y >= 0 && y <= 7 )
+							if (y >= 0 && y < Board.LENGTH_VERTICAL)
 							{
 								buttons[x][y].setEmpty(false);
 								

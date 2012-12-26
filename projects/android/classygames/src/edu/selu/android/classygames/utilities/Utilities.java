@@ -105,6 +105,22 @@ public class Utilities
 
 
 	/**
+	 * <p>Prints a Toast message to the screen with a String taken from the
+	 * strings.xml file.</p>
+	 * 
+	 * @param context
+	 * Just put the name of your class.this, or you can use getApplicationContext().
+	 * 
+	 * @param stringId
+	 * The int ID of the resource that you want to print.
+	 */
+	public static void easyToast(final Context context, final int stringId)
+	{
+		easyToast(context, context.getString(stringId));
+	}
+
+
+	/**
 	 * <p>Prints a Toast message to the screen and prints that same message to the Log.d
 	 * console.</p>
 	 * 

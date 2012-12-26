@@ -18,7 +18,7 @@ import edu.selu.android.classygames.utilities.ServerUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
-public class GameOverActivity extends SherlockActivity
+public class GameOverFragment extends SherlockActivity
 {
 
 
@@ -26,7 +26,7 @@ public class GameOverActivity extends SherlockActivity
 	public void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.game_over_activity);
+		setContentView(R.layout.game_over_fragment);
 		Utilities.styleActionBar(getResources(), getSupportActionBar());
 
 		final Bundle bundle = getIntent().getExtras();
@@ -38,8 +38,8 @@ public class GameOverActivity extends SherlockActivity
 		else
 		{
 			final byte winOrLose = bundle.getByte(ServerUtilities.POST_DATA_TYPE);
-			final long challengedId = bundle.getLong(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_ID);
-			final String challengedName = bundle.getString(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_NAME);
+			final long challengedId = bundle.getLong(CheckersGameFragment.INTENT_DATA_PERSON_CHALLENGED_ID);
+			final String challengedName = bundle.getString(CheckersGameFragment.INTENT_DATA_PERSON_CHALLENGED_NAME);
 
 			if (!ServerUtilities.validWinOrLoseValue(winOrLose) || challengedId < 0 || challengedName == null || challengedName.isEmpty())
 			{
@@ -62,11 +62,11 @@ public class GameOverActivity extends SherlockActivity
 				switch (winOrLose)
 				{
 					case ServerUtilities.POST_DATA_TYPE_GAME_OVER_LOSE:
-						text.setText(GameOverActivity.this.getString(R.string.game_over_activity_description, GameOverActivity.this.getString(R.string.lost)));
+						text.setText(GameOverFragment.this.getString(R.string.game_over_activity_description, GameOverFragment.this.getString(R.string.game_lost)));
 						break;
 
 					case ServerUtilities.POST_DATA_TYPE_GAME_OVER_WIN:
-						text.setText(GameOverActivity.this.getString(R.string.game_over_activity_description, GameOverActivity.this.getString(R.string.won)));
+						text.setText(GameOverFragment.this.getString(R.string.game_over_activity_description, GameOverFragment.this.getString(R.string.game_won)));
 						break;
 				}
 

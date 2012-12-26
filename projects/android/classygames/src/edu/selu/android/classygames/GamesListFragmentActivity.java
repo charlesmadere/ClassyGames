@@ -38,7 +38,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockListActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -52,7 +52,7 @@ import edu.selu.android.classygames.utilities.ServerUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
-public class GamesListActivity extends SherlockListActivity
+public class GamesListFragmentActivity extends SherlockFragmentActivity
 {
 
 
@@ -69,11 +69,11 @@ public class GamesListActivity extends SherlockListActivity
 	public void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.games_list_activity);
+		setContentView(R.layout.games_list_fragment_activity);
 		Utilities.styleActionBar(getResources(), getSupportActionBar(), false);
 
 		// setup cache size for loading drawable images
-		final int memClass = ((ActivityManager) GamesListActivity.this.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
+		final int memClass = ((ActivityManager) GamesListFragmentActivity.this.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
 
 		final int cacheSize = ImageCache.getCacheSize(memClass);
 
@@ -120,7 +120,7 @@ public class GamesListActivity extends SherlockListActivity
 				justReturnedHere = true;
 				break;
 
-			case LogoutActivity.LOGGED_OUT:
+			case LogoutFragment.LOGGED_OUT:
 				finish();
 				break;
 		}
@@ -131,7 +131,7 @@ public class GamesListActivity extends SherlockListActivity
 	public boolean onCreateOptionsMenu(final Menu menu)
 	{
 		MenuInflater inflater = getSupportMenuInflater();
-		inflater.inflate(R.menu.games_list_activity, menu);
+		inflater.inflate(R.menu.games_list_fragment_activity, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -141,19 +141,19 @@ public class GamesListActivity extends SherlockListActivity
 	{
 		switch (item.getItemId()) 
 		{
-			case R.id.games_list_activity_actionbar_about:
-				startActivity(new Intent(GamesListActivity.this, AboutActivity.class));
+			case R.id.games_list_fragment_activity_actionbar_about:
+				startActivity(new Intent(GamesListFragmentActivity.this, AboutFragment.class));
 				return true;
 
-			case R.id.games_list_activity_actionbar_logout:
-				startActivityForResult(new Intent(GamesListActivity.this, LogoutActivity.class), 0);
+			case R.id.games_list_fragment_activity_actionbar_logout:
+				startActivityForResult(new Intent(GamesListFragmentActivity.this, LogoutFragment.class), 0);
 				return true;
 
-			case R.id.games_list_activity_actionbar_new_game:
-				startActivityForResult(new Intent(GamesListActivity.this, NewGameActivity.class), 0);
+			case R.id.games_list_fragment_activity_actionbar_new_game:
+				startActivityForResult(new Intent(GamesListFragmentActivity.this, NewGameActivity.class), 0);
 				return true;
 
-			case R.id.games_list_activity_actionbar_refresh:
+			case R.id.games_list_fragment_activity_actionbar_refresh:
 				new AsyncPopulateGamesList().execute();
 				return true;
 
@@ -225,13 +225,13 @@ public class GamesListActivity extends SherlockListActivity
 		@Override
 		protected void onPostExecute(final Person facebookIdentity)
 		{
-			Utilities.setWhoAmI(GamesListActivity.this, facebookIdentity);
+			Utilities.setWhoAmI(GamesListFragmentActivity.this, facebookIdentity);
 
 			// register for GCM
 			Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
-			registrationIntent.putExtra("app", PendingIntent.getBroadcast(GamesListActivity.this, 0, new Intent(), 0));
+			registrationIntent.putExtra("app", PendingIntent.getBroadcast(GamesListFragmentActivity.this, 0, new Intent(), 0));
 			registrationIntent.putExtra("sender", SecretConstants.GOOGLE_PROJECT_ID);
-			GamesListActivity.this.startService(registrationIntent);
+			GamesListFragmentActivity.this.startService(registrationIntent);
 
 			if (progressDialog.isShowing())
 			{
@@ -245,14 +245,14 @@ public class GamesListActivity extends SherlockListActivity
 		@Override
 		protected void onPreExecute()
 		{
-			progressDialog = new ProgressDialog(GamesListActivity.this);
+			progressDialog = new ProgressDialog(GamesListFragmentActivity.this);
 			progressDialog.setCancelable(false);
 			progressDialog.setCanceledOnTouchOutside(false);
-			progressDialog.setMessage(GamesListActivity.this.getString(R.string.games_list_activity_init_progressdialog_message));
-			progressDialog.setTitle(R.string.games_list_activity_init_progressdialog_title);
+			progressDialog.setMessage(GamesListFragmentActivity.this.getString(R.string.games_list_fragment_activity_init_progressdialog_message));
+			progressDialog.setTitle(R.string.games_list_fragment_activity_init_progressdialog_title);
 			progressDialog.show();
 
-			Utilities.getFacebook().extendAccessTokenIfNeeded(GamesListActivity.this, null);
+			Utilities.getFacebook().extendAccessTokenIfNeeded(GamesListFragmentActivity.this, null);
 		}
 
 
@@ -289,7 +289,7 @@ public class GamesListActivity extends SherlockListActivity
 			try
 			{
 				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, Long.valueOf(Utilities.getWhoAmI(GamesListActivity.this).getId()).toString()));
+				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, Long.valueOf(Utilities.getWhoAmI(GamesListFragmentActivity.this).getId()).toString()));
 
 				// make a call to the server and grab the return JSON result
 				final String jsonString = ServerUtilities.postToServer(ServerUtilities.SERVER_GET_GAMES_ADDRESS, nameValuePairs);
@@ -312,7 +312,7 @@ public class GamesListActivity extends SherlockListActivity
 		@Override
 		protected void onPostExecute(final ArrayList<Game> games)
 		{
-			gamesAdapter = new GamesListAdapter(GamesListActivity.this, R.layout.new_game_activity_listview_item, games);
+			gamesAdapter = new GamesListAdapter(GamesListFragmentActivity.this, R.layout.new_game_fragment_listview_item, games);
 			setListAdapter(gamesAdapter);
 			gamesAdapter.notifyDataSetChanged();
 
@@ -324,15 +324,15 @@ public class GamesListActivity extends SherlockListActivity
 			switch (toastToShow)
 			{
 				case TOAST_NO_GAMES:
-					Utilities.easyToast(GamesListActivity.this, GamesListActivity.this.getString(R.string.games_list_activity_getgames_no_games));
+					Utilities.easyToast(GamesListFragmentActivity.this, R.string.games_list_fragment_activity_getgames_no_games);
 					break;
 
 				case TOAST_SERVER_ERROR:
-					Utilities.easyToast(GamesListActivity.this, GamesListActivity.this.getString(R.string.games_list_activity_getgames_error));
+					Utilities.easyToast(GamesListFragmentActivity.this, R.string.games_list_activity_getgames_error);
 					break;
 
 				case TOAST_SERVER_RESPONSE_ERROR:
-					Utilities.easyToast(GamesListActivity.this, GamesListActivity.this.getString(R.string.games_list_activity_getgames_response_error));
+					Utilities.easyToast(GamesListFragmentActivity.this, R.string.games_list_activity_getgames_response_error);
 					break;
 			}
 		}
@@ -341,17 +341,17 @@ public class GamesListActivity extends SherlockListActivity
 		@Override
 		protected void onPreExecute()
 		{
-			progressDialog = new ProgressDialog(GamesListActivity.this);
+			progressDialog = new ProgressDialog(GamesListFragmentActivity.this);
 			progressDialog.setCancelable(true);
 			progressDialog.setCanceledOnTouchOutside(false);
 			progressDialog.setMax(4);
-			progressDialog.setMessage(GamesListActivity.this.getString(R.string.games_list_activity_getgames_progressdialog_message));
+			progressDialog.setMessage(GamesListFragmentActivity.this.getString(R.string.games_list_activity_getgames_progressdialog_message));
 			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 			progressDialog.setTitle(R.string.games_list_activity_getgames_progressdialog_title);
 			progressDialog.show();
 
 			// cancel all notifications
-			((NotificationManager) GamesListActivity.this.getSystemService(NOTIFICATION_SERVICE)).cancelAll();
+			((NotificationManager) GamesListFragmentActivity.this.getSystemService(NOTIFICATION_SERVICE)).cancelAll();
 
 			toastToShow = TOAST_NONE;
 		}
@@ -403,7 +403,7 @@ public class GamesListActivity extends SherlockListActivity
 					}
 					else
 					{
-						Utilities.easyToast(GamesListActivity.this, GamesListActivity.this.getString(R.string.games_list_activity_getgames_error));
+						Utilities.easyToast(GamesListFragmentActivity.this, GamesListFragmentActivity.this.getString(R.string.games_list_fragment_activity_getgames_error));
 						final String errorMessage = jsonResult.getString(ServerUtilities.POST_DATA_ERROR);
 
 						if (errorMessage != null && !errorMessage.isEmpty())
@@ -522,12 +522,12 @@ public class GamesListActivity extends SherlockListActivity
 
 				if (game.isTypeGame())
 				{
-					convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_item, null);
+					convertView = layoutInflater.inflate(R.layout.games_list_fragment_activity_listview_item, null);
 
 					Bitmap diskImage = ImageCache.getBitmapFromDiskCache(game.getPerson().getId(), diskCache);
 					Bitmap memoryImage = memoryCache.get(game.getPerson().getId());
 
-					viewHolder.picture = (ImageView) convertView.findViewById(R.id.games_list_activity_listview_item_picture);
+					viewHolder.picture = (ImageView) convertView.findViewById(R.id.games_list_fragment_activity_listview_item_picture);
 					if (viewHolder.picture != null)
 					{
 						viewHolder.picture.setImageResource(R.drawable.fb_placeholder);
@@ -547,14 +547,14 @@ public class GamesListActivity extends SherlockListActivity
 						}
 					}
 
-					viewHolder.name = (TextView) convertView.findViewById(R.id.games_list_activity_listview_item_name);
+					viewHolder.name = (TextView) convertView.findViewById(R.id.games_list_fragment_activity_listview_item_name);
 					if (viewHolder.name != null)
 					{
 						viewHolder.name.setText(game.getPerson().getName());
 						viewHolder.name.setTypeface(Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D));
 					}
 
-					viewHolder.time = (TextView) convertView.findViewById(R.id.games_list_activity_listview_item_time);
+					viewHolder.time = (TextView) convertView.findViewById(R.id.games_list_fragment_activity_listview_item_time);
 					if (viewHolder.time != null)
 					{
 						viewHolder.time.setText(game.getTimestampFormatted());
@@ -567,10 +567,10 @@ public class GamesListActivity extends SherlockListActivity
 							@Override
 							public void onClick(final View v)
 							{
-								Intent intent = new Intent(GamesListActivity.this, CheckersGameActivity.class);
-								intent.putExtra(CheckersGameActivity.INTENT_DATA_GAME_ID, game.getId());
-								intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_ID, game.getPerson().getId());
-								intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_NAME, game.getPerson().getName());
+								Intent intent = new Intent(GamesListFragmentActivity.this, CheckersGameFragment.class);
+								intent.putExtra(CheckersGameFragment.INTENT_DATA_GAME_ID, game.getId());
+								intent.putExtra(CheckersGameFragment.INTENT_DATA_PERSON_CHALLENGED_ID, game.getPerson().getId());
+								intent.putExtra(CheckersGameFragment.INTENT_DATA_PERSON_CHALLENGED_NAME, game.getPerson().getName());
 
 								// start the ConfirmGameActivity with a bit of extra data. We're passing it both
 								// the id and the name of the facebook person that the user clicked on
@@ -589,13 +589,13 @@ public class GamesListActivity extends SherlockListActivity
 				{
 					if (game.isTurnYours())
 					{
-						convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_turn_yours, null);
+						convertView = layoutInflater.inflate(R.layout.games_list_fragment_activity_listview_turn_yours, null);
 						viewHolder.picture = (ImageView) convertView.findViewById(R.drawable.turn_yours);
 						convertView.setOnClickListener(null);
 					}
 					else
 					{
-						convertView = layoutInflater.inflate(R.layout.games_list_activity_listview_turn_theirs, null);
+						convertView = layoutInflater.inflate(R.layout.games_list_fragment_activity_listview_turn_theirs, null);
 						viewHolder.picture = (ImageView) convertView.findViewById(R.drawable.turn_theirs);
 						convertView.setOnClickListener(null);
 					}
