@@ -160,11 +160,11 @@ public class CheckersGameFragment extends GameFragment
 				finish();
 				return true;
 
-			case R.id.checkers_game_activity_actionbar_send_move:
+			case R.id.game_fragment_actionbar_send_move:
 				new AsyncSendMove().execute();
 				return true;
 
-			case R.id.checkers_game_activity_actionbar_undo_move:
+			case R.id.game_fragment_actionbar_undo_move:
 				undo();
 				return true;
 
@@ -175,20 +175,18 @@ public class CheckersGameFragment extends GameFragment
 
 
 	@Override
-	public boolean onPrepareOptionsMenu(final Menu menu)
+	public void onPrepareOptionsMenu(final Menu menu)
 	{
 		if (boardLocked)
 		{
-			menu.findItem(R.id.checkers_game_activity_actionbar_send_move).setEnabled(true);
-			menu.findItem(R.id.checkers_game_activity_actionbar_undo_move).setEnabled(true);
+			menu.findItem(R.id.game_fragment_actionbar_send_move).setEnabled(true);
+			menu.findItem(R.id.game_fragment_actionbar_undo_move).setEnabled(true);
 		}
 		else
 		{
-			menu.findItem(R.id.checkers_game_activity_actionbar_send_move).setEnabled(false);
-			menu.findItem(R.id.checkers_game_activity_actionbar_undo_move).setEnabled(false);
+			menu.findItem(R.id.game_fragment_actionbar_send_move).setEnabled(false);
+			menu.findItem(R.id.game_fragment_actionbar_undo_move).setEnabled(false);
 		}
-
-		return true;
 	}
 
 
@@ -266,7 +264,7 @@ public class CheckersGameFragment extends GameFragment
 			layout.addView(rows[i], rowLp);
 		}
 
-		LinearLayout linearLayout = (LinearLayout) findViewById(R.id.checkers_game_activity_linearlayout);
+		LinearLayout linearLayout = (LinearLayout) findViewById(R.id.game_fragment_linearlayout);
 		linearLayout.addView(layout);
 	}
 
@@ -456,11 +454,11 @@ public class CheckersGameFragment extends GameFragment
 			progressDialog = new ProgressDialog(CheckersGameFragment.this);
 			progressDialog.setCancelable(false);
 			progressDialog.setCanceledOnTouchOutside(false);
-			progressDialog.setMessage(CheckersGameFragment.this.getString(R.string.checkers_game_fragment_sendmove_progressdialog_message));
-			progressDialog.setTitle(R.string.checkers_game_fragment_sendmove_progressdialog_title);
+			progressDialog.setMessage(CheckersGameFragment.this.getString(R.string.game_fragment_sendmove_progressdialog_message));
+			progressDialog.setTitle(R.string.game_fragment_sendmove_progressdialog_title);
 			progressDialog.show();
 
-			CheckersGameFragment.this.setResult(GamesListActivity.NEED_TO_REFRESH);
+			CheckersGameFragment.this.setResult(GamesListFragmentActivity.NEED_TO_REFRESH);
 		}
 
 
@@ -930,10 +928,10 @@ public class CheckersGameFragment extends GameFragment
 
 
 	@SuppressLint("NewApi")
-	private void undo()
+	protected void undo()
 	{
 		clearPieces();
-		if (board == null || board.isEmpty())
+		if (boardJSON == null || boardJSON.isEmpty())
 		// simply re instantiate the default board
 		{
 			initPieces();
@@ -945,13 +943,13 @@ public class CheckersGameFragment extends GameFragment
 		}
 
 		boardLocked = false;
-		CheckersGameActivity.this.invalidateOptionsMenu();
+		CheckersGameFragment.this.invalidateOptionsMenu();
 	}
 
 
 	private void activityHasError()
 	{
-		Utilities.easyToastAndLogError(CheckersGameActivity.this, CheckersGameActivity.this.getString(R.string.checkers_game_activity_data_error));
+		Utilities.easyToastAndLogError(CheckersGameFragment.this, R.string.game_fragment_data_error);
 		finish();
 	}
 

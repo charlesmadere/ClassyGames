@@ -49,7 +49,7 @@ public class GameOverFragment extends SherlockActivity
 			{
 				final Person personChallenged = new Person(challengedId, challengedName);
 
-				ImageView personPicture = (ImageView) findViewById(R.id.game_over_activity_person_picture);
+				ImageView personPicture = (ImageView) findViewById(R.id.game_over_fragment_person_picture);
 				personPicture.setImageResource(R.drawable.fb_placeholder);
 				new AsyncPopulatePicture(personPicture).execute(personChallenged);
 
@@ -62,22 +62,22 @@ public class GameOverFragment extends SherlockActivity
 				switch (winOrLose)
 				{
 					case ServerUtilities.POST_DATA_TYPE_GAME_OVER_LOSE:
-						text.setText(GameOverFragment.this.getString(R.string.game_over_activity_description, GameOverFragment.this.getString(R.string.game_lost)));
+						text.setText(GameOverFragment.this.getString(R.string.game_over_fragment_description, GameOverFragment.this.getString(R.string.game_lost)));
 						break;
 
 					case ServerUtilities.POST_DATA_TYPE_GAME_OVER_WIN:
-						text.setText(GameOverFragment.this.getString(R.string.game_over_activity_description, GameOverFragment.this.getString(R.string.game_won)));
+						text.setText(GameOverFragment.this.getString(R.string.game_over_fragment_description, GameOverFragment.this.getString(R.string.game_won)));
 						break;
 				}
 
-				Button buttonReturn = (Button) findViewById(R.id.game_over_activity_button_return);
+				Button buttonReturn = (Button) findViewById(R.id.game_over_fragment_button_return);
 				buttonReturn.setTypeface(Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D));
 				buttonReturn.setOnClickListener(new OnClickListener()
 				{
 					@Override
 					public void onClick(final View v)
 					{
-						setResult(GamesListActivity.NEED_TO_REFRESH);
+						setResult(GamesListFragmentActivity.NEED_TO_REFRESH);
 						finish();
 					}
 				});

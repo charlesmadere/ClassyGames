@@ -3,7 +3,6 @@ package edu.selu.android.classygames;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Window;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.facebook.Request;
@@ -24,7 +23,6 @@ public class MainActivity extends SherlockActivity
 	public void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main_activity);
 
 		Session.openActiveSession(MainActivity.this, true, new Session.StatusCallback()
@@ -53,6 +51,21 @@ public class MainActivity extends SherlockActivity
 				}
 			}
 		});
+	}
+
+
+	@Override
+	public void onActivityResult(final int requestCode, final int resultCode, final Intent data)
+	{
+		super.onActivityResult(requestCode, resultCode, data);
+		Session.getActiveSession().onActivityResult(MainActivity.this, requestCode, resultCode, data);;
+	}
+
+
+	private void goToGamesList()
+	{
+		startActivity(new Intent(MainActivity.this, GamesListFragmentActivity.class));
+		finish();
 	}
 
 
@@ -130,21 +143,6 @@ public class MainActivity extends SherlockActivity
 		}
 	}
 */
-
-
-	@Override
-	public void onActivityResult(final int requestCode, final int resultCode, final Intent data)
-	{
-		super.onActivityResult(requestCode, resultCode, data);
-		Session.getActiveSession().onActivityResult(MainActivity.this, requestCode, resultCode, data);;
-	}
-
-
-	private void goToGamesList()
-	{
-		startActivity(new Intent(MainActivity.this, GamesListFragmentActivity.class));
-		finish();
-	}
 
 
 }
