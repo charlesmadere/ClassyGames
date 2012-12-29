@@ -28,6 +28,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,6 +37,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -56,13 +58,18 @@ public class GamesListFragmentActivity extends SherlockFragmentActivity
 {
 
 
-	private boolean justReturnedHere = false;
+	public final static int NEED_TO_REFRESH = 1;
+
 	private DiskLruCache diskCache;
 	private LruCache<Long, Bitmap> memoryCache;
-	private GamesListAdapter gamesAdapter;
 
+	private GenericGameFragment gameFragment;
 
-	public final static int NEED_TO_REFRESH = 1;
+	private ListView gamesList;
+	private GamesListAdapter gamesListAdapter;
+
+	private boolean justReturnedHere = false;
+	private boolean usingFragmentLayout = false;
 
 
 	@Override
@@ -72,9 +79,20 @@ public class GamesListFragmentActivity extends SherlockFragmentActivity
 		setContentView(R.layout.games_list_fragment_activity);
 		Utilities.styleActionBar(getResources(), getSupportActionBar(), false);
 
+		gamesList = (ListView) findViewById(R.id.games_list_fragment_activity_listview);
+		gamesList.setAdapter(gamesListAdapter);
+
+		if (findViewById(R.id.games_list_fragment_activity_fragment_game) != null)
+		{
+			usingFragmentLayout = true;
+
+			gameFragment = new GameFragment();
+			gameFragment.setArguments(getIntent().getExtras());
+			getSupportFragmentManager().beginTransaction().add(R.id.games_list_fragment_activity_listview, gameFragment).commit();
+		}
+
 		// setup cache size for loading drawable images
 		final int memClass = ((ActivityManager) GamesListFragmentActivity.this.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
-
 		final int cacheSize = ImageCache.getCacheSize(memClass);
 
 		memoryCache = new LruCache<Long, Bitmap> (cacheSize)
@@ -172,7 +190,7 @@ public class GamesListFragmentActivity extends SherlockFragmentActivity
 		{
 			new AsyncGetFacebookIdentificationAndGCMRegister().execute();
 		}
-		else if (justReturnedHere || gamesAdapter == null || gamesAdapter.isEmpty())
+		else if (justReturnedHere || gamesListAdapter == null || gamesListAdapter.isEmpty())
 		{
 			justReturnedHere = false;
 			new AsyncPopulateGamesList().execute();
@@ -312,14 +330,10 @@ public class GamesListFragmentActivity extends SherlockFragmentActivity
 		@Override
 		protected void onPostExecute(final ArrayList<Game> games)
 		{
-			gamesAdapter = new GamesListAdapter(GamesListFragmentActivity.this, R.layout.new_game_fragment_listview_item, games);
-			setListAdapter(gamesAdapter);
-			gamesAdapter.notifyDataSetChanged();
+			gamesListAdapter = new GamesListAdapter(GamesListFragmentActivity.this, R.layout.new_game_fragment_listview_item, games);
+			gamesListAdapter.notifyDataSetChanged();
 
-			if (progressDialog.isShowing())
-			{
-				progressDialog.dismiss();
-			}
+			progressDialog.dismiss();
 
 			switch (toastToShow)
 			{
@@ -328,11 +342,11 @@ public class GamesListFragmentActivity extends SherlockFragmentActivity
 					break;
 
 				case TOAST_SERVER_ERROR:
-					Utilities.easyToast(GamesListFragmentActivity.this, R.string.games_list_activity_getgames_error);
+					Utilities.easyToast(GamesListFragmentActivity.this, R.string.games_list_fragment_activity_getgames_error);
 					break;
 
 				case TOAST_SERVER_RESPONSE_ERROR:
-					Utilities.easyToast(GamesListFragmentActivity.this, R.string.games_list_activity_getgames_response_error);
+					Utilities.easyToast(GamesListFragmentActivity.this, R.string.games_list_fragment_activity_getgames_response_error);
 					break;
 			}
 		}
@@ -345,9 +359,9 @@ public class GamesListFragmentActivity extends SherlockFragmentActivity
 			progressDialog.setCancelable(true);
 			progressDialog.setCanceledOnTouchOutside(false);
 			progressDialog.setMax(4);
-			progressDialog.setMessage(GamesListFragmentActivity.this.getString(R.string.games_list_activity_getgames_progressdialog_message));
+			progressDialog.setMessage(GamesListFragmentActivity.this.getString(R.string.games_list_fragment_activity_getgames_progressdialog_message));
 			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-			progressDialog.setTitle(R.string.games_list_activity_getgames_progressdialog_title);
+			progressDialog.setTitle(R.string.games_list_fragment_activity_getgames_progressdialog_title);
 			progressDialog.show();
 
 			// cancel all notifications
@@ -486,7 +500,7 @@ public class GamesListFragmentActivity extends SherlockFragmentActivity
 			}
 			catch (final JSONException e)
 			{
-				Log.e(Utilities.LOG_TAG, "Error parsing individual game data!");
+				Log.e(Utilities.LOG_TAG, "Error parsing an individual game's data!");
 			}
 
 			return null;
@@ -567,20 +581,40 @@ public class GamesListFragmentActivity extends SherlockFragmentActivity
 							@Override
 							public void onClick(final View v)
 							{
-								Intent intent = new Intent(GamesListFragmentActivity.this, CheckersGameFragment.class);
-								intent.putExtra(CheckersGameFragment.INTENT_DATA_GAME_ID, game.getId());
-								intent.putExtra(CheckersGameFragment.INTENT_DATA_PERSON_CHALLENGED_ID, game.getPerson().getId());
-								intent.putExtra(CheckersGameFragment.INTENT_DATA_PERSON_CHALLENGED_NAME, game.getPerson().getName());
+								final Intent intent = new Intent(GamesListFragmentActivity.this, CheckersGameFragment.class);
+								intent.putExtra(GameFragment.INTENT_DATA_GAME_ID, game.getId());
+								intent.putExtra(GameFragment.INTENT_DATA_PERSON_CHALLENGED_ID, game.getPerson().getId());
+								intent.putExtra(GameFragment.INTENT_DATA_PERSON_CHALLENGED_NAME, game.getPerson().getName());
 
-								// start the ConfirmGameActivity with a bit of extra data. We're passing it both
-								// the id and the name of the facebook person that the user clicked on
-								startActivityForResult(intent, 0);
+								if (usingFragmentLayout)
+								{
+									switch (game.getWhichGame())
+									{
+										case Game.WHICH_GAME_CHECKERS:
+											gameFragment = new CheckersGameFragment();
+											break;
+
+//										case Game.WHICH_GAME_CHESS:
+//											gameFragment = new ChessGameFragment();
+//											break;
+									}
+
+									gameFragment.setArguments(intent.getExtras());
+
+									final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+									transaction.replace(R.id.games_list_fragment_activity_fragment_game, gameFragment);
+									transaction.commit();
+								}
+								else
+								{
+									startActivityForResult(intent, 0);
+								}
 							}
 						};
 
 						convertView.setOnClickListener(viewHolder.onClickListener);
 					}
-					else if( !game.isTurnYours() )
+					else
 					{
 						convertView.setOnClickListener(null);
 					}
@@ -591,14 +625,14 @@ public class GamesListFragmentActivity extends SherlockFragmentActivity
 					{
 						convertView = layoutInflater.inflate(R.layout.games_list_fragment_activity_listview_turn_yours, null);
 						viewHolder.picture = (ImageView) convertView.findViewById(R.drawable.turn_yours);
-						convertView.setOnClickListener(null);
 					}
 					else
 					{
 						convertView = layoutInflater.inflate(R.layout.games_list_fragment_activity_listview_turn_theirs, null);
 						viewHolder.picture = (ImageView) convertView.findViewById(R.drawable.turn_theirs);
-						convertView.setOnClickListener(null);
 					}
+
+					convertView.setOnClickListener(null);
 				}
 
 				convertView.setTag(viewHolder);
@@ -606,9 +640,6 @@ public class GamesListFragmentActivity extends SherlockFragmentActivity
 
 			return convertView;
 		}
-
-
-
 
 
 		private final class AsyncPopulatePictures extends AsyncTask<Person, Long, Drawable>
@@ -655,6 +686,7 @@ public class GamesListFragmentActivity extends SherlockFragmentActivity
 			}
 
 		}
+
 
 	}
 

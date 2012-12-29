@@ -4,12 +4,12 @@ package edu.selu.android.classygames;
 import android.view.View;
 
 
-public class GameFragment extends GenericGameFragment
+public class ChessGameFragment extends GenericGameFragment
 {
 
 
 	@Override
-	protected void initBoard() 
+	protected void initBoard()
 	{
 
 	}

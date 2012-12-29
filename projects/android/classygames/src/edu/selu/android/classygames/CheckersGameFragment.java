@@ -39,7 +39,7 @@ import edu.selu.android.classygames.utilities.ServerUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
-public class CheckersGameFragment extends GameFragment
+public class CheckersGameFragment extends GenericGameFragment
 {
 
 
@@ -52,6 +52,7 @@ public class CheckersGameFragment extends GameFragment
 	private int orangeKing;
 
 
+/*
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{
@@ -92,6 +93,7 @@ public class CheckersGameFragment extends GameFragment
 
 		return inflater.inflate(R.layout.checkers_game_fragment, container, false);
 	}
+*/
 
 
 /*
@@ -141,6 +143,7 @@ public class CheckersGameFragment extends GameFragment
 */
 
 
+/*
 	@Override
 	public boolean onCreateOptionsMenu(final Menu menu)
 	{
@@ -148,8 +151,10 @@ public class CheckersGameFragment extends GameFragment
 		inflater.inflate(R.menu.checkers_game_activity, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
+*/
 
 
+/*
 	@SuppressLint("NewApi")
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item)
@@ -172,6 +177,7 @@ public class CheckersGameFragment extends GameFragment
 				return super.onOptionsItemSelected(item);
 		}
 	}
+*/
 
 
 	@Override
@@ -190,6 +196,7 @@ public class CheckersGameFragment extends GameFragment
 	}
 
 
+/*
 	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
 	@Override
@@ -294,12 +301,8 @@ public class CheckersGameFragment extends GameFragment
 				}
 			}
 		}
-		
-		/*buttons[6][3].setPlayerGreen(false);
-		buttons[6][3].setImageResource(orangeNormal);
-		buttons[6][3].setEmpty(false);
-		buttons[6][3].setCrown(false);*/
 	}
+*/
 
 
 	private void clearPieces()
@@ -316,337 +319,7 @@ public class CheckersGameFragment extends GameFragment
 	}
 
 
-	private final class AsyncGetGame extends AsyncTask<Void, Void, String>
-	{
-
-
-		private ProgressDialog progressDialog;
-
-
-		@Override
-		protected String doInBackground(final Void... v)
-		{
-			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-			nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, gameId));
-
-			try
-			{
-				return ServerUtilities.postToServer( ServerUtilities.SERVER_GET_GAME_ADDRESS, nameValuePairs );
-			}
-			catch (final IOException e)
-			{
-				Log.e(Utilities.LOG_TAG, "Error in HTTP POST to " + ServerUtilities.SERVER_GET_GAME_ADDRESS, e);
-			}
-
-			return null;
-		}
-
-
-		@Override
-		protected void onCancelled()
-		{
-			super.onCancelled();
-
-			finish();
-		}
-
-
-		@Override
-		protected void onPostExecute(final String serverResponse)
-		{
-			boardJSON = parseServerResponse(serverResponse);
-			buildBoard();
-
-			if (progressDialog.isShowing())
-			{
-				progressDialog.dismiss();
-			}
-		}
-
-
-		@Override
-		protected void onPreExecute()
-		{
-			System.out.println( "Progress Dialog creation starting");
-			progressDialog = new ProgressDialog(CheckersGameFragment.this);
-			progressDialog.setMessage(CheckersGameFragment.this.getString(R.string.checkers_game_fragment_getgame_progressdialog_message));
-			progressDialog.setTitle(R.string.checkers_game_fragment_getgame_progressdialog_title);
-			progressDialog.setCancelable(true);
-			progressDialog.setCanceledOnTouchOutside(false);
-			progressDialog.show();
-		}
-
-
-	}
-
-
-	private final class AsyncSendMove extends AsyncTask<Void, Void, String>
-	{
-
-
-		private ProgressDialog progressDialog;
-
-
-		@Override
-		protected String doInBackground(final Void... v)
-		{
-			try
-			{
-				JSONArray teams = createJSONTeams();
-				JSONObject board = new JSONObject();
-				board.put("teams", teams);
-
-				JSONObject object = new JSONObject();
-				object.put("board", board);
-
-				Log.d(Utilities.LOG_TAG, object.toString());
-
-				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-
-				try
-				{
-					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CHALLENGED, Long.valueOf(personChallenged.getId()).toString()));
-					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_NAME, personChallenged.getName()));
-					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CREATOR, Long.valueOf(Utilities.getWhoAmI(CheckersGameFragment.this).getId()).toString()));
-					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_BOARD, object.toString()));
-
-					if (gameId == null || gameId.isEmpty())
-					{
-						return ServerUtilities.postToServer(ServerUtilities.SERVER_NEW_GAME_ADDRESS, nameValuePairs);
-					}
-					else
-					{
-						nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_GAME_ID, gameId));
-						return ServerUtilities.postToServer(ServerUtilities.SERVER_NEW_MOVE_ADDRESS, nameValuePairs);
-					}
-				}
-				catch (final IOException e)
-				{
-					Log.e(Utilities.LOG_TAG, "Error in HTTP POST to server.", e);
-				}
-			}
-			catch (final JSONException e)
-			{
-				Log.e(Utilities.LOG_TAG, "Error in creating JSON data to send to server.", e);
-			}
-
-			return null;
-		}
-
-
-		@Override
-		protected void onPostExecute(final String serverResponse)
-		{
-			parseServerResponse(serverResponse);
-
-			if (progressDialog.isShowing())
-			{
-				progressDialog.dismiss();
-			}
-
-			finish();
-		}
-
-
-		@Override
-		protected void onPreExecute()
-		{
-			progressDialog = new ProgressDialog(CheckersGameFragment.this);
-			progressDialog.setCancelable(false);
-			progressDialog.setCanceledOnTouchOutside(false);
-			progressDialog.setMessage(CheckersGameFragment.this.getString(R.string.game_fragment_sendmove_progressdialog_message));
-			progressDialog.setTitle(R.string.game_fragment_sendmove_progressdialog_title);
-			progressDialog.show();
-
-			CheckersGameFragment.this.setResult(GamesListFragmentActivity.NEED_TO_REFRESH);
-		}
-
-
-		private JSONArray createJSONTeams()
-		{
-			JSONArray teamGreen = createJSONTeam(true);
-			JSONArray teamOrange = createJSONTeam(false);
-
-			JSONArray teams = new JSONArray();
-			teams.put(teamGreen);
-			teams.put(teamOrange);
-
-			return teams;
-		}
-
-
-		private JSONArray createJSONTeam(final boolean isPlayerGreen)
-		{
-			JSONArray team = new JSONArray();
-
-			for (int x = 0; x < Board.LENGTH_HORIZONTAL; ++x)
-			{
-				for (int y = 0; y < Board.LENGTH_VERTICAL; ++y)
-				{
-					if (!buttons[x][y].isEmpty() && buttons[x][y].isPlayerGreen() == isPlayerGreen)
-					// this position has a piece in it that is of the given team color
-					{
-						try
-						{
-							JSONArray coordinate = new JSONArray();
-							coordinate.put(x);
-							coordinate.put(y);
-
-							JSONObject piece = new JSONObject();
-							piece.put("coordinate", coordinate);
-
-							if( isKing(buttons[x][y]) == true )
-							{
-								piece.put("type", 2);
-							}
-							else
-							{
-								piece.put("type", 1);
-							}
-
-							team.put(piece);
-						}
-						catch (final JSONException e)
-						{
-							Log.e(Utilities.LOG_TAG, "Error in createJSONTeam, x = " + x + ", y = " + y);
-						}
-					}
-				}
-			}
-
-			return team;
-		}
-
-
-	}
-
-
-	private String parseServerResponse(String jsonString)
-	{
-		if (jsonString == null || jsonString.isEmpty())
-		{
-			Log.e(Utilities.LOG_TAG, "Empty string received from server on send move!");
-		}
-		else
-		{
-			try
-			{
-				Log.d(Utilities.LOG_TAG, "Parsing JSON data: " + jsonString);
-				final JSONObject jsonData = new JSONObject(jsonString);
-				final JSONObject jsonResult = jsonData.getJSONObject(ServerUtilities.POST_DATA_RESULT);
-
-				try
-				{
-					final String successData = jsonResult.getString(ServerUtilities.POST_DATA_SUCCESS);
-					Log.d(Utilities.LOG_TAG, "Server returned successful message: " + successData);
-
-					return successData;
-				}
-				catch (final JSONException e)
-				{
-					try
-					{
-						final String errorMessage = jsonResult.getString(ServerUtilities.POST_DATA_ERROR);
-						Log.d(Utilities.LOG_TAG, "Server responded with error: " + errorMessage);
-
-						return errorMessage;
-					}
-					catch (final JSONException e1)
-					{
-						Log.e(Utilities.LOG_TAG, "Data returned from server contained no error message.");
-					}
-				}
-			}
-			catch (final JSONException e)
-			{
-				Log.e(Utilities.LOG_TAG, "Couldn't grab result object from server response.");
-			}
-		}
-
-		return null;
-	}
-
-
-	private void buildBoard()
-	{
-		if (boardJSON != null && !boardJSON.isEmpty())
-		{
-			try
-			{
-				JSONObject JSON = new JSONObject(boardJSON);
-				JSONObject boardJSON = JSON.getJSONObject("board");
-				JSONArray array = boardJSON.getJSONArray("teams");
-
-				for( int i = 0; i < array.length(); i++ )
-				{
-					JSONArray team = array.getJSONArray(i);
-
-					for (int j = 0; j < team.length(); ++j)
-					{
-						JSONObject piece = team.getJSONObject(j);
-						int type = piece.getInt("type");
-						JSONArray coordinates = piece.getJSONArray("coordinate");
-
-						if( coordinates.length() == 2 )
-						{
-							int x = coordinates.getInt(0);
-							int y = coordinates.getInt(1);
-
-							if (y >= 0 && y < Board.LENGTH_VERTICAL)
-							{
-								buttons[x][y].setEmpty(false);
-								
-								if( i == 0 )
-								{
-									buttons[x][y].setPlayerGreen(true);
-									buttons[x][y].setImageResource(greenNormal);
-									
-									if( type == 1 )
-									{
-										buttons[x][y].setCrown(false);
-									}
-									else
-									{
-										buttons[x][y].setCrown(true);
-										buttons[x][y].setImageResource(greenKing);
-									}
-								}
-								else
-								{
-									buttons[x][y].setPlayerGreen(false);
-									buttons[x][y].setImageResource(orangeNormal);
-									
-									if( type == 1 )
-									{
-										buttons[x][y].setCrown(false);
-									}
-									else
-									{
-										buttons[x][y].setCrown(true);
-										buttons[x][y].setImageResource(orangeKing);
-									}
-								}
-							}
-							else
-							{
-								Log.e(Utilities.LOG_TAG, "Coordinate outside proper range");
-							}
-						}
-					}
-				}
-			}
-			catch (JSONException e1)
-			{
-				Log.e("Array", "Could not get board for array");
-			}
-		}
-		else
-		{
-			Log.e("Server Result", "placeholder");
-		}
-	}
-
-
+/*
 	@SuppressLint("NewApi")
 	@Override
 	public void onClick(View arg0)
@@ -663,32 +336,38 @@ public class CheckersGameFragment extends GameFragment
 			}
 			else if (prevButton != null)
 			{
-			if (clickedButton.isEmpty())
-			{
-				if (canMove(clickedButton))
+				if (clickedButton.isEmpty())
 				{
-					Move(clickedButton);
-					
-					if (canBeKing(clickedButton))
+					if (canMove(clickedButton))
 					{
-						makeKing(clickedButton);
+						Move(clickedButton);
+						
+						if (canBeKing(clickedButton))
+						{
+							makeKing(clickedButton);
+						}
+						
+						boardLocked = true;
+						this.invalidateOptionsMenu();
 					}
-					
-					boardLocked = true;
-					this.invalidateOptionsMenu();
-				}
-				else if (canJump(clickedButton))
-				{
-					Move(clickedButton);
-					if (canBeKing(clickedButton))
+					else if (canJump(clickedButton))
 					{
-						makeKing(clickedButton);
+						Move(clickedButton);
+						if (canBeKing(clickedButton))
+						{
+							makeKing(clickedButton);
+						}
+						
+						boardLocked = true;
+						this.invalidateOptionsMenu();
 					}
-					
-					boardLocked = true;
-					this.invalidateOptionsMenu();
+					else 
+					{
+						setBackground(R.drawable.bg_board_bright, prevButton);
+						prevButton = null;
+					}
 				}
-				else 
+				else
 				{
 					setBackground(R.drawable.bg_board_bright, prevButton);
 					prevButton = null;
@@ -696,32 +375,31 @@ public class CheckersGameFragment extends GameFragment
 			}
 			else
 			{
-				setBackground(R.drawable.bg_board_bright, prevButton);
-				prevButton = null;
-			}
-		}
-		else
-		{
-			if (!clickedButton.isEmpty()){
-				prevButton = clickedButton;
-				setBackground(R.drawable.bg_board_bright_selected, clickedButton);
+				if (!clickedButton.isEmpty())
+				{
+					prevButton = clickedButton;
+					setBackground(R.drawable.bg_board_bright_selected, clickedButton);
+				}
 			}
 		}
 	}
-}
+*/
 
 	
-	private boolean canBeKing (MyButton pbutton) {
-		if(pbutton.isPlayerGreen() && pbutton.getPy() == 7)
+	private boolean canBeKing (MyButton pbutton)
+	{
+		if (pbutton.isPlayerGreen() && pbutton.getPy() == 7)
 		{
 			return true;
 		}
-		else if(!pbutton.isPlayerGreen() && pbutton.getPy() == 7)
+		else if (!pbutton.isPlayerGreen() && pbutton.getPy() == 7)
 		{
 			return true;
 		}
 		else
+		{
 			return false;
+		}
 	}
 
 
@@ -817,7 +495,9 @@ public class CheckersGameFragment extends GameFragment
 			}
 		}
 	}
-	
+
+
+/*
 	private boolean canJump(MyButton cbutton)
 	{
 		if (!prevButton.isCrown())
@@ -920,13 +600,10 @@ public class CheckersGameFragment extends GameFragment
 			 } 
 		}
 	}
-
-	private int abs(int i)
-	{
-		return (i < 0) ? -1 * i : i;
-	}
+*/
 
 
+/*
 	@SuppressLint("NewApi")
 	protected void undo()
 	{
@@ -945,13 +622,16 @@ public class CheckersGameFragment extends GameFragment
 		boardLocked = false;
 		CheckersGameFragment.this.invalidateOptionsMenu();
 	}
+*/
 
 
+/*
 	private void activityHasError()
 	{
 		Utilities.easyToastAndLogError(CheckersGameFragment.this, R.string.game_fragment_data_error);
 		finish();
 	}
+*/
 
 
 	@SuppressLint("NewApi")

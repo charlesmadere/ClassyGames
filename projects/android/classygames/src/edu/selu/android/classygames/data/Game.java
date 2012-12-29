@@ -13,9 +13,32 @@ public class Game
 	public final static boolean TYPE_GAME = false;
 	public final static boolean TYPE_SEPARATOR = true;
 
+	private byte whichGame;
+	public final static byte WHICH_GAME_CHECKERS = 0;
+	public final static byte WHICH_GAME_CHESS = 1;
+
+
+	/**
+	 * The Unix Epoch as downloaded from the server.
+	 */
 	private long timestamp;
+
+
+	/**
+	 * The person to show in the Games List as your opponent.
+	 */
 	private Person person;
+
+
+	/**
+	 * The ID of this Game object as downloaded from the server.
+	 */
 	private String id;
+
+
+	/**
+	 * A human readable version of the Unix Epoch.
+	 */
 	private String timestampFormatted;
 
 
@@ -44,6 +67,7 @@ public class Game
 	{
 		this.turn = turn;
 		type = TYPE_GAME;
+		whichGame = WHICH_GAME_CHECKERS;
 		this.timestamp = timestamp;
 		this.person = person;
 		this.id = id;
@@ -203,6 +227,12 @@ public class Game
 	public boolean isTypeGame()
 	{
 		return type == TYPE_GAME;
+	}
+
+
+	public byte getWhichGame()
+	{
+		return whichGame;
 	}
 
 

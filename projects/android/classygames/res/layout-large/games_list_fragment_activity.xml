@@ -2,11 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_height="fill_parent"
 	android:layout_width="fill_parent"
-	android:orientation="vertical"
+	android:orientation="horizontal"
 	style="@style/ClassyGames">
 	<ListView
 		android:cacheColorHint="#00000000"
-		android:id="@+id/games_list_fragment_activity_listview"
+		android:id="@+id/android:list"
 		android:layout_height="wrap_content"
 		android:layout_width="fill_parent" />
 	<TextView
@@ -18,4 +18,9 @@
 		android:paddingRight="8dip"
 		android:text="@string/games_list_fragment_activity_listview_no_games"
 		style="@style/paragraph" />
+	<fragment
+		android:id="@+id/games_list_fragment_activity_fragment_game"
+		android:layout_height="match_parent"
+		android:layout_width="0dip"
+		android:name="edu.selu.android.classygames.GameFragment" />
 </LinearLayout>
