@@ -1,42 +1,19 @@
 package edu.selu.android.classygames;
 
 
-import java.io.IOException;
-import java.util.ArrayList;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
-import android.graphics.Point;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.Display;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.View.OnClickListener;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 
-import edu.selu.android.classygames.data.Person;
+import edu.selu.android.classygames.games.Coordinate;
+import edu.selu.android.classygames.games.GenericPiece;
 import edu.selu.android.classygames.games.checkers.Board;
-import edu.selu.android.classygames.utilities.ServerUtilities;
-import edu.selu.android.classygames.utilities.Utilities;
+import edu.selu.android.classygames.games.checkers.Piece;
 
 
 public class CheckersGameFragment extends GenericGameFragment
@@ -632,6 +609,43 @@ public class CheckersGameFragment extends GenericGameFragment
 		finish();
 	}
 */
+
+
+	@Override
+	protected void buildTeam(final JSONArray team, final byte whichTeam)
+	{
+		for (int i = 0; i < team.length(); ++i)
+		{
+			try
+			{
+				final JSONObject piece = team.getJSONObject(i);
+				final JSONArray coordinates = piece.getJSONArray("coordinate");
+
+				if (coordinates.length() == 2)
+				{
+					final Coordinate coordinate = new Coordinate(coordinates.getInt(0), coordinates.getInt(1));
+
+					if (board.isPositionValid(coordinate))
+					{
+						final int type = piece.getInt("type");
+						board.getPosition(coordinate).setPiece(new Piece(whichTeam, type));
+					}
+					else
+					{
+						Log.e(LOG_TAG, "Coordinate outside proper range: " + coordinate + ".");
+					}
+				}
+				else
+				{
+					Log.e(LOG_TAG, "A piece had an improper number of coordinate values.");
+				}
+			}
+			catch (final JSONException e1)
+			{
+				Log.e(LOG_TAG, "A team's piece was massively malformed.");
+			}
+		}
+	}
 
 
 	@Override

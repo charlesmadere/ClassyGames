@@ -35,18 +35,9 @@ public class Position
 	}
 
 
-	public boolean setPiece()
+	public void setPiece(final GenericPiece piece)
 	{
-		if (piece == null)
-		{
-			
-
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		this.piece = piece;
 	}
 
 

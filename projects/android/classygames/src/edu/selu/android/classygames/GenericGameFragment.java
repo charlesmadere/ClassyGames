@@ -147,42 +147,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 				if (teams.length() == 2)
 				{
-					for (int i = 0; i < teams.length(); ++i)
-					{
-						final JSONArray team = teams.getJSONArray(i);
-
-						for (int j = 0; j < team.length(); ++j)
-						{
-							try
-							{
-								final JSONObject piece = team.getJSONObject(j);
-								final JSONArray coordinates = piece.getJSONArray("coordinate");
-
-								if (coordinates.length() == 2)
-								{
-									final Coordinate coordinate = new Coordinate(coordinates.getInt(0), coordinates.getInt(1));
-
-									if (board.isPositionValid(coordinate))
-									{
-										final int type = piece.getInt("type");
-										board.getPosition(coordinate).setPiece();
-									}
-									else
-									{
-										Log.e(LOG_TAG, "Coordinate outside proper range: " + coordinate + ".");
-									}
-								}
-								else
-								{
-									Log.e(LOG_TAG, "A piece had an improper number of coordinate values.");
-								}
-							}
-							catch (final JSONException e1)
-							{
-								Log.e(LOG_TAG, "A team's piece was massively malformed.");
-							}
-						}
-					}
+					buildTeam(teams.getJSONArray(0), GenericPiece.TEAM_PLAYER);
+					buildTeam(teams.getJSONArray(1), GenericPiece.TEAM_OPPONENT);
 				}
 				else
 				{
@@ -191,7 +157,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			}
 			catch (final JSONException e)
 			{
-				Log.e(LOG_TAG, "JSON String was massively malformed.");
+				Log.e(LOG_TAG, "JSON String is massively malformed.");
 			}
 		}
 		else
@@ -387,13 +353,10 @@ public abstract class GenericGameFragment extends SherlockFragment
 		protected void onPostExecute(final String serverResponse)
 		{
 			parseServerResponse(serverResponse);
+			progressDialog.dismiss();
 
-			if (progressDialog.isShowing())
-			{
-				progressDialog.dismiss();
-			}
-
-			finish();
+			// new, fragment way, of doing finish()
+			getSherlockActivity().getSupportFragmentManager().beginTransaction().remove(GenericGameFragment.this).commit();
 		}
 
 
@@ -462,6 +425,33 @@ public abstract class GenericGameFragment extends SherlockFragment
 	}
 
 
+
+
+	/**
+	 * Create's a team from some JSON data.
+	 * 
+	 * @param team
+	 * An individual team as parsed in from a JSON String.
+	 * 
+	 * @param whichTeam
+	 * GenericPiece.TEAM_* should be used here.
+	 */
+	protected abstract void buildTeam(final JSONArray team, final byte whichTeam);
+
+
+	/**
+	 * Create's a team from some JSON data.
+	 * 
+	 * @param team
+	 * An individual team as parsed in from a JSON String.
+	 * 
+	 * @param whichTeam
+	 * GenericPiece.TEAM_* should be used here.
+	 */
+	protected void buildTeam(final JSONArray team, final int whichTeam)
+	{
+		buildTeam(team, (byte) whichTeam);
+	}
 
 
 	/**
