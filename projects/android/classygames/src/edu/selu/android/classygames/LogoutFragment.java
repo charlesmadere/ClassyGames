@@ -8,7 +8,9 @@ import java.net.MalformedURLException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
@@ -26,6 +28,14 @@ public class LogoutFragment extends SherlockFragment
 
 
 	public final static int LOGGED_OUT = 16;
+
+
+	@Override
+	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
+	{
+
+		return super.onCreateView(inflater, container, savedInstanceState);
+	}
 
 
 	@Override
