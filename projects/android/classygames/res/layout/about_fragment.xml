@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_height="fill_parent"
-	android:layout_width="fill_parent"
+	android:layout_height="match_parent"
+	android:layout_width="match_parent"
 	android:orientation="vertical"
 	android:paddingLeft="4dip"
 	android:paddingRight="4dip"
@@ -10,18 +10,18 @@
 		android:adjustViewBounds="true"
 		android:contentDescription="@string/app_name"
 		android:id="@+id/about_fragment_imageview_logo"
-		android:layout_height="fill_parent"
+		android:layout_height="match_parent"
 		android:layout_weight="2"
-		android:layout_width="fill_parent"
+		android:layout_width="match_parent"
 		android:src="@drawable/logo" />
 	<LinearLayout
 		android:gravity="top"
-		android:layout_height="fill_parent"
+		android:layout_height="match_parent"
 		android:layout_weight="5"
-		android:layout_width="fill_parent">
+		android:layout_width="match_parent">
 		<TextView
 			android:layout_height="wrap_content"
-			android:layout_width="fill_parent"
+			android:layout_width="match_parent"
 			android:paddingLeft="4dip"
 			android:paddingRight="4dip"
 			android:text="@string/about_fragment_about"

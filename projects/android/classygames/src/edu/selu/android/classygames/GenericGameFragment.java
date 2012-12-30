@@ -16,16 +16,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
 import edu.selu.android.classygames.data.Person;
 import edu.selu.android.classygames.games.Coordinate;
 import edu.selu.android.classygames.games.GenericBoard;
+import edu.selu.android.classygames.games.GenericPiece;
 import edu.selu.android.classygames.games.checkers.Board;
-import edu.selu.android.classygames.games.checkers.Piece;
 import edu.selu.android.classygames.utilities.ServerUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
 
@@ -74,13 +74,136 @@ public abstract class GenericGameFragment extends SherlockFragment
 	protected GenericBoard board = null;
 
 
+	/**
+	 * Checks to see which position on the board was clicked and then moves
+	 * pieces and / or performs actions accordingly.
+	 */
+	protected OnClickListener onBoardClick = null;
+
+
 
 
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{
+		// retrieve data passed to this fragment
+		final Bundle bundle = getArguments();
+
+		if (bundle == null || bundle.isEmpty())
+		{
+			fragmentHasError();
+		}
+		else
+		{
+			gameId = bundle.getString(INTENT_DATA_GAME_ID);
+			final long challengedId = bundle.getLong(INTENT_DATA_PERSON_CHALLENGED_ID);
+			final String challengedName = bundle.getString(INTENT_DATA_PERSON_CHALLENGED_NAME);
+
+			if (challengedId < 0 || challengedName == null || challengedName.isEmpty())
+			{
+				fragmentHasError();
+			}
+			else
+			{
+				personChallenged = new Person(challengedId, challengedName);
+
+				onBoardClick = new OnClickListener()
+				{
+					@Override
+					public void onClick(final View v)
+					{
+						if (boardLocked)
+						{
+							onBoardClick(v);
+						}
+					}
+				};
+
+				initViews();
+				initBoard();
+
+				if (gameId == null || gameId.isEmpty())
+				{
+					initPieces();
+				}
+				else
+				{
+					new AsyncGetGame().execute();
+				}
+			}
+		}
 
 		return super.onCreateView(inflater, container, savedInstanceState);
+	}
+
+
+	private void buildBoard()
+	{
+		if (boardJSON != null && !boardJSON.isEmpty())
+		{
+			try
+			{
+				final JSONArray teams = new JSONObject(boardJSON).getJSONObject("board").getJSONArray("teams");
+
+				if (teams.length() == 2)
+				{
+					for (int i = 0; i < teams.length(); ++i)
+					{
+						final JSONArray team = teams.getJSONArray(i);
+
+						for (int j = 0; j < team.length(); ++j)
+						{
+							try
+							{
+								final JSONObject piece = team.getJSONObject(j);
+								final JSONArray coordinates = piece.getJSONArray("coordinate");
+
+								if (coordinates.length() == 2)
+								{
+									final Coordinate coordinate = new Coordinate(coordinates.getInt(0), coordinates.getInt(1));
+
+									if (board.isPositionValid(coordinate))
+									{
+										final int type = piece.getInt("type");
+										board.getPosition(coordinate).setPiece();
+									}
+									else
+									{
+										Log.e(LOG_TAG, "Coordinate outside proper range: " + coordinate + ".");
+									}
+								}
+								else
+								{
+									Log.e(LOG_TAG, "A piece had an improper number of coordinate values.");
+								}
+							}
+							catch (final JSONException e1)
+							{
+								Log.e(LOG_TAG, "A team's piece was massively malformed.");
+							}
+						}
+					}
+				}
+				else
+				{
+					Log.e(LOG_TAG, "JSON String has improper number of teams!");
+				}
+			}
+			catch (final JSONException e)
+			{
+				Log.e(LOG_TAG, "JSON String was massively malformed.");
+			}
+		}
+		else
+		{
+			Log.e(LOG_TAG, "Tried to build the board from either a null or empty JSON String!");
+		}
+	}
+
+
+	private void fragmentHasError()
+	{
+
 	}
 
 
@@ -98,6 +221,47 @@ public abstract class GenericGameFragment extends SherlockFragment
 	}
 
 
+	private String parseServerResponse(final String jsonString)
+	{
+		if (jsonString == null || jsonString.isEmpty())
+		{
+			Log.e(LOG_TAG, "Empty string received from server on send move!");
+		}
+		else
+		{
+			try
+			{
+				final JSONObject jsonData = new JSONObject(jsonString);
+				final JSONObject jsonResult = jsonData.getJSONObject(ServerUtilities.POST_DATA_RESULT);
+
+				try
+				{
+					final String successData = jsonResult.getString(ServerUtilities.POST_DATA_SUCCESS);
+					return successData;
+				}
+				catch (final JSONException e)
+				{
+					try
+					{
+						final String errorMessage = jsonResult.getString(ServerUtilities.POST_DATA_ERROR);
+						Log.e(LOG_TAG, "Data returned from server contained an error message: " + errorMessage);
+					}
+					catch (final JSONException e1)
+					{
+						Log.e(LOG_TAG, "Data returned from server contained neither a success nor an error message!");
+					}
+				}
+			}
+			catch (final JSONException e)
+			{
+				Log.e(LOG_TAG, "Couldn't grab result object from server response.");
+			}
+		}
+
+		return null;
+	}
+
+
 	/**
 	 * Undoes the user's last move on the board. Unlocks the board, allowing
 	 * the user to make a different move on the board.
@@ -111,15 +275,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 	}
 
 
-	@Override
-	public void onClick(final View v)
-	{
-		if (!boardLocked)
-		// only continue if the board is currently unlocked
-		{
-			onBoardClick(v);
-		}
-	}
 
 
 	protected final class AsyncGetGame extends AsyncTask<Void, Void, String>
@@ -164,9 +319,9 @@ public abstract class GenericGameFragment extends SherlockFragment
 		@Override
 		protected void onPreExecute()
 		{
-			progressDialog = new ProgressDialog(GameFragment.this);
-			progressDialog.setMessage(GameFragment.this.getString(R.string.checkers_game_fragment_getgame_progressdialog_message));
-			progressDialog.setTitle(R.string.checkers_game_fragment_getgame_progressdialog_title);
+			progressDialog = new ProgressDialog(GenericGameFragment.this.getSherlockActivity());
+			progressDialog.setMessage(GenericGameFragment.this.getString(R.string.game_fragment_getgame_progressdialog_message));
+			progressDialog.setTitle(R.string.game_fragment_getgame_progressdialog_title);
 			progressDialog.setCancelable(true);
 			progressDialog.setCanceledOnTouchOutside(false);
 			progressDialog.show();
@@ -201,7 +356,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 				{
 					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CHALLENGED, Long.valueOf(personChallenged.getId()).toString()));
 					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_NAME, personChallenged.getName()));
-					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CREATOR, Long.valueOf(Utilities.getWhoAmI(GameFragment.this).getId()).toString()));
+					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CREATOR, Long.valueOf(Utilities.getWhoAmI(GenericGameFragment.this.getSherlockActivity()).getId()).toString()));
 					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_BOARD, object.toString()));
 
 					if (gameId == null || gameId.isEmpty())
@@ -245,64 +400,56 @@ public abstract class GenericGameFragment extends SherlockFragment
 		@Override
 		protected void onPreExecute()
 		{
-			progressDialog = new ProgressDialog(CheckersGameFragment.this);
+			progressDialog = new ProgressDialog(GenericGameFragment.this.getActivity());
 			progressDialog.setCancelable(false);
 			progressDialog.setCanceledOnTouchOutside(false);
-			progressDialog.setMessage(CheckersGameFragment.this.getString(R.string.game_fragment_sendmove_progressdialog_message));
+			progressDialog.setMessage(GenericGameFragment.this.getString(R.string.game_fragment_sendmove_progressdialog_message));
 			progressDialog.setTitle(R.string.game_fragment_sendmove_progressdialog_title);
 			progressDialog.show();
 
-			CheckersGameFragment.this.setResult(GamesListFragmentActivity.NEED_TO_REFRESH);
+			GenericGameFragment.this.setResult(GamesListFragmentActivity.NEED_TO_REFRESH);
 		}
 
 
 		private JSONArray createJSONTeams()
 		{
-			JSONArray teamGreen = createJSONTeam(true);
-			JSONArray teamOrange = createJSONTeam(false);
+			final JSONArray teamPlayer = createJSONTeam(GenericPiece.TEAM_PLAYER);
+			final JSONArray teamOpponent = createJSONTeam(GenericPiece.TEAM_OPPONENT);
 
-			JSONArray teams = new JSONArray();
-			teams.put(teamGreen);
-			teams.put(teamOrange);
+			final JSONArray teams = new JSONArray();
+			teams.put(teamPlayer);
+			teams.put(teamOpponent);
 
 			return teams;
 		}
 
 
-		private JSONArray createJSONTeam(final boolean isPlayerGreen)
+		private JSONArray createJSONTeam(final byte whichTeam)
 		{
-			JSONArray team = new JSONArray();
+			final JSONArray team = new JSONArray();
 
-			for (int x = 0; x < Board.LENGTH_HORIZONTAL; ++x)
+			for (byte x = 0; x < Board.LENGTH_HORIZONTAL; ++x)
 			{
-				for (int y = 0; y < Board.LENGTH_VERTICAL; ++y)
+				for (byte y = 0; y < Board.LENGTH_VERTICAL; ++y)
 				{
-					if (!buttons[x][y].isEmpty() && buttons[x][y].isPlayerGreen() == isPlayerGreen)
-					// this position has a piece in it that is of the given team color
+					if (board.getPosition(x, y).hasPiece() && board.getPosition(x, y).getPiece().isTeam(whichTeam))
+					// this position has a piece in it that is of the given team
 					{
 						try
 						{
-							JSONArray coordinate = new JSONArray();
+							final JSONArray coordinate = new JSONArray();
 							coordinate.put(x);
 							coordinate.put(y);
 
-							JSONObject piece = new JSONObject();
+							final JSONObject piece = new JSONObject();
 							piece.put("coordinate", coordinate);
-
-							if( isKing(buttons[x][y]) == true )
-							{
-								piece.put("type", 2);
-							}
-							else
-							{
-								piece.put("type", 1);
-							}
+							piece.put("type", board.getPosition(x, y).getPiece().getType());
 
 							team.put(piece);
 						}
 						catch (final JSONException e)
 						{
-							Log.e(Utilities.LOG_TAG, "Error in createJSONTeam, x = " + x + ", y = " + y);
+							Log.e(LOG_TAG, "Error in createJSONTeam, x = " + x + ", y = " + y);
 						}
 					}
 				}
@@ -315,136 +462,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 	}
 
 
-	private String parseServerResponse(final String jsonString)
-	{
-		if (jsonString == null || jsonString.isEmpty())
-		{
-			Log.e(Utilities.LOG_TAG, "Empty string received from server on send move!");
-		}
-		else
-		{
-			try
-			{
-				final JSONObject jsonData = new JSONObject(jsonString);
-				final JSONObject jsonResult = jsonData.getJSONObject(ServerUtilities.POST_DATA_RESULT);
-
-				try
-				{
-					final String successData = jsonResult.getString(ServerUtilities.POST_DATA_SUCCESS);
-					return successData;
-				}
-				catch (final JSONException e)
-				{
-					try
-					{
-						final String errorMessage = jsonResult.getString(ServerUtilities.POST_DATA_ERROR);
-						return errorMessage;
-					}
-					catch (final JSONException e1)
-					{
-						Log.e(Utilities.LOG_TAG, "Data returned from server contained no error message.");
-					}
-				}
-			}
-			catch (final JSONException e)
-			{
-				Log.e(Utilities.LOG_TAG, "Couldn't grab result object from server response.");
-			}
-		}
-
-		return null;
-	}
-
-
-	private void buildBoard()
-	{
-		if (boardJSON != null && !boardJSON.isEmpty())
-		{
-			final JSONObject JSON = new JSONObject(boardJSON);
-			final JSONObject boardJSON = JSON.getJSONObject("board");
-			final JSONArray teams = boardJSON.getJSONArray("teams");
-
-			if (teams.length() == 2)
-			{
-				
-			}
-			else
-			{
-				Log.e(LOG_TAG, "JSON String has improper number of teams!");
-			}
-
-			for (int i = 0; i < teams.length(); ++i)
-			{
-				final JSONArray team = teams.getJSONArray(i);
-
-				for (int j = 0; j < team.length(); ++j)
-				{
-					final JSONObject piece = team.getJSONObject(j);
-					final int type = piece.getInt("type");
-					JSONArray coordinates = piece.getJSONArray("coordinate");
-
-					if (coordinates.length() == 2)
-					{
-						final Coordinate coordinate = new Coordinate(coordinates.getInt(0), coordinates.getInt(1));
-
-						if (board.isPositionValid(coordinate))
-						{
-							buttons[x][y].setEmpty(false);
-
-							if (i == 0)
-							{
-								buttons[x][y].setPlayerGreen(true);
-								buttons[x][y].setImageResource(greenNormal);
-								
-								if (type == Piece.TYPE_NORMAL)
-								{
-									buttons[x][y].setCrown(false);
-								}
-								else if (type == Piece.TYPE_KING)
-								{
-									buttons[x][y].setCrown(true);
-									buttons[x][y].setImageResource(greenKing);
-								}
-							}
-							else
-							{
-								buttons[x][y].setPlayerGreen(false);
-								buttons[x][y].setImageResource(orangeNormal);
-								
-								if (type == Piece.TYPE_NORMAL)
-								{
-									buttons[x][y].setCrown(false);
-								}
-								else if (type == Piece.TYPE_KING)
-								{
-									buttons[x][y].setCrown(true);
-									buttons[x][y].setImageResource(orangeKing);
-								}
-							}
-						}
-						else
-						{
-							Log.e(Utilities.LOG_TAG, "Coordinate outside proper range: " + coordinate + ".");
-						}
-					}
-				}
-			}
-		}
-		else
-		{
-			Log.e(Utilities.LOG_TAG, "Tried to build a board from either a null or empty JSON String!");
-		}
-	}
-
-
-	/**
-	 * Checks to see which position on the board was clicked and then moves
-	 * pieces accordingly.
-	 * 
-	 * @param v
-	 * The View object that was clicked.
-	 */
-	protected abstract void onBoardClick(final View v);
 
 
 	/**
@@ -459,6 +476,23 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * new game</strong>.
 	 */
 	protected abstract void initPieces();
+
+
+	/**
+	 * Initializes some of this Fragment's view data, such as the actionbar's
+	 * title, layout configurations, and onClickListeners.
+	 */
+	protected abstract void initViews();
+
+
+	/**
+	 * Checks to see which position on the board was clicked and then moves
+	 * pieces and / or performs actions accordingly.
+	 *
+	 * @param v
+	 * The View object that was clicked on.
+	 */
+	protected abstract void onBoardClick(final View v);
 
 
 }

@@ -5,20 +5,12 @@ public class Position
 {
 
 
-	protected Coordinate coordinate;
-	protected GenericPiece piece;
+	private GenericPiece piece;
 
 
-	public Position(final byte x, final byte y)
+	public Position()
 	{
-		this.coordinate = new Coordinate(x, y);
-	}
 
-
-	public Position(final byte x, final byte y, final GenericPiece piece)
-	{
-		this.coordinate = new Coordinate(x, y);
-		this.piece = piece;
 	}
 
 
@@ -40,6 +32,21 @@ public class Position
 	public void removePiece()
 	{
 		piece = null;
+	}
+
+
+	public boolean setPiece()
+	{
+		if (piece == null)
+		{
+			
+
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 

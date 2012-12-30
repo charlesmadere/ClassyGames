@@ -21,7 +21,7 @@ public abstract class GenericBoard
 		{
 			for (byte y = 0; y < lengthVertical; ++y)
 			{
-				positions[x][y] = new Position(x, y);
+				positions[x][y] = new Position();
 			}
 		}
 	}

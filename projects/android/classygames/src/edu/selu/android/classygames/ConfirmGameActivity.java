@@ -39,8 +39,8 @@ public class ConfirmGameActivity extends SherlockActivity
 		}
 		else
 		{
-			final long challengedId = bundle.getLong(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_ID);
-			final String challengedName = bundle.getString(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_NAME);
+			final long challengedId = bundle.getLong(GenericGameFragment.INTENT_DATA_PERSON_CHALLENGED_ID);
+			final String challengedName = bundle.getString(GenericGameFragment.INTENT_DATA_PERSON_CHALLENGED_NAME);
 
 			if (challengedId < 0 || challengedName == null || challengedName.isEmpty())
 			{
@@ -65,9 +65,9 @@ public class ConfirmGameActivity extends SherlockActivity
 					@Override
 					public void onClick(final View v)
 					{
-						Intent intent = new Intent(ConfirmGameActivity.this, CheckersGameActivity.class);
-						intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_ID, personChallenged.getId());
-						intent.putExtra(CheckersGameActivity.INTENT_DATA_PERSON_CHALLENGED_NAME, personChallenged.getName());
+						Intent intent = new Intent(ConfirmGameActivity.this, GenericGameFragment.class);
+						intent.putExtra(GenericGameFragment.INTENT_DATA_PERSON_CHALLENGED_ID, personChallenged.getId());
+						intent.putExtra(GenericGameFragment.INTENT_DATA_PERSON_CHALLENGED_NAME, personChallenged.getName());
 
 						// start the ConfirmGameActivity with a bit of extra data. We're passing it both
 						// the id and the name of the facebook person that the user has decided to challenge
@@ -97,8 +97,8 @@ public class ConfirmGameActivity extends SherlockActivity
 
 		switch (resultCode)
 		{
-			case GamesListActivity.NEED_TO_REFRESH:
-				setResult(GamesListActivity.NEED_TO_REFRESH);
+			case GamesListFragmentActivity.NEED_TO_REFRESH:
+				setResult(GamesListFragmentActivity.NEED_TO_REFRESH);
 				finish();
 				break;
 		}
@@ -131,7 +131,6 @@ public class ConfirmGameActivity extends SherlockActivity
 	{
 
 
-		private Drawable drawable;
 		private ImageView imageView;
 
 
@@ -145,16 +144,7 @@ public class ConfirmGameActivity extends SherlockActivity
 		@Override
 		protected Drawable doInBackground(final Person... person) 
 		{
-			try
-			{
-				drawable = Utilities.loadImageFromWebOperations(Utilities.FACEBOOK_GRAPH_API_URL + person[0].getId() + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_LARGE_SSL);
-			}
-			catch (final Exception e)
-			{
-				Log.e("Classy Games", "Image Load Failed: " + e);
-			}
-
-			return drawable;
+			return Utilities.loadImageFromWebOperations(Utilities.FACEBOOK_GRAPH_API_URL + person[0].getId() + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_LARGE_SSL);
 		}
 
 

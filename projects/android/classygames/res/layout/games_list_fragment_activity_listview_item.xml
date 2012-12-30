@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_gravity="center_vertical"
 	android:layout_height="128dip"
-	android:layout_width="fill_parent"
+	android:layout_width="match_parent"
 	android:paddingBottom="12dip"
 	android:paddingLeft="4dip"
 	android:paddingRight="4dip"
@@ -26,7 +26,7 @@
 		android:layout_alignWithParentIfMissing="true"
 		android:layout_height="wrap_content"
 		android:layout_toRightOf="@id/games_list_fragment_activity_listview_item_picture"
-		android:layout_width="fill_parent"
+		android:layout_width="match_parent"
 		android:maxLines="1"
 		android:textColor="@color/gray_darker"
 		android:textSize="19sp" />
@@ -40,7 +40,7 @@
 		android:layout_below="@id/games_list_fragment_activity_listview_item_name"
 		android:layout_height="wrap_content"
 		android:layout_toRightOf="@id/games_list_fragment_activity_listview_item_picture"
-		android:layout_width="fill_parent"
+		android:layout_width="match_parent"
 		android:maxLines="1"
 		android:textColor="@color/gray_dark"
 		android:textSize="17sp" />

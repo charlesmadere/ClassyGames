@@ -7,8 +7,8 @@ public abstract class GenericPiece
 
 	protected byte team;
 	protected final static byte TEAM_NULL = 0;
-	public final static byte TEAM_OPPONENT = 1;
-	public final static byte TEAM_PLAYER = 2;
+	public final static byte TEAM_PLAYER = 1;
+	public final static byte TEAM_OPPONENT = 2;
 
 	protected byte type;
 	protected final static byte TYPE_NULL = 0;
@@ -47,6 +47,12 @@ public abstract class GenericPiece
 	}
 
 
+	public boolean isTeam(final byte whichTeam)
+	{
+		return team == whichTeam;
+	}
+
+
 	public boolean isTeamOpponent()
 	{
 		return team == TEAM_OPPONENT;
@@ -56,6 +62,12 @@ public abstract class GenericPiece
 	public boolean isTeamPlayer()
 	{
 		return team == TEAM_PLAYER;
+	}
+
+
+	public byte getType()
+	{
+		return type;
 	}
 
 
