@@ -21,14 +21,13 @@ public class EmptyGameFragment extends GenericGameFragment
 
 
 	@Override
-	protected void initBoard()
+	protected void initBoardNew()
 	{
 
 	}
 
 
-	@Override
-	protected void initPieces()
+	protected void initBoardOld()
 	{
 
 	}

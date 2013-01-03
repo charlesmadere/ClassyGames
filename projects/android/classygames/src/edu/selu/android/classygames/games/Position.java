@@ -5,6 +5,11 @@ public class Position
 {
 
 
+	/**
+	 * The GenericPiece object in this Position on the game board. If this
+	 * position on the game board does not have any piece on it then this
+	 * variable will be null.
+	 */
 	private GenericPiece piece;
 
 
@@ -35,6 +40,12 @@ public class Position
 	}
 
 
+	/**
+	 * Assigns a GenericPiece object to this Position.
+	 * 
+	 * @param piece
+	 * The Piece object to assign to this Position.
+	 */
 	public void setPiece(final GenericPiece piece)
 	{
 		this.piece = piece;

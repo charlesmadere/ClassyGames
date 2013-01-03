@@ -112,10 +112,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 					@Override
 					public void onClick(final View v)
 					{
-						if (boardLocked)
-						{
-							onBoardClick(v);
-						}
+						onBoardClick(v);
 					}
 				};
 
@@ -170,6 +167,27 @@ public abstract class GenericGameFragment extends SherlockFragment
 	private void fragmentHasError()
 	{
 
+	}
+
+
+	/**
+	 * Initializes the game board. If this game has been downloaded from the
+	 * server, then this method will run initBoardOld(). Otherwise, this is a
+	 * brand new game and this method will run initBoardNew().
+	 */
+	protected void initBoard()
+	{
+		if (boardJSON == null || boardJSON.isEmpty())
+		// Test to see if this game has been downloaded from the server. This
+		// statement will validate as true if the game has been downloaded from
+		// the server.
+		{
+			initBoardNew();
+		}
+		else
+		{
+			initBoardOld();
+		}
 	}
 
 
@@ -236,6 +254,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		if (boardLocked)
 		{
+			
+
 			boardLocked = false;
 		}
 	}
@@ -309,11 +329,11 @@ public abstract class GenericGameFragment extends SherlockFragment
 		{
 			try
 			{
-				JSONArray teams = createJSONTeams();
-				JSONObject board = new JSONObject();
+				final JSONArray teams = createJSONTeams();
+				final JSONObject board = new JSONObject();
 				board.put("teams", teams);
 
-				JSONObject object = new JSONObject();
+				final JSONObject object = new JSONObject();
 				object.put("board", board);
 
 				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
@@ -455,17 +475,15 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * Initializes the game board as seen on the device's screen.
+	 * Initialize the game board as if it's a <strong>brand new game</strong>.
 	 */
-	protected abstract void initBoard();
+	protected abstract void initBoardNew();
 
 
 	/**
-	 * Initializes the game's pieces <strong>as if it's a brand new game
-	 * </strong>. This method should <strong>only ever be used if it is a brand
-	 * new game</strong>.
+	 * Initialize the game board as if an existing game is being resumed.
 	 */
-	protected abstract void initPieces();
+	protected abstract void initBoardOld();
 
 
 	/**

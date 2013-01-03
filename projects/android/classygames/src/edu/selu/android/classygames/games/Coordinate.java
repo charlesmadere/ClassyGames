@@ -45,12 +45,24 @@ public class Coordinate
 	}
 
 
+	/**
+	 * Returns this Coordinate's X position.
+	 * 
+	 * @return
+	 * This Coordinate's X position.
+	 */
 	public byte getX()
 	{
 		return x;
 	}
 
 
+	/**
+	 * Returns this Coordinate's Y position.
+	 * 
+	 * @return
+	 * This Coordinate's Y position.
+	 */
 	public byte getY()
 	{
 		return y;

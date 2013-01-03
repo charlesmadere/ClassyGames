@@ -640,7 +640,7 @@ public class CheckersGameFragment extends GenericGameFragment
 					Log.e(LOG_TAG, "A piece had an improper number of coordinate values.");
 				}
 			}
-			catch (final JSONException e1)
+			catch (final JSONException e)
 			{
 				Log.e(LOG_TAG, "A team's piece was massively malformed.");
 			}
@@ -649,14 +649,42 @@ public class CheckersGameFragment extends GenericGameFragment
 
 
 	@Override
-	protected void initBoard()
+	protected void initBoardNew()
 	{
+		board = new Board();
 
+		// set up the pieces for the current player's team
+		board.getPosition(1, 0).setPiece(new Piece(Piece.TEAM_PLAYER));
+		board.getPosition(3, 0).setPiece(new Piece(Piece.TEAM_PLAYER));
+		board.getPosition(5, 0).setPiece(new Piece(Piece.TEAM_PLAYER));
+		board.getPosition(7, 0).setPiece(new Piece(Piece.TEAM_PLAYER));
+		board.getPosition(0, 1).setPiece(new Piece(Piece.TEAM_PLAYER));
+		board.getPosition(2, 1).setPiece(new Piece(Piece.TEAM_PLAYER));
+		board.getPosition(4, 1).setPiece(new Piece(Piece.TEAM_PLAYER));
+		board.getPosition(6, 1).setPiece(new Piece(Piece.TEAM_PLAYER));
+		board.getPosition(1, 2).setPiece(new Piece(Piece.TEAM_PLAYER));
+		board.getPosition(3, 2).setPiece(new Piece(Piece.TEAM_PLAYER));
+		board.getPosition(5, 2).setPiece(new Piece(Piece.TEAM_PLAYER));
+		board.getPosition(7, 2).setPiece(new Piece(Piece.TEAM_PLAYER));
+
+		// set up the pieces for the opponent player's team
+		board.getPosition(0, 5).setPiece(new Piece(Piece.TEAM_OPPONENT));
+		board.getPosition(2, 5).setPiece(new Piece(Piece.TEAM_OPPONENT));
+		board.getPosition(4, 5).setPiece(new Piece(Piece.TEAM_OPPONENT));
+		board.getPosition(6, 5).setPiece(new Piece(Piece.TEAM_OPPONENT));
+		board.getPosition(1, 6).setPiece(new Piece(Piece.TEAM_OPPONENT));
+		board.getPosition(3, 6).setPiece(new Piece(Piece.TEAM_OPPONENT));
+		board.getPosition(5, 6).setPiece(new Piece(Piece.TEAM_OPPONENT));
+		board.getPosition(7, 6).setPiece(new Piece(Piece.TEAM_OPPONENT));
+		board.getPosition(0, 7).setPiece(new Piece(Piece.TEAM_OPPONENT));
+		board.getPosition(2, 7).setPiece(new Piece(Piece.TEAM_OPPONENT));
+		board.getPosition(4, 7).setPiece(new Piece(Piece.TEAM_OPPONENT));
+		board.getPosition(6, 7).setPiece(new Piece(Piece.TEAM_OPPONENT));
 	}
 
 
 	@Override
-	protected void initPieces()
+	protected void initBoardOld()
 	{
 
 	}

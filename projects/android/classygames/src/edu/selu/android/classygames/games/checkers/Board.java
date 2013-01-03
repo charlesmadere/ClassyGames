@@ -36,7 +36,7 @@ public class Board extends GenericBoard
 	@Override
 	public boolean isPositionValid(final Coordinate coordinate)
 	{
-		return isPositionValid((byte) coordinate.getX(), (byte) coordinate.getY());
+		return isPositionValid(coordinate.getX(), coordinate.getY());
 	}
 
 
