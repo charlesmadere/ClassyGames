@@ -36,11 +36,17 @@ import android.provider.ContactsContract;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.ImageView;
+import android.view.WindowManager;
 
 public final class UrlImageViewHelper {
     private static void clog(String format, Object... args) {
+        String log;
+        if (args.length == 0)
+            log = format;
+        else
+            log = String.format(format, args);
         if (Constants.LOG_ENABLED)
-            Log.i(Constants.LOGTAG, String.format(format, args));
+            Log.i(Constants.LOGTAG, log);
     }
 
     public static int copyStream(final InputStream input, final OutputStream output) throws IOException {
@@ -62,10 +68,33 @@ public final class UrlImageViewHelper {
             return;
         }
         mMetrics = new DisplayMetrics();
-        final Activity act = (Activity)context;
-        act.getWindowManager().getDefaultDisplay().getMetrics(mMetrics);
+        //final Activity act = (Activity)context;
+        //act.getWindowManager().getDefaultDisplay().getMetrics(mMetrics);
+        ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE))
+        .getDefaultDisplay().getMetrics(mMetrics);
         final AssetManager mgr = context.getAssets();
         mResources = new Resources(mgr, mMetrics, context.getResources().getConfiguration());
+    }
+
+    private static boolean mUseBitmapScaling = true;
+    /**
+     * Bitmap scaling will use smart/sane values to limit the maximum
+     * dimension of the bitmap during decode. This will prevent any dimension of the
+     * bitmap from being larger than the dimensions of the device itself.
+     * Doing this will conserve memory.
+     * @param useBitmapScaling Toggle for smart resizing.
+     */
+    public static void setUseBitmapScaling(boolean useBitmapScaling) {
+        mUseBitmapScaling = useBitmapScaling;
+    }
+    /**
+     * Bitmap scaling will use smart/sane values to limit the maximum
+     * dimension of the bitmap during decode. This will prevent any dimension of the
+     * bitmap from being larger than the dimensions of the device itself.
+     * Doing this will conserve memory.
+     */
+    public static boolean getUseBitmapScaling() {
+        return mUseBitmapScaling;
     }
 
     private static Drawable loadDrawableFromStream(final Context context, final String url, final String filename, final int targetWidth, final int targetHeight) {
@@ -74,19 +103,23 @@ public final class UrlImageViewHelper {
 //        Log.v(Constants.LOGTAG,targetWidth);
 //        Log.v(Constants.LOGTAG,targetHeight);
         FileInputStream stream = null;
+        clog("Decoding: " + url + " " + filename);
         try {
-            BitmapFactory.Options o = new BitmapFactory.Options();
-            o.inJustDecodeBounds = true;
-            stream = new FileInputStream(filename);
-            BitmapFactory.decodeStream(stream, null, o);
-            stream.close();
-            stream = new FileInputStream(filename);
-            int scale = 0;
-            while ((o.outWidth >> scale) > targetWidth || (o.outHeight >> scale) > targetHeight) {
-                scale++;
+            BitmapFactory.Options o = null;
+            if (mUseBitmapScaling) {
+                o = new BitmapFactory.Options();
+                o.inJustDecodeBounds = true;
+                stream = new FileInputStream(filename);
+                BitmapFactory.decodeStream(stream, null, o);
+                stream.close();
+                int scale = 0;
+                while ((o.outWidth >> scale) > targetWidth || (o.outHeight >> scale) > targetHeight) {
+                    scale++;
+                }
+                o = new Options();
+                o.inSampleSize = 1 << scale;
             }
-            o = new Options();
-            o.inSampleSize = 1 << scale;
+            stream = new FileInputStream(filename);
             final Bitmap bitmap = BitmapFactory.decodeStream(stream, null, o);
             clog(String.format("Loaded bitmap (%dx%d).", bitmap.getWidth(), bitmap.getHeight()));
             final BitmapDrawable bd = new BitmapDrawable(mResources, bitmap);
@@ -397,6 +430,21 @@ public final class UrlImageViewHelper {
     private static boolean checkCacheDuration(File file, long cacheDurationMs) {
         return cacheDurationMs == CACHE_DURATION_INFINITE || System.currentTimeMillis() < file.lastModified() + cacheDurationMs;
     }
+    
+    public static Drawable getImmediateMutableDrawable(String url) {
+        Drawable ret = null;
+        if (mDeadCache != null)
+            ret = mDeadCache.get(url);
+        if (ret != null)
+            return ret;
+        if (mLiveCache != null)
+            ret = mLiveCache.get(url);
+        if (ret != null && ret instanceof ZombieDrawable) {
+            ZombieDrawable zd = (ZombieDrawable)ret;
+            return zd.getBitmapDrawable().mutate();
+        }
+        return null;
+    }
 
     /**
      * Download and shrink an Image located at a specified URL, and display it
@@ -422,6 +470,7 @@ public final class UrlImageViewHelper {
         // disassociate this ImageView from any pending downloads
         if (isNullOrEmpty(url)) {
             if (imageView != null) {
+                mPendingViews.remove(imageView);
                 imageView.setImageDrawable(defaultDrawable);
             }
             return;
@@ -441,19 +490,36 @@ public final class UrlImageViewHelper {
             mDeadCache = new UrlLruCache(getHeapSize(context) / 8);
         }
         Drawable drawable;
-        final BitmapDrawable zd = mDeadCache.remove(url);
-        if (zd != null) {
+        final BitmapDrawable bd = mDeadCache.remove(url);
+        if (bd != null) {
             // this drawable was resurrected, it should not be in the live cache
-            clog("zombie load");
-            Assert.assertTrue(!mAllCache.contains(zd));
-            drawable = new ZombieDrawable(url, zd);
+            clog("zombie load: " + url);
+            Assert.assertTrue(url, !mAllCache.contains(bd));
+            drawable = new ZombieDrawable(url, bd);
         } else {
             drawable = mLiveCache.get(url);
         }
 
         if (drawable != null) {
             clog("Cache hit on: " + url);
+            // if the file age is older than the cache duration, force a refresh.
+            // note that the file must exist, otherwise it is using a default.
+            // not checking for file existence would do a network call on every
+            // 404 or failed load.
+            if (file.exists() && !checkCacheDuration(file, cacheDurationMs)) {
+                clog("Cache hit, but file is stale. Forcing reload: " + url);
+                if (drawable instanceof ZombieDrawable)
+                    ((ZombieDrawable)drawable).headshot();
+                drawable = null;
+            }
+            else {
+                clog("Using cached: " + url);
+            }
+        }
+
+        if (drawable != null) {
             if (imageView != null) {
+                mPendingViews.remove(imageView);
                 imageView.setImageDrawable(drawable);
             }
             if (callback != null) {
@@ -466,15 +532,12 @@ public final class UrlImageViewHelper {
         // let's prepare for an asynchronous load of the image.
 
         // null it while it is downloading
-        if (imageView != null) {
-            imageView.setImageDrawable(defaultDrawable);
-        }
-
         // since listviews reuse their views, we need to
         // take note of which url this view is waiting for.
         // This may change rapidly as the list scrolls or is filtered, etc.
-        clog("Waiting for " + url);
+        clog("Waiting for " + url + " " + imageView);
         if (imageView != null) {
+            imageView.setImageDrawable(defaultDrawable);
             mPendingViews.put(imageView, url);
         }
 
@@ -506,6 +569,8 @@ public final class UrlImageViewHelper {
                     result = loadDrawableFromStream(context, url, filename, targetWidth, targetHeight);
                 }
                 catch (final Exception ex) {
+                    if (Constants.LOG_ENABLED)
+                        Log.e(Constants.LOGTAG, "Error loading " + url, ex);
                 }
             }
         };
@@ -516,6 +581,7 @@ public final class UrlImageViewHelper {
                 Assert.assertEquals(Looper.myLooper(), Looper.getMainLooper());
                 Drawable usableResult = loader.result;
                 if (usableResult == null) {
+                    clog("No usable result, defaulting " + url);
                     usableResult = defaultDrawable;
                 }
                 mPendingDownloads.remove(url);
@@ -527,7 +593,7 @@ public final class UrlImageViewHelper {
                     // validate the url it is waiting for
                     final String pendingUrl = mPendingViews.get(iv);
                     if (!url.equals(pendingUrl)) {
-                        clog("Ignoring out of date request to update view for " + url);
+                        clog("Ignoring out of date request to update view for " + url + " " + pendingUrl + " " + iv);
                         continue;
                     }
                     waitingCount++;
@@ -591,9 +657,13 @@ public final class UrlImageViewHelper {
                 protected Void doInBackground(final Void... params) {
                     try {
                         InputStream is = null;
-                        if (url.startsWith(ContactsContract.Contacts.CONTENT_URI.toString())) {
+                        if (url.startsWith(ContentResolver.SCHEME_CONTENT)) {
                             final ContentResolver cr = context.getContentResolver();
-                            is = ContactsContract.Contacts.openContactPhotoInputStream(cr, Uri.parse(url));
+                            if (url.startsWith(ContactsContract.Contacts.CONTENT_URI.toString())) {
+                                is = ContactsContract.Contacts.openContactPhotoInputStream(cr, Uri.parse(url));
+                            } else {
+                                is = cr.openInputStream(Uri.parse(url));
+                            }
                         }
                         else {
                             String thisUrl = url;
@@ -704,14 +774,16 @@ public final class UrlImageViewHelper {
                 mDeadCache.put(mUrl, mDrawable);
             mAllCache.remove(mDrawable);
             mLiveCache.remove(mUrl);
-            clog("Zombie GC event");
-            System.gc();
+            clog("Zombie GC event " + mUrl);
         }
         
         // kill this zombie, forever.
         private boolean mHeadshot = false;
         public void headshot() {
+            clog("BOOM! Headshot: " + mUrl);
             mHeadshot = true;
+            mLiveCache.remove(mUrl);
+            mAllCache.remove(mDrawable);
         }
     }
 

@@ -4,6 +4,9 @@ package edu.selu.android.classygames.games.chess;
 import edu.selu.android.classygames.games.GenericPiece;
 
 
+/**
+ * Class representing a single Chess piece.
+ */
 public class Piece extends GenericPiece
 {
 

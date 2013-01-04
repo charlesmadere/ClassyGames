@@ -22,6 +22,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.util.LruCache;
@@ -42,7 +43,6 @@ import com.facebook.android.Util;
 import com.koushikdutta.urlimageviewhelper.DiskLruCache;
 
 import edu.selu.android.classygames.data.Person;
-import edu.selu.android.classygames.utilities.Utilities;
 
 
 public class NewGameActivity extends SherlockListActivity
@@ -70,8 +70,9 @@ public class NewGameActivity extends SherlockListActivity
 		{
 			protected int sizeOf(final Long key, final Bitmap bitmap)
 			{
-				if (android.os.Build.VERSION.SDK_INT >= 12)
-				// if the running version of Android is 3.1 (Honeycomb) or later
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1)
+				// if the running version of Android is API Level 12 and higher (Honeycomb 3.1 and up)
+				// https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels
 				{
 					return bitmap.getByteCount();
 				}

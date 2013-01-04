@@ -82,11 +82,11 @@ public class GamesListFragmentActivity extends SherlockFragmentActivity
 		gamesList = (ListView) findViewById(R.id.games_list_fragment_activity_listview);
 		gamesList.setAdapter(gamesListAdapter);
 
-		if (findViewById(R.id.games_list_fragment_activity_fragment_game) != null)
+		if (findViewById(R.id.games_list_fragment_activity_game_fragment) != null)
 		{
 			usingFragmentLayout = true;
 
-			gameFragment = new GameFragment();
+			gameFragment = new EmptyGameFragment();
 			gameFragment.setArguments(getIntent().getExtras());
 			getSupportFragmentManager().beginTransaction().add(R.id.games_list_fragment_activity_listview, gameFragment).commit();
 		}

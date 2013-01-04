@@ -5,21 +5,31 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.MenuItem;
 
 import edu.selu.android.classygames.data.Person;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
-public class ConfirmGameActivity extends SherlockActivity
+public class ConfirmGameFragment extends SherlockFragment
 {
+
+
+	@Override
+	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
+	{
+
+		return super.onCreateView(inflater, container, savedInstanceState);
+	}
 
 
 	@Override
@@ -64,7 +74,7 @@ public class ConfirmGameActivity extends SherlockActivity
 					@Override
 					public void onClick(final View v)
 					{
-						Intent intent = new Intent(ConfirmGameActivity.this, GenericGameFragment.class);
+						Intent intent = new Intent(ConfirmGameFragment.this, GenericGameFragment.class);
 						intent.putExtra(GenericGameFragment.INTENT_DATA_PERSON_CHALLENGED_ID, personChallenged.getId());
 						intent.putExtra(GenericGameFragment.INTENT_DATA_PERSON_CHALLENGED_NAME, personChallenged.getName());
 
@@ -121,7 +131,7 @@ public class ConfirmGameActivity extends SherlockActivity
 
 	private void activityHasError()
 	{
-		Utilities.easyToastAndLogError(ConfirmGameActivity.this, ConfirmGameActivity.this.getString(R.string.confirm_game_activity_data_error));
+		Utilities.easyToastAndLogError(ConfirmGameFragment.this, ConfirmGameFragment.this.getString(R.string.confirm_game_activity_data_error));
 		finish();
 	}
 	

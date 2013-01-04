@@ -4,6 +4,9 @@ package edu.selu.android.classygames.games.checkers;
 import edu.selu.android.classygames.games.GenericPiece;
 
 
+/**
+ * Class representing a single Checkers piece.
+ */
 public class Piece extends GenericPiece
 {
 

@@ -13,6 +13,9 @@ public class Game
 	public final static boolean TYPE_GAME = false;
 	public final static boolean TYPE_SEPARATOR = true;
 
+	/**
+	 * Byte representing which game this is. It could be checkers, chess...
+	 */
 	private byte whichGame;
 	public final static byte WHICH_GAME_CHECKERS = 0;
 	public final static byte WHICH_GAME_CHESS = 1;

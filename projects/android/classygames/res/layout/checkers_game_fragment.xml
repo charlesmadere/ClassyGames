@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:gravity="center"
-	android:id="@+id/checkers_game_fragment_linearlayout"
 	android:layout_height="match_parent"
 	android:layout_width="match_parent"
 	android:orientation="vertical"
 	style="@style/ClassyGames">
 	<LinearLayout
+		android:id="@+id/checkers_game_fragment_y7"
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
 		android:orientation="horizontal">
@@ -68,6 +68,7 @@
 			android:layout_width="0dip" />
 	</LinearLayout>
 	<LinearLayout
+		android:id="@+id/checkers_game_fragment_y6"
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
 		android:orientation="horizontal">
@@ -129,6 +130,7 @@
 			android:layout_width="0dip" />
 	</LinearLayout>
 	<LinearLayout
+		android:id="@+id/checkers_game_fragment_y5"
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
 		android:orientation="horizontal">
@@ -190,6 +192,7 @@
 			android:layout_width="0dip" />
 	</LinearLayout>
 	<LinearLayout
+		android:id="@+id/checkers_game_fragment_y4"
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
 		android:orientation="horizontal">
@@ -251,6 +254,7 @@
 			android:layout_width="0dip" />
 	</LinearLayout>
 	<LinearLayout
+		android:id="@+id/checkers_game_fragment_y3"
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
 		android:orientation="horizontal">
@@ -312,6 +316,7 @@
 			android:layout_width="0dip" />
 	</LinearLayout>
 	<LinearLayout
+		android:id="@+id/checkers_game_fragment_y2"
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
 		android:orientation="horizontal">
@@ -373,6 +378,7 @@
 			android:layout_width="0dip" />
 	</LinearLayout>
 	<LinearLayout
+		android:id="@+id/checkers_game_fragment_y1"
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
 		android:orientation="horizontal">
@@ -434,6 +440,7 @@
 			android:layout_width="0dip" />
 	</LinearLayout>
 	<LinearLayout
+		android:id="@+id/checkers_game_fragment_y0"
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
 		android:orientation="horizontal">

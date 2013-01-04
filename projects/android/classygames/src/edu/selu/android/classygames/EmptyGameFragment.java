@@ -27,12 +27,6 @@ public class EmptyGameFragment extends GenericGameFragment
 	}
 
 
-	protected void initBoardOld()
-	{
-
-	}
-
-
 	@Override
 	protected void initViews()
 	{

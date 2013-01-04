@@ -67,7 +67,6 @@
 		<activity
 			android:label="@string/main_activity_title"
 			android:name=".MainActivity"
-			android:screenOrientation="portrait"
 			android:theme="@style/Theme.Styled">
 			<intent-filter>
 				<action
@@ -81,7 +80,6 @@
 			android:label="@string/about_fragment_title"
 			android:name=".AboutActivity"
 			android:parentActivityName=".GamesListActivity"
-			android:screenOrientation="portrait"
 			android:theme="@style/Theme.Styled">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
@@ -92,7 +90,6 @@
 			android:label="@string/checkers_game_fragment_title" 
 			android:name=".CheckersGameActivity"
 			android:parentActivityName=".GamesListActivity"
-			android:screenOrientation="portrait"
 			android:theme="@style/Theme.Styled"
 			android:uiOptions="splitActionBarWhenNarrow">
 			<meta-data
@@ -104,7 +101,6 @@
 			android:label="@string/confirm_game_activity_title"
 			android:name=".ConfirmGameActivity"
 			android:parentActivityName=".NewGameActivity"
-			android:screenOrientation="portrait"
 			android:theme="@style/Theme.Styled">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
@@ -114,14 +110,12 @@
 		<activity
 			android:label="@string/games_list_fragment_activity_title"
 			android:name=".GamesListActivity"
-			android:screenOrientation="portrait"
 			android:theme="@style/Theme.Styled" />
 
 		<activity
 			android:label="@string/game_over_fragment_title"
 			android:name=".GameOverActivity"
 			android:parentActivityName=".GamesListActivity"
-			android:screenOrientation="portrait"
 			android:theme="@style/Theme.Styled">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
@@ -132,7 +126,6 @@
 			android:label="@string/logout_fragment_title"
 			android:name=".LogoutActivity"
 			android:parentActivityName=".GamesListActivity"
-			android:screenOrientation="portrait"
 			android:theme="@style/Theme.Styled">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
@@ -143,7 +136,6 @@
 			android:label="@string/new_game_activity_title"
 			android:name=".NewGameActivity"
 			android:parentActivityName=".GamesListActivity"
-			android:screenOrientation="portrait"
 			android:theme="@style/Theme.Styled">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
@@ -154,7 +146,6 @@
 			android:label="@string/shark_fragment_title"
 			android:name=".SharkActivity"
 			android:parentActivityName=".AboutActivity"
-			android:screenOrientation="portrait"
 			android:theme="@style/Theme.Styled">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"

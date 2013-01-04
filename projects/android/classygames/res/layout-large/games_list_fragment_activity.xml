@@ -19,7 +19,7 @@
 		android:text="@string/games_list_fragment_activity_listview_no_games"
 		style="@style/paragraph" />
 	<fragment
-		android:id="@+id/games_list_fragment_activity_fragment_game"
+		android:id="@+id/games_list_fragment_activity_game_fragment"
 		android:layout_height="match_parent"
 		android:layout_width="0dip"
 		android:name="edu.selu.android.classygames.GameFragment" />
