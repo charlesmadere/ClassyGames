@@ -53,32 +53,32 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * need to be grabbed from the server and can stay null. Otherwise, this
 	 * String <strong>must</strong> have a value.
 	 */
-	protected String gameId = null;
+	protected String gameId;
 
 
 	/**
 	 * Object representing the living person that I am playing against.
 	 */
-	protected Person personChallenged = null;
+	protected Person personChallenged;
 
 
 	/**
 	 * JSON String downloaded from the server that represents the board.
 	 */
-	protected String boardJSON = null;
+	protected String boardJSON;
 
 
 	/**
 	 * The actual logical representation of the board.
 	 */
-	protected GenericBoard board = null;
+	protected GenericBoard board;
 
 
 	/**
 	 * Checks to see which position on the board was clicked and then moves
 	 * pieces and / or performs actions accordingly.
 	 */
-	protected OnClickListener onBoardClick = null;
+	protected OnClickListener onBoardClick;
 
 
 
@@ -99,7 +99,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			final long challengedId = bundle.getLong(INTENT_DATA_PERSON_CHALLENGED_ID);
 			final String challengedName = bundle.getString(INTENT_DATA_PERSON_CHALLENGED_NAME);
 
-			if (challengedId < 0 || challengedName == null || challengedName.isEmpty())
+			if (challengedId <= 0 || challengedName == null || challengedName.isEmpty())
 			{
 				fragmentHasError();
 			}
@@ -117,11 +117,10 @@ public abstract class GenericGameFragment extends SherlockFragment
 				};
 
 				initViews();
-				initBoard();
 
 				if (gameId == null || gameId.isEmpty())
 				{
-					initPieces();
+					initBoard();
 				}
 				else
 				{
@@ -134,7 +133,34 @@ public abstract class GenericGameFragment extends SherlockFragment
 	}
 
 
-	private void buildBoard()
+	private void fragmentHasError()
+	{
+
+	}
+
+
+	/**
+	 * Initializes the game board. If this game has been downloaded from the
+	 * server, then this method will run initBoardOld(). Otherwise, this is a
+	 * brand new game and this method will run initBoardNew().
+	 */
+	private void initBoard()
+	{
+		if (boardJSON == null || boardJSON.isEmpty())
+		// Test to see if this game has been downloaded from the server. This
+		// statement will validate as true if the game has been downloaded from
+		// the server.
+		{
+			initBoardNew();
+		}
+		else
+		{
+			initBoardOld();
+		}
+	}
+
+
+	private void initBoardOld()
 	{
 		if (boardJSON != null && !boardJSON.isEmpty())
 		{
@@ -160,33 +186,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 		else
 		{
 			Log.e(LOG_TAG, "Tried to build the board from either a null or empty JSON String!");
-		}
-	}
-
-
-	private void fragmentHasError()
-	{
-
-	}
-
-
-	/**
-	 * Initializes the game board. If this game has been downloaded from the
-	 * server, then this method will run initBoardOld(). Otherwise, this is a
-	 * brand new game and this method will run initBoardNew().
-	 */
-	protected void initBoard()
-	{
-		if (boardJSON == null || boardJSON.isEmpty())
-		// Test to see if this game has been downloaded from the server. This
-		// statement will validate as true if the game has been downloaded from
-		// the server.
-		{
-			initBoardNew();
-		}
-		else
-		{
-			initBoardOld();
 		}
 	}
 
@@ -293,7 +292,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		protected void onPostExecute(final String serverResponse)
 		{
 			boardJSON = parseServerResponse(serverResponse);
-			buildBoard();
+			initBoard();
 
 			if (progressDialog.isShowing())
 			{
@@ -478,12 +477,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * Initialize the game board as if it's a <strong>brand new game</strong>.
 	 */
 	protected abstract void initBoardNew();
-
-
-	/**
-	 * Initialize the game board as if an existing game is being resumed.
-	 */
-	protected abstract void initBoardOld();
 
 
 	/**

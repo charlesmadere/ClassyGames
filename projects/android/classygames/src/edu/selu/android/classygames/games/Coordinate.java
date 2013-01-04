@@ -5,7 +5,15 @@ public class Coordinate
 {
 
 
+	/**
+	 * This Coordinate object's <strong>X</strong> position.
+	 */
 	private byte x;
+
+
+	/**
+	 * This Coordinate object's <strong>Y</strong> position.
+	 */
 	private byte y;
 
 
@@ -46,10 +54,10 @@ public class Coordinate
 
 
 	/**
-	 * Returns this Coordinate's X position.
+	 * Returns this Coordinate object's <strong>X</strong> position.
 	 * 
 	 * @return
-	 * This Coordinate's X position.
+	 * This Coordinate object's <strong>X</strong> position.
 	 */
 	public byte getX()
 	{
@@ -58,10 +66,10 @@ public class Coordinate
 
 
 	/**
-	 * Returns this Coordinate's Y position.
+	 * Returns this Coordinate object's <strong>Y</strong> position.
 	 * 
 	 * @return
-	 * This Coordinate's Y position.
+	 * This Coordinate object's <strong>Y</strong> position.
 	 */
 	public byte getY()
 	{

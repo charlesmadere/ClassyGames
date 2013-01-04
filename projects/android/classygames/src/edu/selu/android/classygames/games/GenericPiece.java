@@ -60,15 +60,33 @@ public abstract class GenericPiece
 	}
 
 
+	/**
+	 * Checks to see if this Piece is an opponent's piece.
+	 * 
+	 * @return
+	 * True if this Piece is an opponent's piece.
+	 */
 	public boolean isTeamOpponent()
 	{
 		return team == TEAM_OPPONENT;
 	}
 
 
+	/**
+	 * Checks to see if this Piece is a player's piece.
+	 * 
+	 * @return
+	 * True if this Piece is a player's piece.
+	 */
 	public boolean isTeamPlayer()
 	{
 		return team == TEAM_PLAYER;
+	}
+
+
+	public boolean isTypeNull()
+	{
+		return type == TYPE_NULL;
 	}
 
 

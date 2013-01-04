@@ -1,6 +1,9 @@
 package edu.selu.android.classygames.games;
 
 
+/**
+ * Represents a single position, or spot, on the game board.
+ */
 public class Position
 {
 
@@ -27,7 +30,7 @@ public class Position
 	 */
 	public boolean hasPiece()
 	{
-		return piece != null;
+		return piece != null && piece.isTypeNull();
 	}
 
 
@@ -52,6 +55,12 @@ public class Position
 	}
 
 
+	/**
+	 * Returns this GenericPiece object's piece.
+	 * 
+	 * @return
+	 * The Piece object belonging to this Position.
+	 */
 	public GenericPiece getPiece()
 	{
 		return piece;

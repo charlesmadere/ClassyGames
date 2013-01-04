@@ -5,8 +5,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 
 import com.actionbarsherlock.view.Menu;
 
@@ -27,6 +30,30 @@ public class CheckersGameFragment extends GenericGameFragment
 	private int greenKing;
 	private int orangeNormal;
 	private int orangeKing;
+
+
+	/**
+	 * Bitmap representing the player's normal piece.
+	 */
+	private Bitmap playerNormal;
+
+
+	/**
+	 * Bitmap representing the player's king piece.
+	 */
+	private Bitmap playerKing;
+
+
+	/**
+	 * Bitmap representing the opponent's normal piece.
+	 */
+	private Bitmap opponentNormal;
+
+
+	/**
+	 * Bitmap representing the opponent's king piece.
+	 */
+	private Bitmap opponentKing;
 
 
 /*
@@ -380,6 +407,56 @@ public class CheckersGameFragment extends GenericGameFragment
 	}
 
 
+	/**
+	 * Renders all of the game's pieces on the board.
+	 */
+	private void flush()
+	{
+		for (byte x = 0; x < Board.LENGTH_HORIZONTAL; ++x)
+		{
+			for (byte y = 0; y < Board.LENGTH_VERTICAL; ++y)
+			{
+				if (board.getPosition(x, y).hasPiece())
+				{
+					boolean isTeamPlayer = true;
+
+					if (((Piece) board.getPosition(x, y).getPiece()).isTeamOpponent())
+					{
+						isTeamPlayer = false;
+					}
+
+					// TODO
+					// below there is some findViewById stuff going on with the
+					// ID being found being hard coded. This needs to be fixed.
+
+					if (((Piece) board.getPosition(x, y).getPiece()).isTypeNormal())
+					{
+						if (isTeamPlayer)
+						{
+							((ImageButton) getView().findViewById(R.id.checkers_game_fragment_x0y0)).setImageBitmap(playerNormal);
+						}
+						else
+						{
+							((ImageButton) getView().findViewById(R.id.checkers_game_fragment_x0y0)).setImageBitmap(opponentNormal);
+						}
+					}
+					else
+					{
+						if (isTeamPlayer)
+						{
+							((ImageButton) getView().findViewById(R.id.checkers_game_fragment_x0y0)).setImageBitmap(playerKing);
+						}
+						else
+						{
+							((ImageButton) getView().findViewById(R.id.checkers_game_fragment_x0y0)).setImageBitmap(opponentKing);
+						}
+					}
+				}
+			}
+		}
+	}
+
+
 	private void makeKing(MyButton pButton)
 	{
 		if(pButton.isPlayerGreen())
@@ -684,13 +761,6 @@ public class CheckersGameFragment extends GenericGameFragment
 
 
 	@Override
-	protected void initBoardOld()
-	{
-
-	}
-
-
-	@Override
 	protected void initViews()
 	{
 		getSherlockActivity().getSupportActionBar().setTitle(CheckersGameFragment.this.getString(R.string.checkers_game_fragment_title) + " " + personChallenged.getName());
@@ -766,6 +836,14 @@ public class CheckersGameFragment extends GenericGameFragment
 		getView().findViewById(R.id.checkers_game_fragment_x5y7).setOnClickListener(onBoardClick);
 		getView().findViewById(R.id.checkers_game_fragment_x6y7).setOnClickListener(onBoardClick);
 		getView().findViewById(R.id.checkers_game_fragment_x7y7).setOnClickListener(onBoardClick);
+
+		// Load bitmaps for checkers pieces into memory. This is done so that
+		// later when we draw these checkers pieces onto the board, that draw
+		// process can be done very quickly.
+		playerNormal = BitmapFactory.decodeResource(CheckersGameFragment.this.getResources(), R.drawable.piece_checkers_green_normal);
+		playerKing = BitmapFactory.decodeResource(CheckersGameFragment.this.getResources(), R.drawable.piece_checkers_green_king);
+		opponentNormal = BitmapFactory.decodeResource(CheckersGameFragment.this.getResources(), R.drawable.piece_checkers_orange_normal);
+		opponentKing = BitmapFactory.decodeResource(CheckersGameFragment.this.getResources(), R.drawable.piece_checkers_orange_king);
 	}
 
 
@@ -777,4 +855,3 @@ public class CheckersGameFragment extends GenericGameFragment
 
 
 }
-

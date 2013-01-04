@@ -1,21 +1,48 @@
 package edu.selu.android.classygames.games;
 
 
+/**
+ * A generic Board class. All games need to have their own Board class that
+ * extends from this one.
+ */
 public abstract class GenericBoard
 {
 
 
+	/**
+	 * This board's positions. This is a two dimensional array that should be
+	 * accessed as [X][Y]. So a position on the board that is (5, 3) - (X = 5
+	 * and Y = 3), would be [5][3].
+	 */
 	protected Position[][] positions;
 
 
+	/**
+	 * Creates the Board object. Initializes all of the board's positions.
+	 * 
+	 * @param lengthHorizontal
+	 * The <strong>X length</strong> of the game board.
+	 * 
+	 * @param lengthVertical
+	 * The <strong>Y length</strong> of the game board.
+	 */
 	protected GenericBoard(final byte lengthHorizontal, final byte lengthVertical)
 	{
 		positions = new Position[lengthHorizontal][lengthVertical];
-		initializeBoard(lengthHorizontal, lengthVertical);
+		initializePositions(lengthHorizontal, lengthVertical);
 	}
 
 
-	private void initializeBoard(final byte lengthHorizontal, final byte lengthVertical)
+	/**
+	 * Initializes all of this board's positions.
+	 * 
+	 * @param lengthHorizontal
+	 * The <strong>X length</strong> of the game board.
+	 * 
+	 * @param lengthVertical
+	 * The <strong>Y length</strong> of the game board.
+	 */
+	private void initializePositions(final byte lengthHorizontal, final byte lengthVertical)
 	{
 		for (byte x = 0; x < lengthHorizontal; ++x)
 		{

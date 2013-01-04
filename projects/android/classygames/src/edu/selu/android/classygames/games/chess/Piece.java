@@ -32,21 +32,6 @@ public class Piece extends GenericPiece
 
 
 	/**
-	 * Creates a Piece object. As this constructor <strong>does not</strong>
-	 * take a type parameter, this Piece's type will be set to the default
-	 * (a pawn).
-	 * 
-	 * @param team
-	 * What team is this Piece on? Use one of this class's public members for
-	 * this parameter. So that'd be either TEAM_OPPONENT or TEAM_PLAYER.
-	 */
-	public Piece(final int team)
-	{
-		this((byte) team);
-	}
-
-
-	/**
 	 * Creates a Piece object.
 	 * 
 	 * @param team
