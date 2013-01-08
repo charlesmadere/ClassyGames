@@ -108,7 +108,7 @@
 		</activity>
 
 		<activity
-			android:label="@string/games_list_fragment_activity_title"
+			android:label="@string/games_list_fragment_title"
 			android:name=".GamesListActivity"
 			android:theme="@style/Theme.Styled" />
 
@@ -133,7 +133,7 @@
 		</activity>
 
 		<activity
-			android:label="@string/new_game_activity_title"
+			android:label="@string/new_game_fragment_title"
 			android:name=".NewGameActivity"
 			android:parentActivityName=".GamesListActivity"
 			android:theme="@style/Theme.Styled">

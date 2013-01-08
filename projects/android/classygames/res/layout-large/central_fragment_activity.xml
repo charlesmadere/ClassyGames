@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="match_parent"
+	android:layout_width="match_parent"
+	android:orientation="horizontal"
+	style="@style/ClassyGames">
+	<fragment
+		android:id="@+id/central_fragment_activity_fragment_list"
+		android:layout_height="match_parent"
+		android:layout_width="0dip"
+		android:name="edu.selu.android.classygames.ListFragment" />
+	<fragment
+		android:id="@+id/central_fragment_activity_fragment_game"
+		android:layout_height="match_parent"
+		android:layout_width="0dip"
+		android:name="edu.selu.android.classygames.GameFragment" />
+</LinearLayout>

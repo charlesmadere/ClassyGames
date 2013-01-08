@@ -1,35 +1,38 @@
 package edu.selu.android.classygames;
 
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.widget.ImageView;
 
-import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 
 import edu.selu.android.classygames.utilities.Utilities;
 
 
-public class SharkFragment extends SherlockFragment
+public class AboutActivity extends SherlockActivity
 {
-
-
-	@Override
-	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
-	{
-
-		return super.onCreateView(inflater, container, savedInstanceState);
-	}
 
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.shark_fragment);
+		setContentView(R.layout.about_fragment);
 		Utilities.styleActionBar(getResources(), getSupportActionBar());
+
+		ImageView logo = (ImageView) findViewById(R.id.about_fragment_imageview_logo);
+		logo.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View v)
+			{
+				startActivity(new Intent(AboutActivity.this, SharkActivity.class));
+			}
+		});
 	}
 
 

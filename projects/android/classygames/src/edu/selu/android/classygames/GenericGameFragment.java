@@ -389,7 +389,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			progressDialog.setTitle(R.string.game_fragment_sendmove_progressdialog_title);
 			progressDialog.show();
 
-			GenericGameFragment.this.setResult(GamesListFragmentActivity.NEED_TO_REFRESH);
+			GenericGameFragment.this.setResult(CentralFragmentActivity.NEED_TO_REFRESH);
 		}
 
 

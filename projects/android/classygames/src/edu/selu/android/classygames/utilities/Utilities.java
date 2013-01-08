@@ -47,14 +47,15 @@ public class Utilities
 
 
 	// typeface data below
-	public final static int TYPEFACE_BLUE_HIGHWAY_D = 0;
-	public final static int TYPEFACE_BLUE_HIGHWAY_RG = 1;
-	public final static int TYPEFACE_SNELL_ROUNDHAND_BDSCR = 10;
-	public final static int TYPEFACE_SNELL_ROUNDHAND_BLKSCR = 11;
-	private final static String TYPEFACE_BLUE_HIGHWAY_D_PATH = "fonts/blue_highway_d.ttf";
-	private final static String TYPEFACE_BLUE_HIGHWAY_RD_PATH = "fonts/blue_highway_rg.ttf";
-	private final static String TYPEFACE_SNELL_ROUNDHAND_BDSCR_PATH = "fonts/snell_roundhand_bdscr.otf";
-	private final static String TYPEFACE_SNELL_ROUNDHAND_BLKSCR_PATH = "fonts/snell_roundhand_blkscr.otf";
+	public final static byte TYPEFACE_BLUE_HIGHWAY_D = 0;
+	public final static byte TYPEFACE_BLUE_HIGHWAY_RG = 1;
+	public final static byte TYPEFACE_SNELL_ROUNDHAND_BDSCR = 10;
+	public final static byte TYPEFACE_SNELL_ROUNDHAND_BLKSCR = 11;
+	private final static String TYPEFACE_PATH = "fonts/";
+	private final static String TYPEFACE_BLUE_HIGHWAY_D_PATH = TYPEFACE_PATH + "blue_highway_d.ttf";
+	private final static String TYPEFACE_BLUE_HIGHWAY_RD_PATH = TYPEFACE_PATH + "blue_highway_rg.ttf";
+	private final static String TYPEFACE_SNELL_ROUNDHAND_BDSCR_PATH = TYPEFACE_PATH + "snell_roundhand_bdscr.otf";
+	private final static String TYPEFACE_SNELL_ROUNDHAND_BLKSCR_PATH = TYPEFACE_PATH + "snell_roundhand_blkscr.otf";
 	private static Typeface typefaceBlueHighwayD;
 	private static Typeface typefaceBlueHighwayRG;
 	private static Typeface typefaceSnellRoundHandBDSCR;
@@ -225,7 +226,7 @@ public class Utilities
 	 * Returns the Typeface object that you requested. If an invalid int ID was passed into
 	 * this method, this method will then return null.
 	 */
-	public static Typeface getTypeface(final AssetManager assetManager, final int typeface)
+	public static Typeface getTypeface(final AssetManager assetManager, final byte typeface)
 	{
 		switch (typeface)
 		{

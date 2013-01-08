@@ -1,6 +1,9 @@
 package edu.selu.android.classygames.data;
 
 
+/**
+ * Class representing a single Game in the Games List.
+ */
 public class Game
 {
 
@@ -34,7 +37,8 @@ public class Game
 
 
 	/**
-	 * The ID of this Game object as downloaded from the server.
+	 * The ID of this Game object as downloaded from the server. This is a
+	 * unique hash.
 	 */
 	private String id;
 
@@ -95,26 +99,54 @@ public class Game
 	}
 
 
+	/**
+	 * @return
+	 * This Game object's ID. This is a unique hash.
+	 */
 	public String getId()
 	{
 		return id;
 	}
 
 
+	/**
+	 * @return
+	 * The person that the current Android device's user is playing against.
+	 */
 	public Person getPerson()
 	{
 		return person;
 	}
 
 
+	/**
+	 * Returns the raw Unix Epoch. If your purpose is for something that a human is
+	 * going to want to read, then you should use the getTimestampFormatted()
+	 * method instead of this one.
+	 * 
+	 * @return
+	 * The raw Unix Epoch.
+	 */
 	public long getTimestamp()
 	{
 		return timestamp;
 	}
 
 
+	/**
+	 * Reads the Unix Epoch as stored for this Game object and compares it to
+	 * the current Android system's Unix Epoch. Generates a human readable
+	 * version of the difference between those two times.
+	 * 
+	 * @return
+	 * A human readable version of the Unix Epoch.
+	 */
 	public String getTimestampFormatted()
 	{
+		// TODO
+		// rewrite the below code to grab strings from the XML file instead of
+		// being hard coded
+
 		if (timestampFormatted == null || timestampFormatted.isEmpty())
 		// check to see if we've already created a formatted timestamp String
 		// for this game object
@@ -123,7 +155,8 @@ public class Game
 			// last move
 			final long timeDifference = (System.currentTimeMillis() / 1000) - timestamp;
 
-			// calculate the number of weeks in the difference between the two times
+			// calculate the number of WEEKS in the difference between the two
+			// times
 			long timeAgo = timeDifference / 604800;
 
 			if (timeAgo >= 1)
@@ -143,7 +176,7 @@ public class Game
 			}
 			else
 			{
-				// calculate the number of days in the difference between the
+				// calculate the number of DAYS in the difference between the
 				// two times
 				timeAgo = timeDifference / 86400;
 
@@ -164,8 +197,8 @@ public class Game
 				}
 				else
 				{
-					// calculate the number of hours in the difference
-					// between the two times
+					// calculate the number of HOURS in the difference between
+					// the two times
 					timeAgo = timeDifference / 3600;
 
 					if (timeAgo >= 1)
@@ -189,8 +222,8 @@ public class Game
 					}
 					else
 					{
-						// calculate the number of minutes in the
-						// difference between the two times
+						// calculate the number of MINUTES in the difference
+						// between the two times
 						timeAgo = timeDifference / 60;
 
 						if (timeAgo >= 1)
@@ -233,6 +266,16 @@ public class Game
 	}
 
 
+	/**
+	 * When using this method you're probably going to want to compare the
+	 * value returned against some of this class's public data members, mainly
+	 * the WHICH_GAME_* bytes. So that could be WHICH_GAME_CHECKERS,
+	 * WHICH_GAME_CHESS...
+	 * 
+	 * @return
+	 * A byte that represents which game this Game object represents. Could be
+	 * Checkers, Chess...
+	 */
 	public byte getWhichGame()
 	{
 		return whichGame;

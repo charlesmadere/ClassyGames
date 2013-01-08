@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
 	android:adjustViewBounds="true"
-	android:contentDescription="@string/games_list_fragment_activity_turn_yours"
+	android:contentDescription="@string/games_list_fragment_turn_yours"
 	android:layout_height="wrap_content"
 	android:layout_width="match_parent"
 	android:paddingBottom="4dip"

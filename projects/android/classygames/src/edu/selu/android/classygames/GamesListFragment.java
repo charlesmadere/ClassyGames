@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -40,7 +41,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -54,7 +55,7 @@ import edu.selu.android.classygames.utilities.ServerUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
-public class GamesListFragmentActivity extends SherlockFragmentActivity
+public class GamesListFragment extends SherlockListFragment
 {
 
 
@@ -72,27 +73,27 @@ public class GamesListFragmentActivity extends SherlockFragmentActivity
 	private boolean usingFragmentLayout = false;
 
 
+	private OnGameSelectedListener callback;
+
+
+	public interface OnGameSelectedListener
+	{
+		public void onGameSelected(final int position);
+	}
+
+
 	@Override
 	public void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.games_list_fragment_activity);
+		setContentView(R.layout.games_list_fragment);
 		Utilities.styleActionBar(getResources(), getSupportActionBar(), false);
 
-		gamesList = (ListView) findViewById(R.id.games_list_fragment_activity_listview);
+		gamesList = (ListView) findViewById(R.id.games_list_fragment_listview);
 		gamesList.setAdapter(gamesListAdapter);
 
-		if (findViewById(R.id.games_list_fragment_activity_game_fragment) != null)
-		{
-			usingFragmentLayout = true;
-
-			gameFragment = new EmptyGameFragment();
-			gameFragment.setArguments(getIntent().getExtras());
-			getSupportFragmentManager().beginTransaction().add(R.id.games_list_fragment_activity_listview, gameFragment).commit();
-		}
-
 		// setup cache size for loading drawable images
-		final int memClass = ((ActivityManager) GamesListFragmentActivity.this.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
+		final int memClass = ((ActivityManager) CentralFragmentActivity.this.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
 		final int cacheSize = ImageCache.getCacheSize(memClass);
 
 		memoryCache = new LruCache<Long, Bitmap> (cacheSize)
@@ -101,7 +102,8 @@ public class GamesListFragmentActivity extends SherlockFragmentActivity
 			protected int sizeOf(final Long key, final Bitmap bitmap)
 			{
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1)
-				// if the running version of Android is API Level 12 and higher (Honeycomb 3.1 and up)
+				// if the running version of Android is API Level 12 and higher
+				// (Honeycomb 3.1 and up)
 				// https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels
 				{
 					return bitmap.getByteCount();
@@ -145,6 +147,27 @@ public class GamesListFragmentActivity extends SherlockFragmentActivity
 	}
 
 
+	/**
+	 * This makes sure that the Activity containing this Fragment has
+	 * implemented the callback interface. If the callback interface has not
+	 * been implemented, an exception is thrown.
+	 */
+	@Override
+	public void onAttach(final Activity activity)
+	{
+		super.onAttach(activity);
+
+		try
+		{
+			callback = (OnGameSelectedListener) activity;
+		}
+		catch (final ClassCastException e)
+		{
+			throw new ClassCastException(activity.toString() + " must implement OnGameSelectedListener!");
+		}
+	}
+
+
 	@Override
 	public boolean onCreateOptionsMenu(final Menu menu)
 	{
@@ -155,20 +178,31 @@ public class GamesListFragmentActivity extends SherlockFragmentActivity
 
 
 	@Override
+	public void onListItemClick(final ListView l, final View v, final int position, final long id)
+	{
+		// notify the parent Activity that a game has been sleected
+		callback.onGameSelected(position);
+
+		// set the item as checked to be highlighted when in two-pane layout
+		getListView().setItemChecked(position, true);
+	}
+
+
+	@Override
 	public boolean onOptionsItemSelected(final MenuItem item)
 	{
 		switch (item.getItemId()) 
 		{
 			case R.id.games_list_fragment_activity_actionbar_about:
-				startActivity(new Intent(GamesListFragmentActivity.this, AboutFragment.class));
+				startActivity(new Intent(CentralFragmentActivity.this, AboutFragment.class));
 				return true;
 
 			case R.id.games_list_fragment_activity_actionbar_logout:
-				startActivityForResult(new Intent(GamesListFragmentActivity.this, LogoutFragment.class), 0);
+				startActivityForResult(new Intent(CentralFragmentActivity.this, LogoutFragment.class), 0);
 				return true;
 
 			case R.id.games_list_fragment_activity_actionbar_new_game:
-				startActivityForResult(new Intent(GamesListFragmentActivity.this, NewGameActivity.class), 0);
+				startActivityForResult(new Intent(CentralFragmentActivity.this, NewGameActivity.class), 0);
 				return true;
 
 			case R.id.games_list_fragment_activity_actionbar_refresh:
@@ -196,6 +230,8 @@ public class GamesListFragmentActivity extends SherlockFragmentActivity
 			new AsyncPopulateGamesList().execute();
 		}
 	}
+
+
 
 
 	private final class AsyncGetFacebookIdentificationAndGCMRegister extends AsyncTask<Void, Void, Person>
@@ -243,13 +279,13 @@ public class GamesListFragmentActivity extends SherlockFragmentActivity
 		@Override
 		protected void onPostExecute(final Person facebookIdentity)
 		{
-			Utilities.setWhoAmI(GamesListFragmentActivity.this, facebookIdentity);
+			Utilities.setWhoAmI(CentralFragmentActivity.this, facebookIdentity);
 
 			// register for GCM
 			Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
-			registrationIntent.putExtra("app", PendingIntent.getBroadcast(GamesListFragmentActivity.this, 0, new Intent(), 0));
+			registrationIntent.putExtra("app", PendingIntent.getBroadcast(CentralFragmentActivity.this, 0, new Intent(), 0));
 			registrationIntent.putExtra("sender", SecretConstants.GOOGLE_PROJECT_ID);
-			GamesListFragmentActivity.this.startService(registrationIntent);
+			CentralFragmentActivity.this.startService(registrationIntent);
 
 			if (progressDialog.isShowing())
 			{
@@ -263,18 +299,20 @@ public class GamesListFragmentActivity extends SherlockFragmentActivity
 		@Override
 		protected void onPreExecute()
 		{
-			progressDialog = new ProgressDialog(GamesListFragmentActivity.this);
+			progressDialog = new ProgressDialog(CentralFragmentActivity.this);
 			progressDialog.setCancelable(false);
 			progressDialog.setCanceledOnTouchOutside(false);
-			progressDialog.setMessage(GamesListFragmentActivity.this.getString(R.string.games_list_fragment_activity_init_progressdialog_message));
-			progressDialog.setTitle(R.string.games_list_fragment_activity_init_progressdialog_title);
+			progressDialog.setMessage(CentralFragmentActivity.this.getString(R.string.games_list_fragment_init_progressdialog_message));
+			progressDialog.setTitle(R.string.games_list_fragment_init_progressdialog_title);
 			progressDialog.show();
 
-			Utilities.getFacebook().extendAccessTokenIfNeeded(GamesListFragmentActivity.this, null);
+			Utilities.getFacebook().extendAccessTokenIfNeeded(CentralFragmentActivity.this, null);
 		}
 
 
 	}
+
+
 
 
 	private final class AsyncPopulateGamesList extends AsyncTask<Void, Integer, ArrayList<Game>>
@@ -307,7 +345,7 @@ public class GamesListFragmentActivity extends SherlockFragmentActivity
 			try
 			{
 				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, Long.valueOf(Utilities.getWhoAmI(GamesListFragmentActivity.this).getId()).toString()));
+				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, Long.valueOf(Utilities.getWhoAmI(CentralFragmentActivity.this).getId()).toString()));
 
 				// make a call to the server and grab the return JSON result
 				final String jsonString = ServerUtilities.postToServer(ServerUtilities.SERVER_GET_GAMES_ADDRESS, nameValuePairs);
@@ -330,7 +368,7 @@ public class GamesListFragmentActivity extends SherlockFragmentActivity
 		@Override
 		protected void onPostExecute(final ArrayList<Game> games)
 		{
-			gamesListAdapter = new GamesListAdapter(GamesListFragmentActivity.this, R.layout.new_game_fragment_listview_item, games);
+			gamesListAdapter = new GamesListAdapter(CentralFragmentActivity.this, R.layout.new_game_fragment_listview_item, games);
 			gamesListAdapter.notifyDataSetChanged();
 
 			progressDialog.dismiss();
@@ -338,15 +376,15 @@ public class GamesListFragmentActivity extends SherlockFragmentActivity
 			switch (toastToShow)
 			{
 				case TOAST_NO_GAMES:
-					Utilities.easyToast(GamesListFragmentActivity.this, R.string.games_list_fragment_activity_getgames_no_games);
+					Utilities.easyToast(CentralFragmentActivity.this, R.string.games_list_fragment_getgames_no_games);
 					break;
 
 				case TOAST_SERVER_ERROR:
-					Utilities.easyToast(GamesListFragmentActivity.this, R.string.games_list_fragment_activity_getgames_error);
+					Utilities.easyToast(CentralFragmentActivity.this, R.string.games_list_fragment_getgames_error);
 					break;
 
 				case TOAST_SERVER_RESPONSE_ERROR:
-					Utilities.easyToast(GamesListFragmentActivity.this, R.string.games_list_fragment_activity_getgames_response_error);
+					Utilities.easyToast(CentralFragmentActivity.this, R.string.games_list_fragment_getgames_response_error);
 					break;
 			}
 		}
@@ -355,17 +393,17 @@ public class GamesListFragmentActivity extends SherlockFragmentActivity
 		@Override
 		protected void onPreExecute()
 		{
-			progressDialog = new ProgressDialog(GamesListFragmentActivity.this);
+			progressDialog = new ProgressDialog(CentralFragmentActivity.this);
 			progressDialog.setCancelable(true);
 			progressDialog.setCanceledOnTouchOutside(false);
 			progressDialog.setMax(4);
-			progressDialog.setMessage(GamesListFragmentActivity.this.getString(R.string.games_list_fragment_activity_getgames_progressdialog_message));
+			progressDialog.setMessage(CentralFragmentActivity.this.getString(R.string.games_list_fragment_getgames_progressdialog_message));
 			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-			progressDialog.setTitle(R.string.games_list_fragment_activity_getgames_progressdialog_title);
+			progressDialog.setTitle(R.string.games_list_fragment_getgames_progressdialog_title);
 			progressDialog.show();
 
 			// cancel all notifications
-			((NotificationManager) GamesListFragmentActivity.this.getSystemService(NOTIFICATION_SERVICE)).cancelAll();
+			((NotificationManager) CentralFragmentActivity.this.getSystemService(NOTIFICATION_SERVICE)).cancelAll();
 
 			toastToShow = TOAST_NONE;
 		}
@@ -417,7 +455,7 @@ public class GamesListFragmentActivity extends SherlockFragmentActivity
 					}
 					else
 					{
-						Utilities.easyToast(GamesListFragmentActivity.this, GamesListFragmentActivity.this.getString(R.string.games_list_fragment_activity_getgames_error));
+						Utilities.easyToast(CentralFragmentActivity.this, CentralFragmentActivity.this.getString(R.string.games_list_fragment_getgames_error));
 						final String errorMessage = jsonResult.getString(ServerUtilities.POST_DATA_ERROR);
 
 						if (errorMessage != null && !errorMessage.isEmpty())
@@ -510,6 +548,8 @@ public class GamesListFragmentActivity extends SherlockFragmentActivity
 	}
 
 
+
+
 	private class GamesListAdapter extends ArrayAdapter<Game>
 	{
 
@@ -536,7 +576,7 @@ public class GamesListFragmentActivity extends SherlockFragmentActivity
 
 				if (game.isTypeGame())
 				{
-					convertView = layoutInflater.inflate(R.layout.games_list_fragment_activity_listview_item, null);
+					convertView = layoutInflater.inflate(R.layout.games_list_fragment_listview_item, null);
 
 					Bitmap diskImage = ImageCache.getBitmapFromDiskCache(game.getPerson().getId(), diskCache);
 					Bitmap memoryImage = memoryCache.get(game.getPerson().getId());
@@ -581,10 +621,10 @@ public class GamesListFragmentActivity extends SherlockFragmentActivity
 							@Override
 							public void onClick(final View v)
 							{
-								final Intent intent = new Intent(GamesListFragmentActivity.this, CheckersGameFragment.class);
-								intent.putExtra(GameFragment.INTENT_DATA_GAME_ID, game.getId());
-								intent.putExtra(GameFragment.INTENT_DATA_PERSON_CHALLENGED_ID, game.getPerson().getId());
-								intent.putExtra(GameFragment.INTENT_DATA_PERSON_CHALLENGED_NAME, game.getPerson().getName());
+								final Intent intent = new Intent(CentralFragmentActivity.this, CheckersGameFragment.class);
+								intent.putExtra(GenericGameFragment.INTENT_DATA_GAME_ID, game.getId());
+								intent.putExtra(GenericGameFragment.INTENT_DATA_PERSON_CHALLENGED_ID, game.getPerson().getId());
+								intent.putExtra(GenericGameFragment.INTENT_DATA_PERSON_CHALLENGED_NAME, game.getPerson().getName());
 
 								if (usingFragmentLayout)
 								{
@@ -594,15 +634,15 @@ public class GamesListFragmentActivity extends SherlockFragmentActivity
 											gameFragment = new CheckersGameFragment();
 											break;
 
-//										case Game.WHICH_GAME_CHESS:
-//											gameFragment = new ChessGameFragment();
-//											break;
+										case Game.WHICH_GAME_CHESS:
+											gameFragment = new ChessGameFragment();
+											break;
 									}
 
 									gameFragment.setArguments(intent.getExtras());
 
 									final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-									transaction.replace(R.id.games_list_fragment_activity_fragment_game, gameFragment);
+									transaction.replace(R.id.games_list_fragment_game_fragment, gameFragment);
 									transaction.commit();
 								}
 								else
@@ -623,12 +663,12 @@ public class GamesListFragmentActivity extends SherlockFragmentActivity
 				{
 					if (game.isTurnYours())
 					{
-						convertView = layoutInflater.inflate(R.layout.games_list_fragment_activity_listview_turn_yours, null);
+						convertView = layoutInflater.inflate(R.layout.games_list_fragment_listview_turn_yours, null);
 						viewHolder.picture = (ImageView) convertView.findViewById(R.drawable.turn_yours);
 					}
 					else
 					{
-						convertView = layoutInflater.inflate(R.layout.games_list_fragment_activity_listview_turn_theirs, null);
+						convertView = layoutInflater.inflate(R.layout.games_list_fragment_listview_turn_theirs, null);
 						viewHolder.picture = (ImageView) convertView.findViewById(R.drawable.turn_theirs);
 					}
 
@@ -691,6 +731,8 @@ public class GamesListFragmentActivity extends SherlockFragmentActivity
 	}
 
 
+
+
 	/**
 	 * made this li'l class while trying to optimize our listview. apparently it
 	 * helps performance
@@ -707,6 +749,8 @@ public class GamesListFragmentActivity extends SherlockFragmentActivity
 
 
 	}
+
+
 
 
 	private class GamesListSorter implements Comparator<Game>

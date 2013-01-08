@@ -86,7 +86,7 @@ public class GameOverFragment extends SherlockFragment
 					@Override
 					public void onClick(final View v)
 					{
-						setResult(GamesListFragmentActivity.NEED_TO_REFRESH);
+						setResult(CentralFragmentActivity.NEED_TO_REFRESH);
 						finish();
 					}
 				});

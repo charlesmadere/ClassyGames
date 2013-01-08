@@ -5,7 +5,17 @@ public class Person
 {
 
 
+	/**
+	 * The person's Facebook ID. This is a unique, always positive, number
+	 * across the entire Facebook system.
+	 */
 	private long id;
+
+
+	/**
+	 * The person's Facebook name. It could be "Charles Madere". Obviously this
+	 * is not a unique identifier for this person.
+	 */
 	private String name;
 
 

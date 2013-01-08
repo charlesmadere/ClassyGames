@@ -64,7 +64,7 @@ public class MainActivity extends SherlockActivity
 
 	private void goToGamesList()
 	{
-		startActivity(new Intent(MainActivity.this, GamesListFragmentActivity.class));
+		startActivity(new Intent(MainActivity.this, CentralFragmentActivity.class));
 		finish();
 	}
 

@@ -9,7 +9,7 @@
 	android:paddingTop="12dip">
 	<ImageView
 		android:adjustViewBounds="true"
-		android:contentDescription="@string/games_list_fragment_activity_listview_item_picture_description"
+		android:contentDescription="@string/games_list_fragment_listview_item_picture_description"
 		android:gravity="center_vertical"
 		android:id="@+id/games_list_fragment_activity_listview_item_picture"
 		android:layout_alignParentTop="true"

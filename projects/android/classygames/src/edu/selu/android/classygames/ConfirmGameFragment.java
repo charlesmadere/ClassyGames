@@ -106,8 +106,8 @@ public class ConfirmGameFragment extends SherlockFragment
 
 		switch (resultCode)
 		{
-			case GamesListFragmentActivity.NEED_TO_REFRESH:
-				setResult(GamesListFragmentActivity.NEED_TO_REFRESH);
+			case CentralFragmentActivity.NEED_TO_REFRESH:
+				setResult(CentralFragmentActivity.NEED_TO_REFRESH);
 				finish();
 				break;
 		}

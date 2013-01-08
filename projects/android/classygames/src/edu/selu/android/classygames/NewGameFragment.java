@@ -36,6 +36,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListActivity;
+import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -45,7 +46,7 @@ import com.koushikdutta.urlimageviewhelper.DiskLruCache;
 import edu.selu.android.classygames.data.Person;
 
 
-public class NewGameActivity extends SherlockListActivity
+public class NewGameFragment extends SherlockListFragment
 {
 
 

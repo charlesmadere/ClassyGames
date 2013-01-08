@@ -17,6 +17,6 @@
 		android:layout_width="match_parent"
 		android:paddingLeft="8dip"
 		android:paddingRight="8dip"
-		android:text="@string/new_game_activity_listview_no_friends"
+		android:text="@string/new_game_fragment_listview_no_friends"
 		style="@style/paragraph" />
 </LinearLayout>
