@@ -22,7 +22,6 @@ import android.view.ViewGroup;
 import com.actionbarsherlock.app.SherlockFragment;
 
 import edu.selu.android.classygames.data.Person;
-import edu.selu.android.classygames.games.Coordinate;
 import edu.selu.android.classygames.games.GenericBoard;
 import edu.selu.android.classygames.games.GenericPiece;
 import edu.selu.android.classygames.games.checkers.Board;
@@ -305,8 +304,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 		protected void onPreExecute()
 		{
 			progressDialog = new ProgressDialog(GenericGameFragment.this.getSherlockActivity());
-			progressDialog.setMessage(GenericGameFragment.this.getString(R.string.game_fragment_getgame_progressdialog_message));
-			progressDialog.setTitle(R.string.game_fragment_getgame_progressdialog_title);
+			progressDialog.setMessage(GenericGameFragment.this.getString(R.string.generic_game_fragment_getgame_progressdialog_message));
+			progressDialog.setTitle(R.string.generic_game_fragment_getgame_progressdialog_title);
 			progressDialog.setCancelable(true);
 			progressDialog.setCanceledOnTouchOutside(false);
 			progressDialog.show();
@@ -314,6 +313,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	}
+
+
 
 
 	private final class AsyncSendMove extends AsyncTask<Void, Void, String>
@@ -385,11 +386,11 @@ public abstract class GenericGameFragment extends SherlockFragment
 			progressDialog = new ProgressDialog(GenericGameFragment.this.getActivity());
 			progressDialog.setCancelable(false);
 			progressDialog.setCanceledOnTouchOutside(false);
-			progressDialog.setMessage(GenericGameFragment.this.getString(R.string.game_fragment_sendmove_progressdialog_message));
-			progressDialog.setTitle(R.string.game_fragment_sendmove_progressdialog_title);
+			progressDialog.setMessage(GenericGameFragment.this.getString(R.string.generic_game_fragment_sendmove_progressdialog_message));
+			progressDialog.setTitle(R.string.generic_game_fragment_sendmove_progressdialog_title);
 			progressDialog.show();
 
-			GenericGameFragment.this.setResult(CentralFragmentActivity.NEED_TO_REFRESH);
+//			GenericGameFragment.this.setResult(CentralFragmentActivity.NEED_TO_REFRESH);
 		}
 
 

@@ -10,11 +10,6 @@
 		android:showAsAction="ifRoom|withText"
 		android:title="@string/refresh" />
 	<item
-		android:icon="@drawable/ab_logout"
-		android:id="@+id/games_list_fragment_activity_actionbar_logout"
-		android:showAsAction="never|withText"
-		android:title="@string/logout" />
-	<item
 		android:icon="@drawable/ab_about"
 		android:id="@+id/games_list_fragment_activity_actionbar_about"
 		android:showAsAction="never|withText"

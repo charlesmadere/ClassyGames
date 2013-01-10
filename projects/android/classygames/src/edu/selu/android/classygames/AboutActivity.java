@@ -24,7 +24,7 @@ public class AboutActivity extends SherlockActivity
 		setContentView(R.layout.about_fragment);
 		Utilities.styleActionBar(getResources(), getSupportActionBar());
 
-		ImageView logo = (ImageView) findViewById(R.id.about_fragment_imageview_logo);
+		final ImageView logo = (ImageView) findViewById(R.id.about_fragment_imageview_logo);
 		logo.setOnClickListener(new OnClickListener()
 		{
 			@Override

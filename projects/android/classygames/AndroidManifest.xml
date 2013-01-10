@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="edu.selu.android.classygames"
 	android:versionCode="7"
-	android:versionName="1.1.2">
+	android:versionName="1.5">
 
 	<uses-sdk
 		android:minSdkVersion="10"
@@ -14,11 +14,6 @@
 		android:name="android.permission.READ_EXTERNAL_STORAGE" />
 	<uses-permission 
 		android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-	<!-- some Facebook v3.0 stuff -->
-	<meta-data
-		android:name="com.facebook.sdk.ApplicationId"
-		android:value="@string/app_id" />
 
 	<!-- begin GCM stuff -->
 	<!-- this GCM stuff was taken from this official google tutorial -->
@@ -46,6 +41,11 @@
 		android:allowBackup="false"
 		android:icon="@drawable/launcher"
 		android:label="@string/app_name">
+
+    	<!-- some Facebook v3.0 stuff -->
+		<meta-data
+			android:name="com.facebook.sdk.ApplicationId"
+			android:value="@string/facebook_app_id" />
 
 		<!-- more GCM stuff -->
 		<receiver
@@ -77,35 +77,45 @@
 		</activity>
 
 		<activity
+			android:label="@string/central_fragment_activity_title"
+			android:name=".CentralFragmentActivity"
+			android:theme="@style/Theme.Styled" />
+
+		<activity
 			android:label="@string/about_fragment_title"
 			android:name=".AboutActivity"
-			android:parentActivityName=".GamesListActivity"
+			android:parentActivityName=".CentralFragmentActivity"
 			android:theme="@style/Theme.Styled">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".GamesListActivity" />
+				android:value=".CentralFragmentActivity" />
 		</activity>
 
 		<activity
 			android:label="@string/checkers_game_fragment_title" 
 			android:name=".CheckersGameActivity"
-			android:parentActivityName=".GamesListActivity"
+			android:parentActivityName=".CentralFragmentActivity"
 			android:theme="@style/Theme.Styled"
 			android:uiOptions="splitActionBarWhenNarrow">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".GamesListActivity" />
+				android:value=".CentralFragmentActivity" />
 		</activity>
 
 		<activity
 			android:label="@string/confirm_game_activity_title"
 			android:name=".ConfirmGameActivity"
-			android:parentActivityName=".NewGameActivity"
+			android:parentActivityName=".CentralFragmentActivity"
 			android:theme="@style/Theme.Styled">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".NewGameActivity" />
+				android:value=".CentralFragmentActivity" />
 		</activity>
+
+		<activity
+			android:label="@string/app_name"
+			android:name="com.facebook.LoginActivity"
+			android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
 		<activity
 			android:label="@string/games_list_fragment_title"
@@ -115,31 +125,21 @@
 		<activity
 			android:label="@string/game_over_fragment_title"
 			android:name=".GameOverActivity"
-			android:parentActivityName=".GamesListActivity"
+			android:parentActivityName=".CentralFragmentActivity"
 			android:theme="@style/Theme.Styled">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".GamesListActivity" />
-		</activity>
-
-		<activity
-			android:label="@string/logout_fragment_title"
-			android:name=".LogoutActivity"
-			android:parentActivityName=".GamesListActivity"
-			android:theme="@style/Theme.Styled">
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".GamesListActivity" />
+				android:value=".CentralFragmentActivity" />
 		</activity>
 
 		<activity
 			android:label="@string/new_game_fragment_title"
 			android:name=".NewGameActivity"
-			android:parentActivityName=".GamesListActivity"
+			android:parentActivityName=".CentralFragmentActivity"
 			android:theme="@style/Theme.Styled">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".GamesListActivity" />
+				android:value=".CentralFragmentActivity" />
 		</activity>
 
 		<activity

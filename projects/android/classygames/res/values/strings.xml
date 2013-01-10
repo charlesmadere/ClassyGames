@@ -3,8 +3,8 @@
 	<string name="about">About</string>
 	<string name="about_fragment_about">Classy Games was developed by a team of five students attending Southeastern Louisiana University.</string>
 	<string name="about_fragment_title">About</string>
-	<string name="app_id">324400870964487</string>
 	<string name="app_name">Classy Games</string>
+	<string name="central_fragment_activity_title">Central Fragment Activity</string>
 	<string name="checkers_game_fragment_title">Checkers with</string>
 	<string name="chess_game_fragment_title">Chess with</string>
 	<string name="confirm_game_activity_button_accept">Start Game!</string>
@@ -13,6 +13,7 @@
 	<string name="confirm_game_activity_description">Are you sure that you want to start a game with this person?</string>
 	<string name="confirm_game_activity_person_picture_description">Friend\'s Picture</string>
 	<string name="confirm_game_activity_title">Confirm Game</string>
+	<string name="facebook_app_id">324400870964487</string>
 	<string name="game_fragment_board_x0y0">0, 0</string>
 	<string name="game_fragment_board_x1y0">1, 0</string>
 	<string name="game_fragment_board_x2y0">2, 0</string>
@@ -77,11 +78,11 @@
 	<string name="game_fragment_board_x5y7">5, 7</string>
 	<string name="game_fragment_board_x6y7">6, 7</string>
 	<string name="game_fragment_board_x7y7">7, 7</string>
-	<string name="game_fragment_data_error">Error while trying to instantiate the game.</string>
-	<string name="game_fragment_getgame_progressdialog_message">Retrieving your game&#8230;</string>
-	<string name="game_fragment_getgame_progressdialog_title">Classy Games is working&#8230;</string>
-	<string name="game_fragment_sendmove_progressdialog_message">Sending your class to our server, the hamsters will process it shortly!</string>
-	<string name="game_fragment_sendmove_progressdialog_title">Classy Hamsters are working diligently!</string>
+	<string name="generic_game_fragment_data_error">Error while trying to instantiate the game.</string>
+	<string name="generic_game_fragment_getgame_progressdialog_message">Retrieving your game&#8230;</string>
+	<string name="generic_game_fragment_getgame_progressdialog_title">Classy Games is working&#8230;</string>
+	<string name="generic_game_fragment_sendmove_progressdialog_message">Sending your class to our server, the hamsters will process it shortly!</string>
+	<string name="generic_game_fragment_sendmove_progressdialog_title">Classy Hamsters are working diligently!</string>
 	<string name="games_list_fragment_getgames_error">Server was unable to respond with a list of games. Please try again later!</string>
 	<string name="games_list_fragment_getgames_no_games">You have no active games!</string>
 	<string name="games_list_fragment_getgames_response_error">Server was not found. Please try again later!</string>

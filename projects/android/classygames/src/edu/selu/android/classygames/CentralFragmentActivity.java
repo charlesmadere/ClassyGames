@@ -5,6 +5,8 @@ import android.os.Bundle;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
+import edu.selu.android.classygames.utilities.Utilities;
+
 
 public class CentralFragmentActivity extends SherlockFragmentActivity implements GamesListFragment.OnGameSelectedListener
 {
@@ -15,6 +17,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.central_fragment_activity);
+		Utilities.styleActionBar(getResources(), getSupportActionBar());
 
 		if (findViewById(R.id.central_fragment_activity_fragment_container) != null)
 		{
