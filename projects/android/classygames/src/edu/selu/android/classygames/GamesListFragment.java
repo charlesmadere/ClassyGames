@@ -1,13 +1,13 @@
 package edu.selu.android.classygames;
 
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.view.MenuItem;
 
 
 public class GamesListFragment extends SherlockListFragment
@@ -23,10 +23,29 @@ public class GamesListFragment extends SherlockListFragment
 	}
 
 
+//	@Override
+//	public void onAttach(final Activity activity)
+//	// This makes sure that the Activity containing this Fragment has
+//	// implemented the callback interface. If the callback interface has not
+//	// been implemented, an exception is thrown.
+//	{
+//		super.onAttach(activity);
+//
+//		try
+//		{
+//			callback = (OnGameSelectedListener) activity;
+//		}
+//		catch (final ClassCastException e)
+//		{
+//			throw new ClassCastException(activity.toString() + " must implement OnGameSelectedListener!");
+//		}
+//	}
+
+
 	@Override
-	public void onCreate(final Bundle savedInstanceState)
+	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{
-		super.onCreate(savedInstanceState);
+		return inflater.inflate(R.layout.games_list_fragment, container, false);
 	}
 
 
@@ -48,25 +67,6 @@ public class GamesListFragment extends SherlockListFragment
 
 
 	@Override
-	public void onAttach(final Activity activity)
-	// This makes sure that the Activity containing this Fragment has
-	// implemented the callback interface. If the callback interface has not
-	// been implemented, an exception is thrown.
-	{
-		super.onAttach(activity);
-
-		try
-		{
-			callback = (OnGameSelectedListener) activity;
-		}
-		catch (final ClassCastException e)
-		{
-			throw new ClassCastException(activity.toString() + " must implement OnGameSelectedListener!");
-		}
-	}
-
-
-	@Override
 	public void onListItemClick(final ListView l, final View v, final int position, final long id)
 	{
 		// notify the parent Activity that a game has been selected
@@ -74,29 +74,6 @@ public class GamesListFragment extends SherlockListFragment
 
 		// set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(position, true);
-	}
-
-
-	@Override
-	public boolean onOptionsItemSelected(final MenuItem item)
-	{
-		switch (item.getItemId()) 
-		{
-			case R.id.games_list_fragment_activity_actionbar_about:
-				
-				return true;
-
-			case R.id.games_list_fragment_activity_actionbar_new_game:
-				
-				return true;
-
-			case R.id.games_list_fragment_activity_actionbar_refresh:
-				
-				return true;
-
-			default:
-				return super.onOptionsItemSelected(item);
-		}
 	}
 
 

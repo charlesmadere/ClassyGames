@@ -3,28 +3,27 @@
 	android:layout_height="match_parent"
 	android:layout_width="match_parent"
 	android:orientation="vertical"
-	android:paddingLeft="4dip"
-	android:paddingRight="4dip"
-	style="@style/ClassyGames">
+	style="@style/ClassyGamesDark">
 	<ImageView
 		android:adjustViewBounds="true"
-		android:contentDescription="@string/app_name"
-		android:id="@+id/about_fragment_imageview_logo"
+		android:contentDescription="@string/shark_activity_imageview_description"
 		android:layout_height="match_parent"
-		android:layout_weight="2"
+		android:layout_weight="1"
 		android:layout_width="match_parent"
-		android:src="@drawable/logo" />
+		android:src="@drawable/sharks" />
 	<LinearLayout
-		android:gravity="top"
+		android:gravity="center"
 		android:layout_height="match_parent"
-		android:layout_weight="5"
+		android:layout_weight="6"
 		android:layout_width="match_parent">
 		<TextView
+			android:gravity="center"
 			android:layout_height="wrap_content"
 			android:layout_width="match_parent"
 			android:paddingLeft="4dip"
 			android:paddingRight="4dip"
-			android:text="@string/about_fragment_about"
+			android:text="@string/shark_activity_description"
+			android:textColor="@color/gray_light"
 			style="@style/paragraph" />
 	</LinearLayout>
 </LinearLayout>

@@ -88,12 +88,24 @@ public class Piece extends GenericPiece
 	}
 
 
+	/**
+	 * Checks to see if this Piece is a normal piece.
+	 * 
+	 * @return
+	 * Returns true if this Piece is a normal piece.
+	 */
 	public boolean isTypeNormal()
 	{
 		return type == TYPE_NORMAL;
 	}
 
 
+	/**
+	 * Checks to see if this Piece is a king piece.
+	 * 
+	 * @return
+	 * Returns true if this Piece is a king piece.
+	 */
 	public boolean isTypeKing()
 	{
 		return type == TYPE_KING;

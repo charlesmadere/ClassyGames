@@ -86,17 +86,17 @@ public abstract class GenericGameFragment extends SherlockFragment
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{
 		// retrieve data passed to this fragment
-		final Bundle bundle = getArguments();
+		final Bundle arguments = getArguments();
 
-		if (bundle == null || bundle.isEmpty())
+		if (arguments == null || arguments.isEmpty())
 		{
 			fragmentHasError();
 		}
 		else
 		{
-			gameId = bundle.getString(INTENT_DATA_GAME_ID);
-			final long challengedId = bundle.getLong(INTENT_DATA_PERSON_CHALLENGED_ID);
-			final String challengedName = bundle.getString(INTENT_DATA_PERSON_CHALLENGED_NAME);
+			gameId = arguments.getString(INTENT_DATA_GAME_ID);
+			final long challengedId = arguments.getLong(INTENT_DATA_PERSON_CHALLENGED_ID);
+			final String challengedName = arguments.getString(INTENT_DATA_PERSON_CHALLENGED_NAME);
 
 			if (challengedId <= 0 || challengedName == null || challengedName.isEmpty())
 			{
@@ -128,10 +128,37 @@ public abstract class GenericGameFragment extends SherlockFragment
 			}
 		}
 
-		return super.onCreateView(inflater, container, savedInstanceState);
+		return inflater.inflate(onCreateView(), container, false);
 	}
 
 
+	/**
+	 * <p>Creates a tag to be used in a findViewWithTag() operation.</p>
+	 * <p><strong>Examples</strong><br />
+	 * createTag(3, 5) returns "x3y5"<br />
+	 * createTag(0, 0) returns "x0y0"<br /></p>
+	 * 
+	 * @param x
+	 * The <strong>X</strong> coordinate to create the tag from.
+	 * 
+	 * @param y
+	 * The <strong>Y</strong> coordinate to create the tag from.
+	 * 
+	 * @return
+	 * Returns a tag made from the input arguments.
+	 */
+	protected String createTag(final byte x, final byte y)
+	{
+		return "x" + x + "y" + y;
+	}
+
+
+	/**
+	 * If this fragment has some kind of issue with the data passed to it then
+	 * this method should be called. This fragment <strong>requires</strong>
+	 * some specific data and it absolutely can't run in the event that that
+	 * data is missing.
+	 */
 	private void fragmentHasError()
 	{
 
@@ -261,7 +288,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 
-	protected final class AsyncGetGame extends AsyncTask<Void, Void, String>
+	private final class AsyncGetGame extends AsyncTask<Void, Void, String>
 	{
 
 
@@ -329,9 +356,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 		{
 			try
 			{
-				final JSONArray teams = createJSONTeams();
 				final JSONObject board = new JSONObject();
-				board.put("teams", teams);
+				board.put("teams", createJSONTeams());
 
 				final JSONObject object = new JSONObject();
 				object.put("board", board);
@@ -389,8 +415,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 			progressDialog.setMessage(GenericGameFragment.this.getString(R.string.generic_game_fragment_sendmove_progressdialog_message));
 			progressDialog.setTitle(R.string.generic_game_fragment_sendmove_progressdialog_title);
 			progressDialog.show();
-
-//			GenericGameFragment.this.setResult(CentralFragmentActivity.NEED_TO_REFRESH);
 		}
 
 
@@ -495,6 +519,19 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * The View object that was clicked on.
 	 */
 	protected abstract void onBoardClick(final View v);
+
+
+	/**
+	 * Can be looked at as a main method for classes that extend this one. This
+	 * method is very important because of how it returns which layout this
+	 * fragment will need to inflate.
+	 * 
+	 * @return
+	 * This method must return the Android int representation of its layout.
+	 * For checkers, this method will return R.layout.checkers_game_layout. For
+	 * chess, this method will return R.layout.chess_game_layout.
+	 */
+	protected abstract int onCreateView();
 
 
 }

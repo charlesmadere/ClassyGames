@@ -1,4 +1,4 @@
-package edu.selu.android.classygames;
+package edu.selu.android.classygames.utilities;
 
 
 import java.io.BufferedInputStream;
@@ -16,7 +16,7 @@ import android.util.Log;
 import com.koushikdutta.urlimageviewhelper.DiskLruCache;
 import com.koushikdutta.urlimageviewhelper.DiskLruCache.Snapshot;
 
-import edu.selu.android.classygames.utilities.Utilities;
+import edu.selu.android.classygames.BuildConfig;
 
 
 public class ImageCache

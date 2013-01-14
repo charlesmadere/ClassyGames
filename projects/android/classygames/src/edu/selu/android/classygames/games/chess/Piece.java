@@ -87,36 +87,72 @@ public class Piece extends GenericPiece
 	}
 
 
+	/**
+	 * Checks to see if this Piece is a pawn.
+	 * 
+	 * @return
+	 * Returns true if this Piece is a pawn.
+	 */
 	public boolean isTypePawn()
 	{
 		return type == TYPE_PAWN;
 	}
 
 
+	/**
+	 * Checks to see if this Piece is a bishop.
+	 * 
+	 * @return
+	 * Returns true if this Piece is a bishop.
+	 */
 	public boolean isTypeBishop()
 	{
 		return type == TYPE_BISHOP;
 	}
 
 
+	/**
+	 * Checks to see if this Piece is a knight.
+	 * 
+	 * @return
+	 * Returns true if this Piece is a knight.
+	 */
 	public boolean isTypeKnight()
 	{
 		return type == TYPE_KNIGHT;
 	}
 
 
+	/**
+	 * Checks to see if this Piece is a rook.
+	 * 
+	 * @return
+	 * Returns true if this Piece is a rook.
+	 */
 	public boolean isTypeRook()
 	{
 		return type == TYPE_ROOK;
 	}
 
 
+	/**
+	 * Checks to see if this Piece is a queen.
+	 * 
+	 * @return
+	 * Returns true if this Piece is a queen.
+	 */
 	public boolean isTypeQueen()
 	{
 		return type == TYPE_QUEEN;
 	}
 
 
+	/**
+	 * Checks to see if this Piece is a king.
+	 * 
+	 * @return
+	 * Returns true if this Piece is a king.
+	 */
 	public boolean isTypeKing()
 	{
 		return type == TYPE_KING;

@@ -16,6 +16,8 @@ public class Position
 	private GenericPiece piece;
 
 
+
+
 	public Position()
 	{
 
@@ -23,10 +25,10 @@ public class Position
 
 
 	/**
-	 * Check and see if this GenericPosition object has a GenericPiece.
+	 * Checks and sees if this GenericPosition object has a GenericPiece.
 	 * 
 	 * @return
-	 * True if this GenericPosition object has a GenericPiece.
+	 * Returns true if this GenericPosition object has a GenericPiece.
 	 */
 	public boolean hasPiece()
 	{

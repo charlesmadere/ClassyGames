@@ -41,4 +41,11 @@ public class EmptyGameFragment extends GenericGameFragment
 	}
 
 
+	@Override
+	protected int onCreateView()
+	{
+		return R.layout.empty_game_fragment;
+	}
+
+
 }

@@ -17,8 +17,8 @@ public class SharkActivity extends SherlockActivity
 	public void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.shark_fragment);
-		Utilities.styleActionBar(getResources(), getSupportActionBar());
+		setContentView(R.layout.shark_activity);
+		Utilities.styleActionBar(getResources(), getSupportActionBar(), true);
 	}
 
 

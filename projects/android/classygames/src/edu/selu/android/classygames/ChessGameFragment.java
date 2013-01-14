@@ -83,6 +83,15 @@ public class ChessGameFragment extends GenericGameFragment
 	private Bitmap opponentKing;
 
 
+
+
+	@Override
+	protected int onCreateView()
+	{
+		return R.layout.chess_game_fragment;
+	}
+
+
 	@Override
 	protected void buildTeam(final JSONArray team, final byte whichTeam)
 	{

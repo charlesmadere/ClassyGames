@@ -21,10 +21,10 @@ public class AboutActivity extends SherlockActivity
 	public void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.about_fragment);
-		Utilities.styleActionBar(getResources(), getSupportActionBar());
+		setContentView(R.layout.about_activity);
+		Utilities.styleActionBar(getResources(), getSupportActionBar(), true);
 
-		final ImageView logo = (ImageView) findViewById(R.id.about_fragment_imageview_logo);
+		final ImageView logo = (ImageView) findViewById(R.id.about_activity_imageview_logo);
 		logo.setOnClickListener(new OnClickListener()
 		{
 			@Override

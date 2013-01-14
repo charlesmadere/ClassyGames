@@ -366,24 +366,4 @@ public class Utilities
 	}
 
 
-	/**
-	 * <p>This is a workaround for http://b.android.com/15340 from http://stackoverflow.com/a/5852198/132047.
-	 * This ensures that pre ice cream sandwich devices properly render our customized actionbar.
-	 * This method should always be run immediately after the setContentView() method is run.</p>
-	 * 
-	 * <p><strong>Examples</strong><br />
-	 * Utilities.styleActionBar(getResources(), getSupportActionBar());</p>
-	 * 
-	 * @param resources
-	 * getResources()
-	 * 
-	 * @param actionBar
-	 * getSupportActionBar()
-	 */
-	public static void styleActionBar(final Resources resources, final ActionBar actionBar)
-	{
-		styleActionBar(resources, actionBar, true);
-	}
-
-
 }

@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -16,6 +17,7 @@ import android.widget.LinearLayout;
 import com.actionbarsherlock.view.Menu;
 
 import edu.selu.android.classygames.games.Coordinate;
+import edu.selu.android.classygames.games.Position;
 import edu.selu.android.classygames.games.checkers.Board;
 import edu.selu.android.classygames.games.checkers.Piece;
 
@@ -48,82 +50,12 @@ public class CheckersGameFragment extends GenericGameFragment
 	private Bitmap opponentKing;
 
 
+
+
 	@Override
-	public void onPrepareOptionsMenu(final Menu menu)
+	protected int onCreateView()
 	{
-		if (boardLocked)
-		{
-			menu.findItem(R.id.game_fragment_actionbar_send_move).setEnabled(true);
-			menu.findItem(R.id.game_fragment_actionbar_undo_move).setEnabled(true);
-		}
-		else
-		{
-			menu.findItem(R.id.game_fragment_actionbar_send_move).setEnabled(false);
-			menu.findItem(R.id.game_fragment_actionbar_undo_move).setEnabled(false);
-		}
-	}
-
-
-	/**
-	 * Renders all of the game's pieces on the board.
-	 */
-	private void flush()
-	{
-		// clear all of the existing pieces from the board
-		for (byte x = 0; x < Board.LENGTH_HORIZONTAL; ++x)
-		{
-			for (byte y = 0; y < Board.LENGTH_VERTICAL; ++y)
-			{
-				// TODO
-				// replace this findViewById with one that will actually work
-
-				((ImageButton) getView().findViewById(R.id.checkers_game_fragment_x0y0)).setImageBitmap(null);
-			}
-		}
-
-		// place all of the pieces back onto the board
-		for (byte x = 0; x < Board.LENGTH_HORIZONTAL; ++x)
-		{
-			for (byte y = 0; y < Board.LENGTH_VERTICAL; ++y)
-			{
-				if (board.getPosition(x, y).hasPiece())
-				{
-					boolean isTeamPlayer = true;
-
-					if (((Piece) board.getPosition(x, y).getPiece()).isTeamOpponent())
-					{
-						isTeamPlayer = false;
-					}
-
-					// TODO
-					// below there is some findViewById stuff going on with the
-					// ID being found being hard coded. This needs to be fixed.
-
-					if (((Piece) board.getPosition(x, y).getPiece()).isTypeNormal())
-					{
-						if (isTeamPlayer)
-						{
-							((ImageButton) getView().findViewById(R.id.checkers_game_fragment_x0y0)).setImageBitmap(playerNormal);
-						}
-						else
-						{
-							((ImageButton) getView().findViewById(R.id.checkers_game_fragment_x0y0)).setImageBitmap(opponentNormal);
-						}
-					}
-					else
-					{
-						if (isTeamPlayer)
-						{
-							((ImageButton) getView().findViewById(R.id.checkers_game_fragment_x0y0)).setImageBitmap(playerKing);
-						}
-						else
-						{
-							((ImageButton) getView().findViewById(R.id.checkers_game_fragment_x0y0)).setImageBitmap(opponentKing);
-						}
-					}
-				}
-			}
-		}
+		return R.layout.checkers_game_fragment;
 	}
 
 
@@ -202,8 +134,6 @@ public class CheckersGameFragment extends GenericGameFragment
 	@Override
 	protected void initViews()
 	{
-		getSherlockActivity().getSupportActionBar().setTitle(CheckersGameFragment.this.getString(R.string.checkers_game_fragment_title) + " " + personChallenged.getName());
-
 		getView().findViewById(R.id.checkers_game_fragment_x0y0).setOnClickListener(onBoardClick);
 		getView().findViewById(R.id.checkers_game_fragment_x1y0).setOnClickListener(onBoardClick);
 		getView().findViewById(R.id.checkers_game_fragment_x2y0).setOnClickListener(onBoardClick);
@@ -276,8 +206,8 @@ public class CheckersGameFragment extends GenericGameFragment
 		getView().findViewById(R.id.checkers_game_fragment_x6y7).setOnClickListener(onBoardClick);
 		getView().findViewById(R.id.checkers_game_fragment_x7y7).setOnClickListener(onBoardClick);
 
-		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		layoutParams.height = getView().findViewById(R.id.checkers_game_fragment_x7y7).getHeight();
+		final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		layoutParams.height = getView().findViewById(R.id.checkers_game_fragment_x7y7).getWidth();
 
 		getView().findViewById(R.id.checkers_game_fragment_y0).setLayoutParams(layoutParams);
 		getView().findViewById(R.id.checkers_game_fragment_y1).setLayoutParams(layoutParams);
@@ -302,6 +232,80 @@ public class CheckersGameFragment extends GenericGameFragment
 	protected void onBoardClick(final View v)
 	{
 		Log.d(LOG_TAG, "Click! " + v.getId());
+	}
+
+
+	@Override
+	public void onPrepareOptionsMenu(final Menu menu)
+	{
+		if (boardLocked)
+		{
+			menu.findItem(R.id.generic_game_fragment_actionbar_send_move).setEnabled(true);
+			menu.findItem(R.id.generic_game_fragment_actionbar_undo_move).setEnabled(true);
+		}
+		else
+		{
+			menu.findItem(R.id.generic_game_fragment_actionbar_send_move).setEnabled(false);
+			menu.findItem(R.id.generic_game_fragment_actionbar_undo_move).setEnabled(false);
+		}
+	}
+
+
+
+
+	/**
+	 * Renders all of the game's pieces on the board by first clearing all of
+	 * the existing pieces from it and then placing all of the current pieces.
+	 */
+	private void flush()
+	{
+		// clear all of the existing pieces from the board
+		for (byte x = 0; x < Board.LENGTH_HORIZONTAL; ++x)
+		{
+			for (byte y = 0; y < Board.LENGTH_VERTICAL; ++y)
+			{
+				final String tag = createTag(x, y);
+				((ImageButton) getView().findViewWithTag(tag)).setImageBitmap(null);
+			}
+		}
+
+		// place all of the pieces back onto the board
+		for (byte x = 0; x < Board.LENGTH_HORIZONTAL; ++x)
+		{
+			for (byte y = 0; y < Board.LENGTH_VERTICAL; ++y)
+			{
+				final Position position = (Position) board.getPosition(x, y);
+
+				if (position.hasPiece())
+				{
+					final Piece piece = (Piece) position.getPiece();
+					final String tag = createTag(x, y);
+
+					if (piece.isTypeNormal())
+					{
+						if (piece.isTeamPlayer())
+						{
+							((ImageButton) getView().findViewWithTag(tag)).setImageBitmap(playerNormal);
+						}
+						else
+						{
+							((ImageButton) getView().findViewWithTag(tag)).setImageBitmap(opponentNormal);
+						}
+					}
+					else
+					{
+						if (piece.isTeamPlayer())
+						{
+							((ImageButton) getView().findViewWithTag(tag)).setImageBitmap(playerKing);
+						}
+						else
+						{
+							((ImageButton) getView().findViewWithTag(tag)).setImageBitmap(opponentKing);
+						}
+					}
+				}
+			}
+		}
 	}
 
 
