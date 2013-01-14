@@ -5,11 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Window;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
-
-import edu.selu.android.classygames.utilities.Utilities;
 
 
 public class MainActivity extends SherlockActivity
@@ -28,8 +27,8 @@ public class MainActivity extends SherlockActivity
 	public void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main_activity);
-		Utilities.styleActionBar(getResources(), getSupportActionBar(), false);
 
 		sessionStatusCallback = new Session.StatusCallback()
 		{
@@ -99,8 +98,8 @@ public class MainActivity extends SherlockActivity
 		if (isResumed)
 		// only make changes if this activity is visible
 		{
-			if (state.isOpened())
-			// if the session state is open, show the authenticated class
+			if (state.equals(SessionState.OPENED))
+			// if the session state is open, show the authenticated activity
 			{
 				startActivity(new Intent(MainActivity.this, CentralFragmentActivity.class));
 			}

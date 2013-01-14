@@ -4,6 +4,7 @@ package edu.selu.android.classygames;
 import org.json.JSONArray;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.View;
 
 
@@ -116,7 +117,7 @@ public class ChessGameFragment extends GenericGameFragment
 	@Override
 	protected void onBoardClick(final View v)
 	{
-
+		Log.d(LOG_TAG, "Click! id: \"" + v.getId() + "\" tag: \"" + v.getTag() + "\"");
 	}
 
 

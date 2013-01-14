@@ -2,6 +2,7 @@ package edu.selu.android.classygames;
 
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.facebook.Session;
@@ -11,7 +12,8 @@ import com.facebook.UiLifecycleHelper;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
-public class CentralFragmentActivity extends SherlockFragmentActivity implements GamesListFragment.OnGameSelectedListener
+public class CentralFragmentActivity extends SherlockFragmentActivity
+	implements GamesListFragment.OnGameSelectedListener, GenericGameFragment.OnGameSentListener
 {
 
 
@@ -62,13 +64,6 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 
 
 	@Override
-	public void onGameSelected(final int position)
-	{
-
-	}
-
-
-	@Override
 	protected void onPause()
 	{
 		super.onPause();
@@ -99,13 +94,29 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 		if (isResumed)
 		// only make changes if this activity is visible
 		{
-			if (state.isClosed())
-			// if the session state is closed then the user will have to
+			if (!state.equals(SessionState.OPENED))
+			// if the session state is not opened then the user will have to
 			// reauthenticate with Facebook
 			{
 				finish();
 			}
 		}
+	}
+
+
+
+
+	@Override
+	public void onGameSelected(final int position)
+	{
+		Log.d(Utilities.LOG_TAG, "Click! " + position);
+	}
+
+
+	@Override
+	public void onGameSent()
+	{
+		Log.d(Utilities.LOG_TAG, "onGameSent()!");
 	}
 
 

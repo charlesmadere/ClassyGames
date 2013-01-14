@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -40,6 +41,14 @@ public abstract class GenericGameFragment extends SherlockFragment
 	public final static String INTENT_DATA_PERSON_CHALLENGED_NAME = "GAME_PERSON_CHALLENGED_NAME";
 
 
+	private OnGameSentListener callback;
+
+	public interface OnGameSentListener
+	{
+		public void onGameSent();
+	}
+
+
 	/**
 	 * Boolean indicating if the board is locked or not. Once the board has
 	 * been locked it can only be locked by using undo.
@@ -56,7 +65,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * Object representing the living person that I am playing against.
+	 * Object representing the living person that I (the user) am playing
+	 * against.
 	 */
 	protected Person personChallenged;
 
@@ -132,8 +142,28 @@ public abstract class GenericGameFragment extends SherlockFragment
 	}
 
 
+	@Override
+	public void onAttach(final Activity activity)
+	// This makes sure that the Activity containing this Fragment has
+	// implemented the callback interface. If the callback interface has not
+	// been implemented, an exception is thrown.
+	{
+		super.onAttach(activity);
+
+		try
+		{
+			callback = (OnGameSentListener) activity;
+		}
+		catch (final ClassCastException e)
+		{
+			throw new ClassCastException(activity.toString() + " must implement OnGameSentListener!");
+		}
+	}
+
+
 	/**
 	 * <p>Creates a tag to be used in a findViewWithTag() operation.</p>
+	 * 
 	 * <p><strong>Examples</strong><br />
 	 * createTag(3, 5) returns "x3y5"<br />
 	 * createTag(0, 0) returns "x0y0"<br /></p>

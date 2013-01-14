@@ -1,6 +1,7 @@
 package edu.selu.android.classygames;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,10 @@ public class GamesListFragment extends SherlockListFragment
 {
 
 
+	/**
+	 * This class's callback method. This is fired whenever one of the games
+	 * in the user's list of games is clicked on.
+	 */
 	private OnGameSelectedListener callback;
 
 
@@ -23,23 +28,6 @@ public class GamesListFragment extends SherlockListFragment
 	}
 
 
-//	@Override
-//	public void onAttach(final Activity activity)
-//	// This makes sure that the Activity containing this Fragment has
-//	// implemented the callback interface. If the callback interface has not
-//	// been implemented, an exception is thrown.
-//	{
-//		super.onAttach(activity);
-//
-//		try
-//		{
-//			callback = (OnGameSelectedListener) activity;
-//		}
-//		catch (final ClassCastException e)
-//		{
-//			throw new ClassCastException(activity.toString() + " must implement OnGameSelectedListener!");
-//		}
-//	}
 
 
 	@Override
@@ -50,11 +38,30 @@ public class GamesListFragment extends SherlockListFragment
 
 
 	@Override
+	public void onAttach(final Activity activity)
+	// This makes sure that the Activity containing this Fragment has
+	// implemented the callback interface. If the callback interface has not
+	// been implemented, an exception is thrown.
+	{
+		super.onAttach(activity);
+
+		try
+		{
+			callback = (OnGameSelectedListener) activity;
+		}
+		catch (final ClassCastException e)
+		{
+			throw new ClassCastException(activity.toString() + " must implement OnGameSelectedListener!");
+		}
+	}
+
+
+	@Override
 	public void onStart()
 	{
 		super.onStart();
 
-		if (getFragmentManager().findFragmentById(R.id.central_fragment_activity_fragment_game) != null)
+		if (getFragmentManager().findFragmentById(R.id.central_fragment_activity_fragment_empty_game_fragment) != null)
 		// When in two-pane layout, set the ListView to highlight the selected
 		// list item. This is done during onStart because at this point the
 		// ListView is definitely available. Consult the Android Activity

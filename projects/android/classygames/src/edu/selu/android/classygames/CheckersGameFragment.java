@@ -7,7 +7,6 @@ import org.json.JSONObject;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -231,7 +230,7 @@ public class CheckersGameFragment extends GenericGameFragment
 	@Override
 	protected void onBoardClick(final View v)
 	{
-		Log.d(LOG_TAG, "Click! " + v.getId());
+		Log.d(LOG_TAG, "Click! id: \"" + v.getId() + "\" tag: \"" + v.getTag() + "\"");
 	}
 
 
