@@ -51,12 +51,25 @@ public class Person
 	}
 
 
+	/**
+	 * Returns this Person's Facebook ID (a long).
+	 * 
+	 * @return
+	 * Returns this Person's Facebook ID (a long).
+	 */
 	public long getId()
 	{
 		return id;
 	}
 
 
+	/**
+	 * Returns this Person's Facebook name (a String). This is that person's
+	 * <strong>whole name</strong>.
+	 * 
+	 * @return
+	 * Returns this Person's Facebook name (a String).
+	 */
 	public String getName()
 	{
 		return name;

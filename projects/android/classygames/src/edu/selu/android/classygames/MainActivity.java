@@ -6,9 +6,15 @@ import android.os.Bundle;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Window;
+import com.facebook.Request;
+import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
+import com.facebook.model.GraphUser;
+
+import edu.selu.android.classygames.data.Person;
+import edu.selu.android.classygames.utilities.Utilities;
 
 
 public class MainActivity extends SherlockActivity
@@ -101,7 +107,20 @@ public class MainActivity extends SherlockActivity
 			if (state.equals(SessionState.OPENED))
 			// if the session state is open, show the authenticated activity
 			{
-				startActivity(new Intent(MainActivity.this, CentralFragmentActivity.class));
+				Request.executeMeRequestAsync(session, new Request.GraphUserCallback()
+				{
+					@Override
+					public void onCompleted(final GraphUser user, final Response response)
+					{
+						if (user != null)
+						{
+							final Person facebookIdentity = new Person(user.getId(), user.getName());
+							Utilities.setWhoAmI(MainActivity.this, facebookIdentity);
+
+							startActivity(new Intent(MainActivity.this, CentralFragmentActivity.class));
+						}
+					}
+				});
 			}
 		}
 	}
