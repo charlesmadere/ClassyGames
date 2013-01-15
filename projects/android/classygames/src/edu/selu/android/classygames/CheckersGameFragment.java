@@ -220,10 +220,10 @@ public class CheckersGameFragment extends GenericGameFragment
 		// Load bitmaps for checkers pieces into memory. This is done so that
 		// later when we draw these checkers pieces onto the board, that draw
 		// process can be done very quickly.
-		playerNormal = BitmapFactory.decodeResource(CheckersGameFragment.this.getResources(), R.drawable.piece_checkers_green_normal);
-		playerKing = BitmapFactory.decodeResource(CheckersGameFragment.this.getResources(), R.drawable.piece_checkers_green_king);
-		opponentNormal = BitmapFactory.decodeResource(CheckersGameFragment.this.getResources(), R.drawable.piece_checkers_orange_normal);
-		opponentKing = BitmapFactory.decodeResource(CheckersGameFragment.this.getResources(), R.drawable.piece_checkers_orange_king);
+		playerNormal = BitmapFactory.decodeResource(getResources(), R.drawable.piece_checkers_green_normal);
+		playerKing = BitmapFactory.decodeResource(getResources(), R.drawable.piece_checkers_green_king);
+		opponentNormal = BitmapFactory.decodeResource(getResources(), R.drawable.piece_checkers_orange_normal);
+		opponentKing = BitmapFactory.decodeResource(getResources(), R.drawable.piece_checkers_orange_king);
 	}
 
 

@@ -20,7 +20,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.facebook.android.Facebook;
 
 import edu.selu.android.classygames.R;
 import edu.selu.android.classygames.data.Person;
@@ -64,13 +63,6 @@ public class Utilities
 
 
 	// facebook data below
-	private static Facebook facebook;
-
-	public final static String FACEBOOK_ACCESS_TOKEN = "facebook_access_token";
-	public final static String FACEBOOK_EXPIRES = "facebook_expires_in";
-	public final static String FACEBOOK_MY_ID = "facebook_my_id";
-	public final static String FACEBOOK_MY_NAME = "facebook_my_name";
-
 	public final static String FACEBOOK_GRAPH_API_URL = "https://graph.facebook.com/";
 	public final static String FACEBOOK_GRAPH_API_URL_PICTURE = "/picture";
 	public final static String FACEBOOK_GRAPH_API_URL_PICTURE_SSL = "return_ssl_resources=1";
@@ -87,7 +79,7 @@ public class Utilities
 
 
 	/**
-	 * <p>Prints a Toast message to the screen.</p>
+	 * Prints a Toast message to the screen.
 	 * 
 	 * <p><strong>Examples</strong><br />
 	 * Utilities.easyToast(MainActivity.this, "Hello!");<br />
@@ -106,8 +98,8 @@ public class Utilities
 
 
 	/**
-	 * <p>Prints a Toast message to the screen with a String taken from the
-	 * strings.xml file.</p>
+	 * Prints a Toast message to the screen with a String taken from the
+	 * strings.xml file.
 	 * 
 	 * @param context
 	 * Just put the name of your class.this, or you can use getApplicationContext().
@@ -122,8 +114,8 @@ public class Utilities
 
 
 	/**
-	 * <p>Prints a Toast message to the screen and prints that same message to the Log.d
-	 * console.</p>
+	 * Prints a Toast message to the screen and prints that same message to the Log.d
+	 * console.
 	 * 
 	 * <p><strong>Examples</strong><br />
 	 * Utilities.easyToastAndLog(MainActivity.this, "Hello!");<br />
@@ -144,8 +136,8 @@ public class Utilities
 
 
 	/**
-	 * <p>Prints a Toast message to the screen and prints that same message to each and
-	 * every log console.</p>
+	 * Prints a Toast message to the screen and prints that same message to each and
+	 * every log console.
 	 * 
 	 * <p><strong>Examples</strong><br />
 	 * Utilities.easyToastAndLogAll(MainActivity.this, "Hello!");<br />
@@ -170,8 +162,8 @@ public class Utilities
 
 
 	/**
-	 * <p>Prints a Toast message to the screen and prints that same message to the Log.e
-	 * console.</p>
+	 * Prints a Toast message to the screen and prints that same message to the
+	 * Log.e console.
 	 * 
 	 * <p><strong>Examples</strong><br />
 	 * Utilities.easyToastAndLogError(MainActivity.this, "Hello!");<br />
@@ -192,22 +184,7 @@ public class Utilities
 
 
 	/**
-	 * Use this method to retrieve the global Facebook variable that our app uses. This
-	 * method is good to use because it ensures that our Facebook variable isn't null.
-	 */
-	public static Facebook getFacebook()
-	{
-		if (facebook == null)
-		{
-			facebook = new Facebook(SecretConstants.FACEBOOK_APP_ID);
-		}
-
-		return facebook;
-	}
-
-
-	/**
-	 * <p>Returns to you a Typeface that you request.</p>
+	 * Returns to you a Typeface that you request.
 	 * 
 	 * <p><strong>Examples</strong><br />
 	 * Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D);<br />
@@ -276,11 +253,11 @@ public class Utilities
 	{
 		if (whoAmI == null)
 		{
-			SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-			final long id = sharedPreferences.getLong(WHO_AM_I_ID, -1);
+			final SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+			final long id = sharedPreferences.getLong(WHO_AM_I_ID, 0);
 			final String name = sharedPreferences.getString(WHO_AM_I_NAME, null);
 
-			if (id >= 0 && name != null && !name.isEmpty())
+			if (id >= 1 && name != null && !name.isEmpty())
 			{
 				whoAmI = new Person(id, name);
 			}
@@ -290,9 +267,21 @@ public class Utilities
 	}
 
 
+	/**
+	 * Stores the current user's Facebook identity into the Android
+	 * SharedPreferences storage system. The current user's Facebook identity
+	 * is frequently used throughout the app, and so doing this allows future
+	 * needings of this data to not require making a Facebook API call.
+	 * 
+	 * @param context
+	 * The context of the Activity that is calling this method.
+	 * 
+	 * @param facebookIdentity
+	 * A Person object representing the current user's Facebook identity.
+	 */
 	public static void setWhoAmI(final Context context, final Person facebookIdentity)
 	{
-		SharedPreferences.Editor editor = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).edit();
+		final SharedPreferences.Editor editor = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).edit();
 		editor.putLong(WHO_AM_I_ID, facebookIdentity.getId());
 		editor.putString(WHO_AM_I_NAME, facebookIdentity.getName());
 		editor.commit();
@@ -302,7 +291,7 @@ public class Utilities
 
 
 	/**
-	* <p>Simple method that handles pulling an image from a URL.</p>
+	* Simple method that handles pulling an image from a URL.
 	* 
 	* <p><strong>Examples</strong><br />
 	* Utilities.LoadImageFRomWebOperations(myURL);</p>
@@ -319,11 +308,11 @@ public class Utilities
 		}
 		catch (final MalformedURLException e)
 		{
-			Log.e(Utilities.LOG_TAG, "MalformedURLException while trying to create drawable from url: " + url, e);
+			Log.e(LOG_TAG, "MalformedURLException while trying to create drawable from url: " + url, e);
 		}
 		catch (final IOException e)
 		{
-			Log.e(Utilities.LOG_TAG, "IOException while trying to create drawable from url: " + url, e);
+			Log.e(LOG_TAG, "IOException while trying to create drawable from url: " + url, e);
 		}
 
 		return null;
@@ -331,9 +320,9 @@ public class Utilities
 
 
 	/**
-	 * <p>This is a workaround for http://b.android.com/15340 from http://stackoverflow.com/a/5852198/132047.
+	 * This is a workaround for http://b.android.com/15340 from http://stackoverflow.com/a/5852198/132047.
 	 * This ensures that pre ice cream sandwich devices properly render our customized actionbar.
-	 * This method should always be run immediately after the setContentView() method is run.</p>
+	 * This method should always be run immediately after the setContentView() method is run.
 	 * 
 	 * <p><strong>Examples</strong><br />
 	 * Utilities.styleActionBar(getResources(), getSupportActionBar(), false);</p>

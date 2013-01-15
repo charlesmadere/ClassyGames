@@ -1,6 +1,7 @@
 package edu.selu.android.classygames;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -30,12 +31,13 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.central_fragment_activity);
-		Utilities.styleActionBar(getResources(), getSupportActionBar(), true);
+		setResult(MainActivity.CENTRAL_FRAGMENT_ACTIVITY_RESULT_CODE);
+		Utilities.styleActionBar(getResources(), getSupportActionBar(), false);
 
 		sessionStatusCallback = new Session.StatusCallback()
 		{
 			@Override
-			public void call(Session session, SessionState state, Exception exception)
+			public void call(final Session session, final SessionState state, final Exception exception)
 			{
 				onSessionStateChange(session, state, exception);
 			}
@@ -46,12 +48,20 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 
 		if (findViewById(R.id.central_fragment_activity_fragment_container) != null)
 		{
-			if (savedInstanceState == null || savedInstanceState.isEmpty())
+			if (savedInstanceState == null)
 			{
 				final GamesListFragment gamesListFragment = new GamesListFragment();
 				getSupportFragmentManager().beginTransaction().add(R.id.central_fragment_activity_fragment_container, gamesListFragment).commit();
 			}
 		}
+	}
+
+
+	@Override
+	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data)
+	{
+		super.onActivityResult(requestCode, resultCode, data);
+		uiHelper.onActivityResult(requestCode, resultCode, data);
 	}
 
 

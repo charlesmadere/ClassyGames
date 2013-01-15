@@ -1,1 +1,0 @@
-Images, logos, and other files of that nature should go in here. Please store high res versions of image files in here.

@@ -21,6 +21,9 @@ public class MainActivity extends SherlockActivity
 {
 
 
+	public final static int CENTRAL_FRAGMENT_ACTIVITY_RESULT_CODE = 64;
+
+
 	private UiLifecycleHelper uiHelper;
 	private Session.StatusCallback sessionStatusCallback;
 
@@ -55,6 +58,11 @@ public class MainActivity extends SherlockActivity
 	{
 		super.onActivityResult(requestCode, resultCode, data);
 		uiHelper.onActivityResult(requestCode, resultCode, data);
+
+		if (resultCode == CENTRAL_FRAGMENT_ACTIVITY_RESULT_CODE)
+		{
+			finish();
+		}
 	}
 
 
@@ -82,11 +90,9 @@ public class MainActivity extends SherlockActivity
 		uiHelper.onResume();
 		isResumed = true;
 
-		final Session session = Session.getActiveSession();
-
-		if (session != null && session.isOpened())
+		if (Utilities.getWhoAmI(MainActivity.this) != null)
 		{
-			startActivity(new Intent(MainActivity.this, CentralFragmentActivity.class));
+			startCentralFragmentActivity();
 		}
 	}
 
@@ -117,12 +123,19 @@ public class MainActivity extends SherlockActivity
 							final Person facebookIdentity = new Person(user.getId(), user.getName());
 							Utilities.setWhoAmI(MainActivity.this, facebookIdentity);
 
-							startActivity(new Intent(MainActivity.this, CentralFragmentActivity.class));
+							startCentralFragmentActivity();
 						}
 					}
 				});
 			}
 		}
+	}
+
+
+	private void startCentralFragmentActivity()
+	{
+		final Intent intent = new Intent(MainActivity.this, CentralFragmentActivity.class);
+		startActivityForResult(intent, CENTRAL_FRAGMENT_ACTIVITY_RESULT_CODE);
 	}
 
 

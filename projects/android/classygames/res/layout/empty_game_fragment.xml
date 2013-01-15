@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/empty_game_fragment"
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:contentDescription="@string/empty_game_fragment_imageview_placeholder"
 	android:layout_height="match_parent"
 	android:layout_width="match_parent"
+	android:src="@drawable/empty_game_placeholder"
 	style="@style/ClassyGames" />
