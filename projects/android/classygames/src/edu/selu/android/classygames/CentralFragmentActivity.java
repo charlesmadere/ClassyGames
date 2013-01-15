@@ -3,6 +3,7 @@ package edu.selu.android.classygames;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -51,7 +52,10 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 			if (savedInstanceState == null)
 			{
 				final GamesListFragment gamesListFragment = new GamesListFragment();
-				getSupportFragmentManager().beginTransaction().add(R.id.central_fragment_activity_fragment_container, gamesListFragment).commit();
+
+				final FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
+				fTransaction.add(R.id.central_fragment_activity_fragment_container, gamesListFragment);
+				fTransaction.commit();
 			}
 		}
 	}
@@ -119,7 +123,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 	@Override
 	public void onGameSelected(final int position)
 	{
-		Log.d(Utilities.LOG_TAG, "Click! " + position);
+		Log.d(Utilities.LOG_TAG, "onGameSelected()! " + position);
 	}
 
 

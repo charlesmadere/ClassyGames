@@ -191,7 +191,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 */
 	private void fragmentHasError()
 	{
-
+		Log.d(LOG_TAG, "fragmentHasError()!");
 	}
 
 
@@ -430,9 +430,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 		{
 			parseServerResponse(serverResponse);
 			progressDialog.dismiss();
-
-			// new, fragment way, of doing finish()
-			getSherlockActivity().getSupportFragmentManager().beginTransaction().remove(GenericGameFragment.this).commit();
 		}
 
 
