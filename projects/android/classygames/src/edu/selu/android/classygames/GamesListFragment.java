@@ -2,6 +2,7 @@ package edu.selu.android.classygames;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,9 @@ import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+
+import edu.selu.android.classygames.utilities.Utilities;
 
 
 public class GamesListFragment extends SherlockListFragment
@@ -35,6 +39,8 @@ public class GamesListFragment extends SherlockListFragment
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{
+		setHasOptionsMenu(true);
+
 		return inflater.inflate(R.layout.games_list_fragment, container, false);
 	}
 
@@ -55,6 +61,39 @@ public class GamesListFragment extends SherlockListFragment
 		{
 			throw new ClassCastException(activity.toString() + " must implement OnGameSelectedListener!");
 		}
+	}
+
+
+	@Override
+	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
+	{
+		inflater.inflate(R.menu.games_list_fragment, menu);
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+
+	@Override
+	public boolean onOptionsItemSelected(final MenuItem item)
+	{
+		switch (item.getItemId())
+		{
+			case R.id.games_list_fragment_actionbar_about:
+				startActivity(new Intent(getSherlockActivity(), AboutActivity.class));
+				break;
+
+			case R.id.games_list_fragment_actionbar_new_game:
+				Utilities.easyToast(getSherlockActivity(), "new game!");
+				break;
+
+			case R.id.games_list_fragment_actionbar_refresh:
+				Utilities.easyToast(getSherlockActivity(), "refresh!");
+				break;
+
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+
+		return true;
 	}
 
 
