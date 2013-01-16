@@ -3,7 +3,7 @@ package edu.selu.android.classygames;
 
 import org.json.JSONArray;
 
-import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.View;
 
@@ -15,73 +15,73 @@ public class ChessGameFragment extends GenericGameFragment
 	/**
 	 * Bitmap representing the player's pawn piece.
 	 */
-	private Bitmap playerPawn;
+	private BitmapDrawable playerPawn;
 
 
 	/**
 	 * Bitmap representing the player's bishop piece.
 	 */
-	private Bitmap playerBishop;
+	private BitmapDrawable playerBishop;
 
 
 	/**
 	 * Bitmap representing the player's knight piece.
 	 */
-	private Bitmap playerKnight;
+	private BitmapDrawable playerKnight;
 
 
 	/**
 	 * Bitmap representing the player's rook piece.
 	 */
-	private Bitmap playerRook;
+	private BitmapDrawable playerRook;
 
 
 	/**
 	 * Bitmap representing the player's queen piece.
 	 */
-	private Bitmap playerQueen;
+	private BitmapDrawable playerQueen;
 
 
 	/**
 	 * Bitmap representing the player's king piece.
 	 */
-	private Bitmap playerKing;
+	private BitmapDrawable playerKing;
 
 
 	/**
 	 * Bitmap representing the opponent's pawn piece.
 	 */
-	private Bitmap opponentPawn;
+	private BitmapDrawable opponentPawn;
 
 
 	/**
 	 * Bitmap representing the opponent's bishop piece.
 	 */
-	private Bitmap opponentBishop;
+	private BitmapDrawable opponentBishop;
 
 
 	/**
 	 * Bitmap representing the opponent's knight piece.
 	 */
-	private Bitmap opponentKnight;
+	private BitmapDrawable opponentKnight;
 
 
 	/**
 	 * Bitmap representing the opponent's rook piece.
 	 */
-	private Bitmap opponentRook;
+	private BitmapDrawable opponentRook;
 
 
 	/**
 	 * Bitmap representing the opponent's queen piece.
 	 */
-	private Bitmap opponentQueen;
+	private BitmapDrawable opponentQueen;
 
 
 	/**
 	 * Bitmap representing the opponent's king piece.
 	 */
-	private Bitmap opponentKing;
+	private BitmapDrawable opponentKing;
 
 
 
@@ -117,7 +117,7 @@ public class ChessGameFragment extends GenericGameFragment
 	@Override
 	protected void onBoardClick(final View v)
 	{
-		Log.d(LOG_TAG, "Click! id: \"" + v.getId() + "\" tag: \"" + v.getTag() + "\"");
+		Log.d(LOG_TAG, "onBoardClick()! id: \"" + v.getId() + "\" tag: \"" + v.getTag() + "\"");
 	}
 
 

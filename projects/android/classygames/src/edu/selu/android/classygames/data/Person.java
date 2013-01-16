@@ -1,6 +1,12 @@
 package edu.selu.android.classygames.data;
 
 
+import android.graphics.drawable.Drawable;
+
+
+/**
+ * Class representing a real person.
+ */
 public class Person
 {
 
@@ -17,6 +23,14 @@ public class Person
 	 * is not a unique identifier for this person.
 	 */
 	private String name;
+
+
+	/**
+	 * The person's Facebook profile picture.
+	 */
+	private Drawable picture;
+
+
 
 
 	/**
@@ -73,6 +87,34 @@ public class Person
 	public String getName()
 	{
 		return name;
+	}
+
+
+	/**
+	 * Returns this Person's Facebook profile picture (a Drawable). Note that
+	 * this has the possibility of being null.
+	 * 
+	 * @return
+	 * Returns this Person's Facebook profile picture (a Drawable).
+	 */
+	public Drawable getPicture()
+	{
+		return picture;
+	}
+
+
+	/**
+	 * Replaces this Person object's current picture with this newly given
+	 * picture. Note that because this class has no constructor that supplies
+	 * it an initial picture variable, if this method is never used then this
+	 * object's picture variable <strong>will definitely be</strong> null.
+	 * 
+	 * @param picture
+	 * The new picture to assign to this Person object.
+	 */
+	public void setDrawable(final Drawable picture)
+	{
+		this.picture = picture;
 	}
 
 

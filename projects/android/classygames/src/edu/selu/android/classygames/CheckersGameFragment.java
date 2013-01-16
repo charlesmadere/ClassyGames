@@ -5,8 +5,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -28,25 +27,25 @@ public class CheckersGameFragment extends GenericGameFragment
 	/**
 	 * Bitmap representing the player's normal piece.
 	 */
-	private Bitmap playerNormal;
+	private BitmapDrawable playerNormal;
 
 
 	/**
 	 * Bitmap representing the player's king piece.
 	 */
-	private Bitmap playerKing;
+	private BitmapDrawable playerKing;
 
 
 	/**
 	 * Bitmap representing the opponent's normal piece.
 	 */
-	private Bitmap opponentNormal;
+	private BitmapDrawable opponentNormal;
 
 
 	/**
 	 * Bitmap representing the opponent's king piece.
 	 */
-	private Bitmap opponentKing;
+	private BitmapDrawable opponentKing;
 
 
 
@@ -217,20 +216,21 @@ public class CheckersGameFragment extends GenericGameFragment
 		getView().findViewById(R.id.checkers_game_fragment_y6).setLayoutParams(layoutParams);
 		getView().findViewById(R.id.checkers_game_fragment_y7).setLayoutParams(layoutParams);
 
-		// Load bitmaps for checkers pieces into memory. This is done so that
+		// Load Drawables for checkers pieces into memory. This is done so that
 		// later when we draw these checkers pieces onto the board, that draw
-		// process can be done very quickly.
-		playerNormal = BitmapFactory.decodeResource(getResources(), R.drawable.piece_checkers_green_normal);
-		playerKing = BitmapFactory.decodeResource(getResources(), R.drawable.piece_checkers_green_king);
-		opponentNormal = BitmapFactory.decodeResource(getResources(), R.drawable.piece_checkers_orange_normal);
-		opponentKing = BitmapFactory.decodeResource(getResources(), R.drawable.piece_checkers_orange_king);
+		// process can be done very quickly as all of the picture data has
+		// already been loaded.
+		playerNormal = (BitmapDrawable) getResources().getDrawable(R.drawable.piece_checkers_green_normal);
+		playerKing = (BitmapDrawable) getResources().getDrawable(R.drawable.piece_checkers_green_normal);
+		opponentNormal = (BitmapDrawable) getResources().getDrawable(R.drawable.piece_checkers_green_normal);
+		opponentKing = (BitmapDrawable) getResources().getDrawable(R.drawable.piece_checkers_green_normal);
 	}
 
 
 	@Override
 	protected void onBoardClick(final View v)
 	{
-		Log.d(LOG_TAG, "Click! id: \"" + v.getId() + "\" tag: \"" + v.getTag() + "\"");
+		Log.d(LOG_TAG, "onBoardClick()! id: \"" + v.getId() + "\" tag: \"" + v.getTag() + "\"");
 	}
 
 
@@ -264,7 +264,7 @@ public class CheckersGameFragment extends GenericGameFragment
 			for (byte y = 0; y < Board.LENGTH_VERTICAL; ++y)
 			{
 				final String tag = createTag(x, y);
-				((ImageButton) getView().findViewWithTag(tag)).setImageBitmap(null);
+				((ImageButton) getView().findViewWithTag(tag)).setImageDrawable(null);
 			}
 		}
 
@@ -284,22 +284,22 @@ public class CheckersGameFragment extends GenericGameFragment
 					{
 						if (piece.isTeamPlayer())
 						{
-							((ImageButton) getView().findViewWithTag(tag)).setImageBitmap(playerNormal);
+							((ImageButton) getView().findViewWithTag(tag)).setImageDrawable(playerNormal);
 						}
 						else
 						{
-							((ImageButton) getView().findViewWithTag(tag)).setImageBitmap(opponentNormal);
+							((ImageButton) getView().findViewWithTag(tag)).setImageDrawable(opponentNormal);
 						}
 					}
 					else
 					{
 						if (piece.isTeamPlayer())
 						{
-							((ImageButton) getView().findViewWithTag(tag)).setImageBitmap(playerKing);
+							((ImageButton) getView().findViewWithTag(tag)).setImageDrawable(playerKing);
 						}
 						else
 						{
-							((ImageButton) getView().findViewWithTag(tag)).setImageBitmap(opponentKing);
+							((ImageButton) getView().findViewWithTag(tag)).setImageDrawable(opponentKing);
 						}
 					}
 				}
