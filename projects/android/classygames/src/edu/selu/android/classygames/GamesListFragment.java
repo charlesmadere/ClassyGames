@@ -22,15 +22,26 @@ public class GamesListFragment extends SherlockListFragment
 
 
 	/**
-	 * This class's callback method. This is fired whenever one of the games
+	 * One of class's callback methods. This is fired whenever one of the games
 	 * in the user's list of games is clicked on.
 	 */
-	private OnGameSelectedListener callback;
-
+	private OnGameSelectedListener onGameSelectedListener;
 
 	public interface OnGameSelectedListener
 	{
 		public void onGameSelected(final int position);
+	}
+
+
+	/**
+	 * One of this class's callback methods. This is fired whenever the new
+	 * game button in the action bar is clicked.
+	 */
+	private OnNewGameSelectedListener onNewGameSelectedListener;
+
+	public interface OnNewGameSelectedListener
+	{
+		public void onNewGameSelected();
 	}
 
 
@@ -55,7 +66,8 @@ public class GamesListFragment extends SherlockListFragment
 
 		try
 		{
-			callback = (OnGameSelectedListener) activity;
+			onGameSelectedListener = (OnGameSelectedListener) activity;
+			onNewGameSelectedListener = (OnNewGameSelectedListener) activity;
 		}
 		catch (final ClassCastException e)
 		{
@@ -82,7 +94,9 @@ public class GamesListFragment extends SherlockListFragment
 				break;
 
 			case R.id.games_list_fragment_actionbar_new_game:
-				Utilities.easyToast(getSherlockActivity(), "new game!");
+				// notify the parent Activity that the new game button in the
+				// action bar has been clicked
+				onNewGameSelectedListener.onNewGameSelected();
 				break;
 
 			case R.id.games_list_fragment_actionbar_refresh:
@@ -102,7 +116,7 @@ public class GamesListFragment extends SherlockListFragment
 	{
 		super.onStart();
 
-		if (getFragmentManager().findFragmentById(R.id.central_fragment_activity_fragment_empty_game_fragment) != null)
+		if (getFragmentManager().findFragmentById(R.id.central_fragment_activity_fragment_game) != null)
 		// When in two-pane layout, set the ListView to highlight the selected
 		// list item. This is done during onStart because at this point the
 		// ListView is definitely available. Consult the Android Activity
@@ -118,7 +132,7 @@ public class GamesListFragment extends SherlockListFragment
 	public void onListItemClick(final ListView l, final View v, final int position, final long id)
 	{
 		// notify the parent Activity that a game has been selected
-		callback.onGameSelected(position);
+		onGameSelectedListener.onGameSelected(position);
 
 		// set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(position, true);

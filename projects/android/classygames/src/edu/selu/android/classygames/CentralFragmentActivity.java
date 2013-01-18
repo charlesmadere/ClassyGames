@@ -15,7 +15,9 @@ import edu.selu.android.classygames.utilities.Utilities;
 
 
 public class CentralFragmentActivity extends SherlockFragmentActivity
-	implements GamesListFragment.OnGameSelectedListener, GenericGameFragment.OnGameSentListener
+	implements GamesListFragment.OnGameSelectedListener,
+		GamesListFragment.OnNewGameSelectedListener,
+		GenericGameFragment.OnGameSentListener
 {
 
 
@@ -131,6 +133,18 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 	public void onGameSent()
 	{
 		Log.d(Utilities.LOG_TAG, "onGameSent()!");
+	}
+
+
+	@Override
+	public void onNewGameSelected()
+	{
+		final NewGameFragment newGameFragment = new NewGameFragment();
+
+		final FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
+		fTransaction.replace(R.id.central_fragment_activity_fragment_list, newGameFragment);
+		fTransaction.addToBackStack(null);
+		fTransaction.commit();
 	}
 
 
