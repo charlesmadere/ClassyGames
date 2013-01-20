@@ -41,7 +41,11 @@ public abstract class GenericGameFragment extends SherlockFragment
 	public final static String INTENT_DATA_PERSON_CHALLENGED_NAME = "GAME_PERSON_CHALLENGED_NAME";
 
 
-	private OnGameSentListener callback;
+	/**
+	 * One of this class's callback methods. This is fired whenever the player
+	 * has made their move and then has sent the game off to the server.
+	 */
+	private OnGameSentListener onGameSent;
 
 	public interface OnGameSentListener
 	{
@@ -108,7 +112,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			final long challengedId = arguments.getLong(INTENT_DATA_PERSON_CHALLENGED_ID);
 			final String challengedName = arguments.getString(INTENT_DATA_PERSON_CHALLENGED_NAME);
 
-			if (challengedId <= 0 || challengedName == null || challengedName.isEmpty())
+			if (Person.isIdValid(challengedId) || challengedName == null || challengedName.isEmpty())
 			{
 				fragmentHasError();
 			}
@@ -152,7 +156,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 		try
 		{
-			callback = (OnGameSentListener) activity;
+			onGameSent = (OnGameSentListener) activity;
 		}
 		catch (final ClassCastException e)
 		{
@@ -192,6 +196,70 @@ public abstract class GenericGameFragment extends SherlockFragment
 	private void fragmentHasError()
 	{
 		Log.d(LOG_TAG, "fragmentHasError()!");
+	}
+
+
+	/**
+	 * Parses the passed in tag String for two numbers (those two numbers are
+	 * the tag's coordinates) and returns those coordinates as a byte array.
+	 * The returned byte array will have a length of just 2, with [0] being
+	 * the X coordinate and [1] being the Y coordinate.
+	 * 
+	 * <p><strong>Example</strong><br />
+	 * final String tag = "x2y9";<br />
+	 * final byte[] coordinates = getCoordinatesFromTag(tag);</p>
+	 * 
+	 * @param tag
+	 * The tag to parse for coordinates. Note that this method <strong>does not
+	 * check</strong> for a null or empty String. If this method encounters
+	 * either of those scenarios then there will probably be a crash. The tag
+	 * that this method parses for should be formatted like so: "x5y3", "x0y6",
+	 * "x15y3", or "x21y32".
+	 * 
+	 * @return
+	 * Returns a byte array with [0] being the given tag's X coordinate and [1]
+	 * being the given tag's Y coordinate.
+	 */
+	protected byte[] getCoordinatesFromTag(final String tag)
+	{
+		final byte[] coordinates = new byte[2];
+
+		boolean inDigits = false;
+		int beginIndex = 0;
+		int endIndex = 0;
+		int i = 0;
+
+		boolean bothCoordinatesFound = false;
+
+		do
+		{
+			final char character = tag.charAt(i);
+			final boolean isDigit = Character.isDigit(character);
+
+			if (inDigits && !isDigit)
+			{
+				inDigits = false;
+				endIndex = i;
+
+				String sub = tag.substring(beginIndex, endIndex);
+				coordinates[0] = Byte.parseByte(sub);
+
+				sub = tag.substring(endIndex + 1, tag.length());
+				coordinates[1] = Byte.parseByte(sub);
+
+				bothCoordinatesFound = true;
+			}
+			else if (!inDigits && isDigit)
+			{
+				inDigits = true;
+				beginIndex = i;
+			}
+
+			++i;
+		}
+		while (!bothCoordinatesFound);
+
+		return coordinates;
 	}
 
 

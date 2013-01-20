@@ -246,18 +246,37 @@ public class Utilities
 
 
 	/**
+	 * If the user's Facebook identity is already stored in this class's static
+	 * whoAmI Person variable then that variable will be instantly returned. If
+	 * the whoAmI Person variable is currently null or is not valid, then we
+	 * will search the Android SharedPreferences data for the user's Facebook
+	 * identity.
+	 * 
 	 * @return
-	 * A Person object representing your Facebook identity.
+	 * A Person object that represents the user's Facebook identity.
 	 */
 	public static Person getWhoAmI(final Context context)
 	{
-		if (whoAmI == null)
+		if (whoAmI == null || !whoAmI.isValid())
+		// check to see if the whoAmI variable is null or if it's not valid. If
+		// it is either of these two conditions then we will pull the user's
+		// Facebook identity from the Android SharedPreferences data.
 		{
 			final SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+
+			// find the user's Facebook ID. If the ID can't be found then the
+			// id variable will be set to 0.
 			final long id = sharedPreferences.getLong(WHO_AM_I_ID, 0);
+
+			// find the user's Facebook name. If the name can't be found then
+			// the name variable will be set to null.
 			final String name = sharedPreferences.getString(WHO_AM_I_NAME, null);
 
-			if (id >= 1 && name != null && !name.isEmpty())
+			if (Person.isIdValid(id) && name != null && !name.isEmpty())
+			// check to see that we were actually able to find the user's
+			// Facebook ID and Facebook name. If we were able to find both
+			// then we will create a new Person object out of that data. That
+			// Person object will then be returned.
 			{
 				whoAmI = new Person(id, name);
 			}

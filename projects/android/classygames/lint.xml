@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<lint>
-    <issue id="NewApi">
-        <ignore path="src\edu\selu\android\classygames\GamesListActivity.java" />
-        <ignore path="src\edu\selu\android\classygames\NewGameActivity.java" />
-    </issue>
-</lint>

@@ -94,6 +94,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 	{
 		super.onResume();
 		uiHelper.onResume();
+		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 		isResumed = true;
 	}
 
@@ -141,11 +142,21 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 	public void onNewGameSelected()
 	{
 		final NewGameFragment newGameFragment = new NewGameFragment();
-
 		final FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
-		fTransaction.replace(R.id.central_fragment_activity_fragment_list, newGameFragment);
+
+		if (findViewById(R.id.central_fragment_activity_fragment_container) == null)
+		{
+			fTransaction.replace(R.id.central_fragment_activity_fragment_list, newGameFragment);
+		}
+		else
+		{
+			fTransaction.replace(R.id.central_fragment_activity_fragment_container, newGameFragment);
+		}
+
 		fTransaction.addToBackStack(null);
 		fTransaction.commit();
+
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 

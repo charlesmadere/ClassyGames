@@ -23,8 +23,8 @@ public class GamesListFragment extends SherlockListFragment
 
 
 	/**
-	 * One of class's callback methods. This is fired whenever one of the games
-	 * in the user's list of games is clicked on.
+	 * One of this class's callback methods. This is fired whenever one of the
+	 * games in the user's list of games is clicked on.
 	 */
 	private OnGameSelectedListener onGameSelectedListener;
 
@@ -123,7 +123,7 @@ public class GamesListFragment extends SherlockListFragment
 	{
 		super.onStart();
 
-		if (getFragmentManager().findFragmentById(R.id.central_fragment_activity_fragment_game) != null)
+		if (getFragmentManager().findFragmentById(R.id.central_fragment_activity_fragment_container) == null)
 		// When in two-pane layout, set the ListView to highlight the selected
 		// list item. This is done during onStart because at this point the
 		// ListView is definitely available. Consult the Android Activity
