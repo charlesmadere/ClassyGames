@@ -16,7 +16,6 @@ public class NewGameFragment extends SherlockListFragment
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{
-
 		return inflater.inflate(R.layout.new_game_fragment, container, false);
 	}
 

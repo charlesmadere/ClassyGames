@@ -11,6 +11,7 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 
+import edu.selu.android.classygames.data.Game;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
@@ -123,9 +124,9 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 
 
 	@Override
-	public void onGameSelected(final int position)
+	public void onGameSelected(final Game game)
 	{
-		Log.d(Utilities.LOG_TAG, "onGameSelected()! " + position);
+		Log.d(Utilities.LOG_TAG, "onGameSelected()! " + game.getId());
 	}
 
 

@@ -1,7 +1,11 @@
 package edu.selu.android.classygames;
 
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.actionbarsherlock.app.SherlockActivity;
@@ -90,7 +94,9 @@ public class MainActivity extends SherlockActivity
 		uiHelper.onResume();
 		isResumed = true;
 
-		if (Utilities.getWhoAmI(MainActivity.this) != null)
+		final Person whoAmI = Utilities.getWhoAmI(MainActivity.this);
+
+		if (whoAmI != null && whoAmI.isValid())
 		{
 			startCentralFragmentActivity();
 		}
@@ -113,20 +119,7 @@ public class MainActivity extends SherlockActivity
 			if (state.equals(SessionState.OPENED))
 			// if the session state is open, show the authenticated activity
 			{
-				Request.executeMeRequestAsync(session, new Request.GraphUserCallback()
-				{
-					@Override
-					public void onCompleted(final GraphUser user, final Response response)
-					{
-						if (user != null)
-						{
-							final Person facebookIdentity = new Person(user.getId(), user.getName());
-							Utilities.setWhoAmI(MainActivity.this, facebookIdentity);
-
-							startCentralFragmentActivity();
-						}
-					}
-				});
+				new AsyncGetFacebookIdentity(session).execute();
 			}
 		}
 	}
@@ -137,6 +130,100 @@ public class MainActivity extends SherlockActivity
 		final Intent intent = new Intent(MainActivity.this, CentralFragmentActivity.class);
 		startActivityForResult(intent, CENTRAL_FRAGMENT_ACTIVITY_RESULT_CODE);
 	}
+
+
+
+
+	private final class AsyncGetFacebookIdentity extends AsyncTask<Void, Void, Person>
+	{
+
+
+		private ProgressDialog progressDialog;
+		private Session session;
+
+
+		AsyncGetFacebookIdentity(final Session session)
+		{
+			this.session = session;
+		}
+
+
+		@Override
+		protected Person doInBackground(final Void... v)
+		{
+			final Person facebookIdentity = new Person();
+
+			if (!isCancelled())
+			{
+				Request.newMeRequest(session, new Request.GraphUserCallback()
+				{
+					@Override
+					public void onCompleted(final GraphUser user, final Response response)
+					{
+						if (!isCancelled())
+						{
+							facebookIdentity.setId(user.getId());
+							facebookIdentity.setName(user.getName());
+						}
+					}
+				}).executeAndWait();
+			}
+
+			return facebookIdentity;
+		}
+
+
+		@Override
+		protected void onCancelled(final Person facebookIdentity)
+		{
+			session.closeAndClearTokenInformation();
+
+			if (progressDialog.isShowing())
+			{
+				progressDialog.dismiss();
+			}
+		}
+
+
+		@Override
+		protected void onPostExecute(final Person facebookIdentity)
+		{
+			Utilities.setWhoAmI(MainActivity.this, facebookIdentity);
+
+			if (progressDialog.isShowing())
+			{
+				progressDialog.dismiss();
+			}
+
+			startCentralFragmentActivity();
+		}
+
+
+		@Override
+		protected void onPreExecute()
+		{
+			progressDialog = new ProgressDialog(MainActivity.this);
+			progressDialog.setCancelable(true);
+			progressDialog.setCanceledOnTouchOutside(false);
+
+			progressDialog.setOnCancelListener(new OnCancelListener()
+			{
+				@Override
+				public void onCancel(final DialogInterface dialog)
+				{
+					AsyncGetFacebookIdentity.this.cancel(false);
+				}
+			});
+
+			progressDialog.setMessage(MainActivity.this.getString(R.string.main_activity_get_facebook_identity_progressdialog_message));
+			progressDialog.setTitle(R.string.main_activity_get_facebook_identity_progressdialog_title);
+			progressDialog.show();
+		}
+
+
+	}
+
+
 
 
 }

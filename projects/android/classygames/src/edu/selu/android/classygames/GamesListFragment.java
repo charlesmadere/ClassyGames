@@ -14,6 +14,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
+import edu.selu.android.classygames.data.Game;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
@@ -29,7 +30,7 @@ public class GamesListFragment extends SherlockListFragment
 
 	public interface OnGameSelectedListener
 	{
-		public void onGameSelected(final int position);
+		public void onGameSelected(final Game game);
 	}
 
 
@@ -48,10 +49,16 @@ public class GamesListFragment extends SherlockListFragment
 
 
 	@Override
+	public void onCreate(final Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
+	}
+
+
+	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{
-		setHasOptionsMenu(true);
-
 		return inflater.inflate(R.layout.games_list_fragment, container, false);
 	}
 
@@ -125,17 +132,6 @@ public class GamesListFragment extends SherlockListFragment
 		{
 			getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		}
-	}
-
-
-	@Override
-	public void onListItemClick(final ListView l, final View v, final int position, final long id)
-	{
-		// notify the parent Activity that a game has been selected
-		onGameSelectedListener.onGameSelected(position);
-
-		// set the item as checked to be highlighted when in two-pane layout
-		getListView().setItemChecked(position, true);
 	}
 
 

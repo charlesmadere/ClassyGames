@@ -254,18 +254,6 @@ public class Game
 	}
 
 
-	public boolean isTurnYours()
-	{
-		return turn == TURN_YOURS;
-	}
-
-
-	public boolean isTypeGame()
-	{
-		return type == TYPE_GAME;
-	}
-
-
 	/**
 	 * When using this method you're probably going to want to compare the
 	 * value returned against some of this class's public data members, mainly
@@ -279,6 +267,42 @@ public class Game
 	public byte getWhichGame()
 	{
 		return whichGame;
+	}
+
+
+	/**
+	 * Checks to see if this Game object's turn is the opponent player's turn.
+	 * 
+	 * @return
+	 * Returns true if this Game object's turn is the opponent player's turn.
+	 */
+	public boolean isTurnTheirs()
+	{
+		return turn == TURN_THEIRS;
+	}
+
+
+	/**
+	 * Checks to see if this Game object's turn is the current player's turn.
+	 * 
+	 * @return
+	 * Returns true if this Game object's turn is the current player's turn.
+	 */
+	public boolean isTurnYours()
+	{
+		return turn == TURN_YOURS;
+	}
+
+
+	/**
+	 * Checks to see if this Game object's turn is the opponent player's turn.
+	 * 
+	 * @return
+	 * Returns true if this Game object's turn is the opponent player's turn.
+	 */
+	public boolean isTypeGame()
+	{
+		return type == TYPE_GAME;
 	}
 
 

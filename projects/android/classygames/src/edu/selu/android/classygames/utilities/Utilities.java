@@ -268,6 +268,38 @@ public class Utilities
 
 
 	/**
+	* Simple method that handles pulling an image from a URL.
+	* 
+	* <p><strong>Examples</strong><br />
+	* final String myURL = "http://www.google.com/image.png";<br />
+	* Utilities.loadImageFromWebOperations(myURL);</p>
+	* 
+	* @param url
+	* The URL to the image that you want to download.
+	*/
+	public static Drawable loadImageFromWebOperations(final String url)
+	{
+		Drawable drawable = null;
+
+		try
+		{
+			final InputStream is = (InputStream) new URL(url).getContent();
+			drawable = Drawable.createFromStream(is, "src");
+		}
+		catch (final MalformedURLException e)
+		{
+			Log.e(LOG_TAG, "MalformedURLException while trying to create drawable from url: " + url, e);
+		}
+		catch (final IOException e)
+		{
+			Log.e(LOG_TAG, "IOException while trying to create drawable from url: " + url, e);
+		}
+
+		return drawable;
+	}
+
+
+	/**
 	 * Stores the current user's Facebook identity into the Android
 	 * SharedPreferences storage system. The current user's Facebook identity
 	 * is frequently used throughout the app, and so doing this allows future
@@ -287,35 +319,6 @@ public class Utilities
 		editor.commit();
 
 		whoAmI = facebookIdentity;
-	}
-
-
-	/**
-	* Simple method that handles pulling an image from a URL.
-	* 
-	* <p><strong>Examples</strong><br />
-	* Utilities.LoadImageFRomWebOperations(myURL);</p>
-	* 
-	* @param url
-	* The URL to the image that you want to download.
-	*/
-	public static Drawable loadImageFromWebOperations(final String url)
-	{
-		try
-		{
-			InputStream is = (InputStream) new URL(url).getContent();
-			return Drawable.createFromStream(is, "src");
-		}
-		catch (final MalformedURLException e)
-		{
-			Log.e(LOG_TAG, "MalformedURLException while trying to create drawable from url: " + url, e);
-		}
-		catch (final IOException e)
-		{
-			Log.e(LOG_TAG, "IOException while trying to create drawable from url: " + url, e);
-		}
-
-		return null;
 	}
 
 
@@ -343,6 +346,7 @@ public class Utilities
 		// https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels
 		{
 			final BitmapDrawable bg = (BitmapDrawable) resources.getDrawable(R.drawable.bg_actionbar);
+			bg.setAntiAlias(true);
 			bg.setDither(true);
 			bg.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
 			actionBar.setBackgroundDrawable(bg);

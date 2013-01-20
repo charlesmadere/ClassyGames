@@ -20,17 +20,31 @@ public class Person
 
 	/**
 	 * The person's Facebook name. It could be "Charles Madere". Obviously this
-	 * is not a unique identifier for this person.
+	 * is not a unique identifier for this person. This class's long id
+	 * variable, however, <strong>is</strong> a unique identifier.
 	 */
 	private String name;
 
 
 	/**
-	 * The person's Facebook profile picture.
+	 * The person's Facebook profile picture. The value of this variable will
+	 * definitely be null unless it has been set using this class's
+	 * setDrawable(final Drawable picture) method.
 	 */
 	private Drawable picture;
 
 
+
+
+	/**
+	 * Creates a Person object. If possible, <strong>please avoid</strong>
+	 * using this constructor, and instead use this class's other, argument
+	 * taking, constructors.
+	 */
+	public Person()
+	{
+
+	}
 
 
 	/**
@@ -91,8 +105,10 @@ public class Person
 
 
 	/**
-	 * Returns this Person's Facebook profile picture (a Drawable). Note that
-	 * this has the possibility of being null.
+	 * Returns this Person's Facebook profile picture (a Drawable). Note that,
+	 * unless this object has had the setDrawable(final Drawable picture)
+	 * method run on it, this method's return value <strong>will
+	 * definitely</strong> be null.
 	 * 
 	 * @return
 	 * Returns this Person's Facebook profile picture (a Drawable).
@@ -115,6 +131,124 @@ public class Person
 	public void setDrawable(final Drawable picture)
 	{
 		this.picture = picture;
+	}
+
+
+	/**
+	 * Replaces this Person object's current Facebook ID with this newly given
+	 * id. An ID should be a number that is always greater than 0.
+	 * 
+	 * @param id
+	 * New Facebook ID of the user.
+	 */
+	public void setId(final long id)
+	{
+		this.id = id;
+	}
+
+
+	/**
+	 * Replaces this Person object's current Facebook ID with this newly given
+	 * id. An ID should be a number that is always greater than 0. This method
+	 * will convert the given String into a long. As this method doesn't check
+	 * for the possibility that a null String was given to it, this method will
+	 * cause a crash if that happens.
+	 * 
+	 * @param id
+	 * New Facebook ID of the user.
+	 */
+	public void setId(final String id)
+	{
+		this.id = Long.parseLong(id);
+	}
+
+
+	/**
+	 * Replaces this Person object's current Facebook name with this newly
+	 * given name. 
+	 * 
+	 * @param name
+	 * New Facebook name of the user.
+	 */
+	public void setName(final String name)
+	{
+		this.name = name;
+	}
+
+
+	/**
+	 * Checks to see if this Person object has a picture associated with it.
+	 * 
+	 * @return
+	 * Returns true if this Person object has a picture associated with it.
+	 */
+	public boolean hasPicture()
+	{
+		return picture != null;
+	}
+
+
+	/**
+	 * Checks to see that this Person object is valid. Valid means three
+	 * things:
+	 * <ol>
+	 * <li>This Person's Facebook ID is greater than or equal to 1.</li>
+	 * <li>This Person's name is not null.</li>
+	 * <li>This Person's name is not empty.</li>
+	 * </ol>
+	 * 
+	 * @return
+	 * Returns true if all of the above conditions are true.
+	 */
+	public boolean isValid()
+	{
+		return id >= 1 && name != null && !name.isEmpty();
+	}
+
+
+
+
+	/**
+	 * When Facebook IDs are acquired throughout the app's runtime they should
+	 * be checked for validity. Use this method to check for that validity.
+	 * 
+	 * @param id
+	 * The Facebook ID to check for validity.
+	 * 
+	 * @return
+	 * Returns true if the passed in id variable is greater than or equal to 1.
+	 */
+	public static boolean isIdValid(final long id)
+	{
+		return id >= 1;
+	}
+
+
+	/**
+	 * When Facebook IDs are acquired throughout the app's runtime they should
+	 * be checked for validity. Use this method to check for that validity.
+	 * This method allows you to check a whole bunch of IDs at once. If any
+	 * single ID that is passed in is invalid, this method will cease to check
+	 * the rest and will immediately return false.
+	 * 
+	 * @param ids
+	 * The Facebook IDs to check for validity.
+	 * 
+	 * @return
+	 * Returns true if <strong>all</strong> of the passed in Facebook IDs are
+	 * valid.
+	 */
+	public static boolean isIdValid(final long... ids)
+	{
+		for (int i = 0; i < ids.length; ++i)
+		{
+			if (!isIdValid(ids[i]))
+			{
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 
