@@ -42,18 +42,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * One of this class's callback methods. This is fired whenever the player
-	 * has made their move and then has sent the game off to the server.
-	 */
-	private OnGameSentListener onGameSent;
-
-	public interface OnGameSentListener
-	{
-		public void onGameSent();
-	}
-
-
-	/**
 	 * Boolean indicating if the board is locked or not. Once the board has
 	 * been locked it can only be locked by using undo.
 	 */
@@ -146,25 +134,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 	}
 
 
-	@Override
-	public void onAttach(final Activity activity)
-	// This makes sure that the Activity containing this Fragment has
-	// implemented the callback interface. If the callback interface has not
-	// been implemented, an exception is thrown.
-	{
-		super.onAttach(activity);
-
-		try
-		{
-			onGameSent = (OnGameSentListener) activity;
-		}
-		catch (final ClassCastException e)
-		{
-			throw new ClassCastException(activity.toString() + " must implement OnGameSentListener!");
-		}
-	}
-
-
 	/**
 	 * <p>Creates a tag to be used in a findViewWithTag() operation.</p>
 	 * 
@@ -207,7 +176,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * 
 	 * <p><strong>Example</strong><br />
 	 * final String tag = "x2y9";<br />
-	 * final byte[] coordinates = getCoordinatesFromTag(tag);</p>
+	 * final byte[] coordinates = getCoordinatesFromTag(tag);<br />
+	 * coordinates[0]: 2, coordinates[1]: 9</p>
 	 * 
 	 * @param tag
 	 * The tag to parse for coordinates. Note that this method <strong>does not
@@ -222,39 +192,71 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 */
 	protected byte[] getCoordinatesFromTag(final String tag)
 	{
+		// Initialize an array for the coordinates. This will be returned.
 		final byte[] coordinates = new byte[2];
 
 		boolean inDigits = false;
-		int beginIndex = 0;
-		int endIndex = 0;
+
+		// used to store positions in the tag String in order to make
+		// substrings
+		int beginIndex = 0, endIndex = 0;
+
+		// store what character we're currently at in the tag String
 		int i = 0;
 
+		// This will be used with whether or not the below loop continues to
+		// run.
 		boolean bothCoordinatesFound = false;
 
 		do
+		// Continue to loop until the bothCoordinatesFound variable is true.
 		{
+			// save the current char in the String
 			final char character = tag.charAt(i);
-			final boolean isDigit = Character.isDigit(character);
 
-			if (inDigits && !isDigit)
+			// check to see if the char is a digit
+			final boolean characterIsDigit = Character.isDigit(character);
+
+			if (!inDigits && characterIsDigit)
+			// if our position in the tag String is not already in digits and
+			// the current char is a digit
 			{
-				inDigits = false;
-				endIndex = i;
-
-				String sub = tag.substring(beginIndex, endIndex);
-				coordinates[0] = Byte.parseByte(sub);
-
-				sub = tag.substring(endIndex + 1, tag.length());
-				coordinates[1] = Byte.parseByte(sub);
-
-				bothCoordinatesFound = true;
-			}
-			else if (!inDigits && isDigit)
-			{
+				// mark that we're now in digits
 				inDigits = true;
+
+				// store the beginning substring position
 				beginIndex = i;
 			}
+			else if (inDigits && !characterIsDigit)
+			// if our position in the tag String is in digits and the current
+			// char is not a digit
+			{
+				// mark that we're no longer in digits
+				inDigits = false;
 
+				// store the end substring position
+				endIndex = i;
+
+				// create a substring from the tag String
+				String sub = tag.substring(beginIndex, endIndex);
+
+				// Parse that substring into a byte. This value is the tag
+				// String's X value.
+				coordinates[0] = Byte.parseByte(sub);
+
+				// create another substring from the tag String
+				sub = tag.substring(endIndex + 1, tag.length());
+
+				// Parse that substring into a byte. this value is the tag
+				// String's Y value.
+				coordinates[1] = Byte.parseByte(sub);
+
+				// Both coordinates have been found and stored. The loop can
+				// exit now.
+				bothCoordinatesFound = true;
+			}
+
+			// move to the next character in the tag String
 			++i;
 		}
 		while (!bothCoordinatesFound);

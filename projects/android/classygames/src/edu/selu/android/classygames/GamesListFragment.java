@@ -26,11 +26,11 @@ public class GamesListFragment extends SherlockListFragment
 	 * One of this class's callback methods. This is fired whenever one of the
 	 * games in the user's list of games is clicked on.
 	 */
-	private OnGameSelectedListener onGameSelectedListener;
+	private GamesListFragmentOnGameSelectedListener gamesListFragmentOnGameSelectedListener;
 
-	public interface OnGameSelectedListener
+	public interface GamesListFragmentOnGameSelectedListener
 	{
-		public void onGameSelected(final Game game);
+		public void gameListFragmentOnGameSelected(final Game game);
 	}
 
 
@@ -38,11 +38,11 @@ public class GamesListFragment extends SherlockListFragment
 	 * One of this class's callback methods. This is fired whenever the new
 	 * game button in the action bar is clicked.
 	 */
-	private OnNewGameSelectedListener onNewGameSelectedListener;
+	private GamesListFragmentOnNewGameSelectedListener gamesListFragmentOnNewGameSelectedListener;
 
-	public interface OnNewGameSelectedListener
+	public interface GamesListFragmentOnNewGameSelectedListener
 	{
-		public void onNewGameSelected();
+		public void gamesListFragmentOnNewGameSelected();
 	}
 
 
@@ -73,8 +73,8 @@ public class GamesListFragment extends SherlockListFragment
 
 		try
 		{
-			onGameSelectedListener = (OnGameSelectedListener) activity;
-			onNewGameSelectedListener = (OnNewGameSelectedListener) activity;
+			gamesListFragmentOnGameSelectedListener = (GamesListFragmentOnGameSelectedListener) activity;
+			gamesListFragmentOnNewGameSelectedListener = (GamesListFragmentOnNewGameSelectedListener) activity;
 		}
 		catch (final ClassCastException e)
 		{
@@ -103,7 +103,7 @@ public class GamesListFragment extends SherlockListFragment
 			case R.id.games_list_fragment_actionbar_new_game:
 				// notify the parent Activity that the new game button in the
 				// action bar has been clicked
-				onNewGameSelectedListener.onNewGameSelected();
+				gamesListFragmentOnNewGameSelectedListener.gamesListFragmentOnNewGameSelected();
 				break;
 
 			case R.id.games_list_fragment_actionbar_refresh:

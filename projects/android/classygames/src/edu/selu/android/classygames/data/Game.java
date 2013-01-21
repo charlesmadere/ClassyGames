@@ -1,20 +1,41 @@
 package edu.selu.android.classygames.data;
 
 
+import edu.selu.android.classygames.R;
+import android.content.Context;
+
+
 /**
- * Class representing a single Game in the Games List.
+ * Class representing a single Game. This is most obviously represented when
+ * seen in the app's Games List.
  */
 public class Game
 {
 
 
+	/**
+	 * Boolean representing who's turn it is. It can either be the current
+	 * user's turn (TURN_YOURS => true), or the opponent's turn (TURN_THEIRS =>
+	 * false).
+	 */
 	private boolean turn;
 	public final static boolean TURN_THEIRS = false;
 	public final static boolean TURN_YOURS = true;
 
+
+	/**
+	 * Boolean representing what type of game this is. This is not to be
+	 * confused with the whichGame byte variable. Having this variable is
+	 * basically a hack, as Android only allows one object type in its
+	 * ListView layouts. If this is set to TYPE_SEPARATOR (true), then instead
+	 * of drawing a game to the Android ListView, we draw a separator. A
+	 * separator tells the user that all game's below this separator are a
+	 * certain person's turn.
+	 */
 	private boolean type;
 	public final static boolean TYPE_GAME = false;
 	public final static boolean TYPE_SEPARATOR = true;
+
 
 	/**
 	 * Byte representing which game this is. It could be checkers, chess...
@@ -47,6 +68,8 @@ public class Game
 	 * A human readable version of the Unix Epoch.
 	 */
 	private String timestampFormatted;
+
+
 
 
 	/**
@@ -141,15 +164,13 @@ public class Game
 	 * @return
 	 * A human readable version of the Unix Epoch.
 	 */
-	public String getTimestampFormatted()
+	public String getTimestampFormatted(final Context context)
 	{
-		// TODO
-		// rewrite the below code to grab strings from the XML file instead of
-		// being hard coded
-
 		if (timestampFormatted == null || timestampFormatted.isEmpty())
-		// check to see if we've already created a formatted timestamp String
-		// for this game object
+		// Check to see if we've already created a formatted timestamp String
+		// for this game object. If we've already created a formatted timestamp
+		// String, then we can just skip the whole algorithm below and return
+		// the existing String.
 		{
 			// find out the between the time NOW versus the time of this game's
 			// last move
@@ -163,15 +184,15 @@ public class Game
 			{
 				if (timeAgo == 1)
 				{
-					timestampFormatted = "1 week ago";
+					timestampFormatted = context.getString(R.string.game_timestamp_1_week_ago);
 				}
 				else if (timeAgo == 2)
 				{
-					timestampFormatted = "2 weeks ago";
+					timestampFormatted = context.getString(R.string.game_timestamp_2_weeks_ago);
 				}
 				else
 				{
-					timestampFormatted = "more than 2 weeks ago";
+					timestampFormatted = context.getString(R.string.game_timestamp_more_than_2_weeks_ago);
 				}
 			}
 			else
@@ -184,15 +205,15 @@ public class Game
 				{
 					if (timeAgo == 1)
 					{
-						timestampFormatted = "1 day ago";
+						timestampFormatted = context.getString(R.string.game_timestamp_1_day_ago);
 					}
 					else if (timeAgo >= 2 && timeAgo <= 5)
 					{
-						timestampFormatted = timeAgo + " days ago";
+						timestampFormatted = context.getString(R.string.game_timestamp_x_days_ago, timeAgo);
 					}
 					else
 					{
-						timestampFormatted = "almost a week ago";
+						timestampFormatted = context.getString(R.string.game_timestamp_almost_a_week_ago);
 					}
 				}
 				else
@@ -205,19 +226,19 @@ public class Game
 					{
 						if (timeAgo == 1)
 						{
-							timestampFormatted = "1 hour ago";
+							timestampFormatted = context.getString(R.string.game_timestamp_1_hour_ago);
 						}
 						else if (timeAgo >= 2 && timeAgo <= 12)
 						{
-							timestampFormatted = timeAgo + " hours ago";
+							timestampFormatted = context.getString(R.string.game_timestamp_x_hours_ago, timeAgo);
 						}
 						else if (timeAgo > 12 && timeAgo <= 18)
 						{
-							timestampFormatted = "about half a day ago";
+							timestampFormatted = context.getString(R.string.game_timestamp_about_half_a_day_ago);
 						}
 						else
 						{
-							timestampFormatted = "almost a day ago";
+							timestampFormatted = context.getString(R.string.game_timestamp_almost_a_day_ago);
 						}
 					}
 					else
@@ -230,20 +251,20 @@ public class Game
 						{
 							if (timeAgo == 1)
 							{
-								timestampFormatted = "1 minute ago";
+								timestampFormatted = context.getString(R.string.game_timestamp_1_minute_ago);
 							}
 							else if (timeAgo >= 2 && timeAgo <= 45)
 							{
-								timestampFormatted = timeAgo + " minutes ago";
+								timestampFormatted = context.getString(R.string.game_timestamp_x_minutes_ago, timeAgo);
 							}
 							else
 							{
-								timestampFormatted = "almost an hour ago";
+								timestampFormatted = context.getString(R.string.game_timestamp_almost_an_hour_ago);
 							}
 						}
 						else
 						{
-							timestampFormatted = "just now";
+							timestampFormatted = context.getString(R.string.game_timestamp_just_now);
 						}
 					}
 				}
