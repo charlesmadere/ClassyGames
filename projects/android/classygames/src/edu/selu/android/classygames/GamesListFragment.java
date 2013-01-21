@@ -78,7 +78,7 @@ public class GamesListFragment extends SherlockListFragment
 		}
 		catch (final ClassCastException e)
 		{
-			throw new ClassCastException(activity.toString() + " must implement OnGameSelectedListener!");
+			throw new ClassCastException(activity.toString() + " must implement listeners!");
 		}
 	}
 

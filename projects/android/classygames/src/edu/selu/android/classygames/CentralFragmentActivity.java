@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
@@ -93,21 +92,6 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 
 
 	@Override
-	public boolean onOptionsItemSelected(final MenuItem item)
-	{
-		switch (item.getItemId())
-		{
-			case android.R.id.home:
-				
-				return true;
-
-			default:
-				return super.onOptionsItemSelected(item);
-		}
-	}
-
-
-	@Override
 	protected void onPause()
 	{
 		super.onPause();
@@ -174,7 +158,24 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 	@Override
 	public void gamesListFragmentOnNewGameSelected()
 	{
+		final FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
 
+		if (newGameFragment == null)
+		{
+			newGameFragment = new NewGameFragment();
+		}
+
+		if (isDeviceLarge())
+		{
+			fTransaction.add(R.id.central_fragment_activity_fragment_list, newGameFragment);
+		}
+		else
+		{
+			fTransaction.add(R.id.central_fragment_activity_fragment_container, newGameFragment);
+		}
+
+		fTransaction.addToBackStack(null);
+		fTransaction.commit();
 	}
 
 
