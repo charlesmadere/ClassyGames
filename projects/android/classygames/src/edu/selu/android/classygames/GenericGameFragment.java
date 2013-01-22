@@ -10,7 +10,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,10 +20,13 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 
 import edu.selu.android.classygames.data.Person;
 import edu.selu.android.classygames.games.GenericBoard;
 import edu.selu.android.classygames.games.GenericPiece;
+import edu.selu.android.classygames.games.Position;
 import edu.selu.android.classygames.games.checkers.Board;
 import edu.selu.android.classygames.utilities.ServerUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
@@ -85,6 +87,14 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	@Override
+	public void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
+	}
+
+
+	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{
 		// retrieve data passed to this fragment
@@ -100,11 +110,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			final long challengedId = arguments.getLong(INTENT_DATA_PERSON_CHALLENGED_ID);
 			final String challengedName = arguments.getString(INTENT_DATA_PERSON_CHALLENGED_NAME);
 
-			if (Person.isIdValid(challengedId) || challengedName == null || challengedName.isEmpty())
-			{
-				fragmentHasError();
-			}
-			else
+			if (Person.isIdValid(challengedId) && Person.isNameValid(challengedName))
 			{
 				personChallenged = new Person(challengedId, challengedName);
 
@@ -128,9 +134,29 @@ public abstract class GenericGameFragment extends SherlockFragment
 					new AsyncGetGame().execute();
 				}
 			}
+			else
+			{
+				fragmentHasError();
+			}
 		}
 
 		return inflater.inflate(onCreateView(), container, false);
+	}
+
+
+	@Override
+	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
+	{
+		inflater.inflate(R.menu.generic_game_fragment, menu);
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+
+	@Override
+	public void onDestroyView()
+	{
+		super.onDestroyView();
+
 	}
 
 
@@ -201,7 +227,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		// substrings
 		int beginIndex = 0, endIndex = 0;
 
-		// store what character we're currently at in the tag String
+		// store the position we're currently at in the tag String
 		int i = 0;
 
 		// This will be used with whether or not the below loop continues to
@@ -210,6 +236,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 		do
 		// Continue to loop until the bothCoordinatesFound variable is true.
+		// This will only happen when... both coordinates have been found!
 		{
 			// save the current char in the String
 			final char character = tag.charAt(i);
@@ -286,9 +313,17 @@ public abstract class GenericGameFragment extends SherlockFragment
 	}
 
 
+	/**
+	 * This method will initialize the game board as if this is an in progress
+	 * game.
+	 */
 	private void initBoardOld()
 	{
-		if (boardJSON != null && !boardJSON.isEmpty())
+		if (boardJSON == null || boardJSON.isEmpty())
+		{
+			Log.e(LOG_TAG, "Tried to build the board from either a null or empty JSON String!");
+		}
+		else
 		{
 			try
 			{
@@ -301,17 +336,13 @@ public abstract class GenericGameFragment extends SherlockFragment
 				}
 				else
 				{
-					Log.e(LOG_TAG, "JSON String has improper number of teams!");
+					Log.e(LOG_TAG, "JSON String has improper number of teams! teams.length(): " + teams.length());
 				}
 			}
 			catch (final JSONException e)
 			{
 				Log.e(LOG_TAG, "JSON String is massively malformed.");
 			}
-		}
-		else
-		{
-			Log.e(LOG_TAG, "Tried to build the board from either a null or empty JSON String!");
 		}
 	}
 
@@ -330,6 +361,22 @@ public abstract class GenericGameFragment extends SherlockFragment
 	}
 
 
+	/**
+	 * Reads in a JSON response String as received from the web server and
+	 * pulls the needed information out of it. If there is an error during this
+	 * process, null is returned.
+	 * 
+	 * @param jsonString
+	 * The JSON response String as received from the web server. This method
+	 * <strong>does</strong> check to see if this passed in String is either
+	 * null or empty. In that case, the method will immediately log that error
+	 * and then return null.
+	 * 
+	 * @return
+	 * Returns a String containing only the necessary game information. But, if
+	 * there is an error in the parsing process, this method will log some
+	 * stuff and then return null.
+	 */
 	private String parseServerResponse(final String jsonString)
 	{
 		if (jsonString == null || jsonString.isEmpty())
@@ -379,8 +426,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		if (boardLocked)
 		{
-			
-
 			boardLocked = false;
 		}
 	}
@@ -496,25 +541,45 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 		@Override
+		protected void onCancelled(final String serverResponse)
+		{
+			if (progressDialog.isShowing())
+			{
+				progressDialog.dismiss();
+			}
+		}
+
+
+		@Override
 		protected void onPostExecute(final String serverResponse)
 		{
 			parseServerResponse(serverResponse);
-			progressDialog.dismiss();
+
+			if (progressDialog.isShowing())
+			{
+				progressDialog.dismiss();
+			}
 		}
 
 
 		@Override
 		protected void onPreExecute()
 		{
-			progressDialog = new ProgressDialog(GenericGameFragment.this.getActivity());
-			progressDialog.setCancelable(false);
-			progressDialog.setCanceledOnTouchOutside(false);
-			progressDialog.setMessage(GenericGameFragment.this.getString(R.string.generic_game_fragment_sendmove_progressdialog_message));
+			progressDialog = new ProgressDialog(getSherlockActivity());
+			progressDialog.setCancelable(true);
+			progressDialog.setCanceledOnTouchOutside(true);
+			progressDialog.setMessage(getString(R.string.generic_game_fragment_sendmove_progressdialog_message));
 			progressDialog.setTitle(R.string.generic_game_fragment_sendmove_progressdialog_title);
 			progressDialog.show();
 		}
 
 
+		/**
+		 * 
+		 * 
+		 * @return
+		 * 
+		 */
 		private JSONArray createJSONTeams()
 		{
 			final JSONArray teamPlayer = createJSONTeam(GenericPiece.TEAM_PLAYER);
@@ -528,6 +593,15 @@ public abstract class GenericGameFragment extends SherlockFragment
 		}
 
 
+		/**
+		 * 
+		 * 
+		 * @param whichTeam
+		 * 
+		 * 
+		 * @return
+		 * 
+		 */
 		private JSONArray createJSONTeam(final byte whichTeam)
 		{
 			final JSONArray team = new JSONArray();
@@ -536,7 +610,9 @@ public abstract class GenericGameFragment extends SherlockFragment
 			{
 				for (byte y = 0; y < Board.LENGTH_VERTICAL; ++y)
 				{
-					if (board.getPosition(x, y).hasPiece() && board.getPosition(x, y).getPiece().isTeam(whichTeam))
+					final Position position = board.getPosition(x, y);
+
+					if (position.hasPiece() && position.getPiece().isTeam(whichTeam))
 					// this position has a piece in it that is of the given team
 					{
 						try
@@ -566,6 +642,20 @@ public abstract class GenericGameFragment extends SherlockFragment
 	}
 
 
+
+
+	/**
+	 * Can be looked at as a main method for classes that extend this one. This
+	 * method is very important because it must returns which layout this
+	 * fragment will need to inflate. Returning the needed layout is really the
+	 * only thing that this method needs to do.
+	 * 
+	 * @return
+	 * This method must return the Android int representation of its layout.
+	 * For checkers, this method will return R.layout.checkers_game_layout. For
+	 * chess, this method will return R.layout.chess_game_layout.
+	 */
+	protected abstract int onCreateView();
 
 
 	/**
@@ -616,19 +706,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * The View object that was clicked on.
 	 */
 	protected abstract void onBoardClick(final View v);
-
-
-	/**
-	 * Can be looked at as a main method for classes that extend this one. This
-	 * method is very important because of how it returns which layout this
-	 * fragment will need to inflate.
-	 * 
-	 * @return
-	 * This method must return the Android int representation of its layout.
-	 * For checkers, this method will return R.layout.checkers_game_layout. For
-	 * chess, this method will return R.layout.chess_game_layout.
-	 */
-	protected abstract int onCreateView();
 
 
 }
