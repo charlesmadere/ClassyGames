@@ -1,9 +1,18 @@
 package edu.selu.android.classygames;
 
 
+import java.io.IOException;
+import java.util.ArrayList;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +25,8 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 import edu.selu.android.classygames.data.Game;
+import edu.selu.android.classygames.data.Person;
+import edu.selu.android.classygames.utilities.ServerUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
@@ -144,6 +155,94 @@ public class GamesListFragment extends SherlockListFragment
 			getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		}
 	}
+
+
+
+
+	private final class AsyncPopulateGamesList extends AsyncTask<Void, Integer, ArrayList<Game>>
+	{
+
+
+		private ProgressDialog progressDialog;
+
+
+		@Override
+		protected ArrayList<Game> doInBackground(final Void... params)
+		{
+			final ArrayList<Game> games = new ArrayList<Game>();
+			final Person whoAmI = Utilities.getWhoAmI(getSherlockActivity());
+
+			// create the data that will be 
+			final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+			nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, whoAmI.getIdAsString()));
+
+			try
+			{
+				// Make a call to the Classy Games server API and store it's
+				// JSON response. Note that we're also sending it the
+				// nameValuePairs variable that we just created. The server
+				// requires we send it some information in order for us to get
+				// a meaningful response back.
+				final String json = ServerUtilities.postToServer(ServerUtilities.SERVER_GET_GAMES_ADDRESS, nameValuePairs);
+
+				publishProgress(1);
+
+				// TODO
+			}
+			catch (final IOException e)
+			{
+				Log.e(Utilities.LOG_TAG, e.getLocalizedMessage());
+			}
+
+			publishProgress(4);
+
+			return games;
+		}
+
+
+		@Override
+		protected void onCancelled(final ArrayList<Game> games)
+		{
+			if (progressDialog.isShowing())
+			{
+				progressDialog.dismiss();
+			}
+		}
+
+
+		@Override
+		protected void onPostExecute(final ArrayList<Game> games)
+		{
+			if (progressDialog.isShowing())
+			{
+				progressDialog.dismiss();
+			}
+		}
+
+
+		@Override
+		protected void onPreExecute()
+		{
+			progressDialog = new ProgressDialog(getSherlockActivity(), ProgressDialog.STYLE_HORIZONTAL);
+			progressDialog.setCancelable(true);
+			progressDialog.setCanceledOnTouchOutside(true);
+			progressDialog.setMax(4);
+			progressDialog.setMessage(getSherlockActivity().getString(R.string.games_list_fragment_getgames_progressdialog_message));
+			progressDialog.setTitle(R.string.games_list_fragment_getgames_progressdialog_title);
+			progressDialog.show();
+		}
+
+
+		@Override
+		protected void onProgressUpdate(final Integer... values)
+		{
+
+		}
+
+
+	}
+
+
 
 
 }

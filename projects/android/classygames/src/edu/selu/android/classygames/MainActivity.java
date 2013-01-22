@@ -149,7 +149,7 @@ public class MainActivity extends SherlockActivity
 
 
 		@Override
-		protected Person doInBackground(final Void... v)
+		protected Person doInBackground(final Void... params)
 		{
 			final Person facebookIdentity = new Person();
 
