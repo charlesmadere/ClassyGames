@@ -17,7 +17,8 @@ import edu.selu.android.classygames.utilities.Utilities;
 
 public class CentralFragmentActivity extends SherlockFragmentActivity
 	implements GamesListFragment.GamesListFragmentOnGameSelectedListener,
-		GamesListFragment.GamesListFragmentOnNewGameSelectedListener
+		GamesListFragment.GamesListFragmentOnNewGameSelectedListener,
+		NewGameFragment.NewGameFragmentOnDestroyViewListener
 {
 
 
@@ -176,6 +177,18 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 
 		fTransaction.addToBackStack(null);
 		fTransaction.commit();
+	}
+
+
+	@Override
+	public void newGameFragmentOnDestroyViewListener()
+	// This listener does some weird work around stuff. Check out my
+	// explanation of what exactly this does in the NewGameFragment class.
+	{
+		if (gamesListFragment.isVisible())
+		{
+			getSupportActionBar().setTitle(R.string.games_list_fragment_title);
+		}
 	}
 
 

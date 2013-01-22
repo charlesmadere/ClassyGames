@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -115,6 +116,16 @@ public class GamesListFragment extends SherlockListFragment
 		}
 
 		return true;
+	}
+
+
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+
+		final ActionBar actionBar = getSherlockActivity().getSupportActionBar();
+		actionBar.setTitle(R.string.games_list_fragment_title);
 	}
 
 
