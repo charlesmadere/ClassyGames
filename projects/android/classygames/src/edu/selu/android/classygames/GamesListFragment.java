@@ -266,7 +266,7 @@ public class GamesListFragment extends SherlockListFragment
 				@Override
 				public void onCancel(final DialogInterface dialog)
 				{
-					AsyncPopulateGamesList.this.cancel(false);
+					AsyncPopulateGamesList.this.cancel(true);
 				}
 			});
 
@@ -301,57 +301,54 @@ public class GamesListFragment extends SherlockListFragment
 		{
 			final ArrayList<Game> games = new ArrayList<Game>();
 
-			if (!isCancelled())
+			if (!isCancelled() && jsonResponse != null && !jsonResponse.isEmpty())
 			{
-				if (jsonResponse != null && !jsonResponse.isEmpty())
+				try
 				{
-					try
+					final JSONObject jsonRaw = new JSONObject(jsonResponse);
+					final JSONObject jsonResult = jsonRaw.getJSONObject(ServerUtilities.POST_DATA_RESULT);
+					final JSONObject jsonGameData = jsonResult.optJSONObject(ServerUtilities.POST_DATA_SUCCESS);
+
+					if (jsonGameData == null)
 					{
-						final JSONObject jsonRaw = new JSONObject(jsonResponse);
-						final JSONObject jsonResult = jsonRaw.getJSONObject(ServerUtilities.POST_DATA_RESULT);
-						final JSONObject jsonGameData = jsonResult.optJSONObject(ServerUtilities.POST_DATA_SUCCESS);
-
-						if (jsonGameData == null)
+						try
 						{
-							try
-							{
-								final String successMessage = jsonResult.getString(ServerUtilities.POST_DATA_SUCCESS);
-								Log.d(LOG_TAG, "Server returned successful message: " + successMessage);
-							}
-							catch (final JSONException e)
-							{
-								Utilities.easyToast(getSherlockActivity(), getString(R.string.games_list_fragment_getgames_error));
-
-								final String errorMessage = jsonResult.getString(ServerUtilities.POST_DATA_ERROR);
-								Log.e(LOG_TAG, "Server returned error message: " + errorMessage);
-							}
+							final String successMessage = jsonResult.getString(ServerUtilities.POST_DATA_SUCCESS);
+							Log.d(LOG_TAG, "Server returned successful message: " + successMessage);
 						}
-						else
+						catch (final JSONException e)
 						{
-							ArrayList<Game> turn = parseTurn(jsonGameData, ServerUtilities.POST_DATA_TURN_YOURS, Game.TURN_YOURS);
-							if (turn != null && !turn.isEmpty())
-							{
-								games.addAll(turn);
-							}
+							Utilities.easyToast(getSherlockActivity(), getString(R.string.games_list_fragment_getgames_error));
 
-							publishProgress(2);
-
-							turn = parseTurn(jsonGameData, ServerUtilities.POST_DATA_TURN_THEIRS, Game.TURN_THEIRS);
-							if (turn != null && !turn.isEmpty())
-							{
-								games.addAll(turn);
-							}
-
-							publishProgress(3);
+							final String errorMessage = jsonResult.getString(ServerUtilities.POST_DATA_ERROR);
+							Log.e(LOG_TAG, "Server returned error message: " + errorMessage);
 						}
 					}
-					catch (final JSONException e)
+					else
 					{
-						Log.e(LOG_TAG, "Server returned message that was unable to be properly parsed.");
-					}
+						ArrayList<Game> turn = parseTurn(jsonGameData, ServerUtilities.POST_DATA_TURN_YOURS, Game.TURN_YOURS);
+						if (turn != null && !turn.isEmpty())
+						{
+							games.addAll(turn);
+						}
 
-					games.trimToSize();
+						publishProgress(2);
+
+						turn = parseTurn(jsonGameData, ServerUtilities.POST_DATA_TURN_THEIRS, Game.TURN_THEIRS);
+						if (turn != null && !turn.isEmpty())
+						{
+							games.addAll(turn);
+						}
+
+						publishProgress(3);
+					}
 				}
+				catch (final JSONException e)
+				{
+					Log.e(LOG_TAG, "Server returned message that was unable to be properly parsed.");
+				}
+
+				games.trimToSize();
 			}
 
 			return games;
@@ -524,11 +521,13 @@ public class GamesListFragment extends SherlockListFragment
 							@Override
 							public void onClick(final View v)
 							{
-								
+								gamesListFragmentOnGameSelectedListener.gameListFragmentOnGameSelected(game);
 							}
 						};
-
-						convertView.setOnClickListener(viewHolder.onClickListener);
+					}
+					else
+					{
+						viewHolder.onClickListener = null;
 					}
 				}
 				else
@@ -541,8 +540,11 @@ public class GamesListFragment extends SherlockListFragment
 					{
 						convertView = inflater.inflate(R.layout.games_list_fragment_listview_turn_theirs, null);
 					}
+
+					viewHolder.onClickListener = null;
 				}
 
+				convertView.setOnClickListener(viewHolder.onClickListener);
 				convertView.setTag(viewHolder);
 			}
 

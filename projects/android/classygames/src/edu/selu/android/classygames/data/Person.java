@@ -211,11 +211,12 @@ public class Person
 	 * </ol>
 	 * 
 	 * @return
-	 * Returns true if all of the above conditions are true.
+	 * Returns true if all of the above conditions are true. Returns false if
+	 * any single one of the above conditions is false.
 	 */
 	public boolean isValid()
 	{
-		return id >= 1 && name != null && !name.isEmpty();
+		return isIdValid(id) && isNameValid(name);
 	}
 
 

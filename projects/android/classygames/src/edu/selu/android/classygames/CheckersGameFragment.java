@@ -132,89 +132,91 @@ public class CheckersGameFragment extends GenericGameFragment
 	@Override
 	protected void initViews()
 	{
-		getView().findViewById(R.id.checkers_game_fragment_x0y0).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x1y0).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x2y0).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x3y0).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x4y0).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x5y0).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x6y0).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x7y0).setOnClickListener(onBoardClick);
+		final View view = getView();
 
-		getView().findViewById(R.id.checkers_game_fragment_x0y1).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x1y1).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x2y1).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x3y1).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x4y1).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x5y1).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x6y1).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x7y1).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x0y0).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x1y0).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x2y0).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x3y0).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x4y0).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x5y0).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x6y0).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x7y0).setOnClickListener(onBoardClick);
 
-		getView().findViewById(R.id.checkers_game_fragment_x0y2).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x1y2).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x2y2).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x3y2).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x4y2).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x5y2).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x6y2).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x7y2).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x0y1).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x1y1).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x2y1).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x3y1).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x4y1).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x5y1).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x6y1).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x7y1).setOnClickListener(onBoardClick);
 
-		getView().findViewById(R.id.checkers_game_fragment_x0y3).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x1y3).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x2y3).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x3y3).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x4y3).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x5y3).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x6y3).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x7y3).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x0y2).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x1y2).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x2y2).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x3y2).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x4y2).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x5y2).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x6y2).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x7y2).setOnClickListener(onBoardClick);
 
-		getView().findViewById(R.id.checkers_game_fragment_x0y4).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x1y4).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x2y4).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x3y4).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x4y4).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x5y4).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x6y4).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x7y4).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x0y3).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x1y3).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x2y3).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x3y3).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x4y3).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x5y3).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x6y3).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x7y3).setOnClickListener(onBoardClick);
 
-		getView().findViewById(R.id.checkers_game_fragment_x0y5).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x1y5).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x2y5).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x3y5).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x4y5).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x5y5).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x6y5).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x7y5).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x0y4).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x1y4).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x2y4).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x3y4).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x4y4).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x5y4).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x6y4).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x7y4).setOnClickListener(onBoardClick);
 
-		getView().findViewById(R.id.checkers_game_fragment_x0y6).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x1y6).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x2y6).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x3y6).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x4y6).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x5y6).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x6y6).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x7y6).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x0y5).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x1y5).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x2y5).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x3y5).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x4y5).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x5y5).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x6y5).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x7y5).setOnClickListener(onBoardClick);
 
-		getView().findViewById(R.id.checkers_game_fragment_x0y7).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x1y7).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x2y7).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x3y7).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x4y7).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x5y7).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x6y7).setOnClickListener(onBoardClick);
-		getView().findViewById(R.id.checkers_game_fragment_x7y7).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x0y6).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x1y6).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x2y6).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x3y6).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x4y6).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x5y6).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x6y6).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x7y6).setOnClickListener(onBoardClick);
+
+		view.findViewById(R.id.checkers_game_fragment_x0y7).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x1y7).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x2y7).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x3y7).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x4y7).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x5y7).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x6y7).setOnClickListener(onBoardClick);
+		view.findViewById(R.id.checkers_game_fragment_x7y7).setOnClickListener(onBoardClick);
 
 		final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		layoutParams.height = getView().findViewById(R.id.checkers_game_fragment_x7y7).getWidth();
+		layoutParams.height = view.findViewById(R.id.checkers_game_fragment_x7y7).getWidth();
 
-		getView().findViewById(R.id.checkers_game_fragment_y0).setLayoutParams(layoutParams);
-		getView().findViewById(R.id.checkers_game_fragment_y1).setLayoutParams(layoutParams);
-		getView().findViewById(R.id.checkers_game_fragment_y2).setLayoutParams(layoutParams);
-		getView().findViewById(R.id.checkers_game_fragment_y3).setLayoutParams(layoutParams);
-		getView().findViewById(R.id.checkers_game_fragment_y4).setLayoutParams(layoutParams);
-		getView().findViewById(R.id.checkers_game_fragment_y5).setLayoutParams(layoutParams);
-		getView().findViewById(R.id.checkers_game_fragment_y6).setLayoutParams(layoutParams);
-		getView().findViewById(R.id.checkers_game_fragment_y7).setLayoutParams(layoutParams);
+		view.findViewById(R.id.checkers_game_fragment_y0).setLayoutParams(layoutParams);
+		view.findViewById(R.id.checkers_game_fragment_y1).setLayoutParams(layoutParams);
+		view.findViewById(R.id.checkers_game_fragment_y2).setLayoutParams(layoutParams);
+		view.findViewById(R.id.checkers_game_fragment_y3).setLayoutParams(layoutParams);
+		view.findViewById(R.id.checkers_game_fragment_y4).setLayoutParams(layoutParams);
+		view.findViewById(R.id.checkers_game_fragment_y5).setLayoutParams(layoutParams);
+		view.findViewById(R.id.checkers_game_fragment_y6).setLayoutParams(layoutParams);
+		view.findViewById(R.id.checkers_game_fragment_y7).setLayoutParams(layoutParams);
 
 		// Load Drawables for checkers pieces into memory. This is done so that
 		// later when we draw these checkers pieces onto the board, that draw
@@ -264,6 +266,9 @@ public class CheckersGameFragment extends GenericGameFragment
 			for (byte y = 0; y < Board.LENGTH_VERTICAL; ++y)
 			{
 				final String tag = createTag(x, y);
+
+				// setting the ImageDrawable to null erases the current image
+				// (if there is any) from this ImageDrawable
 				((ImageButton) getView().findViewWithTag(tag)).setImageDrawable(null);
 			}
 		}
@@ -279,27 +284,28 @@ public class CheckersGameFragment extends GenericGameFragment
 				{
 					final Piece piece = (Piece) position.getPiece();
 					final String tag = createTag(x, y);
+					final ImageButton imageButton = (ImageButton) getView().findViewWithTag(tag);
 
 					if (piece.isTypeNormal())
 					{
 						if (piece.isTeamPlayer())
 						{
-							((ImageButton) getView().findViewWithTag(tag)).setImageDrawable(playerNormal);
+							imageButton.setImageDrawable(playerNormal);
 						}
 						else
 						{
-							((ImageButton) getView().findViewWithTag(tag)).setImageDrawable(opponentNormal);
+							imageButton.setImageDrawable(opponentNormal);
 						}
 					}
 					else
 					{
 						if (piece.isTeamPlayer())
 						{
-							((ImageButton) getView().findViewWithTag(tag)).setImageDrawable(playerKing);
+							imageButton.setImageDrawable(playerKing);
 						}
 						else
 						{
-							((ImageButton) getView().findViewWithTag(tag)).setImageDrawable(opponentKing);
+							imageButton.setImageDrawable(opponentKing);
 						}
 					}
 				}

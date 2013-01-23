@@ -1,8 +1,8 @@
 package edu.selu.android.classygames.data;
 
 
-import edu.selu.android.classygames.R;
 import android.content.Context;
+import edu.selu.android.classygames.R;
 
 
 /**
@@ -148,7 +148,7 @@ public class Game
 	 * method instead of this one.
 	 * 
 	 * @return
-	 * The raw Unix Epoch.
+	 * Returns the raw Unix Epoch as a long.
 	 */
 	public long getTimestamp()
 	{
@@ -326,9 +326,6 @@ public class Game
 	{
 		return type == TYPE_GAME;
 	}
-
-
-	
 
 
 }

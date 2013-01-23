@@ -2,7 +2,7 @@ package edu.selu.android.classygames.games;
 
 
 /**
- * Represents a single position, or spot, on the game board.
+ * Class representing a single position, or spot, on the game board.
  */
 public class Position
 {

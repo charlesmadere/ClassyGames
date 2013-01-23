@@ -212,7 +212,7 @@ public class MainActivity extends SherlockActivity
 				@Override
 				public void onCancel(final DialogInterface dialog)
 				{
-					AsyncGetFacebookIdentity.this.cancel(false);
+					AsyncGetFacebookIdentity.this.cancel(true);
 				}
 			});
 

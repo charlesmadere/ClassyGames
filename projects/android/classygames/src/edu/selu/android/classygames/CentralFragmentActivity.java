@@ -4,7 +4,6 @@ package edu.selu.android.classygames;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.facebook.Session;
@@ -152,7 +151,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 	@Override
 	public void gameListFragmentOnGameSelected(final Game game)
 	{
-		Log.d(Utilities.LOG_TAG, "onGameSelected()! " + game.getId());
+		Utilities.easyToastAndLog(this, game.getId() + " vs " + game.getPerson().getName());
 	}
 
 
