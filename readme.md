@@ -4,8 +4,8 @@ This is a school project that was completed for the 2012 fall semester. [Downloa
 
 
 Classy Games v1.5
--------------------
-As of December 2013, Classy Games is undergoing a big update. The release date is currently TBA.
+-----------------
+As of December 2012, Classy Games is undergoing a big update. The release date is currently TBA.
 
 ### What's Coming in Classy Games v1.5 ###
 1. Fragments! Classy Games will be far better on an Android powered tablet.
