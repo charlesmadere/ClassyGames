@@ -96,7 +96,7 @@ public class GCMIntentService extends IntentService
 				// build a notification to show to the user
 				NotificationCompat.Builder builder = new NotificationCompat.Builder(GCMIntentService.this);
 				builder.setAutoCancel(true);
-				builder.setContentTitle(GCMIntentService.this.getString(R.string.notification_title));
+				builder.setContentTitle(getString(R.string.notification_title));
 				builder.setLargeIcon(BitmapFactory.decodeResource(GCMIntentService.this.getResources(), R.drawable.notification_raw));
 				builder.setLights(GCM_NOTIFICATION_LIGHTS, GCM_NOTIFICATION_LIGHTS_ON, GCM_NOTIFICATION_LIGHTS_OFF);
 				builder.setOnlyAlertOnce(true);
@@ -112,15 +112,15 @@ public class GCMIntentService extends IntentService
 					gameIntent.putExtra(GenericGameFragment.INTENT_DATA_PERSON_CHALLENGED_NAME, person.getName());
 					stackBuilder.addNextIntentWithParentStack(gameIntent);
 
-					builder.setTicker(GCMIntentService.this.getString(R.string.notification_sent_some_class, person.getName()));
+					builder.setTicker(getString(R.string.notification_sent_some_class, person.getName()));
 
 					if (gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_NEW_GAME)
 					{
-						builder.setContentText(GCMIntentService.this.getString(R.string.notification_new_game_text, person.getName()));
+						builder.setContentText(getString(R.string.notification_new_game_text, person.getName()));
 					}
 					else if (gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_NEW_MOVE)
 					{
-						builder.setContentText(GCMIntentService.this.getString(R.string.notification_new_move_text, person.getName()));
+						builder.setContentText(getString(R.string.notification_new_move_text, person.getName()));
 					}
 				}
 				else if (ServerUtilities.validWinOrLoseValue(gameType.byteValue()))
@@ -132,15 +132,15 @@ public class GCMIntentService extends IntentService
 					gameOverIntent.putExtra(GenericGameFragment.INTENT_DATA_PERSON_CHALLENGED_NAME, person.getName());
 					stackBuilder.addNextIntentWithParentStack(gameOverIntent);
 
-					builder.setTicker(GCMIntentService.this.getString(R.string.notification_game_over_text, person.getName()));
+					builder.setTicker(getString(R.string.notification_game_over_text, person.getName()));
 
 					if (gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_GAME_OVER_LOSE)
 					{
-						builder.setContentText(GCMIntentService.this.getString(R.string.notification_game_over_lose_text, person.getName()));
+						builder.setContentText(getString(R.string.notification_game_over_lose_text, person.getName()));
 					}
 					else if (gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_GAME_OVER_WIN)
 					{
-						builder.setContentText(GCMIntentService.this.getString(R.string.notification_game_over_win_text, person.getName()));
+						builder.setContentText(getString(R.string.notification_game_over_win_text, person.getName()));
 					}
 				}
 

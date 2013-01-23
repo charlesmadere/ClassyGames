@@ -36,7 +36,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 {
 
 
-	protected final static String LOG_TAG = Utilities.LOG_TAG + " - Game Logic";
+	protected final static String LOG_TAG = Utilities.LOG_TAG + " - GenericGameFragment";
 
 	public final static String INTENT_DATA_GAME_ID = "GAME_ID";
 	public final static String INTENT_DATA_PERSON_CHALLENGED_ID = "GAME_PERSON_CHALLENGED_ID";
@@ -161,7 +161,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * <p>Creates a tag to be used in a findViewWithTag() operation.</p>
+	 * Creates a tag to be used in a findViewWithTag() operation.
 	 * 
 	 * <p><strong>Examples</strong><br />
 	 * createTag(3, 5) returns "x3y5"<br />
@@ -475,8 +475,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 		@Override
 		protected void onPreExecute()
 		{
-			progressDialog = new ProgressDialog(GenericGameFragment.this.getSherlockActivity());
-			progressDialog.setMessage(GenericGameFragment.this.getString(R.string.generic_game_fragment_getgame_progressdialog_message));
+			progressDialog = new ProgressDialog(getSherlockActivity());
+			progressDialog.setMessage(getString(R.string.generic_game_fragment_getgame_progressdialog_message));
 			progressDialog.setTitle(R.string.generic_game_fragment_getgame_progressdialog_title);
 			progressDialog.setCancelable(true);
 			progressDialog.setCanceledOnTouchOutside(false);

@@ -316,15 +316,19 @@ public class Game
 
 
 	/**
-	 * Checks to see if this Game object's turn is the opponent player's turn.
+	 * Checks to see if this Game object's type is a game type, not a separator
+	 * type.
 	 * 
 	 * @return
-	 * Returns true if this Game object's turn is the opponent player's turn.
+	 * Returns true if this Game object's type is a game type.
 	 */
 	public boolean isTypeGame()
 	{
 		return type == TYPE_GAME;
 	}
+
+
+	
 
 
 }

@@ -205,6 +205,7 @@ public class MainActivity extends SherlockActivity
 			progressDialog = new ProgressDialog(MainActivity.this);
 			progressDialog.setCancelable(true);
 			progressDialog.setCanceledOnTouchOutside(false);
+			progressDialog.setMessage(getString(R.string.main_activity_get_facebook_identity_progressdialog_message));
 
 			progressDialog.setOnCancelListener(new OnCancelListener()
 			{
@@ -215,7 +216,6 @@ public class MainActivity extends SherlockActivity
 				}
 			});
 
-			progressDialog.setMessage(MainActivity.this.getString(R.string.main_activity_get_facebook_identity_progressdialog_message));
 			progressDialog.setTitle(R.string.main_activity_get_facebook_identity_progressdialog_title);
 			progressDialog.show();
 		}
