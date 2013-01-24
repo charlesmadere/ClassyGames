@@ -14,6 +14,8 @@ import android.widget.LinearLayout;
 
 import com.actionbarsherlock.view.Menu;
 
+import edu.selu.android.classygames.data.Game;
+import edu.selu.android.classygames.data.Person;
 import edu.selu.android.classygames.games.Coordinate;
 import edu.selu.android.classygames.games.Position;
 import edu.selu.android.classygames.games.checkers.Board;
@@ -48,6 +50,18 @@ public class CheckersGameFragment extends GenericGameFragment
 	private BitmapDrawable opponentKing;
 
 
+
+
+	CheckersGameFragment(final Person person)
+	{
+		super(person);
+	}
+
+
+	CheckersGameFragment(final Game game)
+	{
+		super(game);
+	}
 
 
 	@Override
@@ -95,7 +109,7 @@ public class CheckersGameFragment extends GenericGameFragment
 
 
 	@Override
-	protected void initBoardNew()
+	protected void initNewBoard()
 	{
 		board = new Board();
 
@@ -233,22 +247,6 @@ public class CheckersGameFragment extends GenericGameFragment
 	protected void onBoardClick(final View v)
 	{
 		Log.d(LOG_TAG, "onBoardClick()! id: \"" + v.getId() + "\" tag: \"" + v.getTag() + "\"");
-	}
-
-
-	@Override
-	public void onPrepareOptionsMenu(final Menu menu)
-	{
-		if (boardLocked)
-		{
-			menu.findItem(R.id.generic_game_fragment_actionbar_send_move).setEnabled(true);
-			menu.findItem(R.id.generic_game_fragment_actionbar_undo_move).setEnabled(true);
-		}
-		else
-		{
-			menu.findItem(R.id.generic_game_fragment_actionbar_send_move).setEnabled(false);
-			menu.findItem(R.id.generic_game_fragment_actionbar_undo_move).setEnabled(false);
-		}
 	}
 
 

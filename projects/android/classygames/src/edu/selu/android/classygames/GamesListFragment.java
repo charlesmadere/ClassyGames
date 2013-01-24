@@ -24,7 +24,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -156,23 +155,6 @@ public class GamesListFragment extends SherlockListFragment
 	}
 
 
-	@Override
-	public void onStart()
-	{
-		super.onStart();
-
-		if (getFragmentManager().findFragmentById(R.id.central_fragment_activity_fragment_container) == null)
-		// When in two-pane layout, set the ListView to highlight the selected
-		// list item. This is done during onStart because at this point the
-		// ListView is definitely available. Consult the Android Activity
-		// Lifecycle to find out a bit more:
-		// https://developer.android.com/reference/android/app/Activity.html#ActivityLifecycle
-		{
-			getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-		}
-	}
-
-
 
 
 	private final class AsyncPopulateGamesList extends AsyncTask<Void, Integer, ArrayList<Game>>
@@ -301,54 +283,51 @@ public class GamesListFragment extends SherlockListFragment
 		{
 			final ArrayList<Game> games = new ArrayList<Game>();
 
-			if (!isCancelled() && jsonResponse != null && !jsonResponse.isEmpty())
+			if (!isCancelled())
 			{
-				try
+				if (jsonResponse == null || jsonResponse.isEmpty())
 				{
-					final JSONObject jsonRaw = new JSONObject(jsonResponse);
-					final JSONObject jsonResult = jsonRaw.getJSONObject(ServerUtilities.POST_DATA_RESULT);
-					final JSONObject jsonGameData = jsonResult.optJSONObject(ServerUtilities.POST_DATA_SUCCESS);
-
-					if (jsonGameData == null)
+					Log.e(LOG_TAG, "Empty or null String received from server on get games!");
+				}
+				else
+				{
+					try
 					{
-						try
-						{
-							final String successMessage = jsonResult.getString(ServerUtilities.POST_DATA_SUCCESS);
-							Log.d(LOG_TAG, "Server returned successful message: " + successMessage);
-						}
-						catch (final JSONException e)
-						{
-							Utilities.easyToast(getSherlockActivity(), getString(R.string.games_list_fragment_getgames_error));
+						final JSONObject jsonRaw = new JSONObject(jsonResponse);
+						final JSONObject jsonResult = jsonRaw.getJSONObject(ServerUtilities.POST_DATA_RESULT);
+						final JSONObject jsonGameData = jsonResult.optJSONObject(ServerUtilities.POST_DATA_SUCCESS);
 
+						if (jsonGameData == null)
+						{
 							final String errorMessage = jsonResult.getString(ServerUtilities.POST_DATA_ERROR);
 							Log.e(LOG_TAG, "Server returned error message: " + errorMessage);
 						}
+						else
+						{
+							ArrayList<Game> turn = parseTurn(jsonGameData, ServerUtilities.POST_DATA_TURN_YOURS, Game.TURN_YOURS);
+							if (turn != null && !turn.isEmpty())
+							{
+								games.addAll(turn);
+							}
+
+							publishProgress(2);
+
+							turn = parseTurn(jsonGameData, ServerUtilities.POST_DATA_TURN_THEIRS, Game.TURN_THEIRS);
+							if (turn != null && !turn.isEmpty())
+							{
+								games.addAll(turn);
+							}
+
+							publishProgress(3);
+						}
 					}
-					else
+					catch (final JSONException e)
 					{
-						ArrayList<Game> turn = parseTurn(jsonGameData, ServerUtilities.POST_DATA_TURN_YOURS, Game.TURN_YOURS);
-						if (turn != null && !turn.isEmpty())
-						{
-							games.addAll(turn);
-						}
-
-						publishProgress(2);
-
-						turn = parseTurn(jsonGameData, ServerUtilities.POST_DATA_TURN_THEIRS, Game.TURN_THEIRS);
-						if (turn != null && !turn.isEmpty())
-						{
-							games.addAll(turn);
-						}
-
-						publishProgress(3);
+						Log.e(LOG_TAG, "JSON String is massively malformed.");
 					}
-				}
-				catch (final JSONException e)
-				{
-					Log.e(LOG_TAG, "Server returned message that was unable to be properly parsed.");
-				}
 
-				games.trimToSize();
+					games.trimToSize();
+				}
 			}
 
 			return games;

@@ -4,6 +4,8 @@ package edu.selu.android.classygames;
 import org.json.JSONArray;
 
 import android.view.View;
+import edu.selu.android.classygames.data.Game;
+import edu.selu.android.classygames.data.Person;
 
 
 /**
@@ -11,6 +13,18 @@ import android.view.View;
  */
 public class EmptyGameFragment extends GenericGameFragment
 {
+
+
+	EmptyGameFragment(final Person person)
+	{
+		super(person);
+	}
+
+
+	EmptyGameFragment(final Game game)
+	{
+		super(game);
+	}
 
 
 	@Override
@@ -21,7 +35,7 @@ public class EmptyGameFragment extends GenericGameFragment
 
 
 	@Override
-	protected void initBoardNew()
+	protected void initNewBoard()
 	{
 
 	}

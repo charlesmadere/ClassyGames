@@ -3,6 +3,7 @@ package edu.selu.android.classygames;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -67,7 +68,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 			}
 			else
 			{
-				fTransaction.add(R.id.central_fragment_activity_fragment_container, gamesListFragment);
+				fTransaction.add(R.id.central_fragment_activity_container, gamesListFragment);
 			}
 
 			fTransaction.commit();
@@ -142,7 +143,41 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 	 */
 	private boolean isDeviceLarge()
 	{
-		return findViewById(R.id.central_fragment_activity_fragment_container) == null;
+		return findViewById(R.id.central_fragment_activity_container) == null;
+	}
+
+
+	/**
+	 * Transitions either a part of the device's screen or a part of the
+	 * device's screen to the given fragment. A large device will have only
+	 * part of the screen occupied by the given fragment while a smaller device
+	 * (a phone most likely) will have the entire screen occupied.
+	 * 
+	 * @param fragment
+	 * 
+	 * 
+	 * @param largeLayout
+	 * In the case that this is a large device, what portion of the screen do
+	 * you want the given fragment to occupy? Use
+	 * central_fragment_activity_fragment_list for the smaller, left side of
+	 * screen or central_fragment_activity_fragment_game for the bigger, right
+	 * side of the screen.
+	 */
+	private void transitionToFragment(final Fragment fragment, final int largeLayout)
+	{
+		final FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
+
+		if (isDeviceLarge())
+		{
+			fTransaction.add(largeLayout, fragment);
+		}
+		else
+		{
+			fTransaction.add(R.id.central_fragment_activity_container, fragment);
+		}
+
+		fTransaction.addToBackStack(null);
+		fTransaction.commit();
 	}
 
 
@@ -152,30 +187,35 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 	public void gameListFragmentOnGameSelected(final Game game)
 	{
 		Utilities.easyToastAndLog(this, game.getId() + " vs " + game.getPerson().getName());
+
+		// if a future release of Classy Games has chess as well as
+		// checkers, then we will need to do some logic here to check the
+		// game type and then instantiate that game's fragment
+		genericGameFragment = new CheckersGameFragment(game);
+
+		// Build up a set of arguments to send to the fragment as it's
+		// instantiated. These arguments tell the GenericGameFragment the
+		// Game's ID, the player ID of the challenger, and the player name of
+		// the challenger.
+		final Bundle arguments = new Bundle();
+		arguments.putString(GenericGameFragment.BUNDLE_DATA_GAME_ID, game.getId());
+		arguments.putLong(GenericGameFragment.BUNDLE_DATA_PERSON_CHALLENGED_ID, game.getPerson().getId());
+		arguments.putString(GenericGameFragment.BUNDLE_DATA_PERSON_CHALLENGED_NAME, game.getPerson().getName());
+		genericGameFragment.setArguments(arguments);
+
+		transitionToFragment(genericGameFragment, R.id.central_fragment_activity_fragment_game);
 	}
 
 
 	@Override
 	public void gamesListFragmentOnNewGameSelected()
 	{
-		final FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
-
 		if (newGameFragment == null)
 		{
 			newGameFragment = new NewGameFragment();
 		}
 
-		if (isDeviceLarge())
-		{
-			fTransaction.add(R.id.central_fragment_activity_fragment_list, newGameFragment);
-		}
-		else
-		{
-			fTransaction.add(R.id.central_fragment_activity_fragment_container, newGameFragment);
-		}
-
-		fTransaction.addToBackStack(null);
-		fTransaction.commit();
+		transitionToFragment(newGameFragment, R.id.central_fragment_activity_fragment_list);
 	}
 
 

@@ -328,4 +328,75 @@ public class Game
 	}
 
 
+	/**
+	 * Checks to see that this Game object is valid. Valid means four things:
+	 * <ol>
+	 * <li>This Game's ID is not null.</li>
+	 * <li>This Game's ID has a length of greater than or equal to 32.</li>
+	 * <li>This Game's Person object is valid.</li>
+	 * <li>This Game's whichGame byte is valid.</li>
+	 * </ol>
+	 * 
+	 * @return
+	 * Returns true if all of the above conditions are true. Returns false if
+	 * any single one of the above conditions are false.
+	 */
+	public boolean isValid()
+	{
+		return isIdValid(id) && person.isValid() && isWhichGameValid(whichGame);
+	}
+
+
+
+
+	/**
+	 * Checks the given ID to be sure that it is a valid Game ID. Valid means
+	 * two things:
+	 * <ol>
+	 * <li>This ID is not null.</li>
+	 * <li>This ID has a length of greater than or equal to 32.</li>
+	 * </ol>
+	 * 
+	 * @param id
+	 * The Game ID to check for validity.
+	 * 
+	 * @return
+	 * Returns true if all of the above conditions are true for the given ID.
+	 * Returns false if any single one of the above conditions are false.
+	 */
+	public static boolean isIdValid(final String id)
+	{
+		return id != null && id.length() >= 32;
+	}
+
+
+	/**
+	 * Checks to the given whichGame to be sure that it is a valid whichGame.
+	 * Valid means one thing:
+	 * <ol>
+	 * <li>This whichGame is equal to any single one of the other public final
+	 * static WHICH_GAME_* bytes in this class.</li>
+	 * </ol>
+	 * 
+	 * @param whichGame
+	 * The whichGame byte to check for validity.
+	 * 
+	 * @return
+	 * Returns true if the the above condition is true for the given whichGame
+	 * byte.
+	 */
+	public static boolean isWhichGameValid(final byte whichGame)
+	{
+		switch (whichGame)
+		{
+			case WHICH_GAME_CHECKERS:
+			case WHICH_GAME_CHESS:
+				return true;
+
+			default:
+				return false;
+		}
+	}
+
+
 }

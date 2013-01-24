@@ -212,7 +212,7 @@ public class Person
 	 * 
 	 * @return
 	 * Returns true if all of the above conditions are true. Returns false if
-	 * any single one of the above conditions is false.
+	 * any single one of the above conditions are false.
 	 */
 	public boolean isValid()
 	{
@@ -225,12 +225,17 @@ public class Person
 	/**
 	 * When Facebook IDs are acquired throughout the app's runtime they should
 	 * be checked for validity. Use this method to check for that validity.
+	 * Valid means one thing:
+	 * <ol>
+	 * <li>This ID is greater than or equal to 1.</li>
+	 * </ol>
 	 * 
 	 * @param id
 	 * The Facebook ID to check for validity.
 	 * 
 	 * @return
-	 * Returns true if the passed in Facebook ID is valid.
+	 * Returns true if the above condition is true. Returns false if the above
+	 * condition is false.
 	 */
 	public static boolean isIdValid(final long id)
 	{

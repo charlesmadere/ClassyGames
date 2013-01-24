@@ -6,6 +6,8 @@ import org.json.JSONArray;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.View;
+import edu.selu.android.classygames.data.Game;
+import edu.selu.android.classygames.data.Person;
 
 
 public class ChessGameFragment extends GenericGameFragment
@@ -86,6 +88,18 @@ public class ChessGameFragment extends GenericGameFragment
 
 
 
+	ChessGameFragment(final Person person)
+	{
+		super(person);
+	}
+
+
+	ChessGameFragment(final Game game)
+	{
+		super(game);
+	}
+
+
 	@Override
 	protected int onCreateView()
 	{
@@ -101,7 +115,7 @@ public class ChessGameFragment extends GenericGameFragment
 
 
 	@Override
-	protected void initBoardNew()
+	protected void initNewBoard()
 	{
 
 	}

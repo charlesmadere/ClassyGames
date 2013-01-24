@@ -10,7 +10,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,12 +25,15 @@ import android.view.ViewGroup;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
+import edu.selu.android.classygames.data.Game;
 import edu.selu.android.classygames.data.Person;
 import edu.selu.android.classygames.games.GenericBoard;
 import edu.selu.android.classygames.games.GenericPiece;
 import edu.selu.android.classygames.games.Position;
 import edu.selu.android.classygames.games.checkers.Board;
+import edu.selu.android.classygames.games.checkers.Piece;
 import edu.selu.android.classygames.utilities.ServerUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
 
@@ -38,10 +44,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 	protected final static String LOG_TAG = Utilities.LOG_TAG + " - GenericGameFragment";
 
-	public final static String INTENT_DATA_GAME_ID = "GAME_ID";
-	public final static String INTENT_DATA_PERSON_CHALLENGED_ID = "GAME_PERSON_CHALLENGED_ID";
-	public final static String INTENT_DATA_PERSON_CHALLENGED_NAME = "GAME_PERSON_CHALLENGED_NAME";
-
 
 	/**
 	 * Boolean indicating if the board is locked or not. Once the board has
@@ -51,18 +53,28 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * The ID of this game. If this is a brand new game, this value does not
-	 * need to be grabbed from the server and can stay null. Otherwise, this
-	 * String <strong>must</strong> have a value.
+	 * A Person object that represents the Facebook friend that the current
+	 * Android user is playing against. This object has the possibility of
+	 * being null. <strong>DO NOT MODIFY THIS OBJECT ONCE IT HAS BEEN SET.
+	 * </strong> If a GenericGameFragment has been instantiated and this object
+	 * is null, then that means that this game is an in progress game and must
+	 * be resumed. If this object is not null, then that means that this game
+	 * is a brand new game.
 	 */
-	protected String gameId;
+	protected Person person;
 
 
 	/**
-	 * Object representing the living person that I (the user) am playing
-	 * against.
+	 * This game's Game object. This contains a whole bunch of necessary data
+	 * such as the ID of the game as well as the Person object that the current
+	 * Android user is playing against. <strong>DO NOT MODIFY THIS OBJECT ONCE
+	 * IT HAS BEEN SET.</strong> If a GenericGameFragment has been instantiated
+	 * and this object is null, then that means that this game is a brand new
+	 * game. If this object is not null, then that means that this game is an
+	 * in progress game and must be resumed (by downloading the game board from
+	 * the server).
 	 */
-	protected Person personChallenged;
+	protected Game game;
 
 
 	/**
@@ -84,6 +96,62 @@ public abstract class GenericGameFragment extends SherlockFragment
 	protected OnClickListener onBoardClick;
 
 
+	/**
+	 * One of this class's callback methods. This is fired in the event that
+	 * an error was detected in some of the data needed to instantiate a game.
+	 */
+	private GenericGameFragmentOnDataErrorListener genericGameFragmentOnDataErrorListener;
+
+	public interface GenericGameFragmentOnDataErrorListener
+	{
+		public void genericGameFragmentOnDataErrorListener();
+	}
+
+
+
+
+	/**
+	 * <p><strong>Please be sure that you're using the proper constructor for
+	 * the type of game that you're trying to create!</strong> The
+	 * GenericGameFragment class has two constructors - it's very important to
+	 * use the right one.</p>
+	 * 
+	 * <p>Use this constructor if you're creating a brand new game. This means
+	 * that the user has gone to the NewGameFragment in the app and selected a
+	 * Facebook friend to challenge. The board will be a completely default
+	 * board and everything for this case.</p>
+	 * 
+	 * @param person
+	 * The Person object that the current user is playing against. This object
+	 * will be checked for validity. If this object is not valid then this
+	 * class will refuse to instantiate fully.
+	 */
+	protected GenericGameFragment(final Person person)
+	{
+		this.person = person;
+	}
+
+
+	/**
+	 * <p><strong>Please be sure that you're using the proper constructor for
+	 * the type of game that you're trying to create!</strong> The
+	 * GenericGameFragment class has two constructors - it's very important to
+	 * use the right one.</p>
+	 * 
+	 * <p>Use this constructor if you're resuming an existing game. This means
+	 * that the user has selected a game from the GamesListFragment. The board
+	 * will have to be downloaded from the server and then parsed so that the
+	 * existing game can be resumed.</p>
+	 * 
+	 * @param game
+	 * The Game object that the current user selected in the GamesListFragment.
+	 * This object will be checked for validity. If this object is not valid
+	 * then this class will refuse to instantiate fully.
+	 */
+	protected GenericGameFragment(final Game game)
+	{
+		this.game = game;
+	}
 
 
 	@Override
@@ -97,23 +165,14 @@ public abstract class GenericGameFragment extends SherlockFragment
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{
-		// retrieve data passed to this fragment
-		final Bundle arguments = getArguments();
-
-		if (arguments == null || arguments.isEmpty())
+		if (person == null)
 		{
-			fragmentHasError();
-		}
-		else
-		{
-			gameId = arguments.getString(INTENT_DATA_GAME_ID);
-			final long challengedId = arguments.getLong(INTENT_DATA_PERSON_CHALLENGED_ID);
-			final String challengedName = arguments.getString(INTENT_DATA_PERSON_CHALLENGED_NAME);
-
-			if (Person.isIdValid(challengedId) && Person.isNameValid(challengedName))
+			if (game == null || !game.isValid())
 			{
-				personChallenged = new Person(challengedId, challengedName);
-
+				genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataErrorListener();
+			}
+			else
+			{
 				onBoardClick = new OnClickListener()
 				{
 					@Override
@@ -124,23 +183,55 @@ public abstract class GenericGameFragment extends SherlockFragment
 				};
 
 				initViews();
-
-				if (gameId == null || gameId.isEmpty())
-				{
-					initBoard();
-				}
-				else
-				{
-					new AsyncGetGame().execute();
-				}
+				new AsyncGetGame().execute();
+			}
+		}
+		else if (game == null)
+		{
+			if (person == null || !person.isValid())
+			{
+				genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataErrorListener();
 			}
 			else
 			{
-				fragmentHasError();
+				onBoardClick = new OnClickListener()
+				{
+					@Override
+					public void onClick(final View v)
+					{
+						onBoardClick(v);
+					}
+				};
+
+				initViews();
+				initNewBoard();
 			}
+		}
+		else
+		{
+			genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataErrorListener();
 		}
 
 		return inflater.inflate(onCreateView(), container, false);
+	}
+
+
+	@Override
+	public void onAttach(final Activity activity)
+	// This makes sure that the Activity containing this Fragment has
+	// implemented the callback interface. If the callback interface has not
+	// been implemented, an exception is thrown.
+	{
+		super.onAttach(activity);
+
+		try
+		{
+			genericGameFragmentOnDataErrorListener = (GenericGameFragmentOnDataErrorListener) activity;
+		}
+		catch (final ClassCastException e)
+		{
+			throw new ClassCastException(activity.toString() + " must implement listeners!");
+		}
 	}
 
 
@@ -153,10 +244,39 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	@Override
-	public void onDestroyView()
+	public boolean onOptionsItemSelected(final MenuItem item)
 	{
-		super.onDestroyView();
+		switch (item.getItemId())
+		{
+			case R.id.generic_game_fragment_actionbar_send_move:
+				new AsyncSendMove().execute();
+				break;
 
+			case R.id.generic_game_fragment_actionbar_undo_move:
+				undo();
+				break;
+
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+
+		return true;
+	}
+
+
+	@Override
+	public void onPrepareOptionsMenu(final Menu menu)
+	{
+		if (boardLocked)
+		{
+			menu.findItem(R.id.generic_game_fragment_actionbar_send_move).setEnabled(true);
+			menu.findItem(R.id.generic_game_fragment_actionbar_undo_move).setEnabled(true);
+		}
+		else
+		{
+			menu.findItem(R.id.generic_game_fragment_actionbar_send_move).setEnabled(false);
+			menu.findItem(R.id.generic_game_fragment_actionbar_undo_move).setEnabled(false);
+		}
 	}
 
 
@@ -179,18 +299,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 	protected String createTag(final byte x, final byte y)
 	{
 		return "x" + x + "y" + y;
-	}
-
-
-	/**
-	 * If this fragment has some kind of issue with the data passed to it then
-	 * this method should be called. This fragment <strong>requires</strong>
-	 * some specific data and it absolutely can't run in the event that that
-	 * data is missing.
-	 */
-	private void fragmentHasError()
-	{
-		Log.d(LOG_TAG, "fragmentHasError()!");
 	}
 
 
@@ -293,35 +401,16 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * Initializes the game board. If this game has been downloaded from the
-	 * server, then this method will run initBoardOld(). Otherwise, this is a
-	 * brand new game and this method will run initBoardNew().
-	 */
-	private void initBoard()
-	{
-		if (boardJSON == null || boardJSON.isEmpty())
-		// Test to see if this game has been downloaded from the server. This
-		// statement will validate as true if the game has been downloaded from
-		// the server.
-		{
-			initBoardNew();
-		}
-		else
-		{
-			initBoardOld();
-		}
-	}
-
-
-	/**
 	 * This method will initialize the game board as if this is an in progress
-	 * game.
+	 * game. This <strong>resumes</strong> an old game. Do not use this for a
+	 * brand new game.
 	 */
-	private void initBoardOld()
+	private void resumeOldBoard()
 	{
 		if (boardJSON == null || boardJSON.isEmpty())
 		{
 			Log.e(LOG_TAG, "Tried to build the board from either a null or empty JSON String!");
+			genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataErrorListener();
 		}
 		else
 		{
@@ -366,7 +455,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * pulls the needed information out of it. If there is an error during this
 	 * process, null is returned.
 	 * 
-	 * @param jsonString
+	 * @param jsonResponse
 	 * The JSON response String as received from the web server. This method
 	 * <strong>does</strong> check to see if this passed in String is either
 	 * null or empty. In that case, the method will immediately log that error
@@ -377,44 +466,38 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * there is an error in the parsing process, this method will log some
 	 * stuff and then return null.
 	 */
-	private String parseServerResponse(final String jsonString)
+	private String parseServerResponse(final String jsonResponse)
 	{
-		if (jsonString == null || jsonString.isEmpty())
+		String parsedServerResponse = null;
+
+		if (jsonResponse == null || jsonResponse.isEmpty())
 		{
-			Log.e(LOG_TAG, "Empty string received from server on send move!");
+			Log.e(LOG_TAG, "Either null or empty String received from server on send move!");
 		}
 		else
 		{
 			try
 			{
-				final JSONObject jsonData = new JSONObject(jsonString);
+				final JSONObject jsonData = new JSONObject(jsonResponse);
 				final JSONObject jsonResult = jsonData.getJSONObject(ServerUtilities.POST_DATA_RESULT);
 
 				try
 				{
-					final String successData = jsonResult.getString(ServerUtilities.POST_DATA_SUCCESS);
-					return successData;
+					parsedServerResponse = jsonResult.getString(ServerUtilities.POST_DATA_SUCCESS);
 				}
 				catch (final JSONException e)
 				{
-					try
-					{
-						final String errorMessage = jsonResult.getString(ServerUtilities.POST_DATA_ERROR);
-						Log.e(LOG_TAG, "Data returned from server contained an error message: " + errorMessage);
-					}
-					catch (final JSONException e1)
-					{
-						Log.e(LOG_TAG, "Data returned from server contained neither a success nor an error message!");
-					}
+					final String errorMessage = jsonResult.getString(ServerUtilities.POST_DATA_ERROR);
+					Log.e(LOG_TAG, "Server returned error message: " + errorMessage);
 				}
 			}
 			catch (final JSONException e)
 			{
-				Log.e(LOG_TAG, "Couldn't grab result object from server response.");
+				Log.e(LOG_TAG, "JSON String is massively malformed.");
 			}
 		}
 
-		return null;
+		return parsedServerResponse;
 	}
 
 
@@ -427,6 +510,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		if (boardLocked)
 		{
 			boardLocked = false;
+			getSherlockActivity().invalidateOptionsMenu();
 		}
 	}
 
@@ -441,21 +525,36 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 		@Override
-		protected String doInBackground(final Void... v)
+		protected String doInBackground(final Void... params)
 		{
-			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-			nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, gameId));
+			String serverResponse = null;
 
-			try
+			if (!isCancelled())
 			{
-				return ServerUtilities.postToServer( ServerUtilities.SERVER_GET_GAME_ADDRESS, nameValuePairs );
-			}
-			catch (final IOException e)
-			{
-				Log.e(Utilities.LOG_TAG, "Error in HTTP POST to " + ServerUtilities.SERVER_GET_GAME_ADDRESS, e);
+				final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, game.getId()));
+
+				try
+				{
+					serverResponse = ServerUtilities.postToServer(ServerUtilities.SERVER_GET_GAME_ADDRESS, nameValuePairs);
+				}
+				catch (final IOException e)
+				{
+					Log.e(Utilities.LOG_TAG, "IOException error in AsyncGetGame - doInBackground()!", e);
+				}
 			}
 
-			return null;
+			return serverResponse;
+		}
+
+
+		@Override
+		protected void onCancelled(final String serverResponse)
+		{
+			if (progressDialog.isShowing())
+			{
+				progressDialog.dismiss();
+			}
 		}
 
 
@@ -463,7 +562,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		protected void onPostExecute(final String serverResponse)
 		{
 			boardJSON = parseServerResponse(serverResponse);
-			initBoard();
+			resumeOldBoard();
 
 			if (progressDialog.isShowing())
 			{
@@ -476,10 +575,20 @@ public abstract class GenericGameFragment extends SherlockFragment
 		protected void onPreExecute()
 		{
 			progressDialog = new ProgressDialog(getSherlockActivity());
-			progressDialog.setMessage(getString(R.string.generic_game_fragment_getgame_progressdialog_message));
-			progressDialog.setTitle(R.string.generic_game_fragment_getgame_progressdialog_title);
 			progressDialog.setCancelable(true);
-			progressDialog.setCanceledOnTouchOutside(false);
+			progressDialog.setCanceledOnTouchOutside(true);
+			progressDialog.setMessage(getString(R.string.generic_game_fragment_getgame_progressdialog_message));
+
+			progressDialog.setOnCancelListener(new OnCancelListener()
+			{
+				@Override
+				public void onCancel(final DialogInterface dialog)
+				{
+					AsyncGetGame.this.cancel(true);
+				}
+			});
+
+			progressDialog.setTitle(R.string.generic_game_fragment_getgame_progressdialog_title);
 			progressDialog.show();
 		}
 
@@ -499,44 +608,63 @@ public abstract class GenericGameFragment extends SherlockFragment
 		@Override
 		protected String doInBackground(final Void... v)
 		{
-			try
+			String serverResponse = null;
+
+			if (!isCancelled())
 			{
-				final JSONObject board = new JSONObject();
-				board.put("teams", createJSONTeams());
-
-				final JSONObject object = new JSONObject();
-				object.put("board", board);
-
-				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-
 				try
 				{
-					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CHALLENGED, Long.valueOf(personChallenged.getId()).toString()));
-					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_NAME, personChallenged.getName()));
-					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CREATOR, Long.valueOf(Utilities.getWhoAmI(GenericGameFragment.this.getSherlockActivity()).getId()).toString()));
-					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_BOARD, object.toString()));
+					final JSONObject jsonTeams = new JSONObject();
+					jsonTeams.put("teams", createJSONTeams());
 
-					if (gameId == null || gameId.isEmpty())
+					final JSONObject jsonBoard = new JSONObject();
+					jsonBoard.put("board", jsonTeams);
+
+					if (!isCancelled())
 					{
-						return ServerUtilities.postToServer(ServerUtilities.SERVER_NEW_GAME_ADDRESS, nameValuePairs);
-					}
-					else
-					{
-						nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_GAME_ID, gameId));
-						return ServerUtilities.postToServer(ServerUtilities.SERVER_NEW_MOVE_ADDRESS, nameValuePairs);
+						final Person whoAmI = Utilities.getWhoAmI(getSherlockActivity());
+						final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+						nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CREATOR, whoAmI.getIdAsString()));
+						nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_BOARD, jsonBoard.toString()));
+
+						if (game == null)
+						{
+							nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CHALLENGED, person.getIdAsString()));
+							nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_NAME, person.getName()));
+
+							try
+							{
+								serverResponse = ServerUtilities.postToServer(ServerUtilities.SERVER_NEW_GAME_ADDRESS, nameValuePairs);
+							}
+							catch (final IOException e)
+							{
+								Log.e(LOG_TAG, "IOException error in AsyncSendMove - doInBackground()!", e);
+							}
+						}
+						else if (person == null)
+						{
+							nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CHALLENGED, game.getPerson().getIdAsString()));
+							nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_NAME, game.getPerson().getName()));
+							nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_GAME_ID, game.getId()));
+
+							try
+							{
+								serverResponse = ServerUtilities.postToServer(ServerUtilities.SERVER_NEW_MOVE_ADDRESS, nameValuePairs);
+							}
+							catch (final IOException e)
+							{
+								Log.e(LOG_TAG, "IOException error in AsyncSendMove - doInBackground()!", e);
+							}
+						}
 					}
 				}
-				catch (final IOException e)
+				catch (final JSONException e)
 				{
-					Log.e(Utilities.LOG_TAG, "Error in HTTP POST to server.", e);
+					Log.e(LOG_TAG, "Error in creating JSON data to send to server.");
 				}
 			}
-			catch (final JSONException e)
-			{
-				Log.e(Utilities.LOG_TAG, "Error in creating JSON data to send to server.", e);
-			}
 
-			return null;
+			return serverResponse;
 		}
 
 
@@ -569,6 +697,16 @@ public abstract class GenericGameFragment extends SherlockFragment
 			progressDialog.setCancelable(true);
 			progressDialog.setCanceledOnTouchOutside(true);
 			progressDialog.setMessage(getString(R.string.generic_game_fragment_sendmove_progressdialog_message));
+
+			progressDialog.setOnCancelListener(new OnCancelListener()
+			{
+				@Override
+				public void onCancel(final DialogInterface dialog)
+				{
+					AsyncSendMove.this.cancel(true);
+				}
+			});
+
 			progressDialog.setTitle(R.string.generic_game_fragment_sendmove_progressdialog_title);
 			progressDialog.show();
 		}
@@ -604,38 +742,44 @@ public abstract class GenericGameFragment extends SherlockFragment
 		 */
 		private JSONArray createJSONTeam(final byte whichTeam)
 		{
-			final JSONArray team = new JSONArray();
+			final JSONArray jsonTeam = new JSONArray();
 
-			for (byte x = 0; x < Board.LENGTH_HORIZONTAL; ++x)
+			for (byte x = 0; x < Board.LENGTH_HORIZONTAL && !isCancelled(); ++x)
 			{
-				for (byte y = 0; y < Board.LENGTH_VERTICAL; ++y)
+				for (byte y = 0; y < Board.LENGTH_VERTICAL && !isCancelled(); ++y)
 				{
 					final Position position = board.getPosition(x, y);
 
-					if (position.hasPiece() && position.getPiece().isTeam(whichTeam))
-					// this position has a piece in it that is of the given team
+					if (position.hasPiece())
+					// this position has a piece in it
 					{
-						try
-						{
-							final JSONArray coordinate = new JSONArray();
-							coordinate.put(x);
-							coordinate.put(y);
+						final Piece piece = (Piece) position.getPiece();
 
-							final JSONObject piece = new JSONObject();
-							piece.put("coordinate", coordinate);
-							piece.put("type", board.getPosition(x, y).getPiece().getType());
-
-							team.put(piece);
-						}
-						catch (final JSONException e)
+						if (piece.isTeam(whichTeam))
+						// this piece is of the given team 
 						{
-							Log.e(LOG_TAG, "Error in createJSONTeam, x = " + x + ", y = " + y);
+							try
+							{
+								final JSONArray jsonCoordinate = new JSONArray();
+								jsonCoordinate.put(x);
+								jsonCoordinate.put(y);
+
+								final JSONObject jsonPiece = new JSONObject();
+								jsonPiece.put("coordinate", jsonCoordinate);
+								jsonPiece.put("type", piece.getType());
+
+								jsonTeam.put(jsonPiece);
+							}
+							catch (final JSONException e)
+							{
+								Log.e(LOG_TAG, "Error in createJSONTeam(): x = " + x + ", y = " + y);
+							}
 						}
 					}
 				}
 			}
 
-			return team;
+			return jsonTeam;
 		}
 
 
@@ -688,7 +832,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	/**
 	 * Initialize the game board as if it's a <strong>brand new game</strong>.
 	 */
-	protected abstract void initBoardNew();
+	protected abstract void initNewBoard();
 
 
 	/**
