@@ -193,16 +193,6 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 		// game type and then instantiate that game's fragment
 		genericGameFragment = new CheckersGameFragment(game);
 
-		// Build up a set of arguments to send to the fragment as it's
-		// instantiated. These arguments tell the GenericGameFragment the
-		// Game's ID, the player ID of the challenger, and the player name of
-		// the challenger.
-		final Bundle arguments = new Bundle();
-		arguments.putString(GenericGameFragment.BUNDLE_DATA_GAME_ID, game.getId());
-		arguments.putLong(GenericGameFragment.BUNDLE_DATA_PERSON_CHALLENGED_ID, game.getPerson().getId());
-		arguments.putString(GenericGameFragment.BUNDLE_DATA_PERSON_CHALLENGED_NAME, game.getPerson().getName());
-		genericGameFragment.setArguments(arguments);
-
 		transitionToFragment(genericGameFragment, R.id.central_fragment_activity_fragment_game);
 	}
 

@@ -111,6 +111,15 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
+	 * <strong>NEVER USE THIS!</strong>
+	 */
+	protected GenericGameFragment()
+	{
+
+	}
+
+
+	/**
 	 * <p><strong>Please be sure that you're using the proper constructor for
 	 * the type of game that you're trying to create!</strong> The
 	 * GenericGameFragment class has two constructors - it's very important to

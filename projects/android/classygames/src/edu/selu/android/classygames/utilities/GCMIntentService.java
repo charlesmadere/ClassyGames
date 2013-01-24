@@ -14,7 +14,6 @@ import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import edu.selu.android.classygames.CheckersGameFragment;
 import edu.selu.android.classygames.GameOverFragment;
-import edu.selu.android.classygames.GenericGameFragment;
 import edu.selu.android.classygames.R;
 import edu.selu.android.classygames.data.Person;
 
@@ -107,9 +106,9 @@ public class GCMIntentService extends IntentService
 				if (gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_NEW_GAME || gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_NEW_MOVE)
 				{
 					Intent gameIntent = new Intent(this, CheckersGameFragment.class);
-					gameIntent.putExtra(GenericGameFragment.BUNDLE_DATA_GAME_ID, gameId);
-					gameIntent.putExtra(GenericGameFragment.BUNDLE_DATA_PERSON_CHALLENGED_ID, person.getId());
-					gameIntent.putExtra(GenericGameFragment.BUNDLE_DATA_PERSON_CHALLENGED_NAME, person.getName());
+//					gameIntent.putExtra(GenericGameFragment.BUNDLE_DATA_GAME_ID, gameId);
+//					gameIntent.putExtra(GenericGameFragment.BUNDLE_DATA_PERSON_CHALLENGED_ID, person.getId());
+//					gameIntent.putExtra(GenericGameFragment.BUNDLE_DATA_PERSON_CHALLENGED_NAME, person.getName());
 					stackBuilder.addNextIntentWithParentStack(gameIntent);
 
 					builder.setTicker(getString(R.string.notification_sent_some_class, person.getName()));
@@ -128,8 +127,8 @@ public class GCMIntentService extends IntentService
 				{
 					Intent gameOverIntent = new Intent(this, GameOverFragment.class);
 					gameOverIntent.putExtra(ServerUtilities.POST_DATA_TYPE, gameType.byteValue());
-					gameOverIntent.putExtra(GenericGameFragment.BUNDLE_DATA_PERSON_CHALLENGED_ID, person.getId());
-					gameOverIntent.putExtra(GenericGameFragment.BUNDLE_DATA_PERSON_CHALLENGED_NAME, person.getName());
+//					gameOverIntent.putExtra(GenericGameFragment.BUNDLE_DATA_PERSON_CHALLENGED_ID, person.getId());
+//					gameOverIntent.putExtra(GenericGameFragment.BUNDLE_DATA_PERSON_CHALLENGED_NAME, person.getName());
 					stackBuilder.addNextIntentWithParentStack(gameOverIntent);
 
 					builder.setTicker(getString(R.string.notification_game_over_text, person.getName()));
