@@ -225,7 +225,8 @@ public class CheckersGameFragment extends GenericGameFragment
 		view.findViewById(R.id.checkers_game_fragment_x7y7).setOnClickListener(onBoardClick);
 
 		final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		layoutParams.height = view.findViewById(R.id.checkers_game_fragment_x7y7).getWidth();
+		final int height = view.findViewById(R.id.checkers_game_fragment_x7y7).getWidth();
+		layoutParams.height = height;
 
 		view.findViewById(R.id.checkers_game_fragment_y0).setLayoutParams(layoutParams);
 		view.findViewById(R.id.checkers_game_fragment_y1).setLayoutParams(layoutParams);

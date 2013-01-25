@@ -85,6 +85,7 @@
 	<string name="generic_game_fragment_getgame_progressdialog_title">Classy Games is working&#8230;</string>
 	<string name="generic_game_fragment_sendmove_progressdialog_message">Sending your class to our server, the hamsters will process it shortly!</string>
 	<string name="generic_game_fragment_sendmove_progressdialog_title">Classy Hamsters are working diligently!</string>
+	<string name="generic_game_fragment_title">Generic Game Fragment</string>
 	<string name="game_timestamp_1_week_ago">1 week ago</string>
 	<string name="game_timestamp_2_weeks_ago">2 weeks ago</string>
 	<string name="game_timestamp_more_than_2_weeks_ago">more than 2 weeks ago</string>

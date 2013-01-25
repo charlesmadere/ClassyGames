@@ -22,6 +22,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 		GenericGameFragment.GenericGameFragmentOnDataErrorListener,
 		GenericGameFragment.GenericGameFragmentOnDestroyViewListener,
 		NewGameFragment.NewGameFragmentOnDestroyViewListener
+		
 {
 
 
@@ -180,6 +181,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 		}
 
 		fTransaction.addToBackStack(null);
+		fTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		fTransaction.commit();
 	}
 
@@ -189,11 +191,9 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 	@Override
 	public void gameListFragmentOnGameSelected(final Game game)
 	{
-		Utilities.easyToastAndLog(this, game.getId() + " vs " + game.getPerson().getName());
-
-		// if a future release of Classy Games has chess as well as
-		// checkers, then we will need to do some logic here to check the
-		// game type and then instantiate that game's fragment
+		// if a future release of Classy Games has chess as well as checkers,
+		// then we will need to do some logic here to check the game type and
+		// then instantiate that game's fragment
 		genericGameFragment = new CheckersGameFragment(game);
 
 		transitionToFragment(genericGameFragment, R.id.central_fragment_activity_fragment_game);

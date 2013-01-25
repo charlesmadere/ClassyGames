@@ -18,6 +18,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -213,7 +214,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 					}
 				};
 
-				initViews();
+//				initViews();
 //				new AsyncGetGame().execute();
 			}
 		}
@@ -336,7 +337,19 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 		final ActionBar actionBar = getSherlockActivity().getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setTitle(getTitle());
+
+		if (person == null)
+		{
+			actionBar.setTitle(getString(getTitle()) + " " + game.getPerson().getName());
+		}
+		else if (game == null)
+		{
+			actionBar.setTitle(getString(getTitle()) + " " + person.getName());
+		}
+		else
+		{
+			actionBar.setTitle(R.string.generic_game_fragment_title);
+		}
 	}
 
 
@@ -666,7 +679,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 		@Override
-		protected String doInBackground(final Void... v)
+		protected String doInBackground(final Void... params)
 		{
 			String serverResponse = null;
 
