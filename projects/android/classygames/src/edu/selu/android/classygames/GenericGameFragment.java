@@ -16,12 +16,15 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -108,10 +111,20 @@ public abstract class GenericGameFragment extends SherlockFragment
 	}
 
 
+	private GenericGameFragmentOnDestroyViewListener genericGameFragmentOnDestroyViewListener;
+
+	public interface GenericGameFragmentOnDestroyViewListener
+	{
+		public void genericGameFragmentOnDestroyViewListener();
+	}
+
+
 
 
 	/**
-	 * <strong>NEVER USE THIS!</strong>
+	 * <strong>NEVER USE THIS!</strong> Actually I'm not quite telling the
+	 * truth: the only class that should ever use this constructor is the
+	 * EmptyGameFragment class. But still, nothing else should ever use this.
 	 */
 	protected GenericGameFragment()
 	{
@@ -174,6 +187,15 @@ public abstract class GenericGameFragment extends SherlockFragment
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{
+		return inflater.inflate(onCreateView(), container, false);
+	}
+
+
+	@Override
+	public void onActivityCreated(final Bundle savedInstanceState)
+	{
+		super.onActivityCreated(savedInstanceState);
+
 		if (person == null)
 		{
 			if (game == null || !game.isValid())
@@ -192,7 +214,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 				};
 
 				initViews();
-				new AsyncGetGame().execute();
+//				new AsyncGetGame().execute();
 			}
 		}
 		else if (game == null)
@@ -220,8 +242,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 		{
 			genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataErrorListener();
 		}
-
-		return inflater.inflate(onCreateView(), container, false);
 	}
 
 
@@ -236,6 +256,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		try
 		{
 			genericGameFragmentOnDataErrorListener = (GenericGameFragmentOnDataErrorListener) activity;
+			genericGameFragmentOnDestroyViewListener = (GenericGameFragmentOnDestroyViewListener) activity;
 		}
 		catch (final ClassCastException e)
 		{
@@ -247,8 +268,18 @@ public abstract class GenericGameFragment extends SherlockFragment
 	@Override
 	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
 	{
+		menu.clear();
 		inflater.inflate(R.menu.generic_game_fragment, menu);
 		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+
+	@Override
+	public void onDestroyView()
+	{
+		super.onDestroyView();
+
+		genericGameFragmentOnDestroyViewListener.genericGameFragmentOnDestroyViewListener();
 	}
 
 
@@ -257,6 +288,15 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		switch (item.getItemId())
 		{
+			case android.R.id.home:
+				final FragmentManager fManager = getSherlockActivity().getSupportFragmentManager();
+				fManager.popBackStack();
+
+				final FragmentTransaction fTransaction = fManager.beginTransaction();
+				fTransaction.remove(this);
+				fTransaction.commit();
+				break;
+
 			case R.id.generic_game_fragment_actionbar_send_move:
 				new AsyncSendMove().execute();
 				break;
@@ -286,6 +326,17 @@ public abstract class GenericGameFragment extends SherlockFragment
 			menu.findItem(R.id.generic_game_fragment_actionbar_send_move).setEnabled(false);
 			menu.findItem(R.id.generic_game_fragment_actionbar_undo_move).setEnabled(false);
 		}
+	}
+
+
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+
+		final ActionBar actionBar = getSherlockActivity().getSupportActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setTitle(getTitle());
 	}
 
 
@@ -410,42 +461,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * This method will initialize the game board as if this is an in progress
-	 * game. This <strong>resumes</strong> an old game. Do not use this for a
-	 * brand new game.
-	 */
-	private void resumeOldBoard()
-	{
-		if (boardJSON == null || boardJSON.isEmpty())
-		{
-			Log.e(LOG_TAG, "Tried to build the board from either a null or empty JSON String!");
-			genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataErrorListener();
-		}
-		else
-		{
-			try
-			{
-				final JSONArray teams = new JSONObject(boardJSON).getJSONObject("board").getJSONArray("teams");
-
-				if (teams.length() == 2)
-				{
-					buildTeam(teams.getJSONArray(0), GenericPiece.TEAM_PLAYER);
-					buildTeam(teams.getJSONArray(1), GenericPiece.TEAM_OPPONENT);
-				}
-				else
-				{
-					Log.e(LOG_TAG, "JSON String has improper number of teams! teams.length(): " + teams.length());
-				}
-			}
-			catch (final JSONException e)
-			{
-				Log.e(LOG_TAG, "JSON String is massively malformed.");
-			}
-		}
-	}
-
-
-	/**
 	 * Locks the board. This prevents the player from continuing to move
 	 * pieces around. The player must press the undo button if they want to
 	 * move anything from this point on.
@@ -507,6 +522,42 @@ public abstract class GenericGameFragment extends SherlockFragment
 		}
 
 		return parsedServerResponse;
+	}
+
+
+	/**
+	 * This method will initialize the game board as if this is an in progress
+	 * game. This <strong>resumes</strong> an old game. Do not use this for a
+	 * brand new game.
+	 */
+	private void resumeOldBoard()
+	{
+		if (boardJSON == null || boardJSON.isEmpty())
+		{
+			Log.e(LOG_TAG, "Tried to build the board from either a null or empty JSON String!");
+			genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataErrorListener();
+		}
+		else
+		{
+			try
+			{
+				final JSONArray teams = new JSONObject(boardJSON).getJSONObject("board").getJSONArray("teams");
+
+				if (teams.length() == 2)
+				{
+					buildTeam(teams.getJSONArray(0), GenericPiece.TEAM_PLAYER);
+					buildTeam(teams.getJSONArray(1), GenericPiece.TEAM_OPPONENT);
+				}
+				else
+				{
+					Log.e(LOG_TAG, "JSON String has improper number of teams! teams.length(): " + teams.length());
+				}
+			}
+			catch (final JSONException e)
+			{
+				Log.e(LOG_TAG, "JSON String is massively malformed.");
+			}
+		}
 	}
 
 
@@ -801,7 +852,10 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * Can be looked at as a main method for classes that extend this one. This
 	 * method is very important because it must returns which layout this
 	 * fragment will need to inflate. Returning the needed layout is really the
-	 * only thing that this method needs to do.
+	 * only thing that this method needs to do. In fact, it's probably the only
+	 * thing that this method should do. Stuff that's typically in an
+	 * Activity's onCreate() method should instead be, for fragments, placed in
+	 * the onActivityCreated() method.
 	 * 
 	 * @return
 	 * This method must return the Android int representation of its layout.
@@ -836,6 +890,14 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		buildTeam(team, (byte) whichTeam);
 	}
+
+
+	/**
+	 * @return
+	 * Returns the int value for the String to use as the title to display in
+	 * the Action Bar.
+	 */
+	protected abstract int getTitle();
 
 
 	/**

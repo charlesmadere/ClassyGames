@@ -83,13 +83,43 @@ public abstract class GenericPiece
 
 
 	/**
-	 * Checks to see if this Piece's team is the same as the passed in team.
-	 * 
-	 * @param whichTeam
-	 * The team to check this Piece's team against.
+	 * Checks to see if this GenericPiece object is alive. A GenericPiece
+	 * object is alive as long as it's type does not equal TYPE_NULL.
 	 * 
 	 * @return
-	 * Returns true if this Piece's team is the same as the passed in team.
+	 * Returns true if this GenericPiece is alive.
+	 */
+	public boolean isAlive()
+	{
+		return type != TYPE_NULL;
+	}
+
+
+	/**
+	 * Checks to see if this GenericPiece object is dead. This method is really
+	 * just returns the result of the isTypeNull() method, as that checks for
+	 * the very same thing. A GenericPiece object is only dead if it's type is
+	 * equal to TYPE_NULL.
+	 * 
+	 * @return
+	 * Returns true if this GenericPiece is dead.
+	 */
+	public boolean isDead()
+	{
+		return isTypeNull();
+	}
+
+
+	/**
+	 * Checks to see if this GenericPiece's team is the same as the passed in
+	 * team.
+	 * 
+	 * @param whichTeam
+	 * The team to check this GenericPiece's team against.
+	 * 
+	 * @return
+	 * Returns true if this GenericPiece's team is the same as the passed in
+	 * team.
 	 */
 	public boolean isTeam(final byte whichTeam)
 	{
@@ -98,10 +128,10 @@ public abstract class GenericPiece
 
 
 	/**
-	 * Checks to see if this Piece is an opponent's piece.
+	 * Checks to see if this GenericPiece is an opponent's piece.
 	 * 
 	 * @return
-	 * True if this Piece is an opponent's piece.
+	 * True if this GenericPiece is an opponent's piece.
 	 */
 	public boolean isTeamOpponent()
 	{
@@ -110,12 +140,12 @@ public abstract class GenericPiece
 
 
 	/**
-	 * In the act of removing / killing a Piece object on the game board, the
-	 * Piece's type will be set to TYPE_NULL. This method will return true if
-	 * the Piece's type is == to TYPE_NULL.
+	 * In the act of removing / killing a GenericPiece object on the game
+	 * board, the GenericPiece's type will be set to TYPE_NULL. This method
+	 * will return true if the GenericPiece's type is == to TYPE_NULL.
 	 * 
 	 * @return
-	 * Returns true if this Piece's type is TYPE_NULL.
+	 * Returns true if this GenericPiece's type is TYPE_NULL.
 	 */
 	public boolean isTypeNull()
 	{
@@ -124,10 +154,10 @@ public abstract class GenericPiece
 
 
 	/**
-	 * Checks to see if this Piece is a player's piece.
+	 * Checks to see if this GenericPiece is a player's piece.
 	 * 
 	 * @return
-	 * True if this Piece is a player's piece.
+	 * Returns true if this GenericPiece is a player's piece.
 	 */
 	public boolean isTeamPlayer()
 	{
@@ -136,17 +166,30 @@ public abstract class GenericPiece
 
 
 	/**
-	 * Returns this Piece's type. In a game of checkers, the type could be a
-	 * a normal piece or a king piece. In chess, the type could be a pawn,
-	 * rook, knight...
+	 * Returns this GenericPiece's type. In a game of checkers, the type could
+	 * be a a normal piece or a king piece. In chess, the type could be a pawn,
+	 * rook, knight, king... You may want to make a comparison of the returned
+	 * byte with the Piece class's public final static TYPE_* bytes.
 	 * 
 	 * @return
-	 * Returns a byte that represents this Piece's type.
+	 * Returns a byte that represents this GenericPiece's type.
 	 */
 	public byte getType()
 	{
 		return type;
 	}
+
+
+	/**
+	 * Kills this GenericPiece object. Seriously though, this method just sets
+	 * this object's type to TYPE_NULL.
+	 */
+	public void kill()
+	{
+		type = TYPE_NULL;
+	}
+
+
 
 
 	/**

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.facebook.Session;
 import com.facebook.SessionState;
@@ -18,6 +19,8 @@ import edu.selu.android.classygames.utilities.Utilities;
 public class CentralFragmentActivity extends SherlockFragmentActivity
 	implements GamesListFragment.GamesListFragmentOnGameSelectedListener,
 		GamesListFragment.GamesListFragmentOnNewGameSelectedListener,
+		GenericGameFragment.GenericGameFragmentOnDataErrorListener,
+		GenericGameFragment.GenericGameFragmentOnDestroyViewListener,
 		NewGameFragment.NewGameFragmentOnDestroyViewListener
 {
 
@@ -154,7 +157,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 	 * (a phone most likely) will have the entire screen occupied.
 	 * 
 	 * @param fragment
-	 * 
+	 * The Fragment to transition to.
 	 * 
 	 * @param largeLayout
 	 * In the case that this is a large device, what portion of the screen do
@@ -210,13 +213,34 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 
 
 	@Override
+	public void genericGameFragmentOnDataErrorListener()
+	{
+
+	}
+
+
+	@Override
+	public void genericGameFragmentOnDestroyViewListener()
+	{
+		if (gamesListFragment.isVisible())
+		{
+			final ActionBar actionBar = getSupportActionBar();
+			actionBar.setDisplayHomeAsUpEnabled(false);
+			actionBar.setTitle(R.string.games_list_fragment_title);
+		}
+	}
+
+
+	@Override
 	public void newGameFragmentOnDestroyViewListener()
 	// This listener does some weird work around stuff. Check out my
 	// explanation of what exactly this does in the NewGameFragment class.
 	{
 		if (gamesListFragment.isVisible())
 		{
-			getSupportActionBar().setTitle(R.string.games_list_fragment_title);
+			final ActionBar actionBar = getSupportActionBar();
+			actionBar.setDisplayHomeAsUpEnabled(false);
+			actionBar.setTitle(R.string.games_list_fragment_title);
 		}
 	}
 

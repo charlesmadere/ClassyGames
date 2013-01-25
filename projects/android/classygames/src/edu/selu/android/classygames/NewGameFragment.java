@@ -98,9 +98,6 @@ public class NewGameFragment extends SherlockListFragment
 	{
 		super.onDestroyView();
 
-		final ActionBar actionBar = getSherlockActivity().getSupportActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(false);
-
 		newGameFragmentOnDestroyViewListener.newGameFragmentOnDestroyViewListener();
 	}
 

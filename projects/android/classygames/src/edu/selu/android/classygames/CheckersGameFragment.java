@@ -11,9 +11,6 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-
-import com.actionbarsherlock.view.Menu;
-
 import edu.selu.android.classygames.data.Game;
 import edu.selu.android.classygames.data.Person;
 import edu.selu.android.classygames.games.Coordinate;
@@ -105,6 +102,13 @@ public class CheckersGameFragment extends GenericGameFragment
 				Log.e(LOG_TAG, "A team's piece was massively malformed.");
 			}
 		}
+	}
+
+
+	@Override
+	protected int getTitle()
+	{
+		return R.string.checkers_game_fragment_title;
 	}
 
 

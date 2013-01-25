@@ -27,6 +27,13 @@ public class EmptyGameFragment extends GenericGameFragment
 
 
 	@Override
+	protected int getTitle()
+	{
+		return R.string.empty_game_fragment_title;
+	}
+
+
+	@Override
 	protected void initNewBoard()
 	{
 

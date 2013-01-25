@@ -25,10 +25,25 @@ public class Position
 
 
 	/**
+	 * Returns this Position object's GenericPiece object. Note that it's
+	 * possible for this object to be null; to check for that you should use
+	 * this class's hasPiece() method.
+	 * 
+	 * @return
+	 * Returns the Piece object belonging to this Position.
+	 */
+	public GenericPiece getPiece()
+	{
+		return piece;
+	}
+
+
+	/**
 	 * Checks and sees if this GenericPosition object has a GenericPiece.
 	 * 
 	 * @return
-	 * Returns true if this GenericPosition object has a GenericPiece.
+	 * Returns true if this GenericPosition object has a GenericPiece. Returns
+	 * false if the GenericPiece object is either null or is of a null type.
 	 */
 	public boolean hasPiece()
 	{
@@ -41,6 +56,7 @@ public class Position
 	 */
 	public void removePiece()
 	{
+		piece.kill();
 		piece = null;
 	}
 
@@ -54,18 +70,6 @@ public class Position
 	public void setPiece(final GenericPiece piece)
 	{
 		this.piece = piece;
-	}
-
-
-	/**
-	 * Returns this GenericPiece object's piece.
-	 * 
-	 * @return
-	 * The Piece object belonging to this Position.
-	 */
-	public GenericPiece getPiece()
-	{
-		return piece;
 	}
 
 

@@ -115,6 +115,13 @@ public class ChessGameFragment extends GenericGameFragment
 
 
 	@Override
+	protected int getTitle()
+	{
+		return R.string.chess_game_fragment_title;
+	}
+
+
+	@Override
 	protected void initNewBoard()
 	{
 

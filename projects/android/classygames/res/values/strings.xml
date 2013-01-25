@@ -14,6 +14,7 @@
 	<string name="confirm_game_activity_person_picture_description">Friend\'s Picture</string>
 	<string name="confirm_game_activity_title">Confirm Game</string>
 	<string name="empty_game_fragment_imageview_placeholder">No game is currently loaded!</string>
+	<string name="empty_game_fragment_title">Empty Game</string>
 	<string name="facebook_app_id">324400870964487</string>
 	<string name="game_fragment_board_x0y0">0, 0</string>
 	<string name="game_fragment_board_x1y0">1, 0</string>
