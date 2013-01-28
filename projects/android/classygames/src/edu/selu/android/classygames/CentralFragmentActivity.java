@@ -4,6 +4,7 @@ package edu.selu.android.classygames;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -22,7 +23,6 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 		GenericGameFragment.GenericGameFragmentOnDataErrorListener,
 		GenericGameFragment.GenericGameFragmentOnDestroyViewListener,
 		NewGameFragment.NewGameFragmentOnDestroyViewListener
-		
 {
 
 
@@ -122,6 +122,8 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 	}
 
 
+
+
 	private void onSessionStateChange(final Session session, final SessionState state, final Exception exception)
 	{
 		if (isResumed)
@@ -215,7 +217,17 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 	@Override
 	public void genericGameFragmentOnDataErrorListener()
 	{
+		if (genericGameFragment.isVisible())
+		{
+			final FragmentManager fManager = getSupportFragmentManager();
+			fManager.popBackStack();
 
+			final FragmentTransaction fTransaction = fManager.beginTransaction();
+			fTransaction.remove(genericGameFragment);
+			fTransaction.commit();
+
+			Utilities.easyToastAndLogError(this, "Couldn't create a game as malformed data was detected!");
+		}
 	}
 
 
@@ -233,8 +245,6 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 
 	@Override
 	public void newGameFragmentOnDestroyViewListener()
-	// This listener does some weird work around stuff. Check out my
-	// explanation of what exactly this does in the NewGameFragment class.
 	{
 		if (gamesListFragment.isVisible())
 		{

@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 	<item
 		android:enabled="false"
-	    android:icon="@drawable/ab_send_move"
+		android:icon="@drawable/ab_send_move"
 		android:id="@+id/generic_game_fragment_actionbar_send_move"
 		android:showAsAction="ifRoom|withText"
 		android:title="@string/send_move" />

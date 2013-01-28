@@ -9,6 +9,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.view.ViewTreeObserver;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import edu.selu.android.classygames.data.Game;
@@ -224,18 +226,26 @@ public class CheckersGameFragment extends GenericGameFragment
 		view.findViewById(R.id.checkers_game_fragment_x6y7).setOnClickListener(onBoardClick);
 		view.findViewById(R.id.checkers_game_fragment_x7y7).setOnClickListener(onBoardClick);
 
-		final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		final int height = view.findViewById(R.id.checkers_game_fragment_x7y7).getWidth();
-		layoutParams.height = height;
+		final ViewTreeObserver viewTreeObserver = view.getViewTreeObserver();
+		viewTreeObserver.addOnGlobalLayoutListener(new OnGlobalLayoutListener()
+		{
+			@Override
+			public void onGlobalLayout()
+			{
+				final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+				final int width = view.findViewById(R.id.checkers_game_fragment_x7y7).getWidth();
+				layoutParams.height = width;
 
-		view.findViewById(R.id.checkers_game_fragment_y0).setLayoutParams(layoutParams);
-		view.findViewById(R.id.checkers_game_fragment_y1).setLayoutParams(layoutParams);
-		view.findViewById(R.id.checkers_game_fragment_y2).setLayoutParams(layoutParams);
-		view.findViewById(R.id.checkers_game_fragment_y3).setLayoutParams(layoutParams);
-		view.findViewById(R.id.checkers_game_fragment_y4).setLayoutParams(layoutParams);
-		view.findViewById(R.id.checkers_game_fragment_y5).setLayoutParams(layoutParams);
-		view.findViewById(R.id.checkers_game_fragment_y6).setLayoutParams(layoutParams);
-		view.findViewById(R.id.checkers_game_fragment_y7).setLayoutParams(layoutParams);
+				view.findViewById(R.id.checkers_game_fragment_y0).setLayoutParams(layoutParams);
+				view.findViewById(R.id.checkers_game_fragment_y1).setLayoutParams(layoutParams);
+				view.findViewById(R.id.checkers_game_fragment_y2).setLayoutParams(layoutParams);
+				view.findViewById(R.id.checkers_game_fragment_y3).setLayoutParams(layoutParams);
+				view.findViewById(R.id.checkers_game_fragment_y4).setLayoutParams(layoutParams);
+				view.findViewById(R.id.checkers_game_fragment_y5).setLayoutParams(layoutParams);
+				view.findViewById(R.id.checkers_game_fragment_y6).setLayoutParams(layoutParams);
+				view.findViewById(R.id.checkers_game_fragment_y7).setLayoutParams(layoutParams);
+			}
+		});
 
 		// Load Drawables for checkers pieces into memory. This is done so that
 		// later when we draw these checkers pieces onto the board, that draw

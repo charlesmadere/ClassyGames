@@ -18,7 +18,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -112,6 +111,10 @@ public abstract class GenericGameFragment extends SherlockFragment
 	}
 
 
+	/**
+	 * One of this class's callback methods. This is fired whenever this
+	 * fragment's onDestroyView() method is called.
+	 */
 	private GenericGameFragmentOnDestroyViewListener genericGameFragmentOnDestroyViewListener;
 
 	public interface GenericGameFragmentOnDestroyViewListener
@@ -214,7 +217,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 					}
 				};
 
-//				initViews();
+				initViews();
 //				new AsyncGetGame().execute();
 			}
 		}
