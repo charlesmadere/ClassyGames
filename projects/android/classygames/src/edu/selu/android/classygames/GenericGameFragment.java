@@ -23,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
@@ -32,10 +33,10 @@ import com.actionbarsherlock.view.MenuItem;
 
 import edu.selu.android.classygames.data.Game;
 import edu.selu.android.classygames.data.Person;
+import edu.selu.android.classygames.games.Coordinate;
 import edu.selu.android.classygames.games.GenericBoard;
 import edu.selu.android.classygames.games.GenericPiece;
 import edu.selu.android.classygames.games.Position;
-import edu.selu.android.classygames.games.checkers.Board;
 import edu.selu.android.classygames.games.checkers.Piece;
 import edu.selu.android.classygames.utilities.ServerUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
@@ -379,6 +380,64 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
+	 * Creates a tag to be used in a findViewWithTag() operation.
+	 * 
+	 * <p><strong>Examples</strong><br />
+	 * Coordinate c1 = new Coordinate(3, 5);<br />
+	 * createTag(c1) <strong>returns</strong> "x3y5"<br />
+	 * Coordinate c2 = new Coordinate(0, 0);<br />
+	 * createTag(c2) <strong>returns</strong> "x0y0"<br /></p>
+	 * 
+	 * @param coordinate
+	 * The Coordinate object to create the tag from.
+	 * 
+	 * @return
+	 * Returns a tag made from the input Coordinate.
+	 */
+	protected String createTag(final Coordinate coordinate)
+	{
+		return createTag(coordinate.getX(), coordinate.getY());
+	}
+
+
+	/**
+	 * Renders all of the game's pieces on the board by first clearing all of
+	 * the existing pieces from it and then placing all of the current pieces.
+	 */
+	private void flush()
+	{
+		// clear all of the existing pieces from the board
+		for (byte x = 0; x < board.getLengthHorizontal(); ++x)
+		{
+			for (byte y = 0; y < board.getLengthVertical(); ++y)
+			{
+				final String tag = createTag(x, y);
+
+				// setting the ImageDrawable to null erases the current image
+				// (if there is any) from this ImageDrawable
+				((ImageButton) getView().findViewWithTag(tag)).setImageDrawable(null);
+			}
+		}
+
+		// place all of the pieces back onto the board
+		for (byte x = 0; x < board.getLengthHorizontal(); ++x)
+		{
+			for (byte y = 0; y < board.getLengthVertical(); ++y)
+			{
+				final Position position = board.getPosition(x, y);
+
+				if (position.hasPiece())
+				{
+					// let each GameFragment class that extends from this class
+					// handle it from here
+					flush(position);
+				}
+			}
+		}
+	}
+
+
+	/**
 	 * Parses the passed in tag String for two numbers (those two numbers are
 	 * the tag's coordinates) and returns those coordinates as a byte array.
 	 * The returned byte array will have a length of just 2, with [0] being
@@ -583,7 +642,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * Undoes the user's last move on the board. Unlocks the board, allowing
 	 * the user to make a different move on the board.
 	 */
-	protected void undo()
+	private void undo()
 	{
 		if (boardLocked)
 		{
@@ -822,9 +881,9 @@ public abstract class GenericGameFragment extends SherlockFragment
 		{
 			final JSONArray jsonTeam = new JSONArray();
 
-			for (byte x = 0; x < Board.LENGTH_HORIZONTAL && !isCancelled(); ++x)
+			for (byte x = 0; x < board.getLengthHorizontal() && !isCancelled(); ++x)
 			{
-				for (byte y = 0; y < Board.LENGTH_VERTICAL && !isCancelled(); ++y)
+				for (byte y = 0; y < board.getLengthVertical() && !isCancelled(); ++y)
 				{
 					final Position position = board.getPosition(x, y);
 
@@ -911,10 +970,13 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * Renders all of the game's pieces on the board by first clearing all of
-	 * the existing pieces from it and then placing all of the current pieces.
+	 * A Game specific implementation that looks at the given Position
+	 * parameter and draws a piece on that position if / as necessary.
+	 * 
+	 * @param position
+	 * The current Position object in the flush() loop.
 	 */
-	protected abstract void flush();
+	protected abstract void flush(final Position position);
 
 
 	/**

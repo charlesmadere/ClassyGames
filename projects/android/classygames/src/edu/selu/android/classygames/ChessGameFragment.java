@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import edu.selu.android.classygames.data.Game;
 import edu.selu.android.classygames.data.Person;
+import edu.selu.android.classygames.games.Position;
 
 
 public class ChessGameFragment extends GenericGameFragment
@@ -115,7 +116,7 @@ public class ChessGameFragment extends GenericGameFragment
 
 
 	@Override
-	protected void flush()
+	protected void flush(final Position position)
 	{
 
 	}

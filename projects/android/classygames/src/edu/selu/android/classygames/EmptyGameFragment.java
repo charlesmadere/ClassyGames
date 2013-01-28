@@ -4,6 +4,7 @@ package edu.selu.android.classygames;
 import org.json.JSONArray;
 
 import android.view.View;
+import edu.selu.android.classygames.games.Position;
 
 
 /**
@@ -34,7 +35,7 @@ public class EmptyGameFragment extends GenericGameFragment
 
 
 	@Override
-	protected void flush()
+	protected void flush(final Position position)
 	{
 
 	}

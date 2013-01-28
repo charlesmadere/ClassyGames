@@ -13,7 +13,6 @@ import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 import edu.selu.android.classygames.data.Game;
 import edu.selu.android.classygames.data.Person;
 import edu.selu.android.classygames.games.Coordinate;
@@ -114,57 +113,32 @@ public class CheckersGameFragment extends GenericGameFragment
 
 
 	@Override
-	protected void flush()
+	protected void flush(final Position position)
 	{
-		// clear all of the existing pieces from the board
-		for (byte x = 0; x < Board.LENGTH_HORIZONTAL; ++x)
-		{
-			for (byte y = 0; y < Board.LENGTH_VERTICAL; ++y)
-			{
-				final String tag = createTag(x, y);
+		final String tag = createTag(position.getCoordinate());
+		final Piece piece = (Piece) position.getPiece();
+		final ImageButton imageButton = (ImageButton) getView().findViewWithTag(tag);
 
-				// setting the ImageDrawable to null erases the current image
-				// (if there is any) from this ImageDrawable
-				((ImageButton) getView().findViewWithTag(tag)).setImageDrawable(null);
+		if (piece.isTypeNormal())
+		{
+			if (piece.isTeamPlayer())
+			{
+				imageButton.setImageDrawable(playerNormal);
+			}
+			else
+			{
+				imageButton.setImageDrawable(opponentNormal);
 			}
 		}
-
-		// place all of the pieces back onto the board
-		for (byte x = 0; x < Board.LENGTH_HORIZONTAL; ++x)
+		else
 		{
-			for (byte y = 0; y < Board.LENGTH_VERTICAL; ++y)
+			if (piece.isTeamPlayer())
 			{
-				final Position position = board.getPosition(x, y);
-
-				if (position.hasPiece())
-				{
-					final Piece piece = (Piece) position.getPiece();
-					final String tag = createTag(x, y);
-					final ImageButton imageButton = (ImageButton) getView().findViewWithTag(tag);
-
-					if (piece.isTypeNormal())
-					{
-						if (piece.isTeamPlayer())
-						{
-							imageButton.setImageDrawable(playerNormal);
-						}
-						else
-						{
-							imageButton.setImageDrawable(opponentNormal);
-						}
-					}
-					else
-					{
-						if (piece.isTeamPlayer())
-						{
-							imageButton.setImageDrawable(playerKing);
-						}
-						else
-						{
-							imageButton.setImageDrawable(opponentKing);
-						}
-					}
-				}
+				imageButton.setImageDrawable(playerKing);
+			}
+			else
+			{
+				imageButton.setImageDrawable(opponentKing);
 			}
 		}
 	}

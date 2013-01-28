@@ -182,7 +182,7 @@ public abstract class GenericPiece
 
 	/**
 	 * Kills this GenericPiece object. Seriously though, this method just sets
-	 * this object's type to TYPE_NULL.
+	 * this GenericPiece object's type to TYPE_NULL.
 	 */
 	public void kill()
 	{

@@ -10,6 +10,20 @@ public abstract class GenericBoard
 
 
 	/**
+	 * How many positions the board has horizontally. This can be thought of as
+	 * the board's X limit.
+	 */
+	private byte lengthHorizontal;
+
+
+	/**
+	 * How many positions the board has vertically. This can be thought of as
+	 * the board's Y limit.
+	 */
+	private byte lengthVertical;
+
+
+	/**
 	 * This board's positions. This is a two dimensional array that should be
 	 * accessed as [X][Y]. So a position on the board that is (5, 3) - (X = 5
 	 * and Y = 3), would be [5][3].
@@ -28,29 +42,47 @@ public abstract class GenericBoard
 	 */
 	protected GenericBoard(final byte lengthHorizontal, final byte lengthVertical)
 	{
-		positions = new Position[lengthHorizontal][lengthVertical];
-		initializePositions(lengthHorizontal, lengthVertical);
+		this.lengthHorizontal = lengthHorizontal;
+		this.lengthVertical = lengthVertical;
+
+		initializePositions();
 	}
 
 
 	/**
 	 * Initializes all of this board's positions.
-	 * 
-	 * @param lengthHorizontal
-	 * The <strong>X length</strong> of the game board.
-	 * 
-	 * @param lengthVertical
-	 * The <strong>Y length</strong> of the game board.
 	 */
-	private void initializePositions(final byte lengthHorizontal, final byte lengthVertical)
+	private void initializePositions()
 	{
+		positions = new Position[lengthHorizontal][lengthVertical];
+
 		for (byte x = 0; x < lengthHorizontal; ++x)
 		{
 			for (byte y = 0; y < lengthVertical; ++y)
 			{
-				positions[x][y] = new Position();
+				positions[x][y] = new Position(x, y);
 			}
 		}
+	}
+
+
+	/**
+	 * @return
+	 * Returns the number of positions that the board has horizontally.
+	 */
+	public byte getLengthHorizontal()
+	{
+		return lengthHorizontal;
+	}
+
+
+	/**
+	 * @return
+	 * Returns the number of positions that the board has vertically.
+	 */
+	public byte getLengthVertical()
+	{
+		return lengthVertical;
 	}
 
 
@@ -124,7 +156,10 @@ public abstract class GenericBoard
 	 * @return
 	 * True if the X, Y position passed in does exist.
 	 */
-	public abstract boolean isPositionValid(final byte x, final byte y);
+	public boolean isPositionValid(final byte x, final byte y)
+	{
+		return x >= 0 && x < lengthHorizontal && y >= 0 && y < lengthVertical;
+	}
 
 
 	/**
@@ -140,7 +175,10 @@ public abstract class GenericBoard
 	 * @return
 	 * True if the X, Y position passed in does exist.
 	 */
-	public abstract boolean isPositionValid(final int x, final int y);
+	public boolean isPositionValid(final int x, final int y)
+	{
+		return isPositionValid((byte) x, (byte) y);
+	}
 
 
 	/**
@@ -153,7 +191,10 @@ public abstract class GenericBoard
 	 * @return
 	 * True if the X, Y position passed in does exist.
 	 */
-	public abstract boolean isPositionValid(final Coordinate coordinate);
+	public boolean isPositionValid(final Coordinate coordinate)
+	{
+		return isPositionValid(coordinate.getX(), coordinate.getY());
+	}
 
 
 }

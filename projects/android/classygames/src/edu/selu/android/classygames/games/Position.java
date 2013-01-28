@@ -9,6 +9,13 @@ public class Position
 
 
 	/**
+	 * This Position's coordinate. This is this Position object's location on
+	 * the game board.
+	 */
+	private Coordinate coordinate;
+
+
+	/**
 	 * The GenericPiece object in this Position on the game board. If this
 	 * position on the game board does not have any piece on it then this
 	 * variable will be null.
@@ -20,10 +27,28 @@ public class Position
 
 	/**
 	 * Creates a Position object.
+	 * 
+	 * @param x
+	 * This Position object's <strong>X</strong> coordinate.
+	 * 
+	 * @param y
+	 * This Position object's <strong>Y</strong> coordinate.
 	 */
-	public Position()
+	public Position(final byte x, final byte y)
 	{
+		coordinate = new Coordinate(x, y);
+	}
 
+
+	/**
+	 * This Position object's Coordinate is it's location on the game board.
+	 * 
+	 * @return
+	 * Returns this Position object's Coordinate.
+	 */
+	public Coordinate getCoordinate()
+	{
+		return coordinate;
 	}
 
 

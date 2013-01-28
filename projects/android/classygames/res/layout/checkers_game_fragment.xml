@@ -17,6 +17,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x0y7" />
 		<ImageButton
@@ -26,6 +27,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x1y7" />
 		<ImageButton
@@ -35,6 +37,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x2y7" />
 		<ImageButton
@@ -44,6 +47,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x3y7" />
 		<ImageButton
@@ -53,6 +57,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x4y7" />
 		<ImageButton
@@ -62,6 +67,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x5y7" />
 		<ImageButton
@@ -71,6 +77,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x6y7" />
 		<ImageButton
@@ -80,6 +87,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x7y7" />
 	</LinearLayout>
@@ -95,6 +103,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x0y6" />
 		<ImageButton
@@ -104,6 +113,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x1y6" />
 		<ImageButton
@@ -113,6 +123,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x2y6" />
 		<ImageButton
@@ -122,6 +133,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x3y6" />
 		<ImageButton
@@ -131,6 +143,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x4y6" />
 		<ImageButton
@@ -140,6 +153,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x5y6" />
 		<ImageButton
@@ -149,6 +163,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x6y6" />
 		<ImageButton
@@ -158,6 +173,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x7y6" />
 	</LinearLayout>
@@ -173,6 +189,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x0y5" />
 		<ImageButton
@@ -182,6 +199,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x1y5" />
 		<ImageButton
@@ -191,6 +209,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x2y5" />
 		<ImageButton
@@ -200,6 +219,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x3y5" />
 		<ImageButton
@@ -209,6 +229,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x4y5" />
 		<ImageButton
@@ -218,6 +239,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x5y5" />
 		<ImageButton
@@ -227,6 +249,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x6y5" />
 		<ImageButton
@@ -236,6 +259,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x7y5" />
 	</LinearLayout>
@@ -251,6 +275,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x0y4" />
 		<ImageButton
@@ -260,6 +285,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x1y4" />
 		<ImageButton
@@ -269,6 +295,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x2y4" />
 		<ImageButton
@@ -278,6 +305,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x3y4" />
 		<ImageButton
@@ -287,6 +315,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x4y4" />
 		<ImageButton
@@ -296,6 +325,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x5y4" />
 		<ImageButton
@@ -305,6 +335,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x6y4" />
 		<ImageButton
@@ -314,6 +345,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x7y4" />
 	</LinearLayout>
@@ -329,6 +361,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x0y3" />
 		<ImageButton
@@ -338,6 +371,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x1y3" />
 		<ImageButton
@@ -347,6 +381,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x2y3" />
 		<ImageButton
@@ -356,6 +391,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x3y3" />
 		<ImageButton
@@ -365,6 +401,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x4y3" />
 		<ImageButton
@@ -374,6 +411,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x5y3" />
 		<ImageButton
@@ -383,6 +421,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x6y3" />
 		<ImageButton
@@ -392,6 +431,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x7y3" />
 	</LinearLayout>
@@ -407,6 +447,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x0y2" />
 		<ImageButton
@@ -416,6 +457,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x1y2" />
 		<ImageButton
@@ -425,6 +467,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x2y2" />
 		<ImageButton
@@ -434,6 +477,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x3y2" />
 		<ImageButton
@@ -443,6 +487,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x4y2" />
 		<ImageButton
@@ -452,6 +497,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x5y2" />
 		<ImageButton
@@ -461,6 +507,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x6y2" />
 		<ImageButton
@@ -470,6 +517,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x7y2" />
 	</LinearLayout>
@@ -485,6 +533,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x0y1" />
 		<ImageButton
@@ -494,6 +543,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x1y1" />
 		<ImageButton
@@ -503,6 +553,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x2y1" />
 		<ImageButton
@@ -512,6 +563,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x3y1" />
 		<ImageButton
@@ -521,6 +573,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x4y1" />
 		<ImageButton
@@ -530,6 +583,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x5y1" />
 		<ImageButton
@@ -539,6 +593,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x6y1" />
 		<ImageButton
@@ -548,6 +603,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x7y1" />
 	</LinearLayout>
@@ -563,6 +619,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x0y0" />
 		<ImageButton
@@ -572,6 +629,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x1y0" />
 		<ImageButton
@@ -581,6 +639,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x2y0" />
 		<ImageButton
@@ -590,6 +649,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x3y0" />
 		<ImageButton
@@ -599,6 +659,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x4y0" />
 		<ImageButton
@@ -608,6 +669,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x5y0" />
 		<ImageButton
@@ -617,6 +679,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x6y0" />
 		<ImageButton
@@ -626,6 +689,7 @@
 			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:layout_width="0dip"
+			android:padding="1dip"
 			android:scaleType="centerInside"
 			android:tag="x7y0" />
 	</LinearLayout>
