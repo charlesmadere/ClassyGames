@@ -37,7 +37,6 @@ import edu.selu.android.classygames.games.Coordinate;
 import edu.selu.android.classygames.games.GenericBoard;
 import edu.selu.android.classygames.games.GenericPiece;
 import edu.selu.android.classygames.games.Position;
-import edu.selu.android.classygames.games.checkers.Piece;
 import edu.selu.android.classygames.utilities.ServerUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
 
@@ -49,6 +48,11 @@ public abstract class GenericGameFragment extends SherlockFragment
 	protected final static String LOG_TAG = Utilities.LOG_TAG + " - GenericGameFragment";
 
 
+	public final static String KEY_GAME_ID = "KEY_GAME_ID";
+	public final static String KEY_PERSON_ID = "KEY_PERSON_ID";
+	public final static String KEY_PERSON_NAME = "KEY_PERSON_NAME";
+
+
 	/**
 	 * Boolean indicating if the board is locked or not. Once the board has
 	 * been locked it can only be locked by using undo.
@@ -57,26 +61,10 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * A Person object that represents the Facebook friend that the current
-	 * Android user is playing against. This object has the possibility of
-	 * being null. <strong>DO NOT MODIFY THIS OBJECT ONCE IT HAS BEEN SET.
-	 * </strong> If a GenericGameFragment has been instantiated and this object
-	 * is null, then that means that this game is an in progress game and must
-	 * be resumed. If this object is not null, then that means that this game
-	 * is a brand new game.
-	 */
-	protected Person person;
-
-
-	/**
 	 * This game's Game object. This contains a whole bunch of necessary data
 	 * such as the ID of the game as well as the Person object that the current
 	 * Android user is playing against. <strong>DO NOT MODIFY THIS OBJECT ONCE
-	 * IT HAS BEEN SET.</strong> If a GenericGameFragment has been instantiated
-	 * and this object is null, then that means that this game is a brand new
-	 * game. If this object is not null, then that means that this game is an
-	 * in progress game and must be resumed (by downloading the game board from
-	 * the server).
+	 * IT HAS BEEN SET.</strong>
 	 */
 	protected Game game;
 
@@ -126,61 +114,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 
-	/**
-	 * <strong>NEVER USE THIS!</strong> Actually I'm not quite telling the
-	 * truth: the only class that should ever use this constructor is the
-	 * EmptyGameFragment class. But still, nothing else should ever use this.
-	 */
-	protected GenericGameFragment()
-	{
-
-	}
-
-
-	/**
-	 * <p><strong>Please be sure that you're using the proper constructor for
-	 * the type of game that you're trying to create!</strong> The
-	 * GenericGameFragment class has two constructors - it's very important to
-	 * use the right one.</p>
-	 * 
-	 * <p>Use this constructor if you're creating a brand new game. This means
-	 * that the user has gone to the NewGameFragment in the app and selected a
-	 * Facebook friend to challenge. The board will be a completely default
-	 * board and everything for this case.</p>
-	 * 
-	 * @param person
-	 * The Person object that the current user is playing against. This object
-	 * will be checked for validity. If this object is not valid then this
-	 * class will refuse to instantiate fully.
-	 */
-	protected GenericGameFragment(final Person person)
-	{
-		this.person = person;
-	}
-
-
-	/**
-	 * <p><strong>Please be sure that you're using the proper constructor for
-	 * the type of game that you're trying to create!</strong> The
-	 * GenericGameFragment class has two constructors - it's very important to
-	 * use the right one.</p>
-	 * 
-	 * <p>Use this constructor if you're resuming an existing game. This means
-	 * that the user has selected a game from the GamesListFragment. The board
-	 * will have to be downloaded from the server and then parsed so that the
-	 * existing game can be resumed.</p>
-	 * 
-	 * @param game
-	 * The Game object that the current user selected in the GamesListFragment.
-	 * This object will be checked for validity. If this object is not valid
-	 * then this class will refuse to instantiate fully.
-	 */
-	protected GenericGameFragment(final Game game)
-	{
-		this.game = game;
-	}
-
-
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -201,13 +134,75 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		super.onActivityCreated(savedInstanceState);
 
-		if (person == null)
+		final Bundle arguments = getArguments();
+
+		if (arguments == null || arguments.isEmpty())
 		{
-			if (game == null || !game.isValid())
+			genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataErrorListener();
+		}
+		else
+		{
+			final String gameId = arguments.getString(KEY_GAME_ID);
+			final long personId = arguments.getLong(KEY_PERSON_ID);
+			final String personName = arguments.getString(KEY_PERSON_NAME);
+
+			if (Person.isIdValid(personId) && Person.isNameValid(personName))
+			{
+				onBoardClick = new OnClickListener()
+				{
+					@Override
+					public void onClick(final View v)
+					{
+						onBoardClick(v);
+					}
+				};
+
+				final Person person = new Person(personId, personName);
+				initViews();
+
+				if (Game.isIdValid(gameId))
+				{
+					game = new Game(person, gameId);
+					new AsyncGetGame().execute();
+					
+				}
+				else
+				{
+					game = new Game(person);
+					initNewBoard();
+				}
+			}
+			else
 			{
 				genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataErrorListener();
 			}
-			else
+		}
+/*			game = (Game) arguments.get(KEY_GAME);
+
+			if (game == null)
+			{
+				person = (Person) arguments.get(KEY_PERSON);
+
+				if (person == null || !person.isValid())
+				{
+					genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataErrorListener();
+				}
+				else
+				{
+					onBoardClick = new OnClickListener()
+					{
+						@Override
+						public void onClick(final View v)
+						{
+							onBoardClick(v);
+						}
+					};
+
+					initViews();
+					initNewBoard();
+				}
+			}
+			else if (game.isValid())
 			{
 				onBoardClick = new OnClickListener()
 				{
@@ -221,32 +216,11 @@ public abstract class GenericGameFragment extends SherlockFragment
 				initViews();
 				new AsyncGetGame().execute();
 			}
-		}
-		else if (game == null)
-		{
-			if (person == null || !person.isValid())
+			else
 			{
 				genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataErrorListener();
 			}
-			else
-			{
-				onBoardClick = new OnClickListener()
-				{
-					@Override
-					public void onClick(final View v)
-					{
-						onBoardClick(v);
-					}
-				};
-
-				initViews();
-				initNewBoard();
-			}
-		}
-		else
-		{
-			genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataErrorListener();
-		}
+		}*/
 	}
 
 
@@ -341,19 +315,22 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 		final ActionBar actionBar = getSherlockActivity().getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setTitle(getString(getTitle()) + " " + game.getPerson().getName());
+	}
 
-		if (person == null)
-		{
-			actionBar.setTitle(getString(getTitle()) + " " + game.getPerson().getName());
-		}
-		else if (game == null)
-		{
-			actionBar.setTitle(getString(getTitle()) + " " + person.getName());
-		}
-		else
-		{
-			actionBar.setTitle(R.string.generic_game_fragment_title);
-		}
+
+	/**
+	 * Create's a team from some JSON data.
+	 * 
+	 * @param team
+	 * An individual team as parsed in from a JSON String.
+	 * 
+	 * @param whichTeam
+	 * GenericPiece.TEAM_* should be used here.
+	 */
+	protected void buildTeam(final JSONArray team, final int whichTeam)
+	{
+		buildTeam(team, (byte) whichTeam);
 	}
 
 
@@ -764,10 +741,10 @@ public abstract class GenericGameFragment extends SherlockFragment
 						nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CREATOR, whoAmI.getIdAsString()));
 						nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_BOARD, jsonBoard.toString()));
 
-						if (game == null)
+						if (game.getId() == null || game.getId().isEmpty())
 						{
-							nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CHALLENGED, person.getIdAsString()));
-							nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_NAME, person.getName()));
+							nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CHALLENGED, game.getPerson().getIdAsString()));
+							nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_NAME, game.getPerson().getName()));
 
 							try
 							{
@@ -778,7 +755,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 								Log.e(LOG_TAG, "IOException error in AsyncSendMove - doInBackground()!", e);
 							}
 						}
-						else if (person == null)
+						else
 						{
 							nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CHALLENGED, game.getPerson().getIdAsString()));
 							nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_NAME, game.getPerson().getName()));
@@ -850,10 +827,13 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 		/**
-		 * 
+		 * Creates a single JSONArray containing two JSONArrays: one JSONArray
+		 * for each team on the game board. This method should never return
+		 * null.
 		 * 
 		 * @return
-		 * 
+		 * Returns a single JSONArray containing one JSONArray for each team on
+		 * the game board.
 		 */
 		private JSONArray createJSONTeams()
 		{
@@ -869,17 +849,18 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 		/**
-		 * 
+		 * Creates a JSONArray for the given team. This method should never
+		 * return null.
 		 * 
 		 * @param whichTeam
-		 * 
+		 * The team that you want to create a JSONArray for.
 		 * 
 		 * @return
-		 * 
+		 * Returns a JSONArray containing the given team.
 		 */
 		private JSONArray createJSONTeam(final byte whichTeam)
 		{
-			final JSONArray jsonTeam = new JSONArray();
+			final JSONArray JSONTeam = new JSONArray();
 
 			for (byte x = 0; x < board.getLengthHorizontal() && !isCancelled(); ++x)
 			{
@@ -890,33 +871,24 @@ public abstract class GenericGameFragment extends SherlockFragment
 					if (position.hasPiece())
 					// this position has a piece in it
 					{
-						final Piece piece = (Piece) position.getPiece();
-
-						if (piece.isTeam(whichTeam))
-						// this piece is of the given team 
+						try
 						{
-							try
-							{
-								final JSONArray jsonCoordinate = new JSONArray();
-								jsonCoordinate.put(x);
-								jsonCoordinate.put(y);
+							final JSONObject JSONPiece = createJSONPiece(whichTeam, position);
 
-								final JSONObject jsonPiece = new JSONObject();
-								jsonPiece.put("coordinate", jsonCoordinate);
-								jsonPiece.put("type", piece.getType());
-
-								jsonTeam.put(jsonPiece);
-							}
-							catch (final JSONException e)
+							if (JSONPiece != null)
 							{
-								Log.e(LOG_TAG, "Error in createJSONTeam(): x = " + x + ", y = " + y);
+								JSONTeam.put(JSONPiece);
 							}
+						}
+						catch (final JSONException e)
+						{
+							Log.e(LOG_TAG, "JSONException in createJSONTeam()! x: " + x + " y: " + y);
 						}
 					}
 				}
 			}
 
-			return jsonTeam;
+			return JSONTeam;
 		}
 
 
@@ -955,18 +927,29 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * Create's a team from some JSON data.
-	 * 
-	 * @param team
-	 * An individual team as parsed in from a JSON String.
+	 * Attempts to create a JSONObject out of the given Position's GenericPiece
+	 * object. It's possible that the given Position object has no GenericPiece
+	 * at all however, and in that case this method will return null. There is
+	 * another situation where null will be returned as well though: if this
+	 * Position has a piece, but it doesn't belong to the team specified in the
+	 * whichTeam parameter. 
 	 * 
 	 * @param whichTeam
-	 * GenericPiece.TEAM_* should be used here.
+	 * The team that you're currently trying to create a JSONArray for.
+	 * 
+	 * @param position
+	 * The position that you're currently at on the game board.
+	 * 
+	 * @return
+	 * If it was able to be created, this will return a JSONObject that
+	 * represents the GenericPiece object at the given position on the game
+	 * board. Be sure to check for a null response however.
+	 * 
+	 * @throws JSONException
+	 * An error occurred when trying to create a JSONObject for the given
+	 * position on the game board.
 	 */
-	protected void buildTeam(final JSONArray team, final int whichTeam)
-	{
-		buildTeam(team, (byte) whichTeam);
-	}
+	protected abstract JSONObject createJSONPiece(final byte whichTeam, final Position position) throws JSONException;
 
 
 	/**

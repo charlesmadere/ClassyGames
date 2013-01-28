@@ -2,6 +2,8 @@ package edu.selu.android.classygames;
 
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.view.View;
 import edu.selu.android.classygames.games.Position;
@@ -14,16 +16,17 @@ public class EmptyGameFragment extends GenericGameFragment
 {
 
 
-	EmptyGameFragment()
-	{
-		super();
-	}
-
-
 	@Override
 	protected void buildTeam(final JSONArray team, final byte whichTeam)
 	{
 
+	}
+
+
+	@Override
+	protected JSONObject createJSONPiece(final byte whichTeam, final Position position) throws JSONException
+	{
+		return null;
 	}
 
 

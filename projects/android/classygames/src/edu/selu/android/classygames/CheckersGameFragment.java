@@ -13,8 +13,6 @@ import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import edu.selu.android.classygames.data.Game;
-import edu.selu.android.classygames.data.Person;
 import edu.selu.android.classygames.games.Coordinate;
 import edu.selu.android.classygames.games.Position;
 import edu.selu.android.classygames.games.checkers.Board;
@@ -49,18 +47,6 @@ public class CheckersGameFragment extends GenericGameFragment
 	private BitmapDrawable opponentKing;
 
 
-
-
-	CheckersGameFragment(final Person person)
-	{
-		super(person);
-	}
-
-
-	CheckersGameFragment(final Game game)
-	{
-		super(game);
-	}
 
 
 	@Override
@@ -109,6 +95,32 @@ public class CheckersGameFragment extends GenericGameFragment
 				Log.e(LOG_TAG, "A team's piece was massively malformed.");
 			}
 		}
+	}
+
+
+	@Override
+	protected JSONObject createJSONPiece(final byte whichTeam, final Position position) throws JSONException
+	{
+		JSONObject JSONPiece = null;
+
+		if (position.hasPiece())
+		{
+			final Piece piece = (Piece) position.getPiece();
+
+			if (piece.isTeam(whichTeam))
+			{
+				final Coordinate coordinate = position.getCoordinate();
+				final JSONArray JSONCoordinate = new JSONArray();
+				JSONCoordinate.put(coordinate.getX());
+				JSONCoordinate.put(coordinate.getY());
+
+				JSONPiece = new JSONObject();
+				JSONPiece.put("coordinate", JSONCoordinate);
+				JSONPiece.put("type", piece.getType());
+			}
+		}
+
+		return JSONPiece;
 	}
 
 

@@ -2,12 +2,12 @@ package edu.selu.android.classygames;
 
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.View;
-import edu.selu.android.classygames.data.Game;
-import edu.selu.android.classygames.data.Person;
 import edu.selu.android.classygames.games.Position;
 
 
@@ -89,18 +89,6 @@ public class ChessGameFragment extends GenericGameFragment
 
 
 
-	ChessGameFragment(final Person person)
-	{
-		super(person);
-	}
-
-
-	ChessGameFragment(final Game game)
-	{
-		super(game);
-	}
-
-
 	@Override
 	protected int onCreateView()
 	{
@@ -112,6 +100,15 @@ public class ChessGameFragment extends GenericGameFragment
 	protected void buildTeam(final JSONArray team, final byte whichTeam)
 	{
 
+	}
+
+
+	@Override
+	protected JSONObject createJSONPiece(final byte whichTeam, final Position position) throws JSONException
+	{
+		JSONObject JSONPiece = null;
+
+		return JSONPiece;
 	}
 
 

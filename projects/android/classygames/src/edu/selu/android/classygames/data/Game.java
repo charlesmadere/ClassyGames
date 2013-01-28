@@ -73,20 +73,53 @@ public class Game
 
 
 	/**
+	 * Creates a Game object. This constructor should only be used within the
+	 * GenericGameFragment class.
+	 * 
+	 * @param person
+	 * The opposing player. If I am Charles Madere and my opponent is Geonathan
+	 * Sena, then this Person object will be for Geonathan Sena.
+	 */
+	public Game(final Person person)
+	{
+		this.person = person;
+	}
+
+
+	/**
+	 * Creates a Game object. This constructor should only be used within the
+	 * GenericGameFragment class.
+	 * 
+	 * @param person
+	 * The opposing player. If I am Charles Madere and my opponent is Geonathan
+	 * Sena, then this Person object will be for Geonathan Sena.
+	 * 
+	 * @param id
+	 * This game's ID as received from the Classy Games server. This should be
+	 * a rather long String that resembles a hash.
+	 */
+	public Game(final Person person, final String id)
+	{
+		this.person = person;
+		this.id = id;
+	}
+
+
+	/**
 	 * Creates a Game object.
 	 * 
 	 * @param timestamp
-	 * The timestamp as received from the Classy Games server. This should be the
-	 * system epoch. What is the system epoch?
+	 * The timestamp as received from the Classy Games server. This should be
+	 * the system epoch. What is the system epoch?
 	 * https://en.wikipedia.org/wiki/Unix_epoch
 	 * 
 	 * @param person
-	 * The opposing player. If I am Charles Madere and my opponent is Geonathan Sena,
-	 * then this Person object will be for Geonathan Sena.
+	 * The opposing player. If I am Charles Madere and my opponent is Geonathan
+	 * Sena, then this Person object will be for Geonathan Sena.
 	 * 
 	 * @param id
-	 * The ID as received from the Classy Games server. This should be a rather long
-	 * String that resembles a hash.
+	 * This game's ID as received from the Classy Games server. This should be
+	 * a rather long String that resembles a hash.
 	 * 
 	 * @param turn
 	 * Who's turn is it? Use one of the TURN_* variables as defined in this class

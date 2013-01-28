@@ -80,8 +80,6 @@ public class Person
 
 
 	/**
-	 * Returns this Person's Facebook ID (a long).
-	 * 
 	 * @return
 	 * Returns this Person's Facebook ID (a long).
 	 */
