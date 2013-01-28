@@ -183,7 +183,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 		}
 
 		fTransaction.addToBackStack(null);
-		fTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		fTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 		fTransaction.commit();
 	}
 

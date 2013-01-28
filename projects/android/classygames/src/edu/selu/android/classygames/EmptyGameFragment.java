@@ -34,6 +34,13 @@ public class EmptyGameFragment extends GenericGameFragment
 
 
 	@Override
+	protected void flush()
+	{
+
+	}
+
+
+	@Override
 	protected void initNewBoard()
 	{
 

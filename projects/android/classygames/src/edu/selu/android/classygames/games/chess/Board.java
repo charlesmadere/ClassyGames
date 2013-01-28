@@ -5,6 +5,10 @@ import edu.selu.android.classygames.games.Coordinate;
 import edu.selu.android.classygames.games.GenericBoard;
 
 
+/**
+ * Class representing a Chess board. This board is made up of a bunch of
+ * positions. Chess is 8 by 8, so that's 64 positions.
+ */
 public class Board extends GenericBoard
 {
 
@@ -13,6 +17,9 @@ public class Board extends GenericBoard
 	public final static byte LENGTH_VERTICAL = 8;
 
 
+	/**
+	 * Creates a Chess board object.
+	 */
 	public Board()
 	{
 		super(LENGTH_HORIZONTAL, LENGTH_VERTICAL);

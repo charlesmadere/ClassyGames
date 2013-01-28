@@ -329,6 +329,18 @@ public class Game
 
 
 	/**
+	 * Checks to see if this Game object's type is a separator type.
+	 * 
+	 * @return
+	 * Returns true if this Game object's type is a separator type.
+	 */
+	public boolean isTypeSeparator()
+	{
+		return type == TYPE_SEPARATOR;
+	}
+
+
+	/**
 	 * Checks to see that this Game object is valid. Valid means four things:
 	 * <ol>
 	 * <li>This Game's ID is not null.</li>

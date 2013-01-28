@@ -24,7 +24,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -44,6 +43,7 @@ public class GamesListFragment extends SherlockListFragment
 
 
 	private final static String LOG_TAG = Utilities.LOG_TAG + " - GamesListFragment";
+
 
 	private GamesListAdapter gamesListAdapter;
 
@@ -470,84 +470,52 @@ public class GamesListFragment extends SherlockListFragment
 		@Override
 		public View getView(final int position, View convertView, final ViewGroup parent)
 		{
+			final LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			final Game game = games.get(position);
 
-			if (game != null)
+			if (game.isTypeGame())
 			{
-				final LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				final ViewHolder viewHolder = new ViewHolder();
+				convertView = inflater.inflate(R.layout.games_list_fragment_listview_item, null);
 
-				if (game.isTypeGame())
+				final TextView name = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_name);
+				name.setText(game.getPerson().getName());
+				name.setTypeface(Utilities.getTypeface(context.getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D));
+
+				final TextView time = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_time);
+				time.setText(game.getTimestampFormatted(context));
+
+				if (game.isTurnYours())
 				{
-					convertView = inflater.inflate(R.layout.games_list_fragment_listview_item, null);
-
-					viewHolder.name = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_name);
-					if (viewHolder.name != null)
+					convertView.setOnClickListener(new OnClickListener()
 					{
-						viewHolder.name.setText(game.getPerson().getName());
-						viewHolder.name.setTypeface(Utilities.getTypeface(context.getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D));
-					}
-
-					viewHolder.time = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_time);
-					if (viewHolder.time != null)
-					{
-						viewHolder.time.setText(game.getTimestampFormatted(context));
-					}
-
-					if (game.isTurnYours())
-					{
-						viewHolder.onClickListener = new OnClickListener()
+						@Override
+						public void onClick(final View v)
 						{
-							@Override
-							public void onClick(final View v)
-							{
-								gamesListFragmentOnGameSelectedListener.gameListFragmentOnGameSelected(game);
-							}
-						};
-					}
-					else
-					{
-						viewHolder.onClickListener = null;
-					}
+							gamesListFragmentOnGameSelectedListener.gameListFragmentOnGameSelected(game);
+						}
+					});
 				}
 				else
 				{
-					if (game.isTurnYours())
-					{
-						convertView = inflater.inflate(R.layout.games_list_fragment_listview_turn_yours, null);
-					}
-					else
-					{
-						convertView = inflater.inflate(R.layout.games_list_fragment_listview_turn_theirs, null);
-					}
-
-					viewHolder.onClickListener = null;
+					convertView.setOnClickListener(null);
+				}
+			}
+			else
+			{
+				if (game.isTurnYours())
+				{
+					convertView = inflater.inflate(R.layout.games_list_fragment_listview_turn_yours, null);
+				}
+				else
+				{
+					convertView = inflater.inflate(R.layout.games_list_fragment_listview_turn_theirs, null);
 				}
 
-				convertView.setOnClickListener(viewHolder.onClickListener);
-				convertView.setTag(viewHolder);
+				convertView.setOnClickListener(null);
 			}
 
 			return convertView;
 		}
-
-
-	}
-
-
-
-
-	/**
-	 * Helps performance of ListView layouts.
-	 */
-	static class ViewHolder
-	{
-
-
-		OnClickListener onClickListener;
-		ImageView picture;
-		TextView name;
-		TextView time;
 
 
 	}

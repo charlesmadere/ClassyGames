@@ -13,6 +13,7 @@ import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 import edu.selu.android.classygames.data.Game;
 import edu.selu.android.classygames.data.Person;
 import edu.selu.android.classygames.games.Coordinate;
@@ -73,6 +74,11 @@ public class CheckersGameFragment extends GenericGameFragment
 	@Override
 	protected void buildTeam(final JSONArray team, final byte whichTeam)
 	{
+		if (board == null)
+		{
+			board = new Board();
+		}
+
 		for (int i = 0; i < team.length(); ++i)
 		{
 			try
@@ -102,6 +108,63 @@ public class CheckersGameFragment extends GenericGameFragment
 			catch (final JSONException e)
 			{
 				Log.e(LOG_TAG, "A team's piece was massively malformed.");
+			}
+		}
+	}
+
+
+	@Override
+	protected void flush()
+	{
+		// clear all of the existing pieces from the board
+		for (byte x = 0; x < Board.LENGTH_HORIZONTAL; ++x)
+		{
+			for (byte y = 0; y < Board.LENGTH_VERTICAL; ++y)
+			{
+				final String tag = createTag(x, y);
+
+				// setting the ImageDrawable to null erases the current image
+				// (if there is any) from this ImageDrawable
+				((ImageButton) getView().findViewWithTag(tag)).setImageDrawable(null);
+			}
+		}
+
+		// place all of the pieces back onto the board
+		for (byte x = 0; x < Board.LENGTH_HORIZONTAL; ++x)
+		{
+			for (byte y = 0; y < Board.LENGTH_VERTICAL; ++y)
+			{
+				final Position position = board.getPosition(x, y);
+
+				if (position.hasPiece())
+				{
+					final Piece piece = (Piece) position.getPiece();
+					final String tag = createTag(x, y);
+					final ImageButton imageButton = (ImageButton) getView().findViewWithTag(tag);
+
+					if (piece.isTypeNormal())
+					{
+						if (piece.isTeamPlayer())
+						{
+							imageButton.setImageDrawable(playerNormal);
+						}
+						else
+						{
+							imageButton.setImageDrawable(opponentNormal);
+						}
+					}
+					else
+					{
+						if (piece.isTeamPlayer())
+						{
+							imageButton.setImageDrawable(playerKing);
+						}
+						else
+						{
+							imageButton.setImageDrawable(opponentKing);
+						}
+					}
+				}
 			}
 		}
 	}
@@ -252,78 +315,19 @@ public class CheckersGameFragment extends GenericGameFragment
 		// process can be done very quickly as all of the picture data has
 		// already been loaded.
 		playerNormal = (BitmapDrawable) getResources().getDrawable(R.drawable.piece_checkers_green_normal);
-		playerKing = (BitmapDrawable) getResources().getDrawable(R.drawable.piece_checkers_green_normal);
-		opponentNormal = (BitmapDrawable) getResources().getDrawable(R.drawable.piece_checkers_green_normal);
-		opponentKing = (BitmapDrawable) getResources().getDrawable(R.drawable.piece_checkers_green_normal);
+		playerKing = (BitmapDrawable) getResources().getDrawable(R.drawable.piece_checkers_green_king);
+		opponentNormal = (BitmapDrawable) getResources().getDrawable(R.drawable.piece_checkers_orange_normal);
+		opponentKing = (BitmapDrawable) getResources().getDrawable(R.drawable.piece_checkers_orange_king);
 	}
 
 
 	@Override
 	protected void onBoardClick(final View v)
 	{
-		Log.d(LOG_TAG, "onBoardClick()! id: \"" + v.getId() + "\" tag: \"" + v.getTag() + "\"");
-	}
-
-
-
-
-	/**
-	 * Renders all of the game's pieces on the board by first clearing all of
-	 * the existing pieces from it and then placing all of the current pieces.
-	 */
-	private void flush()
-	{
-		// clear all of the existing pieces from the board
-		for (byte x = 0; x < Board.LENGTH_HORIZONTAL; ++x)
-		{
-			for (byte y = 0; y < Board.LENGTH_VERTICAL; ++y)
-			{
-				final String tag = createTag(x, y);
-
-				// setting the ImageDrawable to null erases the current image
-				// (if there is any) from this ImageDrawable
-				((ImageButton) getView().findViewWithTag(tag)).setImageDrawable(null);
-			}
-		}
-
-		// place all of the pieces back onto the board
-		for (byte x = 0; x < Board.LENGTH_HORIZONTAL; ++x)
-		{
-			for (byte y = 0; y < Board.LENGTH_VERTICAL; ++y)
-			{
-				final Position position = (Position) board.getPosition(x, y);
-
-				if (position.hasPiece())
-				{
-					final Piece piece = (Piece) position.getPiece();
-					final String tag = createTag(x, y);
-					final ImageButton imageButton = (ImageButton) getView().findViewWithTag(tag);
-
-					if (piece.isTypeNormal())
-					{
-						if (piece.isTeamPlayer())
-						{
-							imageButton.setImageDrawable(playerNormal);
-						}
-						else
-						{
-							imageButton.setImageDrawable(opponentNormal);
-						}
-					}
-					else
-					{
-						if (piece.isTeamPlayer())
-						{
-							imageButton.setImageDrawable(playerKing);
-						}
-						else
-						{
-							imageButton.setImageDrawable(opponentKing);
-						}
-					}
-				}
-			}
-		}
+		final String tag = (String) v.getTag();
+		final byte[] coordinates = getCoordinatesFromTag(tag);
+		final Position position = board.getPosition(coordinates[0], coordinates[1]);
+		Log.d(LOG_TAG, "Click! (" + coordinates[0] + ", " + coordinates[1] + ") - has piece? " + position.hasPiece());
 	}
 
 

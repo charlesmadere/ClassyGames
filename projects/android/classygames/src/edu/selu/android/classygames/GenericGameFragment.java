@@ -218,7 +218,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 				};
 
 				initViews();
-//				new AsyncGetGame().execute();
+				new AsyncGetGame().execute();
 			}
 		}
 		else if (game == null)
@@ -574,6 +574,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 				Log.e(LOG_TAG, "JSON String is massively malformed.");
 			}
 		}
+
+		flush();
 	}
 
 
@@ -906,6 +908,13 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		buildTeam(team, (byte) whichTeam);
 	}
+
+
+	/**
+	 * Renders all of the game's pieces on the board by first clearing all of
+	 * the existing pieces from it and then placing all of the current pieces.
+	 */
+	protected abstract void flush();
 
 
 	/**

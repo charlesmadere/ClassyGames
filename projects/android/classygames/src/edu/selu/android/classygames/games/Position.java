@@ -18,6 +18,9 @@ public class Position
 
 
 
+	/**
+	 * Creates a Position object.
+	 */
 	public Position()
 	{
 
@@ -47,7 +50,7 @@ public class Position
 	 */
 	public boolean hasPiece()
 	{
-		return piece != null && piece.isTypeNull();
+		return piece != null && !piece.isTypeNull();
 	}
 
 
