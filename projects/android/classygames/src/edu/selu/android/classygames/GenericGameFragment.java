@@ -177,50 +177,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 				genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataErrorListener();
 			}
 		}
-/*			game = (Game) arguments.get(KEY_GAME);
-
-			if (game == null)
-			{
-				person = (Person) arguments.get(KEY_PERSON);
-
-				if (person == null || !person.isValid())
-				{
-					genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataErrorListener();
-				}
-				else
-				{
-					onBoardClick = new OnClickListener()
-					{
-						@Override
-						public void onClick(final View v)
-						{
-							onBoardClick(v);
-						}
-					};
-
-					initViews();
-					initNewBoard();
-				}
-			}
-			else if (game.isValid())
-			{
-				onBoardClick = new OnClickListener()
-				{
-					@Override
-					public void onClick(final View v)
-					{
-						onBoardClick(v);
-					}
-				};
-
-				initViews();
-				new AsyncGetGame().execute();
-			}
-			else
-			{
-				genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataErrorListener();
-			}
-		}*/
 	}
 
 
@@ -313,9 +269,12 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		super.onResume();
 
-		final ActionBar actionBar = getSherlockActivity().getSupportActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setTitle(getString(getTitle()) + " " + game.getPerson().getName());
+		if (game != null)
+		{
+			final ActionBar actionBar = getSherlockActivity().getSupportActionBar();
+			actionBar.setDisplayHomeAsUpEnabled(true);
+			actionBar.setTitle(getString(getTitle()) + " " + game.getPerson().getName());
+		}
 	}
 
 
@@ -416,9 +375,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 	/**
 	 * Parses the passed in tag String for two numbers (those two numbers are
-	 * the tag's coordinates) and returns those coordinates as a byte array.
-	 * The returned byte array will have a length of just 2, with [0] being
-	 * the X coordinate and [1] being the Y coordinate.
+	 * the tag's coordinates) and returns those coordinates as a Coordinate
+	 * object.
 	 * 
 	 * <p><strong>Example</strong><br />
 	 * final String tag = "x2y9";<br />
@@ -433,13 +391,14 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * "x15y3", or "x21y32".
 	 * 
 	 * @return
-	 * Returns a byte array with [0] being the given tag's X coordinate and [1]
-	 * being the given tag's Y coordinate.
+	 * Returns a Coordinate object containing the coordinates as specified in
+	 * the given tag String. Has the possibility of returning a null coordinate
+	 * if the passed in tag String is messed up.
 	 */
-	protected byte[] getCoordinatesFromTag(final String tag)
+	protected Coordinate getCoordinateFromTag(final String tag)
 	{
-		// Initialize an array for the coordinates. This will be returned.
-		final byte[] coordinates = new byte[2];
+		// Create a Coordinate object. This will be returned.
+		Coordinate coordinate = null;
 
 		boolean inDigits = false;
 
@@ -489,14 +448,17 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 				// Parse that substring into a byte. This value is the tag
 				// String's X value.
-				coordinates[0] = Byte.parseByte(sub);
+				final byte x = Byte.parseByte(sub);
 
 				// create another substring from the tag String
 				sub = tag.substring(endIndex + 1, tag.length());
 
 				// Parse that substring into a byte. this value is the tag
 				// String's Y value.
-				coordinates[1] = Byte.parseByte(sub);
+				final byte y = Byte.parseByte(sub);
+
+				// create the Coordinate object out of the data that we found
+				coordinate = new Coordinate(x, y);
 
 				// Both coordinates have been found and stored. The loop can
 				// exit now.
@@ -508,7 +470,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		}
 		while (!bothCoordinatesFound);
 
-		return coordinates;
+		return coordinate;
 	}
 
 

@@ -17,6 +17,8 @@ public class Coordinate
 	private byte y;
 
 
+
+
 	/**
 	 * Creates a Coordinate object. Think of this object as an ordered pair. So
 	 * it should look like this: (x, y). If x were to be 5 and y were to be 7,
@@ -48,8 +50,7 @@ public class Coordinate
 	 */
 	public Coordinate(final int x, final int y)
 	{
-		this.x = (byte) x;
-		this.y = (byte) y;
+		this((byte) x, (byte) y);
 	}
 
 

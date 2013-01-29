@@ -16,10 +16,10 @@
 	<style name="button.pink">
 		<item name="android:background">@drawable/button_pink</item>
 	</style>
-	<style name="ClassyGames">
+	<style name="ClassyGames" parent="android:Theme">
 		<item name="android:background">@drawable/bg_bright</item>
 	</style>
-	<style name="ClassyGamesDark">
+	<style name="ClassyGamesDark" parent="android:Theme">
 		<item name="android:background">@drawable/bg_dark</item>
 	</style>
 	<style name="facebook_button">

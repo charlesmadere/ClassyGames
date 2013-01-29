@@ -311,9 +311,9 @@ public class CheckersGameFragment extends GenericGameFragment
 	protected void onBoardClick(final View v)
 	{
 		final String tag = (String) v.getTag();
-		final byte[] coordinates = getCoordinatesFromTag(tag);
-		final Position position = board.getPosition(coordinates[0], coordinates[1]);
-		Log.d(LOG_TAG, "Click! (" + coordinates[0] + ", " + coordinates[1] + ") - has piece? " + position.hasPiece());
+		final Coordinate coordinate = getCoordinateFromTag(tag);
+		final Position position = board.getPosition(coordinate.getX(), coordinate.getY());
+		Log.d(LOG_TAG, "Click! (" + coordinate.getX() + ", " + coordinate.getY() + ") - has piece? " + position.hasPiece());
 	}
 
 
