@@ -139,7 +139,7 @@ public abstract class GenericBoard
 	 */
 	public Position getPosition(final Coordinate coordinate)
 	{
-		return getPosition((byte) coordinate.getX(), (byte) coordinate.getY());
+		return getPosition(coordinate.getX(), coordinate.getY());
 	}
 
 

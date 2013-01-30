@@ -29,6 +29,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 	private UiLifecycleHelper uiHelper;
 	private Session.StatusCallback sessionStatusCallback;
 
+	private boolean isGenericGameFragmentEmpty = false;
 	private boolean isResumed = false;
 
 	private GamesListFragment gamesListFragment;
@@ -63,6 +64,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 			gamesListFragment = new GamesListFragment();
 			genericGameFragment = new EmptyGameFragment();
 
+			isGenericGameFragmentEmpty = true;
 			final FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
 
 			if (isDeviceLarge())
@@ -176,6 +178,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 		if (isDeviceLarge())
 		{
 			fTransaction.add(largeLayout, fragment);
+			isGenericGameFragmentEmpty = false;
 		}
 		else
 		{
@@ -193,6 +196,18 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 	@Override
 	public void gameListFragmentOnGameSelected(final Game game)
 	{
+		if (genericGameFragment.isVisible() && !isGenericGameFragmentEmpty)
+		{
+			final FragmentManager fManager = getSupportFragmentManager();
+			fManager.popBackStack();
+
+			final FragmentTransaction fTransaction = fManager.beginTransaction();
+			fTransaction.remove(genericGameFragment);
+			fTransaction.commit();
+
+			isGenericGameFragmentEmpty = true;
+		}
+
 		// if a future release of Classy Games has chess as well as checkers,
 		// then we will need to do some logic here to check the game type and
 		// then instantiate that game's fragment

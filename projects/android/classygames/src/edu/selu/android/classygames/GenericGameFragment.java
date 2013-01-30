@@ -57,7 +57,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * Boolean indicating if the board is locked or not. Once the board has
 	 * been locked it can only be locked by using undo.
 	 */
-	protected boolean boardLocked = false;
+	private boolean boardLocked = false;
 
 
 	/**
@@ -72,13 +72,41 @@ public abstract class GenericGameFragment extends SherlockFragment
 	/**
 	 * JSON String downloaded from the server that represents the board.
 	 */
-	protected String boardJSON;
+	private String boardJSON;
 
 
 	/**
 	 * The actual logical representation of the board.
 	 */
 	protected GenericBoard board;
+
+
+	/**
+	 * Holds a handle to the currently running (if it's currently running)
+	 * AsyncGetGame AsyncTask.
+	 */
+	private AsyncGetGame asyncGetGame;
+
+
+	/**
+	 * Variables that holds whether or not the asyncGetGame AsyncTask is
+	 * currently running.
+	 */
+	private boolean isAsyncGetGameRunning = false;
+
+
+	/**
+	 * Holds a handle to the currently running (if it's currently running)
+	 * AsyncSendMove AsyncTask.
+	 */
+	private AsyncSendMove asyncSendMove;
+
+
+	/**
+	 * Variables that holds whether or not the asyncSendMove AsyncTask is
+	 * currently running.
+	 */
+	private boolean isAsyncSendMoveRunning = false;
 
 
 	/**
@@ -163,8 +191,9 @@ public abstract class GenericGameFragment extends SherlockFragment
 				if (Game.isIdValid(gameId))
 				{
 					game = new Game(person, gameId);
-					new AsyncGetGame().execute();
-					
+
+					asyncGetGame = new AsyncGetGame();
+					asyncGetGame.execute();
 				}
 				else
 				{
@@ -204,7 +233,16 @@ public abstract class GenericGameFragment extends SherlockFragment
 	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
 	{
 		menu.clear();
-		inflater.inflate(R.menu.generic_game_fragment, menu);
+
+		if (isAsyncGetGameRunning || isAsyncSendMoveRunning)
+		{
+			inflater.inflate(R.menu.generic_game_fragment_secondary, menu);
+		}
+		else
+		{
+			inflater.inflate(R.menu.generic_game_fragment_primary, menu);
+		}
+
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
@@ -232,8 +270,24 @@ public abstract class GenericGameFragment extends SherlockFragment
 				fTransaction.commit();
 				break;
 
+			case R.id.generic_game_fragment_actionbar_cancel:
+				if (isAsyncGetGameRunning)
+				{
+					asyncGetGame.cancel(true);
+				}
+				else if (isAsyncSendMoveRunning)
+				{
+					asyncSendMove.cancel(true);
+				}
+				else
+				{
+					Log.e(LOG_TAG, "Cancel pressed while no AsyncTasks were running!");
+				}
+				break;
+
 			case R.id.generic_game_fragment_actionbar_send_move:
-				new AsyncSendMove().execute();
+				asyncSendMove = new AsyncSendMove();
+				asyncSendMove.execute();
 				break;
 
 			case R.id.generic_game_fragment_actionbar_undo_move:
@@ -275,21 +329,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 			actionBar.setDisplayHomeAsUpEnabled(true);
 			actionBar.setTitle(getString(getTitle()) + " " + game.getPerson().getName());
 		}
-	}
-
-
-	/**
-	 * Create's a team from some JSON data.
-	 * 
-	 * @param team
-	 * An individual team as parsed in from a JSON String.
-	 * 
-	 * @param whichTeam
-	 * GenericPiece.TEAM_* should be used here.
-	 */
-	protected void buildTeam(final JSONArray team, final int whichTeam)
-	{
-		buildTeam(team, (byte) whichTeam);
 	}
 
 
@@ -631,6 +670,9 @@ public abstract class GenericGameFragment extends SherlockFragment
 			{
 				progressDialog.dismiss();
 			}
+
+			isAsyncGetGameRunning = false;
+			// TODO invalidOptionsMenu();
 		}
 
 
@@ -644,12 +686,18 @@ public abstract class GenericGameFragment extends SherlockFragment
 			{
 				progressDialog.dismiss();
 			}
+
+			isAsyncGetGameRunning = false;
+			// TODO invalidOptionsMenu();
 		}
 
 
 		@Override
 		protected void onPreExecute()
 		{
+			isAsyncGetGameRunning = true;
+			// TODO invalidOptionsMenu();
+
 			progressDialog = new ProgressDialog(getSherlockActivity());
 			progressDialog.setCancelable(true);
 			progressDialog.setCanceledOnTouchOutside(true);
@@ -708,13 +756,16 @@ public abstract class GenericGameFragment extends SherlockFragment
 							nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CHALLENGED, game.getPerson().getIdAsString()));
 							nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_NAME, game.getPerson().getName()));
 
-							try
+							if (!isCancelled())
 							{
-								serverResponse = ServerUtilities.postToServer(ServerUtilities.SERVER_NEW_GAME_ADDRESS, nameValuePairs);
-							}
-							catch (final IOException e)
-							{
-								Log.e(LOG_TAG, "IOException error in AsyncSendMove - doInBackground()!", e);
+								try
+								{
+									serverResponse = ServerUtilities.postToServer(ServerUtilities.SERVER_NEW_GAME_ADDRESS, nameValuePairs);
+								}
+								catch (final IOException e)
+								{
+									Log.e(LOG_TAG, "IOException error in AsyncSendMove - doInBackground()!", e);
+								}
 							}
 						}
 						else
@@ -723,13 +774,16 @@ public abstract class GenericGameFragment extends SherlockFragment
 							nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_NAME, game.getPerson().getName()));
 							nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_GAME_ID, game.getId()));
 
-							try
+							if (!isCancelled())
 							{
-								serverResponse = ServerUtilities.postToServer(ServerUtilities.SERVER_NEW_MOVE_ADDRESS, nameValuePairs);
-							}
-							catch (final IOException e)
-							{
-								Log.e(LOG_TAG, "IOException error in AsyncSendMove - doInBackground()!", e);
+								try
+								{
+									serverResponse = ServerUtilities.postToServer(ServerUtilities.SERVER_NEW_MOVE_ADDRESS, nameValuePairs);
+								}
+								catch (final IOException e)
+								{
+									Log.e(LOG_TAG, "IOException error in AsyncSendMove - doInBackground()!", e);
+								}
 							}
 						}
 					}
@@ -751,6 +805,9 @@ public abstract class GenericGameFragment extends SherlockFragment
 			{
 				progressDialog.dismiss();
 			}
+
+			isAsyncSendMoveRunning = false;
+			// TODO invalidOptionsMenu();
 		}
 
 
@@ -763,12 +820,18 @@ public abstract class GenericGameFragment extends SherlockFragment
 			{
 				progressDialog.dismiss();
 			}
+
+			isAsyncSendMoveRunning = false;
+			// TODO invalidOptionsMenu();
 		}
 
 
 		@Override
 		protected void onPreExecute()
 		{
+			isAsyncSendMoveRunning = true;
+			// TODO invalidOptionsMenu();
+
 			progressDialog = new ProgressDialog(getSherlockActivity());
 			progressDialog.setCancelable(true);
 			progressDialog.setCanceledOnTouchOutside(true);
