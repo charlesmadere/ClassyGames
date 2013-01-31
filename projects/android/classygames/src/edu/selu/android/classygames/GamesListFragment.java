@@ -3,6 +3,8 @@ package edu.selu.android.classygames;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -24,6 +26,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -386,6 +389,8 @@ public class GamesListFragment extends SherlockListFragment
 							Log.e(LOG_TAG, "Error parsing a turn's game data! (" + i + ") whichTurn: " + whichTurn);
 						}
 					}
+
+					Collections.sort(games, new GamesListSorter());
 				}
 			}
 			catch (final JSONException e)
@@ -477,6 +482,9 @@ public class GamesListFragment extends SherlockListFragment
 			{
 				convertView = inflater.inflate(R.layout.games_list_fragment_listview_item, null);
 
+				final ImageView picture = (ImageView) convertView.findViewById(R.id.games_list_fragment_listview_item_picture);
+				Utilities.getImageLoader(context).displayImage(Utilities.FACEBOOK_GRAPH_API_URL + game.getPerson().getId() + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SMALL_SSL, picture);
+
 				final TextView name = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_name);
 				name.setText(game.getPerson().getName());
 				name.setTypeface(Utilities.getTypeface(context.getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D));
@@ -518,6 +526,18 @@ public class GamesListFragment extends SherlockListFragment
 		}
 
 
+	}
+
+
+
+
+	private class GamesListSorter implements Comparator<Game>
+	{
+		@Override
+		public int compare(final Game gameOne, final Game gameTwo)
+		{
+			return (int) (gameTwo.getTimestamp() - gameOne.getTimestamp());
+		}
 	}
 
 

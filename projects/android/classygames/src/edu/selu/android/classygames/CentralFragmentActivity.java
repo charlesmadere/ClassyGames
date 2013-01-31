@@ -20,8 +20,10 @@ import edu.selu.android.classygames.utilities.Utilities;
 public class CentralFragmentActivity extends SherlockFragmentActivity
 	implements GamesListFragment.GamesListFragmentOnGameSelectedListener,
 		GamesListFragment.GamesListFragmentOnNewGameSelectedListener,
+		GenericGameFragment.GenericGameFragmentOnAsyncGetGameCancelledListener,
 		GenericGameFragment.GenericGameFragmentOnDataErrorListener,
 		GenericGameFragment.GenericGameFragmentOnDestroyViewListener,
+		GenericGameFragment.GenericGameFragmentOnInvalidateMenuListener,
 		NewGameFragment.NewGameFragmentOnDestroyViewListener
 {
 
@@ -224,6 +226,20 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 
 
 	@Override
+	public void genericGameFragmentOnAsyncGetGameCancelledListener()
+	{
+		final FragmentManager fManager = getSupportFragmentManager();
+		fManager.popBackStack();
+
+		final FragmentTransaction fTransaction = fManager.beginTransaction();
+		fTransaction.remove(genericGameFragment);
+		fTransaction.commit();
+
+		isGenericGameFragmentEmpty = true;
+	}
+
+
+	@Override
 	public void gamesListFragmentOnNewGameSelected()
 	{
 		if (newGameFragment == null)
@@ -261,6 +277,13 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 			actionBar.setDisplayHomeAsUpEnabled(false);
 			actionBar.setTitle(R.string.games_list_fragment_title);
 		}
+	}
+
+
+	@Override
+	public void genericGameFragmentOnInvalidateMenuListener()
+	{
+		invalidateOptionsMenu();
 	}
 
 

@@ -118,6 +118,18 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 	/**
 	 * One of this class's callback methods. This is fired in the event that
+	 * the user cancels the AsyncGetGame AsyncTask.
+	 */
+	private GenericGameFragmentOnAsyncGetGameCancelledListener genericGameFragmentOnAsyncGetGameCancelledListener;
+
+	public interface GenericGameFragmentOnAsyncGetGameCancelledListener
+	{
+		public void genericGameFragmentOnAsyncGetGameCancelledListener();
+	}
+
+
+	/**
+	 * One of this class's callback methods. This is fired in the event that
 	 * an error was detected in some of the data needed to instantiate a game.
 	 */
 	private GenericGameFragmentOnDataErrorListener genericGameFragmentOnDataErrorListener;
@@ -137,6 +149,18 @@ public abstract class GenericGameFragment extends SherlockFragment
 	public interface GenericGameFragmentOnDestroyViewListener
 	{
 		public void genericGameFragmentOnDestroyViewListener();
+	}
+
+
+	/**
+	 * One of this class's callback methods. This is fired whenever this
+	 * fragment's wants to invalidate the options menu.
+	 */
+	private GenericGameFragmentOnInvalidateMenuListener genericGameFragmentOnInvalidateMenuListener;
+
+	public interface GenericGameFragmentOnInvalidateMenuListener
+	{
+		public void genericGameFragmentOnInvalidateMenuListener();
 	}
 
 
@@ -219,8 +243,10 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 		try
 		{
+			genericGameFragmentOnAsyncGetGameCancelledListener = (GenericGameFragmentOnAsyncGetGameCancelledListener) activity;
 			genericGameFragmentOnDataErrorListener = (GenericGameFragmentOnDataErrorListener) activity;
 			genericGameFragmentOnDestroyViewListener = (GenericGameFragmentOnDestroyViewListener) activity;
+			genericGameFragmentOnInvalidateMenuListener = (GenericGameFragmentOnInvalidateMenuListener) activity;
 		}
 		catch (final ClassCastException e)
 		{
@@ -305,15 +331,18 @@ public abstract class GenericGameFragment extends SherlockFragment
 	@Override
 	public void onPrepareOptionsMenu(final Menu menu)
 	{
-		if (boardLocked)
+		if (!isAsyncGetGameRunning && !isAsyncSendMoveRunning)
 		{
-			menu.findItem(R.id.generic_game_fragment_actionbar_send_move).setEnabled(true);
-			menu.findItem(R.id.generic_game_fragment_actionbar_undo_move).setEnabled(true);
-		}
-		else
-		{
-			menu.findItem(R.id.generic_game_fragment_actionbar_send_move).setEnabled(false);
-			menu.findItem(R.id.generic_game_fragment_actionbar_undo_move).setEnabled(false);
+			if (boardLocked)
+			{
+				menu.findItem(R.id.generic_game_fragment_actionbar_send_move).setEnabled(true);
+				menu.findItem(R.id.generic_game_fragment_actionbar_undo_move).setEnabled(true);
+			}
+			else
+			{
+				menu.findItem(R.id.generic_game_fragment_actionbar_send_move).setEnabled(false);
+				menu.findItem(R.id.generic_game_fragment_actionbar_undo_move).setEnabled(false);
+			}
 		}
 	}
 
@@ -625,7 +654,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		if (boardLocked)
 		{
 			boardLocked = false;
-			getSherlockActivity().invalidateOptionsMenu();
+			genericGameFragmentOnInvalidateMenuListener.genericGameFragmentOnInvalidateMenuListener();
 		}
 	}
 
@@ -655,7 +684,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 				}
 				catch (final IOException e)
 				{
-					Log.e(Utilities.LOG_TAG, "IOException error in AsyncGetGame - doInBackground()!", e);
+					Log.e(LOG_TAG, "IOException error in AsyncGetGame - doInBackground()!", e);
 				}
 			}
 
@@ -672,7 +701,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			}
 
 			isAsyncGetGameRunning = false;
-			// TODO invalidOptionsMenu();
+			genericGameFragmentOnAsyncGetGameCancelledListener.genericGameFragmentOnAsyncGetGameCancelledListener();
 		}
 
 
@@ -688,7 +717,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			}
 
 			isAsyncGetGameRunning = false;
-			// TODO invalidOptionsMenu();
+			genericGameFragmentOnInvalidateMenuListener.genericGameFragmentOnInvalidateMenuListener();
 		}
 
 
@@ -696,7 +725,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		protected void onPreExecute()
 		{
 			isAsyncGetGameRunning = true;
-			// TODO invalidOptionsMenu();
+			genericGameFragmentOnInvalidateMenuListener.genericGameFragmentOnInvalidateMenuListener();
 
 			progressDialog = new ProgressDialog(getSherlockActivity());
 			progressDialog.setCancelable(true);
@@ -807,7 +836,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			}
 
 			isAsyncSendMoveRunning = false;
-			// TODO invalidOptionsMenu();
+			genericGameFragmentOnInvalidateMenuListener.genericGameFragmentOnInvalidateMenuListener();
 		}
 
 
@@ -822,7 +851,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			}
 
 			isAsyncSendMoveRunning = false;
-			// TODO invalidOptionsMenu();
+			genericGameFragmentOnInvalidateMenuListener.genericGameFragmentOnInvalidateMenuListener();
 		}
 
 
@@ -830,7 +859,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		protected void onPreExecute()
 		{
 			isAsyncSendMoveRunning = true;
-			// TODO invalidOptionsMenu();
+			genericGameFragmentOnInvalidateMenuListener.genericGameFragmentOnInvalidateMenuListener();
 
 			progressDialog = new ProgressDialog(getSherlockActivity());
 			progressDialog.setCancelable(true);

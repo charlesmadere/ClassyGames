@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
-import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Shader.TileMode;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
@@ -20,6 +19,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import edu.selu.android.classygames.R;
 import edu.selu.android.classygames.data.Person;
@@ -36,13 +38,7 @@ public class Utilities
 	private final static String WHO_AM_I_ID = "WHO_AM_I_ID";
 	private final static String WHO_AM_I_NAME = "WHO_AM_I_NAME";
 
-	public final static CompressFormat COMPRESS_FORMAT = CompressFormat.PNG;
-	public final static int COMPRESS_QUALITY = 70;
-	public final static int APP_VERSION = 1;
-	public final static int VALUE_COUNT = 1;
-	public final static int IO_BUFFER_SIZE = 8 * 1024;
-	public final static int DISK_CACHE_SIZE = 1024 * 1024 * 10;
-	public final static String DISK_CACHE_SUBDIR = "thumbnails";
+	private static ImageLoader imageLoader;
 
 
 	// typeface data below
@@ -180,6 +176,39 @@ public class Utilities
 	{
 		easyToast(context, message);
 		Log.e(LOG_TAG, message);
+	}
+
+
+	/**
+	 * Initializes the ImageLoader library with some specific configuration
+	 * settings (if it has not already been initialized) and returns only what
+	 * you need - the portion that will actually load an image for ya!
+	 * 
+	 * @param context
+	 * The Context of the class you're currently working in.
+	 * 
+	 * @return
+	 * Returns an instance of the ImageLoader class that can load an image from
+	 * a website for ya!
+	 */
+	public static ImageLoader getImageLoader(final Context context)
+	{
+		if (imageLoader == null)
+		{
+			final DisplayImageOptions displayOptions = new DisplayImageOptions.Builder()
+				.cacheInMemory()
+				.cacheOnDisc()
+				.build();
+
+			final ImageLoaderConfiguration loaderConfiguration = new ImageLoaderConfiguration.Builder(context)
+				.defaultDisplayImageOptions(displayOptions)
+				.build();
+
+			imageLoader = ImageLoader.getInstance();
+			imageLoader.init(loaderConfiguration);
+		}
+
+		return imageLoader;
 	}
 
 
