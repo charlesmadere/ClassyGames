@@ -24,7 +24,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import edu.selu.android.classygames.R;
-import edu.selu.android.classygames.data.Person;
+import edu.selu.android.classygames.models.Person;
 
 
 public class Utilities

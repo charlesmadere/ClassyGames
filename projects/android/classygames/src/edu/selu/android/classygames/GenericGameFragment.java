@@ -31,12 +31,12 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-import edu.selu.android.classygames.data.Game;
-import edu.selu.android.classygames.data.Person;
 import edu.selu.android.classygames.games.Coordinate;
 import edu.selu.android.classygames.games.GenericBoard;
 import edu.selu.android.classygames.games.GenericPiece;
 import edu.selu.android.classygames.games.Position;
+import edu.selu.android.classygames.models.Game;
+import edu.selu.android.classygames.models.Person;
 import edu.selu.android.classygames.utilities.ServerUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
 
@@ -114,6 +114,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * pieces and / or performs actions accordingly.
 	 */
 	protected OnClickListener onBoardClick;
+
+
 
 
 	/**

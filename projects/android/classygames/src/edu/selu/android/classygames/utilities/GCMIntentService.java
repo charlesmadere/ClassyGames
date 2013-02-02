@@ -15,7 +15,7 @@ import android.util.Log;
 import edu.selu.android.classygames.CheckersGameFragment;
 import edu.selu.android.classygames.GameOverFragment;
 import edu.selu.android.classygames.R;
-import edu.selu.android.classygames.data.Person;
+import edu.selu.android.classygames.models.Person;
 
 
 /**

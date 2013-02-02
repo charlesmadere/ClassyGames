@@ -13,7 +13,7 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 
-import edu.selu.android.classygames.data.Game;
+import edu.selu.android.classygames.models.Game;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
@@ -158,6 +158,19 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 
 
 	/**
+	 * Checks to see if the EmptyGameFragment is currently showing. This can
+	 * only happen if the device is using the fragments layout.
+	 * 
+	 * @return
+	 * Returns true if the EmptyGameFragment is currently showing.
+	 */
+	private boolean isEmptyGameFragmentVisible()
+	{
+		return isDeviceLarge() && genericGameFragment != null && genericGameFragment.isVisible() && !isGenericGameFragmentEmpty;
+	}
+
+
+	/**
 	 * Transitions either a part of the device's screen or a part of the
 	 * device's screen to the given fragment. A large device will have only
 	 * part of the screen occupied by the given fragment while a smaller device
@@ -198,7 +211,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 	@Override
 	public void gameListFragmentOnGameSelected(final Game game)
 	{
-		if (genericGameFragment.isVisible() && !isGenericGameFragmentEmpty)
+		if (isEmptyGameFragmentVisible())
 		{
 			final FragmentManager fManager = getSupportFragmentManager();
 			fManager.popBackStack();

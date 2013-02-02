@@ -1,4 +1,4 @@
-package edu.selu.android.classygames.data;
+package edu.selu.android.classygames.models;
 
 
 import android.graphics.drawable.Drawable;

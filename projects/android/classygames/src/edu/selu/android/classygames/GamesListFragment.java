@@ -13,10 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,6 +24,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -35,8 +33,8 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-import edu.selu.android.classygames.data.Game;
-import edu.selu.android.classygames.data.Person;
+import edu.selu.android.classygames.models.Game;
+import edu.selu.android.classygames.models.Person;
 import edu.selu.android.classygames.utilities.ServerUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
 
@@ -48,7 +46,12 @@ public class GamesListFragment extends SherlockListFragment
 	private final static String LOG_TAG = Utilities.LOG_TAG + " - GamesListFragment";
 
 
+	/**
+	 * List Adapter for this Fragment's ListView layout item.
+	 */
 	private GamesListAdapter gamesListAdapter;
+
+
 
 
 	/**
@@ -136,7 +139,7 @@ public class GamesListFragment extends SherlockListFragment
 				break;
 
 			case R.id.games_list_fragment_actionbar_refresh:
-				new AsyncPopulateGamesList().execute();
+				refreshGamesList();
 				break;
 
 			default:
@@ -155,7 +158,13 @@ public class GamesListFragment extends SherlockListFragment
 		final ActionBar actionBar = getSherlockActivity().getSupportActionBar();
 		actionBar.setTitle(R.string.games_list_fragment_title);
 
-		new AsyncPopulateGamesList().execute();
+		refreshGamesList();
+	}
+
+
+	private void refreshGamesList()
+	{
+		new AsyncPopulateGamesList(getLayoutInflater(getArguments()), getSherlockActivity(), (ViewGroup) getView()).execute();
 	}
 
 
@@ -165,7 +174,17 @@ public class GamesListFragment extends SherlockListFragment
 	{
 
 
-		private ProgressDialog progressDialog;
+		private Context context;
+		private LayoutInflater inflater;
+		private ViewGroup viewGroup;
+
+
+		public AsyncPopulateGamesList(final LayoutInflater inflater, final Context context, final ViewGroup viewGroup)
+		{
+			this.inflater = inflater;
+			this.context = context;
+			this.viewGroup = viewGroup;
+		}
 
 
 		@Override
@@ -175,7 +194,7 @@ public class GamesListFragment extends SherlockListFragment
 
 			if (!isCancelled())
 			{
-				final Person whoAmI = Utilities.getWhoAmI(getSherlockActivity());
+				final Person whoAmI = Utilities.getWhoAmI(context);
 
 				// create the data that will be 
 				final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
@@ -192,8 +211,6 @@ public class GamesListFragment extends SherlockListFragment
 						// order for us to get a meaningful response back.
 						final String jsonResponse = ServerUtilities.postToServer(ServerUtilities.SERVER_GET_GAMES_ADDRESS, nameValuePairs);
 
-						publishProgress(1);
-
 						// This line does a lot. Check the parseServerResponse()
 						// method below to get detailed information. This will
 						// parse the JSON response that we got from the server
@@ -208,8 +225,6 @@ public class GamesListFragment extends SherlockListFragment
 				}
 			}
 
-			publishProgress(4);
-
 			return games;
 		}
 
@@ -217,55 +232,30 @@ public class GamesListFragment extends SherlockListFragment
 		@Override
 		protected void onCancelled(final ArrayList<Game> games)
 		{
-			if (progressDialog.isShowing())
-			{
-				progressDialog.dismiss();
-			}
+			viewGroup.removeAllViews();
+			inflater.inflate(R.layout.games_list_fragment, viewGroup);
 		}
 
 
 		@Override
 		protected void onPostExecute(final ArrayList<Game> games)
 		{
-			gamesListAdapter = new GamesListAdapter(getSherlockActivity(), R.layout.games_list_fragment_listview_item, games);
-			setListAdapter(gamesListAdapter);
-			gamesListAdapter.notifyDataSetChanged();
+			viewGroup.removeAllViews();
+			inflater.inflate(R.layout.games_list_fragment, viewGroup);
+			ListView list = (ListView) viewGroup.findViewById(android.R.id.list);
 
-			if (progressDialog.isShowing())
-			{
-				progressDialog.dismiss();
-			}
+			gamesListAdapter = new GamesListAdapter(context, R.layout.games_list_fragment_listview_item, games);
+//			setListAdapter(gamesListAdapter);
+			gamesListAdapter.notifyDataSetChanged();
+			list.setAdapter(gamesListAdapter);
 		}
 
 
 		@Override
 		protected void onPreExecute()
 		{
-			progressDialog = new ProgressDialog(getSherlockActivity());
-			progressDialog.setCancelable(true);
-			progressDialog.setCanceledOnTouchOutside(true);
-			progressDialog.setMax(4);
-			progressDialog.setMessage(getString(R.string.games_list_fragment_getgames_progressdialog_message));
-
-			progressDialog.setOnCancelListener(new OnCancelListener()
-			{
-				@Override
-				public void onCancel(final DialogInterface dialog)
-				{
-					AsyncPopulateGamesList.this.cancel(true);
-				}
-			});
-
-			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-			progressDialog.setTitle(R.string.games_list_fragment_getgames_progressdialog_title);
-			progressDialog.show();
-		}
-
-
-		@Override
-		protected void onProgressUpdate(final Integer... values)
-		{
-			progressDialog.setProgress(values[0].intValue());
+			viewGroup.removeAllViews();
+			inflater.inflate(R.layout.games_list_fragment_loading, viewGroup);
 		}
 
 
@@ -314,15 +304,11 @@ public class GamesListFragment extends SherlockListFragment
 								games.addAll(turn);
 							}
 
-							publishProgress(2);
-
 							turn = parseTurn(jsonGameData, ServerUtilities.POST_DATA_TURN_THEIRS, Game.TURN_THEIRS);
 							if (turn != null && !turn.isEmpty())
 							{
 								games.addAll(turn);
 							}
-
-							publishProgress(3);
 						}
 					}
 					catch (final JSONException e)
