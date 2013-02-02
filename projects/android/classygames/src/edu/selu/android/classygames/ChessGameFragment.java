@@ -8,7 +8,9 @@ import org.json.JSONObject;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import edu.selu.android.classygames.games.Position;
+import edu.selu.android.classygames.games.chess.Piece;
 
 
 public class ChessGameFragment extends GenericGameFragment
@@ -115,7 +117,54 @@ public class ChessGameFragment extends GenericGameFragment
 	@Override
 	protected void flush(final Position position)
 	{
+		final String tag = createTag(position.getCoordinate());
+		final Piece piece = (Piece) position.getPiece();
+		final ImageButton imageButton = (ImageButton) getView().findViewWithTag(tag);
 
+		switch (piece.getType())
+		{
+			case Piece.TYPE_PAWN:
+				if (piece.isTeamPlayer())
+					imageButton.setImageDrawable(playerPawn);
+				else
+					imageButton.setImageDrawable(opponentPawn);
+				break;
+
+			case Piece.TYPE_BISHOP:
+				if (piece.isTeamPlayer())
+					imageButton.setImageDrawable(playerBishop);
+				else
+					imageButton.setImageDrawable(opponentBishop);
+				break;
+
+			case Piece.TYPE_KNIGHT:
+				if (piece.isTeamPlayer())
+					imageButton.setImageDrawable(playerKnight);
+				else
+					imageButton.setImageDrawable(opponentKnight);
+				break;
+
+			case Piece.TYPE_ROOK:
+				if (piece.isTeamPlayer())
+					imageButton.setImageDrawable(playerRook);
+				else
+					imageButton.setImageDrawable(opponentRook);
+				break;
+
+			case Piece.TYPE_QUEEN:
+				if (piece.isTeamPlayer())
+					imageButton.setImageDrawable(playerQueen);
+				else
+					imageButton.setImageDrawable(opponentQueen);
+				break;
+
+			case Piece.TYPE_KING:
+				if (piece.isTeamPlayer())
+					imageButton.setImageDrawable(playerKing);
+				else
+					imageButton.setImageDrawable(opponentKing);
+				break;
+		}
 	}
 
 

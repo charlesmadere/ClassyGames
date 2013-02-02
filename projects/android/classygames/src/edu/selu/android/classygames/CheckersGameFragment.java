@@ -131,27 +131,21 @@ public class CheckersGameFragment extends GenericGameFragment
 		final Piece piece = (Piece) position.getPiece();
 		final ImageButton imageButton = (ImageButton) getView().findViewWithTag(tag);
 
-		if (piece.isTypeNormal())
+		switch (piece.getType())
 		{
-			if (piece.isTeamPlayer())
-			{
-				imageButton.setImageDrawable(playerNormal);
-			}
-			else
-			{
-				imageButton.setImageDrawable(opponentNormal);
-			}
-		}
-		else
-		{
-			if (piece.isTeamPlayer())
-			{
-				imageButton.setImageDrawable(playerKing);
-			}
-			else
-			{
-				imageButton.setImageDrawable(opponentKing);
-			}
+			case Piece.TYPE_NORMAL:
+				if (piece.isTeamPlayer())
+					imageButton.setImageDrawable(playerNormal);
+				else
+					imageButton.setImageDrawable(opponentNormal);
+				break;
+
+			case Piece.TYPE_KING:
+				if (piece.isTeamPlayer())
+					imageButton.setImageDrawable(playerKing);
+				else
+					imageButton.setImageDrawable(opponentKing);
+				break;
 		}
 	}
 

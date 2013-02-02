@@ -23,7 +23,6 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 		GenericGameFragment.GenericGameFragmentOnAsyncGetGameCancelledListener,
 		GenericGameFragment.GenericGameFragmentOnDataErrorListener,
 		GenericGameFragment.GenericGameFragmentOnDestroyViewListener,
-		GenericGameFragment.GenericGameFragmentOnInvalidateMenuListener,
 		NewGameFragment.NewGameFragmentOnDestroyViewListener
 {
 
@@ -290,13 +289,6 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 			actionBar.setDisplayHomeAsUpEnabled(false);
 			actionBar.setTitle(R.string.games_list_fragment_title);
 		}
-	}
-
-
-	@Override
-	public void genericGameFragmentOnInvalidateMenuListener()
-	{
-		invalidateOptionsMenu();
 	}
 
 

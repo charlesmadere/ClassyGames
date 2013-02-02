@@ -16,6 +16,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -154,18 +155,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 	}
 
 
-	/**
-	 * One of this class's callback methods. This is fired whenever this
-	 * fragment's wants to invalidate the options menu.
-	 */
-	private GenericGameFragmentOnInvalidateMenuListener genericGameFragmentOnInvalidateMenuListener;
-
-	public interface GenericGameFragmentOnInvalidateMenuListener
-	{
-		public void genericGameFragmentOnInvalidateMenuListener();
-	}
-
-
 
 
 	@Override
@@ -248,7 +237,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 			genericGameFragmentOnAsyncGetGameCancelledListener = (GenericGameFragmentOnAsyncGetGameCancelledListener) activity;
 			genericGameFragmentOnDataErrorListener = (GenericGameFragmentOnDataErrorListener) activity;
 			genericGameFragmentOnDestroyViewListener = (GenericGameFragmentOnDestroyViewListener) activity;
-			genericGameFragmentOnInvalidateMenuListener = (GenericGameFragmentOnInvalidateMenuListener) activity;
 		}
 		catch (final ClassCastException e)
 		{
@@ -360,6 +348,15 @@ public abstract class GenericGameFragment extends SherlockFragment
 			actionBar.setDisplayHomeAsUpEnabled(true);
 			actionBar.setTitle(getString(getTitle()) + " " + game.getPerson().getName());
 		}
+	}
+
+
+	/**
+	 * Invalidates the options menu using the Android compatibility library.
+	 */
+	private void compatInvalidateOptionsMenu()
+	{
+		ActivityCompat.invalidateOptionsMenu(getSherlockActivity());
 	}
 
 
@@ -656,7 +653,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		if (boardLocked)
 		{
 			boardLocked = false;
-			genericGameFragmentOnInvalidateMenuListener.genericGameFragmentOnInvalidateMenuListener();
+			ActivityCompat.invalidateOptionsMenu(getSherlockActivity());
 		}
 	}
 
@@ -703,6 +700,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			}
 
 			isAsyncGetGameRunning = false;
+			compatInvalidateOptionsMenu();
 			genericGameFragmentOnAsyncGetGameCancelledListener.genericGameFragmentOnAsyncGetGameCancelledListener();
 		}
 
@@ -719,7 +717,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			}
 
 			isAsyncGetGameRunning = false;
-			genericGameFragmentOnInvalidateMenuListener.genericGameFragmentOnInvalidateMenuListener();
+			compatInvalidateOptionsMenu();
 		}
 
 
@@ -727,7 +725,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		protected void onPreExecute()
 		{
 			isAsyncGetGameRunning = true;
-			genericGameFragmentOnInvalidateMenuListener.genericGameFragmentOnInvalidateMenuListener();
+			compatInvalidateOptionsMenu();
 
 			progressDialog = new ProgressDialog(getSherlockActivity());
 			progressDialog.setCancelable(true);
@@ -838,7 +836,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			}
 
 			isAsyncSendMoveRunning = false;
-			genericGameFragmentOnInvalidateMenuListener.genericGameFragmentOnInvalidateMenuListener();
+			compatInvalidateOptionsMenu();
 		}
 
 
@@ -853,7 +851,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			}
 
 			isAsyncSendMoveRunning = false;
-			genericGameFragmentOnInvalidateMenuListener.genericGameFragmentOnInvalidateMenuListener();
+			compatInvalidateOptionsMenu();
 		}
 
 
@@ -861,7 +859,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		protected void onPreExecute()
 		{
 			isAsyncSendMoveRunning = true;
-			genericGameFragmentOnInvalidateMenuListener.genericGameFragmentOnInvalidateMenuListener();
+			compatInvalidateOptionsMenu();
 
 			progressDialog = new ProgressDialog(getSherlockActivity());
 			progressDialog.setCancelable(true);
