@@ -208,9 +208,9 @@ public class ChessGameFragment extends GenericGameFragment
 
 
 	@Override
-	protected void onBoardClick(final View v)
+	protected void onBoardClick(final ImageButton positionPreviousSelected, final ImageButton positionCurrentSelected)
 	{
-		Log.d(LOG_TAG, "onBoardClick()! id: \"" + v.getId() + "\" tag: \"" + v.getTag() + "\"");
+
 	}
 
 

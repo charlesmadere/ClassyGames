@@ -10,12 +10,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
+import android.content.res.Resources;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
@@ -57,13 +61,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * Boolean indicating if the board is locked or not. Once the board has
-	 * been locked it can only be locked by using undo.
-	 */
-	private boolean boardLocked = false;
-
-
-	/**
 	 * This game's Game object. This contains a whole bunch of necessary data
 	 * such as the ID of the game as well as the Person object that the current
 	 * Android user is playing against. <strong>DO NOT MODIFY THIS OBJECT ONCE
@@ -85,6 +82,13 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
+	 * Variables that holds whether or not the asyncGetGame AsyncTask is
+	 * currently running.
+	 */
+	private boolean isAsyncGetGameRunning = false;
+
+
+	/**
 	 * Holds a handle to the currently running (if it's currently running)
 	 * AsyncGetGame AsyncTask.
 	 */
@@ -92,10 +96,36 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * Variables that holds whether or not the asyncGetGame AsyncTask is
-	 * currently running.
+	 * Boolean indicating if the board is locked or not. Once the board has
+	 * been locked it can only be locked by using undo.
 	 */
-	private boolean isAsyncGetGameRunning = false;
+	private boolean boardLocked = false;
+
+
+	/**
+	 * The position on the game board that the user selected last time.
+	 */
+	private ImageButton positionPreviousSelected;
+
+
+	/**
+	 * The position on the game board that the user just now selected.
+	 */
+	private ImageButton positionCurrentSelected;
+
+
+	/**
+	 * When a position is selected that has a bright background then this
+	 * BitmapDrawable should be applied as its background.
+	 */
+	private BitmapDrawable backgroundBrightSelected;
+
+
+	/**
+	 * When a position is selected that has a dark background then this
+	 * BitmapDrawable should be applied as its background.
+	 */
+	private BitmapDrawable backgroundDarkSelected;
 
 
 	/**
@@ -182,14 +212,58 @@ public abstract class GenericGameFragment extends SherlockFragment
 			{
 				onBoardClick = new OnClickListener()
 				{
+					@SuppressLint("NewApi")
+					@SuppressWarnings("deprecation")
 					@Override
-					public void onClick(final View v)
+					public void onClick(final View spot)
 					{
-						onBoardClick(v);
+						if (positionCurrentSelected != null)
+						{
+							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+							{
+								positionCurrentSelected.setBackground(null);
+							}
+							else
+							{
+								positionCurrentSelected.setBackgroundDrawable(null);
+							}
+
+							positionPreviousSelected = positionCurrentSelected;
+						}
+
+						positionCurrentSelected = (ImageButton) spot;
+						final Coordinate coordinate = new Coordinate((String) positionCurrentSelected.getTag());
+
+						if ((coordinate.getX() % 2 == 0 && coordinate.getY() % 2 == 0)
+							|| (coordinate.getX() % 2 == 1 && coordinate.getY() % 2 == 1))
+						{
+							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+							{
+								positionCurrentSelected.setBackground(backgroundDarkSelected);
+							}
+							else
+							{
+								positionCurrentSelected.setBackgroundDrawable(backgroundDarkSelected);
+							}
+						}
+						else
+						{
+							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+							{
+								positionCurrentSelected.setBackground(backgroundBrightSelected);
+							}
+							else
+							{
+								positionCurrentSelected.setBackgroundDrawable(backgroundBrightSelected);
+							}
+						}
+
+						onBoardClick(positionPreviousSelected, positionCurrentSelected);
 					}
 				};
 
 				final Person person = new Person(personId, personName);
+				loadBackgroundResources();
 
 				if (Game.isIdValid(gameId))
 				{
@@ -255,7 +329,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 	public void onDestroyView()
 	{
 		super.onDestroyView();
-
 		genericGameFragmentOnDestroyViewListener.genericGameFragmentOnDestroyViewListener();
 	}
 
@@ -347,8 +420,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * Creates a tag to be used in a findViewWithTag() operation.
 	 * 
 	 * <p><strong>Examples</strong><br />
-	 * createTag(3, 5) returns "x3y5"<br />
-	 * createTag(0, 0) returns "x0y0"<br /></p>
+	 * createTag(3, 5) <strong>returns</strong> "x3y5"<br />
+	 * createTag(0, 0) <strong>returns</strong> "x0y0"<br /></p>
 	 * 
 	 * @param x
 	 * The <strong>X</strong> coordinate to create the tag from.
@@ -420,6 +493,18 @@ public abstract class GenericGameFragment extends SherlockFragment
 				}
 			}
 		}
+	}
+
+
+	/**
+	 * Loads BitmapDrawables that are needed for applying to ImageButtons as
+	 * their background image.
+	 */
+	private void loadBackgroundResources()
+	{
+		final Resources resources = getResources();
+		backgroundBrightSelected = (BitmapDrawable) resources.getDrawable(R.drawable.bg_board_bright_selected);
+		backgroundDarkSelected = (BitmapDrawable) resources.getDrawable(R.drawable.bg_board_dark_selected);
 	}
 
 
@@ -539,6 +624,10 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 
+	/**
+	 * An AsyncTask that will download the current state of the game board from
+	 * the server.
+	 */
 	private final class AsyncGetGame extends AsyncTask<Void, Void, String>
 	{
 
@@ -625,6 +714,10 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 
+	/**
+	 * An AsyncTask that will send the user's move on the game board to the
+	 * server.
+	 */
 	private final class AsyncSendMove extends AsyncTask<Void, Void, String>
 	{
 
@@ -934,11 +1027,15 @@ public abstract class GenericGameFragment extends SherlockFragment
 	/**
 	 * Checks to see which position on the board was clicked and then moves
 	 * pieces and / or performs actions accordingly.
+	 * 
+	 * @param positionPreviousSelected
+	 * The ImageButton object that was previously clicked on. This has the
+	 * possibility of being null.
 	 *
-	 * @param v
-	 * The View object that was clicked on.
+	 * @param positionCurrentSelected
+	 * The ImageButton object that was just now clicked on.
 	 */
-	protected abstract void onBoardClick(final View v);
+	protected abstract void onBoardClick(final ImageButton positionPreviousSelected, final ImageButton positionCurrentSelected);
 
 
 }

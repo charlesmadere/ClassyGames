@@ -31,6 +31,8 @@ public abstract class GenericBoard
 	protected Position[][] positions;
 
 
+
+
 	/**
 	 * Creates the Board object. Initializes all of the board's positions.
 	 * 

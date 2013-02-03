@@ -16,6 +16,8 @@ public class Board extends GenericBoard
 	private final static byte LENGTH_VERTICAL = 8;
 
 
+
+
 	/**
 	 * Creates a Chess board object.
 	 */

@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.util.Log;
@@ -289,7 +290,9 @@ public class CheckersGameFragment extends GenericGameFragment
 		view.findViewById(R.id.checkers_game_fragment_x6y7).setOnClickListener(onBoardClick);
 		view.findViewById(R.id.checkers_game_fragment_x7y7).setOnClickListener(onBoardClick);
 
+		final Resources resources = getResources();
 		final ViewTreeObserver viewTreeObserver = view.getViewTreeObserver();
+
 		viewTreeObserver.addOnGlobalLayoutListener(new OnGlobalLayoutListener()
 		{
 			@SuppressLint("NewApi")
@@ -298,8 +301,18 @@ public class CheckersGameFragment extends GenericGameFragment
 			public void onGlobalLayout()
 			{
 				final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-				final int width = view.findViewById(R.id.checkers_game_fragment_x7y7).getWidth();
-				layoutParams.height = width;
+				final View boardPosition = view.findViewById(R.id.checkers_game_fragment_x7y7);
+
+//				if (resources.getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+//				{
+					final int width = boardPosition.getWidth();
+					layoutParams.height = width;
+//				}
+//				else
+//				{
+//					final int height = boardPosition.getHeight();
+//					layoutParams.width = height;
+//				}
 
 				view.findViewById(R.id.checkers_game_fragment_y0).setLayoutParams(layoutParams);
 				view.findViewById(R.id.checkers_game_fragment_y1).setLayoutParams(layoutParams);
@@ -310,7 +323,7 @@ public class CheckersGameFragment extends GenericGameFragment
 				view.findViewById(R.id.checkers_game_fragment_y6).setLayoutParams(layoutParams);
 				view.findViewById(R.id.checkers_game_fragment_y7).setLayoutParams(layoutParams);
 
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
 				{
 					viewTreeObserver.removeOnGlobalLayoutListener(this);
 				}
@@ -325,18 +338,17 @@ public class CheckersGameFragment extends GenericGameFragment
 		// later when we draw these checkers pieces onto the board, that draw
 		// process can be done very quickly as all of the picture data has
 		// already been loaded.
-		playerNormal = (BitmapDrawable) getResources().getDrawable(R.drawable.piece_checkers_green_normal);
-		playerKing = (BitmapDrawable) getResources().getDrawable(R.drawable.piece_checkers_green_king);
-		opponentNormal = (BitmapDrawable) getResources().getDrawable(R.drawable.piece_checkers_orange_normal);
-		opponentKing = (BitmapDrawable) getResources().getDrawable(R.drawable.piece_checkers_orange_king);
+		playerNormal = (BitmapDrawable) resources.getDrawable(R.drawable.piece_checkers_green_normal);
+		playerKing = (BitmapDrawable) resources.getDrawable(R.drawable.piece_checkers_green_king);
+		opponentNormal = (BitmapDrawable) resources.getDrawable(R.drawable.piece_checkers_orange_normal);
+		opponentKing = (BitmapDrawable) resources.getDrawable(R.drawable.piece_checkers_orange_king);
 	}
 
 
 	@Override
-	protected void onBoardClick(final View v)
+	protected void onBoardClick(final ImageButton positionPreviousSelected, final ImageButton positionCurrentSelected)
 	{
-		final String tag = (String) v.getTag();
-		final Coordinate coordinate = new Coordinate(tag);
+		final Coordinate coordinate = new Coordinate((String) positionCurrentSelected.getTag());
 		final Position position = board.getPosition(coordinate);
 		Log.d(LOG_TAG, "Click! " + coordinate + " - has piece? " + position.hasPiece());
 	}
