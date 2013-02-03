@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
@@ -303,16 +304,16 @@ public class CheckersGameFragment extends GenericGameFragment
 				final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 				final View boardPosition = view.findViewById(R.id.checkers_game_fragment_x7y7);
 
-//				if (resources.getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
-//				{
+				if (resources.getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+				{
 					final int width = boardPosition.getWidth();
 					layoutParams.height = width;
-//				}
-//				else
-//				{
-//					final int height = boardPosition.getHeight();
-//					layoutParams.width = height;
-//				}
+				}
+				else
+				{
+					final int height = boardPosition.getHeight();
+					layoutParams.width = height;
+				}
 
 				view.findViewById(R.id.checkers_game_fragment_y0).setLayoutParams(layoutParams);
 				view.findViewById(R.id.checkers_game_fragment_y1).setLayoutParams(layoutParams);
