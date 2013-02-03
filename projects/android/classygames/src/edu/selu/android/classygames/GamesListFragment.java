@@ -77,6 +77,18 @@ public class GamesListFragment extends SherlockListFragment
 
 
 	/**
+	 * One of this class's callback methods. This is fired whenever this
+	 * fragment's onDestroyView() method is called.
+	 */
+	private GamesListFragmentOnDestroyViewListener gamesListFragmentOnDestroyViewListener;
+
+	public interface GamesListFragmentOnDestroyViewListener
+	{
+		public void gamesListFragmentOnDestroyView();
+	}
+
+
+	/**
 	 * One of this class's callback methods. This is fired whenever one of the
 	 * games in the user's list of games is clicked on.
 	 */
@@ -127,6 +139,7 @@ public class GamesListFragment extends SherlockListFragment
 
 		try
 		{
+			gamesListFragmentOnDestroyViewListener = (GamesListFragmentOnDestroyViewListener) activity;
 			gamesListFragmentOnGameSelectedListener = (GamesListFragmentOnGameSelectedListener) activity;
 			gamesListFragmentOnNewGameSelectedListener = (GamesListFragmentOnNewGameSelectedListener) activity;
 		}
@@ -150,6 +163,14 @@ public class GamesListFragment extends SherlockListFragment
 		}
 
 		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+
+	@Override
+	public void onDestroyView()
+	{
+		super.onDestroyView();
+		gamesListFragmentOnDestroyViewListener.gamesListFragmentOnDestroyView();
 	}
 
 

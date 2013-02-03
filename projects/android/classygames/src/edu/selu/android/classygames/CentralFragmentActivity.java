@@ -17,8 +17,9 @@ import edu.selu.android.classygames.models.Game;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
-public class CentralFragmentActivity extends SherlockFragmentActivity
-	implements GamesListFragment.GamesListFragmentOnGameSelectedListener,
+public class CentralFragmentActivity extends SherlockFragmentActivity implements
+		GamesListFragment.GamesListFragmentOnDestroyViewListener,
+		GamesListFragment.GamesListFragmentOnGameSelectedListener,
 		GamesListFragment.GamesListFragmentOnNewGameSelectedListener,
 		GenericGameFragment.GenericGameFragmentOnAsyncGetGameCancelledListener,
 		GenericGameFragment.GenericGameFragmentOnDataErrorListener,
@@ -193,6 +194,13 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 
 
 	@Override
+	public void gamesListFragmentOnDestroyView()
+	{
+		finish();
+	}
+
+
+	@Override
 	public void gameListFragmentOnGameSelected(final Game game)
 	{
 		if (genericGameFragment != null && genericGameFragment.isVisible())
@@ -233,7 +241,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 
 
 	@Override
-	public void genericGameFragmentOnAsyncGetGameCancelledListener()
+	public void genericGameFragmentOnAsyncGetGameCancelled()
 	{
 		final FragmentManager fManager = getSupportFragmentManager();
 		fManager.popBackStack();
@@ -245,7 +253,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 
 
 	@Override
-	public void genericGameFragmentOnDataErrorListener()
+	public void genericGameFragmentOnDataError()
 	{
 		if (genericGameFragment.isVisible())
 		{
@@ -262,9 +270,9 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 
 
 	@Override
-	public void genericGameFragmentOnDestroyViewListener()
+	public void genericGameFragmentOnDestroyView()
 	{
-		if (gamesListFragment.isVisible())
+		if (gamesListFragment != null && gamesListFragment.isVisible())
 		{
 			final ActionBar actionBar = getSupportActionBar();
 			actionBar.setDisplayHomeAsUpEnabled(false);
@@ -274,9 +282,9 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 
 
 	@Override
-	public void newGameFragmentOnDestroyViewListener()
+	public void newGameFragmentOnDestroyView()
 	{
-		if (gamesListFragment.isVisible())
+		if (gamesListFragment != null && gamesListFragment.isVisible())
 		{
 			final ActionBar actionBar = getSupportActionBar();
 			actionBar.setDisplayHomeAsUpEnabled(false);

@@ -37,7 +37,7 @@ public class NewGameFragment extends SherlockListFragment
 
 	public interface NewGameFragmentOnDestroyViewListener
 	{
-		public void newGameFragmentOnDestroyViewListener();
+		public void newGameFragmentOnDestroyView();
 	}
 
 
@@ -98,7 +98,7 @@ public class NewGameFragment extends SherlockListFragment
 	{
 		super.onDestroyView();
 
-		newGameFragmentOnDestroyViewListener.newGameFragmentOnDestroyViewListener();
+		newGameFragmentOnDestroyViewListener.newGameFragmentOnDestroyView();
 	}
 
 

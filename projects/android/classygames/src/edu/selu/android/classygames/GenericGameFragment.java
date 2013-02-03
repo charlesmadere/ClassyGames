@@ -156,7 +156,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 	public interface GenericGameFragmentOnAsyncGetGameCancelledListener
 	{
-		public void genericGameFragmentOnAsyncGetGameCancelledListener();
+		public void genericGameFragmentOnAsyncGetGameCancelled();
 	}
 
 
@@ -168,7 +168,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 	public interface GenericGameFragmentOnDataErrorListener
 	{
-		public void genericGameFragmentOnDataErrorListener();
+		public void genericGameFragmentOnDataError();
 	}
 
 
@@ -180,7 +180,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 	public interface GenericGameFragmentOnDestroyViewListener
 	{
-		public void genericGameFragmentOnDestroyViewListener();
+		public void genericGameFragmentOnDestroyView();
 	}
 
 
@@ -211,7 +211,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 		if (arguments == null || arguments.isEmpty())
 		{
-			genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataErrorListener();
+			genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataError();
 		}
 		else
 		{
@@ -265,7 +265,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			}
 			else
 			{
-				genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataErrorListener();
+				genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataError();
 			}
 		}
 	}
@@ -314,7 +314,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	public void onDestroyView()
 	{
 		super.onDestroyView();
-		genericGameFragmentOnDestroyViewListener.genericGameFragmentOnDestroyViewListener();
+		genericGameFragmentOnDestroyViewListener.genericGameFragmentOnDestroyView();
 	}
 
 
@@ -571,7 +571,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		if (boardJSON == null || boardJSON.isEmpty())
 		{
 			Log.e(LOG_TAG, "Tried to build the board from either a null or empty JSON String!");
-			genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataErrorListener();
+			genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataError();
 		}
 		else
 		{
@@ -733,7 +733,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		{
 			isAsyncGetGameRunning = false;
 			compatInvalidateOptionsMenu();
-			genericGameFragmentOnAsyncGetGameCancelledListener.genericGameFragmentOnAsyncGetGameCancelledListener();
+			genericGameFragmentOnAsyncGetGameCancelledListener.genericGameFragmentOnAsyncGetGameCancelled();
 		}
 
 
