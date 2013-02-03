@@ -5,7 +5,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -290,6 +292,8 @@ public class CheckersGameFragment extends GenericGameFragment
 		final ViewTreeObserver viewTreeObserver = view.getViewTreeObserver();
 		viewTreeObserver.addOnGlobalLayoutListener(new OnGlobalLayoutListener()
 		{
+			@SuppressLint("NewApi")
+			@SuppressWarnings("deprecation")
 			@Override
 			public void onGlobalLayout()
 			{
@@ -305,6 +309,15 @@ public class CheckersGameFragment extends GenericGameFragment
 				view.findViewById(R.id.checkers_game_fragment_y5).setLayoutParams(layoutParams);
 				view.findViewById(R.id.checkers_game_fragment_y6).setLayoutParams(layoutParams);
 				view.findViewById(R.id.checkers_game_fragment_y7).setLayoutParams(layoutParams);
+
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+				{
+					viewTreeObserver.removeOnGlobalLayoutListener(this);
+				}
+				else
+				{
+					viewTreeObserver.removeGlobalOnLayoutListener(this);
+				}
 			}
 		});
 
@@ -324,8 +337,8 @@ public class CheckersGameFragment extends GenericGameFragment
 	{
 		final String tag = (String) v.getTag();
 		final Coordinate coordinate = new Coordinate(tag);
-		final Position position = board.getPosition(coordinate.getX(), coordinate.getY());
-		Log.d(LOG_TAG, "Click! (" + coordinate.getX() + ", " + coordinate.getY() + ") - has piece? " + position.hasPiece());
+		final Position position = board.getPosition(coordinate);
+		Log.d(LOG_TAG, "Click! " + coordinate + " - has piece? " + position.hasPiece());
 	}
 
 
