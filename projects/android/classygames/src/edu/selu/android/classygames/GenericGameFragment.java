@@ -97,20 +97,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * Holds a handle to the currently running (if it's currently running)
-	 * AsyncSendMove AsyncTask.
-	 */
-	private AsyncSendMove asyncSendMove;
-
-
-	/**
-	 * Variables that holds whether or not the asyncSendMove AsyncTask is
-	 * currently running.
-	 */
-	private boolean isAsyncSendMoveRunning = false;
-
-
-	/**
 	 * Checks to see which position on the board was clicked and then moves
 	 * pieces and / or performs actions accordingly.
 	 */
@@ -251,7 +237,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		menu.clear();
 
-		if (isAsyncGetGameRunning || isAsyncSendMoveRunning)
+		if (isAsyncGetGameRunning)
 		{
 			inflater.inflate(R.menu.generic_game_fragment_secondary, menu);
 		}
@@ -292,10 +278,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 				{
 					asyncGetGame.cancel(true);
 				}
-				else if (isAsyncSendMoveRunning)
-				{
-					asyncSendMove.cancel(true);
-				}
 				else
 				{
 					Log.e(LOG_TAG, "Cancel pressed while no AsyncTasks were running!");
@@ -303,8 +285,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 				break;
 
 			case R.id.generic_game_fragment_actionbar_send_move:
-				asyncSendMove = new AsyncSendMove();
-				asyncSendMove.execute();
+				new AsyncSendMove().execute();
 				break;
 
 			case R.id.generic_game_fragment_actionbar_undo_move:
@@ -322,7 +303,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	@Override
 	public void onPrepareOptionsMenu(final Menu menu)
 	{
-		if (!isAsyncGetGameRunning && !isAsyncSendMoveRunning)
+		if (!isAsyncGetGameRunning)
 		{
 			if (boardLocked)
 			{
@@ -442,107 +423,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * Parses the passed in tag String for two numbers (those two numbers are
-	 * the tag's coordinates) and returns those coordinates as a Coordinate
-	 * object.
-	 * 
-	 * <p><strong>Example</strong><br />
-	 * final String tag = "x2y9";<br />
-	 * final byte[] coordinates = getCoordinatesFromTag(tag);<br />
-	 * coordinates[0]: 2, coordinates[1]: 9</p>
-	 * 
-	 * @param tag
-	 * The tag to parse for coordinates. Note that this method <strong>does not
-	 * check</strong> for a null or empty String. If this method encounters
-	 * either of those scenarios then there will probably be a crash. The tag
-	 * that this method parses for should be formatted like so: "x5y3", "x0y6",
-	 * "x15y3", or "x21y32".
-	 * 
-	 * @return
-	 * Returns a Coordinate object containing the coordinates as specified in
-	 * the given tag String. Has the possibility of returning a null coordinate
-	 * if the passed in tag String is messed up.
-	 */
-	protected Coordinate getCoordinateFromTag(final String tag)
-	{
-		// Create a Coordinate object. This will be returned.
-		Coordinate coordinate = null;
-
-		boolean inDigits = false;
-
-		// used to store positions in the tag String in order to make
-		// substrings
-		int beginIndex = 0, endIndex = 0;
-
-		// store the position we're currently at in the tag String
-		int i = 0;
-
-		// This will be used with whether or not the below loop continues to
-		// run.
-		boolean bothCoordinatesFound = false;
-
-		do
-		// Continue to loop until the bothCoordinatesFound variable is true.
-		// This will only happen when... both coordinates have been found!
-		{
-			// save the current char in the String
-			final char character = tag.charAt(i);
-
-			// check to see if the char is a digit
-			final boolean characterIsDigit = Character.isDigit(character);
-
-			if (!inDigits && characterIsDigit)
-			// if our position in the tag String is not already in digits and
-			// the current char is a digit
-			{
-				// mark that we're now in digits
-				inDigits = true;
-
-				// store the beginning substring position
-				beginIndex = i;
-			}
-			else if (inDigits && !characterIsDigit)
-			// if our position in the tag String is in digits and the current
-			// char is not a digit
-			{
-				// mark that we're no longer in digits
-				inDigits = false;
-
-				// store the end substring position
-				endIndex = i;
-
-				// create a substring from the tag String
-				String sub = tag.substring(beginIndex, endIndex);
-
-				// Parse that substring into a byte. This value is the tag
-				// String's X value.
-				final byte x = Byte.parseByte(sub);
-
-				// create another substring from the tag String
-				sub = tag.substring(endIndex + 1, tag.length());
-
-				// Parse that substring into a byte. this value is the tag
-				// String's Y value.
-				final byte y = Byte.parseByte(sub);
-
-				// create the Coordinate object out of the data that we found
-				coordinate = new Coordinate(x, y);
-
-				// Both coordinates have been found and stored. The loop can
-				// exit now.
-				bothCoordinatesFound = true;
-			}
-
-			// move to the next character in the tag String
-			++i;
-		}
-		while (!bothCoordinatesFound);
-
-		return coordinate;
-	}
-
-
-	/**
 	 * Locks the board. This prevents the player from continuing to move
 	 * pieces around. The player must press the undo button if they want to
 	 * move anything from this point on.
@@ -654,7 +534,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 		if (boardLocked)
 		{
 			boardLocked = false;
-			ActivityCompat.invalidateOptionsMenu(getSherlockActivity());
 		}
 	}
 
@@ -663,6 +542,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 	private final class AsyncGetGame extends AsyncTask<Void, Void, String>
 	{
+
+
 
 
 		private ProgressDialog progressDialog;
@@ -747,6 +628,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 		}
 
 
+
+
 	}
 
 
@@ -754,6 +637,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 	private final class AsyncSendMove extends AsyncTask<Void, Void, String>
 	{
+
+
 
 
 		private ProgressDialog progressDialog;
@@ -835,9 +720,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 			{
 				progressDialog.dismiss();
 			}
-
-			isAsyncSendMoveRunning = false;
-			compatInvalidateOptionsMenu();
 		}
 
 
@@ -850,18 +732,12 @@ public abstract class GenericGameFragment extends SherlockFragment
 			{
 				progressDialog.dismiss();
 			}
-
-			isAsyncSendMoveRunning = false;
-			compatInvalidateOptionsMenu();
 		}
 
 
 		@Override
 		protected void onPreExecute()
 		{
-			isAsyncSendMoveRunning = true;
-			compatInvalidateOptionsMenu();
-
 			progressDialog = new ProgressDialog(getSherlockActivity());
 			progressDialog.setCancelable(true);
 			progressDialog.setCanceledOnTouchOutside(true);
@@ -915,7 +791,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		 */
 		private JSONArray createJSONTeam(final byte whichTeam)
 		{
-			final JSONArray JSONTeam = new JSONArray();
+			final JSONArray jsonTeam = new JSONArray();
 
 			for (byte x = 0; x < board.getLengthHorizontal() && !isCancelled(); ++x)
 			{
@@ -932,7 +808,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 							if (JSONPiece != null)
 							{
-								JSONTeam.put(JSONPiece);
+								jsonTeam.put(JSONPiece);
 							}
 						}
 						catch (final JSONException e)
@@ -943,8 +819,10 @@ public abstract class GenericGameFragment extends SherlockFragment
 				}
 			}
 
-			return JSONTeam;
+			return jsonTeam;
 		}
+
+
 
 
 	}

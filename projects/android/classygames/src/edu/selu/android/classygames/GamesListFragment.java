@@ -177,6 +177,10 @@ public class GamesListFragment extends SherlockListFragment
 				{
 					asyncPopulateGamesList.cancel(true);
 				}
+				else
+				{
+					Log.e(LOG_TAG, "Cancel pressed while no AsyncTasks were running!");
+				}
 				break;
 
 			default:
