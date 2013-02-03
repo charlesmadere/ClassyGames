@@ -112,4 +112,37 @@ public class Piece extends GenericPiece
 	}
 
 
+
+
+	@Override
+	public String toString()
+	{
+		final StringBuilder builder = new StringBuilder();
+
+		if (team == TEAM_PLAYER)
+		{
+			builder.append("Friendly");
+		}
+		else
+		{
+			builder.append("Enemy");
+		}
+
+		builder.append(" ");
+
+		switch (getType())
+		{
+			case TYPE_NORMAL:
+				builder.append("Normal");
+				break;
+
+			case TYPE_KING:
+				builder.append("King");
+				break;
+		}
+
+		return builder.toString();
+	}
+
+
 }

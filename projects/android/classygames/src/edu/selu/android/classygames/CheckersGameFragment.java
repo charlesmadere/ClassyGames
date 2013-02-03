@@ -350,7 +350,7 @@ public class CheckersGameFragment extends GenericGameFragment
 	{
 		final Coordinate coordinate = new Coordinate((String) positionCurrentSelected.getTag());
 		final Position position = board.getPosition(coordinate);
-		Log.d(LOG_TAG, "Click! " + coordinate + " - has piece? " + position.hasPiece());
+		Log.d(LOG_TAG, "Click! " + coordinate + " - has piece? " + position.getPiece());
 	}
 
 

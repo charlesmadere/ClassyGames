@@ -10,7 +10,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -115,17 +114,29 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
+	 * A bright position's default background.
+	 */
+	private BitmapDrawable backgroundBoardBright;
+
+
+	/**
 	 * When a position is selected that has a bright background then this
 	 * BitmapDrawable should be applied as its background.
 	 */
-	private BitmapDrawable backgroundBrightSelected;
+	private BitmapDrawable backgroundBoardBrightSelected;
+
+
+	/**
+	 * A dark position's defeault background.
+	 */
+	private BitmapDrawable backgroundBoardDark;
 
 
 	/**
 	 * When a position is selected that has a dark background then this
 	 * BitmapDrawable should be applied as its background.
 	 */
-	private BitmapDrawable backgroundDarkSelected;
+	private BitmapDrawable backgroundBoardDarkSelected;
 
 
 	/**
@@ -212,53 +223,27 @@ public abstract class GenericGameFragment extends SherlockFragment
 			{
 				onBoardClick = new OnClickListener()
 				{
-					@SuppressLint("NewApi")
-					@SuppressWarnings("deprecation")
 					@Override
 					public void onClick(final View spot)
 					{
 						if (positionCurrentSelected != null)
 						{
-							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-							{
-								positionCurrentSelected.setBackground(null);
-							}
-							else
-							{
-								positionCurrentSelected.setBackgroundDrawable(null);
-							}
-
 							positionPreviousSelected = positionCurrentSelected;
+							setPositionBackground(positionPreviousSelected, false);
 						}
 
 						positionCurrentSelected = (ImageButton) spot;
-						final Coordinate coordinate = new Coordinate((String) positionCurrentSelected.getTag());
 
-						if ((coordinate.getX() % 2 == 0 && coordinate.getY() % 2 == 0)
-							|| (coordinate.getX() % 2 == 1 && coordinate.getY() % 2 == 1))
+						if (positionCurrentSelected == positionPreviousSelected)
 						{
-							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-							{
-								positionCurrentSelected.setBackground(backgroundDarkSelected);
-							}
-							else
-							{
-								positionCurrentSelected.setBackgroundDrawable(backgroundDarkSelected);
-							}
+							positionCurrentSelected = null;
+							positionPreviousSelected = null;
 						}
 						else
 						{
-							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-							{
-								positionCurrentSelected.setBackground(backgroundBrightSelected);
-							}
-							else
-							{
-								positionCurrentSelected.setBackgroundDrawable(backgroundBrightSelected);
-							}
+							setPositionBackground(positionCurrentSelected, true);
+							onBoardClick(positionPreviousSelected, positionCurrentSelected);
 						}
-
-						onBoardClick(positionPreviousSelected, positionCurrentSelected);
 					}
 				};
 
@@ -503,8 +488,11 @@ public abstract class GenericGameFragment extends SherlockFragment
 	private void loadBackgroundResources()
 	{
 		final Resources resources = getResources();
-		backgroundBrightSelected = (BitmapDrawable) resources.getDrawable(R.drawable.bg_board_bright_selected);
-		backgroundDarkSelected = (BitmapDrawable) resources.getDrawable(R.drawable.bg_board_dark_selected);
+
+		backgroundBoardBright = (BitmapDrawable) resources.getDrawable(R.drawable.bg_board_bright);
+		backgroundBoardBrightSelected = (BitmapDrawable) resources.getDrawable(R.drawable.bg_board_bright_selected);
+		backgroundBoardDark = (BitmapDrawable) resources.getDrawable(R.drawable.bg_board_dark);
+		backgroundBoardDarkSelected = (BitmapDrawable) resources.getDrawable(R.drawable.bg_board_dark_selected);
 	}
 
 
@@ -604,6 +592,77 @@ public abstract class GenericGameFragment extends SherlockFragment
 			catch (final JSONException e)
 			{
 				Log.e(LOG_TAG, "JSON String is massively malformed.");
+			}
+		}
+	}
+
+
+	/**
+	 * Sets the background of the given ImageButton to what it should be. If
+	 * the ImageButton was just now selected, it will be given a highlighted
+	 * background that signifies that fact. If the ImageButton was just now
+	 * deselected then it will have its background set back to its default.
+	 * 
+	 * @param position
+	 * The ImageButton to change the background of.
+	 * 
+	 * @param newlySelected
+	 * True if this ImageButton was just now selected.
+	 */
+	@SuppressWarnings("deprecation")
+	private void setPositionBackground(final ImageButton position, final boolean newlySelected)
+	{
+		final Coordinate coordinate = new Coordinate((String) position.getTag());
+
+		if ((coordinate.getX() % 2 == 0 && coordinate.getY() % 2 == 0)
+			|| (coordinate.getX() % 2 == 1 && coordinate.getY() % 2 == 1))
+		{
+			if (newlySelected)
+			{
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+				{
+					position.setBackground(backgroundBoardDarkSelected);
+				}
+				else
+				{
+					position.setBackgroundDrawable(backgroundBoardDarkSelected);
+				}
+			}
+			else
+			{
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+				{
+					position.setBackground(backgroundBoardDark);
+				}
+				else
+				{
+					position.setBackgroundDrawable(backgroundBoardDark);
+				}
+			}
+		}
+		else
+		{
+			if (newlySelected)
+			{
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+				{
+					position.setBackground(backgroundBoardBrightSelected);
+				}
+				else
+				{
+					position.setBackgroundDrawable(backgroundBoardBrightSelected);
+				}
+			}
+			else
+			{
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+				{
+					position.setBackground(backgroundBoardBright);
+				}
+				else
+				{
+					position.setBackgroundDrawable(backgroundBoardBright);
+				}
 			}
 		}
 	}

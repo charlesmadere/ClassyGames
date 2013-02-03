@@ -7,8 +7,8 @@ import org.json.JSONObject;
 
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageButton;
+import edu.selu.android.classygames.games.Coordinate;
 import edu.selu.android.classygames.games.Position;
 import edu.selu.android.classygames.games.chess.Piece;
 import edu.selu.android.classygames.utilities.Utilities;
@@ -210,7 +210,9 @@ public class ChessGameFragment extends GenericGameFragment
 	@Override
 	protected void onBoardClick(final ImageButton positionPreviousSelected, final ImageButton positionCurrentSelected)
 	{
-
+		final Coordinate coordinate = new Coordinate((String) positionCurrentSelected.getTag());
+		final Position position = board.getPosition(coordinate);
+		Log.d(LOG_TAG, "Click! " + coordinate + " - has piece? " + position.getPiece());
 	}
 
 
