@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
@@ -25,6 +26,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
@@ -188,13 +190,12 @@ public abstract class GenericGameFragment extends SherlockFragment
 				};
 
 				final Person person = new Person(personId, personName);
-				initViews();
 
 				if (Game.isIdValid(gameId))
 				{
 					game = new Game(person, gameId);
 
-					asyncGetGame = new AsyncGetGame();
+					asyncGetGame = new AsyncGetGame(getLayoutInflater(getArguments()), (ViewGroup) getView());
 					asyncGetGame.execute();
 				}
 				else
@@ -285,7 +286,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 				break;
 
 			case R.id.generic_game_fragment_actionbar_send_move:
-				new AsyncSendMove().execute();
+				new AsyncSendMove(getSherlockActivity()).execute();
 				break;
 
 			case R.id.generic_game_fragment_actionbar_undo_move:
@@ -520,8 +521,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 				Log.e(LOG_TAG, "JSON String is massively malformed.");
 			}
 		}
-
-		flush();
 	}
 
 
@@ -546,7 +545,15 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 
-		private ProgressDialog progressDialog;
+		private LayoutInflater inflater;
+		private ViewGroup viewGroup;
+
+
+		AsyncGetGame(final LayoutInflater inflater, final ViewGroup viewGroup)
+		{
+			this.inflater = inflater;
+			this.viewGroup = viewGroup;
+		}
 
 
 		@Override
@@ -576,11 +583,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 		@Override
 		protected void onCancelled(final String serverResponse)
 		{
-			if (progressDialog.isShowing())
-			{
-				progressDialog.dismiss();
-			}
-
 			isAsyncGetGameRunning = false;
 			compatInvalidateOptionsMenu();
 			genericGameFragmentOnAsyncGetGameCancelledListener.genericGameFragmentOnAsyncGetGameCancelledListener();
@@ -591,12 +593,12 @@ public abstract class GenericGameFragment extends SherlockFragment
 		protected void onPostExecute(final String serverResponse)
 		{
 			boardJSON = parseServerResponse(serverResponse);
-			resumeOldBoard();
+			viewGroup.removeAllViews();
+			inflater.inflate(getGameView(), viewGroup);
 
-			if (progressDialog.isShowing())
-			{
-				progressDialog.dismiss();
-			}
+			initViews();
+			resumeOldBoard();
+			flush();
 
 			isAsyncGetGameRunning = false;
 			compatInvalidateOptionsMenu();
@@ -609,22 +611,10 @@ public abstract class GenericGameFragment extends SherlockFragment
 			isAsyncGetGameRunning = true;
 			compatInvalidateOptionsMenu();
 
-			progressDialog = new ProgressDialog(getSherlockActivity());
-			progressDialog.setCancelable(true);
-			progressDialog.setCanceledOnTouchOutside(true);
-			progressDialog.setMessage(getString(R.string.generic_game_fragment_getgame_progressdialog_message));
-
-			progressDialog.setOnCancelListener(new OnCancelListener()
-			{
-				@Override
-				public void onCancel(final DialogInterface dialog)
-				{
-					AsyncGetGame.this.cancel(true);
-				}
-			});
-
-			progressDialog.setTitle(R.string.generic_game_fragment_getgame_progressdialog_title);
-			progressDialog.show();
+			viewGroup.removeAllViews();
+			inflater.inflate(R.layout.generic_game_fragment_loading, viewGroup);
+			final TextView textView = (TextView) viewGroup.findViewById(R.id.generic_game_fragment_loading_textview);
+			textView.setText(getString(getLoadingText(), game.getPerson().getName()));
 		}
 
 
@@ -641,7 +631,14 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 
+		private Context context;
 		private ProgressDialog progressDialog;
+
+
+		AsyncSendMove(final Context context)
+		{
+			this.context = context;
+		}
 
 
 		@Override
@@ -661,7 +658,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 					if (!isCancelled())
 					{
-						final Person whoAmI = Utilities.getWhoAmI(getSherlockActivity());
+						final Person whoAmI = Utilities.getWhoAmI(context);
 						final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 						nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CREATOR, whoAmI.getIdAsString()));
 						nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_BOARD, jsonBoard.toString()));
@@ -738,7 +735,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		@Override
 		protected void onPreExecute()
 		{
-			progressDialog = new ProgressDialog(getSherlockActivity());
+			progressDialog = new ProgressDialog(context);
 			progressDialog.setCancelable(true);
 			progressDialog.setCanceledOnTouchOutside(true);
 			progressDialog.setMessage(getString(R.string.generic_game_fragment_sendmove_progressdialog_message));

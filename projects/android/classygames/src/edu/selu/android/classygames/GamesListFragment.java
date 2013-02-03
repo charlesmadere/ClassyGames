@@ -235,12 +235,14 @@ public class GamesListFragment extends SherlockListFragment
 	{
 
 
+
+
 		private Context context;
 		private LayoutInflater inflater;
 		private ViewGroup viewGroup;
 
 
-		public AsyncPopulateGamesList(final Context context, final LayoutInflater inflater, final ViewGroup viewGroup)
+		AsyncPopulateGamesList(final Context context, final LayoutInflater inflater, final ViewGroup viewGroup)
 		{
 			this.context = context;
 			this.inflater = inflater;
@@ -505,6 +507,8 @@ public class GamesListFragment extends SherlockListFragment
 		}
 
 
+
+
 	}
 
 
@@ -512,6 +516,8 @@ public class GamesListFragment extends SherlockListFragment
 
 	private class GamesListAdapter extends ArrayAdapter<Game>
 	{
+
+
 
 
 		private ArrayList<Game> games;
