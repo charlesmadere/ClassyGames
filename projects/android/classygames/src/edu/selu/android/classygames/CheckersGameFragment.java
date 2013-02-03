@@ -308,21 +308,30 @@ public class CheckersGameFragment extends GenericGameFragment
 				{
 					final int width = boardPosition.getWidth();
 					layoutParams.height = width;
+
+					view.findViewById(R.id.checkers_game_fragment_y0).setLayoutParams(layoutParams);
+					view.findViewById(R.id.checkers_game_fragment_y1).setLayoutParams(layoutParams);
+					view.findViewById(R.id.checkers_game_fragment_y2).setLayoutParams(layoutParams);
+					view.findViewById(R.id.checkers_game_fragment_y3).setLayoutParams(layoutParams);
+					view.findViewById(R.id.checkers_game_fragment_y4).setLayoutParams(layoutParams);
+					view.findViewById(R.id.checkers_game_fragment_y5).setLayoutParams(layoutParams);
+					view.findViewById(R.id.checkers_game_fragment_y6).setLayoutParams(layoutParams);
+					view.findViewById(R.id.checkers_game_fragment_y7).setLayoutParams(layoutParams);
 				}
 				else
 				{
 					final int height = boardPosition.getHeight();
 					layoutParams.width = height;
-				}
 
-				view.findViewById(R.id.checkers_game_fragment_y0).setLayoutParams(layoutParams);
-				view.findViewById(R.id.checkers_game_fragment_y1).setLayoutParams(layoutParams);
-				view.findViewById(R.id.checkers_game_fragment_y2).setLayoutParams(layoutParams);
-				view.findViewById(R.id.checkers_game_fragment_y3).setLayoutParams(layoutParams);
-				view.findViewById(R.id.checkers_game_fragment_y4).setLayoutParams(layoutParams);
-				view.findViewById(R.id.checkers_game_fragment_y5).setLayoutParams(layoutParams);
-				view.findViewById(R.id.checkers_game_fragment_y6).setLayoutParams(layoutParams);
-				view.findViewById(R.id.checkers_game_fragment_y7).setLayoutParams(layoutParams);
+					view.findViewById(R.id.checkers_game_fragment_x0).setLayoutParams(layoutParams);
+					view.findViewById(R.id.checkers_game_fragment_x1).setLayoutParams(layoutParams);
+					view.findViewById(R.id.checkers_game_fragment_x2).setLayoutParams(layoutParams);
+					view.findViewById(R.id.checkers_game_fragment_x3).setLayoutParams(layoutParams);
+					view.findViewById(R.id.checkers_game_fragment_x4).setLayoutParams(layoutParams);
+					view.findViewById(R.id.checkers_game_fragment_x5).setLayoutParams(layoutParams);
+					view.findViewById(R.id.checkers_game_fragment_x6).setLayoutParams(layoutParams);
+					view.findViewById(R.id.checkers_game_fragment_x7).setLayoutParams(layoutParams);
+				}
 
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
 				{
