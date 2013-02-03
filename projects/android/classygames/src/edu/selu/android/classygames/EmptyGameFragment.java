@@ -17,6 +17,13 @@ public class EmptyGameFragment extends GenericGameFragment
 
 
 	@Override
+	protected void onCreateView()
+	{
+
+	}
+
+
+	@Override
 	protected void buildTeam(final JSONArray team, final byte whichTeam)
 	{
 
@@ -27,6 +34,20 @@ public class EmptyGameFragment extends GenericGameFragment
 	protected JSONObject createJSONPiece(final byte whichTeam, final Position position) throws JSONException
 	{
 		return null;
+	}
+
+
+	@Override
+	protected int getGameView()
+	{
+		return R.layout.empty_game_fragment;
+	}
+
+
+	@Override
+	protected int getLoadingText()
+	{
+		return R.string.generic_game_fragment_loading_text;
 	}
 
 
@@ -62,13 +83,6 @@ public class EmptyGameFragment extends GenericGameFragment
 	protected void onBoardClick(final View v)
 	{
 
-	}
-
-
-	@Override
-	protected int onCreateView()
-	{
-		return R.layout.empty_game_fragment;
 	}
 
 

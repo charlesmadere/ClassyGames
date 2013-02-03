@@ -92,9 +92,9 @@ public class ChessGameFragment extends GenericGameFragment
 
 
 	@Override
-	protected int onCreateView()
+	protected void onCreateView()
 	{
-		return R.layout.chess_game_fragment;
+
 	}
 
 
@@ -165,6 +165,20 @@ public class ChessGameFragment extends GenericGameFragment
 					imageButton.setImageDrawable(opponentKing);
 				break;
 		}
+	}
+
+
+	@Override
+	protected int getGameView()
+	{
+		return R.layout.chess_game_fragment;
+	}
+
+
+	@Override
+	protected int getLoadingText()
+	{
+		return R.string.chess_game_fragment_loading_text;
 	}
 
 

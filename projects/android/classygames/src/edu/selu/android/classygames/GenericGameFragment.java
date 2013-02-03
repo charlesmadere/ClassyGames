@@ -168,7 +168,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{
-		return inflater.inflate(onCreateView(), container, false);
+		onCreateView();
+		return inflater.inflate(getGameView(), container, false);
 	}
 
 
@@ -965,7 +966,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * For checkers, this method will return R.layout.checkers_game_layout. For
 	 * chess, this method will return R.layout.chess_game_layout.
 	 */
-	protected abstract int onCreateView();
+	protected abstract void onCreateView();
 
 
 	/**
@@ -1014,6 +1015,24 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * The current Position object in the flush() loop.
 	 */
 	protected abstract void flush(final Position position);
+
+
+	/**
+	 * @return
+	 * Returns the int value for the XML layout to use as the standard game
+	 * board layout. For checkers, this method will return
+	 * R.layout.checkers_game_layout. For chess, this method will return
+	 * R.layout.chess_game_layout.
+	 */
+	protected abstract int getGameView();
+
+
+	/**
+	 * @return
+	 * Returns the int value for the XML String to use as the text to display
+	 * as a loading message when the AsyncGetGame AsyncTask is running.
+	 */
+	protected abstract int getLoadingText();
 
 
 	/**

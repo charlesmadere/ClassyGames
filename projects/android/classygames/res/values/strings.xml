@@ -7,7 +7,9 @@
 	<string name="cancel">Cancel</string>
 	<string name="central_fragment_activity_title">Central Fragment Activity</string>
 	<string name="checkers_game_fragment_title">Checkers with</string>
+	<string name="checkers_game_fragment_loading_text">Loading Checkers game against %1$s&#8230;</string>
 	<string name="chess_game_fragment_title">Chess with</string>
+	<string name="chess_game_fragment_loading_text">Loading Chess game against %1$s&#8230;</string>
 	<string name="confirm_game_activity_button_accept">Start Game!</string>
 	<string name="confirm_game_activity_button_deny">Nevermind&#8230;</string>
 	<string name="confirm_game_activity_data_error">Error in trying to store the data for the Facebook user that you selected.</string>
@@ -84,6 +86,7 @@
 	<string name="generic_game_fragment_data_error">Error while trying to instantiate the game.</string>
 	<string name="generic_game_fragment_getgame_progressdialog_message">Retrieving your game&#8230;</string>
 	<string name="generic_game_fragment_getgame_progressdialog_title">Classy Games is working&#8230;</string>
+	<string name="generic_game_fragment_loading_text">Loading game&#8230;</string>
 	<string name="generic_game_fragment_sendmove_progressdialog_message">Sending your class to our server, the hamsters will process it shortly!</string>
 	<string name="generic_game_fragment_sendmove_progressdialog_title">Classy Hamsters are working diligently!</string>
 	<string name="generic_game_fragment_title">Generic Game Fragment</string>

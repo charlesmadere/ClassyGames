@@ -50,9 +50,9 @@ public class CheckersGameFragment extends GenericGameFragment
 
 
 	@Override
-	protected int onCreateView()
+	protected void onCreateView()
 	{
-		return R.layout.checkers_game_fragment;
+
 	}
 
 
@@ -147,6 +147,20 @@ public class CheckersGameFragment extends GenericGameFragment
 					imageButton.setImageDrawable(opponentKing);
 				break;
 		}
+	}
+
+
+	@Override
+	protected int getGameView()
+	{
+		return R.layout.checkers_game_fragment;
+	}
+
+
+	@Override
+	protected int getLoadingText()
+	{
+		return R.string.checkers_game_fragment_loading_text;
 	}
 
 
