@@ -46,7 +46,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 {
 
 
-	protected final static String LOG_TAG = Utilities.LOG_TAG + " - GenericGameFragment";
+	private final static String LOG_TAG = Utilities.LOG_TAG + " - GenericGameFragment";
 
 
 	public final static String KEY_GAME_ID = "KEY_GAME_ID";

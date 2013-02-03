@@ -11,10 +11,14 @@ import android.view.View;
 import android.widget.ImageButton;
 import edu.selu.android.classygames.games.Position;
 import edu.selu.android.classygames.games.chess.Piece;
+import edu.selu.android.classygames.utilities.Utilities;
 
 
 public class ChessGameFragment extends GenericGameFragment
 {
+
+
+	private final static String LOG_TAG = Utilities.LOG_TAG + " - ChessGameFragment";
 
 
 	/**

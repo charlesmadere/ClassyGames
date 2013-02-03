@@ -17,10 +17,14 @@ import edu.selu.android.classygames.games.Coordinate;
 import edu.selu.android.classygames.games.Position;
 import edu.selu.android.classygames.games.checkers.Board;
 import edu.selu.android.classygames.games.checkers.Piece;
+import edu.selu.android.classygames.utilities.Utilities;
 
 
 public class CheckersGameFragment extends GenericGameFragment
 {
+
+
+	private final static String LOG_TAG = Utilities.LOG_TAG + " - CheckersGameFragment";
 
 
 	/**

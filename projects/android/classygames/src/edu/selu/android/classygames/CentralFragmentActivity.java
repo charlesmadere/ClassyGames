@@ -30,9 +30,9 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 	private UiLifecycleHelper uiHelper;
 	private Session.StatusCallback sessionStatusCallback;
 
-	private boolean isGenericGameFragmentEmpty = false;
 	private boolean isResumed = false;
 
+	private EmptyGameFragment emptyGameFragment;
 	private GamesListFragment gamesListFragment;
 	private GenericGameFragment genericGameFragment;
 	private NewGameFragment newGameFragment;
@@ -63,15 +63,14 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 		if (savedInstanceState == null)
 		{
 			gamesListFragment = new GamesListFragment();
-			genericGameFragment = new EmptyGameFragment();
+			emptyGameFragment = new EmptyGameFragment();
 
-			isGenericGameFragmentEmpty = true;
 			final FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
 
 			if (isDeviceLarge())
 			{
 				fTransaction.add(R.id.central_fragment_activity_fragment_list, gamesListFragment);
-				fTransaction.add(R.id.central_fragment_activity_fragment_game, genericGameFragment);
+				fTransaction.add(R.id.central_fragment_activity_fragment_game, emptyGameFragment);
 			}
 			else
 			{
@@ -157,19 +156,6 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 
 
 	/**
-	 * Checks to see if the EmptyGameFragment is currently showing. This can
-	 * only happen if the device is using the fragments layout.
-	 * 
-	 * @return
-	 * Returns true if the EmptyGameFragment is currently showing.
-	 */
-	private boolean isEmptyGameFragmentVisible()
-	{
-		return isDeviceLarge() && genericGameFragment != null && genericGameFragment.isVisible() && !isGenericGameFragmentEmpty;
-	}
-
-
-	/**
 	 * Transitions either a part of the device's screen or a part of the
 	 * device's screen to the given fragment. A large device will have only
 	 * part of the screen occupied by the given fragment while a smaller device
@@ -192,7 +178,6 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 		if (isDeviceLarge())
 		{
 			fTransaction.add(largeLayout, fragment);
-			isGenericGameFragmentEmpty = false;
 		}
 		else
 		{
@@ -210,7 +195,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 	@Override
 	public void gameListFragmentOnGameSelected(final Game game)
 	{
-		if (isEmptyGameFragmentVisible())
+		if (genericGameFragment != null && genericGameFragment.isVisible())
 		{
 			final FragmentManager fManager = getSupportFragmentManager();
 			fManager.popBackStack();
@@ -218,8 +203,6 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 			final FragmentTransaction fTransaction = fManager.beginTransaction();
 			fTransaction.remove(genericGameFragment);
 			fTransaction.commit();
-
-			isGenericGameFragmentEmpty = true;
 		}
 
 		// if a future release of Classy Games has chess as well as checkers,
@@ -238,20 +221,6 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 
 
 	@Override
-	public void genericGameFragmentOnAsyncGetGameCancelledListener()
-	{
-		final FragmentManager fManager = getSupportFragmentManager();
-		fManager.popBackStack();
-
-		final FragmentTransaction fTransaction = fManager.beginTransaction();
-		fTransaction.remove(genericGameFragment);
-		fTransaction.commit();
-
-		isGenericGameFragmentEmpty = true;
-	}
-
-
-	@Override
 	public void gamesListFragmentOnNewGameSelected()
 	{
 		if (newGameFragment == null)
@@ -260,6 +229,18 @@ public class CentralFragmentActivity extends SherlockFragmentActivity
 		}
 
 		transitionToFragment(newGameFragment, R.id.central_fragment_activity_fragment_list);
+	}
+
+
+	@Override
+	public void genericGameFragmentOnAsyncGetGameCancelledListener()
+	{
+		final FragmentManager fManager = getSupportFragmentManager();
+		fManager.popBackStack();
+
+		final FragmentTransaction fTransaction = fManager.beginTransaction();
+		fTransaction.remove(genericGameFragment);
+		fTransaction.commit();
 	}
 
 
