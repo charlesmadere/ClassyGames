@@ -294,16 +294,16 @@ public abstract class GenericGameFragment extends SherlockFragment
 	@Override
 	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
 	{
-		menu.removeItem(R.id.games_list_fragment_primary_actionbar_about);
-		menu.removeItem(R.id.games_list_fragment_primary_actionbar_refresh);
+		menu.removeItem(R.id.games_list_fragment_primary_menu_about);
+		menu.removeItem(R.id.games_list_fragment_primary_menu_refresh);
 
 		if (isAsyncGetGameRunning)
 		{
-			inflater.inflate(R.menu.generic_game_fragment_secondary, menu);
+			inflater.inflate(R.menu.generic_cancel, menu);
 		}
 		else
 		{
-			inflater.inflate(R.menu.generic_game_fragment_primary, menu);
+			inflater.inflate(R.menu.generic_game_fragment, menu);
 		}
 
 		super.onCreateOptionsMenu(menu, inflater);
@@ -332,7 +332,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 				fTransaction.commit();
 				break;
 
-			case R.id.generic_game_fragment_actionbar_cancel:
+			case R.id.generic_cancel_menu_cancel:
 				if (isAsyncGetGameRunning)
 				{
 					asyncGetGame.cancel(true);
@@ -343,11 +343,11 @@ public abstract class GenericGameFragment extends SherlockFragment
 				}
 				break;
 
-			case R.id.generic_game_fragment_actionbar_send_move:
+			case R.id.generic_game_fragment_menu_send_move:
 				new AsyncSendMove(getSherlockActivity()).execute();
 				break;
 
-			case R.id.generic_game_fragment_actionbar_undo_move:
+			case R.id.generic_game_fragment_menu_undo_move:
 				undo();
 				break;
 
@@ -364,13 +364,13 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		if (!isAsyncGetGameRunning)
 		{
-			MenuItem menuItem = menu.findItem(R.id.generic_game_fragment_actionbar_send_move);
+			MenuItem menuItem = menu.findItem(R.id.generic_game_fragment_menu_send_move);
 			if (menuItem != null)
 			{
 				menuItem.setEnabled(boardLocked);
 			}
 
-			menuItem = menu.findItem(R.id.generic_game_fragment_actionbar_undo_move);
+			menuItem = menu.findItem(R.id.generic_game_fragment_menu_undo_move);
 			if (menuItem != null)
 			{
 				menuItem.setEnabled(boardLocked);
@@ -384,12 +384,9 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		super.onResume();
 
-		if (game != null)
-		{
-			final ActionBar actionBar = getSherlockActivity().getSupportActionBar();
-			actionBar.setDisplayHomeAsUpEnabled(true);
-			actionBar.setTitle(getString(getTitle()) + " " + game.getPerson().getName());
-		}
+		final ActionBar actionBar = getSherlockActivity().getSupportActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setTitle(getString(getTitle()) + " " + game.getPerson().getName());
 	}
 
 

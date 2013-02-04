@@ -2,6 +2,8 @@ package edu.selu.android.classygames;
 
 
 import android.app.Activity;
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -20,6 +22,27 @@ import edu.selu.android.classygames.utilities.Utilities;
 
 public class NewGameFragment extends SherlockListFragment
 {
+
+
+	/**
+	 * Boolean that marks if this is the first time that the onResume() method
+	 * was hit.
+	 */
+	private boolean isFirstOnResume = false;
+
+
+	/**
+	 * 
+	 */
+	private boolean isAsyncRefreshFriendsListRunning = false;
+
+
+	/**
+	 * 
+	 */
+	private AsyncRefreshFriendsList asyncRefreshFriendsList;
+
+
 
 
 	/**
@@ -97,7 +120,6 @@ public class NewGameFragment extends SherlockListFragment
 	public void onDestroyView()
 	{
 		super.onDestroyView();
-
 		newGameFragmentOnDestroyViewListener.newGameFragmentOnDestroyView();
 	}
 
@@ -116,7 +138,7 @@ public class NewGameFragment extends SherlockListFragment
 				fTransaction.commit();
 				break;
 
-			case R.id.new_game_fragment_actionbar_refresh:
+			case R.id.new_game_fragment_menu_refresh:
 				Utilities.easyToast(getSherlockActivity(), "other arrow");
 				break;
 
@@ -136,7 +158,54 @@ public class NewGameFragment extends SherlockListFragment
 		final ActionBar actionBar = getSherlockActivity().getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setTitle(R.string.new_game_fragment_title);
+
+		if (isFirstOnResume)
+		{
+			isFirstOnResume = false;
+			refreshFriendsList();
+		}
 	}
+
+
+
+
+	private void refreshFriendsList()
+	{
+		if (!isAsyncRefreshFriendsListRunning)
+		{
+			asyncRefreshFriendsList = new AsyncRefreshFriendsList(getSherlockActivity());
+			asyncRefreshFriendsList.execute();
+		}
+	}
+
+
+
+
+	private final class AsyncRefreshFriendsList extends AsyncTask<Void, Void, Void>
+	{
+
+
+
+
+		private Context context;
+
+
+		AsyncRefreshFriendsList(final Context context)
+		{
+			this.context = context;
+		}
+
+
+		@Override
+		protected Void doInBackground(final Void... params)
+		{
+			return null;
+		}
+
+
+	}
+
+
 
 
 }

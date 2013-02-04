@@ -48,7 +48,7 @@ public class GamesListFragment extends SherlockListFragment
 
 
 	/**
-	 * Boolean that marks if this is the first time that the onResume method
+	 * Boolean that marks if this is the first time that the onResume() method
 	 * was hit.
 	 */
 	private boolean isFirstOnResume = true;
@@ -155,11 +155,11 @@ public class GamesListFragment extends SherlockListFragment
 	{
 		if (isAsyncPopulateGamesListRunning)
 		{
-			inflater.inflate(R.menu.games_list_fragment_secondary, menu);
+			inflater.inflate(R.menu.generic_cancel, menu);
 		}
 		else
 		{
-			inflater.inflate(R.menu.games_list_fragment_primary, menu);
+			inflater.inflate(R.menu.games_list_fragment, menu);
 		}
 
 		super.onCreateOptionsMenu(menu, inflater);
@@ -179,21 +179,21 @@ public class GamesListFragment extends SherlockListFragment
 	{
 		switch (item.getItemId())
 		{
-			case R.id.games_list_fragment_primary_actionbar_about:
+			case R.id.games_list_fragment_primary_menu_about:
 				startActivity(new Intent(getSherlockActivity(), AboutActivity.class));
 				break;
 
-			case R.id.games_list_fragment_primary_actionbar_new_game:
+			case R.id.games_list_fragment_primary_menu_new_game:
 				// notify the parent Activity that the new game button in the
 				// action bar has been clicked
 				gamesListFragmentOnNewGameSelectedListener.gamesListFragmentOnNewGameSelected();
 				break;
 
-			case R.id.games_list_fragment_primary_actionbar_refresh:
+			case R.id.games_list_fragment_primary_menu_refresh:
 				refreshGamesList();
 				break;
 
-			case R.id.games_list_fragment_secondary_actionbar_cancel:
+			case R.id.generic_cancel_menu_cancel:
 				if (isAsyncPopulateGamesListRunning)
 				{
 					asyncPopulateGamesList.cancel(true);
@@ -222,8 +222,8 @@ public class GamesListFragment extends SherlockListFragment
 
 		if (isFirstOnResume)
 		{
-			refreshGamesList();
 			isFirstOnResume = false;
+			refreshGamesList();
 		}
 	}
 

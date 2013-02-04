@@ -2,8 +2,9 @@ package edu.selu.android.classygames;
 
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface.OnCancelListener;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -119,7 +120,7 @@ public class MainActivity extends SherlockActivity
 			if (state.equals(SessionState.OPENED))
 			// if the session state is open, show the authenticated activity
 			{
-				new AsyncGetFacebookIdentity(session).execute();
+				new AsyncGetFacebookIdentity(this, session).execute();
 			}
 		}
 	}
@@ -138,12 +139,14 @@ public class MainActivity extends SherlockActivity
 	{
 
 
+		private Context context;
 		private ProgressDialog progressDialog;
 		private Session session;
 
 
-		AsyncGetFacebookIdentity(final Session session)
+		AsyncGetFacebookIdentity(final Context context, final Session session)
 		{
+			this.context = context;
 			this.session = session;
 		}
 
@@ -188,7 +191,7 @@ public class MainActivity extends SherlockActivity
 		@Override
 		protected void onPostExecute(final Person facebookIdentity)
 		{
-			Utilities.setWhoAmI(MainActivity.this, facebookIdentity);
+			Utilities.setWhoAmI(context, facebookIdentity);
 
 			if (progressDialog.isShowing())
 			{
@@ -202,7 +205,7 @@ public class MainActivity extends SherlockActivity
 		@Override
 		protected void onPreExecute()
 		{
-			progressDialog = new ProgressDialog(MainActivity.this);
+			progressDialog = new ProgressDialog(context);
 			progressDialog.setCancelable(true);
 			progressDialog.setCanceledOnTouchOutside(false);
 			progressDialog.setMessage(getString(R.string.main_activity_get_facebook_identity_progressdialog_message));
