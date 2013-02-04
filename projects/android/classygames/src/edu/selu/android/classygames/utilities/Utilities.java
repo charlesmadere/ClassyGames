@@ -15,10 +15,12 @@ import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockActivity;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -72,6 +74,20 @@ public class Utilities
 	public final static String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE = FACEBOOK_GRAPH_API_URL_PICTURE + FACEBOOK_GRAPH_API_URL_PICTURE_TYPE + "square";
 	public final static String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE_SSL = FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE + "&" + FACEBOOK_GRAPH_API_URL_PICTURE_SSL;
 	// end facebook data
+
+
+
+
+	/**
+	 * Invalidates the options menu using the Android compatibility library.
+	 * 
+	 * @param sherlockActivity
+	 * getSherlockActivity()
+	 */
+	public static void compatInvalidateOptionsMenu(final SherlockActivity sherlockActivity)
+	{
+		ActivityCompat.invalidateOptionsMenu(sherlockActivity);
+	}
 
 
 	/**

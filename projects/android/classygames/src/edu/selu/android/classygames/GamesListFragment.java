@@ -252,10 +252,8 @@ public class GamesListFragment extends SherlockListFragment
 
 
 
-	private final class AsyncPopulateGamesList extends AsyncTask<Void, Integer, ArrayList<Game>>
+	private final class AsyncPopulateGamesList extends AsyncTask<Void, Void, ArrayList<Game>>
 	{
-
-
 
 
 		private Context context;
@@ -528,24 +526,20 @@ public class GamesListFragment extends SherlockListFragment
 		}
 
 
-
-
 	}
 
 
 
 
-	private class GamesListAdapter extends ArrayAdapter<Game>
+	private final class GamesListAdapter extends ArrayAdapter<Game>
 	{
-
-
 
 
 		private ArrayList<Game> games;
 		private Context context;
 
 
-		public GamesListAdapter(final Context context, final int textViewResourceId, final ArrayList<Game> games)
+		GamesListAdapter(final Context context, final int textViewResourceId, final ArrayList<Game> games)
 		{
 			super(context, textViewResourceId, games);
 			this.context = context;
@@ -612,7 +606,7 @@ public class GamesListFragment extends SherlockListFragment
 
 
 
-	private class GamesListSorter implements Comparator<Game>
+	private final class GamesListSorter implements Comparator<Game>
 	{
 		@Override
 		public int compare(final Game gameOne, final Game gameTwo)

@@ -689,8 +689,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 
 
-
-
 		private LayoutInflater inflater;
 		private ViewGroup viewGroup;
 
@@ -764,8 +762,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 		}
 
 
-
-
 	}
 
 
@@ -777,8 +773,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 */
 	private final class AsyncSendMove extends AsyncTask<Void, Void, String>
 	{
-
-
 
 
 		private Context context;
@@ -968,8 +962,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 			return jsonTeam;
 		}
-
-
 
 
 	}

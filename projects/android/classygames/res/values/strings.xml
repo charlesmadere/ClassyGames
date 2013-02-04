@@ -131,9 +131,11 @@
 	<string name="main_activity_get_facebook_identity_progressdialog_title">Classy Games is working&#8230;</string>
 	<string name="main_activity_title">Classy Games</string>
 	<string name="new_game">New Game</string>
+	<string name="new_game_fragment_cancelled_text">Cancelled loading your Friends List!</string>
 	<string name="new_game_fragment_data_error">Error in trying to gather your Facebook data.</string>
 	<string name="new_game_fragment_listview_item_picture_description">Friend\'s Picture</string>
 	<string name="new_game_fragment_listview_no_friends">Well you don\'t seem to have any Facebook friends. In order to play Classy Games you must have some Facebook friends.</string>
+	<string name="new_game_fragment_loading_text">Loading your Friends List&#8230;</string>
 	<string name="new_game_fragment_progressdialog_message">Retrieving all of your Facebook friends&#8230;</string>
 	<string name="new_game_fragment_progressdialog_title">Facebook is working&#8230;</string>
 	<string name="new_game_fragment_title">New Game</string>
