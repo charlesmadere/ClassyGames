@@ -21,7 +21,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 		GamesListFragment.GamesListFragmentOnDestroyViewListener,
 		GamesListFragment.GamesListFragmentOnGameSelectedListener,
 		GamesListFragment.GamesListFragmentOnNewGameSelectedListener,
-		GenericGameFragment.GenericGameFragmentOnAsyncGetGameCancelledListener,
+		GenericGameFragment.GenericGameFragmentOnAsyncGetGameOnCancelledListener,
 		GenericGameFragment.GenericGameFragmentOnDataErrorListener,
 		GenericGameFragment.GenericGameFragmentOnDestroyViewListener,
 		NewGameFragment.NewGameFragmentOnDestroyViewListener
@@ -171,8 +171,11 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	 * central_fragment_activity_fragment_list for the smaller, left side of
 	 * screen or central_fragment_activity_fragment_game for the bigger, right
 	 * side of the screen.
+	 * 
+	 * @param fragmentTransition
+	 * The transition animation to display.
 	 */
-	private void transitionToFragment(final Fragment fragment, final int largeLayout)
+	private void transitionToFragment(final Fragment fragment, final int largeLayout, final int fragmentTransition)
 	{
 		final FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
 
@@ -186,24 +189,43 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 		}
 
 		fTransaction.addToBackStack(null);
-		fTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+		fTransaction.setTransition(fragmentTransition);
 		fTransaction.commit();
 	}
 
 
-
-
-	@Override
-	public void gamesListFragmentOnDestroyView()
+	/**
+	 * Transitions either a part of the device's screen or a part of the
+	 * device's screen to the given fragment. A large device will have only
+	 * part of the screen occupied by the given fragment while a smaller device
+	 * (a phone most likely) will have the entire screen occupied.
+	 * 
+	 * @param fragment
+	 * The Fragment to transition to.
+	 * 
+	 * @param largeLayout
+	 * In the case that this is a large device, what portion of the screen do
+	 * you want the given fragment to occupy? Use
+	 * central_fragment_activity_fragment_list for the smaller, left side of
+	 * screen or central_fragment_activity_fragment_game for the bigger, right
+	 * side of the screen.
+	 */
+	private void transitionToFragment(final Fragment fragment, final int largeLayout)
 	{
-		finish();
+		transitionToFragment(fragment, largeLayout, FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 	}
 
 
-	@Override
-	public void gameListFragmentOnGameSelected(final Game game)
+	/**
+	 * Checks to see if the given Fragment is both not null and visible. If
+	 * that is the case then the given Fragment will be removed.
+	 * 
+	 * @param fragment
+	 * The Fragment to check and then possibly remove.
+	 */
+	private void removeFragment(final Fragment fragment)
 	{
-		if (genericGameFragment != null && genericGameFragment.isVisible())
+		if (fragment != null && fragment.isVisible())
 		{
 			final FragmentManager fManager = getSupportFragmentManager();
 			fManager.popBackStack();
@@ -212,6 +234,22 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 			fTransaction.remove(genericGameFragment);
 			fTransaction.commit();
 		}
+	}
+
+
+
+
+	@Override
+	public void gamesListFragmentOnDestroyView()
+	{
+
+	}
+
+
+	@Override
+	public void gameListFragmentOnGameSelected(final Game game)
+	{
+		removeFragment(genericGameFragment);
 
 		// if a future release of Classy Games has chess as well as checkers,
 		// then we will need to do some logic here to check the game type and
@@ -231,17 +269,15 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	public void gamesListFragmentOnNewGameSelected()
 	{
-		if (newGameFragment == null)
-		{
-			newGameFragment = new NewGameFragment();
-		}
+		removeFragment(genericGameFragment);
 
+		newGameFragment = new NewGameFragment();
 		transitionToFragment(newGameFragment, R.id.central_fragment_activity_fragment_list);
 	}
 
 
 	@Override
-	public void genericGameFragmentOnAsyncGetGameCancelled()
+	public void genericGameFragmentOnAsyncGetGameOnCancelled()
 	{
 		final FragmentManager fManager = getSupportFragmentManager();
 		fManager.popBackStack();
@@ -255,17 +291,8 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	public void genericGameFragmentOnDataError()
 	{
-		if (genericGameFragment.isVisible())
-		{
-			final FragmentManager fManager = getSupportFragmentManager();
-			fManager.popBackStack();
-
-			final FragmentTransaction fTransaction = fManager.beginTransaction();
-			fTransaction.remove(genericGameFragment);
-			fTransaction.commit();
-
-			Utilities.easyToastAndLogError(this, "Couldn't create a game as malformed data was detected!");
-		}
+		removeFragment(genericGameFragment);
+		Utilities.easyToastAndLogError(this, "Couldn't create a game as malformed data was detected!");
 	}
 
 

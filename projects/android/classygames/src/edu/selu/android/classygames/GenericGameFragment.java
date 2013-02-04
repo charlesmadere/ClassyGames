@@ -152,11 +152,11 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * One of this class's callback methods. This is fired in the event that
 	 * the user cancels the AsyncGetGame AsyncTask.
 	 */
-	private GenericGameFragmentOnAsyncGetGameCancelledListener genericGameFragmentOnAsyncGetGameCancelledListener;
+	private GenericGameFragmentOnAsyncGetGameOnCancelledListener genericGameFragmentOnAsyncGetGameOnCancelledListener;
 
-	public interface GenericGameFragmentOnAsyncGetGameCancelledListener
+	public interface GenericGameFragmentOnAsyncGetGameOnCancelledListener
 	{
-		public void genericGameFragmentOnAsyncGetGameCancelled();
+		public void genericGameFragmentOnAsyncGetGameOnCancelled();
 	}
 
 
@@ -206,7 +206,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 	public void onActivityCreated(final Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
-
 		final Bundle arguments = getArguments();
 
 		if (arguments == null || arguments.isEmpty())
@@ -281,7 +280,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 		try
 		{
-			genericGameFragmentOnAsyncGetGameCancelledListener = (GenericGameFragmentOnAsyncGetGameCancelledListener) activity;
+			genericGameFragmentOnAsyncGetGameOnCancelledListener = (GenericGameFragmentOnAsyncGetGameOnCancelledListener) activity;
 			genericGameFragmentOnDataErrorListener = (GenericGameFragmentOnDataErrorListener) activity;
 			genericGameFragmentOnDestroyViewListener = (GenericGameFragmentOnDestroyViewListener) activity;
 		}
@@ -295,7 +294,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 	@Override
 	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
 	{
-		menu.clear();
+		menu.removeItem(R.id.games_list_fragment_primary_actionbar_about);
+		menu.removeItem(R.id.games_list_fragment_primary_actionbar_refresh);
 
 		if (isAsyncGetGameRunning)
 		{
@@ -364,15 +364,16 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		if (!isAsyncGetGameRunning)
 		{
-			if (boardLocked)
+			MenuItem menuItem = menu.findItem(R.id.generic_game_fragment_actionbar_send_move);
+			if (menuItem != null)
 			{
-				menu.findItem(R.id.generic_game_fragment_actionbar_send_move).setEnabled(true);
-				menu.findItem(R.id.generic_game_fragment_actionbar_undo_move).setEnabled(true);
+				menuItem.setEnabled(boardLocked);
 			}
-			else
+
+			menuItem = menu.findItem(R.id.generic_game_fragment_actionbar_undo_move);
+			if (menuItem != null)
 			{
-				menu.findItem(R.id.generic_game_fragment_actionbar_send_move).setEnabled(false);
-				menu.findItem(R.id.generic_game_fragment_actionbar_undo_move).setEnabled(false);
+				menuItem.setEnabled(boardLocked);
 			}
 		}
 	}
@@ -733,7 +734,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		{
 			isAsyncGetGameRunning = false;
 			compatInvalidateOptionsMenu();
-			genericGameFragmentOnAsyncGetGameCancelledListener.genericGameFragmentOnAsyncGetGameCancelled();
+			genericGameFragmentOnAsyncGetGameOnCancelledListener.genericGameFragmentOnAsyncGetGameOnCancelled();
 		}
 
 
