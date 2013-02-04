@@ -16,7 +16,7 @@
 		android:layout_height="46dip"
 		android:layout_marginRight="16dip"
 		android:layout_width="46dip"
-		android:scaleType="centerInside"
+		android:scaleType="centerCrop"
 		android:src="@drawable/fb_placeholder" />
 	<TextView
 		android:ellipsize="end"

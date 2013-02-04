@@ -12,6 +12,7 @@ import android.os.Bundle;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Window;
 import com.facebook.Request;
+import com.facebook.Request.GraphUserCallback;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
@@ -158,16 +159,13 @@ public class MainActivity extends SherlockActivity
 
 			if (!isCancelled())
 			{
-				Request.newMeRequest(session, new Request.GraphUserCallback()
+				Request.newMeRequest(session, new GraphUserCallback()
 				{
 					@Override
 					public void onCompleted(final GraphUser user, final Response response)
 					{
-						if (!isCancelled())
-						{
-							facebookIdentity.setId(user.getId());
-							facebookIdentity.setName(user.getName());
-						}
+						facebookIdentity.setId(user.getId());
+						facebookIdentity.setName(user.getName());
 					}
 				}).executeAndWait();
 			}

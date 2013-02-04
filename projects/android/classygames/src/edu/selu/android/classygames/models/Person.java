@@ -54,7 +54,7 @@ public class Person
 	 * The Facebook ID of the user.
 	 * 
 	 * @param name
-	 * The name of the user. This should also be taken from Facebook.
+	 * The Facebook name of the user.
 	 */
 	public Person(final long id, final String name)
 	{
@@ -70,7 +70,7 @@ public class Person
 	 * The Facebook ID of the user.
 	 * 
 	 * @param name
-	 * The name of the user. This should also be taken from Facebook.
+	 * The Facebook name of the user.
 	 */
 	public Person(final String id, final String name)
 	{
@@ -244,6 +244,38 @@ public class Person
 	/**
 	 * When Facebook IDs are acquired throughout the app's runtime they should
 	 * be checked for validity. Use this method to check for that validity.
+	 * Valid means three things:
+	 * <ol>
+	 * <li>This String is not null.</li>
+	 * <li>This String is not empty.</li>
+	 * <li>This String, when converted into a long, is greater than or equal to
+	 * 1.</li>
+	 * </ol>
+	 * 
+	 * @param id
+	 * The Facebook ID to check for validity. This parameter is converted into
+	 * a long. This String is 
+	 * 
+	 * @return
+	 * Returns true if the above condition is true. Returns false if the above
+	 * condition is false.
+	 */
+	public static boolean isIdValid(final String id)
+	{
+		if (id == null || id.isEmpty())
+		{
+			return false;
+		}
+		else
+		{
+			return isIdValid(Long.parseLong(id));
+		}
+	}
+
+
+	/**
+	 * When Facebook IDs are acquired throughout the app's runtime they should
+	 * be checked for validity. Use this method to check for that validity.
 	 * This method allows you to check a whole bunch of IDs at once. If any
 	 * single ID that is passed in is invalid, then this method will cease to
 	 * check the rest and will immediately return false.
@@ -256,6 +288,34 @@ public class Person
 	 * valid. Returns false if <strong>any single</strong> ID is invalid.
 	 */
 	public static boolean areIdsValid(final long... ids)
+	{
+		for (int i = 0; i < ids.length; ++i)
+		{
+			if (!isIdValid(ids[i]))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+
+	/**
+	 * When Facebook IDs are acquired throughout the app's runtime they should
+	 * be checked for validity. Use this method to check for that validity.
+	 * This method allows you to check a whole bunch of IDs at once. If any
+	 * single ID that is passed in is invalid, then this method will cease to
+	 * check the rest and will immediately return false.
+	 * 
+	 * @param ids
+	 * The Facebook IDs to check for validity.
+	 * 
+	 * @return
+	 * Returns true if <strong>all</strong> of the passed in Facebook IDs are
+	 * valid. Returns false if <strong>any single</strong> ID is invalid.
+	 */
+	public static boolean areIdsValid(final String... ids)
 	{
 		for (int i = 0; i < ids.length; ++i)
 		{

@@ -2,7 +2,9 @@ package edu.selu.android.classygames;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
@@ -24,6 +26,11 @@ import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.facebook.Request;
+import com.facebook.Request.GraphUserListCallback;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.model.GraphUser;
 
 import edu.selu.android.classygames.models.Person;
 import edu.selu.android.classygames.utilities.Utilities;
@@ -37,7 +44,7 @@ public class NewGameFragment extends SherlockListFragment
 	 * Boolean that marks if this is the first time that the onResume() method
 	 * was hit.
 	 */
-	private boolean isFirstOnResume = false;
+	private boolean isFirstOnResume = true;
 
 
 	/**
@@ -245,11 +252,31 @@ public class NewGameFragment extends SherlockListFragment
 		@Override
 		protected ArrayList<Person> doInBackground(final Void... params)
 		{
-			ArrayList<Person> friends = null;
+			final ArrayList<Person> friends = new ArrayList<Person>();
 
 			if (!isCancelled())
 			{
+				Request.newMyFriendsRequest(Session.getActiveSession(), new GraphUserListCallback()
+				{
+					@Override
+					public void onCompleted(final List<GraphUser> users, final Response response)
+					{
+						for (int i = 0; i < users.size() && !isCancelled(); ++i)
+						{
+							final GraphUser user = users.get(i);
+							final String id = user.getId();
+							final String name = user.getName();
 
+							if (Person.isIdValid(id) && Person.isNameValid(name))
+							{
+								final Person friend = new Person(id, name);
+								friends.add(friend);
+							}
+						}
+
+						Collections.sort(friends, new FriendsListSorter());
+					}
+				}).executeAndWait();
 			}
 
 			return friends;
@@ -332,6 +359,7 @@ public class NewGameFragment extends SherlockListFragment
 			final ViewHolder viewHolder = (ViewHolder) convertView.getTag();
 			final Person friend = friends.get(position);
 			viewHolder.name.setText(friend.getName());
+			viewHolder.name.setTypeface(Utilities.getTypeface(context.getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D));
 			Utilities.getImageLoader(context).displayImage(Utilities.FACEBOOK_GRAPH_API_URL + friend.getId() + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SMALL_SSL, viewHolder.picture);
 
 			return convertView;
