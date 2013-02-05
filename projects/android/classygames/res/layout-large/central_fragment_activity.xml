@@ -5,11 +5,12 @@
 	android:layout_width="match_parent"
 	android:orientation="horizontal"
 	style="@style/ClassyGames">
-	<FrameLayout
-		android:id="@+id/central_fragment_activity_fragment_list"
+	<fragment
+		android:id="@+id/central_fragment_activity_fragment_games_list_fragment"
 		android:layout_height="match_parent"
 		android:layout_weight="4"
-		android:layout_width="0dip" />
+		android:layout_width="0dip"
+		android:name="edu.selu.android.classygames.GamesListFragment" />
 	<FrameLayout
 		android:id="@+id/central_fragment_activity_fragment_game"
 		android:layout_height="match_parent"

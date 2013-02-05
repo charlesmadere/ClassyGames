@@ -17,12 +17,13 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 	ConfirmGameFragment.ConfirmGameFragmentOnDataErrorListener,
 	ConfirmGameFragment.ConfirmGameFragmentOnGameConfirmListener,
 	ConfirmGameFragment.ConfirmGameFragmentOnGameDenyListener,
-	FriendsListFragment.FriendsListFragmentOnFriendSelectedListener
+	FriendsListFragment.FriendsListFragmentOnFriendSelectedListener,
+	FriendsListFragment.FriendsListFragmentOnRefreshSelectedListener
 {
 
 
 	public final static int RESULT_CODE_DEFAULT = 0;
-	public final static int RESULT_CODE_FRIEND_SELECTED = CentralFragmentActivity.NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE;
+	public final static int RESULT_CODE_FRIEND_SELECTED = CentralFragmentActivity.NEW_GAME_FRAGMENT_ACTIVITY_FRIEND_SELECTED;
 
 
 	ConfirmGameFragment confirmGameFragment;
@@ -51,7 +52,6 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 			else
 			{
 				friendsListFragment = new FriendsListFragment();
-
 				final FragmentTransaction fTransaction = fManager.beginTransaction();
 				fTransaction.add(R.id.new_game_fragment_activity_container, friendsListFragment);
 				fTransaction.commit();
@@ -97,6 +97,8 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 
 		return true;
 	}
+
+
 
 
 	/**
@@ -180,6 +182,23 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 		}
 
 		fTransaction.commit();
+	}
+
+
+	@Override
+	public void friendsListFragmentOnRefreshSelected()
+	{
+		if (isDeviceLarge())
+		{
+			confirmGameFragment = new ConfirmGameFragment();
+
+			final FragmentManager fManager = getSupportFragmentManager();
+			fManager.popBackStack();
+
+			final FragmentTransaction fTransaction = fManager.beginTransaction();
+			fTransaction.replace(R.id.new_game_fragment_activity_fragment_confirm_game_fragment, confirmGameFragment);
+			fTransaction.commit();
+		}
 	}
 
 

@@ -70,7 +70,7 @@ public class FriendsListFragment extends SherlockListFragment
 
 
 	/**
-	 * One of this class's callback methods. This is fired whenever the user
+	 * One of this class's callback methods. This is fired whenever the use
 	 * has selected a friend in their friends list.
 	 */
 	private FriendsListFragmentOnFriendSelectedListener friendsListFragmentOnFriendSelectedListener;
@@ -78,6 +78,18 @@ public class FriendsListFragment extends SherlockListFragment
 	public interface FriendsListFragmentOnFriendSelectedListener
 	{
 		public void friendsListFragmentOnFriendSelected(final Person friend);
+	}
+
+
+	/**
+	 * One of this class's callback methods. This is fired whenever the user
+	 * has selected the Refresh button on the action bar.
+	 */
+	private FriendsListFragmentOnRefreshSelectedListener friendsListFragmentOnRefreshSelectedListener;
+
+	public interface FriendsListFragmentOnRefreshSelectedListener
+	{
+		public void friendsListFragmentOnRefreshSelected();
 	}
 
 
@@ -109,6 +121,7 @@ public class FriendsListFragment extends SherlockListFragment
 		try
 		{
 			friendsListFragmentOnFriendSelectedListener = (FriendsListFragmentOnFriendSelectedListener) activity;
+			friendsListFragmentOnRefreshSelectedListener = (FriendsListFragmentOnRefreshSelectedListener) activity;
 		}
 		catch (final ClassCastException e)
 		{
@@ -146,15 +159,6 @@ public class FriendsListFragment extends SherlockListFragment
 	{
 		switch (item.getItemId())
 		{
-			case android.R.id.home:
-				final FragmentManager fManager = getSherlockActivity().getSupportFragmentManager();
-				fManager.popBackStack();
-
-				final FragmentTransaction fTransaction = fManager.beginTransaction();
-				fTransaction.remove(this);
-				fTransaction.commit();
-				break;
-
 			case R.id.generic_cancel_menu_cancel:
 				if (isAsyncRefreshFriendsListRunning)
 				{
@@ -163,6 +167,7 @@ public class FriendsListFragment extends SherlockListFragment
 				break;
 
 			case R.id.generic_refresh_menu_refresh:
+				friendsListFragmentOnRefreshSelectedListener.friendsListFragmentOnRefreshSelected();
 				refreshFriendsList();
 				break;
 

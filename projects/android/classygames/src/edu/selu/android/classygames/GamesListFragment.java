@@ -47,6 +47,8 @@ public class GamesListFragment extends SherlockListFragment
 	private final static String LOG_TAG = Utilities.LOG_TAG + " - GamesListFragment";
 
 
+
+
 	/**
 	 * Boolean that marks if this is the first time that the onResume() method
 	 * was hit.

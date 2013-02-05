@@ -18,16 +18,15 @@ import edu.selu.android.classygames.utilities.Utilities;
 
 
 public class CentralFragmentActivity extends SherlockFragmentActivity implements
-		GamesListFragment.GamesListFragmentOnDestroyViewListener,
 		GamesListFragment.GamesListFragmentOnGameSelectedListener,
-		GamesListFragment.GamesListFragmentOnNewGameSelectedListener,
 		GenericGameFragment.GenericGameFragmentOnAsyncGetGameOnCancelledListener,
 		GenericGameFragment.GenericGameFragmentOnDataErrorListener,
 		GenericGameFragment.GenericGameFragmentOnDestroyViewListener
 {
 
 
-	public final static int NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE = 64;
+	public final static int RESULT_CODE_DEFAULT = 0;
+	public final static int NEW_GAME_FRAGMENT_ACTIVITY_FRIEND_SELECTED = 16;
 
 
 	private UiLifecycleHelper uiHelper;
@@ -47,7 +46,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.central_fragment_activity);
-		setResult(MainActivity.CENTRAL_FRAGMENT_ACTIVITY_RESULT_CODE);
+		setResult(RESULT_CODE_DEFAULT);
 		Utilities.styleActionBar(getResources(), getSupportActionBar(), false);
 
 		sessionStatusCallback = new Session.StatusCallback()
@@ -64,19 +63,21 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 
 		if (savedInstanceState == null)
 		{
-			gamesListFragment = new GamesListFragment();
 			emptyGameFragment = new EmptyGameFragment();
 
-			final FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
+			final FragmentManager fManager = getSupportFragmentManager();
+			final FragmentTransaction fTransaction = fManager.beginTransaction();
 
 			if (isDeviceLarge())
 			{
-				fTransaction.add(R.id.central_fragment_activity_fragment_list, gamesListFragment);
+				gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.central_fragment_activity_fragment_games_list_fragment);
 				fTransaction.add(R.id.central_fragment_activity_fragment_game, emptyGameFragment);
 			}
 			else
 			{
+				gamesListFragment = new GamesListFragment();
 				fTransaction.add(R.id.central_fragment_activity_container, gamesListFragment);
+				fTransaction.commit();
 			}
 
 			fTransaction.commit();
@@ -241,13 +242,6 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 
 
 	@Override
-	public void gamesListFragmentOnDestroyView()
-	{
-
-	}
-
-
-	@Override
 	public void gameListFragmentOnGameSelected(final Game game)
 	{
 		removeFragment(genericGameFragment);
@@ -264,13 +258,6 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 		genericGameFragment.setArguments(arguments);
 
 		transitionToFragment(genericGameFragment, R.id.central_fragment_activity_fragment_game);
-	}
-
-
-	@Override
-	public void gamesListFragmentOnNewGameSelected()
-	{
-		startActivityForResult(new Intent(this, NewGameFragmentActivity.class), NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE);
 	}
 
 
