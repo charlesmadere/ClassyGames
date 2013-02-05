@@ -82,6 +82,11 @@
 			android:theme="@style/Theme.Styled" />
 
 		<activity
+			android:label="@string/new_game_fragment_activity_title"
+			android:name=".NewGameFragmentActivity"
+			android:theme="@style/Theme.Styled" />
+
+		<activity
 			android:label="@string/about_activity_title"
 			android:name=".AboutActivity"
 			android:theme="@style/Theme.Styled" />

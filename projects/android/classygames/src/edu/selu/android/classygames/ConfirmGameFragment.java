@@ -16,8 +16,7 @@ public class ConfirmGameFragment extends SherlockFragment
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{
-
-		return super.onCreateView(inflater, container, savedInstanceState);
+		return inflater.inflate(R.layout.confirm_game_fragment, null);
 	}
 
 

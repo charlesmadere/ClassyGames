@@ -1,13 +1,12 @@
 package edu.selu.android.classygames;
 
 
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Window;
@@ -34,6 +33,20 @@ public class MainActivity extends SherlockActivity
 	private Session.StatusCallback sessionStatusCallback;
 
 	private boolean isResumed = false;
+
+
+	/**
+	 * Boolean that marks if the AsyncGetFacebookIdentity AsyncTask is
+	 * currently running. This is used in conjunction with cancelling that
+	 * AsyncTask.
+	 */
+	private boolean isAsyncGetFacebookIdentityRunning = false;
+
+
+	/**
+	 * Used to obtain the current user's Facebook identity.
+	 */
+	private AsyncGetFacebookIdentity asyncGetFacebookIdentity;
 
 
 
@@ -68,6 +81,20 @@ public class MainActivity extends SherlockActivity
 		if (resultCode == CENTRAL_FRAGMENT_ACTIVITY_RESULT_CODE)
 		{
 			finish();
+		}
+	}
+
+
+	@Override
+	public void onBackPressed()
+	{
+		if (isAsyncGetFacebookIdentityRunning)
+		{
+			asyncGetFacebookIdentity.cancel(true);
+		}
+		else
+		{
+			super.onBackPressed();
 		}
 	}
 
@@ -121,7 +148,8 @@ public class MainActivity extends SherlockActivity
 			if (state.equals(SessionState.OPENED))
 			// if the session state is open, show the authenticated activity
 			{
-				new AsyncGetFacebookIdentity(this, session).execute();
+				asyncGetFacebookIdentity = new AsyncGetFacebookIdentity(this, (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE), session, (ViewGroup) findViewById(R.id.main_activity_listview));
+				asyncGetFacebookIdentity.execute();
 			}
 		}
 	}
@@ -141,14 +169,17 @@ public class MainActivity extends SherlockActivity
 
 
 		private Context context;
-		private ProgressDialog progressDialog;
+		private LayoutInflater inflater;
 		private Session session;
+		private ViewGroup viewGroup;
 
 
-		AsyncGetFacebookIdentity(final Context context, final Session session)
+		AsyncGetFacebookIdentity(final Context context, final LayoutInflater inflater, final Session session, final ViewGroup viewGroup)
 		{
 			this.context = context;
+			this.inflater = inflater;
 			this.session = session;
+			this.viewGroup = viewGroup;
 		}
 
 
@@ -178,11 +209,10 @@ public class MainActivity extends SherlockActivity
 		protected void onCancelled(final Person facebookIdentity)
 		{
 			session.closeAndClearTokenInformation();
+			viewGroup.removeAllViews();
+			isAsyncGetFacebookIdentityRunning = false;
 
-			if (progressDialog.isShowing())
-			{
-				progressDialog.dismiss();
-			}
+			finish();
 		}
 
 
@@ -190,11 +220,8 @@ public class MainActivity extends SherlockActivity
 		protected void onPostExecute(final Person facebookIdentity)
 		{
 			Utilities.WhoAmIUtilities.setWhoAmI(context, facebookIdentity);
-
-			if (progressDialog.isShowing())
-			{
-				progressDialog.dismiss();
-			}
+			viewGroup.removeAllViews();
+			isAsyncGetFacebookIdentityRunning = false;
 
 			startCentralFragmentActivity();
 		}
@@ -203,22 +230,9 @@ public class MainActivity extends SherlockActivity
 		@Override
 		protected void onPreExecute()
 		{
-			progressDialog = new ProgressDialog(context);
-			progressDialog.setCancelable(true);
-			progressDialog.setCanceledOnTouchOutside(false);
-			progressDialog.setMessage(getString(R.string.main_activity_get_facebook_identity_progressdialog_message));
-
-			progressDialog.setOnCancelListener(new OnCancelListener()
-			{
-				@Override
-				public void onCancel(final DialogInterface dialog)
-				{
-					AsyncGetFacebookIdentity.this.cancel(true);
-				}
-			});
-
-			progressDialog.setTitle(R.string.main_activity_get_facebook_identity_progressdialog_title);
-			progressDialog.show();
+			isAsyncGetFacebookIdentityRunning = true;
+			viewGroup.removeAllViews();
+			inflater.inflate(R.layout.main_activity_loading, viewGroup);
 		}
 
 

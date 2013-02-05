@@ -224,7 +224,7 @@ public class FriendsListFragment extends SherlockListFragment
 	{
 		if (!isAsyncRefreshFriendsListRunning)
 		{
-			asyncRefreshFriendsList = new AsyncRefreshFriendsList(getSherlockActivity(), getLayoutInflater(getArguments()), (ViewGroup) getView());
+			asyncRefreshFriendsList = new AsyncRefreshFriendsList(getSherlockActivity(), getLayoutInflater(getArguments()), Session.getActiveSession(), (ViewGroup) getView());
 			asyncRefreshFriendsList.execute();
 		}
 	}
@@ -238,13 +238,15 @@ public class FriendsListFragment extends SherlockListFragment
 
 		private Context context;
 		private LayoutInflater inflater;
+		private Session session;
 		private ViewGroup viewGroup;
 
 
-		AsyncRefreshFriendsList(final Context context, final LayoutInflater inflater, final ViewGroup viewGroup)
+		AsyncRefreshFriendsList(final Context context, final LayoutInflater inflater, final Session session, final ViewGroup viewGroup)
 		{
 			this.context = context;
 			this.inflater = inflater;
+			this.session = session;
 			this.viewGroup = viewGroup;
 		}
 
@@ -256,7 +258,7 @@ public class FriendsListFragment extends SherlockListFragment
 
 			if (!isCancelled())
 			{
-				Request.newMyFriendsRequest(Session.getActiveSession(), new GraphUserListCallback()
+				Request.newMyFriendsRequest(session, new GraphUserListCallback()
 				{
 					@Override
 					public void onCompleted(final List<GraphUser> users, final Response response)

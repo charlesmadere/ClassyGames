@@ -28,7 +28,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 {
 
 
-	public final static int NEW_GAME_FRAGMENT_ACTIVITY_RESULT_CODE = 64;
+	public final static int NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE = 64;
 
 
 	private UiLifecycleHelper uiHelper;
@@ -271,7 +271,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	public void gamesListFragmentOnNewGameSelected()
 	{
-		startActivityForResult(new Intent(this, NewGameFragmentActivity.class), NEW_GAME_FRAGMENT_ACTIVITY_RESULT_CODE);
+		startActivityForResult(new Intent(this, NewGameFragmentActivity.class), NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE);
 	}
 
 
