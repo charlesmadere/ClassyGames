@@ -24,8 +24,11 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 		GenericGameFragment.GenericGameFragmentOnAsyncGetGameOnCancelledListener,
 		GenericGameFragment.GenericGameFragmentOnDataErrorListener,
 		GenericGameFragment.GenericGameFragmentOnDestroyViewListener,
-		NewGameFragment.NewGameFragmentOnDestroyViewListener
+		FriendsListFragment.NewGameFragmentOnDestroyViewListener
 {
+
+
+	public final static int NEW_GAME_FRAGMENT_ACTIVITY_RESULT_CODE = 64;
 
 
 	private UiLifecycleHelper uiHelper;
@@ -36,7 +39,6 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	private EmptyGameFragment emptyGameFragment;
 	private GamesListFragment gamesListFragment;
 	private GenericGameFragment genericGameFragment;
-	private NewGameFragment newGameFragment;
 
 
 
@@ -269,10 +271,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	public void gamesListFragmentOnNewGameSelected()
 	{
-		removeFragment(genericGameFragment);
-
-		newGameFragment = new NewGameFragment();
-		transitionToFragment(newGameFragment, R.id.central_fragment_activity_fragment_list);
+		startActivityForResult(new Intent(this, NewGameFragmentActivity.class), NEW_GAME_FRAGMENT_ACTIVITY_RESULT_CODE);
 	}
 
 

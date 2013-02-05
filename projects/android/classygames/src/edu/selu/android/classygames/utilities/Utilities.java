@@ -1,11 +1,6 @@
 package edu.selu.android.classygames.utilities;
 
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
@@ -13,7 +8,6 @@ import android.content.res.Resources;
 import android.graphics.Shader.TileMode;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
@@ -29,6 +23,9 @@ import edu.selu.android.classygames.R;
 import edu.selu.android.classygames.models.Person;
 
 
+/**
+ * Class filled with a bunch of miscellaneous utility methods and constants.
+ */
 public class Utilities
 {
 
@@ -36,44 +33,205 @@ public class Utilities
 	public final static String LOG_TAG = "Classy Games";
 	public final static String SHARED_PREFERENCES_NAME = "CLASSY_PREFERENCES";
 
-	private static Person whoAmI;
-	private final static String WHO_AM_I_ID = "WHO_AM_I_ID";
-	private final static String WHO_AM_I_NAME = "WHO_AM_I_NAME";
-
 	private static ImageLoader imageLoader;
 
 
-	// typeface data below
-	public final static byte TYPEFACE_BLUE_HIGHWAY_D = 0;
-	public final static byte TYPEFACE_BLUE_HIGHWAY_RG = 1;
-	public final static byte TYPEFACE_SNELL_ROUNDHAND_BDSCR = 10;
-	public final static byte TYPEFACE_SNELL_ROUNDHAND_BLKSCR = 11;
-	private final static String TYPEFACE_PATH = "fonts/";
-	private final static String TYPEFACE_BLUE_HIGHWAY_D_PATH = TYPEFACE_PATH + "blue_highway_d.ttf";
-	private final static String TYPEFACE_BLUE_HIGHWAY_RD_PATH = TYPEFACE_PATH + "blue_highway_rg.ttf";
-	private final static String TYPEFACE_SNELL_ROUNDHAND_BDSCR_PATH = TYPEFACE_PATH + "snell_roundhand_bdscr.otf";
-	private final static String TYPEFACE_SNELL_ROUNDHAND_BLKSCR_PATH = TYPEFACE_PATH + "snell_roundhand_blkscr.otf";
-	private static Typeface typefaceBlueHighwayD;
-	private static Typeface typefaceBlueHighwayRG;
-	private static Typeface typefaceSnellRoundHandBDSCR;
-	private static Typeface typefaceSnellRoundHandBLKSCR;
-	// end typeface data
 
 
-	// facebook data below
-	public final static String FACEBOOK_GRAPH_API_URL = "https://graph.facebook.com/";
-	public final static String FACEBOOK_GRAPH_API_URL_PICTURE = "/picture";
-	public final static String FACEBOOK_GRAPH_API_URL_PICTURE_SSL = "return_ssl_resources=1";
-	public final static String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE = "?type=";
-	public final static String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_LARGE = FACEBOOK_GRAPH_API_URL_PICTURE + FACEBOOK_GRAPH_API_URL_PICTURE_TYPE + "large";
-	public final static String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_LARGE_SSL = FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_LARGE + "&" + FACEBOOK_GRAPH_API_URL_PICTURE_SSL;
-	public final static String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_NORMAL = FACEBOOK_GRAPH_API_URL_PICTURE + FACEBOOK_GRAPH_API_URL_PICTURE_TYPE + "normal";
-	public final static String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_NORMAL_SSL = FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_NORMAL + "&" + FACEBOOK_GRAPH_API_URL_PICTURE_SSL;
-	public final static String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SMALL = FACEBOOK_GRAPH_API_URL_PICTURE + FACEBOOK_GRAPH_API_URL_PICTURE_TYPE + "small";
-	public final static String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SMALL_SSL = FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SMALL + "&" + FACEBOOK_GRAPH_API_URL_PICTURE_SSL;
-	public final static String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE = FACEBOOK_GRAPH_API_URL_PICTURE + FACEBOOK_GRAPH_API_URL_PICTURE_TYPE + "square";
-	public final static String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE_SSL = FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE + "&" + FACEBOOK_GRAPH_API_URL_PICTURE_SSL;
-	// end facebook data
+	/**
+	 * Class for constants and methods relating to Facebook.
+	 */
+	public final static class FacebookUtilities
+	{
+
+
+		public final static String GRAPH_API_URL = "https://graph.facebook.com/";
+		public final static String GRAPH_API_URL_PICTURE = "/picture";
+		public final static String GRAPH_API_URL_PICTURE_SSL = "return_ssl_resources=1";
+		public final static String GRAPH_API_URL_PICTURE_TYPE = "?type=";
+		public final static String GRAPH_API_URL_PICTURE_TYPE_LARGE = GRAPH_API_URL_PICTURE + GRAPH_API_URL_PICTURE_TYPE + "large";
+		public final static String GRAPH_API_URL_PICTURE_TYPE_LARGE_SSL = GRAPH_API_URL_PICTURE_TYPE_LARGE + "&" + GRAPH_API_URL_PICTURE_SSL;
+		public final static String GRAPH_API_URL_PICTURE_TYPE_NORMAL = GRAPH_API_URL_PICTURE + GRAPH_API_URL_PICTURE_TYPE + "normal";
+		public final static String GRAPH_API_URL_PICTURE_TYPE_NORMAL_SSL = GRAPH_API_URL_PICTURE_TYPE_NORMAL + "&" + GRAPH_API_URL_PICTURE_SSL;
+		public final static String GRAPH_API_URL_PICTURE_TYPE_SMALL = GRAPH_API_URL_PICTURE + GRAPH_API_URL_PICTURE_TYPE + "small";
+		public final static String GRAPH_API_URL_PICTURE_TYPE_SMALL_SSL = GRAPH_API_URL_PICTURE_TYPE_SMALL + "&" + GRAPH_API_URL_PICTURE_SSL;
+		public final static String GRAPH_API_URL_PICTURE_TYPE_SQUARE = GRAPH_API_URL_PICTURE + GRAPH_API_URL_PICTURE_TYPE + "square";
+		public final static String GRAPH_API_URL_PICTURE_TYPE_SQUARE_SSL = GRAPH_API_URL_PICTURE_TYPE_SQUARE + "&" + GRAPH_API_URL_PICTURE_SSL;
+
+
+	}
+
+
+
+
+	/**
+	 * Class for constants and methods relating to Typefaces.
+	 */
+	public final static class TypefaceUtilities
+	{
+
+
+		private static Typeface typefaceBlueHighwayD;
+		private static Typeface typefaceBlueHighwayRG;
+		private static Typeface typefaceSnellRoundHandBDSCR;
+		private static Typeface typefaceSnellRoundHandBLKSCR;
+
+
+		public final static byte BLUE_HIGHWAY_D = 0;
+		public final static byte BLUE_HIGHWAY_RG = 1;
+		public final static byte SNELL_ROUNDHAND_BDSCR = 10;
+		public final static byte SNELL_ROUNDHAND_BLKSCR = 11;
+		private final static String PATH = "fonts/";
+		private final static String BLUE_HIGHWAY_D_PATH = PATH + "blue_highway_d.ttf";
+		private final static String BLUE_HIGHWAY_RD_PATH = PATH + "blue_highway_rg.ttf";
+		private final static String SNELL_ROUNDHAND_BDSCR_PATH = PATH + "snell_roundhand_bdscr.otf";
+		private final static String SNELL_ROUNDHAND_BLKSCR_PATH = PATH + "snell_roundhand_blkscr.otf";
+
+
+		/**
+		 * Returns to you a Typeface that you request.
+		 * 
+		 * <p><strong>Examples</strong><br />
+		 * Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D);<br />
+		 * Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_SNELL_ROUND_HAND_BDSCR);</p>
+		 * <p><strong>An invalid example</strong><br />
+		 * Utilities.getTypeface(getAssets(), -1);</p>
+		 * 
+		 * @param assetManager
+		 * The getAssets() method. Just pass that sucker in here.
+		 * 
+		 * @param typeface
+		 * The int ID of the Typeface object that you want. This must be a valid int ID, as if
+		 * it's not, this method will return null.
+		 * 
+		 * @return
+		 * Returns the Typeface object that you requested. If an invalid int ID was passed into
+		 * this method, this method will then return null.
+		 */
+		public static Typeface getTypeface(final AssetManager assetManager, final byte typeface)
+		{
+			switch (typeface)
+			{
+				case BLUE_HIGHWAY_D:
+					if (typefaceBlueHighwayD == null)
+					{
+						typefaceBlueHighwayD = Typeface.createFromAsset(assetManager, BLUE_HIGHWAY_D_PATH);
+					}
+
+					return typefaceBlueHighwayD;
+
+				case BLUE_HIGHWAY_RG:
+					if (typefaceBlueHighwayRG == null)
+					{
+						typefaceBlueHighwayRG = Typeface.createFromAsset(assetManager, BLUE_HIGHWAY_RD_PATH);
+					}
+
+					return typefaceBlueHighwayRG;
+
+				case SNELL_ROUNDHAND_BDSCR:
+					if (typefaceSnellRoundHandBDSCR == null)
+					{
+						typefaceSnellRoundHandBDSCR = Typeface.createFromAsset(assetManager, SNELL_ROUNDHAND_BDSCR_PATH);
+					}
+
+					return typefaceSnellRoundHandBDSCR;
+
+				case SNELL_ROUNDHAND_BLKSCR:
+					if (typefaceSnellRoundHandBLKSCR == null)
+					{
+						typefaceSnellRoundHandBLKSCR = Typeface.createFromAsset(assetManager, SNELL_ROUNDHAND_BLKSCR_PATH);
+					}
+
+					return typefaceSnellRoundHandBLKSCR;
+
+				default:
+					return null;
+			}
+		}
+
+
+	}
+
+
+
+
+	/**
+	 * Class for constants and methods relating to the current user of the app.
+	 */
+	public final static class WhoAmIUtilities
+	{
+
+
+		private static Person whoAmI;
+		private final static String WHO_AM_I_ID = "WHO_AM_I_ID";
+		private final static String WHO_AM_I_NAME = "WHO_AM_I_NAME";
+
+
+		/**
+		 * If the user's Facebook identity is already stored in this class's static
+		 * whoAmI Person variable then that variable will be instantly returned. If
+		 * the whoAmI Person variable is currently null or is not valid, then we
+		 * will search the Android SharedPreferences data for the user's Facebook
+		 * identity.
+		 * 
+		 * @return
+		 * A Person object that represents the user's Facebook identity.
+		 */
+		public static Person getWhoAmI(final Context context)
+		{
+			if (whoAmI == null || !whoAmI.isValid())
+			// check to see if the whoAmI variable is null or if it's not valid. If
+			// it is either of these two conditions then we will pull the user's
+			// Facebook identity from the Android SharedPreferences data.
+			{
+				final SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+
+				// find the user's Facebook ID. If the ID can't be found then the
+				// id variable will be set to 0.
+				final long id = sharedPreferences.getLong(WHO_AM_I_ID, 0);
+
+				// find the user's Facebook name. If the name can't be found then
+				// the name variable will be set to null.
+				final String name = sharedPreferences.getString(WHO_AM_I_NAME, null);
+
+				if (Person.isIdValid(id) && name != null && !name.isEmpty())
+				// check to see that we were actually able to find the user's
+				// Facebook ID and Facebook name. If we were able to find both
+				// then we will create a new Person object out of that data. That
+				// Person object will then be returned.
+				{
+					whoAmI = new Person(id, name);
+				}
+			}
+
+			return whoAmI;
+		}
+
+
+		/**
+		 * Stores the current user's Facebook identity into the Android
+		 * SharedPreferences storage system. The current user's Facebook identity
+		 * is frequently used throughout the app, and so doing this allows future
+		 * needings of this data to not require making a Facebook API call.
+		 * 
+		 * @param context
+		 * The context of the Activity that is calling this method.
+		 * 
+		 * @param facebookIdentity
+		 * A Person object representing the current user's Facebook identity.
+		 */
+		public static void setWhoAmI(final Context context, final Person facebookIdentity)
+		{
+			final SharedPreferences.Editor editor = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).edit();
+			editor.putLong(WHO_AM_I_ID, facebookIdentity.getId());
+			editor.putString(WHO_AM_I_NAME, facebookIdentity.getName());
+			editor.commit();
+
+			whoAmI = facebookIdentity;
+		}
+
+
+	}
 
 
 
@@ -225,164 +383,6 @@ public class Utilities
 		}
 
 		return imageLoader;
-	}
-
-
-	/**
-	 * Returns to you a Typeface that you request.
-	 * 
-	 * <p><strong>Examples</strong><br />
-	 * Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D);<br />
-	 * Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_SNELL_ROUND_HAND_BDSCR);</p>
-	 * <p><strong>An invalid example</strong><br />
-	 * Utilities.getTypeface(getAssets(), -1);</p>
-	 * 
-	 * @param assetManager
-	 * The getAssets() method. Just pass that sucker in here.
-	 * 
-	 * @param typeface
-	 * The int ID of the Typeface object that you want. This must be a valid int ID, as if
-	 * it's not, this method will return null.
-	 * 
-	 * @return
-	 * Returns the Typeface object that you requested. If an invalid int ID was passed into
-	 * this method, this method will then return null.
-	 */
-	public static Typeface getTypeface(final AssetManager assetManager, final byte typeface)
-	{
-		switch (typeface)
-		{
-			case TYPEFACE_BLUE_HIGHWAY_D:
-				if (typefaceBlueHighwayD == null)
-				{
-					typefaceBlueHighwayD = Typeface.createFromAsset(assetManager, TYPEFACE_BLUE_HIGHWAY_D_PATH);
-				}
-
-				return typefaceBlueHighwayD;
-
-			case TYPEFACE_BLUE_HIGHWAY_RG:
-				if (typefaceBlueHighwayRG == null)
-				{
-					typefaceBlueHighwayRG = Typeface.createFromAsset(assetManager, TYPEFACE_BLUE_HIGHWAY_RD_PATH);
-				}
-
-				return typefaceBlueHighwayRG;
-
-			case TYPEFACE_SNELL_ROUNDHAND_BDSCR:
-				if (typefaceSnellRoundHandBDSCR == null)
-				{
-					typefaceSnellRoundHandBDSCR = Typeface.createFromAsset(assetManager, TYPEFACE_SNELL_ROUNDHAND_BDSCR_PATH);
-				}
-
-				return typefaceSnellRoundHandBDSCR;
-
-			case TYPEFACE_SNELL_ROUNDHAND_BLKSCR:
-				if (typefaceSnellRoundHandBLKSCR == null)
-				{
-					typefaceSnellRoundHandBLKSCR = Typeface.createFromAsset(assetManager, TYPEFACE_SNELL_ROUNDHAND_BLKSCR_PATH);
-				}
-
-				return typefaceSnellRoundHandBLKSCR;
-
-			default:
-				return null;
-		}
-	}
-
-
-	/**
-	 * If the user's Facebook identity is already stored in this class's static
-	 * whoAmI Person variable then that variable will be instantly returned. If
-	 * the whoAmI Person variable is currently null or is not valid, then we
-	 * will search the Android SharedPreferences data for the user's Facebook
-	 * identity.
-	 * 
-	 * @return
-	 * A Person object that represents the user's Facebook identity.
-	 */
-	public static Person getWhoAmI(final Context context)
-	{
-		if (whoAmI == null || !whoAmI.isValid())
-		// check to see if the whoAmI variable is null or if it's not valid. If
-		// it is either of these two conditions then we will pull the user's
-		// Facebook identity from the Android SharedPreferences data.
-		{
-			final SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-
-			// find the user's Facebook ID. If the ID can't be found then the
-			// id variable will be set to 0.
-			final long id = sharedPreferences.getLong(WHO_AM_I_ID, 0);
-
-			// find the user's Facebook name. If the name can't be found then
-			// the name variable will be set to null.
-			final String name = sharedPreferences.getString(WHO_AM_I_NAME, null);
-
-			if (Person.isIdValid(id) && name != null && !name.isEmpty())
-			// check to see that we were actually able to find the user's
-			// Facebook ID and Facebook name. If we were able to find both
-			// then we will create a new Person object out of that data. That
-			// Person object will then be returned.
-			{
-				whoAmI = new Person(id, name);
-			}
-		}
-
-		return whoAmI;
-	}
-
-
-	/**
-	* Simple method that handles pulling an image from a URL.
-	* 
-	* <p><strong>Examples</strong><br />
-	* final String myURL = "http://www.google.com/image.png";<br />
-	* Utilities.loadImageFromWebOperations(myURL);</p>
-	* 
-	* @param url
-	* The URL to the image that you want to download.
-	*/
-	public static Drawable loadImageFromWebOperations(final String url)
-	{
-		Drawable drawable = null;
-
-		try
-		{
-			final InputStream is = (InputStream) new URL(url).getContent();
-			drawable = Drawable.createFromStream(is, "src");
-		}
-		catch (final MalformedURLException e)
-		{
-			Log.e(LOG_TAG, "MalformedURLException while trying to create drawable from url: " + url, e);
-		}
-		catch (final IOException e)
-		{
-			Log.e(LOG_TAG, "IOException while trying to create drawable from url: " + url, e);
-		}
-
-		return drawable;
-	}
-
-
-	/**
-	 * Stores the current user's Facebook identity into the Android
-	 * SharedPreferences storage system. The current user's Facebook identity
-	 * is frequently used throughout the app, and so doing this allows future
-	 * needings of this data to not require making a Facebook API call.
-	 * 
-	 * @param context
-	 * The context of the Activity that is calling this method.
-	 * 
-	 * @param facebookIdentity
-	 * A Person object representing the current user's Facebook identity.
-	 */
-	public static void setWhoAmI(final Context context, final Person facebookIdentity)
-	{
-		final SharedPreferences.Editor editor = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).edit();
-		editor.putLong(WHO_AM_I_ID, facebookIdentity.getId());
-		editor.putString(WHO_AM_I_NAME, facebookIdentity.getName());
-		editor.commit();
-
-		whoAmI = facebookIdentity;
 	}
 
 

@@ -802,7 +802,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 					if (!isCancelled())
 					{
-						final Person whoAmI = Utilities.getWhoAmI(context);
+						final Person whoAmI = Utilities.WhoAmIUtilities.getWhoAmI(context);
 						final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 						nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CREATOR, whoAmI.getIdAsString()));
 						nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_BOARD, jsonBoard.toString()));

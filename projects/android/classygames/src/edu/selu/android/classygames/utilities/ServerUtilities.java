@@ -109,7 +109,7 @@ public class ServerUtilities
 	{
 		Log.d(Utilities.LOG_TAG, "Registering device with reg_id of \"" + reg_id + "\" from GCM server.");
 
-		final Person whoAmI = Utilities.getWhoAmI(context);
+		final Person whoAmI = Utilities.WhoAmIUtilities.getWhoAmI(context);
 		if (whoAmI != null && whoAmI.getId() >= 0 && !whoAmI.getName().isEmpty())
 		{
 			// build the data to be sent to the server
@@ -139,7 +139,7 @@ public class ServerUtilities
 
 		// build the data to be sent to the server
 		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-		nameValuePairs.add(new BasicNameValuePair(POST_DATA_ID, Long.valueOf(Utilities.getWhoAmI(context).getId()).toString()));
+		nameValuePairs.add(new BasicNameValuePair(POST_DATA_ID, Long.valueOf(Utilities.WhoAmIUtilities.getWhoAmI(context).getId()).toString()));
 		nameValuePairs.add(new BasicNameValuePair(POST_DATA_REG_ID, reg_id));
 
 		try

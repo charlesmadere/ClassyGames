@@ -96,7 +96,7 @@ public class MainActivity extends SherlockActivity
 		uiHelper.onResume();
 		isResumed = true;
 
-		final Person whoAmI = Utilities.getWhoAmI(MainActivity.this);
+		final Person whoAmI = Utilities.WhoAmIUtilities.getWhoAmI(MainActivity.this);
 
 		if (whoAmI != null && whoAmI.isValid())
 		{
@@ -189,7 +189,7 @@ public class MainActivity extends SherlockActivity
 		@Override
 		protected void onPostExecute(final Person facebookIdentity)
 		{
-			Utilities.setWhoAmI(context, facebookIdentity);
+			Utilities.WhoAmIUtilities.setWhoAmI(context, facebookIdentity);
 
 			if (progressDialog.isShowing())
 			{

@@ -41,7 +41,7 @@ public class GCMIntentService extends IntentService
 
 	public GCMIntentService()
 	{
-		super(SecretConstants.GOOGLE_API_KEY);
+		super(KeysAndConstants.GOOGLE_API_KEY);
 	}
 
 

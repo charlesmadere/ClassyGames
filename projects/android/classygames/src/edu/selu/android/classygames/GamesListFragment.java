@@ -276,7 +276,7 @@ public class GamesListFragment extends SherlockListFragment
 
 			if (!isCancelled())
 			{
-				final Person whoAmI = Utilities.getWhoAmI(context);
+				final Person whoAmI = Utilities.WhoAmIUtilities.getWhoAmI(context);
 
 				// create the data that will be 
 				final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
@@ -558,11 +558,11 @@ public class GamesListFragment extends SherlockListFragment
 				convertView = inflater.inflate(R.layout.games_list_fragment_listview_item, null);
 
 				final ImageView picture = (ImageView) convertView.findViewById(R.id.games_list_fragment_listview_item_picture);
-				Utilities.getImageLoader(context).displayImage(Utilities.FACEBOOK_GRAPH_API_URL + game.getPerson().getId() + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SMALL_SSL, picture);
+				Utilities.getImageLoader(context).displayImage(Utilities.FacebookUtilities.GRAPH_API_URL + game.getPerson().getId() + Utilities.FacebookUtilities.GRAPH_API_URL_PICTURE_TYPE_SMALL_SSL, picture);
 
 				final TextView name = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_name);
 				name.setText(game.getPerson().getName());
-				name.setTypeface(Utilities.getTypeface(context.getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D));
+				name.setTypeface(Utilities.TypefaceUtilities.getTypeface(context.getAssets(), Utilities.TypefaceUtilities.BLUE_HIGHWAY_D));
 
 				final TextView time = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_time);
 				time.setText(game.getTimestampFormatted(context));

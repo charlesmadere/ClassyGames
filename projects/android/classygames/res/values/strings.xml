@@ -19,6 +19,11 @@
 	<string name="empty_game_fragment_imageview_placeholder">No game is currently loaded!</string>
 	<string name="empty_game_fragment_title">Empty Game</string>
 	<string name="facebook_app_id">324400870964487</string>
+	<string name="friends_list_fragment_cancelled_text">Cancelled loading your Friends List!</string>
+	<string name="friends_list_fragment_listview_item_picture_description">Friend\'s Picture</string>
+	<string name="friends_list_fragment_listview_no_friends">Sorry, but you don\'t seem to have any Facebook friends. In order to play Classy Games you must have some Facebook friends.</string>
+	<string name="friends_list_fragment_loading_text">Loading your Facebook Friends List&#8230;</string>
+	<string name="friends_list_fragment_title">New Game</string>
 	<string name="game_fragment_board_x0y0">0, 0</string>
 	<string name="game_fragment_board_x1y0">1, 0</string>
 	<string name="game_fragment_board_x2y0">2, 0</string>
@@ -131,14 +136,6 @@
 	<string name="main_activity_get_facebook_identity_progressdialog_title">Classy Games is working&#8230;</string>
 	<string name="main_activity_title">Classy Games</string>
 	<string name="new_game">New Game</string>
-	<string name="new_game_fragment_cancelled_text">Cancelled loading your Friends List!</string>
-	<string name="new_game_fragment_data_error">Error in trying to gather your Facebook data.</string>
-	<string name="new_game_fragment_listview_item_picture_description">Friend\'s Picture</string>
-	<string name="new_game_fragment_listview_no_friends">Well you don\'t seem to have any Facebook friends. In order to play Classy Games you must have some Facebook friends.</string>
-	<string name="new_game_fragment_loading_text">Loading your Friends List&#8230;</string>
-	<string name="new_game_fragment_progressdialog_message">Retrieving all of your Facebook friends&#8230;</string>
-	<string name="new_game_fragment_progressdialog_title">Facebook is working&#8230;</string>
-	<string name="new_game_fragment_title">New Game</string>
 	<string name="notification_game_over_text">Game with %1$s is now over!</string>
 	<string name="notification_game_over_lose_text">You lost the game with %1$s!</string>
 	<string name="notification_game_over_win_text">You won the game with %1$s!</string>

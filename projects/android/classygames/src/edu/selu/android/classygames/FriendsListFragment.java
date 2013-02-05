@@ -36,7 +36,7 @@ import edu.selu.android.classygames.models.Person;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
-public class NewGameFragment extends SherlockListFragment
+public class FriendsListFragment extends SherlockListFragment
 {
 
 
@@ -101,7 +101,7 @@ public class NewGameFragment extends SherlockListFragment
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{
-		return inflater.inflate(R.layout.new_game_fragment, container, false);
+		return inflater.inflate(R.layout.friends_list_fragment, container, false);
 	}
 
 
@@ -196,7 +196,7 @@ public class NewGameFragment extends SherlockListFragment
 
 		final ActionBar actionBar = getSherlockActivity().getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setTitle(R.string.new_game_fragment_title);
+		actionBar.setTitle(R.string.friends_list_fragment_title);
 
 		if (isFirstOnResume)
 		{
@@ -287,7 +287,7 @@ public class NewGameFragment extends SherlockListFragment
 		protected void onCancelled(final ArrayList<Person> friends)
 		{
 			viewGroup.removeAllViews();
-			inflater.inflate(R.layout.new_game_fragment_cancelled, viewGroup);
+			inflater.inflate(R.layout.friends_list_fragment_cancelled, viewGroup);
 
 			isAsyncRefreshFriendsListRunning = false;
 			compatInvalidateOptionsMenu();
@@ -298,9 +298,9 @@ public class NewGameFragment extends SherlockListFragment
 		protected void onPostExecute(final ArrayList<Person> friends)
 		{
 			viewGroup.removeAllViews();
-			inflater.inflate(R.layout.new_game_fragment, viewGroup);
+			inflater.inflate(R.layout.friends_list_fragment, viewGroup);
 
-			friendsListAdapter = new FriendsListAdapter(context, R.layout.new_game_fragment_listview_item, friends);
+			friendsListAdapter = new FriendsListAdapter(context, R.layout.friends_list_fragment_listview_item, friends);
 			final ListView listView = (ListView) viewGroup.findViewById(android.R.id.list);
 			listView.setAdapter(friendsListAdapter);
 
@@ -316,7 +316,7 @@ public class NewGameFragment extends SherlockListFragment
 			compatInvalidateOptionsMenu();
 
 			viewGroup.removeAllViews();
-			inflater.inflate(R.layout.new_game_fragment_loading, viewGroup);
+			inflater.inflate(R.layout.friends_list_fragment_loading, viewGroup);
 		}
 
 
@@ -347,11 +347,11 @@ public class NewGameFragment extends SherlockListFragment
 			if (convertView == null)
 			{
 				final LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				convertView = inflater.inflate(R.layout.new_game_fragment_listview_item, null);
+				convertView = inflater.inflate(R.layout.friends_list_fragment_listview_item, null);
 
 				final ViewHolder viewHolder = new ViewHolder();
-				viewHolder.name = (TextView) convertView.findViewById(R.id.new_game_fragment_listview_item_name);
-				viewHolder.picture = (ImageView) convertView.findViewById(R.id.new_game_fragment_listview_item_picture);
+				viewHolder.name = (TextView) convertView.findViewById(R.id.friends_list_fragment_listview_item_name);
+				viewHolder.picture = (ImageView) convertView.findViewById(R.id.friends_list_fragment_listview_item_picture);
 
 				convertView.setTag(viewHolder);
 			}
@@ -359,8 +359,8 @@ public class NewGameFragment extends SherlockListFragment
 			final ViewHolder viewHolder = (ViewHolder) convertView.getTag();
 			final Person friend = friends.get(position);
 			viewHolder.name.setText(friend.getName());
-			viewHolder.name.setTypeface(Utilities.getTypeface(context.getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D));
-			Utilities.getImageLoader(context).displayImage(Utilities.FACEBOOK_GRAPH_API_URL + friend.getId() + Utilities.FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SMALL_SSL, viewHolder.picture);
+			viewHolder.name.setTypeface(Utilities.TypefaceUtilities.getTypeface(context.getAssets(), Utilities.TypefaceUtilities.BLUE_HIGHWAY_D));
+			Utilities.getImageLoader(context).displayImage(Utilities.FacebookUtilities.GRAPH_API_URL + friend.getId() + Utilities.FacebookUtilities.GRAPH_API_URL_PICTURE_TYPE_SMALL_SSL, viewHolder.picture);
 
 			return convertView;
 		}

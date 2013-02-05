@@ -13,6 +13,6 @@
 		android:gravity="center"
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
-		android:text="@string/new_game_fragment_loading_text"
+		android:text="@string/friends_list_fragment_loading_text"
 		style="@style/paragraph" />
 </LinearLayout>
