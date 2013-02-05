@@ -23,8 +23,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 		GamesListFragment.GamesListFragmentOnNewGameSelectedListener,
 		GenericGameFragment.GenericGameFragmentOnAsyncGetGameOnCancelledListener,
 		GenericGameFragment.GenericGameFragmentOnDataErrorListener,
-		GenericGameFragment.GenericGameFragmentOnDestroyViewListener,
-		FriendsListFragment.NewGameFragmentOnDestroyViewListener
+		GenericGameFragment.GenericGameFragmentOnDestroyViewListener
 {
 
 
@@ -297,18 +296,6 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void genericGameFragmentOnDestroyView()
-	{
-		if (gamesListFragment != null && gamesListFragment.isVisible())
-		{
-			final ActionBar actionBar = getSupportActionBar();
-			actionBar.setDisplayHomeAsUpEnabled(false);
-			actionBar.setTitle(R.string.games_list_fragment_title);
-		}
-	}
-
-
-	@Override
-	public void newGameFragmentOnDestroyView()
 	{
 		if (gamesListFragment != null && gamesListFragment.isVisible())
 		{

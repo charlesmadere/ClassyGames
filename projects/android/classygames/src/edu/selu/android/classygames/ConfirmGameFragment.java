@@ -13,6 +13,11 @@ public class ConfirmGameFragment extends SherlockFragment
 {
 
 
+	
+
+
+
+
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{

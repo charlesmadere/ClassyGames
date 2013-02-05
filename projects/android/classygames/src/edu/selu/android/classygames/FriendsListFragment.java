@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -67,25 +66,7 @@ public class FriendsListFragment extends SherlockListFragment
 	private FriendsListAdapter friendsListAdapter;
 
 
-
-
-	/**
-	 * One of this class's callback methods. This is fired whenever this
-	 * fragment's onDestroyView() method is called. The reason that we need
-	 * this thing is mostly for hacky work around purposes: for some reason
-	 * Android is not properly setting the title on the Action Bar whenever we
-	 * exit one fragment for another. So the end result of this listener stuff
-	 * is that the user presses back on their device (or on the Action Bar) and
-	 * then instead of seeing "New Game" on the Action Bar, we'll see "Games
-	 * List". Without this work around we'd see "New Game", even though we'd be
-	 * currently viewing the GamesListFragment.
-	 */
-	private NewGameFragmentOnDestroyViewListener newGameFragmentOnDestroyViewListener;
-
-	public interface NewGameFragmentOnDestroyViewListener
-	{
-		public void newGameFragmentOnDestroyView();
-	}
+	
 
 
 
@@ -102,25 +83,6 @@ public class FriendsListFragment extends SherlockListFragment
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{
 		return inflater.inflate(R.layout.friends_list_fragment, container, false);
-	}
-
-
-	@Override
-	public void onAttach(final Activity activity)
-	// This makes sure that the Activity containing this Fragment has
-	// implemented the callback interface. If the callback interface has not
-	// been implemented, an exception is thrown.
-	{
-		super.onAttach(activity);
-
-		try
-		{
-			newGameFragmentOnDestroyViewListener = (NewGameFragmentOnDestroyViewListener) activity;
-		}
-		catch (final ClassCastException e)
-		{
-			throw new ClassCastException(activity.toString() + " must implement listeners!");
-		}
 	}
 
 
@@ -145,14 +107,6 @@ public class FriendsListFragment extends SherlockListFragment
 		}
 
 		super.onCreateOptionsMenu(menu, inflater);
-	}
-
-
-	@Override
-	public void onDestroyView()
-	{
-		super.onDestroyView();
-		newGameFragmentOnDestroyViewListener.newGameFragmentOnDestroyView();
 	}
 
 

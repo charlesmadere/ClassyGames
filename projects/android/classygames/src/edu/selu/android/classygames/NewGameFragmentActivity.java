@@ -25,6 +25,8 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity
 		setContentView(R.layout.new_game_fragment_activity);
 		setResult(RESULT_CODE_DEFAULT);
 		Utilities.styleActionBar(getResources(), getSupportActionBar(), true);
+
+		
 	}
 
 
