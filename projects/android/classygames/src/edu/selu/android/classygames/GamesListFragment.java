@@ -36,7 +36,6 @@ import com.actionbarsherlock.view.MenuItem;
 
 import edu.selu.android.classygames.models.Game;
 import edu.selu.android.classygames.models.Person;
-import edu.selu.android.classygames.utilities.ServerUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
@@ -280,7 +279,7 @@ public class GamesListFragment extends SherlockListFragment
 
 				// create the data that will be 
 				final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, whoAmI.getIdAsString()));
+				nameValuePairs.add(new BasicNameValuePair(Utilities.ServerUtilities.PostData.POST_DATA_ID, whoAmI.getIdAsString()));
 
 				if (!isCancelled())
 				{
@@ -291,7 +290,7 @@ public class GamesListFragment extends SherlockListFragment
 						// the nameValuePairs variable that we just created.
 						// The server requires we send it some information in
 						// order for us to get a meaningful response back.
-						final String jsonResponse = ServerUtilities.postToServer(ServerUtilities.SERVER_GET_GAMES_ADDRESS, nameValuePairs);
+						final String jsonResponse = Utilities.ServerUtilities.postToServer(Utilities.ServerUtilities.Addresses.GET_GAMES_ADDRESS, nameValuePairs);
 
 						// This line does a lot. Check the parseServerResponse()
 						// method below to get detailed information. This will
@@ -377,23 +376,23 @@ public class GamesListFragment extends SherlockListFragment
 					try
 					{
 						final JSONObject jsonRaw = new JSONObject(jsonResponse);
-						final JSONObject jsonResult = jsonRaw.getJSONObject(ServerUtilities.POST_DATA_RESULT);
-						final JSONObject jsonGameData = jsonResult.optJSONObject(ServerUtilities.POST_DATA_SUCCESS);
+						final JSONObject jsonResult = jsonRaw.getJSONObject(Utilities.ServerUtilities.PostData.POST_DATA_RESULT);
+						final JSONObject jsonGameData = jsonResult.optJSONObject(Utilities.ServerUtilities.PostData.POST_DATA_SUCCESS);
 
 						if (jsonGameData == null)
 						{
-							final String errorMessage = jsonResult.getString(ServerUtilities.POST_DATA_ERROR);
+							final String errorMessage = jsonResult.getString(Utilities.ServerUtilities.PostData.POST_DATA_ERROR);
 							Log.e(LOG_TAG, "Server returned error message: " + errorMessage);
 						}
 						else
 						{
-							ArrayList<Game> turn = parseTurn(jsonGameData, ServerUtilities.POST_DATA_TURN_YOURS, Game.TURN_YOURS);
+							ArrayList<Game> turn = parseTurn(jsonGameData, Utilities.ServerUtilities.PostData.POST_DATA_TURN_YOURS, Game.TURN_YOURS);
 							if (turn != null && !turn.isEmpty())
 							{
 								games.addAll(turn);
 							}
 
-							turn = parseTurn(jsonGameData, ServerUtilities.POST_DATA_TURN_THEIRS, Game.TURN_THEIRS);
+							turn = parseTurn(jsonGameData, Utilities.ServerUtilities.PostData.POST_DATA_TURN_THEIRS, Game.TURN_THEIRS);
 							if (turn != null && !turn.isEmpty())
 							{
 								games.addAll(turn);
@@ -508,10 +507,10 @@ public class GamesListFragment extends SherlockListFragment
 				try
 				{
 					// create data from the server's json response
-					final long id = gameData.getLong(ServerUtilities.POST_DATA_ID);
-					final String name = gameData.getString(ServerUtilities.POST_DATA_NAME);
-					final String gameId = gameData.getString(ServerUtilities.POST_DATA_GAME_ID);
-					final long timestamp = gameData.getLong(ServerUtilities.POST_DATA_LAST_MOVE);
+					final long id = gameData.getLong(Utilities.ServerUtilities.PostData.POST_DATA_ID);
+					final String name = gameData.getString(Utilities.ServerUtilities.PostData.POST_DATA_NAME);
+					final String gameId = gameData.getString(Utilities.ServerUtilities.PostData.POST_DATA_GAME_ID);
+					final long timestamp = gameData.getLong(Utilities.ServerUtilities.PostData.POST_DATA_LAST_MOVE);
 	
 					// create a new game from this data
 					game = new Game(timestamp, new Person(id, name), gameId, whichTurn);

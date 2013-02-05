@@ -43,7 +43,6 @@ import edu.selu.android.classygames.games.GenericPiece;
 import edu.selu.android.classygames.games.Position;
 import edu.selu.android.classygames.models.Game;
 import edu.selu.android.classygames.models.Person;
-import edu.selu.android.classygames.utilities.ServerUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
@@ -537,15 +536,15 @@ public abstract class GenericGameFragment extends SherlockFragment
 			try
 			{
 				final JSONObject jsonData = new JSONObject(jsonResponse);
-				final JSONObject jsonResult = jsonData.getJSONObject(ServerUtilities.POST_DATA_RESULT);
+				final JSONObject jsonResult = jsonData.getJSONObject(Utilities.ServerUtilities.PostData.POST_DATA_RESULT);
 
 				try
 				{
-					parsedServerResponse = jsonResult.getString(ServerUtilities.POST_DATA_SUCCESS);
+					parsedServerResponse = jsonResult.getString(Utilities.ServerUtilities.PostData.POST_DATA_SUCCESS);
 				}
 				catch (final JSONException e)
 				{
-					final String errorMessage = jsonResult.getString(ServerUtilities.POST_DATA_ERROR);
+					final String errorMessage = jsonResult.getString(Utilities.ServerUtilities.PostData.POST_DATA_ERROR);
 					Log.e(LOG_TAG, "Server returned error message: " + errorMessage);
 				}
 			}
@@ -708,11 +707,11 @@ public abstract class GenericGameFragment extends SherlockFragment
 			if (!isCancelled())
 			{
 				final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, game.getId()));
+				nameValuePairs.add(new BasicNameValuePair(Utilities.ServerUtilities.PostData.POST_DATA_ID, game.getId()));
 
 				try
 				{
-					serverResponse = ServerUtilities.postToServer(ServerUtilities.SERVER_GET_GAME_ADDRESS, nameValuePairs);
+					serverResponse = Utilities.ServerUtilities.postToServer(Utilities.ServerUtilities.Addresses.GET_GAME_ADDRESS, nameValuePairs);
 				}
 				catch (final IOException e)
 				{
@@ -804,19 +803,19 @@ public abstract class GenericGameFragment extends SherlockFragment
 					{
 						final Person whoAmI = Utilities.WhoAmIUtilities.getWhoAmI(context);
 						final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-						nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CREATOR, whoAmI.getIdAsString()));
-						nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_BOARD, jsonBoard.toString()));
+						nameValuePairs.add(new BasicNameValuePair(Utilities.ServerUtilities.PostData.POST_DATA_USER_CREATOR, whoAmI.getIdAsString()));
+						nameValuePairs.add(new BasicNameValuePair(Utilities.ServerUtilities.PostData.POST_DATA_BOARD, jsonBoard.toString()));
 
 						if (game.getId() == null || game.getId().isEmpty())
 						{
-							nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CHALLENGED, game.getPerson().getIdAsString()));
-							nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_NAME, game.getPerson().getName()));
+							nameValuePairs.add(new BasicNameValuePair(Utilities.ServerUtilities.PostData.POST_DATA_USER_CHALLENGED, game.getPerson().getIdAsString()));
+							nameValuePairs.add(new BasicNameValuePair(Utilities.ServerUtilities.PostData.POST_DATA_NAME, game.getPerson().getName()));
 
 							if (!isCancelled())
 							{
 								try
 								{
-									serverResponse = ServerUtilities.postToServer(ServerUtilities.SERVER_NEW_GAME_ADDRESS, nameValuePairs);
+									serverResponse = Utilities.ServerUtilities.postToServer(Utilities.ServerUtilities.Addresses.NEW_GAME_ADDRESS, nameValuePairs);
 								}
 								catch (final IOException e)
 								{
@@ -826,15 +825,15 @@ public abstract class GenericGameFragment extends SherlockFragment
 						}
 						else
 						{
-							nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CHALLENGED, game.getPerson().getIdAsString()));
-							nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_NAME, game.getPerson().getName()));
-							nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_GAME_ID, game.getId()));
+							nameValuePairs.add(new BasicNameValuePair(Utilities.ServerUtilities.PostData.POST_DATA_USER_CHALLENGED, game.getPerson().getIdAsString()));
+							nameValuePairs.add(new BasicNameValuePair(Utilities.ServerUtilities.PostData.POST_DATA_NAME, game.getPerson().getName()));
+							nameValuePairs.add(new BasicNameValuePair(Utilities.ServerUtilities.PostData.POST_DATA_GAME_ID, game.getId()));
 
 							if (!isCancelled())
 							{
 								try
 								{
-									serverResponse = ServerUtilities.postToServer(ServerUtilities.SERVER_NEW_MOVE_ADDRESS, nameValuePairs);
+									serverResponse = Utilities.ServerUtilities.postToServer(Utilities.ServerUtilities.Addresses.NEW_MOVE_ADDRESS, nameValuePairs);
 								}
 								catch (final IOException e)
 								{

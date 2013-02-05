@@ -76,10 +76,10 @@ public class GCMIntentService extends IntentService
 
 	private void handleMessage(final Intent intent)
 	{
-		final String gameId = intent.getStringExtra(ServerUtilities.POST_DATA_GAME_ID);
-		final String personName = intent.getStringExtra(ServerUtilities.POST_DATA_NAME);
-		final String personIdParameter = intent.getStringExtra(ServerUtilities.POST_DATA_ID);
-		final String gameTypeParameter = intent.getStringExtra(ServerUtilities.POST_DATA_TYPE);
+		final String gameId = intent.getStringExtra(Utilities.ServerUtilities.PostData.POST_DATA_GAME_ID);
+		final String personName = intent.getStringExtra(Utilities.ServerUtilities.PostData.POST_DATA_NAME);
+		final String personIdParameter = intent.getStringExtra(Utilities.ServerUtilities.PostData.POST_DATA_ID);
+		final String gameTypeParameter = intent.getStringExtra(Utilities.ServerUtilities.PostData.POST_DATA_TYPE);
 
 		if (gameId != null && !gameId.isEmpty() && personName != null && !personName.isEmpty()
 			&& personIdParameter != null && !personIdParameter.isEmpty()
@@ -88,7 +88,7 @@ public class GCMIntentService extends IntentService
 			final Long personId = Long.valueOf(personIdParameter);
 			final Byte gameType = Byte.valueOf(gameTypeParameter);
 
-			if (personId.longValue() >= 0 && ServerUtilities.validGameTypeValue(gameType.byteValue()))
+			if (personId.longValue() >= 0 && Utilities.ServerUtilities.PostData.validGameTypeValue(gameType.byteValue()))
 			{
 				final Person person = new Person(personId, personName);
 
@@ -103,7 +103,7 @@ public class GCMIntentService extends IntentService
 
 				TaskStackBuilder stackBuilder = TaskStackBuilder.create(GCMIntentService.this);
 
-				if (gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_NEW_GAME || gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_NEW_MOVE)
+				if (gameType.byteValue() == Utilities.ServerUtilities.PostData.POST_DATA_TYPE_NEW_GAME || gameType.byteValue() == Utilities.ServerUtilities.PostData.POST_DATA_TYPE_NEW_MOVE)
 				{
 					Intent gameIntent = new Intent(this, CheckersGameFragment.class);
 //					gameIntent.putExtra(GenericGameFragment.BUNDLE_DATA_GAME_ID, gameId);
@@ -113,31 +113,31 @@ public class GCMIntentService extends IntentService
 
 					builder.setTicker(getString(R.string.notification_sent_some_class, person.getName()));
 
-					if (gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_NEW_GAME)
+					if (gameType.byteValue() == Utilities.ServerUtilities.PostData.POST_DATA_TYPE_NEW_GAME)
 					{
 						builder.setContentText(getString(R.string.notification_new_game_text, person.getName()));
 					}
-					else if (gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_NEW_MOVE)
+					else if (gameType.byteValue() == Utilities.ServerUtilities.PostData.POST_DATA_TYPE_NEW_MOVE)
 					{
 						builder.setContentText(getString(R.string.notification_new_move_text, person.getName()));
 					}
 				}
-				else if (ServerUtilities.validWinOrLoseValue(gameType.byteValue()))
+				else if (Utilities.ServerUtilities.PostData.validWinOrLoseValue(gameType.byteValue()))
 				// it's a GAME_OVER byte
 				{
 					Intent gameOverIntent = new Intent(this, GameOverFragment.class);
-					gameOverIntent.putExtra(ServerUtilities.POST_DATA_TYPE, gameType.byteValue());
+					gameOverIntent.putExtra(Utilities.ServerUtilities.PostData.POST_DATA_TYPE, gameType.byteValue());
 //					gameOverIntent.putExtra(GenericGameFragment.BUNDLE_DATA_PERSON_CHALLENGED_ID, person.getId());
 //					gameOverIntent.putExtra(GenericGameFragment.BUNDLE_DATA_PERSON_CHALLENGED_NAME, person.getName());
 					stackBuilder.addNextIntentWithParentStack(gameOverIntent);
 
 					builder.setTicker(getString(R.string.notification_game_over_text, person.getName()));
 
-					if (gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_GAME_OVER_LOSE)
+					if (gameType.byteValue() == Utilities.ServerUtilities.PostData.POST_DATA_TYPE_GAME_OVER_LOSE)
 					{
 						builder.setContentText(getString(R.string.notification_game_over_lose_text, person.getName()));
 					}
-					else if (gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_GAME_OVER_WIN)
+					else if (gameType.byteValue() == Utilities.ServerUtilities.PostData.POST_DATA_TYPE_GAME_OVER_WIN)
 					{
 						builder.setContentText(getString(R.string.notification_game_over_win_text, person.getName()));
 					}
@@ -179,7 +179,7 @@ public class GCMIntentService extends IntentService
 				editor.commit();
 
 				// notify 3rd party server about the new regId
-				ServerUtilities.GCMRegister(regId, GCMIntentService.this);
+				Utilities.ServerUtilities.GCMRegister(regId, GCMIntentService.this);
 			}
 		}
 
@@ -196,7 +196,7 @@ public class GCMIntentService extends IntentService
 			// ensure that the String we obtained from shared preferences contains text
 			{
 				// notify 3rd party server about the unregistered ID
-				ServerUtilities.GCMUnregister(preferencesRegId, GCMIntentService.this);
+				Utilities.ServerUtilities.GCMUnregister(preferencesRegId, GCMIntentService.this);
 			}
 		}
 
