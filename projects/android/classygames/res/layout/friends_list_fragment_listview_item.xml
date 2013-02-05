@@ -11,7 +11,7 @@
 	<ImageView
 		android:adjustViewBounds="true"
 		android:contentDescription="@string/friends_list_fragment_listview_item_picture_description"
-		android:gravity="center_vertical"
+		android:gravity="center"
 		android:id="@+id/friends_list_fragment_listview_item_picture"
 		android:layout_height="46dip"
 		android:layout_marginRight="16dip"

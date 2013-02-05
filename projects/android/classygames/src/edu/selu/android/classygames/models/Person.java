@@ -220,6 +220,15 @@ public class Person
 
 
 
+	@Override
+	public String toString()
+	{
+		return name;
+	}
+
+
+
+
 	/**
 	 * When Facebook IDs are acquired throughout the app's runtime they should
 	 * be checked for validity. Use this method to check for that validity.

@@ -6,7 +6,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -14,6 +16,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -66,7 +69,16 @@ public class FriendsListFragment extends SherlockListFragment
 	private FriendsListAdapter friendsListAdapter;
 
 
-	
+	/**
+	 * One of this class's callback methods. This is fired whenever the user
+	 * has selected a friend in their friends list.
+	 */
+	private FriendsListFragmentOnFriendSelectedListener friendsListFragmentOnFriendSelectedListener;
+
+	public interface FriendsListFragmentOnFriendSelectedListener
+	{
+		public void friendsListFragmentOnFriendSelected(final Person friend);
+	}
 
 
 
@@ -83,6 +95,25 @@ public class FriendsListFragment extends SherlockListFragment
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{
 		return inflater.inflate(R.layout.friends_list_fragment, container, false);
+	}
+
+
+	@Override
+	public void onAttach(final Activity activity)
+	// This makes sure that the Activity containing this Fragment has
+	// implemented the callback interface. If the callback interface has not
+	// been implemented, an exception is thrown.
+	{
+		super.onAttach(activity);
+
+		try
+		{
+			friendsListFragmentOnFriendSelectedListener = (FriendsListFragmentOnFriendSelectedListener) activity;
+		}
+		catch (final ClassCastException e)
+		{
+			throw new ClassCastException(activity.toString() + " must implement listeners!");
+		}
 	}
 
 
@@ -287,6 +318,7 @@ public class FriendsListFragment extends SherlockListFragment
 
 		private ArrayList<Person> friends;
 		private Context context;
+		private Drawable emptyProfilePicture;
 
 
 		FriendsListAdapter(final Context context, final int textViewResourceId, final ArrayList<Person> friends)
@@ -294,6 +326,8 @@ public class FriendsListFragment extends SherlockListFragment
 			super(context, textViewResourceId, friends);
 			this.friends = friends;
 			this.context = context;
+
+			emptyProfilePicture = (Drawable) context.getResources().getDrawable(R.drawable.empty_profile_picture_small);
 		}
 
 
@@ -316,7 +350,17 @@ public class FriendsListFragment extends SherlockListFragment
 			final Person friend = friends.get(position);
 			viewHolder.name.setText(friend.getName());
 			viewHolder.name.setTypeface(Utilities.TypefaceUtilities.getTypeface(context.getAssets(), Utilities.TypefaceUtilities.BLUE_HIGHWAY_D));
+			viewHolder.picture.setImageDrawable(emptyProfilePicture);
 			Utilities.getImageLoader(context).displayImage(Utilities.FacebookUtilities.GRAPH_API_URL + friend.getId() + Utilities.FacebookUtilities.GRAPH_API_URL_PICTURE_TYPE_SMALL_SSL, viewHolder.picture);
+
+			convertView.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(final View v)
+				{
+					friendsListFragmentOnFriendSelectedListener.friendsListFragmentOnFriendSelected(friend);
+				}
+			});
 
 			return convertView;
 		}

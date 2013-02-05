@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -535,6 +536,7 @@ public class GamesListFragment extends SherlockListFragment
 
 
 		private ArrayList<Game> games;
+		private Drawable emptyProfilePicture;
 		private Context context;
 
 
@@ -543,6 +545,8 @@ public class GamesListFragment extends SherlockListFragment
 			super(context, textViewResourceId, games);
 			this.context = context;
 			this.games = games;
+
+			emptyProfilePicture = (Drawable) context.getResources().getDrawable(R.drawable.empty_profile_picture_small);
 		}
 
 
@@ -557,6 +561,7 @@ public class GamesListFragment extends SherlockListFragment
 				convertView = inflater.inflate(R.layout.games_list_fragment_listview_item, null);
 
 				final ImageView picture = (ImageView) convertView.findViewById(R.id.games_list_fragment_listview_item_picture);
+				picture.setImageDrawable(emptyProfilePicture);
 				Utilities.getImageLoader(context).displayImage(Utilities.FacebookUtilities.GRAPH_API_URL + game.getPerson().getId() + Utilities.FacebookUtilities.GRAPH_API_URL_PICTURE_TYPE_SMALL_SSL, picture);
 
 				final TextView name = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_name);
