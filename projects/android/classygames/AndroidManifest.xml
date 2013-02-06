@@ -84,7 +84,7 @@
 			android:uiOptions="splitActionBarWhenNarrow" />
 
 		<activity
-			android:label="@string/new_game_fragment_activity_title"
+			android:label="@string/friends_list_fragment_title"
 			android:name=".NewGameFragmentActivity"
 			android:theme="@style/Theme.Styled" />
 

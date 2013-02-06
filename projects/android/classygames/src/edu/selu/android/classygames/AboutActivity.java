@@ -42,7 +42,7 @@ public class AboutActivity extends SherlockActivity
 		switch (item.getItemId())
 		{
 			case android.R.id.home:
-				finish();
+				onBackPressed();
 				return true;
 
 			default:

@@ -132,7 +132,6 @@
 	<string name="main_activity_loading_textview_text">Initializing settings and registering you with our servers&#8230;</string>
 	<string name="main_activity_title">Classy Games</string>
 	<string name="new_game">New Game</string>
-	<string name="new_game_fragment_activity_title">New Game</string>
 	<string name="notification_game_over_text">Game with %1$s is now over!</string>
 	<string name="notification_game_over_lose_text">You lost the game with %1$s!</string>
 	<string name="notification_game_over_win_text">You won the game with %1$s!</string>

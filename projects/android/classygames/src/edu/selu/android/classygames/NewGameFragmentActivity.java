@@ -64,34 +64,26 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 
 
 	@Override
+	public void onBackPressed()
+	{
+		if (friendsListFragment.getIsAsyncRefreshFriendsListRunning())
+		{
+			friendsListFragment.cancelAsyncRefreshFriendsList();
+		}
+		else
+		{
+			super.onBackPressed();
+		}
+	}
+
+
+	@Override
 	public boolean onOptionsItemSelected(final MenuItem item)
 	{
 		switch (item.getItemId())
 		{
 			case android.R.id.home:
-				if (confirmGameFragment == null || !confirmGameFragment.isVisible() || !confirmGameFragment.isLoaded())
-				{
-					finish();
-				}
-				else
-				{
-					final FragmentManager fManager = getSupportFragmentManager();
-					fManager.popBackStack();
-
-					final FragmentTransaction fTransaction = fManager.beginTransaction();
-
-					if (isDeviceLarge())
-					{
-						confirmGameFragment = new ConfirmGameFragment();
-						fTransaction.replace(R.id.new_game_fragment_activity_fragment_confirm_game_fragment, confirmGameFragment);
-					}
-					else
-					{
-						fTransaction.replace(R.id.new_game_fragment_activity_container, friendsListFragment);
-					}
-
-					fTransaction.commit();
-				}
+				onBackPressed();
 				break;
 
 			default:
@@ -118,36 +110,12 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 	}
 
 
-	private void removeOrClearConfirmGameFragment()
-	{
-		if (confirmGameFragment != null && confirmGameFragment.isVisible())
-		{
-			final FragmentManager fManager = getSupportFragmentManager();
-			fManager.popBackStack();
-
-			final FragmentTransaction fTransaction = fManager.beginTransaction();
-
-			if (isDeviceLarge())
-			{
-				confirmGameFragment = new ConfirmGameFragment();
-				fTransaction.replace(R.id.new_game_fragment_activity_fragment_confirm_game_fragment, confirmGameFragment);
-			}
-			else
-			{
-				fTransaction.replace(R.id.new_game_fragment_activity_container, friendsListFragment);
-			}
-
-			fTransaction.commit();
-		}
-	}
-
-
 
 
 	@Override
 	public void confirmGameFragmentOnDataError()
 	{
-		removeOrClearConfirmGameFragment();
+		onBackPressed();
 		Utilities.easyToastAndLogError(this, getString(R.string.confirm_game_fragment_data_error));
 	}
 
@@ -163,14 +131,14 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 		intent.putExtras(bundle);
 
 		setResult(RESULT_CODE_FRIEND_SELECTED, intent);
-		finish();
+		onBackPressed();
 	}
 
 
 	@Override
 	public void confirmGameFragmentOnGameDeny()
 	{
-		removeOrClearConfirmGameFragment();
+		onBackPressed();
 	}
 
 
@@ -203,16 +171,9 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	public void friendsListFragmentOnRefreshSelected()
 	{
-		if (isDeviceLarge())
+		if (isDeviceLarge() && confirmGameFragment.isLoaded())
 		{
-			confirmGameFragment = new ConfirmGameFragment();
-
-			final FragmentManager fManager = getSupportFragmentManager();
-			fManager.popBackStack();
-
-			final FragmentTransaction fTransaction = fManager.beginTransaction();
-			fTransaction.replace(R.id.new_game_fragment_activity_fragment_confirm_game_fragment, confirmGameFragment);
-			fTransaction.commit();
+			onBackPressed();
 		}
 	}
 

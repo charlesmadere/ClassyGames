@@ -29,7 +29,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -80,7 +79,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * Variables that holds whether or not the asyncGetGame AsyncTask is
+	 * Variable that holds whether or not the asyncGetGame AsyncTask is
 	 * currently running.
 	 */
 	private boolean isAsyncGetGameRunning = false;
@@ -88,9 +87,23 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 	/**
 	 * Holds a handle to the currently running (if it's currently running)
-	 * AsyncGetGame AsyncTask.
+	 * AsyncGetGame AsyncTask. This could be null.
 	 */
 	private AsyncGetGame asyncGetGame;
+
+
+	/**
+	 * Variable that holds whether or not the asyncSendMove AsyncTask is
+	 * currently running.
+	 */
+	private boolean isAsyncSendMoveRunning = false;
+
+
+	/**
+	 * Holds a handle to the currently running (if it's currently running)
+	 * AsyncSendMove AsncTask. This could be null.
+	 */
+	private AsyncSendMove asyncSendMove;
 
 
 	/**
@@ -183,6 +196,18 @@ public abstract class GenericGameFragment extends SherlockFragment
 	}
 
 
+	/**
+	 * One of this class's callback methods. This is fired at the end of this
+	 * Fragment's onResume() method.
+	 */
+	private GenericGameFragmentOnResumeListener genericGameFragmentOnResumeListener;
+
+	public interface GenericGameFragmentOnResumeListener
+	{
+		public void genericGameFragmentOnResume();
+	}
+
+
 
 
 	@Override
@@ -251,9 +276,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 				if (Game.isIdValid(gameId))
 				{
 					game = new Game(person, gameId);
-
-					asyncGetGame = new AsyncGetGame(getLayoutInflater(getArguments()), (ViewGroup) getView());
-					asyncGetGame.execute();
+					getGame();
 				}
 				else
 				{
@@ -282,6 +305,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			genericGameFragmentIsDeviceSmallListener = (GenericGameFragmentIsDeviceLargeListener) activity;
 			genericGameFragmentOnAsyncGetGameOnCancelledListener = (GenericGameFragmentOnAsyncGetGameOnCancelledListener) activity;
 			genericGameFragmentOnDataErrorListener = (GenericGameFragmentOnDataErrorListener) activity;
+			genericGameFragmentOnResumeListener = (GenericGameFragmentOnResumeListener) activity;
 		}
 		catch (final ClassCastException e)
 		{
@@ -323,13 +347,10 @@ public abstract class GenericGameFragment extends SherlockFragment
 				{
 					asyncGetGame.cancel(true);
 				}
-				else
-				{
-					Log.e(LOG_TAG, "Cancel pressed while no AsyncTasks were running!");
-				}
 				break;
 
 			case R.id.generic_game_fragment_menu_send_move:
+				sendMove();
 				new AsyncSendMove(getSherlockActivity()).execute();
 				break;
 
@@ -369,10 +390,61 @@ public abstract class GenericGameFragment extends SherlockFragment
 	public void onResume()
 	{
 		super.onResume();
+		genericGameFragmentOnResumeListener.genericGameFragmentOnResume();
+	}
 
-		final ActionBar actionBar = getSherlockActivity().getSupportActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setTitle(getString(getTitle()) + " " + game.getPerson().getName());
+
+
+
+	/**
+	 * Attemps to cancel the currently running AsyncGetGame AsyncTask.
+	 * 
+	 * @return
+	 * Returns true if the AsyncTask was cancelled.
+	 */
+	private boolean cancelRunningAsyncGetGame()
+	{
+		boolean cancelled = false;
+
+		if (isAsyncGetGameRunning)
+		{
+			asyncGetGame.cancel(true);
+			cancelled = true;
+		}
+
+		return cancelled;
+	}
+
+
+	/**
+	 * Attempts to cancel the currently running AsyncSendMove AsyncTask.
+	 * 
+	 * @return
+	 * Returns true if the AsyncTask was cancelled.
+	 */
+	private boolean cancelRunningAsyncSendMove()
+	{
+		boolean cancelled = false;
+
+		if (isAsyncSendMoveRunning)
+		{
+			asyncSendMove.cancel(true);
+			cancelled = true;
+		}
+
+		return cancelled;
+	}
+
+
+	/**
+	 * Cancels the currently running AsyncTask (if any).
+	 */
+	public void cancelRunningAnyAsyncTask()
+	{
+		if (!cancelRunningAsyncGetGame())
+		{
+			cancelRunningAsyncSendMove();
+		}
 	}
 
 
@@ -462,6 +534,41 @@ public abstract class GenericGameFragment extends SherlockFragment
 				}
 			}
 		}
+	}
+
+
+	/**
+	 * @return
+	 * Returns a String to be set as the ActionBar's title.
+	 */
+	public String getActionBarTitle()
+	{
+		return getString(getTitle()) + " " + game.getPerson().getName();
+	}
+
+
+	/**
+	 * If the AsyncGetGame AsyncTask is not already running, then this will
+	 * execute it.
+	 */
+	private void getGame()
+	{
+		if (!isAsyncGetGameRunning)
+		{
+			asyncGetGame = new AsyncGetGame(getLayoutInflater(getArguments()), (ViewGroup) getView());
+			asyncGetGame.execute();
+		}
+	}
+
+
+	/**
+	 * @return
+	 * Returns true if either the AsyncGetGame AsyncTask is running or if the
+	 * AsyncSendMove AsyncTask is running.
+	 */
+	public boolean isAnAsyncTaskRunning()
+	{
+		return isAsyncGetGameRunning || isAsyncSendMoveRunning;
 	}
 
 
@@ -577,6 +684,20 @@ public abstract class GenericGameFragment extends SherlockFragment
 			{
 				Log.e(LOG_TAG, "JSON String is massively malformed.");
 			}
+		}
+	}
+
+
+	/**
+	 * If the AsyncSendMove AsyncTask is not already running, then this will
+	 * execute it.
+	 */
+	private void sendMove()
+	{
+		if (!isAsyncSendMoveRunning)
+		{
+			asyncSendMove = new AsyncSendMove(getSherlockActivity());
+			asyncSendMove.execute();
 		}
 	}
 

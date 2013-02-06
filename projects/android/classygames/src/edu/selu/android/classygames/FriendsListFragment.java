@@ -21,7 +21,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -38,6 +37,12 @@ import edu.selu.android.classygames.utilities.Utilities;
 
 public class FriendsListFragment extends SherlockListFragment
 {
+
+
+	public final static int ASYNC_REFRESH_FRIENDS_LIST_IS_RUNNING = 8;
+	public final static int ASYNC_REFRESH_FRIENDS_LIST_IS_NOT_RUNNING = 9;
+
+
 
 
 	/**
@@ -65,6 +70,8 @@ public class FriendsListFragment extends SherlockListFragment
 	 * List Adapter for this Fragment's ListView layout item.
 	 */
 	private FriendsListAdapter friendsListAdapter;
+
+
 
 
 	/**
@@ -131,14 +138,6 @@ public class FriendsListFragment extends SherlockListFragment
 	@Override
 	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
 	{
-		// Typically when fragments have their own menu, Android will add that
-		// fragment's menu items to the already existing menu. This can be good
-		// but can also create issues. In this case we definitely need to get
-		// that functionality out of here because the NewGameFragment and
-		// GamesListFragment both have a refresh button... and each of them
-		// do completely different things!
-		menu.clear();
-
 		if (isAsyncRefreshFriendsListRunning)
 		{
 			inflater.inflate(R.menu.generic_cancel, menu);
@@ -182,10 +181,6 @@ public class FriendsListFragment extends SherlockListFragment
 	{
 		super.onResume();
 
-		final ActionBar actionBar = getSherlockActivity().getSupportActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setTitle(R.string.friends_list_fragment_title);
-
 		if (isFirstOnResume)
 		{
 			isFirstOnResume = false;
@@ -197,11 +192,35 @@ public class FriendsListFragment extends SherlockListFragment
 
 
 	/**
+	 * Cancels the AsyncRefreshFriendsList AsyncTask if it is currently
+	 * running.
+	 */
+	public void cancelAsyncRefreshFriendsList()
+	{
+		if (isAsyncRefreshFriendsListRunning)
+		{
+			asyncRefreshFriendsList.cancel(true);
+		}
+	}
+
+
+	/**
 	 * Invalidates the options menu using the Android compatibility library.
 	 */
 	private void compatInvalidateOptionsMenu()
 	{
 		ActivityCompat.invalidateOptionsMenu(getSherlockActivity());
+	}
+
+
+	/**
+	 * @return
+	 * Returns true if the asyncRefreshFriendsList AsyncTask is currently
+	 * running.
+	 */
+	public boolean getIsAsyncRefreshFriendsListRunning()
+	{
+		return isAsyncRefreshFriendsListRunning;
 	}
 
 
@@ -215,6 +234,13 @@ public class FriendsListFragment extends SherlockListFragment
 			asyncRefreshFriendsList = new AsyncRefreshFriendsList(getSherlockActivity(), getLayoutInflater(getArguments()), Session.getActiveSession(), (ViewGroup) getView());
 			asyncRefreshFriendsList.execute();
 		}
+	}
+
+
+	private void setRunningState(final boolean isRunning)
+	{
+		isAsyncRefreshFriendsListRunning = isRunning;
+		compatInvalidateOptionsMenu();
 	}
 
 
@@ -279,6 +305,7 @@ public class FriendsListFragment extends SherlockListFragment
 			viewGroup.removeAllViews();
 			inflater.inflate(R.layout.friends_list_fragment_cancelled, viewGroup);
 
+			setRunningState(false);
 			isAsyncRefreshFriendsListRunning = false;
 			compatInvalidateOptionsMenu();
 		}
@@ -294,6 +321,7 @@ public class FriendsListFragment extends SherlockListFragment
 			final ListView listView = (ListView) viewGroup.findViewById(android.R.id.list);
 			listView.setAdapter(friendsListAdapter);
 
+			setRunningState(false);
 			isAsyncRefreshFriendsListRunning = false;
 			compatInvalidateOptionsMenu();
 		}
@@ -302,6 +330,7 @@ public class FriendsListFragment extends SherlockListFragment
 		@Override
 		protected void onPreExecute()
 		{
+			setRunningState(true);
 			isAsyncRefreshFriendsListRunning = true;
 			compatInvalidateOptionsMenu();
 

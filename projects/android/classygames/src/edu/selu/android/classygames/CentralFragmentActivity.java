@@ -21,14 +21,18 @@ import edu.selu.android.classygames.utilities.Utilities;
 
 public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	GamesListFragment.GamesListFragmentOnGameSelectedListener,
+	GamesListFragment.GamesListFragmentOnResumeListener,
 	GenericGameFragment.GenericGameFragmentIsDeviceLargeListener,
 	GenericGameFragment.GenericGameFragmentOnAsyncGetGameOnCancelledListener,
-	GenericGameFragment.GenericGameFragmentOnDataErrorListener
+	GenericGameFragment.GenericGameFragmentOnDataErrorListener,
+	GenericGameFragment.GenericGameFragmentOnResumeListener
 {
 
 
 	public final static int RESULT_CODE_FINISH = MainActivity.CENTRAL_FRAGMENT_ACTIVITY_REQUEST_CODE_FINISH;
 	public final static int NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FRIEND_SELECTED = 16;
+
+
 
 
 	private UiLifecycleHelper uiHelper;
@@ -97,7 +101,22 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	public void onBackPressed()
 	{
-		if (destroyGenericGameFragment())
+		if (gamesListFragment.getIsAsyncRefreshGamesListRunning())
+		{
+			gamesListFragment.cancelAsyncRefreshGamesList();
+		}
+		else if (genericGameFragment != null && genericGameFragment.isVisible())
+		{
+			if (genericGameFragment.isAnAsyncTaskRunning())
+			{
+				genericGameFragment.cancelRunningAnyAsyncTask();
+			}
+			else
+			{
+				super.onBackPressed();
+			}
+		}
+		else
 		{
 			super.onBackPressed();
 		}
@@ -127,7 +146,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 		switch (item.getItemId())
 		{
 			case android.R.id.home:
-				destroyGenericGameFragment();
+				onBackPressed();
 				break;
 
 			case R.id.central_fragment_activity_menu_about:
@@ -135,15 +154,9 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 				break;
 
 			case R.id.central_fragment_activity_menu_new_game:
-				if (isDeviceLarge())
+				if (isDeviceLarge() && genericGameFragment != null && genericGameFragment.isVisible())
 				{
-					emptyGameFragment = new EmptyGameFragment();
-
-					final FragmentManager fManager = getSupportFragmentManager();
-					fManager.popBackStack();
-
-					final FragmentTransaction fTransaction = fManager.beginTransaction();
-					fTransaction.replace(R.id.central_fragment_activity_fragment_games_list_fragment, emptyGameFragment);
+					onBackPressed();
 				}
 
 				startActivityForResult(new Intent(this, NewGameFragmentActivity.class), NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FRIEND_SELECTED);
@@ -273,8 +286,8 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 		arguments.putString(GenericGameFragment.KEY_PERSON_NAME, game.getPerson().getName());
 		genericGameFragment.setArguments(arguments);
 
-		final FragmentManager fManager = getSupportFragmentManager();
-		final FragmentTransaction fTransaction = fManager.beginTransaction();
+		final FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
+		fTransaction.addToBackStack(null);
 
 		if (isDeviceLarge())
 		{
@@ -286,6 +299,15 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 		}
 
 		fTransaction.commit();
+	}
+
+
+	@Override
+	public void gamesListFragmentOnResume()
+	{
+		final ActionBar actionBar = getSupportActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(false);
+		actionBar.setTitle(R.string.games_list_fragment_title);
 	}
 
 
@@ -308,6 +330,15 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	{
 		destroyGenericGameFragment();
 		Utilities.easyToastAndLogError(this, "Couldn't create a game as malformed data was detected!");
+	}
+
+
+	@Override
+	public void genericGameFragmentOnResume()
+	{
+		final ActionBar actionBar = getSupportActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setTitle(genericGameFragment.getActionBarTitle());
 	}
 
 
