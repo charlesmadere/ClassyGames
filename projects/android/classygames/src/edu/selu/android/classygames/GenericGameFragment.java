@@ -21,8 +21,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,6 +54,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 	public final static String KEY_GAME_ID = "KEY_GAME_ID";
 	public final static String KEY_PERSON_ID = "KEY_PERSON_ID";
 	public final static String KEY_PERSON_NAME = "KEY_PERSON_NAME";
+
+
 
 
 	/**
@@ -172,26 +172,14 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * One of this class's callback methods. This is fired in the event that
-	 * an error was detected in some of the data needed to instantiate a game.
+	 * One of this class's callback methods. This is fired in the event that an
+	 * error was detected in some of the data needed to instantiate a game.
 	 */
 	private GenericGameFragmentOnDataErrorListener genericGameFragmentOnDataErrorListener;
 
 	public interface GenericGameFragmentOnDataErrorListener
 	{
 		public void genericGameFragmentOnDataError();
-	}
-
-
-	/**
-	 * One of this class's callback methods. This is fired whenever this
-	 * fragment's onDestroyView() method is called.
-	 */
-	private GenericGameFragmentOnDestroyViewListener genericGameFragmentOnDestroyViewListener;
-
-	public interface GenericGameFragmentOnDestroyViewListener
-	{
-		public void genericGameFragmentOnDestroyView();
 	}
 
 
@@ -294,7 +282,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 			genericGameFragmentIsDeviceSmallListener = (GenericGameFragmentIsDeviceLargeListener) activity;
 			genericGameFragmentOnAsyncGetGameOnCancelledListener = (GenericGameFragmentOnAsyncGetGameOnCancelledListener) activity;
 			genericGameFragmentOnDataErrorListener = (GenericGameFragmentOnDataErrorListener) activity;
-			genericGameFragmentOnDestroyViewListener = (GenericGameFragmentOnDestroyViewListener) activity;
 		}
 		catch (final ClassCastException e)
 		{
@@ -327,27 +314,10 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	@Override
-	public void onDestroyView()
-	{
-		super.onDestroyView();
-		genericGameFragmentOnDestroyViewListener.genericGameFragmentOnDestroyView();
-	}
-
-
-	@Override
 	public boolean onOptionsItemSelected(final MenuItem item)
 	{
 		switch (item.getItemId())
 		{
-			case android.R.id.home:
-				final FragmentManager fManager = getSherlockActivity().getSupportFragmentManager();
-				fManager.popBackStack();
-
-				final FragmentTransaction fTransaction = fManager.beginTransaction();
-				fTransaction.remove(this);
-				fTransaction.commit();
-				break;
-
 			case R.id.generic_cancel_menu_cancel:
 				if (isAsyncGetGameRunning)
 				{

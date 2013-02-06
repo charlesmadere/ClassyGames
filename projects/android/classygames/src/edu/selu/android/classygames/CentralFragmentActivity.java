@@ -3,7 +3,6 @@ package edu.selu.android.classygames;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
@@ -24,8 +23,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	GamesListFragment.GamesListFragmentOnGameSelectedListener,
 	GenericGameFragment.GenericGameFragmentIsDeviceLargeListener,
 	GenericGameFragment.GenericGameFragmentOnAsyncGetGameOnCancelledListener,
-	GenericGameFragment.GenericGameFragmentOnDataErrorListener,
-	GenericGameFragment.GenericGameFragmentOnDestroyViewListener
+	GenericGameFragment.GenericGameFragmentOnDataErrorListener
 {
 
 
@@ -97,6 +95,16 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 
 
 	@Override
+	public void onBackPressed()
+	{
+		if (destroyGenericGameFragment())
+		{
+			super.onBackPressed();
+		}
+	}
+
+
+	@Override
 	public boolean onCreateOptionsMenu(final Menu menu)
 	{
 		final MenuInflater inflater = getSupportMenuInflater();
@@ -118,6 +126,10 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	{
 		switch (item.getItemId())
 		{
+			case android.R.id.home:
+				destroyGenericGameFragment();
+				break;
+
 			case R.id.central_fragment_activity_menu_about:
 				startActivity(new Intent(this, AboutActivity.class));
 				break;
@@ -173,21 +185,6 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 
 
 
-	private void onSessionStateChange(final Session session, final SessionState state, final Exception exception)
-	{
-		if (isResumed)
-		// only make changes if this activity is visible
-		{
-			if (!state.equals(SessionState.OPENED))
-			// if the session state is not opened then the user will have to
-			// reauthenticate with Facebook
-			{
-				finish();
-			}
-		}
-	}
-
-
 	/**
 	 * Checks to see what size screen this device has. This method will return
 	 * true if the device has a large screen, and as such said device should be
@@ -203,82 +200,57 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 
 
 	/**
-	 * Transitions either a part of the device's screen or a part of the
-	 * device's screen to the given fragment. A large device will have only
-	 * part of the screen occupied by the given fragment while a smaller device
-	 * (a phone most likely) will have the entire screen occupied.
+	 * Attemps to remove an instance of GenericGameFragment from the screen.
 	 * 
-	 * @param fragment
-	 * The Fragment to transition to.
-	 * 
-	 * @param largeLayout
-	 * In the case that this is a large device, what portion of the screen do
-	 * you want the given fragment to occupy? Use
-	 * central_fragment_activity_fragment_list for the smaller, left side of
-	 * screen or central_fragment_activity_fragment_game for the bigger, right
-	 * side of the screen.
-	 * 
-	 * @param fragmentTransition
-	 * The transition animation to display.
+	 * @return
+	 * Returns true if an instance of GenericGameFragment was displaying on the
+	 * screen and was then removed.
 	 */
-	private void transitionToFragment(final Fragment fragment, final int largeLayout, final int fragmentTransition)
+	private boolean destroyGenericGameFragment()
 	{
-		final FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
-
-		if (isDeviceLarge())
+		if (genericGameFragment == null || !genericGameFragment.isVisible())
 		{
-			fTransaction.add(largeLayout, fragment);
+			return true;
 		}
 		else
-		{
-			fTransaction.add(R.id.central_fragment_activity_container, fragment);
-		}
-
-		fTransaction.addToBackStack(null);
-		fTransaction.setTransition(fragmentTransition);
-		fTransaction.commit();
-	}
-
-
-	/**
-	 * Transitions either a part of the device's screen or a part of the
-	 * device's screen to the given fragment. A large device will have only
-	 * part of the screen occupied by the given fragment while a smaller device
-	 * (a phone most likely) will have the entire screen occupied.
-	 * 
-	 * @param fragment
-	 * The Fragment to transition to.
-	 * 
-	 * @param largeLayout
-	 * In the case that this is a large device, what portion of the screen do
-	 * you want the given fragment to occupy? Use
-	 * central_fragment_activity_fragment_list for the smaller, left side of
-	 * screen or central_fragment_activity_fragment_game for the bigger, right
-	 * side of the screen.
-	 */
-	private void transitionToFragment(final Fragment fragment, final int largeLayout)
-	{
-		transitionToFragment(fragment, largeLayout, FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-	}
-
-
-	/**
-	 * Checks to see if the given Fragment is both not null and visible. If
-	 * that is the case then the given Fragment will be removed.
-	 * 
-	 * @param fragment
-	 * The Fragment to check and then possibly remove.
-	 */
-	private void removeFragment(final Fragment fragment)
-	{
-		if (fragment != null && fragment.isVisible())
 		{
 			final FragmentManager fManager = getSupportFragmentManager();
 			fManager.popBackStack();
 
 			final FragmentTransaction fTransaction = fManager.beginTransaction();
-			fTransaction.remove(genericGameFragment);
+
+			if (isDeviceLarge())
+			{
+				emptyGameFragment = new EmptyGameFragment();
+				fTransaction.replace(R.id.central_fragment_activity_fragment_game, emptyGameFragment);
+			}
+			else
+			{
+				fTransaction.replace(R.id.central_fragment_activity_container, gamesListFragment);
+			}
+
 			fTransaction.commit();
+
+			final ActionBar actionBar = getSupportActionBar();
+			actionBar.setDisplayHomeAsUpEnabled(false);
+			actionBar.setTitle(R.string.games_list_fragment_title);
+
+			return false;
+		}
+	}
+
+
+	private void onSessionStateChange(final Session session, final SessionState state, final Exception exception)
+	{
+		if (isResumed)
+		// only make changes if this activity is visible
+		{
+			if (!state.equals(SessionState.OPENED))
+			// if the session state is not opened then the user will have to
+			// reauthenticate with Facebook
+			{
+				finish();
+			}
 		}
 	}
 
@@ -288,7 +260,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	public void gameListFragmentOnGameSelected(final Game game)
 	{
-		removeFragment(genericGameFragment);
+		destroyGenericGameFragment();
 
 		// if a future release of Classy Games has chess as well as checkers,
 		// then we will need to do some logic here to check the game type and
@@ -301,7 +273,19 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 		arguments.putString(GenericGameFragment.KEY_PERSON_NAME, game.getPerson().getName());
 		genericGameFragment.setArguments(arguments);
 
-		transitionToFragment(genericGameFragment, R.id.central_fragment_activity_fragment_game);
+		final FragmentManager fManager = getSupportFragmentManager();
+		final FragmentTransaction fTransaction = fManager.beginTransaction();
+
+		if (isDeviceLarge())
+		{
+			fTransaction.replace(R.id.central_fragment_activity_fragment_game, genericGameFragment);
+		}
+		else
+		{
+			fTransaction.replace(R.id.central_fragment_activity_container, genericGameFragment);
+		}
+
+		fTransaction.commit();
 	}
 
 
@@ -315,32 +299,15 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	public void genericGameFragmentOnAsyncGetGameOnCancelled()
 	{
-		final FragmentManager fManager = getSupportFragmentManager();
-		fManager.popBackStack();
-
-		final FragmentTransaction fTransaction = fManager.beginTransaction();
-		fTransaction.remove(genericGameFragment);
-		fTransaction.commit();
+		destroyGenericGameFragment();
 	}
 
 
 	@Override
 	public void genericGameFragmentOnDataError()
 	{
-		removeFragment(genericGameFragment);
+		destroyGenericGameFragment();
 		Utilities.easyToastAndLogError(this, "Couldn't create a game as malformed data was detected!");
-	}
-
-
-	@Override
-	public void genericGameFragmentOnDestroyView()
-	{
-		if (gamesListFragment != null && gamesListFragment.isVisible())
-		{
-			final ActionBar actionBar = getSupportActionBar();
-			actionBar.setDisplayHomeAsUpEnabled(false);
-			actionBar.setTitle(R.string.games_list_fragment_title);
-		}
 	}
 
 

@@ -78,7 +78,7 @@
 		</activity>
 
 		<activity
-			android:label="@string/central_fragment_activity_title"
+			android:label="@string/games_list_fragment_title"
 			android:name=".CentralFragmentActivity"
 			android:theme="@style/Theme.Styled"
 			android:uiOptions="splitActionBarWhenNarrow" />

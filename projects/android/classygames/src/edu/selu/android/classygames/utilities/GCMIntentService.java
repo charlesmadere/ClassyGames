@@ -13,7 +13,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import edu.selu.android.classygames.CheckersGameFragment;
-import edu.selu.android.classygames.GameOverFragment;
+import edu.selu.android.classygames.GameOverActivity;
 import edu.selu.android.classygames.R;
 import edu.selu.android.classygames.models.Person;
 
@@ -125,7 +125,7 @@ public class GCMIntentService extends IntentService
 				else if (Utilities.ServerUtilities.PostData.validWinOrLoseValue(gameType.byteValue()))
 				// it's a GAME_OVER byte
 				{
-					Intent gameOverIntent = new Intent(this, GameOverFragment.class);
+					Intent gameOverIntent = new Intent(this, GameOverActivity.class);
 					gameOverIntent.putExtra(Utilities.ServerUtilities.PostData.POST_DATA_TYPE, gameType.byteValue());
 //					gameOverIntent.putExtra(GenericGameFragment.BUNDLE_DATA_PERSON_CHALLENGED_ID, person.getId());
 //					gameOverIntent.putExtra(GenericGameFragment.BUNDLE_DATA_PERSON_CHALLENGED_NAME, person.getName());

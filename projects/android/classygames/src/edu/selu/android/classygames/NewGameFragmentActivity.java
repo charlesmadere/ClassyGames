@@ -1,10 +1,10 @@
 package edu.selu.android.classygames;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
@@ -24,6 +24,9 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 
 	public final static int RESULT_CODE_DEFAULT = 0;
 	public final static int RESULT_CODE_FRIEND_SELECTED = CentralFragmentActivity.NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FRIEND_SELECTED;
+
+	public final static String KEY_FRIEND_ID = "KEY_FRIEND_ID";
+	public final static String KEY_FRIEND_NAME = "KEY_FRIEND_NAME";
 
 
 	ConfirmGameFragment confirmGameFragment;
@@ -122,15 +125,19 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 			final FragmentManager fManager = getSupportFragmentManager();
 			fManager.popBackStack();
 
+			final FragmentTransaction fTransaction = fManager.beginTransaction();
+
 			if (isDeviceLarge())
 			{
 				confirmGameFragment = new ConfirmGameFragment();
+				fTransaction.replace(R.id.new_game_fragment_activity_fragment_confirm_game_fragment, confirmGameFragment);
 			}
 			else
 			{
-				final FragmentTransaction fTransaction = fManager.beginTransaction();
-				fTransaction.remove(confirmGameFragment);
+				fTransaction.replace(R.id.new_game_fragment_activity_container, friendsListFragment);
 			}
+
+			fTransaction.commit();
 		}
 	}
 
@@ -148,7 +155,15 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	public void confirmGameFragmentOnGameConfirm(final Person friend)
 	{
-		Log.d(Utilities.LOG_TAG, friend.toString());
+		final Bundle bundle = new Bundle();
+		bundle.putLong(KEY_FRIEND_ID, friend.getId());
+		bundle.putString(KEY_FRIEND_NAME, friend.getName());
+
+		final Intent intent = new Intent();
+		intent.putExtras(bundle);
+
+		setResult(RESULT_CODE_FRIEND_SELECTED, intent);
+		finish();
 	}
 
 

@@ -25,6 +25,8 @@ public class ConfirmGameFragment extends SherlockFragment
 	public final static String KEY_FRIEND_NAME = "KEY_FRIEND_NAME";
 
 
+
+
 	/**
 	 * 
 	 */
@@ -131,7 +133,7 @@ public class ConfirmGameFragment extends SherlockFragment
 
 			final Button buttonDeny = (Button) view.findViewById(R.id.confirm_game_fragment_loaded_button_deny);
 			buttonDeny.setTypeface(Utilities.TypefaceUtilities.getTypeface(getSherlockActivity().getAssets(), Utilities.TypefaceUtilities.BLUE_HIGHWAY_D));
-			buttonConfirm.setOnClickListener(new OnClickListener()
+			buttonDeny.setOnClickListener(new OnClickListener()
 			{
 				@Override
 				public void onClick(final View v)
