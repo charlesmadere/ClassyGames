@@ -21,6 +21,7 @@
 	<permission
 		android:name="edu.selu.android.classygames.permission.C2D_MESSAGE"
 		android:protectionLevel="signature" />
+
 	<uses-permission
 		android:name="edu.selu.android.classygames.permission.C2D_MESSAGE" />
 
@@ -79,7 +80,8 @@
 		<activity
 			android:label="@string/central_fragment_activity_title"
 			android:name=".CentralFragmentActivity"
-			android:theme="@style/Theme.Styled" />
+			android:theme="@style/Theme.Styled"
+			android:uiOptions="splitActionBarWhenNarrow" />
 
 		<activity
 			android:label="@string/new_game_fragment_activity_title"

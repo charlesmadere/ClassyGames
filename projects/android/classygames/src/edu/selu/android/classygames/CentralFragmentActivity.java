@@ -9,6 +9,9 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
@@ -18,15 +21,16 @@ import edu.selu.android.classygames.utilities.Utilities;
 
 
 public class CentralFragmentActivity extends SherlockFragmentActivity implements
-		GamesListFragment.GamesListFragmentOnGameSelectedListener,
-		GenericGameFragment.GenericGameFragmentOnAsyncGetGameOnCancelledListener,
-		GenericGameFragment.GenericGameFragmentOnDataErrorListener,
-		GenericGameFragment.GenericGameFragmentOnDestroyViewListener
+	GamesListFragment.GamesListFragmentOnGameSelectedListener,
+	GenericGameFragment.GenericGameFragmentIsDeviceLargeListener,
+	GenericGameFragment.GenericGameFragmentOnAsyncGetGameOnCancelledListener,
+	GenericGameFragment.GenericGameFragmentOnDataErrorListener,
+	GenericGameFragment.GenericGameFragmentOnDestroyViewListener
 {
 
 
-	public final static int RESULT_CODE_DEFAULT = 0;
-	public final static int NEW_GAME_FRAGMENT_ACTIVITY_FRIEND_SELECTED = 16;
+	public final static int RESULT_CODE_FINISH = MainActivity.CENTRAL_FRAGMENT_ACTIVITY_REQUEST_CODE_FINISH;
+	public final static int NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FRIEND_SELECTED = 16;
 
 
 	private UiLifecycleHelper uiHelper;
@@ -46,7 +50,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.central_fragment_activity);
-		setResult(RESULT_CODE_DEFAULT);
+		setResult(RESULT_CODE_FINISH);
 		Utilities.styleActionBar(getResources(), getSupportActionBar(), false);
 
 		sessionStatusCallback = new Session.StatusCallback()
@@ -58,7 +62,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 			}
 		};
 
-		uiHelper = new UiLifecycleHelper(CentralFragmentActivity.this, sessionStatusCallback);
+		uiHelper = new UiLifecycleHelper(this, sessionStatusCallback);
 		uiHelper.onCreate(savedInstanceState);
 
 		if (savedInstanceState == null)
@@ -77,7 +81,6 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 			{
 				gamesListFragment = new GamesListFragment();
 				fTransaction.add(R.id.central_fragment_activity_container, gamesListFragment);
-				fTransaction.commit();
 			}
 
 			fTransaction.commit();
@@ -94,10 +97,51 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 
 
 	@Override
+	public boolean onCreateOptionsMenu(final Menu menu)
+	{
+		final MenuInflater inflater = getSupportMenuInflater();
+		inflater.inflate(R.menu.central_fragment_activity, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+
+	@Override
 	protected void onDestroy()
 	{
 		super.onDestroy();
 		uiHelper.onDestroy();
+	}
+
+
+	@Override
+	public boolean onOptionsItemSelected(final MenuItem item)
+	{
+		switch (item.getItemId())
+		{
+			case R.id.central_fragment_activity_menu_about:
+				startActivity(new Intent(this, AboutActivity.class));
+				break;
+
+			case R.id.central_fragment_activity_menu_new_game:
+				if (isDeviceLarge())
+				{
+					emptyGameFragment = new EmptyGameFragment();
+
+					final FragmentManager fManager = getSupportFragmentManager();
+					fManager.popBackStack();
+
+					final FragmentTransaction fTransaction = fManager.beginTransaction();
+					fTransaction.replace(R.id.central_fragment_activity_fragment_games_list_fragment, emptyGameFragment);
+				}
+
+				startActivityForResult(new Intent(this, NewGameFragmentActivity.class), NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FRIEND_SELECTED);
+				break;
+
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+
+		return true;
 	}
 
 
@@ -258,6 +302,13 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 		genericGameFragment.setArguments(arguments);
 
 		transitionToFragment(genericGameFragment, R.id.central_fragment_activity_fragment_game);
+	}
+
+
+	@Override
+	public boolean genericGameFragmentIsDeviceSmall()
+	{
+		return !isDeviceLarge();
 	}
 
 

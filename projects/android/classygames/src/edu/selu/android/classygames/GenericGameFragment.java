@@ -148,6 +148,18 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
+	 * One of this class's callback methods. This is fired whenever this
+	 * fragment's onCreateOptionsMenu
+	 */
+	private GenericGameFragmentIsDeviceLargeListener genericGameFragmentIsDeviceSmallListener;
+
+	public interface GenericGameFragmentIsDeviceLargeListener
+	{
+		public boolean genericGameFragmentIsDeviceSmall();
+	}
+
+
+	/**
 	 * One of this class's callback methods. This is fired in the event that
 	 * the user cancels the AsyncGetGame AsyncTask.
 	 */
@@ -279,6 +291,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 		try
 		{
+			genericGameFragmentIsDeviceSmallListener = (GenericGameFragmentIsDeviceLargeListener) activity;
 			genericGameFragmentOnAsyncGetGameOnCancelledListener = (GenericGameFragmentOnAsyncGetGameOnCancelledListener) activity;
 			genericGameFragmentOnDataErrorListener = (GenericGameFragmentOnDataErrorListener) activity;
 			genericGameFragmentOnDestroyViewListener = (GenericGameFragmentOnDestroyViewListener) activity;
@@ -293,8 +306,12 @@ public abstract class GenericGameFragment extends SherlockFragment
 	@Override
 	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
 	{
-		menu.removeItem(R.id.games_list_fragment_primary_menu_about);
-		menu.removeItem(R.id.games_list_fragment_primary_menu_refresh);
+		menu.removeItem(R.id.generic_refresh_menu_refresh);
+
+		if (genericGameFragmentIsDeviceSmallListener.genericGameFragmentIsDeviceSmall())
+		{
+			menu.removeItem(R.id.central_fragment_activity_menu_new_game);
+		}
 
 		if (isAsyncGetGameRunning)
 		{

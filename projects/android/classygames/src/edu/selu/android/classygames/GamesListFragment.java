@@ -14,7 +14,6 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -29,7 +28,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -79,18 +77,6 @@ public class GamesListFragment extends SherlockListFragment
 
 
 	/**
-	 * One of this class's callback methods. This is fired whenever this
-	 * fragment's onDestroyView() method is called.
-	 */
-	private GamesListFragmentOnDestroyViewListener gamesListFragmentOnDestroyViewListener;
-
-	public interface GamesListFragmentOnDestroyViewListener
-	{
-		public void gamesListFragmentOnDestroyView();
-	}
-
-
-	/**
 	 * One of this class's callback methods. This is fired whenever one of the
 	 * games in the user's list of games is clicked on.
 	 */
@@ -99,18 +85,6 @@ public class GamesListFragment extends SherlockListFragment
 	public interface GamesListFragmentOnGameSelectedListener
 	{
 		public void gameListFragmentOnGameSelected(final Game game);
-	}
-
-
-	/**
-	 * One of this class's callback methods. This is fired whenever the new
-	 * game button in the action bar is clicked.
-	 */
-	private GamesListFragmentOnNewGameSelectedListener gamesListFragmentOnNewGameSelectedListener;
-
-	public interface GamesListFragmentOnNewGameSelectedListener
-	{
-		public void gamesListFragmentOnNewGameSelected();
 	}
 
 
@@ -141,9 +115,7 @@ public class GamesListFragment extends SherlockListFragment
 
 		try
 		{
-			gamesListFragmentOnDestroyViewListener = (GamesListFragmentOnDestroyViewListener) activity;
 			gamesListFragmentOnGameSelectedListener = (GamesListFragmentOnGameSelectedListener) activity;
-			gamesListFragmentOnNewGameSelectedListener = (GamesListFragmentOnNewGameSelectedListener) activity;
 		}
 		catch (final ClassCastException e)
 		{
@@ -161,18 +133,10 @@ public class GamesListFragment extends SherlockListFragment
 		}
 		else
 		{
-			inflater.inflate(R.menu.games_list_fragment, menu);
+			inflater.inflate(R.menu.generic_refresh, menu);
 		}
 
 		super.onCreateOptionsMenu(menu, inflater);
-	}
-
-
-	@Override
-	public void onDestroyView()
-	{
-		super.onDestroyView();
-		gamesListFragmentOnDestroyViewListener.gamesListFragmentOnDestroyView();
 	}
 
 
@@ -181,17 +145,7 @@ public class GamesListFragment extends SherlockListFragment
 	{
 		switch (item.getItemId())
 		{
-			case R.id.games_list_fragment_primary_menu_about:
-				startActivity(new Intent(getSherlockActivity(), AboutActivity.class));
-				break;
-
-			case R.id.games_list_fragment_primary_menu_new_game:
-				// notify the parent Activity that the new game button in the
-				// action bar has been clicked
-				gamesListFragmentOnNewGameSelectedListener.gamesListFragmentOnNewGameSelected();
-				break;
-
-			case R.id.games_list_fragment_primary_menu_refresh:
+			case R.id.generic_refresh_menu_refresh:
 				refreshGamesList();
 				break;
 
@@ -218,9 +172,6 @@ public class GamesListFragment extends SherlockListFragment
 	public void onResume()
 	{
 		super.onResume();
-
-		final ActionBar actionBar = getSherlockActivity().getSupportActionBar();
-		actionBar.setTitle(R.string.games_list_fragment_title);
 
 		if (isFirstOnResume)
 		{

@@ -23,7 +23,7 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 
 
 	public final static int RESULT_CODE_DEFAULT = 0;
-	public final static int RESULT_CODE_FRIEND_SELECTED = CentralFragmentActivity.NEW_GAME_FRAGMENT_ACTIVITY_FRIEND_SELECTED;
+	public final static int RESULT_CODE_FRIEND_SELECTED = CentralFragmentActivity.NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FRIEND_SELECTED;
 
 
 	ConfirmGameFragment confirmGameFragment;
