@@ -310,9 +310,12 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	public void gamesListFragmentOnResume()
 	{
-		final ActionBar actionBar = getSupportActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(false);
-		actionBar.setTitle(R.string.games_list_fragment_title);
+		if (gamesListFragment != null && gamesListFragment.isVisible())
+		{
+			final ActionBar actionBar = getSupportActionBar();
+			actionBar.setDisplayHomeAsUpEnabled(false);
+			actionBar.setTitle(R.string.games_list_fragment_title);
+		}
 	}
 
 
@@ -341,9 +344,12 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	public void genericGameFragmentOnResume()
 	{
-		final ActionBar actionBar = getSupportActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setTitle(genericGameFragment.getActionBarTitle());
+		if (genericGameFragment != null && genericGameFragment.isVisible())
+		{
+			final ActionBar actionBar = getSupportActionBar();
+			actionBar.setDisplayHomeAsUpEnabled(true);
+			actionBar.setTitle(genericGameFragment.getActionBarTitle());
+		}
 	}
 
 

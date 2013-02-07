@@ -393,6 +393,15 @@ public class Game
 
 
 
+	@Override
+	public boolean equals(final Object o)
+	{
+		final Game game = (Game) o;
+		return game.getId().equals(id);
+	}
+
+
+
 
 	/**
 	 * Checks the given ID to be sure that it is a valid Game ID. Valid means

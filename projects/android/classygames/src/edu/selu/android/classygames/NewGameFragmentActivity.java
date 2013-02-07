@@ -73,6 +73,11 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 		else
 		{
 			super.onBackPressed();
+
+			if (friendsListFragment.isVisible())
+			{
+				friendsListFragment.resetSelectedView();
+			}
 		}
 	}
 

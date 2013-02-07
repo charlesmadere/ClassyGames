@@ -221,6 +221,14 @@ public class Person
 
 
 	@Override
+	public boolean equals(final Object o)
+	{
+		final Person person = (Person) o;
+		return person.getId() == id && person.getName().equals(name);
+	}
+
+
+	@Override
 	public String toString()
 	{
 		return name;
