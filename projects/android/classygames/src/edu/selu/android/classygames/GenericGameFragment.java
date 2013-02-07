@@ -20,7 +20,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +29,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -324,7 +324,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			menu.removeItem(R.id.central_fragment_activity_menu_new_game);
 		}
 
-		if (isAsyncGetGameRunning)
+		if (isAsyncGetGameRunning && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 		{
 			inflater.inflate(R.menu.generic_cancel, menu);
 		}
@@ -449,15 +449,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * Invalidates the options menu using the Android compatibility library.
-	 */
-	private void compatInvalidateOptionsMenu()
-	{
-		ActivityCompat.invalidateOptionsMenu(getSherlockActivity());
-	}
-
-
-	/**
 	 * Creates a tag to be used in a findViewWithTag() operation.
 	 * 
 	 * <p><strong>Examples</strong><br />
@@ -555,7 +546,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		if (!isAsyncGetGameRunning)
 		{
-			asyncGetGame = new AsyncGetGame(getLayoutInflater(getArguments()), (ViewGroup) getView());
+			asyncGetGame = new AsyncGetGame(getSherlockActivity(), getLayoutInflater(getArguments()), (ViewGroup) getView());
 			asyncGetGame.execute();
 		}
 	}
@@ -796,12 +787,14 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 
 
+		private SherlockFragmentActivity fragmentActivity;
 		private LayoutInflater inflater;
 		private ViewGroup viewGroup;
 
 
-		AsyncGetGame(final LayoutInflater inflater, final ViewGroup viewGroup)
+		AsyncGetGame(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater, final ViewGroup viewGroup)
 		{
+			this.fragmentActivity = fragmentActivity;
 			this.inflater = inflater;
 			this.viewGroup = viewGroup;
 		}
@@ -831,12 +824,25 @@ public abstract class GenericGameFragment extends SherlockFragment
 		}
 
 
+		private void cancelled()
+		{
+			isAsyncGetGameRunning = false;
+			Utilities.compatInvalidateOptionsMenu(fragmentActivity);
+			genericGameFragmentOnAsyncGetGameOnCancelledListener.genericGameFragmentOnAsyncGetGameOnCancelled();
+		}
+
+
+		@Override
+		protected void onCancelled()
+		{
+			cancelled();
+		}
+
+
 		@Override
 		protected void onCancelled(final String serverResponse)
 		{
-			isAsyncGetGameRunning = false;
-			compatInvalidateOptionsMenu();
-			genericGameFragmentOnAsyncGetGameOnCancelledListener.genericGameFragmentOnAsyncGetGameOnCancelled();
+			cancelled();
 		}
 
 
@@ -852,7 +858,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			flush();
 
 			isAsyncGetGameRunning = false;
-			compatInvalidateOptionsMenu();
+			Utilities.compatInvalidateOptionsMenu(fragmentActivity);
 		}
 
 
@@ -860,7 +866,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		protected void onPreExecute()
 		{
 			isAsyncGetGameRunning = true;
-			compatInvalidateOptionsMenu();
+			Utilities.compatInvalidateOptionsMenu(fragmentActivity);
 
 			viewGroup.removeAllViews();
 			inflater.inflate(R.layout.generic_game_fragment_loading, viewGroup);

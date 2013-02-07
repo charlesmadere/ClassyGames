@@ -26,12 +26,11 @@ import android.graphics.Shader.TileMode;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -516,12 +515,15 @@ public class Utilities
 	/**
 	 * Invalidates the options menu using the Android compatibility library.
 	 * 
-	 * @param sherlockActivity
+	 * @param fragmentActivity
 	 * getSherlockActivity()
 	 */
-	public static void compatInvalidateOptionsMenu(final SherlockActivity sherlockActivity)
+	public static void compatInvalidateOptionsMenu(final SherlockFragmentActivity fragmentActivity)
 	{
-		ActivityCompat.invalidateOptionsMenu(sherlockActivity);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+		{
+			fragmentActivity.invalidateOptionsMenu();
+		}
 	}
 
 

@@ -17,7 +17,6 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -167,10 +167,6 @@ public class GamesListFragment extends SherlockListFragment
 				{
 					asyncRefreshGamesList.cancel(true);
 				}
-				else
-				{
-					Log.e(LOG_TAG, "Cancel pressed while no AsyncTasks were running!");
-				}
 				break;
 
 			default:
@@ -178,6 +174,30 @@ public class GamesListFragment extends SherlockListFragment
 		}
 
 		return true;
+	}
+
+
+	@Override
+	public void onPrepareOptionsMenu(final Menu menu)
+	{
+		final MenuItem menuItem = menu.findItem(R.id.generic_refresh_menu_refresh);
+
+		if (isAsyncRefreshGamesListRunning)
+		{
+			if (menuItem != null)
+			{
+				menuItem.setEnabled(false);
+			}
+		}
+		else
+		{
+			if (menuItem != null)
+			{
+				menuItem.setEnabled(true);
+			}
+		}
+
+		super.onPrepareOptionsMenu(menu);
 	}
 
 
@@ -211,15 +231,6 @@ public class GamesListFragment extends SherlockListFragment
 
 
 	/**
-	 * Invalidates the options menu using the Android compatibility library.
-	 */
-	private void compatInvalidateOptionsMenu()
-	{
-		ActivityCompat.invalidateOptionsMenu(getSherlockActivity());
-	}
-
-
-	/**
 	 * @return
 	 * Returns true if the AsyncRefreshGamesList AsyncTask is running.
 	 */
@@ -248,14 +259,14 @@ public class GamesListFragment extends SherlockListFragment
 	{
 
 
-		private Context context;
+		private SherlockFragmentActivity fragmentActivity;
 		private LayoutInflater inflater;
 		private ViewGroup viewGroup;
 
 
-		AsyncRefreshGamesList(final Context context, final LayoutInflater inflater, final ViewGroup viewGroup)
+		AsyncRefreshGamesList(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater, final ViewGroup viewGroup)
 		{
-			this.context = context;
+			this.fragmentActivity = fragmentActivity;
 			this.inflater = inflater;
 			this.viewGroup = viewGroup;
 		}
@@ -268,7 +279,7 @@ public class GamesListFragment extends SherlockListFragment
 
 			if (!isCancelled())
 			{
-				final Person whoAmI = Utilities.WhoAmIUtilities.getWhoAmI(context);
+				final Person whoAmI = Utilities.WhoAmIUtilities.getWhoAmI(fragmentActivity);
 
 				// create the data that will be 
 				final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
@@ -303,14 +314,27 @@ public class GamesListFragment extends SherlockListFragment
 		}
 
 
-		@Override
-		protected void onCancelled(final ArrayList<Game> games)
+		private void cancelled()
 		{
 			viewGroup.removeAllViews();
 			inflater.inflate(R.layout.games_list_fragment_cancelled, viewGroup);
 
 			isAsyncRefreshGamesListRunning = false;
-			compatInvalidateOptionsMenu();
+			Utilities.compatInvalidateOptionsMenu(fragmentActivity);
+		}
+
+
+		@Override
+		protected void onCancelled()
+		{
+			cancelled();
+		}
+
+
+		@Override
+		protected void onCancelled(final ArrayList<Game> games)
+		{
+			cancelled();
 		}
 
 
@@ -320,12 +344,12 @@ public class GamesListFragment extends SherlockListFragment
 			viewGroup.removeAllViews();
 			inflater.inflate(R.layout.games_list_fragment, viewGroup);
 
-			gamesListAdapter = new GamesListAdapter(context, R.layout.games_list_fragment_listview_item, games);
+			gamesListAdapter = new GamesListAdapter(fragmentActivity, R.layout.games_list_fragment_listview_item, games);
 			final ListView listView = (ListView) viewGroup.findViewById(android.R.id.list);
 			listView.setAdapter(gamesListAdapter);
 
 			isAsyncRefreshGamesListRunning = false;
-			compatInvalidateOptionsMenu();
+			Utilities.compatInvalidateOptionsMenu(fragmentActivity);
 		}
 
 
@@ -333,7 +357,7 @@ public class GamesListFragment extends SherlockListFragment
 		protected void onPreExecute()
 		{
 			isAsyncRefreshGamesListRunning = true;
-			compatInvalidateOptionsMenu();
+			Utilities.compatInvalidateOptionsMenu(fragmentActivity);
 
 			viewGroup.removeAllViews();
 			inflater.inflate(R.layout.games_list_fragment_loading, viewGroup);

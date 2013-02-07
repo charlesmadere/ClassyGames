@@ -101,7 +101,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	public void onBackPressed()
 	{
-		if (gamesListFragment.getIsAsyncRefreshGamesListRunning())
+		if (gamesListFragment != null && gamesListFragment.getIsAsyncRefreshGamesListRunning())
 		{
 			gamesListFragment.cancelAsyncRefreshGamesList();
 		}
@@ -114,6 +114,11 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 			else
 			{
 				super.onBackPressed();
+			}
+
+			if (isDeviceLarge())
+			{
+				gamesListFragmentOnResume();
 			}
 		}
 		else

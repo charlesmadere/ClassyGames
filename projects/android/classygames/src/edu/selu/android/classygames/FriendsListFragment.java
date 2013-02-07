@@ -11,7 +11,6 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -205,15 +205,6 @@ public class FriendsListFragment extends SherlockListFragment
 
 
 	/**
-	 * Invalidates the options menu using the Android compatibility library.
-	 */
-	private void compatInvalidateOptionsMenu()
-	{
-		ActivityCompat.invalidateOptionsMenu(getSherlockActivity());
-	}
-
-
-	/**
 	 * @return
 	 * Returns true if the asyncRefreshFriendsList AsyncTask is currently
 	 * running.
@@ -240,7 +231,7 @@ public class FriendsListFragment extends SherlockListFragment
 	private void setRunningState(final boolean isRunning)
 	{
 		isAsyncRefreshFriendsListRunning = isRunning;
-		compatInvalidateOptionsMenu();
+		Utilities.compatInvalidateOptionsMenu(getSherlockActivity());
 	}
 
 
@@ -250,15 +241,15 @@ public class FriendsListFragment extends SherlockListFragment
 	{
 
 
-		private Context context;
+		private SherlockFragmentActivity fragmentActivity;
 		private LayoutInflater inflater;
 		private Session session;
 		private ViewGroup viewGroup;
 
 
-		AsyncRefreshFriendsList(final Context context, final LayoutInflater inflater, final Session session, final ViewGroup viewGroup)
+		AsyncRefreshFriendsList(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater, final Session session, final ViewGroup viewGroup)
 		{
-			this.context = context;
+			this.fragmentActivity = fragmentActivity;
 			this.inflater = inflater;
 			this.session = session;
 			this.viewGroup = viewGroup;
@@ -299,15 +290,28 @@ public class FriendsListFragment extends SherlockListFragment
 		}
 
 
-		@Override
-		protected void onCancelled(final ArrayList<Person> friends)
+		private void cancelled()
 		{
 			viewGroup.removeAllViews();
 			inflater.inflate(R.layout.friends_list_fragment_cancelled, viewGroup);
 
 			setRunningState(false);
 			isAsyncRefreshFriendsListRunning = false;
-			compatInvalidateOptionsMenu();
+			Utilities.compatInvalidateOptionsMenu(fragmentActivity);
+		}
+
+
+		@Override
+		protected void onCancelled()
+		{
+			cancelled();
+		}
+
+
+		@Override
+		protected void onCancelled(final ArrayList<Person> friends)
+		{
+			cancelled();
 		}
 
 
@@ -317,13 +321,13 @@ public class FriendsListFragment extends SherlockListFragment
 			viewGroup.removeAllViews();
 			inflater.inflate(R.layout.friends_list_fragment, viewGroup);
 
-			friendsListAdapter = new FriendsListAdapter(context, R.layout.friends_list_fragment_listview_item, friends);
+			friendsListAdapter = new FriendsListAdapter(fragmentActivity, R.layout.friends_list_fragment_listview_item, friends);
 			final ListView listView = (ListView) viewGroup.findViewById(android.R.id.list);
 			listView.setAdapter(friendsListAdapter);
 
 			setRunningState(false);
 			isAsyncRefreshFriendsListRunning = false;
-			compatInvalidateOptionsMenu();
+			Utilities.compatInvalidateOptionsMenu(fragmentActivity);
 		}
 
 
@@ -332,7 +336,7 @@ public class FriendsListFragment extends SherlockListFragment
 		{
 			setRunningState(true);
 			isAsyncRefreshFriendsListRunning = true;
-			compatInvalidateOptionsMenu();
+			Utilities.compatInvalidateOptionsMenu(fragmentActivity);
 
 			viewGroup.removeAllViews();
 			inflater.inflate(R.layout.friends_list_fragment_loading, viewGroup);
