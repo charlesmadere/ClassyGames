@@ -967,13 +967,26 @@ public abstract class GenericGameFragment extends SherlockFragment
 		}
 
 
-		@Override
-		protected void onCancelled(final String serverResponse)
+		private void cancelled()
 		{
 			if (progressDialog.isShowing())
 			{
 				progressDialog.dismiss();
 			}
+		}
+
+
+		@Override
+		protected void onCancelled()
+		{
+			cancelled();
+		}
+
+
+		@Override
+		protected void onCancelled(final String serverResponse)
+		{
+			cancelled();
 		}
 
 

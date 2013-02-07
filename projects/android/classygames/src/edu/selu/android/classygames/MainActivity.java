@@ -33,6 +33,9 @@ public class MainActivity extends SherlockActivity
 	private Session.StatusCallback sessionStatusCallback;
 
 	private boolean isResumed = false;
+	private boolean hasFinished = false;
+
+
 
 
 	/**
@@ -80,6 +83,7 @@ public class MainActivity extends SherlockActivity
 
 		if (resultCode == CENTRAL_FRAGMENT_ACTIVITY_REQUEST_CODE_FINISH)
 		{
+			hasFinished = true;
 			finish();
 		}
 	}
@@ -102,17 +106,18 @@ public class MainActivity extends SherlockActivity
 	@Override
 	protected void onDestroy()
 	{
-		super.onDestroy();
+		isResumed = false;
 		uiHelper.onDestroy();
+		super.onDestroy();
 	}
 
 
 	@Override
 	protected void onPause()
 	{
-		super.onPause();
-		uiHelper.onPause();
 		isResumed = false;
+		uiHelper.onPause();
+		super.onPause();
 	}
 
 
@@ -123,11 +128,14 @@ public class MainActivity extends SherlockActivity
 		uiHelper.onResume();
 		isResumed = true;
 
-		final Person whoAmI = Utilities.WhoAmIUtilities.getWhoAmI(MainActivity.this);
-
-		if (whoAmI != null && whoAmI.isValid())
+		if (!hasFinished)
 		{
-			startCentralFragmentActivity();
+			final Person whoAmI = Utilities.WhoAmIUtilities.getWhoAmI(this);
+	
+			if (whoAmI != null && whoAmI.isValid())
+			{
+				startCentralFragmentActivity();
+			}
 		}
 	}
 
@@ -135,9 +143,11 @@ public class MainActivity extends SherlockActivity
 	@Override
 	protected void onSaveInstanceState(final Bundle outState)
 	{
-		super.onSaveInstanceState(outState);
 		uiHelper.onSaveInstanceState(outState);
+		super.onSaveInstanceState(outState);
 	}
+
+
 
 
 	private void onSessionStateChange(final Session session, final SessionState state, final Exception exception)
@@ -205,8 +215,7 @@ public class MainActivity extends SherlockActivity
 		}
 
 
-		@Override
-		protected void onCancelled(final Person facebookIdentity)
+		private void cancelled()
 		{
 			session.closeAndClearTokenInformation();
 			viewGroup.removeAllViews();
@@ -217,13 +226,34 @@ public class MainActivity extends SherlockActivity
 
 
 		@Override
+		protected void onCancelled()
+		{
+			cancelled();
+		}
+
+
+		@Override
+		protected void onCancelled(final Person facebookIdentity)
+		{
+			cancelled();
+		}
+
+
+		@Override
 		protected void onPostExecute(final Person facebookIdentity)
 		{
-			Utilities.WhoAmIUtilities.setWhoAmI(context, facebookIdentity);
-			viewGroup.removeAllViews();
-			isAsyncGetFacebookIdentityRunning = false;
+			if (facebookIdentity.isValid())
+			{
+				Utilities.WhoAmIUtilities.setWhoAmI(context, facebookIdentity);
+				viewGroup.removeAllViews();
+				isAsyncGetFacebookIdentityRunning = false;
 
-			startCentralFragmentActivity();
+				startCentralFragmentActivity();
+			}
+			else
+			{
+				cancelled();
+			}
 		}
 
 

@@ -20,8 +20,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -38,7 +39,7 @@ import edu.selu.android.classygames.models.Person;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
-public class GamesListFragment extends SherlockListFragment
+public class GamesListFragment extends SherlockListFragment implements OnItemClickListener
 {
 
 
@@ -150,6 +151,14 @@ public class GamesListFragment extends SherlockListFragment
 		}
 
 		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+
+	@Override
+	public void onItemClick(final AdapterView<?> l, final View v, final int position, final long id)
+	{
+		final Game game = gamesListAdapter.getItem(position);
+		gamesListFragmentOnGameSelectedListener.gameListFragmentOnGameSelected(game);
 	}
 
 
@@ -347,6 +356,7 @@ public class GamesListFragment extends SherlockListFragment
 			gamesListAdapter = new GamesListAdapter(fragmentActivity, R.layout.games_list_fragment_listview_item, games);
 			final ListView listView = (ListView) viewGroup.findViewById(android.R.id.list);
 			listView.setAdapter(gamesListAdapter);
+			listView.setOnItemClickListener(GamesListFragment.this);
 
 			isAsyncRefreshGamesListRunning = false;
 			Utilities.compatInvalidateOptionsMenu(fragmentActivity);
@@ -587,18 +597,7 @@ public class GamesListFragment extends SherlockListFragment
 				final TextView time = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_time);
 				time.setText(game.getTimestampFormatted(context));
 
-				if (game.isTurnYours())
-				{
-					convertView.setOnClickListener(new OnClickListener()
-					{
-						@Override
-						public void onClick(final View v)
-						{
-							gamesListFragmentOnGameSelectedListener.gameListFragmentOnGameSelected(game);
-						}
-					});
-				}
-				else
+				if (game.isTurnTheirs())
 				{
 					convertView.setOnClickListener(null);
 				}

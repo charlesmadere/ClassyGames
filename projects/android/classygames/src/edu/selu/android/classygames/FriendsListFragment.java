@@ -17,8 +17,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -39,7 +40,7 @@ import edu.selu.android.classygames.models.Person;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
-public class FriendsListFragment extends SherlockListFragment
+public class FriendsListFragment extends SherlockListFragment implements OnItemClickListener
 {
 
 
@@ -152,6 +153,14 @@ public class FriendsListFragment extends SherlockListFragment
 		}
 
 		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+
+	@Override
+	public void onItemClick(final AdapterView<?> l, final View v, final int position, final long id)
+	{
+		final Person friend = friendsListAdapter.getItem(position);
+		friendsListFragmentOnFriendSelectedListener.friendsListFragmentOnFriendSelected(friend);
 	}
 
 
@@ -396,6 +405,7 @@ public class FriendsListFragment extends SherlockListFragment
 			friendsListAdapter = new FriendsListAdapter(fragmentActivity, R.layout.friends_list_fragment_listview_item, friends);
 			final ListView listView = (ListView) viewGroup.findViewById(android.R.id.list);
 			listView.setAdapter(friendsListAdapter);
+			listView.setOnItemClickListener(FriendsListFragment.this);
 
 			setRunningState(false);
 			isAsyncRefreshFriendsListRunning = false;
@@ -461,22 +471,11 @@ public class FriendsListFragment extends SherlockListFragment
 			viewHolder.picture.setImageDrawable(emptyProfilePicture);
 			Utilities.getImageLoader(context).displayImage(Utilities.FacebookUtilities.GRAPH_API_URL + friend.getId() + Utilities.FacebookUtilities.GRAPH_API_URL_PICTURE_TYPE_SMALL_SSL, viewHolder.picture);
 
-			convertView.setOnClickListener(new OnClickListener()
-			{
-				@Override
-				public void onClick(final View v)
-				{
-					friendsListFragmentOnFriendSelectedListener.friendsListFragmentOnFriendSelected(friend);
-				}
-			});
-
 			return convertView;
 		}
 
 
 	}
-
-
 
 
 	private final static class ViewHolder

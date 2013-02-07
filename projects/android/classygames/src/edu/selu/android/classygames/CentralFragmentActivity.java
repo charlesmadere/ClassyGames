@@ -32,12 +32,16 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	public final static int RESULT_CODE_FINISH = MainActivity.CENTRAL_FRAGMENT_ACTIVITY_REQUEST_CODE_FINISH;
 	public final static int NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FRIEND_SELECTED = 16;
 
+	private final static String KEY_PREVIOUS_ACTION_BAR_TITLE = "KEY_PREVIOUS_ACTION_BAR_TITLE";
+	private final static String KEY_PREVIOUS_ACTION_BAR_HOME_ENABLED = "KEY_PREVIOUS_ACTION_BAR_HOME_ENABLED";
+
 
 
 
 	private UiLifecycleHelper uiHelper;
 	private Session.StatusCallback sessionStatusCallback;
 
+	private boolean isActionBarHomeEnabled = false;
 	private boolean isResumed = false;
 
 	private EmptyGameFragment emptyGameFragment;
@@ -67,25 +71,54 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 		uiHelper = new UiLifecycleHelper(this, sessionStatusCallback);
 		uiHelper.onCreate(savedInstanceState);
 
-		if (savedInstanceState == null)
+		final FragmentManager fManager = getSupportFragmentManager();
+
+		if (isDeviceLarge())
+		{
+			gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.central_fragment_activity_fragment_games_list_fragment);
+		}
+		else
+		{
+			gamesListFragment = new GamesListFragment();
+		}
+
+		try
+		{
+			genericGameFragment = (GenericGameFragment) getSupportFragmentManager().findFragmentById(R.id.central_fragment_activity_fragment_game);
+		}
+		catch (final ClassCastException e)
+		{
+
+		}
+
+		if (savedInstanceState == null || savedInstanceState.isEmpty())
 		{
 			emptyGameFragment = new EmptyGameFragment();
-
-			final FragmentManager fManager = getSupportFragmentManager();
 			final FragmentTransaction fTransaction = fManager.beginTransaction();
 
 			if (isDeviceLarge())
 			{
-				gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.central_fragment_activity_fragment_games_list_fragment);
 				fTransaction.add(R.id.central_fragment_activity_fragment_game, emptyGameFragment);
 			}
 			else
 			{
-				gamesListFragment = new GamesListFragment();
 				fTransaction.add(R.id.central_fragment_activity_container, gamesListFragment);
 			}
 
 			fTransaction.commit();
+		}
+		else
+		{
+			final boolean previousActionBarHomeEnabled = savedInstanceState.getBoolean(KEY_PREVIOUS_ACTION_BAR_HOME_ENABLED);
+			final CharSequence previousActionBarTitle = savedInstanceState.getCharSequence(KEY_PREVIOUS_ACTION_BAR_TITLE);
+
+			final ActionBar actionBar = getSupportActionBar();
+			actionBar.setDisplayHomeAsUpEnabled(previousActionBarHomeEnabled);
+
+			if (previousActionBarTitle != null)
+			{
+				actionBar.setTitle(previousActionBarTitle);
+			}
 		}
 	}
 
@@ -140,8 +173,9 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	protected void onDestroy()
 	{
-		super.onDestroy();
+		isResumed = false;
 		uiHelper.onDestroy();
+		super.onDestroy();
 	}
 
 
@@ -178,9 +212,9 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	protected void onPause()
 	{
-		super.onPause();
-		uiHelper.onPause();
 		isResumed = false;
+		uiHelper.onPause();
+		super.onPause();
 	}
 
 
@@ -196,8 +230,12 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	protected void onSaveInstanceState(final Bundle outState)
 	{
-		super.onSaveInstanceState(outState);
+		final ActionBar actionBar = getSupportActionBar();
+		outState.putBoolean(KEY_PREVIOUS_ACTION_BAR_HOME_ENABLED, isActionBarHomeEnabled);
+		outState.putCharSequence(KEY_PREVIOUS_ACTION_BAR_TITLE, actionBar.getTitle());
+
 		uiHelper.onSaveInstanceState(outState);
+		super.onSaveInstanceState(outState);
 	}
 
 
@@ -272,10 +310,13 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	public void gamesListFragmentOnResume()
 	{
+		gamesListFragment = (GamesListFragment) getSupportFragmentManager().findFragmentById(R.id.central_fragment_activity_fragment_games_list_fragment);
+
 		if (gamesListFragment != null && gamesListFragment.isVisible())
 		{
 			final ActionBar actionBar = getSupportActionBar();
-			actionBar.setDisplayHomeAsUpEnabled(false);
+			isActionBarHomeEnabled = false;
+			actionBar.setDisplayHomeAsUpEnabled(isActionBarHomeEnabled);
 			actionBar.setTitle(R.string.games_list_fragment_title);
 		}
 	}
@@ -306,11 +347,21 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	public void genericGameFragmentOnResume()
 	{
-		if (genericGameFragment != null && genericGameFragment.isVisible())
+		try
 		{
-			final ActionBar actionBar = getSupportActionBar();
-			actionBar.setDisplayHomeAsUpEnabled(true);
-			actionBar.setTitle(genericGameFragment.getActionBarTitle());
+			genericGameFragment = (GenericGameFragment) getSupportFragmentManager().findFragmentById(R.id.central_fragment_activity_fragment_game);
+
+			if (genericGameFragment != null && genericGameFragment.isVisible())
+			{
+				final ActionBar actionBar = getSupportActionBar();
+				isActionBarHomeEnabled = true;
+				actionBar.setDisplayHomeAsUpEnabled(isActionBarHomeEnabled);
+				actionBar.setTitle(genericGameFragment.getActionBarTitle());
+			}
+		}
+		catch (final ClassCastException e)
+		{
+
 		}
 	}
 
