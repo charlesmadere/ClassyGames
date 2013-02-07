@@ -4,10 +4,14 @@ package edu.selu.android.classygames;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -164,6 +168,7 @@ public class FriendsListFragment extends SherlockListFragment
 				break;
 
 			case R.id.generic_refresh_menu_refresh:
+				getSherlockActivity().getPreferences(Context.MODE_PRIVATE).edit().clear().commit();
 				friendsListFragmentOnRefreshSelectedListener.friendsListFragmentOnRefreshSelected();
 				refreshFriendsList();
 				break;
@@ -263,30 +268,97 @@ public class FriendsListFragment extends SherlockListFragment
 
 			if (!isCancelled())
 			{
-				Request.newMyFriendsRequest(session, new GraphUserListCallback()
+				final SharedPreferences sPreferences = fragmentActivity.getPreferences(Context.MODE_PRIVATE);
+
+				@SuppressWarnings("unchecked")
+				final Map<String, String> map = (Map<String, String>) sPreferences.getAll();
+
+				if (map == null || map.isEmpty())
 				{
-					@Override
-					public void onCompleted(final List<GraphUser> users, final Response response)
+					Request.newMyFriendsRequest(session, new GraphUserListCallback()
 					{
-						for (int i = 0; i < users.size() && !isCancelled(); ++i)
+						@Override
+						public void onCompleted(final List<GraphUser> users, final Response response)
 						{
-							final GraphUser user = users.get(i);
-							final String id = user.getId();
-							final String name = user.getName();
-
-							if (Person.isIdValid(id) && Person.isNameValid(name))
+							for (int i = 0; i < users.size() && !isCancelled(); ++i)
 							{
-								final Person friend = new Person(id, name);
-								friends.add(friend);
-							}
-						}
+								final GraphUser user = users.get(i);
+								final String id = user.getId();
+								final String name = user.getName();
 
-						Collections.sort(friends, new FriendsListSorter());
+								final Person friend = addFriend(id, name);
+
+								if (friend != null)
+								{
+									friends.add(friend);
+								}
+							}
+
+							friends.trimToSize();
+							final SharedPreferences.Editor editor = sPreferences.edit();
+							editor.clear();
+
+							for (int i = 0; i < friends.size() && !isCancelled(); ++i)
+							{
+								final Person friend = friends.get(i);
+								editor.putString(friend.getIdAsString(), friend.getName());
+							}
+
+							editor.commit();
+						}
+					}).executeAndWait();
+				}
+				else
+				{
+					final Set<String> set = map.keySet();
+
+					for (final Iterator<String> i = set.iterator(); i.hasNext() && !isCancelled(); )
+					{
+						final String id = i.next();
+						final String name = map.get(id);
+
+						final Person friend = addFriend(id, name);
+
+						if (friend != null)
+						{
+							friends.add(friend);
+						}
 					}
-				}).executeAndWait();
+
+					friends.trimToSize();
+				}
 			}
 
+			Collections.sort(friends, new FriendsListSorter());
+
 			return friends;
+		}
+
+
+		/**
+		 * Creates a Person object out of the given data (if the given data is
+		 * valid).
+		 * 
+		 * @param id
+		 * The friend's Facebook ID.
+		 * 
+		 * @param name
+		 * The friend's Facebook name.
+		 * 
+		 * @return
+		 * Returns a Person object representing the given Facebook friend. Has
+		 * the possibility of returning null if the given data is invalid.
+		 */
+		private Person addFriend(final String id, final String name)
+		{
+			Person friend = null;
+
+			if (Person.isIdValid(id) && Person.isNameValid(name))
+			{
+				friend = new Person(id, name);
+			}
+
+			return friend;
 		}
 
 
