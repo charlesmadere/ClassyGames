@@ -145,26 +145,29 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	public void friendsListFragmentOnFriendSelected(final Person friend)
 	{
-		final Bundle arguments = new Bundle();
-		arguments.putLong(ConfirmGameFragment.KEY_FRIEND_ID, friend.getId());
-		arguments.putString(ConfirmGameFragment.KEY_FRIEND_NAME, friend.getName());
-
-		confirmGameFragment = new ConfirmGameFragment();
-		confirmGameFragment.setArguments(arguments);
-
-		final FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
-		fTransaction.addToBackStack(null);
-
-		if (isDeviceLarge())
+		if (isDeviceLarge() || (confirmGameFragment == null || !confirmGameFragment.isVisible()))
 		{
-			fTransaction.replace(R.id.new_game_fragment_activity_fragment_confirm_game_fragment, confirmGameFragment);
-		}
-		else
-		{
-			fTransaction.replace(R.id.new_game_fragment_activity_container, confirmGameFragment);
-		}
+			final Bundle arguments = new Bundle();
+			arguments.putLong(ConfirmGameFragment.KEY_FRIEND_ID, friend.getId());
+			arguments.putString(ConfirmGameFragment.KEY_FRIEND_NAME, friend.getName());
 
-		fTransaction.commit();
+			confirmGameFragment = new ConfirmGameFragment();
+			confirmGameFragment.setArguments(arguments);
+
+			final FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
+			fTransaction.addToBackStack(null);
+
+			if (isDeviceLarge())
+			{
+				fTransaction.replace(R.id.new_game_fragment_activity_fragment_confirm_game_fragment, confirmGameFragment);
+			}
+			else
+			{
+				fTransaction.add(R.id.new_game_fragment_activity_container, confirmGameFragment);
+			}
+
+			fTransaction.commit();
+		}
 	}
 
 

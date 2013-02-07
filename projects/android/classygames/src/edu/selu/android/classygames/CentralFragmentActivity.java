@@ -149,10 +149,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 				super.onBackPressed();
 			}
 
-			if (isDeviceLarge())
-			{
-				gamesListFragmentOnResume();
-			}
+			gamesListFragmentOnResume();
 		}
 		else
 		{
@@ -275,42 +272,54 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	public void gameListFragmentOnGameSelected(final Game game)
 	{
-		if (genericGameFragment != null && genericGameFragment.isVisible())
+		if (isDeviceLarge() || (genericGameFragment == null || !genericGameFragment.isVisible()))
 		{
-			onBackPressed();
+			if (genericGameFragment != null && genericGameFragment.isVisible())
+			{
+				onBackPressed();
+			}
+
+			// if a future release of Classy Games has chess as well as checkers,
+			// then we will need to do some logic here to check the game type and
+			// then instantiate that game's fragment
+			genericGameFragment = new CheckersGameFragment();
+
+			final Bundle arguments = new Bundle();
+			arguments.putString(GenericGameFragment.KEY_GAME_ID, game.getId());
+			arguments.putLong(GenericGameFragment.KEY_PERSON_ID, game.getPerson().getId());
+			arguments.putString(GenericGameFragment.KEY_PERSON_NAME, game.getPerson().getName());
+			genericGameFragment.setArguments(arguments);
+
+			final FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
+			fTransaction.addToBackStack(null);
+
+			if (isDeviceLarge())
+			{
+				fTransaction.replace(R.id.central_fragment_activity_fragment_game, genericGameFragment);
+			}
+			else
+			{
+				fTransaction.add(R.id.central_fragment_activity_container, genericGameFragment);
+			}
+
+			fTransaction.commit();
 		}
-
-		// if a future release of Classy Games has chess as well as checkers,
-		// then we will need to do some logic here to check the game type and
-		// then instantiate that game's fragment
-		genericGameFragment = new CheckersGameFragment();
-
-		final Bundle arguments = new Bundle();
-		arguments.putString(GenericGameFragment.KEY_GAME_ID, game.getId());
-		arguments.putLong(GenericGameFragment.KEY_PERSON_ID, game.getPerson().getId());
-		arguments.putString(GenericGameFragment.KEY_PERSON_NAME, game.getPerson().getName());
-		genericGameFragment.setArguments(arguments);
-
-		final FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
-		fTransaction.addToBackStack(null);
-
-		if (isDeviceLarge())
-		{
-			fTransaction.replace(R.id.central_fragment_activity_fragment_game, genericGameFragment);
-		}
-		else
-		{
-			fTransaction.replace(R.id.central_fragment_activity_container, genericGameFragment);
-		}
-
-		fTransaction.commit();
 	}
 
 
 	@Override
 	public void gamesListFragmentOnResume()
 	{
-		gamesListFragment = (GamesListFragment) getSupportFragmentManager().findFragmentById(R.id.central_fragment_activity_fragment_games_list_fragment);
+		final FragmentManager fManager = getSupportFragmentManager();
+
+		if (isDeviceLarge())
+		{
+			gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.central_fragment_activity_fragment_games_list_fragment);
+		}
+		else
+		{
+			gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.central_fragment_activity_container);
+		}
 
 		if (gamesListFragment != null && gamesListFragment.isVisible())
 		{
@@ -349,7 +358,16 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	{
 		try
 		{
-			genericGameFragment = (GenericGameFragment) getSupportFragmentManager().findFragmentById(R.id.central_fragment_activity_fragment_game);
+			final FragmentManager fManager = getSupportFragmentManager();
+
+			if (isDeviceLarge())
+			{
+				genericGameFragment = (GenericGameFragment) fManager.findFragmentById(R.id.central_fragment_activity_fragment_game);
+			}
+			else
+			{
+				genericGameFragment = (GenericGameFragment) fManager.findFragmentById(R.id.central_fragment_activity_container);
+			}
 
 			if (genericGameFragment != null && genericGameFragment.isVisible())
 			{
