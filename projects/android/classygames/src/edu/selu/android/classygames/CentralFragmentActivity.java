@@ -217,47 +217,6 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	}
 
 
-	/**
-	 * Attemps to remove an instance of GenericGameFragment from the screen.
-	 * 
-	 * @return
-	 * Returns true if an instance of GenericGameFragment was displaying on the
-	 * screen and was then removed.
-	 */
-	private boolean destroyGenericGameFragment()
-	{
-		if (genericGameFragment == null || !genericGameFragment.isVisible())
-		{
-			return true;
-		}
-		else
-		{
-			final FragmentManager fManager = getSupportFragmentManager();
-			fManager.popBackStack();
-
-			final FragmentTransaction fTransaction = fManager.beginTransaction();
-
-			if (isDeviceLarge())
-			{
-				emptyGameFragment = new EmptyGameFragment();
-				fTransaction.replace(R.id.central_fragment_activity_fragment_game, emptyGameFragment);
-			}
-			else
-			{
-				fTransaction.replace(R.id.central_fragment_activity_container, gamesListFragment);
-			}
-
-			fTransaction.commit();
-
-			final ActionBar actionBar = getSupportActionBar();
-			actionBar.setDisplayHomeAsUpEnabled(false);
-			actionBar.setTitle(R.string.games_list_fragment_title);
-
-			return false;
-		}
-	}
-
-
 	private void onSessionStateChange(final Session session, final SessionState state, final Exception exception)
 	{
 		if (isResumed)
@@ -278,7 +237,10 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	public void gameListFragmentOnGameSelected(final Game game)
 	{
-		destroyGenericGameFragment();
+		if (genericGameFragment != null && genericGameFragment.isVisible())
+		{
+			onBackPressed();
+		}
 
 		// if a future release of Classy Games has chess as well as checkers,
 		// then we will need to do some logic here to check the game type and
@@ -329,14 +291,14 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	public void genericGameFragmentOnAsyncGetGameOnCancelled()
 	{
-		destroyGenericGameFragment();
+		onBackPressed();
 	}
 
 
 	@Override
 	public void genericGameFragmentOnDataError()
 	{
-		destroyGenericGameFragment();
+		onBackPressed();
 		Utilities.easyToastAndLogError(this, "Couldn't create a game as malformed data was detected!");
 	}
 
