@@ -19,7 +19,7 @@ import edu.selu.android.classygames.models.Game;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
-public class CentralFragmentActivity extends SherlockFragmentActivity implements
+public class GameFragmentActivity extends SherlockFragmentActivity implements
 	GamesListFragment.GamesListFragmentOnGameSelectedListener,
 	GamesListFragment.GamesListFragmentOnResumeListener,
 	GenericGameFragment.GenericGameFragmentIsDeviceLargeListener,
@@ -29,7 +29,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 {
 
 
-	public final static int RESULT_CODE_FINISH = MainActivity.CENTRAL_FRAGMENT_ACTIVITY_REQUEST_CODE_FINISH;
+	public final static int RESULT_CODE_FINISH = MainActivity.GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FINISH;
 	public final static int NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FRIEND_SELECTED = 16;
 
 	private final static String KEY_PREVIOUS_ACTION_BAR_TITLE = "KEY_PREVIOUS_ACTION_BAR_TITLE";
@@ -55,7 +55,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	protected void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.central_fragment_activity);
+		setContentView(R.layout.game_fragment_activity);
 		setResult(RESULT_CODE_FINISH);
 		Utilities.styleActionBar(getResources(), getSupportActionBar(), false);
 
@@ -75,7 +75,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 
 		if (isDeviceLarge())
 		{
-			gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.central_fragment_activity_fragment_games_list_fragment);
+			gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_games_list_fragment);
 		}
 		else
 		{
@@ -84,7 +84,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 
 		try
 		{
-			genericGameFragment = (GenericGameFragment) getSupportFragmentManager().findFragmentById(R.id.central_fragment_activity_fragment_game);
+			genericGameFragment = (GenericGameFragment) getSupportFragmentManager().findFragmentById(R.id.game_fragment_activity_fragment_game);
 		}
 		catch (final ClassCastException e)
 		{
@@ -98,11 +98,11 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 
 			if (isDeviceLarge())
 			{
-				fTransaction.add(R.id.central_fragment_activity_fragment_game, emptyGameFragment);
+				fTransaction.add(R.id.game_fragment_activity_fragment_game, emptyGameFragment);
 			}
 			else
 			{
-				fTransaction.add(R.id.central_fragment_activity_container, gamesListFragment);
+				fTransaction.add(R.id.game_fragment_activity_container, gamesListFragment);
 			}
 
 			fTransaction.commit();
@@ -248,7 +248,7 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 	 */
 	private boolean isDeviceLarge()
 	{
-		return findViewById(R.id.central_fragment_activity_container) == null;
+		return findViewById(R.id.game_fragment_activity_container) == null;
 	}
 
 
@@ -295,11 +295,11 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 
 			if (isDeviceLarge())
 			{
-				fTransaction.replace(R.id.central_fragment_activity_fragment_game, genericGameFragment);
+				fTransaction.replace(R.id.game_fragment_activity_fragment_game, genericGameFragment);
 			}
 			else
 			{
-				fTransaction.add(R.id.central_fragment_activity_container, genericGameFragment);
+				fTransaction.add(R.id.game_fragment_activity_container, genericGameFragment);
 			}
 
 			fTransaction.commit();
@@ -314,11 +314,11 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 
 		if (isDeviceLarge())
 		{
-			gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.central_fragment_activity_fragment_games_list_fragment);
+			gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_games_list_fragment);
 		}
 		else
 		{
-			gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.central_fragment_activity_container);
+			gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.game_fragment_activity_container);
 		}
 
 		if (gamesListFragment != null && gamesListFragment.isVisible())
@@ -362,11 +362,11 @@ public class CentralFragmentActivity extends SherlockFragmentActivity implements
 
 			if (isDeviceLarge())
 			{
-				genericGameFragment = (GenericGameFragment) fManager.findFragmentById(R.id.central_fragment_activity_fragment_game);
+				genericGameFragment = (GenericGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_game);
 			}
 			else
 			{
-				genericGameFragment = (GenericGameFragment) fManager.findFragmentById(R.id.central_fragment_activity_container);
+				genericGameFragment = (GenericGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_container);
 			}
 
 			if (genericGameFragment != null && genericGameFragment.isVisible())

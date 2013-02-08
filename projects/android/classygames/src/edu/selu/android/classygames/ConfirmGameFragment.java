@@ -28,7 +28,8 @@ public class ConfirmGameFragment extends SherlockFragment
 
 
 	/**
-	 * 
+	 * The Person object that will be shown on this Fragment's layout. The user
+	 * must confirm whether or not they want to play against this friend.
 	 */
 	private Person friend;
 
@@ -95,7 +96,6 @@ public class ConfirmGameFragment extends SherlockFragment
 			}
 			else
 			{
-				view = inflater.inflate(R.layout.confirm_game_fragment, null);
 				confirmGameFragmentOnDataErrorListener.confirmGameFragmentOnDataError();
 			}
 		}

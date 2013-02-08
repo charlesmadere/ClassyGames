@@ -6,13 +6,13 @@
 	android:orientation="horizontal"
 	style="@style/ClassyGames">
 	<fragment
-		android:id="@+id/central_fragment_activity_fragment_games_list_fragment"
+		android:id="@+id/game_fragment_activity_fragment_games_list_fragment"
 		android:layout_height="match_parent"
 		android:layout_weight="4"
 		android:layout_width="0dip"
 		android:name="edu.selu.android.classygames.GamesListFragment" />
 	<FrameLayout
-		android:id="@+id/central_fragment_activity_fragment_game"
+		android:id="@+id/game_fragment_activity_fragment_game"
 		android:layout_height="match_parent"
 		android:layout_weight="5"
 		android:layout_width="0dip" />

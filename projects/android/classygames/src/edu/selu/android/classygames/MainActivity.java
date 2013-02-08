@@ -26,7 +26,7 @@ public class MainActivity extends SherlockActivity
 {
 
 
-	public final static int CENTRAL_FRAGMENT_ACTIVITY_REQUEST_CODE_FINISH = 8;
+	public final static int GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FINISH = 8;
 
 
 	private UiLifecycleHelper uiHelper;
@@ -81,7 +81,7 @@ public class MainActivity extends SherlockActivity
 		super.onActivityResult(requestCode, resultCode, data);
 		uiHelper.onActivityResult(requestCode, resultCode, data);
 
-		if (resultCode == CENTRAL_FRAGMENT_ACTIVITY_REQUEST_CODE_FINISH)
+		if (resultCode == GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FINISH)
 		{
 			hasFinished = true;
 			finish();
@@ -167,8 +167,8 @@ public class MainActivity extends SherlockActivity
 
 	private void startCentralFragmentActivity()
 	{
-		final Intent intent = new Intent(MainActivity.this, CentralFragmentActivity.class);
-		startActivityForResult(intent, CENTRAL_FRAGMENT_ACTIVITY_REQUEST_CODE_FINISH);
+		final Intent intent = new Intent(MainActivity.this, GameFragmentActivity.class);
+		startActivityForResult(intent, GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FINISH);
 	}
 
 

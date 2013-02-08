@@ -23,7 +23,7 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 
 
 	public final static int RESULT_CODE_DEFAULT = 0;
-	public final static int RESULT_CODE_FRIEND_SELECTED = CentralFragmentActivity.NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FRIEND_SELECTED;
+	public final static int RESULT_CODE_FRIEND_SELECTED = GameFragmentActivity.NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FRIEND_SELECTED;
 
 	public final static String KEY_FRIEND_ID = "KEY_FRIEND_ID";
 	public final static String KEY_FRIEND_NAME = "KEY_FRIEND_NAME";
@@ -66,7 +66,7 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	public void onBackPressed()
 	{
-		if (friendsListFragment.getIsAsyncRefreshFriendsListRunning())
+		if (friendsListFragment != null && friendsListFragment.getIsAsyncRefreshFriendsListRunning())
 		{
 			friendsListFragment.cancelAsyncRefreshFriendsList();
 		}
@@ -115,8 +115,8 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	public void confirmGameFragmentOnDataError()
 	{
-		onBackPressed();
 		Utilities.easyToastAndLogError(this, getString(R.string.confirm_game_fragment_data_error));
+		onBackPressed();
 	}
 
 
