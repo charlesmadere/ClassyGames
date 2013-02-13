@@ -140,6 +140,18 @@ public abstract class GenericPiece
 
 
 	/**
+	 * Checks to see if this GenericPiece is a player's piece.
+	 * 
+	 * @return
+	 * Returns true if this GenericPiece is a player's piece.
+	 */
+	public boolean isTeamPlayer()
+	{
+		return team == TEAM_PLAYER;
+	}
+
+
+	/**
 	 * In the act of removing / killing a GenericPiece object on the game
 	 * board, the GenericPiece's type will be set to TYPE_NULL. This method
 	 * will return true if the GenericPiece's type is == to TYPE_NULL.
@@ -150,18 +162,6 @@ public abstract class GenericPiece
 	public boolean isTypeNull()
 	{
 		return type == TYPE_NULL;
-	}
-
-
-	/**
-	 * Checks to see if this GenericPiece is a player's piece.
-	 * 
-	 * @return
-	 * Returns true if this GenericPiece is a player's piece.
-	 */
-	public boolean isTeamPlayer()
-	{
-		return team == TEAM_PLAYER;
 	}
 
 
