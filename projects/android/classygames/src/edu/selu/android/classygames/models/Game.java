@@ -178,6 +178,7 @@ public class Game
 	{
 		id = gameData.getString(ServerUtilities.POST_DATA_GAME_ID);
 		timestamp = gameData.getLong(ServerUtilities.POST_DATA_LAST_MOVE);
+		turn = whichTurn;
 
 		final long personId = gameData.getLong(ServerUtilities.POST_DATA_ID);
 		final String personName = gameData.getString(ServerUtilities.POST_DATA_NAME);
