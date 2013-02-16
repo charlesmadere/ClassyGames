@@ -3,5 +3,6 @@
 	android:contentDescription="@string/empty_game_fragment_imageview_placeholder"
 	android:layout_height="match_parent"
 	android:layout_width="match_parent"
+	android:padding="16dip"
 	android:src="@drawable/empty_profile_picture_large"
 	style="@style/ClassyGames" />

@@ -1,7 +1,6 @@
 package edu.selu.android.classygames;
 
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,6 +9,7 @@ import android.util.Log;
 import android.widget.ImageButton;
 import edu.selu.android.classygames.games.Coordinate;
 import edu.selu.android.classygames.games.Position;
+import edu.selu.android.classygames.games.chess.Board;
 import edu.selu.android.classygames.games.chess.Piece;
 import edu.selu.android.classygames.utilities.Utilities;
 
@@ -19,6 +19,8 @@ public class ChessGameFragment extends GenericGameFragment
 
 
 	private final static String LOG_TAG = Utilities.LOG_TAG + " - ChessGameFragment";
+
+
 
 
 	/**
@@ -103,22 +105,6 @@ public class ChessGameFragment extends GenericGameFragment
 
 
 	@Override
-	protected void buildTeam(final JSONArray team, final byte whichTeam)
-	{
-
-	}
-
-
-	@Override
-	protected JSONObject createJSONPiece(final byte whichTeam, final Position position) throws JSONException
-	{
-		JSONObject JSONPiece = null;
-
-		return JSONPiece;
-	}
-
-
-	@Override
 	protected void flush(final Position position)
 	{
 		final String tag = createTag(position.getCoordinate());
@@ -187,16 +173,9 @@ public class ChessGameFragment extends GenericGameFragment
 
 
 	@Override
-	protected int getTitle()
+	protected void initNewBoard() throws JSONException
 	{
-		return R.string.chess_game_fragment_title;
-	}
-
-
-	@Override
-	protected void initNewBoard()
-	{
-
+		board = new Board();
 	}
 
 
@@ -213,6 +192,13 @@ public class ChessGameFragment extends GenericGameFragment
 		final Coordinate coordinate = new Coordinate((String) positionCurrentSelected.getTag());
 		final Position position = board.getPosition(coordinate);
 		Log.d(LOG_TAG, "Click! " + coordinate + " - has piece? " + position.getPiece());
+	}
+
+
+	@Override
+	protected void resumeOldBoard(final JSONObject boardJSON) throws JSONException
+	{
+		board = new Board(boardJSON);
 	}
 
 

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -36,7 +35,6 @@ import com.actionbarsherlock.view.MenuItem;
 
 import edu.selu.android.classygames.games.Coordinate;
 import edu.selu.android.classygames.games.GenericBoard;
-import edu.selu.android.classygames.games.GenericPiece;
 import edu.selu.android.classygames.games.Position;
 import edu.selu.android.classygames.models.Game;
 import edu.selu.android.classygames.models.Person;
@@ -68,9 +66,9 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * JSON String downloaded from the server that represents the board.
+	 * JSONObject downloaded from the server that represents the board.
 	 */
-	private String boardJSON;
+	private JSONObject boardJSON;
 
 
 	/**
@@ -270,7 +268,15 @@ public abstract class GenericGameFragment extends SherlockFragment
 				else
 				{
 					game = new Game(person);
-					initNewBoard();
+
+					try
+					{
+						initNewBoard();
+					}
+					catch (final JSONException e)
+					{
+						genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataError();
+					}
 				}
 			}
 			else
@@ -509,16 +515,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * @return
-	 * Returns a String to be set as the ActionBar's title.
-	 */
-	public String getActionBarTitle()
-	{
-		return getString(getTitle()) + " " + game.getPerson().getName();
-	}
-
-
-	/**
 	 * If the AsyncGetGame AsyncTask is not already running, then this will
 	 * execute it.
 	 */
@@ -577,22 +573,22 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * pulls the needed information out of it. If there is an error during this
 	 * process, null is returned.
 	 * 
-	 * @param jsonResponse
+	 * @param serverResponse
 	 * The JSON response String as received from the web server. This method
 	 * <strong>does</strong> check to see if this passed in String is either
 	 * null or empty. In that case, the method will immediately log that error
 	 * and then return null.
 	 * 
 	 * @return
-	 * Returns a String containing only the necessary game information. But, if
-	 * there is an error in the parsing process, this method will log some
-	 * stuff and then return null.
+	 * Returns a JSONObject containing only the necessary game information.
+	 * But, if there is an error in the parsing process, this method will log
+	 * some stuff and then return null.
 	 */
-	private String parseServerResponse(final String jsonResponse)
+	private JSONObject parseServerResponse(final String serverResponse)
 	{
-		String parsedServerResponse = null;
+		JSONObject parsedServerResponse = null;
 
-		if (jsonResponse == null || jsonResponse.isEmpty())
+		if (serverResponse == null || serverResponse.isEmpty())
 		{
 			Log.e(LOG_TAG, "Either null or empty String received from server on send move!");
 		}
@@ -600,12 +596,12 @@ public abstract class GenericGameFragment extends SherlockFragment
 		{
 			try
 			{
-				final JSONObject jsonData = new JSONObject(jsonResponse);
+				final JSONObject jsonData = new JSONObject(serverResponse);
 				final JSONObject jsonResult = jsonData.getJSONObject(ServerUtilities.POST_DATA_RESULT);
 
 				try
 				{
-					parsedServerResponse = jsonResult.getString(ServerUtilities.POST_DATA_SUCCESS);
+					parsedServerResponse = new JSONObject(jsonResult.getString(ServerUtilities.POST_DATA_SUCCESS));
 				}
 				catch (final JSONException e)
 				{
@@ -624,48 +620,12 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * This method will initialize the game board as if this is an in progress
-	 * game. This <strong>resumes</strong> an old game. Do not use this for a
-	 * brand new game.
-	 */
-	private void resumeOldBoard()
-	{
-		if (boardJSON == null || boardJSON.isEmpty())
-		{
-			Log.e(LOG_TAG, "Tried to build the board from either a null or empty JSON String!");
-			genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataError();
-		}
-		else
-		{
-			try
-			{
-				final JSONArray teams = new JSONObject(boardJSON).getJSONObject("board").getJSONArray("teams");
-
-				if (teams.length() == 2)
-				{
-					buildTeam(teams.getJSONArray(0), GenericPiece.TEAM_PLAYER);
-					buildTeam(teams.getJSONArray(1), GenericPiece.TEAM_OPPONENT);
-				}
-				else
-				{
-					Log.e(LOG_TAG, "JSON String has improper number of teams! teams.length(): " + teams.length());
-				}
-			}
-			catch (final JSONException e)
-			{
-				Log.e(LOG_TAG, "JSON String is massively malformed.");
-			}
-		}
-	}
-
-
-	/**
 	 * If the AsyncSendMove AsyncTask is not already running, then this will
 	 * execute it.
 	 */
 	private void sendMove()
 	{
-		if (!isAsyncSendMoveRunning)
+		if (!isAsyncSendMoveRunning && boardLocked)
 		{
 			asyncSendMove = new AsyncSendMove(getSherlockActivity());
 			asyncSendMove.execute();
@@ -752,6 +712,16 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		if (boardLocked)
 		{
+			try
+			{
+				board.refresh();
+			}
+			catch (final JSONException e)
+			{
+				genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataError();
+			}
+
+			flush();
 			boardLocked = false;
 		}
 	}
@@ -806,8 +776,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 		private void cancelled()
 		{
-			isAsyncGetGameRunning = false;
-			Utilities.compatInvalidateOptionsMenu(fragmentActivity);
+			setRunningState(false);
 			genericGameFragmentOnAsyncGetGameOnCancelledListener.genericGameFragmentOnAsyncGetGameOnCancelled();
 		}
 
@@ -830,6 +799,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		protected void onPostExecute(final String serverResponse)
 		{
 			boardJSON = parseServerResponse(serverResponse);
+
 			viewGroup.removeAllViews();
 			inflater.inflate(getGameView(), viewGroup);
 
@@ -837,21 +807,61 @@ public abstract class GenericGameFragment extends SherlockFragment
 			resumeOldBoard();
 			flush();
 
-			isAsyncGetGameRunning = false;
-			Utilities.compatInvalidateOptionsMenu(fragmentActivity);
+			setRunningState(false);
 		}
 
 
 		@Override
 		protected void onPreExecute()
 		{
-			isAsyncGetGameRunning = true;
-			Utilities.compatInvalidateOptionsMenu(fragmentActivity);
+			setRunningState(true);
 
 			viewGroup.removeAllViews();
 			inflater.inflate(R.layout.generic_game_fragment_loading, viewGroup);
 			final TextView textView = (TextView) viewGroup.findViewById(R.id.generic_game_fragment_loading_textview);
 			textView.setText(getString(getLoadingText(), game.getPerson().getName()));
+		}
+
+
+		/**
+		 * This method will initialize the game board as if this is an in progress
+		 * game. This <strong>resumes</strong> an old game. Do not use this for a
+		 * brand new game.
+		 */
+		private void resumeOldBoard()
+		{
+			if (boardJSON == null)
+			{
+				Log.e(LOG_TAG, "Tried to build the board from either a null or empty JSON String!");
+				genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataError();
+			}
+			else
+			{
+				try
+				{
+					GenericGameFragment.this.resumeOldBoard(boardJSON);
+				}
+				catch (final JSONException e)
+				{
+					Log.e(LOG_TAG, "resumeOldBoard(): boardJSON is massively malformed.", e);
+					genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataError();
+				}
+			}
+		}
+
+
+		/**
+		 * Use this method to reset the options menu. This should only be used when
+		 * an AsyncTask is running.
+		 * 
+		 * @param isRunning
+		 * True if the AsyncTask is just starting to run, false if it's just
+		 * finished.
+		 */
+		private void setRunningState(final boolean isRunning)
+		{
+			isAsyncGetGameRunning = isRunning;
+			Utilities.compatInvalidateOptionsMenu(fragmentActivity);
 		}
 
 
@@ -889,12 +899,12 @@ public abstract class GenericGameFragment extends SherlockFragment
 				{
 					final Person whoAmI = Utilities.getWhoAmI(context);
 
-					final JSONObject jsonBoard = board.makeJSON();
-					final String jsonBoardString = jsonBoard.toString();
+					final JSONObject boardJSON = board.makeJSON();
+					final String boardJSONString = boardJSON.toString();
 
 					final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CREATOR, whoAmI.getIdAsString()));
-					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_BOARD, jsonBoardString));
+					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_BOARD, boardJSONString));
 
 					if (game.getId() == null || game.getId().isEmpty())
 					{
@@ -1006,44 +1016,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * Create's a team from some JSON data.
-	 * 
-	 * @param team
-	 * An individual team as parsed in from a JSON String.
-	 * 
-	 * @param whichTeam
-	 * GenericPiece.TEAM_* should be used here.
-	 */
-	protected abstract void buildTeam(final JSONArray team, final byte whichTeam);
-
-
-	/**
-	 * Attempts to create a JSONObject out of the given Position's GenericPiece
-	 * object. It's possible that the given Position object has no GenericPiece
-	 * at all however, and in that case this method will return null. There is
-	 * another situation where null will be returned as well though: if this
-	 * Position has a piece, but it doesn't belong to the team specified in the
-	 * whichTeam parameter. 
-	 * 
-	 * @param whichTeam
-	 * The team that you're currently trying to create a JSONArray for.
-	 * 
-	 * @param position
-	 * The position that you're currently at on the game board.
-	 * 
-	 * @return
-	 * If it was able to be created, this will return a JSONObject that
-	 * represents the GenericPiece object at the given position on the game
-	 * board. Be sure to check for a null response however.
-	 * 
-	 * @throws JSONException
-	 * An error occurred when trying to create a JSONObject for the given
-	 * position on the game board.
-	 */
-	protected abstract JSONObject createJSONPiece(final byte whichTeam, final Position position) throws JSONException;
-
-
-	/**
 	 * A Game specific implementation that looks at the given Position
 	 * parameter and draws a piece on that position if / as necessary.
 	 * 
@@ -1072,17 +1044,12 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * @return
-	 * Returns the int value for the String to use as the title to display in
-	 * the Action Bar.
-	 */
-	protected abstract int getTitle();
-
-
-	/**
 	 * Initialize the game board as if it's a <strong>brand new game</strong>.
+	 * 
+	 * @throws JSONException
+	 * This should never happen. 
 	 */
-	protected abstract void initNewBoard();
+	protected abstract void initNewBoard() throws JSONException;
 
 
 	/**
@@ -1104,6 +1071,16 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * The ImageButton object that was just now clicked on.
 	 */
 	protected abstract void onBoardClick(final ImageButton positionPreviousSelected, final ImageButton positionCurrentSelected);
+
+
+	/**
+	 * Creates a Board object out of the given JSON String.
+	 * 
+	 * @param boardJSON
+	 * The JSONObject that represents the game board as was received from the
+	 * Classy Games server.
+	 */
+	protected abstract void resumeOldBoard(final JSONObject boardJSON) throws JSONException;
 
 
 }

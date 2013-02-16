@@ -1,7 +1,6 @@
 package edu.selu.android.classygames;
 
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,6 +28,8 @@ public class CheckersGameFragment extends GenericGameFragment
 
 
 	private final static String LOG_TAG = Utilities.LOG_TAG + " - CheckersGameFragment";
+
+
 
 
 	/**
@@ -61,74 +62,6 @@ public class CheckersGameFragment extends GenericGameFragment
 	protected void onCreateView()
 	{
 
-	}
-
-
-	@Override
-	protected void buildTeam(final JSONArray team, final byte whichTeam)
-	{
-		if (board == null)
-		{
-			board = new Board();
-		}
-
-		for (int i = 0; i < team.length(); ++i)
-		{
-			try
-			{
-				final JSONObject piece = team.getJSONObject(i);
-				final JSONArray coordinates = piece.getJSONArray("coordinate");
-
-				if (coordinates.length() == 2)
-				{
-					final Coordinate coordinate = new Coordinate(coordinates.getInt(0), coordinates.getInt(1));
-
-					if (board.isPositionValid(coordinate))
-					{
-						final int type = piece.getInt("type");
-						board.getPosition(coordinate).setPiece(new Piece(whichTeam, type));
-					}
-					else
-					{
-						Log.e(LOG_TAG, "Coordinate outside proper range: " + coordinate + ".");
-					}
-				}
-				else
-				{
-					Log.e(LOG_TAG, "A piece had an improper number of coordinate values.");
-				}
-			}
-			catch (final JSONException e)
-			{
-				Log.e(LOG_TAG, "A team's piece was massively malformed.");
-			}
-		}
-	}
-
-
-	@Override
-	protected JSONObject createJSONPiece(final byte whichTeam, final Position position) throws JSONException
-	{
-		JSONObject JSONPiece = null;
-
-		if (position.hasPiece())
-		{
-			final Piece piece = (Piece) position.getPiece();
-
-			if (piece.isTeam(whichTeam))
-			{
-				final Coordinate coordinate = position.getCoordinate();
-				final JSONArray JSONCoordinate = new JSONArray();
-				JSONCoordinate.put(coordinate.getX());
-				JSONCoordinate.put(coordinate.getY());
-
-				JSONPiece = new JSONObject();
-				JSONPiece.put("coordinate", JSONCoordinate);
-				JSONPiece.put("type", piece.getType());
-			}
-		}
-
-		return JSONPiece;
 	}
 
 
@@ -173,14 +106,7 @@ public class CheckersGameFragment extends GenericGameFragment
 
 
 	@Override
-	protected int getTitle()
-	{
-		return R.string.checkers_game_fragment_title;
-	}
-
-
-	@Override
-	protected void initNewBoard()
+	protected void initNewBoard() throws JSONException
 	{
 		board = new Board();
 
@@ -361,6 +287,13 @@ public class CheckersGameFragment extends GenericGameFragment
 		final Coordinate coordinate = new Coordinate((String) positionCurrentSelected.getTag());
 		final Position position = board.getPosition(coordinate);
 		Log.d(LOG_TAG, "Click! " + coordinate + " - has piece? " + position.getPiece());
+	}
+
+
+	@Override
+	protected void resumeOldBoard(final JSONObject boardJSON) throws JSONException
+	{
+		board = new Board(boardJSON);
 	}
 
 

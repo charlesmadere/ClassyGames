@@ -1,7 +1,11 @@
 package edu.selu.android.classygames.games.chess;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import edu.selu.android.classygames.games.GenericBoard;
+import edu.selu.android.classygames.games.GenericPiece;
 
 
 /**
@@ -20,8 +24,13 @@ public class Board extends GenericBoard
 
 	/**
 	 * Creates a Chess board object.
+	 * 
+	 * @throws JSONException
+	 * If a glitch or something happened while trying to create some JSON data
+	 * then this JSONException will be thrown. When using this particular
+	 * constructor this should never happen.
 	 */
-	public Board()
+	public Board() throws JSONException
 	{
 		super(LENGTH_HORIZONTAL, LENGTH_VERTICAL);
 	}
@@ -30,21 +39,30 @@ public class Board extends GenericBoard
 	/**
 	 * Creates a Checkers board object using the given JSON String.
 	 * 
-	 * @param jsonBoard
-	 * JSON String that represents the board.
+	 * @param boardJSON
+	 * JSONObject that represents the board.
+	 * 
+	 * @throws JSONException
+	 * If a glitch or something happened while trying to create this JSONObject
+	 * then a JSONException will be thrown.
 	 */
-	public Board(final String jsonBoard)
+	public Board(final JSONObject boardJSON) throws JSONException
 	{
-		super(LENGTH_HORIZONTAL, LENGTH_VERTICAL);
-
-		
+		super(LENGTH_HORIZONTAL, LENGTH_VERTICAL, boardJSON);
 	}
 
 
 
 
 	@Override
-	protected void makeDefaultBoard()
+	protected GenericPiece buildPiece(final byte whichTeam, final int type)
+	{
+		return new Piece(whichTeam, type);
+	}
+
+
+	@Override
+	protected void initializeDefaultBoard()
 	{
 		// player team
 		getPosition(0, 0).setPiece(new Piece(Piece.TEAM_PLAYER, Piece.TYPE_ROOK));

@@ -29,6 +29,12 @@ public abstract class GenericBoard
 
 
 	/**
+	 * JSONObject that represents the game board. This can be null.
+	 */
+	private JSONObject boardJSON;
+
+
+	/**
 	 * This board's positions. This is a two dimensional array that should be
 	 * accessed as [X][Y]. So a position on the board that is (5, 3) - (X = 5
 	 * and Y = 3), would be [5][3].
@@ -39,37 +45,55 @@ public abstract class GenericBoard
 
 
 	/**
-	 * Creates the Board object. Initializes all of the board's positions.
+	 * Creates the Board object. Initializes all of the board's positions and
+	 * sets them to this board's defaults.
 	 * 
 	 * @param lengthHorizontal
 	 * The <strong>X length</strong> of the game board.
 	 * 
 	 * @param lengthVertical
 	 * The <strong>Y length</strong> of the game board.
+	 * 
+	 * @throws JSONException
+	 * If a glitch or something happened while trying to create some JSON data
+	 * then this JSONException will be thrown. When using this particular
+	 * constructor this should never happen.
 	 */
-	protected GenericBoard(final byte lengthHorizontal, final byte lengthVertical)
+	protected GenericBoard(final byte lengthHorizontal, final byte lengthVertical) throws JSONException
 	{
 		this.lengthHorizontal = lengthHorizontal;
 		this.lengthVertical = lengthVertical;
 
 		initializePositions();
+		refresh();
 	}
 
 
 	/**
-	 * Initializes all of this board's positions.
+	 * Creates the Board object. Initializes all of the board's positions and
+	 * sets them to the data found in the boardJSON JSONObject.
+	 * 
+	 * @param lengthHorizontal
+	 * The <strong>X length</strong> of the game board.
+	 * 
+	 * @param lengthVertical
+	 * The <strong>Y length</strong> of the game board.
+	 * 
+	 * @param boardJSON
+	 * JSONObject that represents the board.
+	 * 
+	 * @throws JSONException
+	 * If a glitch or something happened while trying to create some JSON data
+	 * then this JSONException will be thrown.
 	 */
-	private void initializePositions()
+	protected GenericBoard(final byte lengthHorizontal, final byte lengthVertical, final JSONObject boardJSON) throws JSONException
 	{
-		positions = new Position[lengthHorizontal][lengthVertical];
+		this.lengthHorizontal = lengthHorizontal;
+		this.lengthVertical = lengthVertical;
+		this.boardJSON = boardJSON;
 
-		for (byte x = 0; x < lengthHorizontal; ++x)
-		{
-			for (byte y = 0; y < lengthVertical; ++y)
-			{
-				positions[x][y] = new Position(x, y);
-			}
-		}
+		initializePositions();
+		refresh();
 	}
 
 
@@ -147,6 +171,68 @@ public abstract class GenericBoard
 	public Position getPosition(final Coordinate coordinate)
 	{
 		return getPosition(coordinate.getX(), coordinate.getY());
+	}
+
+
+	/**
+	 * Initializes the game board using data from the boardJSON variable.
+	 * 
+	 * @throws JSONException
+	 * If a glitch or something happened while trying to create some JSON data
+	 * then this JSONException will be thrown.
+	 */
+	private void initializeBoardFromJSON() throws JSONException
+	{
+		final JSONArray teams = boardJSON.getJSONObject("board").getJSONArray("teams");
+		initializeTeamFromJSON(teams.getJSONArray(0), GenericPiece.TEAM_PLAYER);
+		initializeTeamFromJSON(teams.getJSONArray(1), GenericPiece.TEAM_OPPONENT);
+	}
+
+
+	/**
+	 * Initializes all of this board's positions.
+	 */
+	private void initializePositions()
+	{
+		positions = new Position[lengthHorizontal][lengthVertical];
+
+		for (byte x = 0; x < lengthHorizontal; ++x)
+		{
+			for (byte y = 0; y < lengthVertical; ++y)
+			{
+				positions[x][y] = new Position(x, y);
+			}
+		}
+	}
+
+
+	/**
+	 * Creates a team of pieces from the given JSONArray.
+	 * 
+	 * @param team
+	 * JSONArray of all of this team's pieces.
+	 * 
+	 * @param whichTeam
+	 * A byte that specifies which team these pieces belong to.
+	 * 
+	 * @throws JSONException
+	 * If a glitch or something happened while trying to create this JSONObject
+	 * then a JSONException will be thrown.
+	 */
+	private void initializeTeamFromJSON(final JSONArray team, final byte whichTeam) throws JSONException
+	{
+		for (int i = 0; i < team.length(); ++i)
+		{
+			final JSONObject piece = team.getJSONObject(i);
+
+			final JSONArray coordinates = piece.getJSONArray("coordinate");
+			final Coordinate coordinate = new Coordinate(coordinates.getInt(0), coordinates.getInt(1));
+
+			final int type = piece.getInt("type");
+
+			final GenericPiece genericPiece = buildPiece(whichTeam, type);
+			getPosition(coordinate).setPiece(genericPiece);
+		}
 	}
 
 
@@ -293,6 +379,44 @@ public abstract class GenericBoard
 	}
 
 
+	/**
+	 * This will reset the board back to it's original state as created
+	 * immediately after using this class's constructor.
+	 * 
+	 * @throws JSONException
+	 * If a glitch or something happened while trying to create some JSON data
+	 * then this JSONException will be thrown. If the game was not resumed from
+	 * JSON data then this should never happen.
+	 */
+	public void refresh() throws JSONException
+	{
+		if (boardJSON == null)
+		{
+			initializeDefaultBoard();
+		}
+		else
+		{
+			initializeBoardFromJSON();
+		}
+	}
+
+
+
+
+	/**
+	 * Creates a GenericPiece object out of the given data.
+	 * 
+	 * @param whichTeam
+	 * The team that this new GenericPiece object should be on.
+	 * 
+	 * @param type
+	 * The type of piece that this GenericPiece object should be. This should
+	 * be something like a king for checkers or a knight for chess.
+	 * 
+	 * @return
+	 * Returns a new GenericPiece object made from the given data.
+	 */
+	protected abstract GenericPiece buildPiece(final byte whichTeam, final int type);
 
 
 	/**
@@ -301,7 +425,7 @@ public abstract class GenericBoard
 	 * used. This should probably be run (in the case that it needs to be)
 	 * immediately after the object is constructed.
 	 */
-	protected abstract void makeDefaultBoard();
+	protected abstract void initializeDefaultBoard();
 
 
 }

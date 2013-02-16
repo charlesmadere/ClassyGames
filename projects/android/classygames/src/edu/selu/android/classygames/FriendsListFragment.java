@@ -416,7 +416,7 @@ public class FriendsListFragment extends SherlockListFragment implements OnItemC
 
 		/**
 		 * Use this method to reset the options menu. This should only be used when
-		 * an AsyncTask is running.
+		 * an AsyncTask has either just begun or has just ended.
 		 * 
 		 * @param isRunning
 		 * True if the AsyncTask is just starting to run, false if it's just
