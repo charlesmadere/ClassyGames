@@ -103,7 +103,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 			{
 				try
 				{
-					emptyGameFragment = (EmptyGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_container);
+					gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.game_fragment_activity_container);
 				}
 				catch (final ClassCastException e)
 				{
@@ -278,6 +278,18 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 			fTransaction.commit();
 		}
+	}
+
+
+	@Override
+	public void gamesListFragmentOnRefreshSelected()
+	{
+		if (isDeviceLarge() && genericGameFragment != null && genericGameFragment.isVisible())
+		{
+			onBackPressed();
+		}
+
+		gamesListFragment.refreshGamesList();
 	}
 
 

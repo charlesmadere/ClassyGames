@@ -219,7 +219,7 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	public void friendsListFragmentOnRefreshSelected()
 	{
-		if (isDeviceLarge() && confirmGameFragment.isLoaded())
+		if (isDeviceLarge() && confirmGameFragment != null && confirmGameFragment.isVisible())
 		{
 			onBackPressed();
 		}

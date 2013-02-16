@@ -93,6 +93,18 @@ public class GamesListFragment extends SherlockListFragment implements OnItemCli
 	}
 
 
+	/**
+	 * One of this class's callback methods. This is fired whenever the user
+	 * has selected the Refresh button on the action bar.
+	 */
+	private GamesListFragmentOnRefreshSelectedListener gamesListFragmentOnRefreshSelectedListener;
+
+	public interface GamesListFragmentOnRefreshSelectedListener
+	{
+		public void gamesListFragmentOnRefreshSelected();
+	}
+
+
 
 
 	@Override
@@ -121,6 +133,7 @@ public class GamesListFragment extends SherlockListFragment implements OnItemCli
 		try
 		{
 			gamesListFragmentOnGameSelectedListener = (GamesListFragmentOnGameSelectedListener) activity;
+			gamesListFragmentOnRefreshSelectedListener = (GamesListFragmentOnRefreshSelectedListener) activity;
 		}
 		catch (final ClassCastException e)
 		{
@@ -242,7 +255,7 @@ public class GamesListFragment extends SherlockListFragment implements OnItemCli
 	/**
 	 * Refreshes the Games List if a refresh is not already running.
 	 */
-	private void refreshGamesList()
+	public void refreshGamesList()
 	{
 		if (!isAsyncRefreshGamesListRunning)
 		{
