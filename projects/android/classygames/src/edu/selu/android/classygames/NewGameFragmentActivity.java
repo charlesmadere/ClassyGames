@@ -49,24 +49,36 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 
 		if (savedInstanceState == null)
 		{
+			final FragmentTransaction fTransaction = fManager.beginTransaction();
+
 			if (isDeviceLarge())
 			{
-				confirmGameFragment = (ConfirmGameFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_fragment_confirm_game_fragment);
+				emptyConfirmGameFragment = new EmptyConfirmGameFragment();
+				fTransaction.add(R.id.new_game_fragment_activity_fragment_confirm_game_fragment, emptyConfirmGameFragment);
+
 				friendsListFragment = (FriendsListFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_fragment_friends_list_fragment);
 			}
 			else
 			{
 				friendsListFragment = new FriendsListFragment();
-				final FragmentTransaction fTransaction = fManager.beginTransaction();
 				fTransaction.add(R.id.new_game_fragment_activity_container, friendsListFragment);
-				fTransaction.commit();
 			}
+
+			fTransaction.commit();
 		}
 		else
 		{
 			if (isDeviceLarge())
 			{
-				confirmGameFragment = (ConfirmGameFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_fragment_confirm_game_fragment);
+				try
+				{
+					emptyConfirmGameFragment = (EmptyConfirmGameFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_fragment_confirm_game_fragment);
+				}
+				catch (final ClassCastException e)
+				{
+					confirmGameFragment = (ConfirmGameFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_fragment_confirm_game_fragment);
+				}
+
 				friendsListFragment = (FriendsListFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_fragment_friends_list_fragment);
 			}
 			else
