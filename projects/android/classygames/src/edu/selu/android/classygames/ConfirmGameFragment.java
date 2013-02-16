@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 
 import edu.selu.android.classygames.models.Person;
+import edu.selu.android.classygames.utilities.FacebookUtilities;
+import edu.selu.android.classygames.utilities.TypefaceUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
@@ -115,13 +117,13 @@ public class ConfirmGameFragment extends SherlockFragment
 
 			final TextView friendName = (TextView) view.findViewById(R.id.confirm_game_fragment_loaded_friend_name);
 			friendName.setText(friend.getName());
-			friendName.setTypeface(Utilities.TypefaceUtilities.getTypeface(getSherlockActivity().getAssets(), Utilities.TypefaceUtilities.SNELL_ROUNDHAND_BDSCR));
+			friendName.setTypeface(TypefaceUtilities.getTypeface(getSherlockActivity().getAssets(), TypefaceUtilities.SNELL_ROUNDHAND_BDSCR));
 
 			final TextView description = (TextView) view.findViewById(R.id.confirm_game_fragment_loaded_description);
 			description.setText(getString(R.string.confirm_game_fragment_loaded_description_text, friend.getName()));
 
 			final Button buttonConfirm = (Button) view.findViewById(R.id.confirm_game_fragment_loaded_button_confirm);
-			buttonConfirm.setTypeface(Utilities.TypefaceUtilities.getTypeface(getSherlockActivity().getAssets(), Utilities.TypefaceUtilities.BLUE_HIGHWAY_D));
+			buttonConfirm.setTypeface(TypefaceUtilities.getTypeface(getSherlockActivity().getAssets(), TypefaceUtilities.BLUE_HIGHWAY_D));
 			buttonConfirm.setOnClickListener(new OnClickListener()
 			{
 				@Override
@@ -132,7 +134,7 @@ public class ConfirmGameFragment extends SherlockFragment
 			});
 
 			final Button buttonDeny = (Button) view.findViewById(R.id.confirm_game_fragment_loaded_button_deny);
-			buttonDeny.setTypeface(Utilities.TypefaceUtilities.getTypeface(getSherlockActivity().getAssets(), Utilities.TypefaceUtilities.BLUE_HIGHWAY_D));
+			buttonDeny.setTypeface(TypefaceUtilities.getTypeface(getSherlockActivity().getAssets(), TypefaceUtilities.BLUE_HIGHWAY_D));
 			buttonDeny.setOnClickListener(new OnClickListener()
 			{
 				@Override
@@ -143,7 +145,7 @@ public class ConfirmGameFragment extends SherlockFragment
 			});
 
 			final ImageView profilePicture = (ImageView) view.findViewById(R.id.confirm_game_fragment_loaded_friend_profile_picture);
-			Utilities.getImageLoader(getSherlockActivity()).displayImage(Utilities.FacebookUtilities.GRAPH_API_URL + friend.getId() + Utilities.FacebookUtilities.GRAPH_API_URL_PICTURE_TYPE_LARGE_SSL, profilePicture);
+			Utilities.getImageLoader(getSherlockActivity()).displayImage(FacebookUtilities.GRAPH_API_URL + friend.getId() + FacebookUtilities.GRAPH_API_URL_PICTURE_TYPE_LARGE_SSL, profilePicture);
 		}
 	}
 

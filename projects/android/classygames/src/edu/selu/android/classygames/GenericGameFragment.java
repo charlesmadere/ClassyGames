@@ -40,6 +40,7 @@ import edu.selu.android.classygames.games.GenericPiece;
 import edu.selu.android.classygames.games.Position;
 import edu.selu.android.classygames.models.Game;
 import edu.selu.android.classygames.models.Person;
+import edu.selu.android.classygames.utilities.ServerUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
@@ -621,15 +622,15 @@ public abstract class GenericGameFragment extends SherlockFragment
 			try
 			{
 				final JSONObject jsonData = new JSONObject(jsonResponse);
-				final JSONObject jsonResult = jsonData.getJSONObject(Utilities.ServerUtilities.PostData.POST_DATA_RESULT);
+				final JSONObject jsonResult = jsonData.getJSONObject(ServerUtilities.POST_DATA_RESULT);
 
 				try
 				{
-					parsedServerResponse = jsonResult.getString(Utilities.ServerUtilities.PostData.POST_DATA_SUCCESS);
+					parsedServerResponse = jsonResult.getString(ServerUtilities.POST_DATA_SUCCESS);
 				}
 				catch (final JSONException e)
 				{
-					final String errorMessage = jsonResult.getString(Utilities.ServerUtilities.PostData.POST_DATA_ERROR);
+					final String errorMessage = jsonResult.getString(ServerUtilities.POST_DATA_ERROR);
 					Log.e(LOG_TAG, "Server returned error message: " + errorMessage);
 				}
 			}
@@ -808,11 +809,11 @@ public abstract class GenericGameFragment extends SherlockFragment
 			if (!isCancelled())
 			{
 				final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-				nameValuePairs.add(new BasicNameValuePair(Utilities.ServerUtilities.PostData.POST_DATA_ID, game.getId()));
+				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, game.getId()));
 
 				try
 				{
-					serverResponse = Utilities.ServerUtilities.postToServer(Utilities.ServerUtilities.Addresses.GET_GAME_ADDRESS, nameValuePairs);
+					serverResponse = ServerUtilities.postToServer(ServerUtilities.ADDRESS_GET_GAME, nameValuePairs);
 				}
 				catch (final IOException e)
 				{
@@ -907,59 +908,38 @@ public abstract class GenericGameFragment extends SherlockFragment
 			{
 				try
 				{
-					final JSONObject jsonTeams = new JSONObject();
-					jsonTeams.put("teams", createJSONTeams());
+					final Person whoAmI = Utilities.getWhoAmI(context);
 
-					final JSONObject jsonBoard = new JSONObject();
-					jsonBoard.put("board", jsonTeams);
+					final JSONObject jsonBoard = board.makeJSON();
+					final String jsonBoardString = jsonBoard.toString();
 
-					if (!isCancelled())
+					final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CREATOR, whoAmI.getIdAsString()));
+					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_BOARD, jsonBoardString));
+
+					if (game.getId() == null || game.getId().isEmpty())
 					{
-						final Person whoAmI = Utilities.WhoAmIUtilities.getWhoAmI(context);
-						final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-						nameValuePairs.add(new BasicNameValuePair(Utilities.ServerUtilities.PostData.POST_DATA_USER_CREATOR, whoAmI.getIdAsString()));
-						nameValuePairs.add(new BasicNameValuePair(Utilities.ServerUtilities.PostData.POST_DATA_BOARD, jsonBoard.toString()));
+						nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CHALLENGED, game.getPerson().getIdAsString()));
+						nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_NAME, game.getPerson().getName()));
 
-						if (game.getId() == null || game.getId().isEmpty())
-						{
-							nameValuePairs.add(new BasicNameValuePair(Utilities.ServerUtilities.PostData.POST_DATA_USER_CHALLENGED, game.getPerson().getIdAsString()));
-							nameValuePairs.add(new BasicNameValuePair(Utilities.ServerUtilities.PostData.POST_DATA_NAME, game.getPerson().getName()));
-
-							if (!isCancelled())
-							{
-								try
-								{
-									serverResponse = Utilities.ServerUtilities.postToServer(Utilities.ServerUtilities.Addresses.NEW_GAME_ADDRESS, nameValuePairs);
-								}
-								catch (final IOException e)
-								{
-									Log.e(LOG_TAG, "IOException error in AsyncSendMove - doInBackground()!", e);
-								}
-							}
-						}
-						else
-						{
-							nameValuePairs.add(new BasicNameValuePair(Utilities.ServerUtilities.PostData.POST_DATA_USER_CHALLENGED, game.getPerson().getIdAsString()));
-							nameValuePairs.add(new BasicNameValuePair(Utilities.ServerUtilities.PostData.POST_DATA_NAME, game.getPerson().getName()));
-							nameValuePairs.add(new BasicNameValuePair(Utilities.ServerUtilities.PostData.POST_DATA_GAME_ID, game.getId()));
-
-							if (!isCancelled())
-							{
-								try
-								{
-									serverResponse = Utilities.ServerUtilities.postToServer(Utilities.ServerUtilities.Addresses.NEW_MOVE_ADDRESS, nameValuePairs);
-								}
-								catch (final IOException e)
-								{
-									Log.e(LOG_TAG, "IOException error in AsyncSendMove - doInBackground()!", e);
-								}
-							}
-						}
+						serverResponse = ServerUtilities.postToServer(ServerUtilities.ADDRESS_NEW_GAME, nameValuePairs);
 					}
+					else
+					{
+						nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CHALLENGED, game.getPerson().getIdAsString()));
+						nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_NAME, game.getPerson().getName()));
+						nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_GAME_ID, game.getId()));
+
+						serverResponse = ServerUtilities.postToServer(ServerUtilities.ADDRESS_NEW_MOVE, nameValuePairs);
+					}
+				}
+				catch (final IOException e)
+				{
+					Log.e(LOG_TAG, "IOException error in AsyncSendMove - doInBackground()!", e);
 				}
 				catch (final JSONException e)
 				{
-					Log.e(LOG_TAG, "Error in creating JSON data to send to server.");
+					Log.e(LOG_TAG, "JSONException error in AsyncSendMove - doInBackground()!", e);
 				}
 			}
 
@@ -1021,72 +1001,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 			progressDialog.setTitle(R.string.generic_game_fragment_sendmove_progressdialog_title);
 			progressDialog.show();
-		}
-
-
-		/**
-		 * Creates a single JSONArray containing two JSONArrays: one JSONArray
-		 * for each team on the game board. This method should never return
-		 * null.
-		 * 
-		 * @return
-		 * Returns a single JSONArray containing one JSONArray for each team on
-		 * the game board.
-		 */
-		private JSONArray createJSONTeams()
-		{
-			final JSONArray teamPlayer = createJSONTeam(GenericPiece.TEAM_PLAYER);
-			final JSONArray teamOpponent = createJSONTeam(GenericPiece.TEAM_OPPONENT);
-
-			final JSONArray teams = new JSONArray();
-			teams.put(teamPlayer);
-			teams.put(teamOpponent);
-
-			return teams;
-		}
-
-
-		/**
-		 * Creates a JSONArray for the given team. This method should never
-		 * return null.
-		 * 
-		 * @param whichTeam
-		 * The team that you want to create a JSONArray for.
-		 * 
-		 * @return
-		 * Returns a JSONArray containing the given team.
-		 */
-		private JSONArray createJSONTeam(final byte whichTeam)
-		{
-			final JSONArray jsonTeam = new JSONArray();
-
-			for (byte x = 0; x < board.getLengthHorizontal() && !isCancelled(); ++x)
-			{
-				for (byte y = 0; y < board.getLengthVertical() && !isCancelled(); ++y)
-				{
-					final Position position = board.getPosition(x, y);
-
-					if (position.hasPiece())
-					// this position has a piece in it
-					{
-						try
-						{
-							final JSONObject JSONPiece = createJSONPiece(whichTeam, position);
-
-							if (JSONPiece != null)
-							{
-								jsonTeam.put(JSONPiece);
-							}
-						}
-						catch (final JSONException e)
-						{
-							Log.e(LOG_TAG, "JSONException in createJSONTeam()! x: " + x + " y: " + y);
-						}
-					}
-				}
-			}
-
-			return jsonTeam;
 		}
 
 

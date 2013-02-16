@@ -1,7 +1,10 @@
 package edu.selu.android.classygames.utilities;
 
 
-public class KeysAndConstants
+/**
+ * Class with random key values that this app needs.
+ */
+public final class KeysAndConstants
 {
 
 

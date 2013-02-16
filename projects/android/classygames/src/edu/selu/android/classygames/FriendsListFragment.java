@@ -37,6 +37,8 @@ import com.facebook.Session;
 import com.facebook.model.GraphUser;
 
 import edu.selu.android.classygames.models.Person;
+import edu.selu.android.classygames.utilities.FacebookUtilities;
+import edu.selu.android.classygames.utilities.TypefaceUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
@@ -467,9 +469,9 @@ public class FriendsListFragment extends SherlockListFragment implements OnItemC
 			final ViewHolder viewHolder = (ViewHolder) convertView.getTag();
 			final Person friend = friends.get(position);
 			viewHolder.name.setText(friend.getName());
-			viewHolder.name.setTypeface(Utilities.TypefaceUtilities.getTypeface(context.getAssets(), Utilities.TypefaceUtilities.BLUE_HIGHWAY_D));
+			viewHolder.name.setTypeface(TypefaceUtilities.getTypeface(context.getAssets(), TypefaceUtilities.BLUE_HIGHWAY_D));
 			viewHolder.picture.setImageDrawable(emptyProfilePicture);
-			Utilities.getImageLoader(context).displayImage(Utilities.FacebookUtilities.GRAPH_API_URL + friend.getId() + Utilities.FacebookUtilities.GRAPH_API_URL_PICTURE_TYPE_SMALL_SSL, viewHolder.picture);
+			Utilities.getImageLoader(context).displayImage(FacebookUtilities.GRAPH_API_URL + friend.getId() + FacebookUtilities.GRAPH_API_URL_PICTURE_TYPE_SMALL_SSL, viewHolder.picture);
 
 			return convertView;
 		}

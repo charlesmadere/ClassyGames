@@ -1,6 +1,11 @@
 package edu.selu.android.classygames.games;
 
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+
 /**
  * A generic Board class. All games need to have their own Board class that
  * extends from this one.
@@ -197,6 +202,106 @@ public abstract class GenericBoard
 	{
 		return isPositionValid(coordinate.getX(), coordinate.getY());
 	}
+
+
+	/**
+	 * Creates a JSON representation of this GenericBoard object. The
+	 * JSONObject that is created here <strong>is not stored</strong>, so
+	 * please be sure to only run this method when you really need to okay? :)
+	 * 
+	 * @return
+	 * Returns a JSONObject that represents this GenericBoard object.
+	 * 
+	 * @throws JSONException
+	 * If a glitch or something happened while trying to create this JSONObject
+	 * then a JSONException will be thrown.
+	 */
+	public JSONObject makeJSON() throws JSONException
+	{
+		final JSONObject teams = new JSONObject();
+		teams.put("teams", makeJSONTeams());
+
+		final JSONObject board = new JSONObject();
+		board.put("board", teams);
+
+		return board;
+	}
+
+
+	/**
+	 * Creates a JSONArray of both teams (the player's and the opponent's) on
+	 * the board. This JSONArray is actually a JSONArray of two other
+	 * JSONArray's: one is the player's pieces and the other is the opponent's
+	 * pieces.
+	 * 
+	 * @return
+	 * Returns a JSONArray that contains two other JSONArrays: one is the
+	 * player's pieces and the other is the opponent's pieces.
+	 * 
+	 * @throws JSONException
+	 * If a glitch or something happened while trying to create this JSON
+	 * String then a JSONException will be thrown.
+	 */
+	private JSONArray makeJSONTeams() throws JSONException
+	{
+		final JSONArray teamPlayer = makeJSONTeam(GenericPiece.TEAM_PLAYER);
+		final JSONArray teamOpponent = makeJSONTeam(GenericPiece.TEAM_OPPONENT);
+
+		final JSONArray teams = new JSONArray();
+		teams.put(teamPlayer);
+		teams.put(teamOpponent);
+
+		return teams;
+	}
+
+
+	/**
+	 * Creates a JSONArray of one team's pieces. The team to make the pieces
+	 * for is specified by the whichTeam parameter.
+	 * 
+	 * @param whichTeam
+	 * Which team do you want to make a JSONArray for? You should use one of
+	 * the GenericPiece class's TEAM_* public static members for this
+	 * parameter.
+	 * 
+	 * @return
+	 * Returns a JSONArray that contains all of the given team's pieces. This
+	 * has the possibility of being an empty JSONArray.
+	 * 
+	 * @throws JSONException
+	 * If a glitch or something happened while trying to create this JSON
+	 * String then a JSONException will be thrown.
+	 */
+	private JSONArray makeJSONTeam(final byte whichTeam) throws JSONException
+	{
+		final JSONArray team = new JSONArray();
+
+		for (byte x = 0; x < lengthHorizontal; ++x)
+		{
+			for (byte y = 0; y < lengthVertical; ++y)
+			{
+				final Position position = getPosition(x, y);
+
+				if (position.hasPiece() && position.getPiece().isTeam(whichTeam))
+				{
+					team.put(position.makeJSON());
+				}
+			}
+		}
+
+		return team;
+	}
+
+
+
+
+	/**
+	 * Makes this GenericBoard object a default board. This should only be used
+	 * for a brand new game. If a game is being resumed then this should not be
+	 * used. This should probably be run (in the case that it needs to be)
+	 * immediately after the object is constructed.
+	 */
+	protected abstract void makeDefaultBoard();
 
 
 }

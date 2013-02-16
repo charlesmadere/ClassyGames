@@ -21,8 +21,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -36,6 +36,9 @@ import com.actionbarsherlock.view.MenuItem;
 
 import edu.selu.android.classygames.models.Game;
 import edu.selu.android.classygames.models.Person;
+import edu.selu.android.classygames.utilities.FacebookUtilities;
+import edu.selu.android.classygames.utilities.ServerUtilities;
+import edu.selu.android.classygames.utilities.TypefaceUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
@@ -288,11 +291,11 @@ public class GamesListFragment extends SherlockListFragment implements OnItemCli
 
 			if (!isCancelled())
 			{
-				final Person whoAmI = Utilities.WhoAmIUtilities.getWhoAmI(fragmentActivity);
+				final Person whoAmI = Utilities.getWhoAmI(fragmentActivity);
 
 				// create the data that will be 
 				final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-				nameValuePairs.add(new BasicNameValuePair(Utilities.ServerUtilities.PostData.POST_DATA_ID, whoAmI.getIdAsString()));
+				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, whoAmI.getIdAsString()));
 
 				if (!isCancelled())
 				{
@@ -303,7 +306,7 @@ public class GamesListFragment extends SherlockListFragment implements OnItemCli
 						// the nameValuePairs variable that we just created.
 						// The server requires we send it some information in
 						// order for us to get a meaningful response back.
-						final String jsonResponse = Utilities.ServerUtilities.postToServer(Utilities.ServerUtilities.Addresses.GET_GAMES_ADDRESS, nameValuePairs);
+						final String jsonResponse = ServerUtilities.postToServer(ServerUtilities.ADDRESS_GET_GAMES, nameValuePairs);
 
 						// This line does a lot. Check the parseServerResponse()
 						// method below to get detailed information. This will
@@ -403,23 +406,23 @@ public class GamesListFragment extends SherlockListFragment implements OnItemCli
 					try
 					{
 						final JSONObject jsonRaw = new JSONObject(jsonResponse);
-						final JSONObject jsonResult = jsonRaw.getJSONObject(Utilities.ServerUtilities.PostData.POST_DATA_RESULT);
-						final JSONObject jsonGameData = jsonResult.optJSONObject(Utilities.ServerUtilities.PostData.POST_DATA_SUCCESS);
+						final JSONObject jsonResult = jsonRaw.getJSONObject(ServerUtilities.POST_DATA_RESULT);
+						final JSONObject jsonGameData = jsonResult.optJSONObject(ServerUtilities.POST_DATA_SUCCESS);
 
 						if (jsonGameData == null)
 						{
-							final String errorMessage = jsonResult.getString(Utilities.ServerUtilities.PostData.POST_DATA_ERROR);
+							final String errorMessage = jsonResult.getString(ServerUtilities.POST_DATA_ERROR);
 							Log.e(LOG_TAG, "Server returned error message: " + errorMessage);
 						}
 						else
 						{
-							ArrayList<Game> turn = parseTurn(jsonGameData, Utilities.ServerUtilities.PostData.POST_DATA_TURN_YOURS, Game.TURN_YOURS);
+							ArrayList<Game> turn = parseTurn(jsonGameData, ServerUtilities.POST_DATA_TURN_YOURS, Game.TURN_YOURS);
 							if (turn != null && !turn.isEmpty())
 							{
 								games.addAll(turn);
 							}
 
-							turn = parseTurn(jsonGameData, Utilities.ServerUtilities.PostData.POST_DATA_TURN_THEIRS, Game.TURN_THEIRS);
+							turn = parseTurn(jsonGameData, ServerUtilities.POST_DATA_TURN_THEIRS, Game.TURN_THEIRS);
 							if (turn != null && !turn.isEmpty())
 							{
 								games.addAll(turn);
@@ -534,10 +537,10 @@ public class GamesListFragment extends SherlockListFragment implements OnItemCli
 				try
 				{
 					// create data from the server's json response
-					final long id = gameData.getLong(Utilities.ServerUtilities.PostData.POST_DATA_ID);
-					final String name = gameData.getString(Utilities.ServerUtilities.PostData.POST_DATA_NAME);
-					final String gameId = gameData.getString(Utilities.ServerUtilities.PostData.POST_DATA_GAME_ID);
-					final long timestamp = gameData.getLong(Utilities.ServerUtilities.PostData.POST_DATA_LAST_MOVE);
+					final long id = gameData.getLong(ServerUtilities.POST_DATA_ID);
+					final String name = gameData.getString(ServerUtilities.POST_DATA_NAME);
+					final String gameId = gameData.getString(ServerUtilities.POST_DATA_GAME_ID);
+					final long timestamp = gameData.getLong(ServerUtilities.POST_DATA_LAST_MOVE);
 	
 					// create a new game from this data
 					game = new Game(timestamp, new Person(id, name), gameId, whichTurn);
@@ -588,11 +591,11 @@ public class GamesListFragment extends SherlockListFragment implements OnItemCli
 
 				final ImageView picture = (ImageView) convertView.findViewById(R.id.games_list_fragment_listview_item_picture);
 				picture.setImageDrawable(emptyProfilePicture);
-				Utilities.getImageLoader(context).displayImage(Utilities.FacebookUtilities.GRAPH_API_URL + game.getPerson().getId() + Utilities.FacebookUtilities.GRAPH_API_URL_PICTURE_TYPE_SMALL_SSL, picture);
+				Utilities.getImageLoader(context).displayImage(FacebookUtilities.GRAPH_API_URL + game.getPerson().getId() + FacebookUtilities.GRAPH_API_URL_PICTURE_TYPE_SMALL_SSL, picture);
 
 				final TextView name = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_name);
 				name.setText(game.getPerson().getName());
-				name.setTypeface(Utilities.TypefaceUtilities.getTypeface(context.getAssets(), Utilities.TypefaceUtilities.BLUE_HIGHWAY_D));
+				name.setTypeface(TypefaceUtilities.getTypeface(context.getAssets(), TypefaceUtilities.BLUE_HIGHWAY_D));
 
 				final TextView time = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_time);
 				time.setText(game.getTimestampFormatted(context));

@@ -22,6 +22,9 @@ import edu.selu.android.classygames.models.Person;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
+/**
+ * This class is the app's entry point.
+ */
 public class MainActivity extends SherlockActivity
 {
 
@@ -130,7 +133,7 @@ public class MainActivity extends SherlockActivity
 
 		if (!hasFinished)
 		{
-			final Person whoAmI = Utilities.WhoAmIUtilities.getWhoAmI(this);
+			final Person whoAmI = Utilities.getWhoAmI(this);
 	
 			if (whoAmI != null && whoAmI.isValid())
 			{
@@ -244,7 +247,7 @@ public class MainActivity extends SherlockActivity
 		{
 			if (facebookIdentity.isValid())
 			{
-				Utilities.WhoAmIUtilities.setWhoAmI(context, facebookIdentity);
+				Utilities.setWhoAmI(context, facebookIdentity);
 				viewGroup.removeAllViews();
 				isAsyncGetFacebookIdentityRunning = false;
 

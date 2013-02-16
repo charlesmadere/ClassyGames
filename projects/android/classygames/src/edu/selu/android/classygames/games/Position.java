@@ -1,5 +1,9 @@
 package edu.selu.android.classygames.games;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 /**
  * Class representing a single position, or spot, on the game board.
@@ -41,6 +45,53 @@ public class Position
 
 
 	/**
+	 * Creates a Position object.
+	 * 
+	 * @param coordinate
+	 * This Position object's coordinate.
+	 */
+	public Position(final Coordinate coordinate)
+	{
+		this.coordinate = coordinate;
+	}
+
+
+	/**
+	 * Creates a Position object.
+	 * 
+	 * @param x
+	 * This Position object's <strong>X</strong> coordinate.
+	 * 
+	 * @param y
+	 * This Position object's <strong>Y</strong> coordinate.
+	 * 
+	 * @param piece
+	 * This Position object's GenericPiece object.
+	 */
+	public Position(final byte x, final byte y, final GenericPiece piece)
+	{
+		coordinate = new Coordinate(x, y);
+		this.piece = piece;
+	}
+
+
+	/**
+	 * Creates a Position object.
+	 * 
+	 * @param coordinate
+	 * This Position object's coordinate.
+	 * 
+	 * @param piece
+	 * This Position object's GenericPiece object.
+	 */
+	public Position(final Coordinate coordinate, final GenericPiece piece)
+	{
+		this.coordinate = coordinate;
+		this.piece = piece;
+	}
+
+
+	/**
 	 * This Position object's Coordinate is it's location on the game board.
 	 * 
 	 * @return
@@ -76,6 +127,30 @@ public class Position
 	public boolean hasPiece()
 	{
 		return piece != null && !piece.isTypeNull();
+	}
+
+
+	/**
+	 * Creates a JSONObject for this Position object.
+	 * 
+	 * @return
+	 * Returns the created JSONObject for this Position object.
+	 * 
+	 * @throws JSONException
+	 * If a glitch or something happened while trying to create this JSONObject
+	 * then a JSONException will be thrown.
+	 */
+	public JSONObject makeJSON() throws JSONException
+	{
+		final JSONArray coordinate = new JSONArray();
+		coordinate.put(this.coordinate.getX());
+		coordinate.put(this.coordinate.getY());
+
+		final JSONObject position = new JSONObject();
+		position.put("coordinate", coordinate);
+		position.put("type", piece.makeJSON());
+
+		return position;
 	}
 
 

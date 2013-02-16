@@ -68,25 +68,6 @@ public class Piece extends GenericPiece
 	}
 
 
-	@Override
-	protected boolean checkIfTypeIsValid(final byte type)
-	{
-		switch (type)
-		{
-			case TYPE_PAWN:
-			case TYPE_BISHOP:
-			case TYPE_KNIGHT:
-			case TYPE_ROOK:
-			case TYPE_QUEEN:
-			case TYPE_KING:
-				return true;
-
-			default:
-				return false;
-		}
-	}
-
-
 	/**
 	 * Checks to see if this Piece is a pawn.
 	 * 
@@ -162,17 +143,38 @@ public class Piece extends GenericPiece
 
 
 	@Override
+	protected boolean checkIfTypeIsValid(final byte type)
+	{
+		switch (type)
+		{
+			case TYPE_PAWN:
+			case TYPE_BISHOP:
+			case TYPE_KNIGHT:
+			case TYPE_ROOK:
+			case TYPE_QUEEN:
+			case TYPE_KING:
+				return true;
+
+			default:
+				return false;
+		}
+	}
+
+
+	@Override
 	public String toString()
 	{
 		final StringBuilder builder = new StringBuilder();
 
-		if (team == TEAM_PLAYER)
+		switch (team)
 		{
-			builder.append("Friendly");
-		}
-		else
-		{
-			builder.append("Enemy");
+			case TEAM_PLAYER:
+				builder.append("Player");
+				break;
+
+			case TEAM_OPPONENT:
+				builder.append("Opponent");
+				break;
 		}
 
 		builder.append(" ");

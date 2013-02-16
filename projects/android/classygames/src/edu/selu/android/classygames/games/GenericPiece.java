@@ -1,5 +1,8 @@
 package edu.selu.android.classygames.games;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 /**
  * Class representing a single GenericPiece. Each game will need to extend this
@@ -60,25 +63,17 @@ public abstract class GenericPiece
 
 
 	/**
-	 * Checks to see if the passed in team byte is a valid team byte.
-	 * 
-	 * @param team
-	 * A byte representing this Piece's team.
+	 * Returns this GenericPiece's type. In a game of checkers, the type could
+	 * be a a normal piece or a king piece. In chess, the type could be a pawn,
+	 * rook, knight, king... You may want to make a comparison of the returned
+	 * byte with the Piece class's public final static TYPE_* bytes.
 	 * 
 	 * @return
-	 * Returns true if the passed in team byte is a valid team byte.
+	 * Returns a byte that represents this GenericPiece's type.
 	 */
-	private boolean checkIfTeamIsValid(final byte team)
+	public byte getType()
 	{
-		switch (team)
-		{
-			case TEAM_PLAYER:
-			case TEAM_OPPONENT:
-				return true;
-
-			default:
-				return false;
-		}
+		return type;
 	}
 
 
@@ -166,27 +161,56 @@ public abstract class GenericPiece
 
 
 	/**
-	 * Returns this GenericPiece's type. In a game of checkers, the type could
-	 * be a a normal piece or a king piece. In chess, the type could be a pawn,
-	 * rook, knight, king... You may want to make a comparison of the returned
-	 * byte with the Piece class's public final static TYPE_* bytes.
-	 * 
-	 * @return
-	 * Returns a byte that represents this GenericPiece's type.
-	 */
-	public byte getType()
-	{
-		return type;
-	}
-
-
-	/**
 	 * Kills this GenericPiece object. Seriously though, this method just sets
 	 * this GenericPiece object's type to TYPE_NULL.
 	 */
 	public void kill()
 	{
 		type = TYPE_NULL;
+	}
+
+
+	/**
+	 * Creates a JSONObject for this GenericPiece object.
+	 * 
+	 * @return
+	 * Returns the created JSONObject for this GenericPiece object.
+	 * 
+	 * @throws JSONException
+	 * If a glitch or something happened while trying to create this JSONObject
+	 * then a JSONException will be thrown.
+	 */
+	public JSONObject makeJSON() throws JSONException
+	{
+		final JSONObject piece = new JSONObject();
+		piece.put("type", type);
+
+		return piece;
+	}
+
+
+
+
+	/**
+	 * Checks to see if the passed in team byte is a valid team byte.
+	 * 
+	 * @param team
+	 * A byte representing this Piece's team.
+	 * 
+	 * @return
+	 * Returns true if the passed in team byte is a valid team byte.
+	 */
+	private static boolean checkIfTeamIsValid(final byte team)
+	{
+		switch (team)
+		{
+			case TEAM_PLAYER:
+			case TEAM_OPPONENT:
+				return true;
+
+			default:
+				return false;
+		}
 	}
 
 
