@@ -171,15 +171,15 @@ public class GamesListFragment extends SherlockListFragment implements OnItemCli
 	{
 		switch (item.getItemId())
 		{
-			case R.id.generic_refresh_menu_refresh:
-				refreshGamesList();
-				break;
-
 			case R.id.generic_cancel_menu_cancel:
 				if (isAsyncRefreshGamesListRunning)
 				{
 					asyncRefreshGamesList.cancel(true);
 				}
+				break;
+
+			case R.id.generic_refresh_menu_refresh:
+				gamesListFragmentOnRefreshSelectedListener.gamesListFragmentOnRefreshSelected();
 				break;
 
 			default:

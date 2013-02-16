@@ -182,7 +182,6 @@ public class FriendsListFragment extends SherlockListFragment implements OnItemC
 			case R.id.generic_refresh_menu_refresh:
 				getSherlockActivity().getPreferences(Context.MODE_PRIVATE).edit().clear().commit();
 				friendsListFragmentOnRefreshSelectedListener.friendsListFragmentOnRefreshSelected();
-				refreshFriendsList();
 				break;
 
 			default:
