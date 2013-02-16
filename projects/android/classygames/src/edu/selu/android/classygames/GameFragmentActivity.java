@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -29,6 +30,8 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 	public final static int RESULT_CODE_FINISH = MainActivity.GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FINISH;
 	public final static int NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FRIEND_SELECTED = 16;
+
+	private final static String KEY_ACTION_BAR_TITLE = "KEY_ACTION_BAR_TITLE";
 
 
 
@@ -97,6 +100,10 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 				catch (final ClassCastException e)
 				{
 					genericGameFragment = (GenericGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_game);
+
+					final ActionBar actionBar = getSupportActionBar();
+					actionBar.setDisplayHomeAsUpEnabled(true);
+					actionBar.setTitle(savedInstanceState.getCharSequence(KEY_ACTION_BAR_TITLE));
 				}
 			}
 			else
@@ -108,6 +115,10 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 				catch (final ClassCastException e)
 				{
 					genericGameFragment = (GenericGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_container);
+
+					final ActionBar actionBar = getSupportActionBar();
+					actionBar.setDisplayHomeAsUpEnabled(true);
+					actionBar.setTitle(savedInstanceState.getCharSequence(KEY_ACTION_BAR_TITLE));
 				}
 			}
 		}
@@ -131,6 +142,10 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 		}
 		else
 		{
+			final ActionBar actionBar = getSupportActionBar();
+			actionBar.setDisplayHomeAsUpEnabled(false);
+			actionBar.setTitle(R.string.games_list_fragment_title);
+
 			super.onBackPressed();
 		}
 	}
@@ -205,6 +220,9 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	protected void onSaveInstanceState(final Bundle outState)
 	{
+		final CharSequence actionBarTitle = getSupportActionBar().getTitle();
+		outState.putCharSequence(KEY_ACTION_BAR_TITLE, actionBarTitle);
+
 		uiHelper.onSaveInstanceState(outState);
 		super.onSaveInstanceState(outState);
 	}
@@ -277,6 +295,10 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 			}
 
 			fTransaction.commit();
+
+			final ActionBar actionBar = getSupportActionBar();
+			actionBar.setDisplayHomeAsUpEnabled(true);
+			actionBar.setTitle(getString(R.string.checkers_game_fragment_title) + " " + game.getPerson().getName());
 		}
 	}
 
