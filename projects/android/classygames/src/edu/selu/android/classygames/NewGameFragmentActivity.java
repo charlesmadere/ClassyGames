@@ -54,7 +54,7 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 			if (isDeviceLarge())
 			{
 				emptyConfirmGameFragment = new EmptyConfirmGameFragment();
-				fTransaction.add(R.id.new_game_fragment_activity_fragment_confirm_game_fragment, emptyConfirmGameFragment);
+				fTransaction.add(R.id.new_game_fragment_activity_fragment_confirm_game, emptyConfirmGameFragment);
 
 				friendsListFragment = (FriendsListFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_fragment_friends_list_fragment);
 			}
@@ -72,11 +72,11 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 			{
 				try
 				{
-					emptyConfirmGameFragment = (EmptyConfirmGameFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_fragment_confirm_game_fragment);
+					emptyConfirmGameFragment = (EmptyConfirmGameFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_fragment_confirm_game);
 				}
 				catch (final ClassCastException e)
 				{
-					confirmGameFragment = (ConfirmGameFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_fragment_confirm_game_fragment);
+					confirmGameFragment = (ConfirmGameFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_fragment_confirm_game);
 				}
 
 				friendsListFragment = (FriendsListFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_fragment_friends_list_fragment);
@@ -199,7 +199,7 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 
 			if (isDeviceLarge())
 			{
-				fTransaction.replace(R.id.new_game_fragment_activity_fragment_confirm_game_fragment, confirmGameFragment);
+				fTransaction.replace(R.id.new_game_fragment_activity_fragment_confirm_game, confirmGameFragment);
 			}
 			else
 			{

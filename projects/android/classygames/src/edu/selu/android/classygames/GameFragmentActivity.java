@@ -73,35 +73,20 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 		final FragmentManager fManager = getSupportFragmentManager();
 
-		if (isDeviceLarge())
+		if (savedInstanceState == null)
 		{
-			gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_games_list_fragment);
-		}
-		else
-		{
-			gamesListFragment = new GamesListFragment();
-		}
-
-		try
-		{
-			genericGameFragment = (GenericGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_game);
-		}
-		catch (final ClassCastException e)
-		{
-			emptyGameFragment = (EmptyGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_game);
-		}
-
-		if (savedInstanceState == null || savedInstanceState.isEmpty())
-		{
-			emptyGameFragment = new EmptyGameFragment();
 			final FragmentTransaction fTransaction = fManager.beginTransaction();
 
 			if (isDeviceLarge())
 			{
+				emptyGameFragment = new EmptyGameFragment();
 				fTransaction.add(R.id.game_fragment_activity_fragment_game, emptyGameFragment);
+
+				gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_games_list_fragment);
 			}
 			else
 			{
+				gamesListFragment = new GamesListFragment();
 				fTransaction.add(R.id.game_fragment_activity_container, gamesListFragment);
 			}
 
@@ -109,15 +94,27 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 		}
 		else
 		{
-			final boolean previousActionBarHomeEnabled = savedInstanceState.getBoolean(KEY_PREVIOUS_ACTION_BAR_HOME_ENABLED);
-			final CharSequence previousActionBarTitle = savedInstanceState.getCharSequence(KEY_PREVIOUS_ACTION_BAR_TITLE);
-
-			final ActionBar actionBar = getSupportActionBar();
-			actionBar.setDisplayHomeAsUpEnabled(previousActionBarHomeEnabled);
-
-			if (previousActionBarTitle != null)
+			if (isDeviceLarge())
 			{
-				actionBar.setTitle(previousActionBarTitle);
+				try
+				{
+					emptyGameFragment = (EmptyGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_game);
+				}
+				catch (final ClassCastException e)
+				{
+					genericGameFragment = (GenericGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_game);
+				}
+			}
+			else
+			{
+				try
+				{
+					emptyGameFragment = (EmptyGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_container);
+				}
+				catch (final ClassCastException e)
+				{
+					genericGameFragment = (GenericGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_container);
+				}
 			}
 		}
 	}
@@ -227,10 +224,6 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	protected void onSaveInstanceState(final Bundle outState)
 	{
-		final ActionBar actionBar = getSupportActionBar();
-		outState.putBoolean(KEY_PREVIOUS_ACTION_BAR_HOME_ENABLED, isActionBarHomeEnabled);
-		outState.putCharSequence(KEY_PREVIOUS_ACTION_BAR_TITLE, actionBar.getTitle());
-
 		uiHelper.onSaveInstanceState(outState);
 		super.onSaveInstanceState(outState);
 	}
@@ -348,8 +341,8 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	public void genericGameFragmentOnDataError()
 	{
-		onBackPressed();
 		Utilities.easyToastAndLogError(this, "Couldn't create a game as malformed data was detected!");
+		onBackPressed();
 	}
 
 

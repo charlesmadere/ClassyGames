@@ -12,7 +12,7 @@
 		android:layout_width="0dip"
 		android:name="edu.selu.android.classygames.FriendsListFragment" />
 	<FrameLayout
-		android:id="@+id/new_game_fragment_activity_fragment_confirm_game_fragment"
+		android:id="@+id/new_game_fragment_activity_fragment_confirm_game"
 		android:layout_height="match_parent"
 		android:layout_weight="2"
 		android:layout_width="0dip" />
