@@ -49,7 +49,7 @@ public final class Utilities
 	 */
 	public static void compatInvalidateOptionsMenu(final SherlockFragmentActivity fragmentActivity)
 	{
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && fragmentActivity != null)
 		{
 			fragmentActivity.invalidateOptionsMenu();
 		}

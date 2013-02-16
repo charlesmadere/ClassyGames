@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -145,7 +146,7 @@ public class FriendsListFragment extends SherlockListFragment implements OnItemC
 	@Override
 	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
 	{
-		if (isAsyncRefreshFriendsListRunning)
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && isAsyncRefreshFriendsListRunning)
 		{
 			inflater.inflate(R.menu.generic_cancel, menu);
 		}
@@ -234,20 +235,13 @@ public class FriendsListFragment extends SherlockListFragment implements OnItemC
 	/**
 	 * Refreshes the friends list if a refresh is not already running.
 	 */
-	private void refreshFriendsList()
+	public void refreshFriendsList()
 	{
 		if (!isAsyncRefreshFriendsListRunning)
 		{
 			asyncRefreshFriendsList = new AsyncRefreshFriendsList(getSherlockActivity(), getLayoutInflater(getArguments()), Session.getActiveSession(), (ViewGroup) getView());
 			asyncRefreshFriendsList.execute();
 		}
-	}
-
-
-	private void setRunningState(final boolean isRunning)
-	{
-		isAsyncRefreshFriendsListRunning = isRunning;
-		Utilities.compatInvalidateOptionsMenu(getSherlockActivity());
 	}
 
 
@@ -379,8 +373,6 @@ public class FriendsListFragment extends SherlockListFragment implements OnItemC
 			inflater.inflate(R.layout.friends_list_fragment_cancelled, viewGroup);
 
 			setRunningState(false);
-			isAsyncRefreshFriendsListRunning = false;
-			Utilities.compatInvalidateOptionsMenu(fragmentActivity);
 		}
 
 
@@ -410,8 +402,6 @@ public class FriendsListFragment extends SherlockListFragment implements OnItemC
 			listView.setOnItemClickListener(FriendsListFragment.this);
 
 			setRunningState(false);
-			isAsyncRefreshFriendsListRunning = false;
-			Utilities.compatInvalidateOptionsMenu(fragmentActivity);
 		}
 
 
@@ -419,11 +409,24 @@ public class FriendsListFragment extends SherlockListFragment implements OnItemC
 		protected void onPreExecute()
 		{
 			setRunningState(true);
-			isAsyncRefreshFriendsListRunning = true;
-			Utilities.compatInvalidateOptionsMenu(fragmentActivity);
 
 			viewGroup.removeAllViews();
 			inflater.inflate(R.layout.friends_list_fragment_loading, viewGroup);
+		}
+
+
+		/**
+		 * Use this method to reset the options menu. This should only be used when
+		 * an AsyncTask is running.
+		 * 
+		 * @param isRunning
+		 * True if the AsyncTask is just starting to run, false if it's just
+		 * finished.
+		 */
+		private void setRunningState(final boolean isRunning)
+		{
+			isAsyncRefreshFriendsListRunning = isRunning;
+			Utilities.compatInvalidateOptionsMenu(fragmentActivity);
 		}
 
 

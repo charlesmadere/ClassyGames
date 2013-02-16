@@ -16,6 +16,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -144,7 +145,7 @@ public class GamesListFragment extends SherlockListFragment implements OnItemCli
 	@Override
 	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
 	{
-		if (isAsyncRefreshGamesListRunning)
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && isAsyncRefreshGamesListRunning)
 		{
 			inflater.inflate(R.menu.generic_cancel, menu);
 		}
@@ -331,8 +332,7 @@ public class GamesListFragment extends SherlockListFragment implements OnItemCli
 			viewGroup.removeAllViews();
 			inflater.inflate(R.layout.games_list_fragment_cancelled, viewGroup);
 
-			isAsyncRefreshGamesListRunning = false;
-			Utilities.compatInvalidateOptionsMenu(fragmentActivity);
+			setRunningState(false);
 		}
 
 
@@ -361,16 +361,14 @@ public class GamesListFragment extends SherlockListFragment implements OnItemCli
 			listView.setAdapter(gamesListAdapter);
 			listView.setOnItemClickListener(GamesListFragment.this);
 
-			isAsyncRefreshGamesListRunning = false;
-			Utilities.compatInvalidateOptionsMenu(fragmentActivity);
+			setRunningState(false);
 		}
 
 
 		@Override
 		protected void onPreExecute()
 		{
-			isAsyncRefreshGamesListRunning = true;
-			Utilities.compatInvalidateOptionsMenu(fragmentActivity);
+			setRunningState(true);
 
 			viewGroup.removeAllViews();
 			inflater.inflate(R.layout.games_list_fragment_loading, viewGroup);
@@ -552,6 +550,21 @@ public class GamesListFragment extends SherlockListFragment implements OnItemCli
 			}
 
 			return game;
+		}
+
+
+		/**
+		 * Use this method to reset the options menu. This should only be used when
+		 * an AsyncTask is running.
+		 * 
+		 * @param isRunning
+		 * True if the AsyncTask is just starting to run, false if it's just
+		 * finished.
+		 */
+		private void setRunningState(final boolean isRunning)
+		{
+			isAsyncRefreshGamesListRunning = isRunning;
+			Utilities.compatInvalidateOptionsMenu(fragmentActivity);
 		}
 
 

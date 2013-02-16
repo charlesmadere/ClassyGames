@@ -27,6 +27,20 @@ public class Board extends GenericBoard
 	}
 
 
+	/**
+	 * Creates a Checkers board object using the given JSON String.
+	 * 
+	 * @param jsonBoard
+	 * JSON String that represents the board.
+	 */
+	public Board(final String jsonBoard)
+	{
+		super(LENGTH_HORIZONTAL, LENGTH_VERTICAL);
+
+		
+	}
+
+
 
 
 	@Override
@@ -58,7 +72,7 @@ public class Board extends GenericBoard
 		getPosition(4, 7).setPiece(new Piece(Piece.TEAM_OPPONENT, Piece.TYPE_KING));
 		getPosition(5, 7).setPiece(new Piece(Piece.TEAM_OPPONENT, Piece.TYPE_BISHOP));
 		getPosition(6, 7).setPiece(new Piece(Piece.TEAM_OPPONENT, Piece.TYPE_KNIGHT));
-		getPosition(7, 7).setPiece(new Piece(Piece.TEAM_OPPONENT));
+		getPosition(7, 7).setPiece(new Piece(Piece.TEAM_OPPONENT, Piece.TYPE_ROOK));
 		getPosition(0, 6).setPiece(new Piece(Piece.TEAM_OPPONENT));
 		getPosition(1, 6).setPiece(new Piece(Piece.TEAM_OPPONENT));
 		getPosition(2, 6).setPiece(new Piece(Piece.TEAM_OPPONENT));

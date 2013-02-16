@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 
 import edu.selu.android.classygames.models.Person;
 import edu.selu.android.classygames.utilities.FacebookUtilities;
@@ -36,6 +38,18 @@ public class ConfirmGameFragment extends SherlockFragment
 	private Person friend;
 
 
+
+
+	/**
+	 * One of this class's callback methods. This is fired during this
+	 * fragment's onCreateOptionsMenu.
+	 */
+	private ConfirmGameFragmentIsDeviceSmallListener confirmGameFragmentIsDeviceSmallListener;
+
+	public interface ConfirmGameFragmentIsDeviceSmallListener
+	{
+		public boolean confirmGameFragmentIsDeviceSmall();
+	}
 
 
 	/**
@@ -80,6 +94,14 @@ public class ConfirmGameFragment extends SherlockFragment
 
 
 	@Override
+	public void onCreate(final Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
+	}
+
+
+	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{
 		View view = inflater.inflate(R.layout.confirm_game_fragment, null);
@@ -94,7 +116,6 @@ public class ConfirmGameFragment extends SherlockFragment
 			if (Person.isIdValid(friendId) && Person.isNameValid(friendName))
 			{
 				friend = new Person(friendId, friendName);
-				view = inflater.inflate(R.layout.confirm_game_fragment_loaded, null);
 			}
 			else
 			{
@@ -111,42 +132,39 @@ public class ConfirmGameFragment extends SherlockFragment
 	{
 		super.onActivityCreated(savedInstanceState);
 
-		if (friend != null && friend.isValid())
+		final View view = getView();
+
+		final TextView friendName = (TextView) view.findViewById(R.id.confirm_game_fragment_friend_name);
+		friendName.setText(friend.getName());
+		friendName.setTypeface(TypefaceUtilities.getTypeface(getSherlockActivity().getAssets(), TypefaceUtilities.SNELL_ROUNDHAND_BDSCR));
+
+		final TextView description = (TextView) view.findViewById(R.id.confirm_game_fragment_description);
+		description.setText(getString(R.string.confirm_game_fragment_description_text, friend.getName()));
+
+		final Button buttonConfirm = (Button) view.findViewById(R.id.confirm_game_fragment_button_confirm);
+		buttonConfirm.setTypeface(TypefaceUtilities.getTypeface(getSherlockActivity().getAssets(), TypefaceUtilities.BLUE_HIGHWAY_D));
+		buttonConfirm.setOnClickListener(new OnClickListener()
 		{
-			final View view = getView();
-
-			final TextView friendName = (TextView) view.findViewById(R.id.confirm_game_fragment_loaded_friend_name);
-			friendName.setText(friend.getName());
-			friendName.setTypeface(TypefaceUtilities.getTypeface(getSherlockActivity().getAssets(), TypefaceUtilities.SNELL_ROUNDHAND_BDSCR));
-
-			final TextView description = (TextView) view.findViewById(R.id.confirm_game_fragment_loaded_description);
-			description.setText(getString(R.string.confirm_game_fragment_loaded_description_text, friend.getName()));
-
-			final Button buttonConfirm = (Button) view.findViewById(R.id.confirm_game_fragment_loaded_button_confirm);
-			buttonConfirm.setTypeface(TypefaceUtilities.getTypeface(getSherlockActivity().getAssets(), TypefaceUtilities.BLUE_HIGHWAY_D));
-			buttonConfirm.setOnClickListener(new OnClickListener()
+			@Override
+			public void onClick(final View v)
 			{
-				@Override
-				public void onClick(final View v)
-				{
-					confirmGameFragmentOnGameConfirmListener.confirmGameFragmentOnGameConfirm(friend);
-				}
-			});
+				confirmGameFragmentOnGameConfirmListener.confirmGameFragmentOnGameConfirm(friend);
+			}
+		});
 
-			final Button buttonDeny = (Button) view.findViewById(R.id.confirm_game_fragment_loaded_button_deny);
-			buttonDeny.setTypeface(TypefaceUtilities.getTypeface(getSherlockActivity().getAssets(), TypefaceUtilities.BLUE_HIGHWAY_D));
-			buttonDeny.setOnClickListener(new OnClickListener()
+		final Button buttonDeny = (Button) view.findViewById(R.id.confirm_game_fragment_button_deny);
+		buttonDeny.setTypeface(TypefaceUtilities.getTypeface(getSherlockActivity().getAssets(), TypefaceUtilities.BLUE_HIGHWAY_D));
+		buttonDeny.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(final View v)
 			{
-				@Override
-				public void onClick(final View v)
-				{
-					confirmGameFragmentOnGameDenyListener.confirmGameFragmentOnGameDeny();
-				}
-			});
+				confirmGameFragmentOnGameDenyListener.confirmGameFragmentOnGameDeny();
+			}
+		});
 
-			final ImageView profilePicture = (ImageView) view.findViewById(R.id.confirm_game_fragment_loaded_friend_profile_picture);
-			Utilities.getImageLoader(getSherlockActivity()).displayImage(FacebookUtilities.GRAPH_API_URL + friend.getId() + FacebookUtilities.GRAPH_API_URL_PICTURE_TYPE_LARGE_SSL, profilePicture);
-		}
+		final ImageView profilePicture = (ImageView) view.findViewById(R.id.confirm_game_fragment_friend_profile_picture);
+		Utilities.getImageLoader(getSherlockActivity()).displayImage(FacebookUtilities.GRAPH_API_URL + friend.getId() + FacebookUtilities.GRAPH_API_URL_PICTURE_TYPE_LARGE_SSL, profilePicture);
 	}
 
 
@@ -160,6 +178,7 @@ public class ConfirmGameFragment extends SherlockFragment
 
 		try
 		{
+			confirmGameFragmentIsDeviceSmallListener = (ConfirmGameFragmentIsDeviceSmallListener) activity;
 			confirmGameFragmentOnDataErrorListener = (ConfirmGameFragmentOnDataErrorListener) activity;
 			confirmGameFragmentOnGameConfirmListener = (ConfirmGameFragmentOnGameConfirmListener) activity;
 			confirmGameFragmentOnGameDenyListener = (ConfirmGameFragmentOnGameDenyListener) activity;
@@ -168,6 +187,18 @@ public class ConfirmGameFragment extends SherlockFragment
 		{
 			throw new ClassCastException(activity.toString() + " must implement listeners!");
 		}
+	}
+
+
+	@Override
+	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
+	{
+		if (confirmGameFragmentIsDeviceSmallListener.confirmGameFragmentIsDeviceSmall())
+		{
+			menu.removeItem(R.id.generic_refresh_menu_refresh);
+		}
+
+		super.onCreateOptionsMenu(menu, inflater);
 	}
 
 

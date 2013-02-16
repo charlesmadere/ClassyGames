@@ -162,8 +162,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * One of this class's callback methods. This is fired whenever this
-	 * fragment's onCreateOptionsMenu
+	 * One of this class's callback methods. This is fired during this
+	 * fragment's onCreateOptionsMenu.
 	 */
 	private GenericGameFragmentIsDeviceLargeListener genericGameFragmentIsDeviceSmallListener;
 
@@ -325,7 +325,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			menu.removeItem(R.id.central_fragment_activity_menu_new_game);
 		}
 
-		if (isAsyncGetGameRunning && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && isAsyncGetGameRunning)
 		{
 			inflater.inflate(R.menu.generic_cancel, menu);
 		}

@@ -14,6 +14,7 @@ import edu.selu.android.classygames.utilities.Utilities;
 
 
 public class NewGameFragmentActivity extends SherlockFragmentActivity implements
+	ConfirmGameFragment.ConfirmGameFragmentIsDeviceSmallListener,
 	ConfirmGameFragment.ConfirmGameFragmentOnDataErrorListener,
 	ConfirmGameFragment.ConfirmGameFragmentOnGameConfirmListener,
 	ConfirmGameFragment.ConfirmGameFragmentOnGameDenyListener,
@@ -30,6 +31,7 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 
 
 	ConfirmGameFragment confirmGameFragment;
+	EmptyConfirmGameFragment emptyConfirmGameFragment;
 	FriendsListFragment friendsListFragment;
 
 
@@ -43,10 +45,10 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 		setResult(RESULT_CODE_DEFAULT);
 		Utilities.styleActionBar(getResources(), getSupportActionBar(), true);
 
+		final FragmentManager fManager = getSupportFragmentManager();
+
 		if (savedInstanceState == null)
 		{
-			final FragmentManager fManager = getSupportFragmentManager();
-
 			if (isDeviceLarge())
 			{
 				confirmGameFragment = (ConfirmGameFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_fragment_confirm_game_fragment);
@@ -58,6 +60,25 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 				final FragmentTransaction fTransaction = fManager.beginTransaction();
 				fTransaction.add(R.id.new_game_fragment_activity_container, friendsListFragment);
 				fTransaction.commit();
+			}
+		}
+		else
+		{
+			if (isDeviceLarge())
+			{
+				confirmGameFragment = (ConfirmGameFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_fragment_confirm_game_fragment);
+				friendsListFragment = (FriendsListFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_fragment_friends_list_fragment);
+			}
+			else
+			{
+				try
+				{
+					friendsListFragment = (FriendsListFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_container);
+				}
+				catch (final ClassCastException e)
+				{
+					confirmGameFragment = (ConfirmGameFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_container);
+				}
 			}
 		}
 	}
@@ -110,6 +131,13 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 	}
 
 
+
+
+	@Override
+	public boolean confirmGameFragmentIsDeviceSmall()
+	{
+		return !isDeviceLarge();
+	}
 
 
 	@Override
@@ -178,6 +206,8 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 		{
 			onBackPressed();
 		}
+
+		friendsListFragment.refreshFriendsList();
 	}
 
 

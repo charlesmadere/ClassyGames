@@ -27,6 +27,20 @@ public class Board extends GenericBoard
 	}
 
 
+	/**
+	 * Creates a Checkers board object using the given JSON String.
+	 * 
+	 * @param jsonBoard
+	 * JSON String that represents the board.
+	 */
+	public Board(final String jsonBoard)
+	{
+		super(LENGTH_HORIZONTAL, LENGTH_VERTICAL);
+
+		
+	}
+
+
 
 
 	@Override

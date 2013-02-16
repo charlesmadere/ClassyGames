@@ -84,11 +84,11 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 		try
 		{
-			genericGameFragment = (GenericGameFragment) getSupportFragmentManager().findFragmentById(R.id.game_fragment_activity_fragment_game);
+			genericGameFragment = (GenericGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_game);
 		}
 		catch (final ClassCastException e)
 		{
-
+			emptyGameFragment = (EmptyGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_game);
 		}
 
 		if (savedInstanceState == null || savedInstanceState.isEmpty())
