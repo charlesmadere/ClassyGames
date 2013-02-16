@@ -478,12 +478,9 @@ public class GamesListFragment extends SherlockListFragment implements OnItemCli
 						try
 						{
 							final JSONObject jsonGame = turn.getJSONObject(i);
-							final Game game = parseGame(jsonGame, whichTurn);
 
-							if (game != null)
-							{
-								games.add(game);
-							}
+							final Game game = new Game(jsonGame, whichTurn);
+							games.add(game);
 						}
 						catch (final JSONException e)
 						{
@@ -507,48 +504,6 @@ public class GamesListFragment extends SherlockListFragment implements OnItemCli
 			}
 
 			return games;
-		}
-
-
-		/**
-		 * Creates a single Game object out of some JSON data as received from
-		 * the server.
-		 * 
-		 * @param gameData
-		 * JSON data pertaining to a single Game object.
-		 * 
-		 * @param whichTurn
-		 * Who's turn is this? This variable's value should be one of the
-		 * Game.TURN_* variables.
-		 * 
-		 * @return
-		 * Returns a single Game object. Has the possibility of being null.
-		 * Make sure to check for that!
-		 */
-		private Game parseGame(final JSONObject gameData, final boolean whichTurn)
-		{
-			Game game = null;
-
-			if (!isCancelled())
-			{
-				try
-				{
-					// create data from the server's json response
-					final long id = gameData.getLong(ServerUtilities.POST_DATA_ID);
-					final String name = gameData.getString(ServerUtilities.POST_DATA_NAME);
-					final String gameId = gameData.getString(ServerUtilities.POST_DATA_GAME_ID);
-					final long timestamp = gameData.getLong(ServerUtilities.POST_DATA_LAST_MOVE);
-	
-					// create a new game from this data
-					game = new Game(timestamp, new Person(id, name), gameId, whichTurn);
-				}
-				catch (final JSONException e)
-				{
-					Log.e(LOG_TAG, "Error parsing individual game data!");
-				}
-			}
-
-			return game;
 		}
 
 

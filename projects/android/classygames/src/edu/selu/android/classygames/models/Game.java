@@ -1,8 +1,12 @@
 package edu.selu.android.classygames.models;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.Context;
 import edu.selu.android.classygames.R;
+import edu.selu.android.classygames.utilities.ServerUtilities;
 
 
 /**
@@ -152,6 +156,32 @@ public class Game
 		this.turn = turn;
 		this.type = type;
 		timestamp = (System.currentTimeMillis() / 1000) + 7200;
+	}
+
+
+	/**
+	 * Creates a single Game object out of some JSON data as received from
+	 * the server.
+	 * 
+	 * @param gameData
+	 * JSON data pertaining to a single Game object.
+	 * 
+	 * @param whichTurn
+	 * Who's turn is this? This variable's value should be one of the
+	 * Game.TURN_* variables.
+	 * 
+	 * @throws JSONException
+	 * If a glitch or something happened while trying to create this JSONObject
+	 * then a JSONException will be thrown.
+	 */
+	public Game(final JSONObject gameData, final boolean whichTurn) throws JSONException
+	{
+		id = gameData.getString(ServerUtilities.POST_DATA_GAME_ID);
+		timestamp = gameData.getLong(ServerUtilities.POST_DATA_LAST_MOVE);
+
+		final long personId = gameData.getLong(ServerUtilities.POST_DATA_ID);
+		final String personName = gameData.getString(ServerUtilities.POST_DATA_NAME);
+		person = new Person(personId, personName);
 	}
 
 
