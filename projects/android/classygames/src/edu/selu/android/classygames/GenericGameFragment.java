@@ -197,18 +197,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 	}
 
 
-	/**
-	 * One of this class's callback methods. This is fired at the end of this
-	 * Fragment's onResume() method.
-	 */
-	private GenericGameFragmentOnResumeListener genericGameFragmentOnResumeListener;
-
-	public interface GenericGameFragmentOnResumeListener
-	{
-		public void genericGameFragmentOnResume();
-	}
-
-
 
 
 	@Override
@@ -306,7 +294,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 			genericGameFragmentIsDeviceSmallListener = (GenericGameFragmentIsDeviceLargeListener) activity;
 			genericGameFragmentOnAsyncGetGameOnCancelledListener = (GenericGameFragmentOnAsyncGetGameOnCancelledListener) activity;
 			genericGameFragmentOnDataErrorListener = (GenericGameFragmentOnDataErrorListener) activity;
-			genericGameFragmentOnResumeListener = (GenericGameFragmentOnResumeListener) activity;
 		}
 		catch (final ClassCastException e)
 		{
@@ -384,14 +371,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 				menuItem.setEnabled(boardLocked);
 			}
 		}
-	}
-
-
-	@Override
-	public void onResume()
-	{
-		super.onResume();
-		genericGameFragmentOnResumeListener.genericGameFragmentOnResume();
 	}
 
 

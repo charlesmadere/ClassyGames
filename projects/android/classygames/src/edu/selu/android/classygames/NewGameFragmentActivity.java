@@ -187,6 +187,11 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 	{
 		if (isDeviceLarge() || (confirmGameFragment == null || !confirmGameFragment.isVisible()))
 		{
+			if (confirmGameFragment != null && confirmGameFragment.isVisible())
+			{
+				onBackPressed();
+			}
+
 			final Bundle arguments = new Bundle();
 			arguments.putLong(ConfirmGameFragment.KEY_FRIEND_ID, friend.getId());
 			arguments.putString(ConfirmGameFragment.KEY_FRIEND_NAME, friend.getName());

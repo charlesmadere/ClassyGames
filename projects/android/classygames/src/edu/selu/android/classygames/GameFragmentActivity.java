@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -21,19 +20,15 @@ import edu.selu.android.classygames.utilities.Utilities;
 
 public class GameFragmentActivity extends SherlockFragmentActivity implements
 	GamesListFragment.GamesListFragmentOnGameSelectedListener,
-	GamesListFragment.GamesListFragmentOnResumeListener,
+	GamesListFragment.GamesListFragmentOnRefreshSelectedListener,
 	GenericGameFragment.GenericGameFragmentIsDeviceLargeListener,
 	GenericGameFragment.GenericGameFragmentOnAsyncGetGameOnCancelledListener,
-	GenericGameFragment.GenericGameFragmentOnDataErrorListener,
-	GenericGameFragment.GenericGameFragmentOnResumeListener
+	GenericGameFragment.GenericGameFragmentOnDataErrorListener
 {
 
 
 	public final static int RESULT_CODE_FINISH = MainActivity.GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FINISH;
 	public final static int NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FRIEND_SELECTED = 16;
-
-	private final static String KEY_PREVIOUS_ACTION_BAR_TITLE = "KEY_PREVIOUS_ACTION_BAR_TITLE";
-	private final static String KEY_PREVIOUS_ACTION_BAR_HOME_ENABLED = "KEY_PREVIOUS_ACTION_BAR_HOME_ENABLED";
 
 
 
@@ -41,7 +36,6 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 	private UiLifecycleHelper uiHelper;
 	private Session.StatusCallback sessionStatusCallback;
 
-	private boolean isActionBarHomeEnabled = false;
 	private boolean isResumed = false;
 
 	private EmptyGameFragment emptyGameFragment;
@@ -134,19 +128,6 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 		if (gamesListFragment != null && gamesListFragment.getIsAsyncRefreshGamesListRunning())
 		{
 			gamesListFragment.cancelAsyncRefreshGamesList();
-		}
-		else if (genericGameFragment != null && genericGameFragment.isVisible())
-		{
-			if (genericGameFragment.isAnAsyncTaskRunning())
-			{
-				genericGameFragment.cancelRunningAnyAsyncTask();
-			}
-			else
-			{
-				super.onBackPressed();
-			}
-
-			gamesListFragmentOnResume();
 		}
 		else
 		{
@@ -272,15 +253,15 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 				onBackPressed();
 			}
 
-			// if a future release of Classy Games has chess as well as checkers,
-			// then we will need to do some logic here to check the game type and
-			// then instantiate that game's fragment
-			genericGameFragment = new CheckersGameFragment();
-
 			final Bundle arguments = new Bundle();
 			arguments.putString(GenericGameFragment.KEY_GAME_ID, game.getId());
 			arguments.putLong(GenericGameFragment.KEY_PERSON_ID, game.getPerson().getId());
 			arguments.putString(GenericGameFragment.KEY_PERSON_NAME, game.getPerson().getName());
+
+			// if a future release of Classy Games has chess as well as checkers,
+			// then we will need to do some logic here to check the game type and
+			// then instantiate that game's fragment
+			genericGameFragment = new CheckersGameFragment();
 			genericGameFragment.setArguments(arguments);
 
 			final FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
@@ -296,30 +277,6 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 			}
 
 			fTransaction.commit();
-		}
-	}
-
-
-	@Override
-	public void gamesListFragmentOnResume()
-	{
-		final FragmentManager fManager = getSupportFragmentManager();
-
-		if (isDeviceLarge())
-		{
-			gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_games_list_fragment);
-		}
-		else
-		{
-			gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.game_fragment_activity_container);
-		}
-
-		if (gamesListFragment != null && gamesListFragment.isVisible())
-		{
-			final ActionBar actionBar = getSupportActionBar();
-			isActionBarHomeEnabled = false;
-			actionBar.setDisplayHomeAsUpEnabled(isActionBarHomeEnabled);
-			actionBar.setTitle(R.string.games_list_fragment_title);
 		}
 	}
 
@@ -346,35 +303,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 	}
 
 
-	@Override
-	public void genericGameFragmentOnResume()
-	{
-		try
-		{
-			final FragmentManager fManager = getSupportFragmentManager();
-
-			if (isDeviceLarge())
-			{
-				genericGameFragment = (GenericGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_game);
-			}
-			else
-			{
-				genericGameFragment = (GenericGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_container);
-			}
-
-			if (genericGameFragment != null && genericGameFragment.isVisible())
-			{
-				final ActionBar actionBar = getSupportActionBar();
-				isActionBarHomeEnabled = true;
-				actionBar.setDisplayHomeAsUpEnabled(isActionBarHomeEnabled);
-				actionBar.setTitle(genericGameFragment.getActionBarTitle());
-			}
-		}
-		catch (final ClassCastException e)
-		{
-
-		}
-	}
+	
 
 
 }

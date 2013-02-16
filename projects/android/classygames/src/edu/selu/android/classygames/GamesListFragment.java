@@ -93,18 +93,6 @@ public class GamesListFragment extends SherlockListFragment implements OnItemCli
 	}
 
 
-	/**
-	 * One of this class's callback methods. This is fired at the end of this
-	 * Fragment's onResume() method.
-	 */
-	private GamesListFragmentOnResumeListener gamesListFragmentOnResumeListener;
-
-	public interface GamesListFragmentOnResumeListener
-	{
-		public void gamesListFragmentOnResume();
-	}
-
-
 
 
 	@Override
@@ -133,7 +121,6 @@ public class GamesListFragment extends SherlockListFragment implements OnItemCli
 		try
 		{
 			gamesListFragmentOnGameSelectedListener = (GamesListFragmentOnGameSelectedListener) activity;
-			gamesListFragmentOnResumeListener = (GamesListFragmentOnResumeListener) activity;
 		}
 		catch (final ClassCastException e)
 		{
@@ -218,7 +205,6 @@ public class GamesListFragment extends SherlockListFragment implements OnItemCli
 	public void onResume()
 	{
 		super.onResume();
-		gamesListFragmentOnResumeListener.gamesListFragmentOnResume();
 
 		if (isFirstOnResume)
 		{
