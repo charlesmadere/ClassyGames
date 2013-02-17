@@ -89,7 +89,7 @@ public class GamesListFragment extends SherlockListFragment implements OnItemCli
 
 	public interface GamesListFragmentOnGameSelectedListener
 	{
-		public void gameListFragmentOnGameSelected(final Game game);
+		public void gamesListFragmentOnGameSelected(final Game game);
 	}
 
 
@@ -162,7 +162,7 @@ public class GamesListFragment extends SherlockListFragment implements OnItemCli
 	public void onItemClick(final AdapterView<?> l, final View v, final int position, final long id)
 	{
 		final Game game = gamesListAdapter.getItem(position);
-		gamesListFragmentOnGameSelectedListener.gameListFragmentOnGameSelected(game);
+		gamesListFragmentOnGameSelectedListener.gamesListFragmentOnGameSelected(game);
 	}
 
 
@@ -293,9 +293,10 @@ public class GamesListFragment extends SherlockListFragment implements OnItemCli
 			{
 				final Person whoAmI = Utilities.getWhoAmI(fragmentActivity);
 
-				// create the data that will be 
+				// create the data that will be posted to the server
 				final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, whoAmI.getIdAsString()));
+//				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_REG_ID, ));
 
 				if (!isCancelled())
 				{
@@ -306,14 +307,14 @@ public class GamesListFragment extends SherlockListFragment implements OnItemCli
 						// the nameValuePairs variable that we just created.
 						// The server requires we send it some information in
 						// order for us to get a meaningful response back.
-						final String jsonResponse = ServerUtilities.postToServer(ServerUtilities.ADDRESS_GET_GAMES, nameValuePairs);
+						final String serverResponse = ServerUtilities.postToServer(ServerUtilities.ADDRESS_GET_GAMES, nameValuePairs);
 
 						// This line does a lot. Check the parseServerResponse()
 						// method below to get detailed information. This will
 						// parse the JSON response that we got from the server
 						// and create a bunch of individual Game objects out of
 						// that data.
-						games = parseServerResponse(jsonResponse);
+						games = parseServerResponse(serverResponse);
 					}
 					catch (final IOException e)
 					{

@@ -274,6 +274,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 					try
 					{
 						initNewBoard();
+						initViews();
+						flush();
 					}
 					catch (final JSONException e)
 					{

@@ -163,15 +163,15 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	public void confirmGameFragmentOnGameConfirm(final Person friend)
 	{
-		final Bundle bundle = new Bundle();
-		bundle.putLong(KEY_FRIEND_ID, friend.getId());
-		bundle.putString(KEY_FRIEND_NAME, friend.getName());
+		final Bundle extras = new Bundle();
+		extras.putLong(KEY_FRIEND_ID, friend.getId());
+		extras.putString(KEY_FRIEND_NAME, friend.getName());
 
 		final Intent intent = new Intent();
-		intent.putExtras(bundle);
+		intent.putExtras(extras);
 
 		setResult(RESULT_CODE_FRIEND_SELECTED, intent);
-		onBackPressed();
+		finish();
 	}
 
 

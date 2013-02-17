@@ -16,6 +16,7 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 
 import edu.selu.android.classygames.models.Game;
+import edu.selu.android.classygames.models.Person;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
@@ -130,6 +131,24 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 	{
 		super.onActivityResult(requestCode, resultCode, data);
 		uiHelper.onActivityResult(requestCode, resultCode, data);
+
+		if (resultCode == NewGameFragmentActivity.RESULT_CODE_FRIEND_SELECTED)
+		{
+			final Bundle extras = data.getExtras();
+
+			if (extras != null && !extras.isEmpty())
+			{
+				final long id = extras.getLong(NewGameFragmentActivity.KEY_FRIEND_ID);
+				final String name = extras.getString(NewGameFragmentActivity.KEY_FRIEND_NAME);
+
+				if (Person.isIdValid(id) && Person.isNameValid(name))
+				{
+					final Person friend = new Person(id, name);
+					final Game game = new Game(friend);
+					gamesListFragmentOnGameSelected(game);
+				}
+			}
+		}
 	}
 
 
@@ -262,7 +281,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 
 	@Override
-	public void gameListFragmentOnGameSelected(final Game game)
+	public void gamesListFragmentOnGameSelected(final Game game)
 	{
 		if (isDeviceLarge() || (genericGameFragment == null || !genericGameFragment.isVisible()))
 		{
@@ -276,10 +295,19 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 			arguments.putLong(GenericGameFragment.KEY_PERSON_ID, game.getPerson().getId());
 			arguments.putString(GenericGameFragment.KEY_PERSON_NAME, game.getPerson().getName());
 
-			// if a future release of Classy Games has chess as well as checkers,
-			// then we will need to do some logic here to check the game type and
-			// then instantiate that game's fragment
-			genericGameFragment = new CheckersGameFragment();
+			if (game.isGameCheckers())
+			{
+				genericGameFragment = new CheckersGameFragment();
+			}
+			else if (game.isGameChess())
+			{
+				genericGameFragment = new ChessGameFragment();
+			}
+			else
+			{
+				genericGameFragment = new CheckersGameFragment();
+			}
+
 			genericGameFragment.setArguments(arguments);
 
 			final FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();

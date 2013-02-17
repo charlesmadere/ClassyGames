@@ -45,8 +45,9 @@ public class Game
 	 * Byte representing which game this is. It could be checkers, chess...
 	 */
 	private byte whichGame;
-	public final static byte WHICH_GAME_CHECKERS = 0;
-	public final static byte WHICH_GAME_CHESS = 1;
+	private final static byte WHICH_GAME_NULL = 0;
+	public final static byte WHICH_GAME_CHECKERS = 1;
+	public final static byte WHICH_GAME_CHESS = 2;
 
 
 	/**
@@ -155,6 +156,7 @@ public class Game
 	{
 		this.turn = turn;
 		this.type = type;
+		whichGame = WHICH_GAME_NULL;
 		timestamp = (System.currentTimeMillis() / 1000) + 7200;
 	}
 
@@ -183,6 +185,8 @@ public class Game
 		final long personId = gameData.getLong(ServerUtilities.POST_DATA_ID);
 		final String personName = gameData.getString(ServerUtilities.POST_DATA_NAME);
 		person = new Person(personId, personName);
+
+		whichGame = (byte) gameData.optInt(ServerUtilities.POST_DATA_TYPE);
 	}
 
 
@@ -356,6 +360,30 @@ public class Game
 
 
 	/**
+	 * Checks to see if this Game object represents a game of checkers.
+	 * 
+	 * @return
+	 * Returns true if this Game object represents a game of checkers.
+	 */
+	public boolean isGameCheckers()
+	{
+		return whichGame == WHICH_GAME_CHECKERS;
+	}
+
+
+	/**
+	 * Checks to see if this Game object represents a game of chess.
+	 * 
+	 * @return
+	 * Returns true if this Game object represents a game of chess.
+	 */
+	public boolean isGameChess()
+	{
+		return whichGame == WHICH_GAME_CHESS;
+	}
+
+
+	/**
 	 * Checks to see if this Game object's turn is the opponent player's turn.
 	 * 
 	 * @return
@@ -428,7 +456,7 @@ public class Game
 	public boolean equals(final Object o)
 	{
 		final Game game = (Game) o;
-		return game.getId().equals(id);
+		return game.getId().equalsIgnoreCase(id);
 	}
 
 
