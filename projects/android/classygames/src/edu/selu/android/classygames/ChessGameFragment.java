@@ -216,8 +216,8 @@ public class ChessGameFragment extends GenericGameFragment
 		final Coordinate coordinateCurrent = new Coordinate((String) positionCurrent.getTag());
 		setPositionBackground(positionCurrent, true, coordinateCurrent);
 
-		final Position position = board.getPosition(coordinateCurrent);
-		Log.d(LOG_TAG, "Click! " + coordinateCurrent + " - has piece? " + position.getPiece());
+		final Position current = board.getPosition(coordinateCurrent);
+		Log.d(LOG_TAG, "Click! " + coordinateCurrent + " - has piece? " + current.getPiece());
 	}
 
 
@@ -230,8 +230,9 @@ public class ChessGameFragment extends GenericGameFragment
 		final Coordinate coordinateCurrent = new Coordinate((String) positionCurrent.getTag());
 		setPositionBackground(positionCurrent, true, coordinateCurrent);
 
-		final Position position = board.getPosition(coordinateCurrent);
-		Log.d(LOG_TAG, "Click! " + coordinateCurrent + " - has piece? " + position.getPiece());
+		final Position current = board.getPosition(coordinateCurrent);
+		final Position previous = board.getPosition(coordinatePrevious);
+		Log.d(LOG_TAG, "Click! Old: " + coordinatePrevious + " has piece? " + previous.getPiece() + ", New: " + coordinateCurrent + " has piece? " + current.getPiece());
 	}
 
 

@@ -5,7 +5,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import edu.selu.android.classygames.games.GenericBoard;
-import edu.selu.android.classygames.games.GenericPiece;
 
 
 /**
@@ -55,7 +54,7 @@ public class Board extends GenericBoard
 
 
 	@Override
-	protected GenericPiece buildPiece(final byte whichTeam, final int type)
+	protected Piece buildPiece(final byte whichTeam, final int type)
 	{
 		return new Piece(whichTeam, type);
 	}
