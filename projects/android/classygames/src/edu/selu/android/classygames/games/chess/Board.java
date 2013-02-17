@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import edu.selu.android.classygames.games.GenericBoard;
+import edu.selu.android.classygames.games.Position;
 
 
 /**
@@ -98,6 +99,17 @@ public class Board extends GenericBoard
 		getPosition(5, 6).setPiece(new Piece(Piece.TEAM_OPPONENT));
 		getPosition(6, 6).setPiece(new Piece(Piece.TEAM_OPPONENT));
 		getPosition(7, 6).setPiece(new Piece(Piece.TEAM_OPPONENT));
+	}
+
+
+
+
+	@Override
+	public boolean move(final Position previous, final Position current)
+	{
+		boolean isMoveValid = false;
+
+		return isMoveValid;
 	}
 
 

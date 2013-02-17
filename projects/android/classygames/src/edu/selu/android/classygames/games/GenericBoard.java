@@ -18,14 +18,14 @@ public abstract class GenericBoard
 	 * How many positions the board has horizontally. This can be thought of as
 	 * the board's X limit.
 	 */
-	private byte lengthHorizontal;
+	protected byte lengthHorizontal;
 
 
 	/**
 	 * How many positions the board has vertically. This can be thought of as
 	 * the board's Y limit.
 	 */
-	private byte lengthVertical;
+	protected byte lengthVertical;
 
 
 	/**
@@ -390,6 +390,8 @@ public abstract class GenericBoard
 	 */
 	public void refresh() throws JSONException
 	{
+		initializePositions();
+
 		if (boardJSON == null)
 		{
 			initializeDefaultBoard();
@@ -426,6 +428,23 @@ public abstract class GenericBoard
 	 * immediately after the object is constructed.
 	 */
 	protected abstract void initializeDefaultBoard();
+
+
+	/**
+	 * Checks to see if a move can be performed given the input positions. If
+	 * the given move turns out to be valid then this method will make any
+	 * needed adjustments to the game board and then return true.
+	 * 
+	 * @param previous
+	 * The previous (old) position on the game board that the user clicked on.
+	 * 
+	 * @param current
+	 * The current (new) position on the game board that the user clicked on.
+	 * 
+	 * @return
+	 * Returns true if the given move is a valid one.
+	 */
+	public abstract boolean move(final Position previous, final Position current);
 
 
 }

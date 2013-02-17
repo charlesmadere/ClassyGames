@@ -64,6 +64,12 @@ public class Piece extends GenericPiece
 	}
 
 
+	public Piece(final Piece piece)
+	{
+		super(piece.getTeam(), piece.getType());
+	}
+
+
 	/**
 	 * Crowns a Piece object. This Piece object is now a King.
 	 */

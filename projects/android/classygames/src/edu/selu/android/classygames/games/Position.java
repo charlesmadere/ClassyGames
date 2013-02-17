@@ -121,12 +121,12 @@ public class Position
 	 * Checks and sees if this GenericPosition object has a GenericPiece.
 	 * 
 	 * @return
-	 * Returns true if this GenericPosition object has a GenericPiece. Returns
-	 * false if the GenericPiece object is either null or is of a null type.
+	 * Returns true if both this GenericPosition object has a GenericPiece and
+	 * also that the GenericPiece is alive.
 	 */
 	public boolean hasPiece()
 	{
-		return piece != null && !piece.isTypeNull();
+		return piece != null && piece.isAlive();
 	}
 
 

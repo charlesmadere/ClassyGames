@@ -113,6 +113,13 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
+	 * Boolean indicating if the board is in a state that would allow it to be
+	 * sent to the server.
+	 */
+	private boolean isReadyToSendMove = false;
+
+
+	/**
 	 * The position on the game board that the user just now selected.
 	 */
 	private ImageButton positionSelectedCurrent;
@@ -251,9 +258,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 							{
 								final Coordinate coordinate = new Coordinate((String) positionSelectedCurrent.getTag());
 								setPositionBackground(positionSelectedCurrent, false, coordinate);
-
-								positionSelectedPrevious = null;
-								positionSelectedCurrent = null;
+								clearSelectedPositions();
 							}
 							else
 							{
@@ -374,13 +379,13 @@ public abstract class GenericGameFragment extends SherlockFragment
 			MenuItem menuItem = menu.findItem(R.id.generic_game_fragment_menu_send_move);
 			if (menuItem != null)
 			{
-				menuItem.setEnabled(boardLocked);
+				menuItem.setEnabled(isReadyToSendMove);
 			}
 
 			menuItem = menu.findItem(R.id.generic_game_fragment_menu_undo_move);
 			if (menuItem != null)
 			{
-				menuItem.setEnabled(boardLocked);
+				menuItem.setEnabled(isReadyToSendMove);
 			}
 		}
 	}
@@ -441,6 +446,27 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
+	 * Clears both selected positions variables. (They are both set to null.)
+	 */
+	protected void clearSelectedPositions()
+	{
+		if (positionSelectedPrevious != null)
+		{
+			final Coordinate previous = new Coordinate((String) positionSelectedPrevious.getTag());
+			setPositionBackground(positionSelectedPrevious, false, previous);
+			positionSelectedPrevious = null;
+		}
+
+		if (positionSelectedCurrent != null)
+		{
+			final Coordinate current = new Coordinate((String) positionSelectedCurrent.getTag());
+			setPositionBackground(positionSelectedCurrent, false, current);
+			positionSelectedCurrent = null;
+		}
+	}
+
+
+	/**
 	 * Creates a tag to be used in a findViewWithTag() operation.
 	 * 
 	 * <p><strong>Examples</strong><br />
@@ -487,7 +513,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * Renders all of the game's pieces on the board by first clearing all of
 	 * the existing pieces from it and then placing all of the current pieces.
 	 */
-	private void flush()
+	protected void flush()
 	{
 		// clear all of the existing pieces from the board
 		for (byte x = 0; x < board.getLengthHorizontal(); ++x)
@@ -570,6 +596,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		if (!boardLocked)
 		{
 			boardLocked = true;
+			readyToSendMove();
 		}
 	}
 
@@ -631,7 +658,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 */
 	private void sendMove()
 	{
-		if (!isAsyncSendMoveRunning && boardLocked)
+		if (!isAsyncSendMoveRunning && (boardLocked || isReadyToSendMove))
 		{
 			asyncSendMove = new AsyncSendMove(getSherlockActivity());
 			asyncSendMove.execute();
@@ -711,13 +738,25 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
+	 * Puts the board in a state so that the move is now ready to be sent.
+	 */
+	protected void readyToSendMove()
+	{
+		isReadyToSendMove = true;
+		Utilities.compatInvalidateOptionsMenu(getSherlockActivity());
+	}
+
+
+	/**
 	 * Undoes the user's last move on the board. Unlocks the board, allowing
 	 * the user to make a different move on the board.
 	 */
 	private void undo()
 	{
-		if (boardLocked)
+		if (boardLocked || isReadyToSendMove)
 		{
+			clearSelectedPositions();
+
 			try
 			{
 				board.refresh();
@@ -729,6 +768,9 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 			flush();
 			boardLocked = false;
+			isReadyToSendMove = false;
+
+			Utilities.compatInvalidateOptionsMenu(getSherlockActivity());
 		}
 	}
 

@@ -4,7 +4,9 @@ package edu.selu.android.classygames.games.checkers;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import edu.selu.android.classygames.games.Coordinate;
 import edu.selu.android.classygames.games.GenericBoard;
+import edu.selu.android.classygames.games.Position;
 
 
 /**
@@ -90,6 +92,104 @@ public class Board extends GenericBoard
 		getPosition(2, 5).setPiece(new Piece(Piece.TEAM_OPPONENT));
 		getPosition(4, 5).setPiece(new Piece(Piece.TEAM_OPPONENT));
 		getPosition(6, 5).setPiece(new Piece(Piece.TEAM_OPPONENT));
+	}
+
+
+
+
+	@Override
+	public boolean move(final Position previous, final Position current)
+	{
+		boolean isMoveValid = false;
+
+		if (previous.hasPiece() && current.hasPiece())
+		{
+			isMoveValid = false;
+		}
+		else if ((previous.hasPiece() && previous.getPiece().isTeamOpponent()) || (current.hasPiece() && current.getPiece().isTeamPlayer()))
+		{
+			isMoveValid = false;
+		}
+		else if (previous.hasPiece())
+		{
+			final Piece piece = (Piece) previous.getPiece();
+
+			if ((previous.getCoordinate().getX() == current.getCoordinate().getX() - 1)
+				|| (previous.getCoordinate().getX() == current.getCoordinate().getX() + 1))
+			{
+				switch (piece.getType())
+				{
+					case Piece.TYPE_KING:
+						if (previous.getCoordinate().getY() == current.getCoordinate().getY() + 1)
+						{
+							isMoveValid = true;
+						}
+
+					case Piece.TYPE_NORMAL:
+						if (previous.getCoordinate().getY() == current.getCoordinate().getY() - 1)
+						{
+							isMoveValid = true;
+						}
+				}
+			}
+			else if ((previous.getCoordinate().getX() == current.getCoordinate().getX() - 2)
+				|| (previous.getCoordinate().getX() == current.getCoordinate().getX() + 2))
+			{
+				boolean isJumpValid = false;
+
+				switch (piece.getType())
+				{
+					case Piece.TYPE_KING:
+						if (previous.getCoordinate().getY() == current.getCoordinate().getY() + 2)
+						{
+							isJumpValid = true;
+						}
+						break;
+
+					case Piece.TYPE_NORMAL:
+						if (previous.getCoordinate().getY() == current.getCoordinate().getY() - 2)
+						{
+							isJumpValid = true;
+						}
+						break;
+				}
+
+				if (isJumpValid)
+				{
+					final byte middleX = (byte) Math.abs(previous.getCoordinate().getX() - current.getCoordinate().getX());
+					final byte middleY = (byte) Math.abs(previous.getCoordinate().getY() - current.getCoordinate().getY());
+					final Coordinate middleCoordinate = new Coordinate(middleX, middleY);
+					final Position middlePosition = getPosition(middleCoordinate);
+
+					if (middlePosition.hasPiece() && middlePosition.getPiece().isTeamOpponent())
+					{
+						middlePosition.getPiece().kill();
+						isMoveValid = true;
+					}
+				}
+			}
+
+			if (isMoveValid)
+			{
+				current.setPiece(new Piece(piece));
+				previous.removePiece();
+
+				if (current.getCoordinate().getY() == lengthVertical - 1)
+				{
+					((Piece) current.getPiece()).ascendToKing();
+				}
+			}
+		}
+		else if (current.hasPiece())
+		{
+			isMoveValid = false;
+		}
+		else
+		{
+			isMoveValid = false;
+		}
+
+		return isMoveValid;
 	}
 
 

@@ -9,7 +9,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewTreeObserver;
@@ -20,16 +19,10 @@ import edu.selu.android.classygames.games.Coordinate;
 import edu.selu.android.classygames.games.Position;
 import edu.selu.android.classygames.games.checkers.Board;
 import edu.selu.android.classygames.games.checkers.Piece;
-import edu.selu.android.classygames.utilities.Utilities;
 
 
 public class CheckersGameFragment extends GenericGameFragment
 {
-
-
-	private final static String LOG_TAG = Utilities.LOG_TAG + " - CheckersGameFragment";
-
-
 
 
 	/**
@@ -293,10 +286,16 @@ public class CheckersGameFragment extends GenericGameFragment
 	protected void onBoardClick(final ImageButton positionCurrent)
 	{
 		final Coordinate coordinateCurrent = new Coordinate((String) positionCurrent.getTag());
-		setPositionBackground(positionCurrent, true, coordinateCurrent);
-
 		final Position current = board.getPosition(coordinateCurrent);
-		Log.d(LOG_TAG, "Click! " + coordinateCurrent + " - has piece? " + current.getPiece());
+
+		if (current.hasPiece() && current.getPiece().isTeamPlayer())
+		{
+			setPositionBackground(positionCurrent, true, coordinateCurrent);
+		}
+		else
+		{
+			clearSelectedPositions();
+		}
 	}
 
 
@@ -304,14 +303,30 @@ public class CheckersGameFragment extends GenericGameFragment
 	protected void onBoardClick(final ImageButton positionPrevious, final ImageButton positionCurrent)
 	{
 		final Coordinate coordinatePrevious = new Coordinate((String) positionPrevious.getTag());
+		final Position previous = board.getPosition(coordinatePrevious);
 		setPositionBackground(positionPrevious, false, coordinatePrevious);
 
 		final Coordinate coordinateCurrent = new Coordinate((String) positionCurrent.getTag());
-		setPositionBackground(positionCurrent, true, coordinateCurrent);
-
 		final Position current = board.getPosition(coordinateCurrent);
-		final Position previous = board.getPosition(coordinatePrevious);
-		Log.d(LOG_TAG, "Click! Old: " + coordinatePrevious + " has piece? " + previous.getPiece() + ", New: " + coordinateCurrent + " has piece? " + current.getPiece());
+
+		if (!current.hasPiece())
+		{
+			setPositionBackground(positionCurrent, true, coordinateCurrent);
+
+			if (board.move(previous, current))
+			{
+				flush();
+				readyToSendMove();
+			}
+			else
+			{
+				setPositionBackground(positionCurrent, false, coordinateCurrent);
+			}
+		}
+		else
+		{
+			clearSelectedPositions();
+		}
 	}
 
 
