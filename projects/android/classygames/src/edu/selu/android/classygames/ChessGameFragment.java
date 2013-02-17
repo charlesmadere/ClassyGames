@@ -115,44 +115,68 @@ public class ChessGameFragment extends GenericGameFragment
 		{
 			case Piece.TYPE_PAWN:
 				if (piece.isTeamPlayer())
+				{
 					imageButton.setImageDrawable(playerPawn);
+				}
 				else
+				{
 					imageButton.setImageDrawable(opponentPawn);
+				}
 				break;
 
 			case Piece.TYPE_BISHOP:
 				if (piece.isTeamPlayer())
+				{
 					imageButton.setImageDrawable(playerBishop);
+				}
 				else
+				{
 					imageButton.setImageDrawable(opponentBishop);
+				}
 				break;
 
 			case Piece.TYPE_KNIGHT:
 				if (piece.isTeamPlayer())
+				{
 					imageButton.setImageDrawable(playerKnight);
+				}
 				else
+				{
 					imageButton.setImageDrawable(opponentKnight);
+				}
 				break;
 
 			case Piece.TYPE_ROOK:
 				if (piece.isTeamPlayer())
+				{
 					imageButton.setImageDrawable(playerRook);
+				}
 				else
+				{
 					imageButton.setImageDrawable(opponentRook);
+				}
 				break;
 
 			case Piece.TYPE_QUEEN:
 				if (piece.isTeamPlayer())
+				{
 					imageButton.setImageDrawable(playerQueen);
+				}
 				else
+				{
 					imageButton.setImageDrawable(opponentQueen);
+				}
 				break;
 
 			case Piece.TYPE_KING:
 				if (piece.isTeamPlayer())
+				{
 					imageButton.setImageDrawable(playerKing);
+				}
 				else
+				{
 					imageButton.setImageDrawable(opponentKing);
+				}
 				break;
 		}
 	}
@@ -187,11 +211,27 @@ public class ChessGameFragment extends GenericGameFragment
 
 
 	@Override
-	protected void onBoardClick(final ImageButton positionPreviousSelected, final ImageButton positionCurrentSelected)
+	protected void onBoardClick(final ImageButton positionCurrent)
 	{
-		final Coordinate coordinate = new Coordinate((String) positionCurrentSelected.getTag());
-		final Position position = board.getPosition(coordinate);
-		Log.d(LOG_TAG, "Click! " + coordinate + " - has piece? " + position.getPiece());
+		final Coordinate coordinateCurrent = new Coordinate((String) positionCurrent.getTag());
+		setPositionBackground(positionCurrent, true, coordinateCurrent);
+
+		final Position position = board.getPosition(coordinateCurrent);
+		Log.d(LOG_TAG, "Click! " + coordinateCurrent + " - has piece? " + position.getPiece());
+	}
+
+
+	@Override
+	protected void onBoardClick(final ImageButton positionPrevious, final ImageButton positionCurrent)
+	{
+		final Coordinate coordinatePrevious = new Coordinate((String) positionPrevious.getTag());
+		setPositionBackground(positionPrevious, false, coordinatePrevious);
+
+		final Coordinate coordinateCurrent = new Coordinate((String) positionCurrent.getTag());
+		setPositionBackground(positionCurrent, true, coordinateCurrent);
+
+		final Position position = board.getPosition(coordinateCurrent);
+		Log.d(LOG_TAG, "Click! " + coordinateCurrent + " - has piece? " + position.getPiece());
 	}
 
 

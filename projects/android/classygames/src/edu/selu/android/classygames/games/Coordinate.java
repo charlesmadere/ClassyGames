@@ -167,6 +167,23 @@ public class Coordinate
 	}
 
 
+	/**
+	 * Checks to see if this Coordinate's X and Y values are either both even
+	 * (as in X % 2 == 0 and Y % 2 == 0) <strong>or</strong> they're both odd
+	 * (as in Y % 2 == 1 and Y % 2 == 1). If X is 3 and Y is 2, then this will
+	 * return false. If X is 3 and Y is 3, this will return true. If X is 4 and
+	 * Y is 2, then this will return true.
+	 * 
+	 * @return
+	 * Returns true if either both X and Y are even numbers or if both X and Y
+	 * are odd.
+	 */
+	public boolean areBothEitherEvenOrOdd()
+	{
+		return (x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1);
+	}
+
+
 
 
 	@Override

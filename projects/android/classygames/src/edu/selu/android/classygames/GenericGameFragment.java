@@ -113,15 +113,15 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * The position on the game board that the user selected last time.
+	 * The position on the game board that the user just now selected.
 	 */
-	private ImageButton positionPreviousSelected;
+	private ImageButton positionSelectedCurrent;
 
 
 	/**
-	 * The position on the game board that the user just now selected.
+	 * The position on the game board that the user selected last time.
 	 */
-	private ImageButton positionCurrentSelected;
+	private ImageButton positionSelectedPrevious;
 
 
 	/**
@@ -234,25 +234,31 @@ public abstract class GenericGameFragment extends SherlockFragment
 				onBoardClick = new OnClickListener()
 				{
 					@Override
-					public void onClick(final View spot)
+					public void onClick(final View v)
 					{
-						if (positionCurrentSelected != null)
+						if (positionSelectedCurrent == null)
 						{
-							positionPreviousSelected = positionCurrentSelected;
-							setPositionBackground(positionPreviousSelected, false);
-						}
-
-						positionCurrentSelected = (ImageButton) spot;
-
-						if (positionCurrentSelected == positionPreviousSelected)
-						{
-							positionCurrentSelected = null;
-							positionPreviousSelected = null;
+							positionSelectedCurrent = (ImageButton) v;
+							onBoardClick(positionSelectedCurrent);
 						}
 						else
 						{
-							setPositionBackground(positionCurrentSelected, true);
-							onBoardClick(positionPreviousSelected, positionCurrentSelected);
+							positionSelectedPrevious = positionSelectedCurrent;
+							positionSelectedCurrent = (ImageButton) v;
+
+							if (positionSelectedPrevious == positionSelectedCurrent)
+							// deselect action
+							{
+								final Coordinate coordinate = new Coordinate((String) positionSelectedCurrent.getTag());
+								setPositionBackground(positionSelectedCurrent, false, coordinate);
+
+								positionSelectedPrevious = null;
+								positionSelectedCurrent = null;
+							}
+							else
+							{
+								onBoardClick(positionSelectedPrevious, positionSelectedCurrent);
+							}
 						}
 					}
 				};
@@ -644,14 +650,14 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * 
 	 * @param newlySelected
 	 * True if this ImageButton was just now selected.
+	 * 
+	 * @param coordinate
+	 * The coordinate for the given ImageButton.
 	 */
 	@SuppressWarnings("deprecation")
-	private void setPositionBackground(final ImageButton position, final boolean newlySelected)
+	protected void setPositionBackground(final ImageButton position, final boolean newlySelected, final Coordinate coordinate)
 	{
-		final Coordinate coordinate = new Coordinate((String) position.getTag());
-
-		if ((coordinate.getX() % 2 == 0 && coordinate.getY() % 2 == 0)
-			|| (coordinate.getX() % 2 == 1 && coordinate.getY() % 2 == 1))
+		if (coordinate.areBothEitherEvenOrOdd())
 		{
 			if (newlySelected)
 			{
@@ -1061,16 +1067,27 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 	/**
 	 * Checks to see which position on the board was clicked and then moves
-	 * pieces and / or performs actions accordingly.
-	 * 
-	 * @param positionPreviousSelected
-	 * The ImageButton object that was previously clicked on. This has the
-	 * possibility of being null.
+	 * pieces and / or performs actions accordingly. This method will only be
+	 * called if there is no previous position on the board that the user
+	 * clicked on.
 	 *
-	 * @param positionCurrentSelected
+	 * @param positionCurrent
 	 * The ImageButton object that was just now clicked on.
 	 */
-	protected abstract void onBoardClick(final ImageButton positionPreviousSelected, final ImageButton positionCurrentSelected);
+	protected abstract void onBoardClick(final ImageButton positionCurrent);
+
+
+	/**
+	 * Checks to see which position on the board was clicked and then moves
+	 * pieces and / or performs actions accordingly.
+	 * 
+	 * @param positionPrevious
+	 * The ImageButton object that was previously clicked on.
+	 *
+	 * @param positionCurrent
+	 * The ImageButton object that was just now clicked on.
+	 */
+	protected abstract void onBoardClick(final ImageButton positionPrevious, final ImageButton positionCurrent);
 
 
 	/**

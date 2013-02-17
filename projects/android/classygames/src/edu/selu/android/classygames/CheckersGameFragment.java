@@ -76,16 +76,24 @@ public class CheckersGameFragment extends GenericGameFragment
 		{
 			case Piece.TYPE_NORMAL:
 				if (piece.isTeamPlayer())
+				{
 					imageButton.setImageDrawable(playerNormal);
+				}
 				else
+				{
 					imageButton.setImageDrawable(opponentNormal);
+				}
 				break;
 
 			case Piece.TYPE_KING:
 				if (piece.isTeamPlayer())
+				{
 					imageButton.setImageDrawable(playerKing);
+				}
 				else
+				{
 					imageButton.setImageDrawable(opponentKing);
+				}
 				break;
 		}
 	}
@@ -282,11 +290,27 @@ public class CheckersGameFragment extends GenericGameFragment
 
 
 	@Override
-	protected void onBoardClick(final ImageButton positionPreviousSelected, final ImageButton positionCurrentSelected)
+	protected void onBoardClick(final ImageButton positionCurrent)
 	{
-		final Coordinate coordinate = new Coordinate((String) positionCurrentSelected.getTag());
-		final Position position = board.getPosition(coordinate);
-		Log.d(LOG_TAG, "Click! " + coordinate + " - has piece? " + position.getPiece());
+		final Coordinate coordinateCurrent = new Coordinate((String) positionCurrent.getTag());
+		setPositionBackground(positionCurrent, true, coordinateCurrent);
+
+		final Position position = board.getPosition(coordinateCurrent);
+		Log.d(LOG_TAG, "Click! " + coordinateCurrent + " - has piece? " + position.getPiece());
+	}
+
+
+	@Override
+	protected void onBoardClick(final ImageButton positionPrevious, final ImageButton positionCurrent)
+	{
+		final Coordinate coordinatePrevious = new Coordinate((String) positionPrevious.getTag());
+		setPositionBackground(positionPrevious, false, coordinatePrevious);
+
+		final Coordinate coordinateCurrent = new Coordinate((String) positionCurrent.getTag());
+		setPositionBackground(positionCurrent, true, coordinateCurrent);
+
+		final Position position = board.getPosition(coordinateCurrent);
+		Log.d(LOG_TAG, "Click! " + coordinateCurrent + " - has piece? " + position.getPiece());
 	}
 
 
