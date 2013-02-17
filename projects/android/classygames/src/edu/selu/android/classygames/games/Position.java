@@ -142,13 +142,13 @@ public class Position
 	 */
 	public JSONObject makeJSON() throws JSONException
 	{
-		final JSONArray coordinate = new JSONArray();
-		coordinate.put(this.coordinate.getX());
-		coordinate.put(this.coordinate.getY());
+		final JSONArray coordinateJSON = new JSONArray();
+		coordinateJSON.put(coordinate.getX());
+		coordinateJSON.put(coordinate.getY());
 
 		final JSONObject position = new JSONObject();
-		position.put("coordinate", coordinate);
-		position.put("type", piece.makeJSON());
+		position.put("coordinate", coordinateJSON);
+		position.put("type", piece.getType());
 
 		return position;
 	}

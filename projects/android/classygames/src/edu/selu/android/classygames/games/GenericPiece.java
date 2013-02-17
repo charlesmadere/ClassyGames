@@ -172,25 +172,6 @@ public abstract class GenericPiece
 	}
 
 
-	/**
-	 * Creates a JSONObject for this GenericPiece object.
-	 * 
-	 * @return
-	 * Returns the created JSONObject for this GenericPiece object.
-	 * 
-	 * @throws JSONException
-	 * If a glitch or something happened while trying to create this JSONObject
-	 * then a JSONException will be thrown.
-	 */
-	public JSONObject makeJSON() throws JSONException
-	{
-		final JSONObject piece = new JSONObject();
-		piece.put("type", type);
-
-		return piece;
-	}
-
-
 
 
 	/**
