@@ -106,13 +106,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * Boolean indicating if the board is locked or not. Once the board has
-	 * been locked it can only be locked by using undo.
-	 */
-	private boolean boardLocked = false;
-
-
-	/**
 	 * Boolean indicating if the board is in a state that would allow it to be
 	 * sent to the server.
 	 */
@@ -256,8 +249,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 							if (positionSelectedPrevious == positionSelectedCurrent)
 							// deselect action
 							{
-								final Coordinate coordinate = new Coordinate((String) positionSelectedCurrent.getTag());
-								setPositionBackground(positionSelectedCurrent, false, coordinate);
 								clearSelectedPositions();
 							}
 							else
@@ -447,6 +438,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 	/**
 	 * Clears both selected positions variables. (They are both set to null.)
+	 * The background image on both of them is also reset.
 	 */
 	protected void clearSelectedPositions()
 	{
@@ -587,21 +579,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * Locks the board. This prevents the player from continuing to move
-	 * pieces around. The player must press the undo button if they want to
-	 * move anything from this point on.
-	 */
-	protected void lockBoard()
-	{
-		if (!boardLocked)
-		{
-			boardLocked = true;
-			readyToSendMove();
-		}
-	}
-
-
-	/**
 	 * Reads in a JSON response String as received from the web server and
 	 * pulls the needed information out of it. If there is an error during this
 	 * process, null is returned.
@@ -658,7 +635,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 */
 	private void sendMove()
 	{
-		if (!isAsyncSendMoveRunning && (boardLocked || isReadyToSendMove))
+		if (!isAsyncSendMoveRunning && isReadyToSendMove)
 		{
 			asyncSendMove = new AsyncSendMove(getSherlockActivity());
 			asyncSendMove.execute();
@@ -753,13 +730,13 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 */
 	private void undo()
 	{
-		if (boardLocked || isReadyToSendMove)
+		if (board.getIsBoardLocked() || isReadyToSendMove)
 		{
 			clearSelectedPositions();
 
 			try
 			{
-				board.refresh();
+				board.reset();
 			}
 			catch (final JSONException e)
 			{
@@ -767,7 +744,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 			}
 
 			flush();
-			boardLocked = false;
 			isReadyToSendMove = false;
 
 			Utilities.compatInvalidateOptionsMenu(getSherlockActivity());

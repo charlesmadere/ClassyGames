@@ -285,16 +285,23 @@ public class CheckersGameFragment extends GenericGameFragment
 	@Override
 	protected void onBoardClick(final ImageButton positionCurrent)
 	{
-		final Coordinate coordinateCurrent = new Coordinate((String) positionCurrent.getTag());
-		final Position current = board.getPosition(coordinateCurrent);
-
-		if (current.hasPiece() && current.getPiece().isTeamPlayer())
+		if (board.getIsBoardLocked())
 		{
-			setPositionBackground(positionCurrent, true, coordinateCurrent);
+			clearSelectedPositions();
 		}
 		else
 		{
-			clearSelectedPositions();
+			final Coordinate coordinateCurrent = new Coordinate((String) positionCurrent.getTag());
+			final Position current = board.getPosition(coordinateCurrent);
+
+			if (current.hasPiece() && current.getPiece().isTeamPlayer())
+			{
+				setPositionBackground(positionCurrent, true, coordinateCurrent);
+			}
+			else
+			{
+				clearSelectedPositions();
+			}
 		}
 	}
 
@@ -302,30 +309,38 @@ public class CheckersGameFragment extends GenericGameFragment
 	@Override
 	protected void onBoardClick(final ImageButton positionPrevious, final ImageButton positionCurrent)
 	{
-		final Coordinate coordinatePrevious = new Coordinate((String) positionPrevious.getTag());
-		final Position previous = board.getPosition(coordinatePrevious);
-		setPositionBackground(positionPrevious, false, coordinatePrevious);
-
-		final Coordinate coordinateCurrent = new Coordinate((String) positionCurrent.getTag());
-		final Position current = board.getPosition(coordinateCurrent);
-
-		if (!current.hasPiece())
+		if (!board.getIsBoardLocked())
 		{
-			setPositionBackground(positionCurrent, true, coordinateCurrent);
+			final Coordinate coordinatePrevious = new Coordinate((String) positionPrevious.getTag());
+			final Position previous = board.getPosition(coordinatePrevious);
+			setPositionBackground(positionPrevious, false, coordinatePrevious);
 
-			if (board.move(previous, current))
+			final Coordinate coordinateCurrent = new Coordinate((String) positionCurrent.getTag());
+			final Position current = board.getPosition(coordinateCurrent);
+
+			if (!current.hasPiece())
 			{
-				flush();
-				readyToSendMove();
+				setPositionBackground(positionCurrent, true, coordinateCurrent);
+
+				if (board.move(previous, current))
+				{
+					flush();
+					readyToSendMove();
+
+					if (board.getIsBoardLocked())
+					{
+						clearSelectedPositions();
+					}
+				}
+				else
+				{
+					setPositionBackground(positionCurrent, false, coordinateCurrent);
+				}
 			}
 			else
 			{
-				setPositionBackground(positionCurrent, false, coordinateCurrent);
+				clearSelectedPositions();
 			}
-		}
-		else
-		{
-			clearSelectedPositions();
 		}
 	}
 

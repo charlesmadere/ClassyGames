@@ -39,7 +39,14 @@ public abstract class GenericBoard
 	 * accessed as [X][Y]. So a position on the board that is (5, 3) - (X = 5
 	 * and Y = 3), would be [5][3].
 	 */
-	protected Position[][] positions;
+	private Position[][] positions;
+
+
+	/**
+	 * Boolean indicating whether or not this board is locked. If the board is
+	 * locked then pieces can't be moved.
+	 */
+	protected boolean isBoardLocked;
 
 
 
@@ -65,7 +72,7 @@ public abstract class GenericBoard
 		this.lengthVertical = lengthVertical;
 
 		initializePositions();
-		refresh();
+		reset();
 	}
 
 
@@ -93,7 +100,17 @@ public abstract class GenericBoard
 		this.boardJSON = boardJSON;
 
 		initializePositions();
-		refresh();
+		reset();
+	}
+
+
+	/**
+	 * @return
+	 * Returns whether or not the board is currently locked.
+	 */
+	public boolean getIsBoardLocked()
+	{
+		return isBoardLocked;
 	}
 
 
@@ -388,9 +405,11 @@ public abstract class GenericBoard
 	 * then this JSONException will be thrown. If the game was not resumed from
 	 * JSON data then this should never happen.
 	 */
-	public void refresh() throws JSONException
+	public void reset() throws JSONException
 	{
+		isBoardLocked = false;
 		initializePositions();
+		resetBoard();
 
 		if (boardJSON == null)
 		{
@@ -445,6 +464,13 @@ public abstract class GenericBoard
 	 * Returns true if the given move is a valid one.
 	 */
 	public abstract boolean move(final Position previous, final Position current);
+
+
+	/**
+	 * Allows classes that extend from this one to perform some code when this
+	 * class's reset() method is run.
+	 */
+	protected abstract void resetBoard();
 
 
 }

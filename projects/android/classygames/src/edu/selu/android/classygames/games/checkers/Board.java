@@ -21,6 +21,13 @@ public class Board extends GenericBoard
 	private final static byte LENGTH_VERTICAL = 8;
 
 
+	/**
+	 * Holds a handle to the piece that the user last moved. This isn eeded for
+	 * multijump purposes.
+	 */
+	private Piece lastMovedPiece;
+
+
 
 
 	/**
@@ -102,7 +109,11 @@ public class Board extends GenericBoard
 	{
 		boolean isMoveValid = false;
 
-		if (previous.hasPiece() && current.hasPiece())
+		if (isBoardLocked)
+		{
+			isMoveValid = false;
+		}
+		else if (previous.hasPiece() && current.hasPiece())
 		{
 			isMoveValid = false;
 		}
@@ -123,12 +134,14 @@ public class Board extends GenericBoard
 						if (previous.getCoordinate().getY() == current.getCoordinate().getY() + 1)
 						{
 							isMoveValid = true;
+							isBoardLocked = true;
 						}
 
 					case Piece.TYPE_NORMAL:
 						if (previous.getCoordinate().getY() == current.getCoordinate().getY() - 1)
 						{
 							isMoveValid = true;
+							isBoardLocked = true;
 						}
 				}
 			}
@@ -163,8 +176,11 @@ public class Board extends GenericBoard
 
 					if (middlePosition.hasPiece() && middlePosition.getPiece().isTeamOpponent())
 					{
-						middlePosition.getPiece().kill();
-						isMoveValid = true;
+						if (lastMovedPiece != null && lastMovedPiece == piece)
+						{
+							middlePosition.getPiece().kill();
+							isMoveValid = true;
+						}
 					}
 				}
 			}
@@ -173,6 +189,7 @@ public class Board extends GenericBoard
 			{
 				current.setPiece(new Piece(piece));
 				previous.removePiece();
+				lastMovedPiece = (Piece) current.getPiece();
 
 				if (current.getCoordinate().getY() == lengthVertical - 1)
 				{
@@ -190,6 +207,13 @@ public class Board extends GenericBoard
 		}
 
 		return isMoveValid;
+	}
+
+
+	@Override
+	protected void resetBoard()
+	{
+		lastMovedPiece = null;
 	}
 
 

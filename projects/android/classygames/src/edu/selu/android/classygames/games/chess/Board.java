@@ -113,4 +113,11 @@ public class Board extends GenericBoard
 	}
 
 
+	@Override
+	protected void resetBoard()
+	{
+
+	}
+
+
 }
