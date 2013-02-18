@@ -19,6 +19,9 @@ public class Board extends GenericBoard
 
 	private final static byte LENGTH_HORIZONTAL = 8;
 	private final static byte LENGTH_VERTICAL = 8;
+	private final static byte MAX_TEAM_SIZE = 12;
+
+
 
 
 	/**
@@ -72,14 +75,194 @@ public class Board extends GenericBoard
 	@Override
 	public byte checkValidity()
 	{
-		return (byte) 0;
+		byte piecesCountOpponent = 0;
+		byte piecesCountPlayer = 0;
+
+		for (byte x = 0; x < lengthHorizontal; ++x)
+		{
+			for (byte y = 0; y < lengthVertical; ++y)
+			{
+				final Coordinate coordinate = new Coordinate(x, y);
+
+				final Position position = getPosition(coordinate);
+				final Piece piece = (Piece) position.getPiece();
+
+				if (piece != null && coordinate.areBothEitherEvenOrOdd())
+				// check to see if this piece is in an invalid position on the
+				// board
+				{
+					return BOARD_INVALID;
+				}
+
+				if (piece != null)
+				// count the size of the teams
+				{
+					if (piece.isTeamOpponent())
+					{
+						++piecesCountOpponent;
+					}
+					else if (piece.isTeamPlayer())
+					{
+						++piecesCountPlayer;
+					}
+				}
+
+				if (!coordinate.areBothEitherEvenOrOdd())
+				{
+					if (y > 4)
+					{
+						if (piece == null)
+						{
+							return BOARD_INVALID;
+						}
+						else if (piece.isTeamPlayer())
+						{
+							return BOARD_INVALID;
+						}
+						else if (piece.isTypeKing())
+						{
+							return BOARD_INVALID;
+						}
+					}
+					else if (y == 2)
+					{
+						if (piece != null)
+						{
+							if (piece.isTeamOpponent())
+							{
+								return BOARD_INVALID;
+							}
+							else if (piece.isTypeKing())
+							{
+								return BOARD_INVALID;
+							}
+						}
+					}
+					else if (y < 2)
+					{
+						if (piece == null)
+						{
+							return BOARD_INVALID;
+						}
+						else if (piece.isTeamOpponent())
+						{
+							return BOARD_INVALID;
+						}
+						else if (piece.isTypeKing())
+						{
+							return BOARD_INVALID;
+						}
+					}
+				}
+
+				if (y == 7 && x % 2 == 0 || y == 6 && x % 2 != 0 || y == 5 && x % 2 == 0 || y == 1 && x % 2 == 0 || y == 0 && x % 2 != 0)
+				// only the first row should have a piece moved from a valid
+				// spot at first
+				{
+					if (piece == null)
+					{
+						return BOARD_INVALID;
+					}
+				}
+
+				if (y == 3)
+				// make sure that the first move came from a valid place
+				{
+					if (piece != null)
+					{
+						if (x == 0)
+						// check that farthest left piece moved to this position
+						{
+							if (getPosition(x + 1, y - 1).hasPiece())
+							{
+								return BOARD_INVALID;
+							}
+						}
+						else if (x % 2 == 0)
+						// check the rest of the pieces for a valid first turn
+						// move
+						{
+							if (getPosition(x - 1, y - 1).hasPiece() && getPosition(x + 1, y - 1).hasPiece())
+							{
+								return BOARD_INVALID;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		if (piecesCountOpponent != MAX_TEAM_SIZE || piecesCountPlayer != MAX_TEAM_SIZE)
+		{
+			return BOARD_INVALID;
+		}
+
+		return BOARD_NEW_GAME;
 	}
 
 
 	@Override
 	public byte checkValidity(final JSONObject boardJSON)
 	{
-		return (byte) 0;
+		try
+		{
+			final Board board = new Board(boardJSON);
+			byte piecesCountOpponent = 0;
+			byte piecesCountPlayer = 0;
+
+			for (byte x = 0; x < lengthHorizontal; ++x)
+			{
+				for (byte y = 0; y < lengthVertical; ++y)
+				{
+					final Coordinate coordinate = new Coordinate(x, y);
+
+					final Position position = getPosition(coordinate);
+					final Piece piece = (Piece) position.getPiece();
+
+					final Position positionNew = board.getPosition(coordinate);
+					final Piece pieceNew = (Piece) positionNew.getPiece();
+
+					if (coordinate.areBothEitherEvenOrOdd())
+					// check to see if this piece is in an invalid position on
+					// the board
+					{
+						if (pieceNew != null)
+						{
+							return BOARD_INVALID;
+						}
+					}
+
+					if (pieceNew != null)
+					// count the size of the teams
+					{
+						if (pieceNew.isTeamOpponent())
+						{
+							++piecesCountOpponent;
+						}
+						else if (pieceNew.isTeamPlayer())
+						{
+							++piecesCountPlayer;
+						}
+					}
+
+					if (piecesCountOpponent > MAX_TEAM_SIZE || piecesCountPlayer > MAX_TEAM_SIZE)
+					{
+						return BOARD_INVALID;
+					}
+
+					if (piecesCountOpponent == 0)
+					{
+						return BOARD_WIN;
+					}
+				}
+			}
+		}
+		catch (final JSONException e)
+		{
+			return BOARD_INVALID;
+		}
+
+		return BOARD_NEW_MOVE;
 	}
 
 

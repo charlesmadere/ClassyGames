@@ -14,6 +14,14 @@ public abstract class GenericBoard
 {
 
 
+	protected final static byte BOARD_INVALID = -1;
+	protected final static byte BOARD_NEW_GAME = 1;
+	protected final static byte BOARD_NEW_MOVE = 2;
+	protected final static byte BOARD_WIN = 3;
+
+
+
+
 	/**
 	 * The number of positions the board has horizontally. This can be thought
 	 * of as the board's X limit.
