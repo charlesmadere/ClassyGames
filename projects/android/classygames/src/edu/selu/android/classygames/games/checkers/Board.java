@@ -70,6 +70,20 @@ public class Board extends GenericBoard
 
 
 	@Override
+	public byte checkValidity()
+	{
+		return (byte) 0;
+	}
+
+
+	@Override
+	public byte checkValidity(final JSONObject boardJSON)
+	{
+		return (byte) 0;
+	}
+
+
+	@Override
 	protected void initializeDefaultBoard()
 	{
 		// player team

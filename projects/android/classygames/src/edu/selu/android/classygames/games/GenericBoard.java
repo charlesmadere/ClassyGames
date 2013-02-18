@@ -105,6 +105,15 @@ public abstract class GenericBoard
 
 
 	/**
+	 * Flips both team's coordinate locations on the board.
+	 */
+	public void flipTeams()
+	{
+		
+	}
+
+
+	/**
 	 * @return
 	 * Returns whether or not the board is currently locked.
 	 */
@@ -438,6 +447,29 @@ public abstract class GenericBoard
 	 * Returns a new GenericPiece object made from the given data.
 	 */
 	protected abstract GenericPiece buildPiece(final byte whichTeam, final int type);
+
+
+	/**
+	 * Checks this GenericBoard object for validity.
+	 * 
+	 * @return
+	 * A byte that represents if the board is valid or not.
+	 */
+	public abstract byte checkValidity();
+
+
+	/**
+	 * Checks this GenericBoard object for validity against the board given in
+	 * the boardJSON parameter.
+	 * 
+	 * @param boardJSON
+	 * The board to check against. This is a newer game board than the one
+	 * stored in this GenericBoard object.
+	 * 
+	 * @return
+	 * A byte that represents if the board is valid or not.
+	 */
+	public abstract byte checkValidity(final JSONObject boardJSON);
 
 
 	/**

@@ -1,8 +1,5 @@
 package edu.selu.android.classygames.games;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 
 /**
  * Class representing a single GenericPiece. Each game will need to extend this
