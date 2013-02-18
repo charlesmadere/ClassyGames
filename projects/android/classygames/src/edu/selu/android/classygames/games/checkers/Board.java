@@ -217,8 +217,6 @@ public class Board extends GenericBoard
 					final Coordinate coordinate = new Coordinate(x, y);
 
 					final Position position = getPosition(coordinate);
-					final Piece piece = (Piece) position.getPiece();
-
 					final Position positionNew = board.getPosition(coordinate);
 					final Piece pieceNew = (Piece) positionNew.getPiece();
 
