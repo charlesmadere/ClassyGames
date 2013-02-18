@@ -15,15 +15,15 @@ public abstract class GenericBoard
 
 
 	/**
-	 * How many positions the board has horizontally. This can be thought of as
-	 * the board's X limit.
+	 * The number of positions the board has horizontally. This can be thought
+	 * of as the board's X limit.
 	 */
 	protected byte lengthHorizontal;
 
 
 	/**
-	 * How many positions the board has vertically. This can be thought of as
-	 * the board's Y limit.
+	 * The number of positions that the board has vertically. This can be
+	 * thought of as the board's Y limit.
 	 */
 	protected byte lengthVertical;
 
@@ -109,7 +109,22 @@ public abstract class GenericBoard
 	 */
 	public void flipTeams()
 	{
-		
+		final byte halfLengthVertical = (byte) (lengthVertical / 2);
+
+		for (byte x = 0; x < lengthHorizontal; ++x)
+		{
+			for (byte y = 0; y < halfLengthVertical; ++y)
+			{
+				final Position position = getPosition(x, y);
+				final Position positionInverse = getPosition(lengthHorizontal - 1 - x, lengthVertical - 1 - y);
+
+				final GenericPiece piece = position.getPiece();
+				final GenericPiece pieceInverse = positionInverse.getPiece();
+
+				position.setPiece(pieceInverse);
+				positionInverse.setPiece(piece);
+			}
+		}
 	}
 
 
