@@ -184,6 +184,18 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
+	 * One of this class's callback methods. This is fired in the event that
+	 * a move has finished being sent to the server.
+	 */
+	private GenericGameFragmentOnAsyncSendMoveFinishedListener genericGameFragmentOnAsyncSendMoveFinishedListener;
+
+	public interface GenericGameFragmentOnAsyncSendMoveFinishedListener
+	{
+		public void genericGameFragmentOnAsyncSendMoveFinished();
+	}
+
+
+	/**
 	 * One of this class's callback methods. This is fired in the event that an
 	 * error was detected in some of the data needed to instantiate a game.
 	 */
@@ -303,6 +315,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		{
 			genericGameFragmentIsDeviceSmallListener = (GenericGameFragmentIsDeviceLargeListener) activity;
 			genericGameFragmentOnAsyncGetGameOnCancelledListener = (GenericGameFragmentOnAsyncGetGameOnCancelledListener) activity;
+			genericGameFragmentOnAsyncSendMoveFinishedListener = (GenericGameFragmentOnAsyncSendMoveFinishedListener) activity;
 			genericGameFragmentOnDataErrorListener = (GenericGameFragmentOnDataErrorListener) activity;
 		}
 		catch (final ClassCastException e)
@@ -997,6 +1010,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 			{
 				progressDialog.dismiss();
 			}
+
+			genericGameFragmentOnAsyncSendMoveFinishedListener.genericGameFragmentOnAsyncSendMoveFinished();
 		}
 
 

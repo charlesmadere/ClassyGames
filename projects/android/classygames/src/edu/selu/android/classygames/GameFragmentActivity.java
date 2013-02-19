@@ -25,6 +25,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 	GamesListFragment.GamesListFragmentOnRefreshSelectedListener,
 	GenericGameFragment.GenericGameFragmentIsDeviceLargeListener,
 	GenericGameFragment.GenericGameFragmentOnAsyncGetGameOnCancelledListener,
+	GenericGameFragment.GenericGameFragmentOnAsyncSendMoveFinishedListener,
 	GenericGameFragment.GenericGameFragmentOnDataErrorListener
 {
 
@@ -250,6 +251,27 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 
 	/**
+	 * Ensures that the gamesListFragment Fragment is not null.
+	 */
+	private void getGamesListFragment()
+	{
+		if (gamesListFragment == null)
+		{
+			final FragmentManager fManager = getSupportFragmentManager();
+
+			if (isDeviceLarge())
+			{
+				gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_games_list_fragment);
+			}
+			else
+			{
+				gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.game_fragment_activity_container);
+			}
+		}
+	}
+
+
+	/**
 	 * Checks to see what size screen this device has. This method will return
 	 * true if the device has a large screen, and as such said device should be
 	 * using the dual pane, fragment based, layout stuff.
@@ -339,6 +361,34 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 			onBackPressed();
 		}
 
+		getGamesListFragment();
+		gamesListFragment.refreshGamesList();
+	}
+
+
+	@Override
+	public void genericGameFragmentOnAsyncSendMoveFinished()
+	{
+		final FragmentManager fManager = getSupportFragmentManager();
+		fManager.popBackStack();
+		final FragmentTransaction fTransaction = fManager.beginTransaction();
+
+		if (isDeviceLarge())
+		{
+			if (emptyGameFragment == null)
+			{
+				emptyGameFragment = new EmptyGameFragment();
+			}
+
+			fTransaction.replace(R.id.game_fragment_activity_fragment_game, emptyGameFragment);
+		}
+		else
+		{
+			fTransaction.remove(genericGameFragment);
+		}
+
+		fTransaction.commit();
+		getGamesListFragment();
 		gamesListFragment.refreshGamesList();
 	}
 
@@ -363,9 +413,6 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 		Utilities.easyToastAndLogError(this, "Couldn't create a game as malformed data was detected!");
 		onBackPressed();
 	}
-
-
-	
 
 
 }
