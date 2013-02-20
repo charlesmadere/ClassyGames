@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="edu.selu.android.classygames"
-	android:versionCode="7"
+	android:versionCode="10"
 	android:versionName="1.5">
 
+    <!-- Check out the Android API Levels website for more information on this topic -->
+    <!-- https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels -->
 	<uses-sdk
-		android:minSdkVersion="10"
+		android:minSdkVersion="8"
 		android:targetSdkVersion="17" />
 
 	<uses-permission
@@ -78,25 +80,54 @@
 		</activity>
 
 		<activity
+			android:label="@string/about_activity_title"
+			android:name=".AboutActivity"
+			android:parentActivityName=".GameFragmentActivity"
+			android:theme="@style/Theme.Styled">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".GameFragmentActivity" />
+		</activity>
+
+		<activity
 			android:label="@string/games_list_fragment_title"
 			android:name=".GameFragmentActivity"
+			android:parentActivityName=".MainActivity"
 			android:theme="@style/Theme.Styled"
-			android:uiOptions="splitActionBarWhenNarrow" />
+			android:uiOptions="splitActionBarWhenNarrow">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".MainActivity" />
+		</activity>
+
+		<activity
+			android:label="@string/game_over_activity_title"
+			android:name=".GameOverActivity"
+			android:parentActivityName=".GameFragmentActivity"
+			android:theme="@style/Theme.Styled">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".GameFragmentActivity" />
+		</activity>
 
 		<activity
 			android:label="@string/friends_list_fragment_title"
 			android:name=".NewGameFragmentActivity"
-			android:theme="@style/Theme.Styled" />
-
-		<activity
-			android:label="@string/about_activity_title"
-			android:name=".AboutActivity"
-			android:theme="@style/Theme.Styled" />
+			android:theme="@style/Theme.Styled">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".GameFragmentActivity" />
+		</activity>
 
 		<activity
 			android:label="@string/shark_activity_title"
 			android:name=".SharkActivity"
-			android:theme="@style/Theme.Styled" />
+			android:parentActivityName=".AboutActivity"
+			android:theme="@style/Theme.Styled">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".AboutActivity" />
+		</activity>
 
 		<activity
 			android:label="@string/app_name"

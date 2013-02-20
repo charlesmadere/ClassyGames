@@ -14,5 +14,6 @@
 		android:id="@+id/generic_game_fragment_loading_textview"
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
+		android:textIsSelectable="false"
 		style="@style/paragraph" />
 </LinearLayout>

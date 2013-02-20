@@ -7,7 +7,7 @@
 	style="@style/ClassyGames">
 	<LinearLayout
 		android:id="@+id/chess_game_fragment_x0"
-		android:layout_height="match_parent"
+		android:layout_height="1dip"
 		android:layout_width="wrap_content"
 		android:orientation="vertical">
 		<ImageButton
@@ -93,7 +93,7 @@
 	</LinearLayout>
 	<LinearLayout
 		android:id="@+id/chess_game_fragment_x1"
-		android:layout_height="match_parent"
+		android:layout_height="1dip"
 		android:layout_width="wrap_content"
 		android:orientation="vertical">
 		<ImageButton
@@ -179,7 +179,7 @@
 	</LinearLayout>
 	<LinearLayout
 		android:id="@+id/chess_game_fragment_x2"
-		android:layout_height="match_parent"
+		android:layout_height="1dip"
 		android:layout_width="wrap_content"
 		android:orientation="vertical">
 		<ImageButton
@@ -265,7 +265,7 @@
 	</LinearLayout>
 	<LinearLayout
 		android:id="@+id/chess_game_fragment_x3"
-		android:layout_height="match_parent"
+		android:layout_height="1dip"
 		android:layout_width="wrap_content"
 		android:orientation="vertical">
 		<ImageButton
@@ -351,7 +351,7 @@
 	</LinearLayout>
 	<LinearLayout
 		android:id="@+id/chess_game_fragment_x4"
-		android:layout_height="match_parent"
+		android:layout_height="1dip"
 		android:layout_width="wrap_content"
 		android:orientation="vertical">
 		<ImageButton
@@ -437,7 +437,7 @@
 	</LinearLayout>
 	<LinearLayout
 		android:id="@+id/chess_game_fragment_x5"
-		android:layout_height="match_parent"
+		android:layout_height="1dip"
 		android:layout_width="wrap_content"
 		android:orientation="vertical">
 		<ImageButton
@@ -523,7 +523,7 @@
 	</LinearLayout>
 	<LinearLayout
 		android:id="@+id/chess_game_fragment_x6"
-		android:layout_height="match_parent"
+		android:layout_height="1dip"
 		android:layout_width="wrap_content"
 		android:orientation="vertical">
 		<ImageButton
@@ -609,7 +609,7 @@
 	</LinearLayout>
 	<LinearLayout
 		android:id="@+id/chess_game_fragment_x7"
-		android:layout_height="match_parent"
+		android:layout_height="1dip"
 		android:layout_width="wrap_content"
 		android:orientation="vertical">
 		<ImageButton

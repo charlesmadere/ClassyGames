@@ -14,7 +14,7 @@ import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
-import edu.selu.android.classygames.CheckersGameFragment;
+import edu.selu.android.classygames.GameFragmentActivity;
 import edu.selu.android.classygames.GameOverActivity;
 import edu.selu.android.classygames.R;
 import edu.selu.android.classygames.models.Person;
@@ -58,7 +58,7 @@ public class GCMIntentService extends IntentService
 		{
 			final String action = intent.getAction();
 
-			if (action != null && !action.isEmpty())
+			if (Utilities.verifyValidString(action))
 			{
 				if (action.equals("com.google.android.c2dm.intent.REGISTRATION"))
 				{
@@ -100,23 +100,23 @@ public class GCMIntentService extends IntentService
 				final Person person = new Person(personId, parameter_personName);
 
 				// build a notification to show to the user
-				NotificationCompat.Builder builder = new NotificationCompat.Builder(GCMIntentService.this);
+				final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 				builder.setAutoCancel(true);
 				builder.setContentTitle(getString(R.string.notification_title));
-				builder.setLargeIcon(BitmapFactory.decodeResource(GCMIntentService.this.getResources(), R.drawable.notification_raw));
+				builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification_raw));
 				builder.setLights(GCM_NOTIFICATION_LIGHTS, GCM_NOTIFICATION_LIGHTS_ON, GCM_NOTIFICATION_LIGHTS_OFF);
 				builder.setOnlyAlertOnce(true);
 				builder.setSmallIcon(R.drawable.notification_small);
 
-				TaskStackBuilder stackBuilder = TaskStackBuilder.create(GCMIntentService.this);
+				final TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 
 				if (messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_GAME
 					|| messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_MOVE)
 				{
-					Intent gameIntent = new Intent(this, CheckersGameFragment.class);
-//					gameIntent.putExtra(GenericGameFragment.BUNDLE_DATA_GAME_ID, gameId);
-//					gameIntent.putExtra(GenericGameFragment.BUNDLE_DATA_PERSON_CHALLENGED_ID, person.getId());
-//					gameIntent.putExtra(GenericGameFragment.BUNDLE_DATA_PERSON_CHALLENGED_NAME, person.getName());
+					final Intent gameIntent = new Intent(this, GameFragmentActivity.class);
+					gameIntent.putExtra(GameFragmentActivity.BUNDLE_DATA_GAME_ID, parameter_gameId);
+					gameIntent.putExtra(GameFragmentActivity.BUNDLE_DATA_PERSON_OPPONENT_ID, person.getId());
+					gameIntent.putExtra(GameFragmentActivity.BUNDLE_DATA_PERSON_OPPONENT_NAME, person.getName());
 					stackBuilder.addNextIntentWithParentStack(gameIntent);
 
 					builder.setTicker(getString(R.string.notification_sent_some_class, person.getName()));
@@ -133,10 +133,10 @@ public class GCMIntentService extends IntentService
 				else if (ServerUtilities.validWinOrLoseValue(messageType.byteValue()))
 				// it's a GAME_OVER byte
 				{
-					Intent gameOverIntent = new Intent(this, GameOverActivity.class);
-					gameOverIntent.putExtra(ServerUtilities.POST_DATA_GAME_TYPE, messageType.byteValue());
-//					gameOverIntent.putExtra(GenericGameFragment.BUNDLE_DATA_PERSON_CHALLENGED_ID, person.getId());
-//					gameOverIntent.putExtra(GenericGameFragment.BUNDLE_DATA_PERSON_CHALLENGED_NAME, person.getName());
+					final Intent gameOverIntent = new Intent(this, GameOverActivity.class);
+					gameOverIntent.putExtra(GameOverActivity.BUNDLE_DATA_MESSAGE_TYPE, messageType.byteValue());
+					gameOverIntent.putExtra(GameOverActivity.BUNDLE_DATA_PERSON_OPPONENT_ID, person.getId());
+					gameOverIntent.putExtra(GameOverActivity.BUNDLE_DATA_PERSON_OPPONENT_NAME, person.getName());
 					stackBuilder.addNextIntentWithParentStack(gameOverIntent);
 
 					builder.setTicker(getString(R.string.notification_game_over_text, person.getName()));
@@ -155,7 +155,7 @@ public class GCMIntentService extends IntentService
 				builder.setContentIntent(gamePendingIntent);
 
 				// show the notification
-				NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+				final NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 				notificationManager.notify(GCM_NOTIFICATION_ID, builder.build());
 			}
 		}
@@ -189,7 +189,7 @@ public class GCMIntentService extends IntentService
 				try
 				{
 					// notify 3rd party server about the new regId
-					ServerUtilities.GCMRegister(regId, GCMIntentService.this);
+					ServerUtilities.GCMRegister(regId, this);
 				}
 				catch (final IOException e)
 				{
@@ -213,7 +213,7 @@ public class GCMIntentService extends IntentService
 				try
 				{
 					// notify 3rd party server about the unregistered ID
-					ServerUtilities.GCMUnregister(preferencesRegId, GCMIntentService.this);
+					ServerUtilities.GCMUnregister(preferencesRegId, this);
 				}
 				catch (final IOException e)
 				{
@@ -246,7 +246,7 @@ public class GCMIntentService extends IntentService
 		{
 			if (wakeLock == null)
 			{
-				PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+				final PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 				wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "classy_wakelock");
 			}
 		}

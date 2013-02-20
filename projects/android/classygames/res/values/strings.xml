@@ -87,7 +87,8 @@
 	<string name="game_fragment_board_x6y7">6, 7</string>
 	<string name="game_fragment_board_x7y7">7, 7</string>
 	<string name="game_over_activity_button_return">Return to Games List</string>
-	<string name="game_over_activity_description">You %1$s the game! You should play another round!</string>
+	<string name="game_over_activity_win_or_lose_lost">You lost the game! Better luck next time!</string>
+	<string name="game_over_activity_win_or_lose_won">You won the game! What a champ!</string>
 	<string name="game_over_activity_friend_profile_picture_description">Friend\'s Picture</string>
 	<string name="game_over_activity_title">Game Over</string>
 	<string name="game_timestamp_1_week_ago">1 week ago</string>

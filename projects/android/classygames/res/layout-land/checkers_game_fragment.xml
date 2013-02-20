@@ -8,7 +8,7 @@
 	<LinearLayout
 		android:id="@+id/checkers_game_fragment_x0"
 		android:layout_height="match_parent"
-		android:layout_width="wrap_content"
+		android:layout_width="1dip"
 		android:orientation="vertical">
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
@@ -94,7 +94,7 @@
 	<LinearLayout
 		android:id="@+id/checkers_game_fragment_x1"
 		android:layout_height="match_parent"
-		android:layout_width="wrap_content"
+		android:layout_width="1dip"
 		android:orientation="vertical">
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
@@ -180,7 +180,7 @@
 	<LinearLayout
 		android:id="@+id/checkers_game_fragment_x2"
 		android:layout_height="match_parent"
-		android:layout_width="wrap_content"
+		android:layout_width="1dip"
 		android:orientation="vertical">
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
@@ -266,7 +266,7 @@
 	<LinearLayout
 		android:id="@+id/checkers_game_fragment_x3"
 		android:layout_height="match_parent"
-		android:layout_width="wrap_content"
+		android:layout_width="1dip"
 		android:orientation="vertical">
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
@@ -352,7 +352,7 @@
 	<LinearLayout
 		android:id="@+id/checkers_game_fragment_x4"
 		android:layout_height="match_parent"
-		android:layout_width="wrap_content"
+		android:layout_width="1dip"
 		android:orientation="vertical">
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
@@ -438,7 +438,7 @@
 	<LinearLayout
 		android:id="@+id/checkers_game_fragment_x5"
 		android:layout_height="match_parent"
-		android:layout_width="wrap_content"
+		android:layout_width="1dip"
 		android:orientation="vertical">
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
@@ -524,7 +524,7 @@
 	<LinearLayout
 		android:id="@+id/checkers_game_fragment_x6"
 		android:layout_height="match_parent"
-		android:layout_width="wrap_content"
+		android:layout_width="1dip"
 		android:orientation="vertical">
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
@@ -610,7 +610,7 @@
 	<LinearLayout
 		android:id="@+id/checkers_game_fragment_x7"
 		android:layout_height="match_parent"
-		android:layout_width="wrap_content"
+		android:layout_width="1dip"
 		android:orientation="vertical">
 		<ImageButton
 			android:background="@drawable/bg_board_dark"

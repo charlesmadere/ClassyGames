@@ -30,6 +30,7 @@
 		android:layout_width="match_parent"
 		android:maxLines="1"
 		android:textColor="@color/gray_darker"
+		android:textIsSelectable="false"
 		android:textSize="19sp" />
 	<TextView
 		android:ellipsize="end"
@@ -44,5 +45,6 @@
 		android:layout_width="match_parent"
 		android:maxLines="1"
 		android:textColor="@color/gray_dark"
+		android:textIsSelectable="false"
 		android:textSize="17sp" />
 </RelativeLayout>

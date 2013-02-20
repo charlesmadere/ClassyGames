@@ -23,6 +23,7 @@
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
 		android:textColor="@color/gray_darker"
+		android:textIsSelectable="true"
 		android:textSize="26sp" />
 	<LinearLayout
 		android:id="@+id/confirm_game_fragment_buttons"
@@ -56,5 +57,6 @@
 		android:paddingLeft="20dip"
 		android:paddingRight="20dip"
 		android:textColor="@color/gray_dark"
+		android:textIsSelectable="false"
 		style="@style/paragraph" />
 </RelativeLayout>

@@ -7,7 +7,7 @@
 	style="@style/ClassyGames">
 	<LinearLayout
 		android:id="@+id/checkers_game_fragment_y7"
-		android:layout_height="wrap_content"
+		android:layout_height="1dip"
 		android:layout_width="match_parent"
 		android:orientation="horizontal">
 		<ImageButton
@@ -93,7 +93,7 @@
 	</LinearLayout>
 	<LinearLayout
 		android:id="@+id/checkers_game_fragment_y6"
-		android:layout_height="wrap_content"
+		android:layout_height="1dip"
 		android:layout_width="match_parent"
 		android:orientation="horizontal">
 		<ImageButton
@@ -179,7 +179,7 @@
 	</LinearLayout>
 	<LinearLayout
 		android:id="@+id/checkers_game_fragment_y5"
-		android:layout_height="wrap_content"
+		android:layout_height="1dip"
 		android:layout_width="match_parent"
 		android:orientation="horizontal">
 		<ImageButton
@@ -265,7 +265,7 @@
 	</LinearLayout>
 	<LinearLayout
 		android:id="@+id/checkers_game_fragment_y4"
-		android:layout_height="wrap_content"
+		android:layout_height="1dip"
 		android:layout_width="match_parent"
 		android:orientation="horizontal">
 		<ImageButton
@@ -351,7 +351,7 @@
 	</LinearLayout>
 	<LinearLayout
 		android:id="@+id/checkers_game_fragment_y3"
-		android:layout_height="wrap_content"
+		android:layout_height="1dip"
 		android:layout_width="match_parent"
 		android:orientation="horizontal">
 		<ImageButton
@@ -437,7 +437,7 @@
 	</LinearLayout>
 	<LinearLayout
 		android:id="@+id/checkers_game_fragment_y2"
-		android:layout_height="wrap_content"
+		android:layout_height="1dip"
 		android:layout_width="match_parent"
 		android:orientation="horizontal">
 		<ImageButton
@@ -523,7 +523,7 @@
 	</LinearLayout>
 	<LinearLayout
 		android:id="@+id/checkers_game_fragment_y1"
-		android:layout_height="wrap_content"
+		android:layout_height="1dip"
 		android:layout_width="match_parent"
 		android:orientation="horizontal">
 		<ImageButton
@@ -609,7 +609,7 @@
 	</LinearLayout>
 	<LinearLayout
 		android:id="@+id/checkers_game_fragment_y0"
-		android:layout_height="wrap_content"
+		android:layout_height="1dip"
 		android:layout_width="match_parent"
 		android:orientation="horizontal">
 		<ImageButton
