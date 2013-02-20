@@ -295,4 +295,42 @@ public final class Utilities
 	}
 
 
+	/**
+	 * Verifies a String object for validity.
+	 * 
+	 * @param string
+	 * The String to check.
+	 * 
+	 * @return
+	 * Returns true if the given String is valid.
+	 */
+	public static boolean verifyValidString(final String string)
+	{
+		return string != null && !string.isEmpty();
+	}
+
+
+	/**
+	 * Verifies a set of String objects for validity.
+	 * 
+	 * @param strings
+	 * The Strings to check.
+	 * 
+	 * @return
+	 * Returns true if all of the given Strings are valid.
+	 */
+	public static boolean verifyValidStrings(final String... strings)
+	{
+		for (int i = 0; i < strings.length; ++i)
+		{
+			if (!verifyValidString(strings[i]))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+
 }

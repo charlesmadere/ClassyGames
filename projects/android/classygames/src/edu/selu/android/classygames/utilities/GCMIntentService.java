@@ -80,21 +80,22 @@ public class GCMIntentService extends IntentService
 
 	private void handleMessage(final Intent intent)
 	{
-		final String gameId = intent.getStringExtra(ServerUtilities.POST_DATA_GAME_ID);
-		final String personName = intent.getStringExtra(ServerUtilities.POST_DATA_NAME);
-		final String personIdParameter = intent.getStringExtra(ServerUtilities.POST_DATA_ID);
-		final String gameTypeParameter = intent.getStringExtra(ServerUtilities.POST_DATA_TYPE);
+		final String parameter_gameId = intent.getStringExtra(ServerUtilities.POST_DATA_GAME_ID);
+		final String parameter_gameType = intent.getStringExtra(ServerUtilities.POST_DATA_GAME_TYPE);
+		final String parameter_personId = intent.getStringExtra(ServerUtilities.POST_DATA_ID);
+		final String parameter_messageType = intent.getStringExtra(ServerUtilities.POST_DATA_MESSAGE_TYPE);
+		final String parameter_personName = intent.getStringExtra(ServerUtilities.POST_DATA_NAME);
 
-		if (gameId != null && !gameId.isEmpty() && personName != null && !personName.isEmpty()
-			&& personIdParameter != null && !personIdParameter.isEmpty()
-			&& gameTypeParameter != null && !gameTypeParameter.isEmpty())
+		if (Utilities.verifyValidStrings(parameter_gameId, parameter_gameType, parameter_personId, parameter_messageType, parameter_personName))
 		{
-			final Long personId = Long.valueOf(personIdParameter);
-			final Byte gameType = Byte.valueOf(gameTypeParameter);
+			final Byte gameType = Byte.valueOf(parameter_gameType);
+			final Byte messageType = Byte.valueOf(parameter_messageType);
+			final Long personId = Long.valueOf(parameter_personId);
 
-			if (personId.longValue() >= 0 && ServerUtilities.validGameTypeValue(gameType.byteValue()))
+			if (Person.isIdValid(personId.longValue()) && Person.isNameValid(parameter_personName)
+				&& ServerUtilities.validGameTypeValue(gameType.byteValue()) && ServerUtilities.validMessageTypeValue(messageType.byteValue()))
 			{
-				final Person person = new Person(personId, personName);
+				final Person person = new Person(personId, parameter_personName);
 
 				// build a notification to show to the user
 				NotificationCompat.Builder builder = new NotificationCompat.Builder(GCMIntentService.this);
@@ -107,7 +108,8 @@ public class GCMIntentService extends IntentService
 
 				TaskStackBuilder stackBuilder = TaskStackBuilder.create(GCMIntentService.this);
 
-				if (gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_NEW_GAME || gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_NEW_MOVE)
+				if (messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_GAME
+					|| messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_MOVE)
 				{
 					Intent gameIntent = new Intent(this, CheckersGameFragment.class);
 //					gameIntent.putExtra(GenericGameFragment.BUNDLE_DATA_GAME_ID, gameId);
@@ -117,31 +119,31 @@ public class GCMIntentService extends IntentService
 
 					builder.setTicker(getString(R.string.notification_sent_some_class, person.getName()));
 
-					if (gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_NEW_GAME)
+					if (messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_GAME)
 					{
 						builder.setContentText(getString(R.string.notification_new_game_text, person.getName()));
 					}
-					else if (gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_NEW_MOVE)
+					else if (messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_MOVE)
 					{
 						builder.setContentText(getString(R.string.notification_new_move_text, person.getName()));
 					}
 				}
-				else if (ServerUtilities.validWinOrLoseValue(gameType.byteValue()))
+				else if (ServerUtilities.validWinOrLoseValue(messageType.byteValue()))
 				// it's a GAME_OVER byte
 				{
 					Intent gameOverIntent = new Intent(this, GameOverActivity.class);
-					gameOverIntent.putExtra(ServerUtilities.POST_DATA_TYPE, gameType.byteValue());
+					gameOverIntent.putExtra(ServerUtilities.POST_DATA_GAME_TYPE, messageType.byteValue());
 //					gameOverIntent.putExtra(GenericGameFragment.BUNDLE_DATA_PERSON_CHALLENGED_ID, person.getId());
 //					gameOverIntent.putExtra(GenericGameFragment.BUNDLE_DATA_PERSON_CHALLENGED_NAME, person.getName());
 					stackBuilder.addNextIntentWithParentStack(gameOverIntent);
 
 					builder.setTicker(getString(R.string.notification_game_over_text, person.getName()));
 
-					if (gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_GAME_OVER_LOSE)
+					if (messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_GAME_OVER_LOSE)
 					{
 						builder.setContentText(getString(R.string.notification_game_over_lose_text, person.getName()));
 					}
-					else if (gameType.byteValue() == ServerUtilities.POST_DATA_TYPE_GAME_OVER_WIN)
+					else if (messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_GAME_OVER_WIN)
 					{
 						builder.setContentText(getString(R.string.notification_game_over_win_text, person.getName()));
 					}
@@ -157,7 +159,7 @@ public class GCMIntentService extends IntentService
 		}
 		else
 		{
-			Log.e(Utilities.LOG_TAG, "Received malformed GCM message!");
+			Log.e(LOG_TAG, "Received malformed GCM message!");
 		}
 	}
 
@@ -165,7 +167,7 @@ public class GCMIntentService extends IntentService
 	private void handleRegistration(final Intent intent)
 	{
 		final String regId = intent.getStringExtra("registration_id");
-		if (regId != null && !regId.isEmpty())
+		if (Utilities.verifyValidString(regId))
 		// registration succeeded
 		{
 			SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES_FILE, MODE_PRIVATE);
@@ -195,7 +197,7 @@ public class GCMIntentService extends IntentService
 		}
 
 		final String unregistered = intent.getStringExtra("unregistered");
-		if (unregistered != null && !unregistered.isEmpty())
+		if (Utilities.verifyValidString(unregistered))
 		// unregistration succeeded
 		{
 			SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES_FILE, MODE_PRIVATE);
@@ -219,7 +221,7 @@ public class GCMIntentService extends IntentService
 		}
 
 		final String error = intent.getStringExtra("error");
-		if (error != null && !error.isEmpty())
+		if (Utilities.verifyValidString(error))
 		// last operation (registration or unregistration) returned an error
 		{
 			if (error.equals("SERVICE_NOT_AVAILABLE"))

@@ -255,6 +255,30 @@ public final class ServerUtilities
 	{
 		switch (gameType)
 		{
+			case POST_DATA_GAME_TYPE_CHECKERS:
+			case POST_DATA_GAME_TYPE_CHESS:
+				return true;
+
+			default:
+				return false;
+		}
+	}
+
+
+	/**
+	 * Ensures that a messageType byte received from the server is a valid
+	 * messageType byte.
+	 * 
+	 * @param messageType
+	 * The messageType byte to check for validity.
+	 * 
+	 * @return
+	 * Returns true if the given messageType byte is valid.
+	 */
+	public static boolean validMessageTypeValue(final byte messageType)
+	{
+		switch (messageType)
+		{
 			case POST_DATA_MESSAGE_TYPE_NEW_GAME:
 			case POST_DATA_MESSAGE_TYPE_NEW_MOVE:
 			case POST_DATA_MESSAGE_TYPE_GAME_OVER_LOSE:

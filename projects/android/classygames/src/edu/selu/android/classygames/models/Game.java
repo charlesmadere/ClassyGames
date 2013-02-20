@@ -186,7 +186,7 @@ public class Game
 		final String personName = gameData.getString(ServerUtilities.POST_DATA_NAME);
 		person = new Person(personId, personName);
 
-		whichGame = (byte) gameData.optInt(ServerUtilities.POST_DATA_TYPE);
+		whichGame = (byte) gameData.optInt(ServerUtilities.POST_DATA_GAME_TYPE);
 	}
 
 
