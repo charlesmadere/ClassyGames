@@ -22,7 +22,7 @@ public final class TypefaceUtilities
 	public final static byte BLUE_HIGHWAY_RG = 1;
 	public final static byte SNELL_ROUNDHAND_BDSCR = 10;
 	public final static byte SNELL_ROUNDHAND_BLKSCR = 11;
-	private final static String PATH = "fonts/";
+	private final static String PATH = "typefaces/";
 	private final static String BLUE_HIGHWAY_D_PATH = PATH + "blue_highway_d.ttf";
 	private final static String BLUE_HIGHWAY_RD_PATH = PATH + "blue_highway_rg.ttf";
 	private final static String SNELL_ROUNDHAND_BDSCR_PATH = PATH + "snell_roundhand_bdscr.otf";

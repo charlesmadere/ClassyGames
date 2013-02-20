@@ -3,6 +3,9 @@ package edu.selu.android.classygames;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -51,7 +54,7 @@ public class GameOverActivity extends SherlockActivity
 
 				final TextView friendName = (TextView) findViewById(R.id.game_over_activity_friend_name);
 				friendName.setText(personName);
-				friendName.setTypeface(TypefaceUtilities.getTypeface(getAssets(), TypefaceUtilities.SNELL_ROUNDHAND_BLKSCR));
+				friendName.setTypeface(TypefaceUtilities.getTypeface(getAssets(), TypefaceUtilities.SNELL_ROUNDHAND_BDSCR));
 
 				final TextView winOrLose = (TextView) findViewById(R.id.game_over_activity_win_or_lose);
 
@@ -65,6 +68,17 @@ public class GameOverActivity extends SherlockActivity
 						winOrLose.setText(R.string.game_over_activity_win_or_lose_won);
 						break;
 				}
+
+				final Button returnToGamesList = (Button) findViewById(R.id.game_over_activity_button_return);
+				returnToGamesList.setTypeface(TypefaceUtilities.getTypeface(getAssets(), TypefaceUtilities.BLUE_HIGHWAY_D));
+				returnToGamesList.setOnClickListener(new OnClickListener()
+				{
+					@Override
+					public void onClick(final View v)
+					{
+						finish();
+					}
+				});
 			}
 			else
 			{
