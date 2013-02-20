@@ -1,6 +1,7 @@
 package edu.selu.android.classygames;
 
 
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -19,6 +20,7 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 
 import edu.selu.android.classygames.models.Person;
+import edu.selu.android.classygames.utilities.KeysAndConstants;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
@@ -212,6 +214,11 @@ public class MainActivity extends SherlockActivity
 						facebookIdentity.setName(user.getName());
 					}
 				}).executeAndWait();
+
+				final Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
+				registrationIntent.putExtra("app", PendingIntent.getBroadcast(context, 0, new Intent(), 0));
+				registrationIntent.putExtra("sender", KeysAndConstants.GOOGLE_PROJECT_ID);
+				context.startService(registrationIntent);
 			}
 
 			return facebookIdentity;

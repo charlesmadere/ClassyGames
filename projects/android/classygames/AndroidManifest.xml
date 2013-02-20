@@ -92,13 +92,8 @@
 		<activity
 			android:label="@string/games_list_fragment_title"
 			android:name=".GameFragmentActivity"
-			android:parentActivityName=".MainActivity"
 			android:theme="@style/Theme.Styled"
-			android:uiOptions="splitActionBarWhenNarrow">
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".MainActivity" />
-		</activity>
+			android:uiOptions="splitActionBarWhenNarrow" />
 
 		<activity
 			android:label="@string/game_over_activity_title"

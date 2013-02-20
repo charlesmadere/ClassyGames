@@ -1,9 +1,6 @@
 package edu.selu.android.classygames.models;
 
 
-import android.graphics.drawable.Drawable;
-
-
 /**
  * Class representing a real person.
  */
@@ -24,14 +21,6 @@ public class Person
 	 * variable, however, <strong>is</strong> a unique identifier.
 	 */
 	private String name;
-
-
-	/**
-	 * The person's Facebook profile picture. The value of this variable will
-	 * definitely be null unless it has been set using this class's
-	 * setDrawable(final Drawable picture) method.
-	 */
-	private Drawable picture;
 
 
 
@@ -116,36 +105,6 @@ public class Person
 
 
 	/**
-	 * Returns this Person's Facebook profile picture (a Drawable). Note that,
-	 * unless this object has had the setDrawable(final Drawable picture)
-	 * method run on it, this method's return value <strong>will
-	 * definitely</strong> be null.
-	 * 
-	 * @return
-	 * Returns this Person's Facebook profile picture (a Drawable).
-	 */
-	public Drawable getPicture()
-	{
-		return picture;
-	}
-
-
-	/**
-	 * Replaces this Person object's current picture with this newly given
-	 * picture. Note that because this class has no constructor that supplies
-	 * it an initial picture variable, if this method is never used then this
-	 * object's picture variable <strong>will definitely be</strong> null.
-	 * 
-	 * @param picture
-	 * The new picture to assign to this Person object.
-	 */
-	public void setDrawable(final Drawable picture)
-	{
-		this.picture = picture;
-	}
-
-
-	/**
 	 * Replaces this Person object's current Facebook ID with this newly given
 	 * id. An ID should be a number that is always greater than 0.
 	 * 
@@ -184,18 +143,6 @@ public class Person
 	public void setName(final String name)
 	{
 		this.name = name;
-	}
-
-
-	/**
-	 * Checks to see if this Person object has a picture associated with it.
-	 * 
-	 * @return
-	 * Returns true if this Person object has a picture associated with it.
-	 */
-	public boolean hasPicture()
-	{
-		return picture != null;
 	}
 
 

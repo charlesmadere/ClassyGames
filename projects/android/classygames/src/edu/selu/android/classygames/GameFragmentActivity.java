@@ -425,8 +425,8 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 		getGamesListFragment();
 
 		final ActionBar actionBar = getSupportActionBar();
-		actionBar.setTitle(R.string.games_list_fragment_title);
 		actionBar.setDisplayHomeAsUpEnabled(false);
+		actionBar.setTitle(R.string.games_list_fragment_title);
 
 		gamesListFragment.refreshGamesList();
 	}

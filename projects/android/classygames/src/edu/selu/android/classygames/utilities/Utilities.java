@@ -285,6 +285,7 @@ public final class Utilities
 			bg.setAntiAlias(true);
 			bg.setDither(true);
 			bg.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
+
 			actionBar.setBackgroundDrawable(bg);
 		}
 
