@@ -367,6 +367,20 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 
 	@Override
+	public boolean genericGameFragmentIsDeviceSmall()
+	{
+		return !isDeviceLarge();
+	}
+
+
+	@Override
+	public void genericGameFragmentOnAsyncGetGameOnCancelled()
+	{
+		onBackPressed();
+	}
+
+
+	@Override
 	public void genericGameFragmentOnAsyncSendMoveFinished()
 	{
 		final FragmentManager fManager = getSupportFragmentManager();
@@ -389,21 +403,12 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 		fTransaction.commit();
 		getGamesListFragment();
+
+		final ActionBar actionBar = getSupportActionBar();
+		actionBar.setTitle(R.string.games_list_fragment_title);
+		actionBar.setDisplayHomeAsUpEnabled(false);
+
 		gamesListFragment.refreshGamesList();
-	}
-
-
-	@Override
-	public boolean genericGameFragmentIsDeviceSmall()
-	{
-		return !isDeviceLarge();
-	}
-
-
-	@Override
-	public void genericGameFragmentOnAsyncGetGameOnCancelled()
-	{
-		onBackPressed();
 	}
 
 

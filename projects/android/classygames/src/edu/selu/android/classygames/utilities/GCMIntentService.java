@@ -43,6 +43,8 @@ public class GCMIntentService extends IntentService
 	private final static String PREFERENCES_REG_ID = PREFERENCES + "_REG_ID";
 
 
+
+
 	public GCMIntentService()
 	{
 		super(KeysAndConstants.GOOGLE_API_KEY);
@@ -205,7 +207,7 @@ public class GCMIntentService extends IntentService
 			// get old registration ID from shared preferences
 			final String preferencesRegId = sharedPreferences.getString(PREFERENCES_REG_ID, null);
 
-			if (preferencesRegId != null && !preferencesRegId.isEmpty())
+			if (Utilities.verifyValidString(preferencesRegId))
 			// ensure that the String we obtained from shared preferences contains text
 			{
 				try
@@ -232,7 +234,7 @@ public class GCMIntentService extends IntentService
 			else
 			{
 				// unrecoverable error, log it
-				Log.e(Utilities.LOG_TAG, "Received error: " + error);
+				Log.e(LOG_TAG, "Received error: " + error);
 			}
 		}
 	}
