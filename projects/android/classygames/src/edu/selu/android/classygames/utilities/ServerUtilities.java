@@ -49,23 +49,25 @@ public final class ServerUtilities
 	public final static String POST_DATA_ERROR = "error";
 	public final static String POST_DATA_FINISHED = "finished";
 	public final static String POST_DATA_GAME_ID = "game_id";
+	public final static String POST_DATA_GAME_TYPE = "game_type";
+	public final static byte POST_DATA_GAME_TYPE_CHECKERS = 1;
+	public final static byte POST_DATA_GAME_TYPE_CHESS = 2;
 	public final static String POST_DATA_ID = "id";
 	public final static String POST_DATA_LAST_MOVE = "last_move";
+	public final static String POST_DATA_MESSAGE_TYPE = "type";
+	public final static byte POST_DATA_MESSAGE_TYPE_NEW_GAME = 1;
+	public final static byte POST_DATA_MESSAGE_TYPE_NEW_MOVE = 2;
+	public final static byte POST_DATA_MESSAGE_TYPE_GAME_OVER_LOSE = 7;
+	public final static byte POST_DATA_MESSAGE_TYPE_GAME_OVER_WIN = 15;
 	public final static String POST_DATA_NAME = "name";
 	public final static String POST_DATA_REG_ID = "reg_id";
 	public final static String POST_DATA_RESULT = "result";
 	public final static String POST_DATA_TURN = "turn";
 	public final static String POST_DATA_TURN_THEIRS = "turn_theirs";
 	public final static String POST_DATA_TURN_YOURS = "turn_yours";
-	public final static String POST_DATA_TYPE = "type";
 	public final static String POST_DATA_SUCCESS = "success";
 	public final static String POST_DATA_USER_CHALLENGED = "user_challenged";
 	public final static String POST_DATA_USER_CREATOR = "user_creator";
-
-	public final static byte POST_DATA_TYPE_NEW_GAME = 1;
-	public final static byte POST_DATA_TYPE_NEW_MOVE = 2;
-	public final static byte POST_DATA_TYPE_GAME_OVER_LOSE = 7;
-	public final static byte POST_DATA_TYPE_GAME_OVER_WIN = 15;
 
 
 
@@ -253,10 +255,10 @@ public final class ServerUtilities
 	{
 		switch (gameType)
 		{
-			case POST_DATA_TYPE_NEW_GAME:
-			case POST_DATA_TYPE_NEW_MOVE:
-			case POST_DATA_TYPE_GAME_OVER_LOSE:
-			case POST_DATA_TYPE_GAME_OVER_WIN:
+			case POST_DATA_MESSAGE_TYPE_NEW_GAME:
+			case POST_DATA_MESSAGE_TYPE_NEW_MOVE:
+			case POST_DATA_MESSAGE_TYPE_GAME_OVER_LOSE:
+			case POST_DATA_MESSAGE_TYPE_GAME_OVER_WIN:
 				return true;
 
 			default:
@@ -279,8 +281,8 @@ public final class ServerUtilities
 	{
 		switch (winOrLose)
 		{
-			case POST_DATA_TYPE_GAME_OVER_LOSE:
-			case POST_DATA_TYPE_GAME_OVER_WIN:
+			case POST_DATA_MESSAGE_TYPE_GAME_OVER_LOSE:
+			case POST_DATA_MESSAGE_TYPE_GAME_OVER_WIN:
 				return true;
 
 			default:
