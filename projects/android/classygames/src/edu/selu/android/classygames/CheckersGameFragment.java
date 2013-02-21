@@ -297,7 +297,7 @@ public class CheckersGameFragment extends GenericGameFragment
 				if (board.move(previous, current))
 				{
 					flush();
-					readyToSendMove();
+					readyToSendMove(true);
 
 					if (board.getIsBoardLocked())
 					{

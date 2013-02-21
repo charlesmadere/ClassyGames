@@ -95,7 +95,8 @@ public class GCMIntentService extends IntentService
 			final Long personId = Long.valueOf(parameter_personId);
 
 			if (Person.isIdValid(personId.longValue()) && Person.isNameValid(parameter_personName)
-				&& ServerUtilities.validGameTypeValue(gameType.byteValue()) && ServerUtilities.validMessageTypeValue(messageType.byteValue()))
+				&& ServerUtilities.validGameTypeValue(gameType.byteValue())
+				&& ServerUtilities.validMessageTypeValue(messageType.byteValue()))
 			{
 				final Person person = new Person(personId, parameter_personName);
 

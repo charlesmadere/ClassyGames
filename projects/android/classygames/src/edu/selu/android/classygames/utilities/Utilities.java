@@ -42,6 +42,34 @@ public final class Utilities
 
 
 	/**
+	 * Invalidates the options menu using the Android compatibility library. If
+	 * the force parameter is set to true then this method will even attempt to
+	 * invalidate a pre honeycomb device's menu.
+	 * 
+	 * @param fragmentActivity
+	 * getSherlockActivity()
+	 * 
+	 * @param force
+	 * True if you want to refresh the device's menu no matter what version of
+	 * Android it's running.
+	 */
+	public static void compatInvalidateOptionsMenu(final SherlockFragmentActivity fragmentActivity, final boolean force)
+	{
+		if (fragmentActivity != null)
+		{
+			if (force)
+			{
+				fragmentActivity.invalidateOptionsMenu();
+			}
+			else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+			{
+				fragmentActivity.invalidateOptionsMenu();
+			}
+		}
+	}
+
+
+	/**
 	 * Invalidates the options menu using the Android compatibility library.
 	 * 
 	 * @param fragmentActivity
@@ -49,10 +77,7 @@ public final class Utilities
 	 */
 	public static void compatInvalidateOptionsMenu(final SherlockFragmentActivity fragmentActivity)
 	{
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && fragmentActivity != null)
-		{
-			fragmentActivity.invalidateOptionsMenu();
-		}
+		compatInvalidateOptionsMenu(fragmentActivity, false);
 	}
 
 

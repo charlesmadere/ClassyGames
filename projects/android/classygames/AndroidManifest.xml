@@ -115,6 +115,15 @@
 		</activity>
 
 		<activity
+			android:label="@string/register_for_notifications_activity_title"
+			android:name=".RegisterForNotificationsActivity"
+			android:theme="@style/Theme.Styled">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".GameFragmentActivity" />
+		</activity>
+
+		<activity
 			android:label="@string/shark_activity_title"
 			android:name=".SharkActivity"
 			android:parentActivityName=".AboutActivity"

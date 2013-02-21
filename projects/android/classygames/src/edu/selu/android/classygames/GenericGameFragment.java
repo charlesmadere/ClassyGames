@@ -332,7 +332,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 		if (genericGameFragmentIsDeviceSmallListener.genericGameFragmentIsDeviceSmall())
 		{
-			menu.removeItem(R.id.central_fragment_activity_menu_new_game);
+			menu.removeItem(R.id.game_fragment_activity_menu_new_game);
 		}
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && isAsyncGetGameRunning)
@@ -730,11 +730,24 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 	/**
 	 * Puts the board in a state so that the move is now ready to be sent.
+	 * 
+	 * @param force
+	 * If you want to force a pre honeycomb device to refresh it's menu then
+	 * set this to true.
+	 */
+	protected void readyToSendMove(final boolean force)
+	{
+		isReadyToSendMove = true;
+		Utilities.compatInvalidateOptionsMenu(getSherlockActivity(), force);
+	}
+
+
+	/**
+	 * Puts the board in a state so that the move is now ready to be sent.
 	 */
 	protected void readyToSendMove()
 	{
-		isReadyToSendMove = true;
-		Utilities.compatInvalidateOptionsMenu(getSherlockActivity());
+		readyToSendMove(false);
 	}
 
 

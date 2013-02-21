@@ -56,7 +56,7 @@ public final class ServerUtilities
 	public final static byte POST_DATA_GAME_TYPE_CHESS = 2;
 	public final static String POST_DATA_ID = "id";
 	public final static String POST_DATA_LAST_MOVE = "last_move";
-	public final static String POST_DATA_MESSAGE_TYPE = "type";
+	public final static String POST_DATA_MESSAGE_TYPE = "message_type";
 	public final static byte POST_DATA_MESSAGE_TYPE_NEW_GAME = 1;
 	public final static byte POST_DATA_MESSAGE_TYPE_NEW_MOVE = 2;
 	public final static byte POST_DATA_MESSAGE_TYPE_GAME_OVER_LOSE = 7;
@@ -134,7 +134,7 @@ public final class ServerUtilities
 	 */
 	public static void gcmRegister(final String regId, final Context context) throws IOException
 	{
-		Log.d(LOG_TAG, "Registering device with regId of \"" + regId + "\" from GCM server.");
+		Log.d(LOG_TAG, "Registering device with regId of \"" + regId + "\" with GCM server.");
 
 		final Person whoAmI = Utilities.getWhoAmI(context);
 

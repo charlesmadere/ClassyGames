@@ -195,7 +195,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 	public boolean onCreateOptionsMenu(final Menu menu)
 	{
 		final MenuInflater inflater = getSupportMenuInflater();
-		inflater.inflate(R.menu.central_fragment_activity, menu);
+		inflater.inflate(R.menu.game_fragment_activity, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -218,17 +218,21 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 				onBackPressed();
 				break;
 
-			case R.id.central_fragment_activity_menu_about:
+			case R.id.game_fragment_activity_menu_about:
 				startActivity(new Intent(this, AboutActivity.class));
 				break;
 
-			case R.id.central_fragment_activity_menu_new_game:
+			case R.id.game_fragment_activity_menu_new_game:
 				if (isDeviceLarge() && genericGameFragment != null && genericGameFragment.isVisible())
 				{
 					onBackPressed();
 				}
 
 				startActivityForResult(new Intent(this, NewGameFragmentActivity.class), NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FRIEND_SELECTED);
+				break;
+
+			case R.id.game_fragment_activity_menu_register_for_notifications:
+				startActivity(new Intent(this, RegisterForNotificationsActivity.class));
 				break;
 
 			default:

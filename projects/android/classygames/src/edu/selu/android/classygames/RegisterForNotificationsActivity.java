@@ -120,6 +120,7 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 			}
 
 			Utilities.easyToastAndLog(context, context.getString(R.string.register_for_notifications_activity_registration_complete));
+			finish();
 		}
 
 
