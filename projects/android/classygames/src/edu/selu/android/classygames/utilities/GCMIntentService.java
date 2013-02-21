@@ -182,14 +182,14 @@ public class GCMIntentService extends IntentService
 			// with this new regId
 			{
 				// store new regId
-				SharedPreferences.Editor editor = sharedPreferences.edit();
+				final SharedPreferences.Editor editor = sharedPreferences.edit();
 				editor.putString(PREFERENCES_REG_ID, regId);
 				editor.commit();
 
 				try
 				{
 					// notify 3rd party server about the new regId
-					ServerUtilities.GCMRegister(regId, this);
+					ServerUtilities.gcmRegister(regId, this);
 				}
 				catch (final IOException e)
 				{
@@ -213,7 +213,7 @@ public class GCMIntentService extends IntentService
 				try
 				{
 					// notify 3rd party server about the unregistered ID
-					ServerUtilities.GCMUnregister(preferencesRegId, this);
+					ServerUtilities.gcmUnregister(preferencesRegId, this);
 				}
 				catch (final IOException e)
 				{

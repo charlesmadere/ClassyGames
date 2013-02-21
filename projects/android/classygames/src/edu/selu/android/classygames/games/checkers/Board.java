@@ -318,8 +318,9 @@ public class Board extends GenericBoard
 		{
 			final Piece piece = (Piece) previous.getPiece();
 
-			if ((previous.getCoordinate().getX() == current.getCoordinate().getX() - 1)
+			if (((previous.getCoordinate().getX() == current.getCoordinate().getX() - 1)
 				|| (previous.getCoordinate().getX() == current.getCoordinate().getX() + 1))
+				&& lastMovedPiece == null)
 			{
 				switch (piece.getType())
 				{
@@ -362,14 +363,20 @@ public class Board extends GenericBoard
 
 				if (isJumpValid)
 				{
-					final byte middleX = (byte) Math.abs(previous.getCoordinate().getX() - current.getCoordinate().getX());
-					final byte middleY = (byte) Math.abs(previous.getCoordinate().getY() - current.getCoordinate().getY());
+					final byte middleX = (byte) Math.abs((previous.getCoordinate().getX() + current.getCoordinate().getX()) / 2);
+					final byte middleY = (byte) Math.abs((previous.getCoordinate().getY() + current.getCoordinate().getY()) / 2);
 					final Coordinate middleCoordinate = new Coordinate(middleX, middleY);
 					final Position middlePosition = getPosition(middleCoordinate);
 
 					if (middlePosition.hasPiece() && middlePosition.getPiece().isTeamOpponent())
 					{
-						if (lastMovedPiece != null && lastMovedPiece == piece)
+						if (lastMovedPiece == null)
+						{
+							lastMovedPiece = piece;
+							middlePosition.getPiece().kill();
+							isMoveValid = true;
+						}
+						else if (lastMovedPiece == piece)
 						{
 							middlePosition.getPiece().kill();
 							isMoveValid = true;

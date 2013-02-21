@@ -18,7 +18,9 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import edu.selu.android.classygames.models.Person;
 
@@ -83,7 +85,7 @@ public final class ServerUtilities
 	 * Returns true if a successful message was able to be parsed out of the
 	 * given server response.
 	 */
-	private static boolean GCMParseServerResults(final String serverResponse)
+	private static boolean gcmParseServerResults(final String serverResponse)
 	{
 		boolean wasSuccessMessageFound = false;
 
@@ -130,7 +132,7 @@ public final class ServerUtilities
 	 * If something weird happens when trying to post the given data to the
 	 * server then this exception will be thrown.
 	 */
-	public static void GCMRegister(final String regId, final Context context) throws IOException
+	public static void gcmRegister(final String regId, final Context context) throws IOException
 	{
 		Log.d(LOG_TAG, "Registering device with regId of \"" + regId + "\" from GCM server.");
 
@@ -142,10 +144,25 @@ public final class ServerUtilities
 		nameValuePairs.add(new BasicNameValuePair(POST_DATA_NAME, whoAmI.getName()));
 		nameValuePairs.add(new BasicNameValuePair(POST_DATA_REG_ID, regId));
 
-		if (GCMParseServerResults(postToServer(ADDRESS_NEW_REG_ID, nameValuePairs)))
+		if (gcmParseServerResults(postToServer(ADDRESS_NEW_REG_ID, nameValuePairs)))
 		{
 			Log.d(LOG_TAG, "Server successfully completed all the regId stuff.");
 		}
+	}
+
+
+	/**
+	 * Performs the GCM registration process.
+	 * 
+	 * @param context
+	 * The Context of the class that you're calling this method from.
+	 */
+	public static void gcmPerformRegister(final Context context)
+	{
+		final Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
+		registrationIntent.putExtra("app", PendingIntent.getBroadcast(context, 0, new Intent(), 0));
+		registrationIntent.putExtra("sender", KeysAndConstants.GOOGLE_PROJECT_ID);
+		context.startService(registrationIntent);
 	}
 
 
@@ -164,7 +181,7 @@ public final class ServerUtilities
 	 * If something weird happens when trying to post the given data to the
 	 * server then this exception will be thrown.
 	 */
-	public static void GCMUnregister(final String regId, final Context context) throws IOException
+	public static void gcmUnregister(final String regId, final Context context) throws IOException
 	{
 		Log.d(LOG_TAG, "Unregistering device with regId of \"" + regId + "\" from GCM server.");
 

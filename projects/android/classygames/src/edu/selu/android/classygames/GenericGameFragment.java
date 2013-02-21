@@ -362,7 +362,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 			case R.id.generic_game_fragment_menu_send_move:
 				sendMove();
-				new AsyncSendMove(getSherlockActivity()).execute();
 				break;
 
 			case R.id.generic_game_fragment_menu_undo_move:
@@ -1021,7 +1020,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			progressDialog = new ProgressDialog(context);
 			progressDialog.setCancelable(true);
 			progressDialog.setCanceledOnTouchOutside(true);
-			progressDialog.setMessage(getString(R.string.generic_game_fragment_sendmove_progressdialog_message));
+			progressDialog.setMessage(context.getString(R.string.generic_game_fragment_sendmove_progressdialog_message));
 
 			progressDialog.setOnCancelListener(new OnCancelListener()
 			{
