@@ -146,7 +146,7 @@
 	<string name="piece_checkers_orange_king">Kinged Orange Piece</string>
 	<string name="refresh">Refresh</string>
 	<string name="register_for_notifications">Register for Notifications</string>
-	<string name="register_for_notifications_activity_description">Do you use Classy Games on more than one device? Our server can only send push notifications one of your devices at a time. If you have a device that is getting those notifications but would rather that this device would get those notifications intead, click the button below. You should probably ignore this if you only have Classy Games installed on one device. But in that case clicking this would do no harm&#8230; Anyway thanks for playing!</string>
+	<string name="register_for_notifications_activity_description">Play Classy Games on more than one device? Our server can only send push notifications to one of your devices at a time. If you have a device that is getting those notifications but would rather that this device get those notifications intead, press the button below. You should probably ignore this if you only have Classy Games installed on one device.</string>
 	<string name="register_for_notifications_activity_progressdialog_message">Classy Games is working&#8230;</string>
 	<string name="register_for_notifications_activity_progressdialog_title">Registering your device with our server&#8230;</string>
 	<string name="register_for_notifications_activity_register_button">Register for Notifications</string>

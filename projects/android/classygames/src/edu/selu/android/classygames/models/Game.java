@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import edu.selu.android.classygames.R;
 import edu.selu.android.classygames.utilities.ServerUtilities;
+import edu.selu.android.classygames.utilities.Utilities;
 
 
 /**
@@ -234,7 +235,7 @@ public class Game
 	 */
 	public String getTimestampFormatted(final Context context)
 	{
-		if (timestampFormatted == null || timestampFormatted.isEmpty())
+		if (!Utilities.verifyValidString(timestampFormatted))
 		// Check to see if we've already created a formatted timestamp String
 		// for this game object. If we've already created a formatted timestamp
 		// String, then we can just skip the whole algorithm below and return

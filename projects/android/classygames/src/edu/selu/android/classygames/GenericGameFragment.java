@@ -229,6 +229,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	public void onActivityCreated(final Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
+
 		final Bundle arguments = getArguments();
 
 		if (arguments == null || arguments.isEmpty())
@@ -612,11 +613,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		JSONObject parsedServerResponse = null;
 
-		if (serverResponse == null || serverResponse.isEmpty())
-		{
-			Log.e(LOG_TAG, "Either null or empty String received from server on send move!");
-		}
-		else
+		if (Utilities.verifyValidString(serverResponse))
 		{
 			try
 			{
@@ -637,6 +634,10 @@ public abstract class GenericGameFragment extends SherlockFragment
 			{
 				Log.e(LOG_TAG, "JSON String is massively malformed.");
 			}
+		}
+		else
+		{
+			Log.e(LOG_TAG, "Either null or empty String received from server on send move!");
 		}
 
 		return parsedServerResponse;
@@ -773,7 +774,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			flush();
 			isReadyToSendMove = false;
 
-			Utilities.compatInvalidateOptionsMenu(getSherlockActivity());
+			Utilities.compatInvalidateOptionsMenu(getSherlockActivity(), true);
 		}
 	}
 
@@ -959,20 +960,20 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 					if (!isCancelled())
 					{
-						if (game.getId() == null || game.getId().isEmpty())
+						if (Utilities.verifyValidString(game.getId()))
 						{
 							nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CHALLENGED, game.getPerson().getIdAsString()));
 							nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_NAME, game.getPerson().getName()));
-	
-							serverResponse = ServerUtilities.postToServer(ServerUtilities.ADDRESS_NEW_GAME, nameValuePairs);
+							nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_GAME_ID, game.getId()));
+
+							serverResponse = ServerUtilities.postToServer(ServerUtilities.ADDRESS_NEW_MOVE, nameValuePairs);
 						}
 						else
 						{
 							nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CHALLENGED, game.getPerson().getIdAsString()));
 							nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_NAME, game.getPerson().getName()));
-							nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_GAME_ID, game.getId()));
-	
-							serverResponse = ServerUtilities.postToServer(ServerUtilities.ADDRESS_NEW_MOVE, nameValuePairs);
+
+							serverResponse = ServerUtilities.postToServer(ServerUtilities.ADDRESS_NEW_GAME, nameValuePairs);
 						}
 					}
 				}

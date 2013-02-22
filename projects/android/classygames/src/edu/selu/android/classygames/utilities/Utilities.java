@@ -332,7 +332,7 @@ public final class Utilities
 	 */
 	public static boolean verifyValidString(final String string)
 	{
-		return string != null && !string.isEmpty();
+		return string != null && string.length() >= 1;
 	}
 
 

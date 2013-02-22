@@ -379,7 +379,7 @@ public class GamesListFragment extends SherlockListFragment implements OnItemCli
 		 * Parses the JSON response from the server and makes a bunch of Game
 		 * objects about it. 
 		 * 
-		 * @param jsonResponse
+		 * @param serverResponse
 		 * The JSON response acquired from the Classy Games server. This method
 		 * <strong>does</strong> check to make sure that this String is both
 		 * not null and not empty. If that scenario happens then this method
@@ -389,21 +389,17 @@ public class GamesListFragment extends SherlockListFragment implements OnItemCli
 		 * Returns an ArrayList of Game objects. This ArrayList has a
 		 * possilibity of being empty.
 		 */
-		private ArrayList<Game> parseServerResponse(final String jsonResponse)
+		private ArrayList<Game> parseServerResponse(final String serverResponse)
 		{
 			final ArrayList<Game> games = new ArrayList<Game>();
 
 			if (!isCancelled())
 			{
-				if (jsonResponse == null || jsonResponse.isEmpty())
-				{
-					Log.e(LOG_TAG, "Empty or null String received from server on get games!");
-				}
-				else
+				if (Utilities.verifyValidString(serverResponse))
 				{
 					try
 					{
-						final JSONObject jsonRaw = new JSONObject(jsonResponse);
+						final JSONObject jsonRaw = new JSONObject(serverResponse);
 						final JSONObject jsonResult = jsonRaw.getJSONObject(ServerUtilities.POST_DATA_RESULT);
 						final JSONObject jsonGameData = jsonResult.optJSONObject(ServerUtilities.POST_DATA_SUCCESS);
 
@@ -433,6 +429,10 @@ public class GamesListFragment extends SherlockListFragment implements OnItemCli
 					}
 
 					games.trimToSize();
+				}
+				else
+				{
+					Log.e(LOG_TAG, "Empty or null String received from server on get games!");
 				}
 			}
 

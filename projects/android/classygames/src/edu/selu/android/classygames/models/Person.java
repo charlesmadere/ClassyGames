@@ -1,5 +1,7 @@
 package edu.selu.android.classygames.models;
 
+import edu.selu.android.classygames.utilities.Utilities;
+
 
 /**
  * Class representing a real person.
@@ -226,13 +228,13 @@ public class Person
 	 */
 	public static boolean isIdValid(final String id)
 	{
-		if (id == null || id.isEmpty())
+		if (Utilities.verifyValidString(id))
 		{
-			return false;
+			return isIdValid(Long.parseLong(id));
 		}
 		else
 		{
-			return isIdValid(Long.parseLong(id));
+			return false;
 		}
 	}
 
@@ -306,7 +308,7 @@ public class Person
 	 */
 	public static boolean isNameValid(final String name)
 	{
-		return name != null && !name.isEmpty();
+		return Utilities.verifyValidString(name);
 	}
 
 

@@ -7,7 +7,7 @@
     <!-- Check out the Android API Levels website for more information on this topic -->
     <!-- https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels -->
 	<uses-sdk
-		android:minSdkVersion="9"
+		android:minSdkVersion="8"
 		android:targetSdkVersion="17" />
 
 	<uses-permission

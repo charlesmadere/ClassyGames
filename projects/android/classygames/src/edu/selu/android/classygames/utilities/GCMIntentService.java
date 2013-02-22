@@ -101,25 +101,25 @@ public class GCMIntentService extends IntentService
 				final Person person = new Person(personId, parameter_personName);
 
 				// build a notification to show to the user
-				final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-				builder.setAutoCancel(true);
-				builder.setContentTitle(getString(R.string.notification_title));
-				builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification_raw));
-				builder.setLights(GCM_NOTIFICATION_LIGHTS, GCM_NOTIFICATION_LIGHTS_ON, GCM_NOTIFICATION_LIGHTS_OFF);
-				builder.setOnlyAlertOnce(true);
-				builder.setSmallIcon(R.drawable.notification_small);
+				final NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+					.setAutoCancel(true)
+					.setContentTitle(getString(R.string.notification_title))
+					.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification_raw))
+					.setLights(GCM_NOTIFICATION_LIGHTS, GCM_NOTIFICATION_LIGHTS_ON, GCM_NOTIFICATION_LIGHTS_OFF)
+					.setOnlyAlertOnce(true)
+					.setSmallIcon(R.drawable.notification_small);
 
 				final TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 
 				if (messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_GAME
 					|| messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_MOVE)
 				{
-					final Intent gameIntent = new Intent(this, GameFragmentActivity.class);
-					gameIntent.putExtra(GameFragmentActivity.BUNDLE_DATA_GAME_ID, parameter_gameId);
-					gameIntent.putExtra(GameFragmentActivity.BUNDLE_DATA_PERSON_OPPONENT_ID, person.getId());
-					gameIntent.putExtra(GameFragmentActivity.BUNDLE_DATA_PERSON_OPPONENT_NAME, person.getName());
-					stackBuilder.addNextIntentWithParentStack(gameIntent);
+					final Intent gameIntent = new Intent(this, GameFragmentActivity.class)
+						.putExtra(GameFragmentActivity.BUNDLE_DATA_GAME_ID, parameter_gameId)
+						.putExtra(GameFragmentActivity.BUNDLE_DATA_PERSON_OPPONENT_ID, person.getId())
+						.putExtra(GameFragmentActivity.BUNDLE_DATA_PERSON_OPPONENT_NAME, person.getName());
 
+					stackBuilder.addNextIntentWithParentStack(gameIntent);
 					builder.setTicker(getString(R.string.notification_sent_some_class, person.getName()));
 
 					if (messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_GAME)
@@ -134,12 +134,12 @@ public class GCMIntentService extends IntentService
 				else if (ServerUtilities.validWinOrLoseValue(messageType.byteValue()))
 				// it's a GAME_OVER byte
 				{
-					final Intent gameOverIntent = new Intent(this, GameOverActivity.class);
-					gameOverIntent.putExtra(GameOverActivity.BUNDLE_DATA_MESSAGE_TYPE, messageType.byteValue());
-					gameOverIntent.putExtra(GameOverActivity.BUNDLE_DATA_PERSON_OPPONENT_ID, person.getId());
-					gameOverIntent.putExtra(GameOverActivity.BUNDLE_DATA_PERSON_OPPONENT_NAME, person.getName());
-					stackBuilder.addNextIntentWithParentStack(gameOverIntent);
+					final Intent gameOverIntent = new Intent(this, GameOverActivity.class)
+						.putExtra(GameOverActivity.BUNDLE_DATA_MESSAGE_TYPE, messageType.byteValue())
+						.putExtra(GameOverActivity.BUNDLE_DATA_PERSON_OPPONENT_ID, person.getId())
+						.putExtra(GameOverActivity.BUNDLE_DATA_PERSON_OPPONENT_NAME, person.getName());
 
+					stackBuilder.addNextIntentWithParentStack(gameOverIntent);
 					builder.setTicker(getString(R.string.notification_game_over_text, person.getName()));
 
 					if (messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_GAME_OVER_LOSE)
