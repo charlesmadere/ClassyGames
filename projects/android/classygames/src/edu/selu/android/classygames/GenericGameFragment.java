@@ -366,7 +366,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 				break;
 
 			case R.id.generic_game_fragment_menu_undo_move:
-				undo();
+				undoMove();
 				break;
 
 			default:
@@ -756,7 +756,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * Undoes the user's last move on the board. Unlocks the board, allowing
 	 * the user to make a different move on the board.
 	 */
-	private void undo()
+	private void undoMove()
 	{
 		if (board.getIsBoardLocked() || isReadyToSendMove)
 		{
