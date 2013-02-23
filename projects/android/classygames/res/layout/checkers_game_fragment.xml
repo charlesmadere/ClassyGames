@@ -10,7 +10,7 @@
 		android:layout_centerHorizontal="true"
 		android:layout_height="wrap_content"
 		android:layout_width="wrap_content"
-		ads:adSize="SMART_BANNER"
+		ads:adSize="BANNER"
 		ads:adUnitId="@string/admob_publisher_id"
 		ads:loadAdOnCreate="true"
 		ads:testDevices="@string/admob_test_devices" />
