@@ -296,7 +296,6 @@ public class GamesListFragment extends SherlockListFragment implements OnItemCli
 				// create the data that will be posted to the server
 				final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, whoAmI.getIdAsString()));
-//				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_REG_ID, ));
 
 				if (!isCancelled())
 				{
@@ -405,8 +404,17 @@ public class GamesListFragment extends SherlockListFragment implements OnItemCli
 
 						if (jsonGameData == null)
 						{
-							final String errorMessage = jsonResult.getString(ServerUtilities.POST_DATA_ERROR);
-							Log.e(LOG_TAG, "Server returned error message: " + errorMessage);
+							final String successMessage = jsonResult.optString(ServerUtilities.POST_DATA_SUCCESS);
+
+							if (Utilities.verifyValidString(successMessage))
+							{
+								Log.d(LOG_TAG, "Server returned success message: " + successMessage);
+							}
+							else
+							{
+								final String errorMessage = jsonResult.getString(ServerUtilities.POST_DATA_ERROR);
+								Log.e(LOG_TAG, "Server returned error message: " + errorMessage);
+							}
 						}
 						else
 						{
