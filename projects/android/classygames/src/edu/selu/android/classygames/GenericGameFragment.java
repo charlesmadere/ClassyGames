@@ -622,7 +622,17 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 				try
 				{
-					parsedServerResponse = new JSONObject(jsonResult.getString(ServerUtilities.POST_DATA_SUCCESS));
+					final String successMessage = jsonResult.getString(ServerUtilities.POST_DATA_SUCCESS);
+					Log.i(LOG_TAG, "Server returned success message: " + successMessage);
+
+					try
+					{
+						parsedServerResponse = new JSONObject(successMessage);
+					}
+					catch (final JSONException e)
+					{
+
+					}
 				}
 				catch (final JSONException e)
 				{
