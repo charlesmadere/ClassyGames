@@ -4,7 +4,8 @@
 	android:layout_height="match_parent"
 	android:layout_width="match_parent"
 	android:orientation="vertical"
-	style="@style/ClassyGames">
+	android:paddingLeft="8dip"
+	android:paddingRight="8dip">
 	<ProgressBar
 		android:indeterminate="true"
 		android:layout_height="wrap_content"
@@ -15,5 +16,6 @@
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
 		android:textIsSelectable="false"
+		android:text="@string/generic_game_fragment_loading_text"
 		style="@style/paragraph" />
 </LinearLayout>

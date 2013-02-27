@@ -26,8 +26,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -43,12 +43,8 @@ import edu.selu.android.classygames.utilities.TypefaceUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
-public class FriendsListFragment extends SherlockListFragment implements OnItemClickListener
+public class FriendsListFragment extends SherlockFragment implements OnItemClickListener
 {
-
-
-	public final static int ASYNC_REFRESH_FRIENDS_LIST_IS_RUNNING = 8;
-	public final static int ASYNC_REFRESH_FRIENDS_LIST_IS_NOT_RUNNING = 9;
 
 
 
@@ -225,7 +221,7 @@ public class FriendsListFragment extends SherlockListFragment implements OnItemC
 	 * Returns true if the asyncRefreshFriendsList AsyncTask is currently
 	 * running.
 	 */
-	public boolean getIsAsyncRefreshFriendsListRunning()
+	public boolean isAsyncRefreshFriendsListRunning()
 	{
 		return isAsyncRefreshFriendsListRunning;
 	}
@@ -299,6 +295,7 @@ public class FriendsListFragment extends SherlockListFragment implements OnItemC
 							}
 
 							friends.trimToSize();
+
 							final SharedPreferences.Editor editor = sPreferences.edit();
 							editor.clear();
 
@@ -393,12 +390,20 @@ public class FriendsListFragment extends SherlockListFragment implements OnItemC
 		protected void onPostExecute(final ArrayList<Person> friends)
 		{
 			viewGroup.removeAllViews();
-			inflater.inflate(R.layout.friends_list_fragment, viewGroup);
 
-			friendsListAdapter = new FriendsListAdapter(fragmentActivity, R.layout.friends_list_fragment_listview_item, friends);
-			final ListView listView = (ListView) viewGroup.findViewById(android.R.id.list);
-			listView.setAdapter(friendsListAdapter);
-			listView.setOnItemClickListener(FriendsListFragment.this);
+			if (friends.size() >= 1)
+			{
+				inflater.inflate(R.layout.friends_list_fragment, viewGroup);
+
+				friendsListAdapter = new FriendsListAdapter(fragmentActivity, R.layout.friends_list_fragment_listview_item, friends);
+				final ListView listView = (ListView) viewGroup.findViewById(R.id.friends_list_fragment_listview);
+				listView.setAdapter(friendsListAdapter);
+				listView.setOnItemClickListener(FriendsListFragment.this);
+			}
+			else
+			{
+				inflater.inflate(R.layout.friends_list_fragment_no_friends, viewGroup);
+			}
 
 			setRunningState(false);
 		}
@@ -425,7 +430,7 @@ public class FriendsListFragment extends SherlockListFragment implements OnItemC
 		private void setRunningState(final boolean isRunning)
 		{
 			isAsyncRefreshFriendsListRunning = isRunning;
-			Utilities.compatInvalidateOptionsMenu(fragmentActivity);
+			Utilities.compatInvalidateOptionsMenu(fragmentActivity, true);
 		}
 
 
@@ -480,6 +485,8 @@ public class FriendsListFragment extends SherlockListFragment implements OnItemC
 
 
 	}
+
+
 
 
 	private final static class ViewHolder

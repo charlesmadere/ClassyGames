@@ -632,7 +632,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			}
 			catch (final JSONException e)
 			{
-				Log.e(LOG_TAG, "JSON String is massively malformed.");
+				Log.e(LOG_TAG, "Server response is massively malformed.");
 			}
 		}
 		else

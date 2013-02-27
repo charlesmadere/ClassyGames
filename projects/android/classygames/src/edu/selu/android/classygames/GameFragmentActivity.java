@@ -176,7 +176,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	public void onBackPressed()
 	{
-		if (gamesListFragment != null && gamesListFragment.getIsAsyncRefreshGamesListRunning())
+		if (gamesListFragment != null && gamesListFragment.isAsyncRefreshGamesListRunning())
 		{
 			gamesListFragment.cancelAsyncRefreshGamesList();
 		}
@@ -203,6 +203,16 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	protected void onDestroy()
 	{
+		if (gamesListFragment != null)
+		{
+			gamesListFragment.cancelAsyncRefreshGamesList();
+		}
+
+		if (genericGameFragment != null)
+		{
+			genericGameFragment.cancelRunningAnyAsyncTask();
+		}
+
 		isResumed = false;
 		uiHelper.onDestroy();
 		super.onDestroy();

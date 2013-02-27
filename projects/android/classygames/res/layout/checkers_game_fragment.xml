@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
-	android:id="@+id/checkers_game_fragment_relativelayout"
 	android:layout_height="match_parent"
 	android:layout_width="match_parent"
+	android:orientation="vertical"
 	style="@style/ClassyGames">
 	<com.google.ads.AdView
-		android:layout_alignTop="@id/checkers_game_fragment_relativelayout"
-		android:layout_centerHorizontal="true"
+		android:layout_gravity="center_horizontal"
 		android:layout_height="wrap_content"
 		android:layout_width="wrap_content"
 		ads:adSize="BANNER"
@@ -16,7 +15,6 @@
 		ads:testDevices="@string/admob_test_devices" />
 	<LinearLayout
 		android:gravity="center"
-		android:layout_centerInParent="true"
 		android:layout_height="match_parent"
 		android:layout_width="match_parent"
 		android:orientation="vertical">
@@ -709,4 +707,4 @@
 				android:tag="x7y0" />
 		</LinearLayout>
 	</LinearLayout>
-</RelativeLayout>
+</LinearLayout>

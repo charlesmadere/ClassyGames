@@ -29,8 +29,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -43,7 +43,7 @@ import edu.selu.android.classygames.utilities.TypefaceUtilities;
 import edu.selu.android.classygames.utilities.Utilities;
 
 
-public class GamesListFragment extends SherlockListFragment implements OnItemClickListener
+public class GamesListFragment extends SherlockFragment implements OnItemClickListener
 {
 
 
@@ -246,7 +246,7 @@ public class GamesListFragment extends SherlockListFragment implements OnItemCli
 	 * @return
 	 * Returns true if the AsyncRefreshGamesList AsyncTask is running.
 	 */
-	public boolean getIsAsyncRefreshGamesListRunning()
+	public boolean isAsyncRefreshGamesListRunning()
 	{
 		return isAsyncRefreshGamesListRunning;
 	}
@@ -353,12 +353,20 @@ public class GamesListFragment extends SherlockListFragment implements OnItemCli
 		protected void onPostExecute(final ArrayList<Game> games)
 		{
 			viewGroup.removeAllViews();
-			inflater.inflate(R.layout.games_list_fragment, viewGroup);
 
-			gamesListAdapter = new GamesListAdapter(fragmentActivity, R.layout.games_list_fragment_listview_item, games);
-			final ListView listView = (ListView) viewGroup.findViewById(android.R.id.list);
-			listView.setAdapter(gamesListAdapter);
-			listView.setOnItemClickListener(GamesListFragment.this);
+			if (games.size() >= 1)
+			{
+				inflater.inflate(R.layout.games_list_fragment, viewGroup);
+
+				gamesListAdapter = new GamesListAdapter(fragmentActivity, R.layout.games_list_fragment_listview_item, games);
+				final ListView listView = (ListView) viewGroup.findViewById(R.id.games_list_fragment_listview);
+				listView.setAdapter(gamesListAdapter);
+				listView.setOnItemClickListener(GamesListFragment.this);
+			}
+			else
+			{
+				inflater.inflate(R.layout.games_list_fragment_no_games, viewGroup);
+			}
 
 			setRunningState(false);
 		}
@@ -527,7 +535,7 @@ public class GamesListFragment extends SherlockListFragment implements OnItemCli
 		private void setRunningState(final boolean isRunning)
 		{
 			isAsyncRefreshGamesListRunning = isRunning;
-			Utilities.compatInvalidateOptionsMenu(fragmentActivity);
+			Utilities.compatInvalidateOptionsMenu(fragmentActivity, true);
 		}
 
 

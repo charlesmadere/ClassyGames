@@ -5,5 +5,5 @@
 	android:layout_width="match_parent"
 	android:paddingLeft="8dip"
 	android:paddingRight="8dip"
-	android:text="@string/games_list_fragment_cancelled_text"
+	android:text="@string/games_list_fragment_no_games"
 	style="@style/paragraph" />

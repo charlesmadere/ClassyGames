@@ -21,8 +21,8 @@
 	<string name="facebook_app_id">324400870964487</string>
 	<string name="friends_list_fragment_cancelled_text">Cancelled loading your Facebook Friends List!</string>
 	<string name="friends_list_fragment_listview_item_picture_description">Friend\'s Picture</string>
-	<string name="friends_list_fragment_listview_no_friends">Sorry, but you don\'t seem to have any Facebook friends. In order to play Classy Games you must have some Facebook friends.</string>
 	<string name="friends_list_fragment_loading_text">Loading your Facebook Friends List&#8230;</string>
+	<string name="friends_list_fragment_no_friends">Sorry, but you don\'t seem to have any Facebook friends. In order to play Classy Games you must have some Facebook friends.</string>
 	<string name="friends_list_fragment_title">New Game</string>
 	<string name="game_fragment_board_x0y0">0, 0</string>
 	<string name="game_fragment_board_x1y0">1, 0</string>
@@ -114,7 +114,7 @@
 	<string name="games_list_fragment_getgames_progressdialog_message">Retrieving all of your games&#8230;</string>
 	<string name="games_list_fragment_getgames_progressdialog_title">Classy Games is working&#8230;</string>
 	<string name="games_list_fragment_listview_item_picture_description">Friend\'s Picture</string>
-	<string name="games_list_fragment_listview_no_games">You have no games! Perhaps you should start a new game?</string>
+	<string name="games_list_fragment_no_games">You have no games! Perhaps you should start a new game?</string>
 	<string name="games_list_fragment_loading_text">Loading your Games List&#8230;</string>
 	<string name="games_list_fragment_title">Games List</string>
 	<string name="games_list_fragment_turn_theirs">Their Turn</string>
