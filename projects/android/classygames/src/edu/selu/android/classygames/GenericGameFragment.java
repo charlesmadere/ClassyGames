@@ -625,19 +625,19 @@ public abstract class GenericGameFragment extends SherlockFragment
 					final String successMessage = jsonResult.getString(ServerUtilities.POST_DATA_SUCCESS);
 					Log.i(LOG_TAG, "Server returned success message: " + successMessage);
 
-					try
-					{
-						parsedServerResponse = new JSONObject(successMessage);
-					}
-					catch (final JSONException e)
-					{
-
-					}
+					parsedServerResponse = new JSONObject(successMessage);
 				}
 				catch (final JSONException e)
 				{
-					final String errorMessage = jsonResult.getString(ServerUtilities.POST_DATA_ERROR);
-					Log.e(LOG_TAG, "Server returned error message: " + errorMessage);
+					try
+					{
+						final String errorMessage = jsonResult.getString(ServerUtilities.POST_DATA_ERROR);
+						Log.e(LOG_TAG, "Server returned error message: " + errorMessage);
+					}
+					catch (final JSONException e1)
+					{
+						Log.e(LOG_TAG, "Server response is nothing much.");
+					}
 				}
 			}
 			catch (final JSONException e)
