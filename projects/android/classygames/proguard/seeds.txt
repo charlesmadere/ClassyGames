@@ -11,7 +11,6 @@ android.support.v4.app.FragmentState: android.os.Parcelable$Creator CREATOR
 android.support.v4.app.FragmentTabHost: void setOnTabChangedListener(android.widget.TabHost$OnTabChangeListener)
 android.support.v4.app.FragmentTabHost$SavedState
 android.support.v4.app.FragmentTabHost$SavedState: android.os.Parcelable$Creator CREATOR
-android.support.v4.app.ListFragment: ListFragment()
 android.support.v4.app.Watson: Watson()
 android.support.v4.content.ModernAsyncTask$Status: android.support.v4.content.ModernAsyncTask$Status[] values()
 android.support.v4.content.ModernAsyncTask$Status: android.support.v4.content.ModernAsyncTask$Status valueOf(java.lang.String)
@@ -628,10 +627,10 @@ com.actionbarsherlock.R$styleable: int SherlockTheme_windowActionBarOverlay
 com.actionbarsherlock.app.SherlockActivity: SherlockActivity()
 com.actionbarsherlock.app.SherlockActivity: void setContentView(android.view.View)
 com.actionbarsherlock.app.SherlockExpandableListActivity: void setContentView(android.view.View)
+com.actionbarsherlock.app.SherlockFragment: SherlockFragment()
 com.actionbarsherlock.app.SherlockFragmentActivity: SherlockFragmentActivity()
 com.actionbarsherlock.app.SherlockFragmentActivity: void setContentView(android.view.View)
 com.actionbarsherlock.app.SherlockListActivity: void setContentView(android.view.View)
-com.actionbarsherlock.app.SherlockListFragment: SherlockListFragment()
 com.actionbarsherlock.app.SherlockPreferenceActivity: void setContentView(android.view.View)
 com.actionbarsherlock.internal.nineoldandroids.view.NineViewGroup: NineViewGroup(android.content.Context)
 com.actionbarsherlock.internal.nineoldandroids.view.NineViewGroup: NineViewGroup(android.content.Context,android.util.AttributeSet)
@@ -1568,7 +1567,6 @@ edu.selu.android.classygames.R$id: int abs__textButton
 edu.selu.android.classygames.R$id: int abs__title
 edu.selu.android.classygames.R$id: int abs__titleDivider
 edu.selu.android.classygames.R$id: int abs__up
-edu.selu.android.classygames.R$id: int checkers_game_fragment_relativelayout
 edu.selu.android.classygames.R$id: int checkers_game_fragment_x0
 edu.selu.android.classygames.R$id: int checkers_game_fragment_x0y0
 edu.selu.android.classygames.R$id: int checkers_game_fragment_x0y1
@@ -1649,7 +1647,6 @@ edu.selu.android.classygames.R$id: int checkers_game_fragment_y4
 edu.selu.android.classygames.R$id: int checkers_game_fragment_y5
 edu.selu.android.classygames.R$id: int checkers_game_fragment_y6
 edu.selu.android.classygames.R$id: int checkers_game_fragment_y7
-edu.selu.android.classygames.R$id: int chess_game_fragment_relativelayout
 edu.selu.android.classygames.R$id: int chess_game_fragment_x0
 edu.selu.android.classygames.R$id: int chess_game_fragment_x0y0
 edu.selu.android.classygames.R$id: int chess_game_fragment_x0y1
@@ -1751,12 +1748,12 @@ edu.selu.android.classygames.R$id: int com_facebook_usersettingsfragment_logo_im
 edu.selu.android.classygames.R$id: int com_facebook_usersettingsfragment_profile_name
 edu.selu.android.classygames.R$id: int confirm_game_fragment_button_confirm
 edu.selu.android.classygames.R$id: int confirm_game_fragment_button_deny
-edu.selu.android.classygames.R$id: int confirm_game_fragment_buttons
 edu.selu.android.classygames.R$id: int confirm_game_fragment_description
 edu.selu.android.classygames.R$id: int confirm_game_fragment_friend_name
 edu.selu.android.classygames.R$id: int confirm_game_fragment_friend_profile_picture
 edu.selu.android.classygames.R$id: int disableHome
 edu.selu.android.classygames.R$id: int edit_query
+edu.selu.android.classygames.R$id: int friends_list_fragment_listview
 edu.selu.android.classygames.R$id: int friends_list_fragment_listview_item_name
 edu.selu.android.classygames.R$id: int friends_list_fragment_listview_item_picture
 edu.selu.android.classygames.R$id: int game_fragment_activity_container
@@ -1769,6 +1766,7 @@ edu.selu.android.classygames.R$id: int game_over_activity_button_return
 edu.selu.android.classygames.R$id: int game_over_activity_friend_name
 edu.selu.android.classygames.R$id: int game_over_activity_friend_picture
 edu.selu.android.classygames.R$id: int game_over_activity_win_or_lose
+edu.selu.android.classygames.R$id: int games_list_fragment_listview
 edu.selu.android.classygames.R$id: int games_list_fragment_listview_item_name
 edu.selu.android.classygames.R$id: int games_list_fragment_listview_item_picture
 edu.selu.android.classygames.R$id: int games_list_fragment_listview_item_time
@@ -1844,6 +1842,7 @@ edu.selu.android.classygames.R$layout: int friends_list_fragment
 edu.selu.android.classygames.R$layout: int friends_list_fragment_cancelled
 edu.selu.android.classygames.R$layout: int friends_list_fragment_listview_item
 edu.selu.android.classygames.R$layout: int friends_list_fragment_loading
+edu.selu.android.classygames.R$layout: int friends_list_fragment_no_friends
 edu.selu.android.classygames.R$layout: int game_fragment_activity
 edu.selu.android.classygames.R$layout: int game_over_activity
 edu.selu.android.classygames.R$layout: int games_list_fragment
@@ -1852,6 +1851,7 @@ edu.selu.android.classygames.R$layout: int games_list_fragment_listview_item
 edu.selu.android.classygames.R$layout: int games_list_fragment_listview_turn_theirs
 edu.selu.android.classygames.R$layout: int games_list_fragment_listview_turn_yours
 edu.selu.android.classygames.R$layout: int games_list_fragment_loading
+edu.selu.android.classygames.R$layout: int games_list_fragment_no_games
 edu.selu.android.classygames.R$layout: int generic_game_fragment_loading
 edu.selu.android.classygames.R$layout: int main_activity
 edu.selu.android.classygames.R$layout: int main_activity_loading
@@ -1925,8 +1925,8 @@ edu.selu.android.classygames.R$string: int empty_game_fragment_title
 edu.selu.android.classygames.R$string: int facebook_app_id
 edu.selu.android.classygames.R$string: int friends_list_fragment_cancelled_text
 edu.selu.android.classygames.R$string: int friends_list_fragment_listview_item_picture_description
-edu.selu.android.classygames.R$string: int friends_list_fragment_listview_no_friends
 edu.selu.android.classygames.R$string: int friends_list_fragment_loading_text
+edu.selu.android.classygames.R$string: int friends_list_fragment_no_friends
 edu.selu.android.classygames.R$string: int friends_list_fragment_title
 edu.selu.android.classygames.R$string: int game_fragment_board_x0y0
 edu.selu.android.classygames.R$string: int game_fragment_board_x0y1
@@ -2018,8 +2018,8 @@ edu.selu.android.classygames.R$string: int games_list_fragment_getgames_progress
 edu.selu.android.classygames.R$string: int games_list_fragment_getgames_progressdialog_title
 edu.selu.android.classygames.R$string: int games_list_fragment_getgames_response_error
 edu.selu.android.classygames.R$string: int games_list_fragment_listview_item_picture_description
-edu.selu.android.classygames.R$string: int games_list_fragment_listview_no_games
 edu.selu.android.classygames.R$string: int games_list_fragment_loading_text
+edu.selu.android.classygames.R$string: int games_list_fragment_no_games
 edu.selu.android.classygames.R$string: int games_list_fragment_title
 edu.selu.android.classygames.R$string: int games_list_fragment_turn_theirs
 edu.selu.android.classygames.R$string: int games_list_fragment_turn_yours
