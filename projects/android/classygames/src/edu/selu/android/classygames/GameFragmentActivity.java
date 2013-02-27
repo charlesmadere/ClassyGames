@@ -299,7 +299,14 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 			}
 			else
 			{
-				gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.game_fragment_activity_container);
+				try
+				{
+					gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.game_fragment_activity_container);
+				}
+				catch (final ClassCastException e)
+				{
+
+				}
 			}
 		}
 	}
