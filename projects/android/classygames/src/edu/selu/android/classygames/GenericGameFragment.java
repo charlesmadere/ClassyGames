@@ -208,9 +208,9 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * One of this class's callback methods. This is fired in the event that
 	 * a move has finished being sent to the server.
 	 */
-	private GenericGameFragmentOnAsyncSendMoveFinishedListener genericGameFragmentOnAsyncSendOrSkipMoveFinishedListener;
+	private GenericGameFragmentOnAsyncSendOrSkipMoveFinishedListener genericGameFragmentOnAsyncSendOrSkipMoveFinishedListener;
 
-	public interface GenericGameFragmentOnAsyncSendMoveFinishedListener
+	public interface GenericGameFragmentOnAsyncSendOrSkipMoveFinishedListener
 	{
 		public void genericGameFragmentOnAsyncSendOrSkipMoveFinished();
 	}
@@ -340,7 +340,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		{
 			genericGameFragmentIsDeviceSmallListener = (GenericGameFragmentIsDeviceLargeListener) activity;
 			genericGameFragmentOnAsyncGetGameOnCancelledListener = (GenericGameFragmentOnAsyncGetGameOnCancelledListener) activity;
-			genericGameFragmentOnAsyncSendOrSkipMoveFinishedListener = (GenericGameFragmentOnAsyncSendMoveFinishedListener) activity;
+			genericGameFragmentOnAsyncSendOrSkipMoveFinishedListener = (GenericGameFragmentOnAsyncSendOrSkipMoveFinishedListener) activity;
 			genericGameFragmentOnDataErrorListener = (GenericGameFragmentOnDataErrorListener) activity;
 		}
 		catch (final ClassCastException e)
@@ -360,6 +360,15 @@ public abstract class GenericGameFragment extends SherlockFragment
 			menu.removeItem(R.id.game_fragment_activity_menu_new_game);
 		}
 
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && isAsyncGetGameRunning)
+		{
+			inflater.inflate(R.menu.generic_cancel, menu);
+		}
+		else
+		{
+			inflater.inflate(R.menu.generic_game_fragment, menu);
+		}
+
 		if (arguments == null || arguments.isEmpty())
 		{
 			arguments = getArguments();
@@ -368,15 +377,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 		if (!Utilities.verifyValidString(arguments.getString(KEY_GAME_ID)))
 		{
 			menu.removeItem(R.id.generic_game_fragment_menu_skip_move);
-		}
-
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && isAsyncGetGameRunning)
-		{
-			inflater.inflate(R.menu.generic_cancel, menu);
-		}
-		else
-		{
-			inflater.inflate(R.menu.generic_game_fragment, menu);
 		}
 
 		super.onCreateOptionsMenu(menu, inflater);
@@ -1248,6 +1248,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 		@Override
 		protected void onPostExecute(final String serverResponse)
 		{
+			parseServerResponse(serverResponse);
+
 			if (progressDialog.isShowing())
 			{
 				progressDialog.dismiss();

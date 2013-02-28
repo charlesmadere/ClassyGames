@@ -25,7 +25,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 	GamesListFragment.GamesListFragmentOnRefreshSelectedListener,
 	GenericGameFragment.GenericGameFragmentIsDeviceLargeListener,
 	GenericGameFragment.GenericGameFragmentOnAsyncGetGameOnCancelledListener,
-	GenericGameFragment.GenericGameFragmentOnAsyncSendMoveFinishedListener,
+	GenericGameFragment.GenericGameFragmentOnAsyncSendOrSkipMoveFinishedListener,
 	GenericGameFragment.GenericGameFragmentOnDataErrorListener
 {
 
@@ -443,12 +443,13 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 		}
 
 		fTransaction.commit();
-		getGamesListFragment();
+		fManager.executePendingTransactions();
 
 		final ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(false);
 		actionBar.setTitle(R.string.games_list_fragment_title);
 
+		getGamesListFragment();
 		gamesListFragment.refreshGamesList();
 	}
 
