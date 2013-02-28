@@ -79,6 +79,12 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
+	 * Stores the arguments given to this Fragment.
+	 */
+	private Bundle arguments;
+
+
+	/**
 	 * Variable that holds whether or not the asyncGetGame AsyncTask is
 	 * currently running.
 	 */
@@ -245,7 +251,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		super.onActivityCreated(savedInstanceState);
 
-		final Bundle arguments = getArguments();
+		arguments = getArguments();
 
 		if (arguments == null || arguments.isEmpty())
 		{
@@ -351,14 +357,9 @@ public abstract class GenericGameFragment extends SherlockFragment
 			menu.removeItem(R.id.game_fragment_activity_menu_new_game);
 		}
 
-		final Bundle arguments = getArguments();
-
-		if (arguments != null && !arguments.isEmpty())
+		if (!Utilities.verifyValidString(arguments.getString(KEY_GAME_ID)))
 		{
-			if (!Utilities.verifyValidString(arguments.getString(KEY_GAME_ID)))
-			{
-				menu.removeItem(R.id.generic_game_fragment_menu_skip_move);
-			}
+			menu.removeItem(R.id.generic_game_fragment_menu_skip_move);
 		}
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && isAsyncGetGameRunning)
