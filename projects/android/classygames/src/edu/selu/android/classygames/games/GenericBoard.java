@@ -377,8 +377,8 @@ public abstract class GenericBoard
 	 */
 	private JSONArray makeJSONTeams() throws JSONException
 	{
-		final JSONArray teamPlayer = makeJSONTeam(GenericPiece.TEAM_PLAYER);
-		final JSONArray teamOpponent = makeJSONTeam(GenericPiece.TEAM_OPPONENT);
+		final JSONArray teamPlayer = makeJSONTeam(GenericPiece.TEAM_OPPONENT);
+		final JSONArray teamOpponent = makeJSONTeam(GenericPiece.TEAM_PLAYER);
 
 		final JSONArray teams = new JSONArray();
 		teams.put(teamPlayer);

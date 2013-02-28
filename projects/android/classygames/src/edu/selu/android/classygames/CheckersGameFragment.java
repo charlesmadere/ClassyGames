@@ -232,13 +232,16 @@ public class CheckersGameFragment extends GenericGameFragment
 					view.findViewById(R.id.checkers_game_fragment_x7).setLayoutParams(layoutParams);
 				}
 
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+				if (viewTreeObserver.isAlive())
 				{
-					viewTreeObserver.removeOnGlobalLayoutListener(this);
-				}
-				else
-				{
-					viewTreeObserver.removeGlobalOnLayoutListener(this);
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+					{
+						viewTreeObserver.removeOnGlobalLayoutListener(this);
+					}
+					else
+					{
+						viewTreeObserver.removeGlobalOnLayoutListener(this);
+					}
 				}
 			}
 		});

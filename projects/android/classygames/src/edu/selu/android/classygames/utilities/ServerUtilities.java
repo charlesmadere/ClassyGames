@@ -37,7 +37,7 @@ public final class ServerUtilities
 	public final static String MIMETYPE_JSON = "application/json";
 
 
-	public final static String ADDRESS_MAIN = "http://classygames.elasticbeanstalk.com/";
+	public final static String ADDRESS_MAIN = "http://classygames-beta.elasticbeanstalk.com/";
 	public final static String ADDRESS_GET_GAME = ADDRESS_MAIN + "GetGame";
 	public final static String ADDRESS_GET_GAMES = ADDRESS_MAIN + "GetGames";
 	public final static String ADDRESS_NEW_GAME = ADDRESS_MAIN + "NewGame";

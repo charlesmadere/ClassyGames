@@ -351,9 +351,14 @@ public abstract class GenericGameFragment extends SherlockFragment
 			menu.removeItem(R.id.game_fragment_activity_menu_new_game);
 		}
 
-		if (!Utilities.verifyValidString(game.getId()))
+		final Bundle arguments = getArguments();
+
+		if (arguments != null && !arguments.isEmpty())
 		{
-			menu.removeItem(R.id.generic_game_fragment_menu_skip_move);
+			if (!Utilities.verifyValidString(arguments.getString(KEY_GAME_ID)))
+			{
+				menu.removeItem(R.id.generic_game_fragment_menu_skip_move);
+			}
 		}
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && isAsyncGetGameRunning)
