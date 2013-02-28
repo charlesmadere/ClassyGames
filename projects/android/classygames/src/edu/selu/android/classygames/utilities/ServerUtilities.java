@@ -44,6 +44,7 @@ public final class ServerUtilities
 	public final static String ADDRESS_NEW_MOVE = ADDRESS_MAIN + "NewMove";
 	public final static String ADDRESS_NEW_REG_ID = ADDRESS_MAIN + "NewRegId";
 	public final static String ADDRESS_REMOVE_REG_ID = ADDRESS_MAIN + "RemoveRegId";
+	public final static String ADDRESS_SKIP_MOVE = ADDRESS_MAIN + "SkipMove";
 
 
 	public final static String POST_DATA = "json";

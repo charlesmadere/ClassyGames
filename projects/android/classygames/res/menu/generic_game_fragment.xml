@@ -12,4 +12,9 @@
 		android:id="@+id/generic_game_fragment_menu_undo_move"
 		android:showAsAction="ifRoom|withText"
 		android:title="@string/undo_move" />
+	<item
+		android:icon="@drawable/ab_skip_move"
+		android:id="@+id/generic_game_fragment_menu_skip_move"
+		android:showAsAction="never|withText"
+		android:title="@string/skip_move" />
 </menu>

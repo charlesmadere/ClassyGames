@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -106,6 +107,20 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
+	 * Variable that holds whether or not the asyncSkipMove AsyncTask is
+	 * currently running.
+	 */
+	private boolean isAsyncSkipMoveRunning = false;
+
+
+	/**
+	 * Holds a handle to the currently running (if it's currently running)
+	 * AsyncSkipMove AsyncTask. This could be null.
+	 */
+	private AsyncSkipMove asyncSkipMove;
+
+
+	/**
 	 * Boolean indicating if the board is in a state that would allow it to be
 	 * sent to the server.
 	 */
@@ -187,11 +202,11 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * One of this class's callback methods. This is fired in the event that
 	 * a move has finished being sent to the server.
 	 */
-	private GenericGameFragmentOnAsyncSendMoveFinishedListener genericGameFragmentOnAsyncSendMoveFinishedListener;
+	private GenericGameFragmentOnAsyncSendMoveFinishedListener genericGameFragmentOnAsyncSendOrSkipMoveFinishedListener;
 
 	public interface GenericGameFragmentOnAsyncSendMoveFinishedListener
 	{
-		public void genericGameFragmentOnAsyncSendMoveFinished();
+		public void genericGameFragmentOnAsyncSendOrSkipMoveFinished();
 	}
 
 
@@ -316,7 +331,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		{
 			genericGameFragmentIsDeviceSmallListener = (GenericGameFragmentIsDeviceLargeListener) activity;
 			genericGameFragmentOnAsyncGetGameOnCancelledListener = (GenericGameFragmentOnAsyncGetGameOnCancelledListener) activity;
-			genericGameFragmentOnAsyncSendMoveFinishedListener = (GenericGameFragmentOnAsyncSendMoveFinishedListener) activity;
+			genericGameFragmentOnAsyncSendOrSkipMoveFinishedListener = (GenericGameFragmentOnAsyncSendMoveFinishedListener) activity;
 			genericGameFragmentOnDataErrorListener = (GenericGameFragmentOnDataErrorListener) activity;
 		}
 		catch (final ClassCastException e)
@@ -334,6 +349,11 @@ public abstract class GenericGameFragment extends SherlockFragment
 		if (genericGameFragmentIsDeviceSmallListener.genericGameFragmentIsDeviceSmall())
 		{
 			menu.removeItem(R.id.game_fragment_activity_menu_new_game);
+		}
+
+		if (!Utilities.verifyValidString(game.getId()))
+		{
+			menu.removeItem(R.id.generic_game_fragment_menu_skip_move);
 		}
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && isAsyncGetGameRunning)
@@ -363,6 +383,10 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 			case R.id.generic_game_fragment_menu_send_move:
 				sendMove();
+				break;
+
+			case R.id.generic_game_fragment_menu_skip_move:
+				skipMove();
 				break;
 
 			case R.id.generic_game_fragment_menu_undo_move:
@@ -440,13 +464,36 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
+	 * Attempts to cancel the currently running AsyncSkipMove AsyncTask.
+	 * 
+	 * @return
+	 * Returns true if the AsyncTask was cancelled.
+	 */
+	private boolean cancelRunningAsyncSkipMove()
+	{
+		boolean cancelled = false;
+
+		if (isAsyncSkipMoveRunning)
+		{
+			asyncSkipMove.cancel(true);
+			cancelled = true;
+		}
+
+		return cancelled;
+	}
+
+
+	/**
 	 * Cancels the currently running AsyncTask (if any).
 	 */
 	public void cancelRunningAnyAsyncTask()
 	{
 		if (!cancelRunningAsyncGetGame())
 		{
-			cancelRunningAsyncSendMove();
+			if (!cancelRunningAsyncSendMove())
+			{
+				cancelRunningAsyncSkipMove();
+			}
 		}
 	}
 
@@ -574,7 +621,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 */
 	public boolean isAnAsyncTaskRunning()
 	{
-		return isAsyncGetGameRunning || isAsyncSendMoveRunning;
+		return isAsyncGetGameRunning || isAsyncSendMoveRunning || isAsyncSkipMoveRunning;
 	}
 
 
@@ -651,6 +698,29 @@ public abstract class GenericGameFragment extends SherlockFragment
 		}
 
 		return parsedServerResponse;
+	}
+
+
+	/**
+	 * Puts the board in a state so that the move is now ready to be sent.
+	 * 
+	 * @param force
+	 * If you want to force a pre honeycomb device to refresh it's menu then
+	 * set this to true.
+	 */
+	protected void readyToSendMove(final boolean force)
+	{
+		isReadyToSendMove = true;
+		Utilities.compatInvalidateOptionsMenu(getSherlockActivity(), force);
+	}
+
+
+	/**
+	 * Puts the board in a state so that the move is now ready to be sent.
+	 */
+	protected void readyToSendMove()
+	{
+		readyToSendMove(false);
 	}
 
 
@@ -740,25 +810,40 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * Puts the board in a state so that the move is now ready to be sent.
-	 * 
-	 * @param force
-	 * If you want to force a pre honeycomb device to refresh it's menu then
-	 * set this to true.
+	 * Skips the user's turn.
 	 */
-	protected void readyToSendMove(final boolean force)
+	private void skipMove()
 	{
-		isReadyToSendMove = true;
-		Utilities.compatInvalidateOptionsMenu(getSherlockActivity(), force);
-	}
+		if (Utilities.verifyValidString(game.getId()) && !isAsyncSkipMoveRunning)
+		{
+			final AlertDialog.Builder builder = new AlertDialog.Builder(getSherlockActivity())
+				.setMessage(R.string.generic_game_fragment_skipmove_dialog_message)
+				.setNegativeButton(R.string.no, new DialogInterface.OnClickListener()
+				{
+					@Override
+					public void onClick(final DialogInterface dialog, final int which)
+					{
+						dialog.dismiss();
+					}
+				})
+				.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
+				{
+					@Override
+					public void onClick(final DialogInterface dialog, final int which)
+					{
+						if (Utilities.verifyValidString(game.getId()) && !isAsyncSkipMoveRunning)
+						{
+							asyncSkipMove = new AsyncSkipMove(getSherlockActivity());
+							asyncSkipMove.execute();
+						}
 
+						dialog.dismiss();
+					}
+				})
+				.setTitle(R.string.generic_game_fragment_skipmove_dialog_title);
 
-	/**
-	 * Puts the board in a state so that the move is now ready to be sent.
-	 */
-	protected void readyToSendMove()
-	{
-		readyToSendMove(false);
+			builder.show();
+		}
 	}
 
 
@@ -1034,7 +1119,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 				progressDialog.dismiss();
 			}
 
-			genericGameFragmentOnAsyncSendMoveFinishedListener.genericGameFragmentOnAsyncSendMoveFinished();
+			genericGameFragmentOnAsyncSendOrSkipMoveFinishedListener.genericGameFragmentOnAsyncSendOrSkipMoveFinished();
 		}
 
 
@@ -1055,7 +1140,127 @@ public abstract class GenericGameFragment extends SherlockFragment
 				}
 			});
 
-			progressDialog.setTitle(R.string.generic_game_fragment_sendmove_progressdialog_title);
+			progressDialog.setTitle(R.string.generic_game_fragment_progressdialog_title);
+			progressDialog.show();
+		}
+
+
+	}
+
+
+
+
+	/**
+	 * An AsyncTask that will skip the user's turn.
+	 */
+	private final class AsyncSkipMove extends AsyncTask<Void, Void, String>
+	{
+
+
+		private Context context;
+		private ProgressDialog progressDialog;
+
+
+		AsyncSkipMove(final Context context)
+		{
+			this.context = context;
+		}
+
+
+		@Override
+		protected String doInBackground(final Void... params)
+		{
+			String serverResponse = null;
+
+			if (!isCancelled() && Utilities.verifyValidString(game.getId()))
+			{
+				try
+				{
+					final Person whoAmI = Utilities.getWhoAmI(context);
+
+					final JSONObject boardJSON = board.makeJSON();
+					final String boardJSONString = boardJSON.toString();
+
+					final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CREATOR, whoAmI.getIdAsString()));
+					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_BOARD, boardJSONString));
+
+					if (!isCancelled())
+					{
+						nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CHALLENGED, game.getPerson().getIdAsString()));
+						nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_NAME, game.getPerson().getName()));
+						nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_GAME_ID, game.getId()));
+
+						serverResponse = ServerUtilities.postToServer(ServerUtilities.ADDRESS_SKIP_MOVE, nameValuePairs);
+					}
+				}
+				catch (final IOException e)
+				{
+					Log.e(LOG_TAG, "IOException error in AsyncSkipMove - doInBackground()!", e);
+				}
+				catch (final JSONException e)
+				{
+					Log.e(LOG_TAG, "JSONException error in AsyncSkipMove - doInBackground()!", e);
+				}
+			}
+
+			return serverResponse;
+		}
+
+
+		private void cancelled()
+		{
+			if (progressDialog.isShowing())
+			{
+				progressDialog.dismiss();
+			}
+		}
+
+
+		@Override
+		protected void onCancelled()
+		{
+			cancelled();
+		}
+
+
+		@Override
+		protected void onCancelled(final String serverResponse)
+		{
+			cancelled();
+		}
+
+
+		@Override
+		protected void onPostExecute(final String serverResponse)
+		{
+			if (progressDialog.isShowing())
+			{
+				progressDialog.dismiss();
+			}
+
+			genericGameFragmentOnAsyncSendOrSkipMoveFinishedListener.genericGameFragmentOnAsyncSendOrSkipMoveFinished();
+		}
+
+
+		@Override
+		protected void onPreExecute()
+		{
+			progressDialog = new ProgressDialog(context);
+			progressDialog.setCancelable(true);
+			progressDialog.setCanceledOnTouchOutside(true);
+			progressDialog.setMessage(context.getString(R.string.generic_game_fragment_skipmove_progressdialog_message));
+
+			progressDialog.setOnCancelListener(new OnCancelListener()
+			{
+				@Override
+				public void onCancel(final DialogInterface dialog)
+				{
+					AsyncSkipMove.this.cancel(true);
+				}
+			});
+
+			progressDialog.setTitle(R.string.generic_game_fragment_progressdialog_title);
 			progressDialog.show();
 		}
 

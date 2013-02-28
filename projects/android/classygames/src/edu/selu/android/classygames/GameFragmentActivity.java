@@ -422,7 +422,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 
 	@Override
-	public void genericGameFragmentOnAsyncSendMoveFinished()
+	public void genericGameFragmentOnAsyncSendOrSkipMoveFinished()
 	{
 		final FragmentManager fManager = getSupportFragmentManager();
 		fManager.popBackStack();
