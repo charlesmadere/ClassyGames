@@ -251,7 +251,10 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		super.onActivityCreated(savedInstanceState);
 
-		arguments = getArguments();
+		if (arguments == null || arguments.isEmpty())
+		{
+			arguments = getArguments();
+		}
 
 		if (arguments == null || arguments.isEmpty())
 		{
@@ -355,6 +358,11 @@ public abstract class GenericGameFragment extends SherlockFragment
 		if (genericGameFragmentIsDeviceSmallListener.genericGameFragmentIsDeviceSmall())
 		{
 			menu.removeItem(R.id.game_fragment_activity_menu_new_game);
+		}
+
+		if (arguments == null || arguments.isEmpty())
+		{
+			arguments = getArguments();
 		}
 
 		if (!Utilities.verifyValidString(arguments.getString(KEY_GAME_ID)))
