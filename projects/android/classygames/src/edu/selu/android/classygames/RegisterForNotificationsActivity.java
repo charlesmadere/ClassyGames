@@ -5,7 +5,6 @@ import java.io.IOException;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
@@ -86,13 +85,13 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 	{
 
 
-		private Context context;
+		private SherlockActivity activity;
 		private ProgressDialog progressDialog;
 
 
-		AsyncRegisterForNotifications(final Context context)
+		AsyncRegisterForNotifications(final SherlockActivity activity)
 		{
-			this.context = context;
+			this.activity = activity;
 		}
 
 
@@ -105,7 +104,7 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 			{
 				try
 				{
-					ServerUtilities.gcmRegister(context);
+					registrationSuccess = Boolean.valueOf(ServerUtilities.gcmRegister(activity));
 				}
 				catch (final IOException e)
 				{
@@ -125,7 +124,7 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 			}
 
 			isAsyncRegisterForNotificationsRunning = false;
-			Utilities.easyToastAndLog(context, context.getString(R.string.register_for_notifications_activity_registration_cancelled));
+			Utilities.easyToastAndLog(activity, activity.getString(R.string.register_for_notifications_activity_registration_cancelled));
 		}
 
 
@@ -153,11 +152,12 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 
 			if (registrationSuccess.booleanValue())
 			{
-				Utilities.easyToastAndLog(context, context.getString(R.string.register_for_notifications_activity_registration_complete));
+				Utilities.easyToastAndLog(activity, activity.getString(R.string.register_for_notifications_activity_registration_complete));
+				activity.finish();
 			}
 			else
 			{
-				final AlertDialog.Builder builder = new AlertDialog.Builder(context)
+				final AlertDialog.Builder builder = new AlertDialog.Builder(activity)
 					.setMessage(R.string.register_for_notifications_activity_registration_failed_message)
 					.setNeutralButton(R.string.okay, new DialogInterface.OnClickListener()
 					{
@@ -165,6 +165,7 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 						public void onClick(final DialogInterface dialog, final int which)
 						{
 							dialog.dismiss();
+							activity.finish();
 						}
 					})
 					.setTitle(R.string.register_for_notifications_activity_registration_failed_title);
@@ -173,7 +174,6 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 			}
 
 			isAsyncRegisterForNotificationsRunning = false;
-			finish();
 		}
 
 
@@ -182,10 +182,10 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 		{
 			isAsyncRegisterForNotificationsRunning = true;
 
-			progressDialog = new ProgressDialog(context);
+			progressDialog = new ProgressDialog(activity);
 			progressDialog.setCancelable(true);
 			progressDialog.setCanceledOnTouchOutside(true);
-			progressDialog.setMessage(context.getString(R.string.register_for_notifications_activity_progressdialog_message));
+			progressDialog.setMessage(activity.getString(R.string.register_for_notifications_activity_progressdialog_message));
 
 			progressDialog.setOnCancelListener(new OnCancelListener()
 			{
