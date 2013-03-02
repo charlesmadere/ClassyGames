@@ -162,7 +162,11 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 	public void onItemClick(final AdapterView<?> l, final View v, final int position, final long id)
 	{
 		final Game game = gamesListAdapter.getItem(position);
-		gamesListFragmentOnGameSelectedListener.gamesListFragmentOnGameSelected(game);
+
+		if (game.isTypeGame())
+		{
+			gamesListFragmentOnGameSelectedListener.gamesListFragmentOnGameSelected(game);
+		}
 	}
 
 
