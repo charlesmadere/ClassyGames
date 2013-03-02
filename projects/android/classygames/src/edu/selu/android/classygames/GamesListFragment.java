@@ -358,7 +358,7 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 		{
 			viewGroup.removeAllViews();
 
-			if (games.size() >= 1)
+			if (games != null && games.size() >= 1)
 			{
 				inflater.inflate(R.layout.games_list_fragment, viewGroup);
 

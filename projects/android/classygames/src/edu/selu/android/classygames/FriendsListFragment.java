@@ -391,7 +391,7 @@ public class FriendsListFragment extends SherlockFragment implements OnItemClick
 		{
 			viewGroup.removeAllViews();
 
-			if (friends.size() >= 1)
+			if (friends != null && friends.size() >= 1)
 			{
 				inflater.inflate(R.layout.friends_list_fragment, viewGroup);
 
