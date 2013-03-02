@@ -127,8 +127,15 @@ public abstract class GenericBoard
 				final GenericPiece piece = position.getPiece();
 				final GenericPiece pieceInverse = positionInverse.getPiece();
 
-				piece.switchTeam();
-				pieceInverse.switchTeam();
+				if (piece != null)
+				{
+					piece.switchTeam();
+				}
+
+				if (pieceInverse != null)
+				{
+					pieceInverse.switchTeam();
+				}
 
 				position.setPiece(pieceInverse);
 				positionInverse.setPiece(piece);
