@@ -110,6 +110,11 @@ public class MainActivity extends SherlockActivity
 	@Override
 	protected void onDestroy()
 	{
+		if (isAsyncGetFacebookIdentityRunning)
+		{
+			asyncGetFacebookIdentity.cancel(true);
+		}
+
 		isResumed = false;
 		uiHelper.onDestroy();
 		super.onDestroy();

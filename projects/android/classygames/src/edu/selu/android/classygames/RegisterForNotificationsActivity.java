@@ -1,6 +1,9 @@
 package edu.selu.android.classygames;
 
 
+import java.io.IOException;
+
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,6 +26,12 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 {
 
 
+	private boolean isAsyncRegisterForNotificationsRunning = false;
+	private AsyncRegisterForNotifications asyncRegisterForNotifications;
+
+
+
+
 	@Override
 	protected void onCreate(final Bundle savedInstanceState)
 	{
@@ -37,9 +46,22 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 			@Override
 			public void onClick(final View v)
 			{
-				new AsyncRegisterForNotifications(RegisterForNotificationsActivity.this).execute();
+				asyncRegisterForNotifications = new AsyncRegisterForNotifications(RegisterForNotificationsActivity.this);
+				asyncRegisterForNotifications.execute();
 			}
 		});
+	}
+
+
+	@Override
+	protected void onDestroy()
+	{
+		if (isAsyncRegisterForNotificationsRunning)
+		{
+			asyncRegisterForNotifications.cancel(true);
+		}
+
+		super.onDestroy();
 	}
 
 
@@ -60,7 +82,7 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 
 
 
-	private final class AsyncRegisterForNotifications extends AsyncTask<Void, Void, Void>
+	private final class AsyncRegisterForNotifications extends AsyncTask<Void, Void, Boolean>
 	{
 
 
@@ -75,14 +97,23 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 
 
 		@Override
-		protected Void doInBackground(final Void... params)
+		protected Boolean doInBackground(final Void... params)
 		{
+			Boolean registrationSuccess = Boolean.valueOf(false);
+
 			if (!isCancelled())
 			{
-				ServerUtilities.gcmPerformRegister(context);
+				try
+				{
+					ServerUtilities.gcmRegister(context);
+				}
+				catch (final IOException e)
+				{
+
+				}
 			}
 
-			return null;
+			return registrationSuccess;
 		}
 
 
@@ -93,6 +124,7 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 				progressDialog.dismiss();
 			}
 
+			isAsyncRegisterForNotificationsRunning = false;
 			Utilities.easyToastAndLog(context, context.getString(R.string.register_for_notifications_activity_registration_cancelled));
 		}
 
@@ -105,21 +137,42 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 
 
 		@Override
-		protected void onCancelled(final Void result)
+		protected void onCancelled(final Boolean registrationSuccess)
 		{
 			cancelled();
 		}
 
 
 		@Override
-		protected void onPostExecute(final Void result)
+		protected void onPostExecute(final Boolean registrationSuccess)
 		{
 			if (progressDialog.isShowing())
 			{
 				progressDialog.dismiss();
 			}
 
-			Utilities.easyToastAndLog(context, context.getString(R.string.register_for_notifications_activity_registration_complete));
+			if (registrationSuccess.booleanValue())
+			{
+				Utilities.easyToastAndLog(context, context.getString(R.string.register_for_notifications_activity_registration_complete));
+			}
+			else
+			{
+				final AlertDialog.Builder builder = new AlertDialog.Builder(context)
+					.setMessage(R.string.register_for_notifications_activity_registration_failed_message)
+					.setNeutralButton(R.string.okay, new DialogInterface.OnClickListener()
+					{
+						@Override
+						public void onClick(final DialogInterface dialog, final int which)
+						{
+							dialog.dismiss();
+						}
+					})
+					.setTitle(R.string.register_for_notifications_activity_registration_failed_title);
+
+				builder.show();
+			}
+
+			isAsyncRegisterForNotificationsRunning = false;
 			finish();
 		}
 
@@ -127,6 +180,8 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 		@Override
 		protected void onPreExecute()
 		{
+			isAsyncRegisterForNotificationsRunning = true;
+
 			progressDialog = new ProgressDialog(context);
 			progressDialog.setCancelable(true);
 			progressDialog.setCanceledOnTouchOutside(true);

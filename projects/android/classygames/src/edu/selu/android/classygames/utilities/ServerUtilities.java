@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import edu.selu.android.classygames.models.Person;
 
@@ -129,11 +130,14 @@ public final class ServerUtilities
 	 * @param context
 	 * The Context of the class you're calling this method from.
 	 * 
+	 * @return
+	 * Returns true if the GCM registration attempt was successful.
+	 * 
 	 * @throws IOException
 	 * If something weird happens when trying to post the given data to the
 	 * server then this exception will be thrown.
 	 */
-	public static void gcmRegister(final String regId, final Context context) throws IOException
+	public static boolean gcmRegister(final String regId, final Context context) throws IOException
 	{
 		Log.d(LOG_TAG, "Registering device with regId of \"" + regId + "\" with GCM server.");
 
@@ -148,6 +152,44 @@ public final class ServerUtilities
 		if (gcmParseServerResults(postToServer(ADDRESS_NEW_REG_ID, nameValuePairs)))
 		{
 			Log.d(LOG_TAG, "Server successfully completed all the regId stuff.");
+
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+
+	/**
+	 * Attempts to register the current Android user's registration ID with the
+	 * server for GCM notifications.
+	 * 
+	 * @param context
+	 * The Context of the class that you're calling this method from.
+	 * 
+	 * @return
+	 * Returns true if the GCM registration attempt was successful.
+	 * 
+	 * @throws IOException
+	 * If something weird happens when trying to post the given data to the
+	 * server then this exception will be thrown.
+	 */
+	public static boolean gcmRegister(final Context context) throws IOException
+	{
+		final SharedPreferences sPreferences = context.getSharedPreferences(GCMIntentService.PREFERENCES_FILE, Context.MODE_PRIVATE);
+		final String preferencesRegId = sPreferences.getString(GCMIntentService.PREFERENCES_REG_ID, null);
+
+		if (Utilities.verifyValidString(preferencesRegId))
+		{
+			return gcmRegister(preferencesRegId, context);
+		}
+		else
+		{
+			gcmPerformRegister(context);
+
+			return false;
 		}
 	}
 

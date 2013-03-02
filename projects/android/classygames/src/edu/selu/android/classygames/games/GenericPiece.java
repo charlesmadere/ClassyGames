@@ -169,6 +169,24 @@ public abstract class GenericPiece
 	}
 
 
+	/**
+	 * Changes the team that this GenericPiece object is on from the team that
+	 * it's currently on to the other team. If it's currently TEAM_PLAYER's
+	 * team then it will be switched to TEAM_OPPONENT's team, and vice versa.
+	 */
+	public void switchTeam()
+	{
+		if (isTeamOpponent())
+		{
+			team = TEAM_PLAYER;
+		}
+		else if (isTeamPlayer())
+		{
+			team = TEAM_OPPONENT;
+		}
+	}
+
+
 
 
 	/**

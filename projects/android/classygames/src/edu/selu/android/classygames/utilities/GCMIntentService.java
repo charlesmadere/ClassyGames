@@ -38,9 +38,9 @@ public class GCMIntentService extends IntentService
 	public final static int GCM_NOTIFICATION_LIGHTS_ON = 1000; // milliseconds
 	public final static int GCM_NOTIFICATION_LIGHTS_OFF = 16000; // milliseconds
 
-	private final static String PREFERENCES = "PREFERENCES";
-	private final static String PREFERENCES_FILE = PREFERENCES + "_GCMIntentService";
-	private final static String PREFERENCES_REG_ID = PREFERENCES + "_REG_ID";
+	public final static String PREFERENCES = "PREFERENCES";
+	public final static String PREFERENCES_FILE = PREFERENCES + "_GCMIntentService";
+	public final static String PREFERENCES_REG_ID = PREFERENCES + "_REG_ID";
 
 
 
@@ -173,17 +173,17 @@ public class GCMIntentService extends IntentService
 		if (Utilities.verifyValidString(regId))
 		// registration succeeded
 		{
-			SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES_FILE, MODE_PRIVATE);
+			final SharedPreferences sPreferences = getSharedPreferences(PREFERENCES_FILE, MODE_PRIVATE);
 
 			// get old registration ID from shared preferences
-			final String preferencesRegId = sharedPreferences.getString(PREFERENCES_REG_ID, null);
+			final String preferencesRegId = sPreferences.getString(PREFERENCES_REG_ID, null);
 
-			if (preferencesRegId == null || !preferencesRegId.equals(regId))
+			if (!Utilities.verifyValidString(preferencesRegId) || !preferencesRegId.equals(regId))
 			// the two regIds are not the the same. replace the existing stored regId
 			// with this new regId
 			{
 				// store new regId
-				final SharedPreferences.Editor editor = sharedPreferences.edit();
+				final SharedPreferences.Editor editor = sPreferences.edit();
 				editor.putString(PREFERENCES_REG_ID, regId);
 				editor.commit();
 

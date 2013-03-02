@@ -144,6 +144,7 @@
 	<string name="notification_new_move_text">New move from %1$s!</string>
 	<string name="notification_sent_some_class">Ol\' %1$s sent you some class.</string>
 	<string name="notification_title">Classy Games</string>
+	<string name="okay">Okay</string>
 	<string name="piece_checkers_green_normal">Normal Green Piece</string>
 	<string name="piece_checkers_green_king">Kinged Green Piece</string>
 	<string name="piece_checkers_orange_normal">Normal Orange Piece</string>
@@ -156,6 +157,8 @@
 	<string name="register_for_notifications_activity_register_button">Register for Notifications</string>
 	<string name="register_for_notifications_activity_registration_cancelled">Registration cancelled.</string>
 	<string name="register_for_notifications_activity_registration_complete">Registration complete!</string>
+	<string name="register_for_notifications_activity_registration_failed_message">You will need to clear the app\'s data in order for it to register properly.</string>
+	<string name="register_for_notifications_activity_registration_failed_title">Registration failed!</string>
 	<string name="register_for_notifications_activity_title">Register for Notifications</string>
 	<string name="send_move">Send Move</string>
 	<string name="server_registration_attempt">Trying (attempt %1$d) to register device on server.</string>
