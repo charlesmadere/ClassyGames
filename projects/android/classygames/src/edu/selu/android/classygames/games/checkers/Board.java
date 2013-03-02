@@ -245,12 +245,12 @@ public class Board extends GenericBoard
 					{
 						return BOARD_INVALID;
 					}
-
-					if (piecesCountOpponent == 0)
-					{
-						return BOARD_WIN;
-					}
 				}
+			}
+
+			if (piecesCountOpponent == 0)
+			{
+				return BOARD_WIN;
 			}
 		}
 		catch (final JSONException e)
