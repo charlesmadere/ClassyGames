@@ -231,8 +231,8 @@ public abstract class GenericBoard
 	private void initializeBoardFromJSON() throws JSONException
 	{
 		final JSONArray teams = boardJSON.getJSONObject("board").getJSONArray("teams");
-		initializeTeamFromJSON(teams.getJSONArray(0), GenericPiece.TEAM_PLAYER);
-		initializeTeamFromJSON(teams.getJSONArray(1), GenericPiece.TEAM_OPPONENT);
+		initializeTeamFromJSON(teams.getJSONArray(0), GenericPiece.TEAM_OPPONENT);
+		initializeTeamFromJSON(teams.getJSONArray(1), GenericPiece.TEAM_PLAYER);
 	}
 
 
