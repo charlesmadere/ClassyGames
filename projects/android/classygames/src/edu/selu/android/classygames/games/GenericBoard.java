@@ -231,8 +231,8 @@ public abstract class GenericBoard
 	private void initializeBoardFromJSON() throws JSONException
 	{
 		final JSONArray teams = boardJSON.getJSONObject("board").getJSONArray("teams");
-		initializeTeamFromJSON(teams.getJSONArray(0), GenericPiece.TEAM_OPPONENT);
-		initializeTeamFromJSON(teams.getJSONArray(1), GenericPiece.TEAM_PLAYER);
+		initializeTeamFromJSON(teams.getJSONArray(0), GenericPiece.TEAM_PLAYER);
+		initializeTeamFromJSON(teams.getJSONArray(1), GenericPiece.TEAM_OPPONENT);
 	}
 
 
@@ -377,8 +377,8 @@ public abstract class GenericBoard
 	 */
 	private JSONArray makeJSONTeams() throws JSONException
 	{
-		final JSONArray teamPlayer = makeJSONTeam(GenericPiece.TEAM_OPPONENT);
-		final JSONArray teamOpponent = makeJSONTeam(GenericPiece.TEAM_PLAYER);
+		final JSONArray teamPlayer = makeJSONTeam(GenericPiece.TEAM_PLAYER);
+		final JSONArray teamOpponent = makeJSONTeam(GenericPiece.TEAM_OPPONENT);
 
 		final JSONArray teams = new JSONArray();
 		teams.put(teamPlayer);
