@@ -72,43 +72,43 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 		uiHelper = new UiLifecycleHelper(this, sessionStatusCallback);
 		uiHelper.onCreate(savedInstanceState);
 
-		final FragmentManager fManager = getSupportFragmentManager();
+		final Intent intent = getIntent();
 
-		if (savedInstanceState == null)
+		if (intent != null && intent.hasExtra(BUNDLE_DATA_GAME_ID) && intent.hasExtra(BUNDLE_DATA_PERSON_OPPONENT_ID)
+			&& intent.hasExtra(BUNDLE_DATA_PERSON_OPPONENT_NAME))
 		{
-			final FragmentTransaction fTransaction = fManager.beginTransaction();
+			final String gameId = intent.getStringExtra(BUNDLE_DATA_GAME_ID);
+			final String personId = intent.getStringExtra(BUNDLE_DATA_PERSON_OPPONENT_ID);
+			final String personName = intent.getStringExtra(BUNDLE_DATA_PERSON_OPPONENT_NAME);
 
-			if (isDeviceLarge())
+			if (Game.isIdValid(gameId) && Person.isIdValid(personId) && Person.isNameValid(personName))
 			{
-				emptyGameFragment = new EmptyGameFragment();
-				fTransaction.add(R.id.game_fragment_activity_fragment_game, emptyGameFragment);
-
-				gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_games_list_fragment);
+				final Game game = new Game(new Person(personId, personName), gameId);
+				gamesListFragmentOnGameSelected(game);
 			}
-			else
-			{
-				gamesListFragment = new GamesListFragment();
-				fTransaction.add(R.id.game_fragment_activity_container, gamesListFragment);
-			}
-
-			fTransaction.commit();
 		}
 		else
 		{
-			final Intent intent = getIntent();
+			final FragmentManager fManager = getSupportFragmentManager();
 
-			if (intent != null && intent.hasExtra(BUNDLE_DATA_GAME_ID) && intent.hasExtra(BUNDLE_DATA_PERSON_OPPONENT_ID)
-				&& intent.hasExtra(BUNDLE_DATA_PERSON_OPPONENT_NAME))
+			if (savedInstanceState == null)
 			{
-				final String gameId = intent.getStringExtra(BUNDLE_DATA_GAME_ID);
-				final String personId = intent.getStringExtra(BUNDLE_DATA_PERSON_OPPONENT_ID);
-				final String personName = intent.getStringExtra(BUNDLE_DATA_PERSON_OPPONENT_NAME);
-
-				if (Game.isIdValid(gameId) && Person.isIdValid(personId) && Person.isNameValid(personName))
+				final FragmentTransaction fTransaction = fManager.beginTransaction();
+	
+				if (isDeviceLarge())
 				{
-					final Game game = new Game(new Person(personId, personName), gameId);
-					gamesListFragmentOnGameSelected(game);
+					emptyGameFragment = new EmptyGameFragment();
+					fTransaction.add(R.id.game_fragment_activity_fragment_game, emptyGameFragment);
+	
+					gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_games_list_fragment);
 				}
+				else
+				{
+					gamesListFragment = new GamesListFragment();
+					fTransaction.add(R.id.game_fragment_activity_container, gamesListFragment);
+				}
+	
+				fTransaction.commit();
 			}
 			else
 			{
@@ -121,7 +121,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 					catch (final ClassCastException e)
 					{
 						genericGameFragment = (GenericGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_game);
-
+	
 						final ActionBar actionBar = getSupportActionBar();
 						actionBar.setDisplayHomeAsUpEnabled(true);
 						actionBar.setTitle(savedInstanceState.getCharSequence(KEY_ACTION_BAR_TITLE));
@@ -136,7 +136,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 					catch (final ClassCastException e)
 					{
 						genericGameFragment = (GenericGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_container);
-
+	
 						final ActionBar actionBar = getSupportActionBar();
 						actionBar.setDisplayHomeAsUpEnabled(true);
 						actionBar.setTitle(savedInstanceState.getCharSequence(KEY_ACTION_BAR_TITLE));
