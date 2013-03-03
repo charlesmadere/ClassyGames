@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="edu.selu.android.classygames"
+	package="com.charlesmadere.android.classygames"
 	android:versionCode="10"
 	android:versionName="1.5">
 
@@ -21,11 +21,11 @@
 	<!-- this GCM stuff was taken from this official google tutorial -->
 	<!-- https://developer.android.com/guide/google/gcm/gs.html -->
 	<permission
-		android:name="edu.selu.android.classygames.permission.C2D_MESSAGE"
+		android:name="com.charlesmadere.android.classygames.permission.C2D_MESSAGE"
 		android:protectionLevel="signature" />
 
 	<uses-permission
-		android:name="edu.selu.android.classygames.permission.C2D_MESSAGE" />
+		android:name="com.charlesmadere.android.classygames.permission.C2D_MESSAGE" />
 
 	<!-- App receives GCM messages. -->
 	<uses-permission
@@ -56,7 +56,7 @@
 
 		<!-- more GCM stuff -->
 		<receiver
-			android:name="edu.selu.android.classygames.utilities.GCMBroadcastReceiver"
+			android:name="com.charlesmadere.android.classygames.utilities.GCMBroadcastReceiver"
 			android:permission="com.google.android.c2dm.permission.SEND">
 			<intent-filter>
 				<action
@@ -64,16 +64,16 @@
 				<action
 					android:name="com.google.android.c2dm.intent.REGISTRATION" />
 				<category
-					android:name="edu.selu.android.classygames" />
+					android:name="com.charlesmadere.android.classygames" />
 			</intent-filter>
 		</receiver>
 		<service
-			android:name="edu.selu.android.classygames.utilities.GCMIntentService" />
+			android:name="com.charlesmadere.android.classygames.utilities.GCMIntentService" />
 		<!--  end more GCM stuff -->
 
 		<activity
 			android:label="@string/main_activity_title"
-			android:name=".MainActivity"
+			android:name="com.charlesmadere.android.classygames.MainActivity"
 			android:theme="@style/Theme.Styled">
 			<intent-filter>
 				<action
@@ -85,8 +85,8 @@
 
 		<activity
 			android:label="@string/about_activity_title"
-			android:name=".AboutActivity"
-			android:parentActivityName=".GameFragmentActivity"
+			android:name="com.charlesmadere.android.classygames.AboutActivity"
+			android:parentActivityName="com.charlesmadere.android.classygames.GameFragmentActivity"
 			android:theme="@style/Theme.Styled">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
@@ -95,14 +95,14 @@
 
 		<activity
 			android:label="@string/games_list_fragment_title"
-			android:name=".GameFragmentActivity"
+			android:name="com.charlesmadere.android.classygames.GameFragmentActivity"
 			android:theme="@style/Theme.Styled"
 			android:uiOptions="splitActionBarWhenNarrow" />
 
 		<activity
 			android:label="@string/game_over_activity_title"
-			android:name=".GameOverActivity"
-			android:parentActivityName=".GameFragmentActivity"
+			android:name="com.charlesmadere.android.classygames.GameOverActivity"
+			android:parentActivityName="com.charlesmadere.android.classygames.GameFragmentActivity"
 			android:theme="@style/Theme.Styled">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
@@ -111,7 +111,7 @@
 
 		<activity
 			android:label="@string/friends_list_fragment_title"
-			android:name=".NewGameFragmentActivity"
+			android:name="com.charlesmadere.android.classygames.NewGameFragmentActivity"
 			android:theme="@style/Theme.Styled">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
@@ -120,7 +120,7 @@
 
 		<activity
 			android:label="@string/register_for_notifications_activity_title"
-			android:name=".RegisterForNotificationsActivity"
+			android:name="com.charlesmadere.android.classygames.RegisterForNotificationsActivity"
 			android:theme="@style/Theme.Styled">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
@@ -129,8 +129,8 @@
 
 		<activity
 			android:label="@string/shark_activity_title"
-			android:name=".SharkActivity"
-			android:parentActivityName=".AboutActivity"
+			android:name="com.charlesmadere.android.classygames.SharkActivity"
+			android:parentActivityName="com.charlesmadere.android.classygames.AboutActivity"
 			android:theme="@style/Theme.Styled">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
