@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 
+import edu.selu.android.classygames.models.Person;
 import edu.selu.android.classygames.utilities.FacebookUtilities;
 import edu.selu.android.classygames.utilities.ServerUtilities;
 import edu.selu.android.classygames.utilities.TypefaceUtilities;
@@ -41,16 +42,16 @@ public class GameOverActivity extends SherlockActivity
 		if (intent != null && intent.hasExtra(BUNDLE_DATA_MESSAGE_TYPE) && intent.hasExtra(BUNDLE_DATA_PERSON_OPPONENT_ID)
 			&& intent.hasExtra(BUNDLE_DATA_PERSON_OPPONENT_NAME))
 		{
-			final String messageTypeString = intent.getStringExtra(BUNDLE_DATA_MESSAGE_TYPE);
-			final String personId = intent.getStringExtra(BUNDLE_DATA_PERSON_OPPONENT_ID);
+			final byte messageTypeString = intent.getByteExtra(BUNDLE_DATA_MESSAGE_TYPE, (byte) -1);
+			final long personId = intent.getLongExtra(BUNDLE_DATA_PERSON_OPPONENT_ID, -1);
 			final String personName = intent.getStringExtra(BUNDLE_DATA_PERSON_OPPONENT_NAME);
 
-			if (Utilities.verifyValidStrings(messageTypeString, personId, personName))
+			if (Utilities.verifyValidStrings(personName) && Person.isIdValid(personId))
 			{
 				final Byte messageType = Byte.valueOf(messageTypeString);
 
 				final ImageView friendPicture = (ImageView) findViewById(R.id.game_over_activity_friend_picture);
-				Utilities.getImageLoader(this).displayImage(FacebookUtilities.GRAPH_API_URL + personId + FacebookUtilities.GRAPH_API_URL_PICTURE_TYPE_SMALL_SSL, friendPicture);
+				Utilities.getImageLoader(this).displayImage(FacebookUtilities.GRAPH_API_URL + personId + FacebookUtilities.GRAPH_API_URL_PICTURE_TYPE_LARGE_SSL, friendPicture);
 
 				final TextView friendName = (TextView) findViewById(R.id.game_over_activity_friend_name);
 				friendName.setText(personName);

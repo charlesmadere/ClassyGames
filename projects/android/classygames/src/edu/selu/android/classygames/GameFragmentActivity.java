@@ -1,6 +1,7 @@
 package edu.selu.android.classygames;
 
 
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -32,6 +33,8 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 	public final static int RESULT_CODE_FINISH = MainActivity.GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FINISH;
 	public final static int NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FRIEND_SELECTED = 16;
+
+	public final static String GCM_RECEIVED = "edu.selu.android.classygames.GameFragmentActivity.GCM_RECEIVED";
 
 	public final static String BUNDLE_DATA_GAME_ID = "BUNDLE_DATA_GAME_ID";
 	public final static String BUNDLE_DATA_PERSON_OPPONENT_ID = "BUNDLE_DATA_PERSON_OPPONENT_ID";
@@ -72,75 +75,76 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 		uiHelper = new UiLifecycleHelper(this, sessionStatusCallback);
 		uiHelper.onCreate(savedInstanceState);
 
-		final Intent intent = getIntent();
+		final FragmentManager fManager = getSupportFragmentManager();
 
-		if (intent != null && intent.hasExtra(BUNDLE_DATA_GAME_ID) && intent.hasExtra(BUNDLE_DATA_PERSON_OPPONENT_ID)
-			&& intent.hasExtra(BUNDLE_DATA_PERSON_OPPONENT_NAME))
+		if (savedInstanceState == null)
 		{
-			final String gameId = intent.getStringExtra(BUNDLE_DATA_GAME_ID);
-			final String personId = intent.getStringExtra(BUNDLE_DATA_PERSON_OPPONENT_ID);
-			final String personName = intent.getStringExtra(BUNDLE_DATA_PERSON_OPPONENT_NAME);
+			final FragmentTransaction fTransaction = fManager.beginTransaction();
 
-			if (Game.isIdValid(gameId) && Person.isIdValid(personId) && Person.isNameValid(personName))
+			if (isDeviceLarge())
 			{
-				final Game game = new Game(new Person(personId, personName), gameId);
-				gamesListFragmentOnGameSelected(game);
-			}
-		}
-		else
-		{
-			final FragmentManager fManager = getSupportFragmentManager();
+				emptyGameFragment = new EmptyGameFragment();
+				fTransaction.add(R.id.game_fragment_activity_fragment_game, emptyGameFragment);
 
-			if (savedInstanceState == null)
-			{
-				final FragmentTransaction fTransaction = fManager.beginTransaction();
-	
-				if (isDeviceLarge())
-				{
-					emptyGameFragment = new EmptyGameFragment();
-					fTransaction.add(R.id.game_fragment_activity_fragment_game, emptyGameFragment);
-	
-					gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_games_list_fragment);
-				}
-				else
-				{
-					gamesListFragment = new GamesListFragment();
-					fTransaction.add(R.id.game_fragment_activity_container, gamesListFragment);
-				}
-	
-				fTransaction.commit();
+				gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_games_list_fragment);
 			}
 			else
 			{
-				if (isDeviceLarge())
+				gamesListFragment = new GamesListFragment();
+				fTransaction.add(R.id.game_fragment_activity_container, gamesListFragment);
+			}
+
+			fTransaction.commit();
+		}
+		else
+		{
+			if (isDeviceLarge())
+			{
+				try
 				{
-					try
-					{
-						emptyGameFragment = (EmptyGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_game);
-					}
-					catch (final ClassCastException e)
-					{
-						genericGameFragment = (GenericGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_game);
-	
-						final ActionBar actionBar = getSupportActionBar();
-						actionBar.setDisplayHomeAsUpEnabled(true);
-						actionBar.setTitle(savedInstanceState.getCharSequence(KEY_ACTION_BAR_TITLE));
-					}
+					emptyGameFragment = (EmptyGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_game);
 				}
-				else
+				catch (final ClassCastException e)
 				{
-					try
-					{
-						gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.game_fragment_activity_container);
-					}
-					catch (final ClassCastException e)
-					{
-						genericGameFragment = (GenericGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_container);
-	
-						final ActionBar actionBar = getSupportActionBar();
-						actionBar.setDisplayHomeAsUpEnabled(true);
-						actionBar.setTitle(savedInstanceState.getCharSequence(KEY_ACTION_BAR_TITLE));
-					}
+					genericGameFragment = (GenericGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_game);
+
+					final ActionBar actionBar = getSupportActionBar();
+					actionBar.setDisplayHomeAsUpEnabled(true);
+					actionBar.setTitle(savedInstanceState.getCharSequence(KEY_ACTION_BAR_TITLE));
+				}
+			}
+			else
+			{
+				try
+				{
+					gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.game_fragment_activity_container);
+				}
+				catch (final ClassCastException e)
+				{
+					genericGameFragment = (GenericGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_container);
+
+					final ActionBar actionBar = getSupportActionBar();
+					actionBar.setDisplayHomeAsUpEnabled(true);
+					actionBar.setTitle(savedInstanceState.getCharSequence(KEY_ACTION_BAR_TITLE));
+				}
+			}
+		}
+
+		final Intent intent = getIntent();
+
+		if (intent != null)
+		{
+			if (intent.hasExtra(BUNDLE_DATA_GAME_ID) && intent.hasExtra(BUNDLE_DATA_PERSON_OPPONENT_ID)
+				&& intent.hasExtra(BUNDLE_DATA_PERSON_OPPONENT_NAME))
+			{
+				final String gameId = intent.getStringExtra(BUNDLE_DATA_GAME_ID);
+				final long personId = intent.getLongExtra(BUNDLE_DATA_PERSON_OPPONENT_ID, -1);
+				final String personName = intent.getStringExtra(BUNDLE_DATA_PERSON_OPPONENT_NAME);
+
+				if (Game.isIdValid(gameId) && Person.isIdValid(personId) && Person.isNameValid(personName))
+				{
+					final Game game = new Game(new Person(personId, personName), gameId);
+					gamesListFragmentOnGameSelected(game);
 				}
 			}
 		}
@@ -402,6 +406,8 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 			onBackPressed();
 		}
 
+		((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancelAll();
+
 		getGamesListFragment();
 		gamesListFragment.refreshGamesList();
 	}
@@ -449,8 +455,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 		actionBar.setDisplayHomeAsUpEnabled(false);
 		actionBar.setTitle(R.string.games_list_fragment_title);
 
-		getGamesListFragment();
-		gamesListFragment.refreshGamesList();
+		gamesListFragmentOnRefreshSelected();
 	}
 
 

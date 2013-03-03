@@ -214,7 +214,7 @@ public class Person
 	 * Valid means three things:
 	 * <ol>
 	 * <li>This String is not null.</li>
-	 * <li>This String is not empty.</li>
+	 * <li>This String has a length of greater than or equal to 1.</li>
 	 * <li>This String, when converted into a long, is greater than or equal to
 	 * 1.</li>
 	 * </ol>

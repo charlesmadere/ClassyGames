@@ -1329,9 +1329,11 @@ edu.selu.android.classygames.R$drawable: int ab_about
 edu.selu.android.classygames.R$drawable: int ab_cancel
 edu.selu.android.classygames.R$drawable: int ab_logout
 edu.selu.android.classygames.R$drawable: int ab_refresh
+edu.selu.android.classygames.R$drawable: int ab_register_for_notifications
 edu.selu.android.classygames.R$drawable: int ab_send_move
 edu.selu.android.classygames.R$drawable: int ab_send_move_disabled_raw
 edu.selu.android.classygames.R$drawable: int ab_send_move_enabled_raw
+edu.selu.android.classygames.R$drawable: int ab_skip_move
 edu.selu.android.classygames.R$drawable: int ab_undo_move
 edu.selu.android.classygames.R$drawable: int ab_undo_move_disabled_raw
 edu.selu.android.classygames.R$drawable: int ab_undo_move_enabled_raw
@@ -1773,6 +1775,7 @@ edu.selu.android.classygames.R$id: int games_list_fragment_listview_item_time
 edu.selu.android.classygames.R$id: int generic_cancel_menu_cancel
 edu.selu.android.classygames.R$id: int generic_game_fragment_loading_textview
 edu.selu.android.classygames.R$id: int generic_game_fragment_menu_send_move
+edu.selu.android.classygames.R$id: int generic_game_fragment_menu_skip_move
 edu.selu.android.classygames.R$id: int generic_game_fragment_menu_undo_move
 edu.selu.android.classygames.R$id: int generic_refresh_menu_refresh
 edu.selu.android.classygames.R$id: int homeAsUp
@@ -2024,11 +2027,12 @@ edu.selu.android.classygames.R$string: int games_list_fragment_title
 edu.selu.android.classygames.R$string: int games_list_fragment_turn_theirs
 edu.selu.android.classygames.R$string: int games_list_fragment_turn_yours
 edu.selu.android.classygames.R$string: int generic_game_fragment_data_error
-edu.selu.android.classygames.R$string: int generic_game_fragment_getgame_progressdialog_message
-edu.selu.android.classygames.R$string: int generic_game_fragment_getgame_progressdialog_title
 edu.selu.android.classygames.R$string: int generic_game_fragment_loading_text
+edu.selu.android.classygames.R$string: int generic_game_fragment_progressdialog_title
 edu.selu.android.classygames.R$string: int generic_game_fragment_sendmove_progressdialog_message
-edu.selu.android.classygames.R$string: int generic_game_fragment_sendmove_progressdialog_title
+edu.selu.android.classygames.R$string: int generic_game_fragment_skipmove_dialog_message
+edu.selu.android.classygames.R$string: int generic_game_fragment_skipmove_dialog_title
+edu.selu.android.classygames.R$string: int generic_game_fragment_skipmove_progressdialog_message
 edu.selu.android.classygames.R$string: int generic_game_fragment_title
 edu.selu.android.classygames.R$string: int login_with_facebook
 edu.selu.android.classygames.R$string: int logout
@@ -2039,6 +2043,7 @@ edu.selu.android.classygames.R$string: int lost
 edu.selu.android.classygames.R$string: int main_activity_loading_textview_text
 edu.selu.android.classygames.R$string: int main_activity_title
 edu.selu.android.classygames.R$string: int new_game
+edu.selu.android.classygames.R$string: int no
 edu.selu.android.classygames.R$string: int notification_game_over_lose_text
 edu.selu.android.classygames.R$string: int notification_game_over_text
 edu.selu.android.classygames.R$string: int notification_game_over_win_text
@@ -2046,6 +2051,7 @@ edu.selu.android.classygames.R$string: int notification_new_game_text
 edu.selu.android.classygames.R$string: int notification_new_move_text
 edu.selu.android.classygames.R$string: int notification_sent_some_class
 edu.selu.android.classygames.R$string: int notification_title
+edu.selu.android.classygames.R$string: int okay
 edu.selu.android.classygames.R$string: int piece_checkers_green_king
 edu.selu.android.classygames.R$string: int piece_checkers_green_normal
 edu.selu.android.classygames.R$string: int piece_checkers_orange_king
@@ -2058,6 +2064,8 @@ edu.selu.android.classygames.R$string: int register_for_notifications_activity_p
 edu.selu.android.classygames.R$string: int register_for_notifications_activity_register_button
 edu.selu.android.classygames.R$string: int register_for_notifications_activity_registration_cancelled
 edu.selu.android.classygames.R$string: int register_for_notifications_activity_registration_complete
+edu.selu.android.classygames.R$string: int register_for_notifications_activity_registration_failed_message
+edu.selu.android.classygames.R$string: int register_for_notifications_activity_registration_failed_title
 edu.selu.android.classygames.R$string: int register_for_notifications_activity_title
 edu.selu.android.classygames.R$string: int send_move
 edu.selu.android.classygames.R$string: int server_registration_attempt
@@ -2069,8 +2077,10 @@ edu.selu.android.classygames.R$string: int settings
 edu.selu.android.classygames.R$string: int shark_activity_description
 edu.selu.android.classygames.R$string: int shark_activity_imageview_description
 edu.selu.android.classygames.R$string: int shark_activity_title
+edu.selu.android.classygames.R$string: int skip_move
 edu.selu.android.classygames.R$string: int undo_move
 edu.selu.android.classygames.R$string: int won
+edu.selu.android.classygames.R$string: int yes
 edu.selu.android.classygames.R$style: int ClassyGames
 edu.selu.android.classygames.R$style: int ClassyGamesDark
 edu.selu.android.classygames.R$style: int DialogWindowTitle_Sherlock

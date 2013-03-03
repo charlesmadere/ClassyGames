@@ -11,8 +11,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.PowerManager;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.support.v4.app.NotificationCompat.Builder;
 import android.util.Log;
 import edu.selu.android.classygames.GameFragmentActivity;
 import edu.selu.android.classygames.GameOverActivity;
@@ -94,19 +94,18 @@ public class GCMIntentService extends IntentService
 			final Byte messageType = Byte.valueOf(parameter_messageType);
 			final Long personId = Long.valueOf(parameter_personId);
 
-			if (Person.isIdValid(personId.longValue()) && Person.isNameValid(parameter_personName)
-				&& ServerUtilities.validGameTypeValue(gameType.byteValue())
-				&& ServerUtilities.validMessageTypeValue(messageType.byteValue()))
+			if (Person.isIdValid(personId.longValue()) && Person.isNameValid(parameter_personName) &&
+				(ServerUtilities.validGameTypeValue(gameType.byteValue()) || ServerUtilities.validMessageTypeValue(messageType.byteValue())))
 			{
 				final Person person = new Person(personId, parameter_personName);
 
 				// build a notification to show to the user
-				final NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+				final Builder builder = new Builder(this)
 					.setAutoCancel(true)
 					.setContentTitle(getString(R.string.notification_title))
 					.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification_raw))
 					.setLights(GCM_NOTIFICATION_LIGHTS, GCM_NOTIFICATION_LIGHTS_ON, GCM_NOTIFICATION_LIGHTS_OFF)
-					.setOnlyAlertOnce(true)
+					.setOnlyAlertOnce(false)
 					.setSmallIcon(R.drawable.notification_small);
 
 				final TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
@@ -117,7 +116,8 @@ public class GCMIntentService extends IntentService
 					final Intent gameIntent = new Intent(this, GameFragmentActivity.class)
 						.putExtra(GameFragmentActivity.BUNDLE_DATA_GAME_ID, parameter_gameId)
 						.putExtra(GameFragmentActivity.BUNDLE_DATA_PERSON_OPPONENT_ID, person.getId())
-						.putExtra(GameFragmentActivity.BUNDLE_DATA_PERSON_OPPONENT_NAME, person.getName());
+						.putExtra(GameFragmentActivity.BUNDLE_DATA_PERSON_OPPONENT_NAME, person.getName())
+						.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
 					stackBuilder.addNextIntentWithParentStack(gameIntent);
 					builder.setTicker(getString(R.string.notification_sent_some_class, person.getName()));
@@ -152,7 +152,7 @@ public class GCMIntentService extends IntentService
 					}
 				}
 
-				final PendingIntent gamePendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_CANCEL_CURRENT);
+				final PendingIntent gamePendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 				builder.setContentIntent(gamePendingIntent);
 
 				// show the notification

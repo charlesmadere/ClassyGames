@@ -351,14 +351,12 @@ public class Board extends GenericBoard
 						{
 							isJumpValid = true;
 						}
-						break;
 
 					case Piece.TYPE_NORMAL:
 						if (previous.getCoordinate().getY() == current.getCoordinate().getY() - 2)
 						{
 							isJumpValid = true;
 						}
-						break;
 				}
 
 				if (isJumpValid)
