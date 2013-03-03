@@ -10,8 +10,7 @@
 		android:layout_width="wrap_content"
 		ads:adSize="BANNER"
 		ads:adUnitId="@string/admob_publisher_id"
-		ads:loadAdOnCreate="true"
-		ads:testDevices="@string/admob_test_devices" />
+		ads:loadAdOnCreate="true" />
 	<LinearLayout
 		android:gravity="center"
 		android:layout_height="match_parent"
