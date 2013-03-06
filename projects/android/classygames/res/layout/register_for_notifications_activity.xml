@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="match_parent"
+	android:layout_width="match_parent"
+	android:orientation="vertical"
+	android:paddingBottom="8dip"
+	android:paddingLeft="4dip"
+	android:paddingRight="4dip"
+	android:paddingTop="8dip"
+	style="@style/ClassyGames">
+	<TextView
+	    android:gravity="center_vertical"
+		android:layout_height="match_parent"
+		android:layout_weight="2"
+		android:layout_width="match_parent"
+		android:text="@string/register_for_notifications_activity_description"
+		style="@style/paragraph" />
+	<LinearLayout
+		android:gravity="center"
+		android:layout_height="match_parent"
+		android:layout_weight="5"
+		android:layout_width="match_parent"
+		android:orientation="vertical">
+		<Button
+			android:id="@+id/register_for_notifications_activity_register"
+			android:layout_height="wrap_content"
+			android:layout_width="match_parent"
+			android:text="@string/register_for_notifications_activity_register_button"
+			style="@style/button.gray" />
+	</LinearLayout>
+</LinearLayout>

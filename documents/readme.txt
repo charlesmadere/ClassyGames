@@ -1,1 +1,0 @@
-The documents folder should contain any documents (word, powerpoint, etc) that we need throughout the semester.

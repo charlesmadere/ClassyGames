@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:adjustViewBounds="true"
+	android:contentDescription="@string/games_list_fragment_turn_theirs"
+	android:layout_height="wrap_content"
+	android:layout_width="match_parent"
+	android:paddingBottom="4dip"
+	android:paddingTop="4dip"
+	android:scaleType="centerInside"
+	android:src="@drawable/turn_theirs" />

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="edu.selu.android.classygames"
-	android:versionCode="6"
-	android:versionName="1.1.1">
+	package="com.charlesmadere.android.classygames"
+	android:versionCode="10"
+	android:versionName="1.5">
 
+    <!-- Check out the Android API Levels website for more information on this topic -->
+    <!-- https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels -->
 	<uses-sdk
-		android:minSdkVersion="10"
+		android:minSdkVersion="8"
 		android:targetSdkVersion="17" />
 
 	<uses-permission
@@ -19,10 +21,11 @@
 	<!-- this GCM stuff was taken from this official google tutorial -->
 	<!-- https://developer.android.com/guide/google/gcm/gs.html -->
 	<permission
-		android:name="edu.selu.android.classygames.permission.C2D_MESSAGE"
+		android:name="com.charlesmadere.android.classygames.permission.C2D_MESSAGE"
 		android:protectionLevel="signature" />
+
 	<uses-permission
-		android:name="edu.selu.android.classygames.permission.C2D_MESSAGE" />
+		android:name="com.charlesmadere.android.classygames.permission.C2D_MESSAGE" />
 
 	<!-- App receives GCM messages. -->
 	<uses-permission
@@ -37,14 +40,23 @@
 		android:name="android.permission.WAKE_LOCK" />
 	<!-- end most of the GCM stuff -->
 
+	<!-- Needed for Google AdMob -->
+	<uses-permission
+		android:name="android.permission.ACCESS_NETWORK_STATE" />
+
 	<application
 		android:allowBackup="false"
 		android:icon="@drawable/launcher"
 		android:label="@string/app_name">
 
+    	<!-- some Facebook v3.0 stuff -->
+		<meta-data
+			android:name="com.facebook.sdk.ApplicationId"
+			android:value="@string/facebook_app_id" />
+
 		<!-- more GCM stuff -->
 		<receiver
-			android:name="edu.selu.android.classygames.utilities.GCMBroadcastReceiver"
+			android:name="com.charlesmadere.android.classygames.utilities.GCMBroadcastReceiver"
 			android:permission="com.google.android.c2dm.permission.SEND">
 			<intent-filter>
 				<action
@@ -52,17 +64,16 @@
 				<action
 					android:name="com.google.android.c2dm.intent.REGISTRATION" />
 				<category
-					android:name="edu.selu.android.classygames" />
+					android:name="com.charlesmadere.android.classygames" />
 			</intent-filter>
 		</receiver>
 		<service
-			android:name="edu.selu.android.classygames.utilities.GCMIntentService" />
+			android:name="com.charlesmadere.android.classygames.utilities.GCMIntentService" />
 		<!--  end more GCM stuff -->
 
 		<activity
 			android:label="@string/main_activity_title"
-			android:name=".MainActivity"
-			android:screenOrientation="portrait"
+			android:name="com.charlesmadere.android.classygames.MainActivity"
 			android:theme="@style/Theme.Styled">
 			<intent-filter>
 				<action
@@ -74,86 +85,66 @@
 
 		<activity
 			android:label="@string/about_activity_title"
-			android:name=".AboutActivity"
-			android:parentActivityName=".GamesListActivity"
-			android:screenOrientation="portrait"
+			android:name="com.charlesmadere.android.classygames.AboutActivity"
+			android:parentActivityName="com.charlesmadere.android.classygames.GameFragmentActivity"
 			android:theme="@style/Theme.Styled">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".GamesListActivity" />
+				android:value=".GameFragmentActivity" />
 		</activity>
 
 		<activity
-			android:label="@string/checkers_game_activity_title" 
-			android:name=".CheckersGameActivity"
-			android:parentActivityName=".GamesListActivity"
-			android:screenOrientation="portrait"
+			android:label="@string/games_list_fragment_title"
+			android:name="com.charlesmadere.android.classygames.GameFragmentActivity"
 			android:theme="@style/Theme.Styled"
-			android:uiOptions="splitActionBarWhenNarrow">
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".GamesListActivity" />
-		</activity>
-
-		<activity
-			android:label="@string/confirm_game_activity_title"
-			android:name=".ConfirmGameActivity"
-			android:parentActivityName=".NewGameActivity"
-			android:screenOrientation="portrait"
-			android:theme="@style/Theme.Styled">
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".NewGameActivity" />
-		</activity>
-
-		<activity
-			android:label="@string/games_list_activity_title"
-			android:name=".GamesListActivity"
-			android:screenOrientation="portrait"
-			android:theme="@style/Theme.Styled" />
+			android:uiOptions="splitActionBarWhenNarrow" />
 
 		<activity
 			android:label="@string/game_over_activity_title"
-			android:name=".GameOverActivity"
-			android:parentActivityName=".GamesListActivity"
-			android:screenOrientation="portrait"
+			android:name="com.charlesmadere.android.classygames.GameOverActivity"
+			android:parentActivityName="com.charlesmadere.android.classygames.GameFragmentActivity"
 			android:theme="@style/Theme.Styled">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".GamesListActivity" />
+				android:value=".GameFragmentActivity" />
 		</activity>
 
 		<activity
-			android:label="@string/logout_activity_title"
-			android:name=".LogoutActivity"
-			android:parentActivityName=".GamesListActivity"
-			android:screenOrientation="portrait"
+			android:label="@string/friends_list_fragment_title"
+			android:name="com.charlesmadere.android.classygames.NewGameFragmentActivity"
 			android:theme="@style/Theme.Styled">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".GamesListActivity" />
+				android:value=".GameFragmentActivity" />
 		</activity>
 
 		<activity
-			android:label="@string/new_game_activity_title"
-			android:name=".NewGameActivity"
-			android:parentActivityName=".GamesListActivity"
-			android:screenOrientation="portrait"
+			android:label="@string/register_for_notifications_activity_title"
+			android:name="com.charlesmadere.android.classygames.RegisterForNotificationsActivity"
 			android:theme="@style/Theme.Styled">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".GamesListActivity" />
+				android:value=".GameFragmentActivity" />
 		</activity>
 
 		<activity
 			android:label="@string/shark_activity_title"
-			android:name=".SharkActivity"
-			android:parentActivityName=".AboutActivity"
-			android:screenOrientation="portrait"
+			android:name="com.charlesmadere.android.classygames.SharkActivity"
+			android:parentActivityName="com.charlesmadere.android.classygames.AboutActivity"
 			android:theme="@style/Theme.Styled">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value=".AboutActivity" />
 		</activity>
+
+		<activity
+			android:label="@string/app_name"
+			android:name="com.facebook.LoginActivity"
+			android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+		<activity
+			android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+			android:label="@string/app_name"
+			android:name="com.google.ads.AdActivity" />
 	</application>
 </manifest>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_height="fill_parent"
-	android:layout_width="fill_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="match_parent"
+	android:layout_width="match_parent"
 	android:orientation="vertical"
 	android:paddingBottom="8dip"
 	android:paddingLeft="4dip"
@@ -10,36 +10,46 @@
 	style="@style/ClassyGames">
 	<ImageView
 		android:adjustViewBounds="true"
-		android:contentDescription="@string/game_over_activity_person_picture_description"
-		android:id="@+id/game_over_activity_person_picture"
-		android:layout_height="224dip"
-		android:layout_marginBottom="8dip"
-		android:layout_width="fill_parent" />
-	<TextView
-		android:gravity="center_horizontal"
-		android:id="@+id/game_over_activity_person_name"
-		android:layout_below="@id/game_over_activity_person_picture"
+		android:contentDescription="@string/game_over_activity_friend_profile_picture_description"
+		android:id="@+id/game_over_activity_friend_picture"
+		android:layout_height="0dip"
+		android:layout_weight="1"
+		android:layout_width="match_parent"
+		android:src="@drawable/empty_profile_picture_large" />
+	<LinearLayout
 		android:layout_height="wrap_content"
-		android:layout_width="fill_parent"
-		android:textColor="@color/gray_darker"
-		android:textSize="26sp" />
-	<Button
-		android:id="@+id/game_over_activity_button_return"
-		android:layout_alignParentBottom="true"
-		android:layout_alignParentLeft="true"
-		android:layout_alignParentRight="true"
-		android:layout_height="wrap_content"
-		android:layout_width="fill_parent"
-		android:layout_marginTop="8dip"
-		android:text="@string/game_over_activity_button_return"
-		style="@style/button.gray" />
-	<TextView
-		android:id="@+id/game_over_activity_text"
-		android:layout_above="@id/game_over_activity_button_return"
-		android:layout_height="wrap_content"
-		android:layout_width="fill_parent"
-		android:paddingLeft="20dip"
-		android:paddingRight="20dip"
-		android:textColor="@color/gray_dark"
-		style="@style/paragraph" />
-</RelativeLayout>
+		android:layout_width="match_parent"
+		android:orientation="vertical">
+		<TextView
+			android:gravity="center"
+			android:id="@+id/game_over_activity_friend_name"
+			android:layout_height="wrap_content"
+			android:layout_width="match_parent"
+			android:textColor="@color/gray_darker"
+			android:textIsSelectable="true"
+			android:textSize="26sp" />
+		<TextView
+			android:gravity="center"
+			android:id="@+id/game_over_activity_win_or_lose"
+			android:layout_height="wrap_content"
+			android:layout_width="match_parent"
+			android:paddingLeft="20dip"
+			android:paddingRight="20dip"
+			android:textColor="@color/gray_dark"
+			android:textIsSelectable="false"
+			style="@style/paragraph" />
+		<LinearLayout
+			android:layout_height="wrap_content"
+			android:layout_marginTop="16dip"
+			android:layout_width="match_parent"
+			android:orientation="horizontal">
+			<Button
+				android:id="@+id/game_over_activity_button_return"
+				android:layout_height="wrap_content"
+				android:layout_width="match_parent"
+				android:layout_marginTop="8dip"
+				android:text="@string/game_over_activity_button_return"
+				style="@style/button.gray" />
+		</LinearLayout>
+	</LinearLayout>
+</LinearLayout>

@@ -1,21 +1,15 @@
-Welcome to the Classy Games repository!
-======================================
-This is a school project that was completed for the 2012 fall semester. [Download the app from the Google Play store](https://play.google.com/store/apps/details?id=edu.selu.android.classygames)!
+# Welcome to the Classy Games repository! #
+This is a school project that was completed for the 2012 fall semester. [Download the app from the Google Play store](https://play.google.com/store/apps/details?id=com.charlesmadere.android.classygames)!
 
-
-Classy Games v1.5
------------------
-As of December 2012, Classy Games is undergoing a big update. The release date is currently TBA.
-
-### What's Coming in Classy Games v1.5 ###
-1. Fragments! Classy Games will be far better on an Android powered tablet.
+## Classy Games v1.5 ##
+Was released on March 3rd, 2013. It features a couple of cool things.
+1. Fragments! Classy Games is far better on an Android powered tablet.
 2. Facebook SDK v3.0 upgrade
-3. Orientation change support (currently the app forces portrait mode)
-4. More!
+3. Orientation change support (previous the app forced portrait mode)
+4. Support for down to Android v2.2 (Froyo)
+5. More!
 
-
-The Classy Games Rating System
-------------------------------
+## The Classy Games Rating System ##
 1. mediocre
 2. poor
 3. AMAZING

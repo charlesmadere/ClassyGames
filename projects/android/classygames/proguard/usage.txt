@@ -23,17 +23,12 @@ android.support.v4.app.BackStackRecord:
     350:353:public java.lang.CharSequence getBreadCrumbTitle()
     357:360:public java.lang.CharSequence getBreadCrumbShortTitle()
     379:380:public android.support.v4.app.FragmentTransaction add(android.support.v4.app.Fragment,java.lang.String)
-    384:385:public android.support.v4.app.FragmentTransaction add(int,android.support.v4.app.Fragment)
-    421:421:public android.support.v4.app.FragmentTransaction replace(int,android.support.v4.app.Fragment)
-    425:430:public android.support.v4.app.FragmentTransaction replace(int,android.support.v4.app.Fragment,java.lang.String)
-    434:439:public android.support.v4.app.FragmentTransaction remove(android.support.v4.app.Fragment)
     443:448:public android.support.v4.app.FragmentTransaction hide(android.support.v4.app.Fragment)
     452:457:public android.support.v4.app.FragmentTransaction show(android.support.v4.app.Fragment)
     479:479:public android.support.v4.app.FragmentTransaction setCustomAnimations(int,int)
     484:488:public android.support.v4.app.FragmentTransaction setCustomAnimations(int,int,int,int)
     492:493:public android.support.v4.app.FragmentTransaction setTransition(int)
     497:498:public android.support.v4.app.FragmentTransaction setTransitionStyle(int)
-    502:508:public android.support.v4.app.FragmentTransaction addToBackStack(java.lang.String)
     512:512:public boolean isAddToBackStackAllowed()
     516:521:public android.support.v4.app.FragmentTransaction disallowAddToBackStack()
     525:527:public android.support.v4.app.FragmentTransaction setBreadCrumbTitle(int)
@@ -54,34 +49,25 @@ android.support.v4.app.Fragment:
     static final int RESUMED
     481:481:public final int getId()
     488:488:public final java.lang.String getTag()
-    499:503:public void setArguments(android.os.Bundle)
-    510:510:public final android.os.Bundle getArguments()
     522:527:public void setInitialSavedState(android.support.v4.app.Fragment$SavedState)
     541:543:public void setTargetFragment(android.support.v4.app.Fragment,int)
     549:549:public final android.support.v4.app.Fragment getTargetFragment()
     556:556:public final int getTargetRequestCode()
     583:583:public final java.lang.CharSequence getText(int)
     593:593:public final java.lang.String getString(int)
-    606:606:public final varargs java.lang.String getString(int,java.lang.Object[])
     620:620:public final android.support.v4.app.FragmentManager getFragmentManager()
     628:640:public final android.support.v4.app.FragmentManager getChildFragmentManager()
     648:648:public final android.support.v4.app.Fragment getParentFragment()
-    655:655:public final boolean isAdded()
     673:673:public final boolean isRemoving()
     684:684:public final boolean isInLayout()
     692:692:public final boolean isResumed()
-    701:701:public final boolean isVisible()
-    713:713:public final boolean isHidden()
     741:746:public void setRetainInstance(boolean)
     749:749:public final boolean getRetainInstance()
-    760:766:public void setHasOptionsMenu(boolean)
     778:784:public void setMenuVisibility(boolean)
     800:805:public void setUserVisibleHint(boolean)
     812:812:public boolean getUserVisibleHint()
     819:827:public android.support.v4.app.LoaderManager getLoaderManager()
     835:839:public void startActivity(android.content.Intent)
-    846:850:public void startActivityForResult(android.content.Intent,int)
-    1001:1001:public android.view.View getView()
     1288:1289:public void registerForContextMenu(android.view.View)
     1299:1300:public void unregisterForContextMenu(android.view.View)
     1410:1416:android.support.v4.app.Fragment findFragmentByWho(java.lang.String)
@@ -93,13 +79,8 @@ android.support.v4.app.FragmentActivity:
     private static final int HONEYCOMB
     static final int MSG_REALLY_STOPPED
     static final int MSG_RESUME_PENDING
-    70:129:public FragmentActivity()
     612:614:public java.lang.Object getLastCustomNonConfigurationInstance()
-    805:805:public android.support.v4.app.FragmentManager getSupportFragmentManager()
-    825:833:public void startActivityFromFragment(android.support.v4.app.Fragment,android.content.Intent,int)
     854:859:public android.support.v4.app.LoaderManager getSupportLoaderManager()
-android.support.v4.app.FragmentActivity$1
-android.support.v4.app.FragmentActivity$2
 android.support.v4.app.FragmentActivity$FragmentTag:
     public static final int Fragment_id
     public static final int Fragment_name
@@ -108,8 +89,6 @@ android.support.v4.app.FragmentActivity$FragmentTag:
 android.support.v4.app.FragmentManager:
     public static final int POP_BACK_STACK_INCLUSIVE
     139:139:public android.support.v4.app.FragmentTransaction openTransaction()
-    public abstract android.support.v4.app.Fragment findFragmentById(int)
-    public abstract void popBackStack()
     public abstract boolean popBackStackImmediate()
     public abstract void popBackStack(java.lang.String,int)
     public abstract boolean popBackStackImmediate(java.lang.String,int)
@@ -138,7 +117,6 @@ android.support.v4.app.FragmentManagerImpl:
     public static final int ANIM_STYLE_CLOSE_EXIT
     public static final int ANIM_STYLE_FADE_ENTER
     public static final int ANIM_STYLE_FADE_EXIT
-    466:471:public void popBackStack()
     482:487:public void popBackStack(java.lang.String,int)
     491:493:public boolean popBackStackImmediate(java.lang.String,int)
     498:506:public void popBackStack(int,int)
@@ -149,7 +127,6 @@ android.support.v4.app.FragmentManagerImpl:
     538:541:public void removeOnBackStackChangedListener(android.support.v4.app.FragmentManager$OnBackStackChangedListener)
     572:580:public android.support.v4.app.Fragment$SavedState saveFragmentInstanceState(android.support.v4.app.Fragment)
     1314:1322:public android.support.v4.app.Fragment findFragmentByWho(java.lang.String)
-android.support.v4.app.FragmentManagerImpl$2
 android.support.v4.app.FragmentManagerImpl$3
 android.support.v4.app.FragmentManagerImpl$4
 android.support.v4.app.FragmentPagerAdapter
@@ -175,10 +152,7 @@ android.support.v4.app.FragmentTransaction:
     public static final int TRANSIT_FRAGMENT_CLOSE
     public static final int TRANSIT_FRAGMENT_FADE
     public abstract android.support.v4.app.FragmentTransaction add(android.support.v4.app.Fragment,java.lang.String)
-    public abstract android.support.v4.app.FragmentTransaction add(int,android.support.v4.app.Fragment)
-    public abstract android.support.v4.app.FragmentTransaction replace(int,android.support.v4.app.Fragment)
     public abstract android.support.v4.app.FragmentTransaction replace(int,android.support.v4.app.Fragment,java.lang.String)
-    public abstract android.support.v4.app.FragmentTransaction remove(android.support.v4.app.Fragment)
     public abstract android.support.v4.app.FragmentTransaction hide(android.support.v4.app.Fragment)
     public abstract android.support.v4.app.FragmentTransaction show(android.support.v4.app.Fragment)
     public abstract boolean isEmpty()
@@ -186,7 +160,6 @@ android.support.v4.app.FragmentTransaction:
     public abstract android.support.v4.app.FragmentTransaction setCustomAnimations(int,int,int,int)
     public abstract android.support.v4.app.FragmentTransaction setTransition(int)
     public abstract android.support.v4.app.FragmentTransaction setTransitionStyle(int)
-    public abstract android.support.v4.app.FragmentTransaction addToBackStack(java.lang.String)
     public abstract boolean isAddToBackStackAllowed()
     public abstract android.support.v4.app.FragmentTransaction disallowAddToBackStack()
     public abstract android.support.v4.app.FragmentTransaction setBreadCrumbTitle(int)
@@ -194,9 +167,18 @@ android.support.v4.app.FragmentTransaction:
     public abstract android.support.v4.app.FragmentTransaction setBreadCrumbShortTitle(int)
     public abstract android.support.v4.app.FragmentTransaction setBreadCrumbShortTitle(java.lang.CharSequence)
     public abstract int commitAllowingStateLoss()
-android.support.v4.app.ListFragment
-android.support.v4.app.ListFragment$1
-android.support.v4.app.ListFragment$2
+android.support.v4.app.ListFragment:
+    static final int INTERNAL_EMPTY_ID
+    static final int INTERNAL_PROGRESS_CONTAINER_ID
+    static final int INTERNAL_LIST_CONTAINER_ID
+    198:200:public void setSelection(int)
+    206:207:public int getSelectedItemPosition()
+    214:215:public long getSelectedItemId()
+    222:223:public android.widget.ListView getListView()
+    232:241:public void setEmptyText(java.lang.CharSequence)
+    258:259:public void setListShown(boolean)
+    266:267:public void setListShownNoAnimation(boolean)
+    319:319:public android.widget.ListAdapter getListAdapter()
 android.support.v4.app.LoaderManager:
     public abstract android.support.v4.content.Loader initLoader(int,android.os.Bundle,android.support.v4.app.LoaderManager$LoaderCallbacks)
     public abstract android.support.v4.content.Loader restartLoader(int,android.os.Bundle,android.support.v4.app.LoaderManager$LoaderCallbacks)
@@ -325,10 +307,9 @@ android.support.v4.app.TaskStackBuilder$TaskStackBuilderImplJellybean
 android.support.v4.app.TaskStackBuilderHoneycomb:
     26:26:public TaskStackBuilderHoneycomb()
 android.support.v4.app.TaskStackBuilderJellybean
-android.support.v4.app.Watson
-android.support.v4.app.Watson$OnCreateOptionsMenuListener
-android.support.v4.app.Watson$OnOptionsItemSelectedListener
-android.support.v4.app.Watson$OnPrepareOptionsMenuListener
+android.support.v4.app.Watson:
+    private static final boolean DEBUG
+    private static final java.lang.String TAG
 android.support.v4.content.AsyncTaskLoader
 android.support.v4.content.AsyncTaskLoader$LoadTask
 android.support.v4.content.ContextCompat
@@ -378,10 +359,11 @@ android.support.v4.content.Loader:
 android.support.v4.content.Loader$ForceLoadContentObserver
 android.support.v4.content.Loader$OnLoadCompleteListener:
     public abstract void onLoadComplete(android.support.v4.content.Loader,java.lang.Object)
-android.support.v4.content.LocalBroadcastManager
-android.support.v4.content.LocalBroadcastManager$1
-android.support.v4.content.LocalBroadcastManager$BroadcastRecord
-android.support.v4.content.LocalBroadcastManager$ReceiverRecord
+android.support.v4.content.LocalBroadcastManager:
+    private static final java.lang.String TAG
+    private static final boolean DEBUG
+    static final int MSG_EXEC_PENDING_BROADCASTS
+    277:280:public void sendBroadcastSync(android.content.Intent)
 android.support.v4.content.ModernAsyncTask
 android.support.v4.content.ModernAsyncTask$1
 android.support.v4.content.ModernAsyncTask$2
@@ -418,17 +400,7 @@ android.support.v4.util.AtomicFile
 android.support.v4.util.DebugUtils:
     25:25:public DebugUtils()
 android.support.v4.util.LongSparseArray
-android.support.v4.util.LruCache:
-    177:193:public final java.lang.Object remove(java.lang.Object)
-    255:256:public final void evictAll()
-    264:264:public final synchronized int size()
-    273:273:public final synchronized int maxSize()
-    280:280:public final synchronized int hitCount()
-    288:288:public final synchronized int missCount()
-    295:295:public final synchronized int createCount()
-    302:302:public final synchronized int putCount()
-    309:309:public final synchronized int evictionCount()
-    317:317:public final synchronized java.util.Map snapshot()
+android.support.v4.util.LruCache
 android.support.v4.util.SparseArrayCompat:
     52:52:public java.lang.Object get(int)
     60:65:public java.lang.Object get(int,java.lang.Object)
@@ -837,7 +809,6 @@ com.actionbarsherlock.app.ActionBar:
     public abstract void setSelectedNavigationItem(int)
     public abstract int getSelectedNavigationIndex()
     public abstract int getNavigationItemCount()
-    public abstract void setTitle(int)
     public abstract void setSubtitle(java.lang.CharSequence)
     public abstract void setSubtitle(int)
     public abstract void setDisplayOptions(int)
@@ -849,7 +820,6 @@ com.actionbarsherlock.app.ActionBar:
     436:436:public void setStackedBackgroundDrawable(android.graphics.drawable.Drawable)
     446:446:public void setSplitBackgroundDrawable(android.graphics.drawable.Drawable)
     public abstract android.view.View getCustomView()
-    public abstract java.lang.CharSequence getTitle()
     public abstract java.lang.CharSequence getSubtitle()
     public abstract int getNavigationMode()
     public abstract void setNavigationMode(int)
@@ -895,6 +865,7 @@ com.actionbarsherlock.app.SherlockActivity:
     41:41:public com.actionbarsherlock.view.ActionMode startActionMode(com.actionbarsherlock.view.ActionMode$Callback)
     45:45:public void onActionModeStarted(com.actionbarsherlock.view.ActionMode)
     48:48:public void onActionModeFinished(com.actionbarsherlock.view.ActionMode)
+    136:136:public com.actionbarsherlock.view.MenuInflater getSupportMenuInflater()
     144:145:public void supportInvalidateOptionsMenu()
     252:253:public void setSupportProgress(int)
     256:257:public void setSupportProgressBarIndeterminate(boolean)
@@ -903,20 +874,19 @@ com.actionbarsherlock.app.SherlockActivity:
     268:269:public void setSupportSecondaryProgress(int)
 com.actionbarsherlock.app.SherlockDialogFragment
 com.actionbarsherlock.app.SherlockExpandableListActivity
-com.actionbarsherlock.app.SherlockFragment
-com.actionbarsherlock.app.SherlockFragmentActivity
-com.actionbarsherlock.app.SherlockListActivity:
-    41:41:public com.actionbarsherlock.view.ActionMode startActionMode(com.actionbarsherlock.view.ActionMode$Callback)
-    45:45:public void onActionModeStarted(com.actionbarsherlock.view.ActionMode)
-    48:48:public void onActionModeFinished(com.actionbarsherlock.view.ActionMode)
-    144:145:public void supportInvalidateOptionsMenu()
-    243:244:public void requestWindowFeature(long)
-    252:253:public void setSupportProgress(int)
-    256:257:public void setSupportProgressBarIndeterminate(boolean)
-    260:261:public void setSupportProgressBarIndeterminateVisibility(boolean)
-    264:265:public void setSupportProgressBarVisibility(boolean)
-    268:269:public void setSupportSecondaryProgress(int)
-com.actionbarsherlock.app.SherlockListFragment
+com.actionbarsherlock.app.SherlockFragmentActivity:
+    private static final boolean DEBUG
+    private static final java.lang.String TAG
+    47:47:public com.actionbarsherlock.view.ActionMode startActionMode(com.actionbarsherlock.view.ActionMode$Callback)
+    51:51:public void onActionModeStarted(com.actionbarsherlock.view.ActionMode)
+    54:54:public void onActionModeFinished(com.actionbarsherlock.view.ActionMode)
+    276:277:public void requestWindowFeature(long)
+    285:286:public void setSupportProgress(int)
+    289:290:public void setSupportProgressBarIndeterminate(boolean)
+    293:294:public void setSupportProgressBarIndeterminateVisibility(boolean)
+    297:298:public void setSupportProgressBarVisibility(boolean)
+    301:302:public void setSupportSecondaryProgress(int)
+com.actionbarsherlock.app.SherlockListActivity
 com.actionbarsherlock.app.SherlockPreferenceActivity
 com.actionbarsherlock.internal.ActionBarSherlockCompat:
     protected static final int DEFAULT_FEATURES
@@ -982,7 +952,6 @@ com.actionbarsherlock.internal.app.ActionBarImpl:
     281:282:public void setDisplayShowHomeEnabled(boolean)
     291:292:public void setDisplayShowTitleEnabled(boolean)
     296:297:public void setDisplayShowCustomEnabled(boolean)
-    306:307:public void setTitle(int)
     311:312:public void setSubtitle(int)
     315:326:public void setSelectedNavigationItem(int)
     329:330:public void removeAllTabs()
@@ -992,7 +961,6 @@ com.actionbarsherlock.internal.app.ActionBarImpl:
     365:366:public void setStackedBackgroundDrawable(android.graphics.drawable.Drawable)
     369:372:public void setSplitBackgroundDrawable(android.graphics.drawable.Drawable)
     375:375:public android.view.View getCustomView()
-    379:379:public java.lang.CharSequence getTitle()
     383:383:public java.lang.CharSequence getSubtitle()
     391:391:public int getDisplayOptions()
     395:416:public com.actionbarsherlock.view.ActionMode startActionMode(com.actionbarsherlock.view.ActionMode$Callback)
@@ -1043,7 +1011,6 @@ com.actionbarsherlock.internal.app.ActionBarWrapper:
     99:100:public void setSelectedNavigationItem(int)
     104:104:public int getSelectedNavigationIndex()
     109:109:public int getNavigationItemCount()
-    119:120:public void setTitle(int)
     124:125:public void setSubtitle(java.lang.CharSequence)
     129:130:public void setSubtitle(int)
     134:135:public void setDisplayOptions(int)
@@ -1055,7 +1022,6 @@ com.actionbarsherlock.internal.app.ActionBarWrapper:
     174:175:public void setStackedBackgroundDrawable(android.graphics.drawable.Drawable)
     179:180:public void setSplitBackgroundDrawable(android.graphics.drawable.Drawable)
     184:184:public android.view.View getCustomView()
-    189:189:public java.lang.CharSequence getTitle()
     194:194:public java.lang.CharSequence getSubtitle()
     199:199:public int getNavigationMode()
     204:205:public void setNavigationMode(int)
@@ -1265,14 +1231,11 @@ com.actionbarsherlock.internal.view.menu.MenuBuilder:
     427:427:public com.actionbarsherlock.view.SubMenu addSubMenu(int)
     439:439:public com.actionbarsherlock.view.SubMenu addSubMenu(int,int,int,int)
     444:468:public int addIntentOptions(int,int,int,android.content.ComponentName,android.content.Intent[],android.content.Intent,int,com.actionbarsherlock.view.MenuItem[])
-    472:473:public void removeItem(int)
     476:489:public void removeGroup(int)
-    502:507:private void removeItemAtInt(int,boolean)
     510:511:public void removeItemAt(int)
     514:520:public void clearAll()
     560:574:public void setGroupVisible(int,boolean)
     577:585:public void setGroupEnabled(int,boolean)
-    619:628:public int findItemIndex(int)
     632:632:public int findGroupIndex(int)
     636:650:public int findGroupIndex(int,int)
     663:663:public boolean isShortcutKey(int,android.view.KeyEvent)
@@ -1362,12 +1325,10 @@ com.actionbarsherlock.internal.view.menu.MenuWrapper:
     67:67:public com.actionbarsherlock.view.SubMenu addSubMenu(int)
     77:77:public com.actionbarsherlock.view.SubMenu addSubMenu(int,int,int,int)
     83:92:public int addIntentOptions(int,int,int,android.content.ComponentName,android.content.Intent[],android.content.Intent,int,com.actionbarsherlock.view.MenuItem[])
-    97:98:public void removeItem(int)
     102:103:public void removeGroup(int)
     107:109:public void clear()
     118:119:public void setGroupVisible(int,boolean)
     123:124:public void setGroupEnabled(int,boolean)
-    128:128:public boolean hasVisibleItems()
     152:152:public int size()
     157:158:public com.actionbarsherlock.view.MenuItem getItem(int)
     163:164:public void close()
@@ -1553,12 +1514,10 @@ com.actionbarsherlock.view.Menu:
     public abstract com.actionbarsherlock.view.SubMenu addSubMenu(int)
     public abstract com.actionbarsherlock.view.SubMenu addSubMenu(int,int,int,int)
     public abstract int addIntentOptions(int,int,int,android.content.ComponentName,android.content.Intent[],android.content.Intent,int,com.actionbarsherlock.view.MenuItem[])
-    public abstract void removeItem(int)
     public abstract void removeGroup(int)
     public abstract void clear()
     public abstract void setGroupVisible(int,boolean)
     public abstract void setGroupEnabled(int,boolean)
-    public abstract boolean hasVisibleItems()
     public abstract int size()
     public abstract com.actionbarsherlock.view.MenuItem getItem(int)
     public abstract void close()
@@ -1735,26 +1694,306 @@ com.actionbarsherlock.widget.SuggestionsAdapter:
     225:227:public void close()
     665:676:private android.graphics.drawable.Drawable getActivityIconWithCache(android.content.ComponentName)
     687:704:private android.graphics.drawable.Drawable getActivityIcon(android.content.ComponentName)
-com.facebook.android.AsyncFacebookRunner:
-    137:138:public void request(android.os.Bundle,com.facebook.android.AsyncFacebookRunner$RequestListener,java.lang.Object)
-    141:142:public void request(android.os.Bundle,com.facebook.android.AsyncFacebookRunner$RequestListener)
-    168:169:public void request(java.lang.String,com.facebook.android.AsyncFacebookRunner$RequestListener,java.lang.Object)
-    172:173:public void request(java.lang.String,com.facebook.android.AsyncFacebookRunner$RequestListener)
-    206:207:public void request(java.lang.String,android.os.Bundle,com.facebook.android.AsyncFacebookRunner$RequestListener,java.lang.Object)
-    212:213:public void request(java.lang.String,android.os.Bundle,com.facebook.android.AsyncFacebookRunner$RequestListener)
-    250:264:public void request(java.lang.String,android.os.Bundle,java.lang.String,com.facebook.android.AsyncFacebookRunner$RequestListener,java.lang.Object)
-com.facebook.android.AsyncFacebookRunner$2
-com.facebook.android.DialogError:
+com.facebook.AccessToken:
     private static final long serialVersionUID
-    44:44:int getErrorCode()
-    48:48:java.lang.String getFailingUrl()
-com.facebook.android.Facebook:
-    public static final java.lang.String REDIRECT_URI
-    public static final java.lang.String CANCEL_URI
-    public static final java.lang.String TOKEN
-    public static final java.lang.String EXPIRES
-    public static final java.lang.String SINGLE_SIGN_ON_DISABLED
-    public static final java.lang.String ATTRIBUTION_ID_COLUMN_NAME
+    static final java.lang.String ACCESS_TOKEN_KEY
+    static final java.lang.String EXPIRES_IN_KEY
+    141:151:public static com.facebook.AccessToken createFromExistingAccessToken(java.lang.String,java.util.Date,java.util.Date,com.facebook.AccessTokenSource,java.util.List)
+    163:169:public static com.facebook.AccessToken createFromNativeLinkingIntent(android.content.Intent)
+    190:190:static com.facebook.AccessToken createFromString(java.lang.String,java.util.List,com.facebook.AccessTokenSource)
+    270:277:private static com.facebook.AccessToken createFromBundle(java.util.List,android.os.Bundle,com.facebook.AccessTokenSource,java.util.Date)
+    324:324:private java.lang.Object writeReplace()
+    329:329:private void readObject(java.io.ObjectInputStream)
+com.facebook.AccessToken$SerializationProxyV1
+com.facebook.AuthorizationClient:
+    private static final long serialVersionUID
+    231:231:com.facebook.AuthorizationClient$OnCompletedListener getOnCompletedListener()
+    239:239:com.facebook.AuthorizationClient$BackgroundProcessingListener getBackgroundProcessingListener()
+com.facebook.AuthorizationClient$AuthDialogBuilder:
+    private static final java.lang.String OAUTH_DIALOG
+    static final java.lang.String REDIRECT_URI
+com.facebook.AuthorizationClient$AuthHandler:
+    private static final long serialVersionUID
+com.facebook.AuthorizationClient$AuthorizationRequest:
+    private static final long serialVersionUID
+    758:759:void setIsLegacy(boolean)
+com.facebook.AuthorizationClient$GetTokenAuthHandler:
+    private static final long serialVersionUID
+com.facebook.AuthorizationClient$KatanaAuthHandler:
+    private static final long serialVersionUID
+com.facebook.AuthorizationClient$KatanaLoginDialogAuthHandler:
+    private static final long serialVersionUID
+com.facebook.AuthorizationClient$KatanaProxyAuthHandler:
+    private static final long serialVersionUID
+com.facebook.AuthorizationClient$Result:
+    private static final long serialVersionUID
+com.facebook.AuthorizationClient$WebViewAuthHandler:
+    private static final long serialVersionUID
+com.facebook.FacebookAuthorizationException:
+    static final long serialVersionUID
+    53:54:public FacebookAuthorizationException(java.lang.String,java.lang.Throwable)
+    63:64:public FacebookAuthorizationException(java.lang.Throwable)
+com.facebook.FacebookDialogException:
+    static final long serialVersionUID
+    43:43:public int getErrorCode()
+    51:51:public java.lang.String getFailingUrl()
+com.facebook.FacebookException:
+    static final long serialVersionUID
+com.facebook.FacebookGraphObjectException:
+    static final long serialVersionUID
+    51:52:public FacebookGraphObjectException(java.lang.String,java.lang.Throwable)
+    61:62:public FacebookGraphObjectException(java.lang.Throwable)
+com.facebook.FacebookOperationCanceledException:
+    static final long serialVersionUID
+    48:49:public FacebookOperationCanceledException(java.lang.String,java.lang.Throwable)
+    57:58:public FacebookOperationCanceledException(java.lang.Throwable)
+com.facebook.FacebookRequestError:
+    public static final int INVALID_ERROR_CODE
+    public static final int INVALID_HTTP_STATUS_CODE
+    private static final int INVALID_MESSAGE_ID
+    private static final java.lang.String CODE_KEY
+    private static final java.lang.String BODY_KEY
+    private static final java.lang.String ERROR_KEY
+    private static final java.lang.String ERROR_TYPE_FIELD_KEY
+    private static final java.lang.String ERROR_CODE_FIELD_KEY
+    private static final java.lang.String ERROR_MESSAGE_FIELD_KEY
+    private static final java.lang.String ERROR_CODE_KEY
+    private static final java.lang.String ERROR_SUB_CODE_KEY
+    private static final java.lang.String ERROR_MSG_KEY
+    private static final java.lang.String ERROR_REASON_KEY
+    private static final int EC_UNKNOWN_ERROR
+    private static final int EC_SERVICE_UNAVAILABLE
+    private static final int EC_APP_TOO_MANY_CALLS
+    private static final int EC_USER_TOO_MANY_CALLS
+    private static final int EC_PERMISSION_DENIED
+    private static final int EC_INVALID_SESSION
+    private static final int EC_INVALID_TOKEN
+    private static final int EC_APP_NOT_INSTALLED
+    private static final int EC_USER_CHECKPOINTED
+    private static final int EC_PASSWORD_CHANGED
+    private static final int EC_UNCONFIRMED_USER
+    204:204:public int getUserActionMessageId()
+    215:215:public boolean shouldNotifyUser()
+    226:226:public com.facebook.FacebookRequestError$Category getCategory()
+    253:253:public int getSubErrorCode()
+    286:286:public org.json.JSONObject getRequestResultBody()
+    298:298:public org.json.JSONObject getRequestResult()
+    311:311:public java.lang.Object getBatchRequestResult()
+    320:320:public java.net.HttpURLConnection getConnection()
+com.facebook.FacebookSdkVersion
+com.facebook.FacebookServiceException:
+    private static final long serialVersionUID
+    44:44:public final com.facebook.FacebookRequestError getRequestError()
+com.facebook.LegacyHelper
+com.facebook.LoginActivity:
+    static final java.lang.String RESULT_KEY
+    private static final java.lang.String NULL_CALLING_PKG_ERROR_MSG
+    private static final java.lang.String SAVED_CALLING_PKG_KEY
+    private static final java.lang.String SAVED_AUTH_CLIENT
+    private static final java.lang.String EXTRA_REQUEST
+com.facebook.NativeProtocol:
+    static final java.lang.String KATANA_PACKAGE
+    static final java.lang.String KATANA_PROXY_AUTH_ACTIVITY
+    static final java.lang.String KATANA_TOKEN_REFRESH_ACTIVITY
+    static final java.lang.String KATANA_SIGNATURE
+    private static final java.lang.String BASIC_INFO
+    public static final java.lang.String KATANA_PROXY_AUTH_PERMISSIONS_KEY
+    public static final java.lang.String KATANA_PROXY_AUTH_APP_ID_KEY
+    static final java.lang.String INTENT_ACTION_PLATFORM_ACTIVITY
+    static final java.lang.String INTENT_ACTION_PLATFORM_SERVICE
+    static final int PROTOCOL_VERSION_20121101
+    static final java.lang.String EXTRA_PROTOCOL_VERSION
+    static final java.lang.String EXTRA_PROTOCOL_ACTION
+    static final int MESSAGE_GET_ACCESS_TOKEN_REQUEST
+    static final int MESSAGE_GET_ACCESS_TOKEN_REPLY
+    static final java.lang.String ACTION_LOGIN_DIALOG
+    static final java.lang.String ACTION_LOGIN_DIALOG_REPLY
+    static final java.lang.String EXTRA_PERMISSIONS
+    static final java.lang.String EXTRA_WRITE_PRIVACY
+    static final java.lang.String EXTRA_APPLICATION_ID
+    static final java.lang.String EXTRA_ACCESS_TOKEN
+    static final java.lang.String EXTRA_EXPIRES_SECONDS_SINCE_EPOCH
+    static final java.lang.String STATUS_ERROR_TYPE
+    static final java.lang.String STATUS_ERROR_DESCRIPTION
+    static final java.lang.String STATUS_ERROR_CODE
+    static final java.lang.String STATUS_ERROR_SUBCODE
+    static final java.lang.String STATUS_ERROR_JSON
+    static final java.lang.String ERROR_UNKNOWN_ERROR
+    static final java.lang.String ERROR_PROTOCOL_ERROR
+    static final java.lang.String ERROR_USER_CANCELED
+    static final java.lang.String ERROR_APPLICATION_ERROR
+    static final java.lang.String ERROR_NETWORK_ERROR
+    static final java.lang.String ERROR_PERMISSION_DENIED
+    static final java.lang.String ERROR_SERVICE_DISABLED
+    static final java.lang.String AUDIENCE_ME
+    static final java.lang.String AUDIENCE_FRIENDS
+    static final java.lang.String AUDIENCE_EVERYONE
+    32:32:NativeProtocol()
+    245:251:static com.facebook.AccessTokenSource getAccessTokenSourceFromNative(android.os.Bundle)
+com.facebook.NonCachingTokenCachingStrategy
+com.facebook.Request:
+    public static final int MAXIMUM_BATCH_SIZE
+    private static final java.lang.String ME
+    private static final java.lang.String MY_FRIENDS
+    private static final java.lang.String MY_PHOTOS
+    private static final java.lang.String MY_VIDEOS
+    private static final java.lang.String SEARCH
+    private static final java.lang.String MY_FEED
+    private static final java.lang.String USER_AGENT_BASE
+    private static final java.lang.String USER_AGENT_HEADER
+    private static final java.lang.String CONTENT_TYPE_HEADER
+    private static final java.lang.String PICTURE_PARAM
+    private static final java.lang.String FORMAT_PARAM
+    private static final java.lang.String FORMAT_JSON
+    private static final java.lang.String SDK_PARAM
+    private static final java.lang.String SDK_ANDROID
+    private static final java.lang.String ACCESS_TOKEN_PARAM
+    private static final java.lang.String BATCH_ENTRY_NAME_PARAM
+    private static final java.lang.String BATCH_ENTRY_OMIT_RESPONSE_ON_SUCCESS_PARAM
+    private static final java.lang.String BATCH_ENTRY_DEPENDS_ON_PARAM
+    private static final java.lang.String BATCH_APP_ID_PARAM
+    private static final java.lang.String BATCH_RELATIVE_URL_PARAM
+    private static final java.lang.String BATCH_BODY_PARAM
+    private static final java.lang.String BATCH_METHOD_PARAM
+    private static final java.lang.String BATCH_PARAM
+    private static final java.lang.String ATTACHMENT_FILENAME_PREFIX
+    private static final java.lang.String ATTACHED_FILES_PARAM
+    private static final java.lang.String MIGRATION_BUNDLE_PARAM
+    private static final java.lang.String ISO_8601_FORMAT_STRING
+    private static final java.lang.String MIME_BOUNDARY
+    138:139:public Request(com.facebook.Session,java.lang.String)
+    160:161:public Request(com.facebook.Session,java.lang.String,android.os.Bundle,com.facebook.HttpMethod)
+    201:208:Request(com.facebook.Session,java.net.URL)
+    245:247:public static com.facebook.Request newRestRequest(com.facebook.Session,java.lang.String,android.os.Bundle,com.facebook.HttpMethod)
+    304:307:public static com.facebook.Request newUploadPhotoRequest(com.facebook.Session,android.graphics.Bitmap,com.facebook.Request$Callback)
+    321:325:public static com.facebook.Request newUploadPhotoRequest(com.facebook.Session,java.io.File,com.facebook.Request$Callback)
+    339:343:public static com.facebook.Request newUploadVideoRequest(com.facebook.Session,java.io.File,com.facebook.Request$Callback)
+    385:410:public static com.facebook.Request newPlacesSearchRequest(com.facebook.Session,android.location.Location,int,int,java.lang.String,com.facebook.Request$GraphPlaceListCallback)
+    425:428:public static com.facebook.Request newStatusUpdateRequest(com.facebook.Session,java.lang.String,com.facebook.Request$Callback)
+    437:437:public final com.facebook.model.GraphObject getGraphObject()
+    456:456:public final java.lang.String getGraphPath()
+    466:467:public final void setGraphPath(java.lang.String)
+    475:475:public final com.facebook.HttpMethod getHttpMethod()
+    497:497:public final android.os.Bundle getParameters()
+    516:516:public final java.lang.String getRestMethod()
+    526:527:public final void setRestMethod(java.lang.String)
+    546:547:public final void setSession(com.facebook.Session)
+    555:555:public final java.lang.String getBatchEntryName()
+    569:570:public final void setBatchEntryName(java.lang.String)
+    578:578:public final java.lang.String getBatchEntryDependsOn()
+    591:592:public final void setBatchEntryDependsOn(java.lang.String)
+    602:602:public final boolean getBatchEntryOmitResultOnSuccess()
+    615:616:public final void setBatchEntryOmitResultOnSuccess(boolean)
+    626:626:public static final java.lang.String getDefaultBatchApplicationId()
+    638:639:public static final void setDefaultBatchApplicationId(java.lang.String)
+    647:647:public final com.facebook.Request$Callback getCallback()
+    678:678:public static com.facebook.RequestAsyncTask executePostRequestAsync(com.facebook.Session,java.lang.String,com.facebook.model.GraphObject,com.facebook.Request$Callback)
+    699:699:public static com.facebook.RequestAsyncTask executeRestRequestAsync(com.facebook.Session,java.lang.String,android.os.Bundle,com.facebook.HttpMethod)
+    714:714:public static com.facebook.RequestAsyncTask executeMeRequestAsync(com.facebook.Session,com.facebook.Request$GraphUserCallback)
+    729:729:public static com.facebook.RequestAsyncTask executeMyFriendsRequestAsync(com.facebook.Session,com.facebook.Request$GraphUserListCallback)
+    746:746:public static com.facebook.RequestAsyncTask executeUploadPhotoRequestAsync(com.facebook.Session,android.graphics.Bitmap,com.facebook.Request$Callback)
+    762:762:public static com.facebook.RequestAsyncTask executeUploadPhotoRequestAsync(com.facebook.Session,java.io.File,com.facebook.Request$Callback)
+    779:779:public static com.facebook.RequestAsyncTask executeGraphPathRequestAsync(com.facebook.Session,java.lang.String,com.facebook.Request$Callback)
+    807:807:public static com.facebook.RequestAsyncTask executePlacesSearchRequestAsync(com.facebook.Session,android.location.Location,int,int,java.lang.String,com.facebook.Request$GraphPlaceListCallback)
+    824:824:public static com.facebook.RequestAsyncTask executeStatusUpdateRequestAsync(com.facebook.Session,java.lang.String,com.facebook.Request$Callback)
+    852:852:public final com.facebook.RequestAsyncTask executeAsync()
+    870:870:public static varargs java.net.HttpURLConnection toHttpConnection(com.facebook.Request[])
+    888:890:public static java.net.HttpURLConnection toHttpConnection(java.util.Collection)
+    1115:1115:public static java.util.List executeConnectionAndWait(java.net.HttpURLConnection,java.util.Collection)
+    1179:1179:public static com.facebook.RequestAsyncTask executeConnectionAsync(java.net.HttpURLConnection,com.facebook.RequestBatch)
+    1203:1208:public static com.facebook.RequestAsyncTask executeConnectionAsync(android.os.Handler,java.net.HttpURLConnection,com.facebook.RequestBatch)
+com.facebook.Request$3
+com.facebook.Request$GraphPlaceListCallback
+com.facebook.RequestAsyncTask:
+    64:65:public varargs RequestAsyncTask(com.facebook.Request[])
+    74:75:public RequestAsyncTask(java.util.Collection)
+    97:98:public varargs RequestAsyncTask(java.net.HttpURLConnection,com.facebook.Request[])
+    110:111:public RequestAsyncTask(java.net.HttpURLConnection,java.util.Collection)
+    128:128:protected final java.lang.Exception getException()
+    132:132:protected final com.facebook.RequestBatch getRequests()
+com.facebook.RequestBatch:
+    64:69:public RequestBatch(com.facebook.RequestBatch)
+    84:88:public void setTimeout(int)
+    107:108:public void removeCallback(com.facebook.RequestBatch$Callback)
+com.facebook.Response:
+    public static final java.lang.String NON_JSON_RESPONSE_PROPERTY
+    private static final int INVALID_SESSION_FACEBOOK_ERROR_CODE
+    private static final java.lang.String CODE_KEY
+    private static final java.lang.String BODY_KEY
+    private static final java.lang.String RESPONSE_LOG_TAG
+    private static final java.lang.String RESPONSE_CACHE_TAG
+    133:133:public final com.facebook.model.GraphObjectList getGraphObjectList()
+    144:147:public final com.facebook.model.GraphObjectList getGraphObjectListAs(java.lang.Class)
+    157:157:public final java.net.HttpURLConnection getConnection()
+    166:166:public com.facebook.Request getRequest()
+    193:222:public com.facebook.Request getRequestForPagedResults(com.facebook.Response$PagingDirection)
+    249:249:public final boolean getIsFromCache()
+com.facebook.Response$PagedResults
+com.facebook.Response$PagingDirection
+com.facebook.Response$PagingInfo
+com.facebook.Session:
+    private static final long serialVersionUID
+    public static final int DEFAULT_AUTHORIZE_ACTIVITY_CODE
+    public static final java.lang.String WEB_VIEW_ERROR_CODE_KEY
+    public static final java.lang.String WEB_VIEW_FAILING_URL_KEY
+    public static final java.lang.String ACTION_ACTIVE_SESSION_SET
+    public static final java.lang.String ACTION_ACTIVE_SESSION_UNSET
+    public static final java.lang.String ACTION_ACTIVE_SESSION_OPENED
+    public static final java.lang.String ACTION_ACTIVE_SESSION_CLOSED
+    public static final java.lang.String APPLICATION_ID_PROPERTY
+    private static final int TOKEN_EXTEND_THRESHOLD_SECONDS
+    private static final int TOKEN_EXTEND_RETRY_SECONDS
+    private static final java.lang.String SESSION_BUNDLE_SAVE_KEY
+    private static final java.lang.String AUTH_BUNDLE_SAVE_KEY
+    private static final java.lang.String PUBLISH_PERMISSION_PREFIX
+    private static final java.lang.String MANAGE_PERMISSION_PREFIX
+    189:201:private Session(java.lang.String,com.facebook.SessionState,com.facebook.AccessToken,java.util.Date,boolean,com.facebook.Session$AuthorizationRequest)
+    268:268:public final android.os.Bundle getAuthorizationBundle()
+    285:285:public final boolean isClosed()
+    435:462:public final void open(com.facebook.AccessToken,com.facebook.Session$StatusCallback)
+    481:482:public final void requestNewReadPermissions(com.facebook.Session$NewPermissionsRequest)
+    501:502:public final void requestNewPublishPermissions(com.facebook.Session$NewPermissionsRequest)
+    652:652:private java.lang.Object writeReplace()
+    658:658:private void readObject(java.io.ObjectInputStream)
+    805:805:public static com.facebook.Session openActiveSession(android.app.Activity,boolean,com.facebook.Session$StatusCallback)
+    828:828:public static com.facebook.Session openActiveSession(android.content.Context,android.support.v4.app.Fragment,boolean,com.facebook.Session$StatusCallback)
+    854:859:public static com.facebook.Session openActiveSessionWithAccessToken(android.content.Context,com.facebook.AccessToken,com.facebook.Session$StatusCallback)
+    962:985:private void requestNewPermissions(com.facebook.Session$NewPermissionsRequest,com.facebook.internal.SessionAuthorizationType)
+    1258:1259:void setTokenInfo(com.facebook.AccessToken)
+    1262:1262:java.util.Date getLastAttemptedTokenExtendDate()
+    1270:1271:void setCurrentTokenRefreshRequest(com.facebook.Session$TokenRefreshRequest)
+    189:189:synthetic Session(java.lang.String,com.facebook.SessionState,com.facebook.AccessToken,java.util.Date,boolean,com.facebook.Session$AuthorizationRequest,com.facebook.Session)
+com.facebook.Session$AuthorizationRequest:
+    private static final long serialVersionUID
+    1551:1574:private Session$AuthorizationRequest(com.facebook.SessionLoginBehavior,int,java.util.List,java.lang.String,boolean,java.lang.String,java.lang.String)
+    1582:1583:public void setIsLegacy(boolean)
+    1586:1586:boolean isLegacy()
+    1590:1591:com.facebook.Session$AuthorizationRequest setCallback(com.facebook.Session$StatusCallback)
+    1610:1613:com.facebook.Session$AuthorizationRequest setRequestCode(int)
+    1639:1639:com.facebook.SessionDefaultAudience getDefaultAudience()
+    1647:1647:java.lang.String getApplicationId()
+    1655:1655:java.lang.String getValidateSameFbidAsToken()
+    1659:1660:void setValidateSameFbidAsToken(java.lang.String)
+    1680:1680:java.lang.Object writeReplace()
+    1687:1687:void readObject(java.io.ObjectInputStream)
+    1551:1551:synthetic Session$AuthorizationRequest(com.facebook.SessionLoginBehavior,int,java.util.List,java.lang.String,boolean,java.lang.String,java.lang.String,com.facebook.Session$AuthorizationRequest)
+com.facebook.Session$AuthorizationRequest$3
+com.facebook.Session$AuthorizationRequest$AuthRequestSerializationProxyV1
+com.facebook.Session$Builder:
+    1433:1434:public com.facebook.Session$Builder setTokenCachingStrategy(com.facebook.TokenCachingStrategy)
+com.facebook.Session$NewPermissionsRequest
+com.facebook.Session$OpenRequest:
+    private static final long serialVersionUID
+    1751:1752:public final com.facebook.Session$OpenRequest setCallback(com.facebook.Session$StatusCallback)
+    1778:1779:public final com.facebook.Session$OpenRequest setRequestCode(int)
+    1:1:public bridge synthetic com.facebook.Session$AuthorizationRequest setRequestCode(int)
+    1:1:public bridge synthetic com.facebook.Session$AuthorizationRequest setCallback(com.facebook.Session$StatusCallback)
+com.facebook.Session$SerializationProxyV1
+com.facebook.Settings:
+    private static final int DEFAULT_CORE_POOL_SIZE
+    private static final int DEFAULT_MAXIMUM_POOL_SIZE
+    private static final int DEFAULT_KEEP_ALIVE
+    private static final java.lang.String ATTRIBUTION_ID_COLUMN_NAME
     private static final java.lang.String ATTRIBUTION_PREFERENCES
     private static final java.lang.String PUBLISH_ACTIVITY_PATH
     private static final java.lang.String MOBILE_INSTALL_EVENT
@@ -1762,107 +2001,811 @@ com.facebook.android.Facebook:
     private static final java.lang.String APPLICATION_FIELDS
     private static final java.lang.String ANALYTICS_EVENT
     private static final java.lang.String ATTRIBUTION_KEY
-    public static final int FORCE_DIALOG_AUTH
-    private static final java.lang.String LOGIN
-    private static final int DEFAULT_AUTH_ACTIVITY_CODE
-    public static final java.lang.String FB_APP_SIGNATURE
-    148:149:public void authorize(android.app.Activity,java.lang.String[],com.facebook.android.Facebook$DialogListener)
-    797:798:public void dialog(android.content.Context,java.lang.String,com.facebook.android.Facebook$DialogListener)
-    880:880:public long getLastAccessUpdate()
-    893:896:public void setTokenFromCache(java.lang.String,long,long)
-    935:935:public java.lang.String getAppId()
-    939:940:public void setAppId(java.lang.String)
-    974:975:public void setShouldAutoPublishInstall(boolean)
-    984:985:public boolean publishInstall(android.content.Context)
-com.facebook.android.FacebookError:
-    private static final long serialVersionUID
-    43:43:public int getErrorCode()
-    47:47:public java.lang.String getErrorType()
-com.facebook.android.FbDialog:
-    static final int FB_BLUE
-    static final int MARGIN
-    static final int PADDING
-    static final java.lang.String DISPLAY_STRING
-    static final java.lang.String FB_ICON
+    42:42:public Settings()
+    84:84:public static final java.util.Set getLoggingBehaviors()
+    99:102:public static final void addLoggingBehavior(com.facebook.LoggingBehavior)
+    114:117:public static final void removeLoggingBehavior(com.facebook.LoggingBehavior)
+    126:129:public static final void clearLoggingBehaviors()
+    176:180:public static void setExecutor(java.util.concurrent.Executor)
+    214:221:public static void publishInstallAsync(android.content.Context,java.lang.String)
+    229:230:public static void setShouldAutoPublishInstall(boolean)
+com.facebook.Settings$2
+com.facebook.SharedPreferencesTokenCachingStrategy:
+    private static final java.lang.String DEFAULT_CACHE_KEY
+    private static final java.lang.String JSON_VALUE_TYPE
+    private static final java.lang.String JSON_VALUE
+    private static final java.lang.String JSON_VALUE_ENUM_TYPE
+    private static final java.lang.String TYPE_BOOLEAN
+    private static final java.lang.String TYPE_BOOLEAN_ARRAY
+    private static final java.lang.String TYPE_BYTE
+    private static final java.lang.String TYPE_BYTE_ARRAY
+    private static final java.lang.String TYPE_SHORT
+    private static final java.lang.String TYPE_SHORT_ARRAY
+    private static final java.lang.String TYPE_INTEGER
+    private static final java.lang.String TYPE_INTEGER_ARRAY
+    private static final java.lang.String TYPE_LONG
+    private static final java.lang.String TYPE_LONG_ARRAY
+    private static final java.lang.String TYPE_FLOAT
+    private static final java.lang.String TYPE_FLOAT_ARRAY
+    private static final java.lang.String TYPE_DOUBLE
+    private static final java.lang.String TYPE_DOUBLE_ARRAY
+    private static final java.lang.String TYPE_CHAR
+    private static final java.lang.String TYPE_CHAR_ARRAY
+    private static final java.lang.String TYPE_STRING
+    private static final java.lang.String TYPE_STRING_LIST
+    private static final java.lang.String TYPE_ENUM
+com.facebook.TestSession
+com.facebook.TestSession$FqlResponse
+com.facebook.TestSession$FqlResult
+com.facebook.TestSession$Mode
+com.facebook.TestSession$TestAccount
+com.facebook.TestSession$TestTokenCachingStrategy
+com.facebook.TestSession$UserAccount
+com.facebook.TokenCachingStrategy:
+    public static final java.lang.String TOKEN_KEY
+    public static final java.lang.String EXPIRATION_DATE_KEY
+    public static final java.lang.String LAST_REFRESH_DATE_KEY
+    public static final java.lang.String USER_FBID_KEY
+    public static final java.lang.String TOKEN_SOURCE_KEY
+    public static final java.lang.String PERMISSIONS_KEY
+    private static final long INVALID_BUNDLE_MILLISECONDS
+    private static final java.lang.String IS_SSO_KEY
+    150:151:public static java.lang.String getToken(android.os.Bundle)
+    165:168:public static void putToken(android.os.Bundle,java.lang.String)
+    180:181:public static java.util.Date getExpirationDate(android.os.Bundle)
+    195:198:public static void putExpirationDate(android.os.Bundle,java.util.Date)
+    211:212:public static long getExpirationMilliseconds(android.os.Bundle)
+    227:229:public static void putExpirationMilliseconds(android.os.Bundle,long)
+    241:242:public static java.util.List getPermissions(android.os.Bundle)
+    257:267:public static void putPermissions(android.os.Bundle,java.util.List)
+    298:300:public static void putSource(android.os.Bundle,com.facebook.AccessTokenSource)
+    312:313:public static java.util.Date getLastRefreshDate(android.os.Bundle)
+    327:330:public static void putLastRefreshDate(android.os.Bundle,java.util.Date)
+    342:343:public static long getLastRefreshMilliseconds(android.os.Bundle)
+    358:360:public static void putLastRefreshMilliseconds(android.os.Bundle,long)
+com.facebook.UiLifecycleHelper:
+    private static final java.lang.String ACTIVITY_NULL_MESSAGE
+com.facebook.android.AsyncFacebookRunner
+com.facebook.android.AsyncFacebookRunner$1
+com.facebook.android.AsyncFacebookRunner$2
+com.facebook.android.AsyncFacebookRunner$RequestListener
+com.facebook.android.DialogError
+com.facebook.android.Facebook
+com.facebook.android.Facebook$1
+com.facebook.android.Facebook$DialogListener
+com.facebook.android.Facebook$ServiceListener
+com.facebook.android.Facebook$SetterTokenCachingStrategy
+com.facebook.android.Facebook$TokenRefreshConnectionHandler
+com.facebook.android.Facebook$TokenRefreshServiceConnection
+com.facebook.android.FacebookError
+com.facebook.android.FbDialog
+com.facebook.android.FbDialog$1
 com.facebook.android.R:
     9:9:public R()
+com.facebook.android.R$attr
+com.facebook.android.R$color:
+    40:40:public R$color()
+com.facebook.android.R$dimen:
+    167:167:public R$dimen()
 com.facebook.android.R$drawable:
-    10:10:public R$drawable()
+    114:114:public R$drawable()
+com.facebook.android.R$id:
+    10:10:public R$id()
+com.facebook.android.R$layout:
+    74:74:public R$layout()
+com.facebook.android.R$string:
+    47:47:public R$string()
+com.facebook.android.R$style
+com.facebook.android.R$styleable:
+    89:89:public R$styleable()
 com.facebook.android.Util:
-    48:48:public Util()
+    private static final java.lang.String UTF8
+    44:44:public Util()
+    58:72:public static java.lang.String encodePostBody(android.os.Bundle,java.lang.String)
+    77:93:public static java.lang.String encodeUrl(android.os.Bundle)
+    157:224:public static java.lang.String openUrl(java.lang.String,java.lang.String,android.os.Bundle)
+    229:235:private static java.lang.String read(java.io.InputStream)
+    260:289:public static org.json.JSONObject parseJson(java.lang.String)
+    304:308:public static void showAlert(android.content.Context,java.lang.String,java.lang.String)
+com.facebook.internal.CacheableRequestBatch:
+    35:36:public varargs CacheableRequestBatch(com.facebook.Request[])
+    46:47:public final void setCacheKeyOverride(java.lang.String)
+    54:55:public final void setForceRoundTrip(boolean)
+com.facebook.internal.FileLruCache:
+    private static final java.lang.String HEADER_CACHEKEY_KEY
+    private static final java.lang.String HEADER_CACHE_CONTENT_TAG_KEY
+    89:92:public void clearForTest()
+    100:115:long sizeInBytesForTest()
+com.facebook.internal.FileLruCache$BufferFile:
+    private static final java.lang.String FILE_NAME_PREFIX
+    292:292:private FileLruCache$BufferFile()
+com.facebook.internal.FileLruCache$Limits:
+    552:556:void setByteCount(int)
+    559:563:void setFileCount(int)
+com.facebook.internal.FileLruCache$StreamHeader:
+    private static final int HEADER_VERSION
+    337:337:private FileLruCache$StreamHeader()
+com.facebook.internal.Logger:
+    public static final java.lang.String LOG_TAG_BASE
+    89:89:public int getPriority()
+    93:96:public void setPriority(int)
+    99:99:public java.lang.String getContents()
+    114:117:public void append(java.lang.StringBuilder)
+com.facebook.internal.ServerProtocol:
+    static final java.lang.String FACEBOOK_COM
+    public static final java.lang.String DIALOG_AUTHORITY
+    public static final java.lang.String DIALOG_PATH
+    public static final java.lang.String DIALOG_PARAM_SCOPE
+    public static final java.lang.String DIALOG_PARAM_CLIENT_ID
+    public static final java.lang.String DIALOG_PARAM_DISPLAY
+    public static final java.lang.String DIALOG_PARAM_REDIRECT_URI
+    public static final java.lang.String DIALOG_PARAM_TYPE
+    public static final java.lang.String GRAPH_URL
+    public static final java.lang.String GRAPH_URL_BASE
+    public static final java.lang.String REST_URL_BASE
+    public static final java.lang.String BATCHED_REST_METHOD_URL_BASE
+    28:28:public ServerProtocol()
+com.facebook.internal.SessionTracker:
+    48:49:public SessionTracker(android.content.Context,com.facebook.Session$StatusCallback)
+    60:61:SessionTracker(android.content.Context,com.facebook.Session$StatusCallback,com.facebook.Session)
+    191:191:public boolean isTrackingActiveSession()
+com.facebook.internal.Utility:
+    static final java.lang.String LOG_TAG
+    private static final java.lang.String HASH_ALGORITHM_MD5
+    private static final java.lang.String URL_SCHEME
+    public static final int DEFAULT_STREAM_BUFFER_SIZE
+    49:49:public Utility()
+    87:91:public static varargs java.util.ArrayList arrayList(java.lang.Object[])
+    169:183:static java.util.Map convertJSONObjectToHashMap(org.json.JSONObject)
+    237:249:public static boolean stringsEqualOrEmpty(java.lang.String,java.lang.String)
+com.facebook.internal.Validate:
+    26:26:public Validate()
+    60:71:public static varargs void oneOf(java.lang.Object,java.lang.String,java.lang.Object[])
+com.facebook.internal.package-info
+com.facebook.model.GraphLocation
+com.facebook.model.GraphObject:
+    public abstract void removeProperty(java.lang.String)
+com.facebook.model.GraphObject$Factory:
+    98:99:private GraphObject$Factory()
+    156:167:public static boolean hasSameId(com.facebook.model.GraphObject,com.facebook.model.GraphObject)
+    192:192:public static com.facebook.model.GraphObjectList createList(java.lang.Class)
+com.facebook.model.GraphObject$Factory$GraphObjectProxy:
+    private static final java.lang.String CLEAR_METHOD
+    private static final java.lang.String CONTAINSKEY_METHOD
+    private static final java.lang.String CONTAINSVALUE_METHOD
+    private static final java.lang.String ENTRYSET_METHOD
+    private static final java.lang.String GET_METHOD
+    private static final java.lang.String ISEMPTY_METHOD
+    private static final java.lang.String KEYSET_METHOD
+    private static final java.lang.String PUT_METHOD
+    private static final java.lang.String PUTALL_METHOD
+    private static final java.lang.String REMOVE_METHOD
+    private static final java.lang.String SIZE_METHOD
+    private static final java.lang.String VALUES_METHOD
+    private static final java.lang.String CAST_METHOD
+    private static final java.lang.String CASTTOMAP_METHOD
+    private static final java.lang.String GETPROPERTY_METHOD
+    private static final java.lang.String SETPROPERTY_METHOD
+    private static final java.lang.String REMOVEPROPERTY_METHOD
+    private static final java.lang.String GETINNERJSONOBJECT_METHOD
+com.facebook.model.GraphObject$Factory$ProxyBase:
+    private static final java.lang.String EQUALS_METHOD
+    private static final java.lang.String TOSTRING_METHOD
+com.facebook.model.GraphPlace
+com.facebook.model.GraphUser:
+    public abstract void setId(java.lang.String)
+    public abstract void setName(java.lang.String)
+    public abstract java.lang.String getFirstName()
+    public abstract void setFirstName(java.lang.String)
+    public abstract java.lang.String getMiddleName()
+    public abstract void setMiddleName(java.lang.String)
+    public abstract java.lang.String getLastName()
+    public abstract void setLastName(java.lang.String)
+    public abstract java.lang.String getLink()
+    public abstract void setLink(java.lang.String)
+    public abstract java.lang.String getUsername()
+    public abstract void setUsername(java.lang.String)
+    public abstract java.lang.String getBirthday()
+    public abstract void setBirthday(java.lang.String)
+    public abstract com.facebook.model.GraphLocation getLocation()
+    public abstract void setLocation(com.facebook.model.GraphLocation)
+com.facebook.model.JsonUtil:
+    25:25:JsonUtil()
+com.facebook.model.OpenGraphAction
+com.facebook.widget.FacebookFragment
+com.facebook.widget.FacebookFragment$DefaultSessionStatusCallback
+com.facebook.widget.FriendPickerFragment
+com.facebook.widget.FriendPickerFragment$1
+com.facebook.widget.FriendPickerFragment$ImmediateLoadingStrategy
+com.facebook.widget.GraphObjectAdapter
+com.facebook.widget.GraphObjectAdapter$1
+com.facebook.widget.GraphObjectAdapter$2
+com.facebook.widget.GraphObjectAdapter$DataNeededListener
+com.facebook.widget.GraphObjectAdapter$Filter
+com.facebook.widget.GraphObjectAdapter$ItemPicture
+com.facebook.widget.GraphObjectAdapter$ItemPictureData
+com.facebook.widget.GraphObjectAdapter$SectionAndItem
+com.facebook.widget.GraphObjectAdapter$SectionAndItem$Type
+com.facebook.widget.GraphObjectCursor
+com.facebook.widget.GraphObjectPagingLoader
+com.facebook.widget.GraphObjectPagingLoader$1
+com.facebook.widget.GraphObjectPagingLoader$2
+com.facebook.widget.GraphObjectPagingLoader$3
+com.facebook.widget.GraphObjectPagingLoader$OnErrorListener
+com.facebook.widget.GraphObjectPagingLoader$PagedResults
+com.facebook.widget.ImageDownloader
+com.facebook.widget.ImageDownloader$1
+com.facebook.widget.ImageDownloader$CacheReadWorkItem
+com.facebook.widget.ImageDownloader$DownloadImageWorkItem
+com.facebook.widget.ImageDownloader$DownloaderContext
+com.facebook.widget.ImageDownloader$RequestKey
+com.facebook.widget.ImageRequest
+com.facebook.widget.ImageRequest$Builder
+com.facebook.widget.ImageRequest$Callback
+com.facebook.widget.ImageResponse
+com.facebook.widget.ImageResponseCache
+com.facebook.widget.ImageResponseCache$BufferedHttpInputStream
+com.facebook.widget.LoginButton:
+    337:338:public void clearPermissions()
+    437:442:public boolean onActivityResult(int,int,android.content.Intent)
+com.facebook.widget.LoginButton$LoginButtonProperties:
+    135:137:public void clearPermissions()
+com.facebook.widget.PickerFragment
+com.facebook.widget.PickerFragment$1
+com.facebook.widget.PickerFragment$2
+com.facebook.widget.PickerFragment$3
+com.facebook.widget.PickerFragment$4
+com.facebook.widget.PickerFragment$5
+com.facebook.widget.PickerFragment$6
+com.facebook.widget.PickerFragment$GraphObjectFilter
+com.facebook.widget.PickerFragment$LoadingStrategy
+com.facebook.widget.PickerFragment$LoadingStrategy$1
+com.facebook.widget.PickerFragment$LoadingStrategy$2
+com.facebook.widget.PickerFragment$MultiSelectionStrategy
+com.facebook.widget.PickerFragment$OnDataChangedListener
+com.facebook.widget.PickerFragment$OnDoneButtonClickedListener
+com.facebook.widget.PickerFragment$OnErrorListener
+com.facebook.widget.PickerFragment$OnSelectionChangedListener
+com.facebook.widget.PickerFragment$PickerFragmentAdapter
+com.facebook.widget.PickerFragment$SelectionStrategy
+com.facebook.widget.PickerFragment$SingleSelectionStrategy
+com.facebook.widget.PlacePickerFragment
+com.facebook.widget.PlacePickerFragment$1
+com.facebook.widget.PlacePickerFragment$2
+com.facebook.widget.PlacePickerFragment$3
+com.facebook.widget.PlacePickerFragment$AsNeededLoadingStrategy
+com.facebook.widget.PlacePickerFragment$AsNeededLoadingStrategy$1
+com.facebook.widget.PlacePickerFragment$SearchTextWatcher
+com.facebook.widget.ProfilePictureView
+com.facebook.widget.ProfilePictureView$1
+com.facebook.widget.ProfilePictureView$OnErrorListener
+com.facebook.widget.SimpleGraphObjectCursor
+com.facebook.widget.UrlRedirectCache
+com.facebook.widget.UserSettingsFragment
+com.facebook.widget.UserSettingsFragment$1
+com.facebook.widget.UserSettingsFragment$2
+com.facebook.widget.WebDialog:
+    private static final java.lang.String LOG_TAG
+    private static final java.lang.String DISPLAY_TOUCH
+    private static final java.lang.String USER_AGENT
+    static final java.lang.String REDIRECT_URI
+    static final java.lang.String CANCEL_URI
+    public static final int DEFAULT_THEME
+    93:94:public WebDialog(android.content.Context,java.lang.String)
+    105:107:public WebDialog(android.content.Context,java.lang.String,int)
+    138:139:public void setOnCompleteListener(com.facebook.widget.WebDialog$OnCompleteListener)
+    147:147:public com.facebook.widget.WebDialog$OnCompleteListener getOnCompleteListener()
+com.facebook.widget.WebDialog$Builder:
+    499:500:public WebDialog$Builder(android.content.Context,com.facebook.Session,java.lang.String,android.os.Bundle)
+    1:1:public bridge synthetic com.facebook.widget.WebDialog$BuilderBase setTheme(int)
+com.facebook.widget.WebDialog$BuilderBase:
+    private static final java.lang.String APP_ID_PARAM
+    public static final java.lang.String ACCESS_TOKEN
+    389:397:protected WebDialog$BuilderBase(android.content.Context,com.facebook.Session,java.lang.String,android.os.Bundle)
+    413:416:public com.facebook.widget.WebDialog$BuilderBase setTheme(int)
+com.facebook.widget.WebDialog$FeedDialogBuilder
+com.facebook.widget.WebDialog$RequestsDialogBuilder
+com.facebook.widget.WorkQueue
+com.facebook.widget.WorkQueue$1
+com.facebook.widget.WorkQueue$WorkItem
+com.facebook.widget.WorkQueue$WorkNode
+com.google.ads.Ad:
+    public abstract boolean isReady()
+    public abstract void loadAd(com.google.ads.AdRequest)
+    public abstract void setAdListener(com.google.ads.AdListener)
+    public abstract void stopLoading()
+com.google.ads.AdActivity:
+    public static final java.lang.String BASE_URL_PARAM
+    public static final java.lang.String HTML_PARAM
+    public static final java.lang.String URL_PARAM
+    public static final java.lang.String CUSTOM_CLOSE_PARAM
+    public static final java.lang.String INTENT_ACTION_PARAM
+    public static final java.lang.String TYPE_PARAM
+    public static final java.lang.String COMPONENT_NAME_PARAM
+    public static final java.lang.String PACKAGE_NAME_PARAM
+    public static final java.lang.String INTENT_FLAGS_PARAM
+    public static final java.lang.String INTENT_EXTRAS_PARAM
+    public static final java.lang.String ORIENTATION_PARAM
+    313:335:public com.google.ads.internal.AdWebView getOpeningAdWebView()
+com.google.ads.AdRequest:
+    public static final java.lang.String VERSION
+    public static final java.lang.String LOGTAG
+    224:225:public com.google.ads.AdRequest setGender(com.google.ads.AdRequest$Gender)
+    233:233:public com.google.ads.AdRequest$Gender getGender()
+    246:258:public com.google.ads.AdRequest setBirthday(java.lang.String)
+    267:273:public com.google.ads.AdRequest setBirthday(java.util.Date)
+    283:289:public com.google.ads.AdRequest setBirthday(java.util.Calendar)
+    297:297:public java.util.Date getBirthday()
+    305:306:public com.google.ads.AdRequest clearBirthday()
+    323:324:public com.google.ads.AdRequest setPlusOneOptOut(boolean)
+    337:337:public boolean getPlusOneOptOut()
+    363:368:public com.google.ads.AdRequest addKeyword(java.lang.String)
+    381:386:public com.google.ads.AdRequest addKeywords(java.util.Set)
+    397:401:public java.util.Set getKeywords()
+    411:415:private synchronized com.google.ads.mediation.admob.AdMobAdapterExtras a()
+    430:431:public com.google.ads.AdRequest setExtras(java.util.Map)
+    448:454:public com.google.ads.AdRequest addExtra(java.lang.String,java.lang.Object)
+    481:482:public com.google.ads.AdRequest removeNetworkExtras(java.lang.Class)
+    505:506:public com.google.ads.AdRequest setMediationExtras(java.util.Map)
+    520:525:public com.google.ads.AdRequest addMediationExtra(java.lang.String,java.lang.Object)
+    536:537:public com.google.ads.AdRequest setLocation(android.location.Location)
+    545:545:public android.location.Location getLocation()
+    560:561:public com.google.ads.AdRequest setTesting(boolean)
+    680:685:public com.google.ads.AdRequest addTestDevice(java.lang.String)
+com.google.ads.AdSize:
+    public static final int FULL_WIDTH
+    public static final int AUTO_HEIGHT
+    public static final int LANDSCAPE_AD_HEIGHT
+    public static final int PORTRAIT_AD_HEIGHT
+    public static final int LARGE_AD_HEIGHT
+    291:291:public int getWidthInPixels(android.content.Context)
+    301:301:public int getHeightInPixels(android.content.Context)
+    317:317:public boolean isSizeAppropriate(int,int)
+    339:359:public varargs com.google.ads.AdSize findBestSize(com.google.ads.AdSize[])
+com.google.ads.AdView:
+    252:253:public void destroy()
+    542:546:public boolean isReady()
+    651:654:public void stopLoading()
+com.google.ads.InterstitialAd:
+    private com.google.ads.internal.d a
+    82:83:public InterstitialAd(android.app.Activity,java.lang.String)
+    97:99:public InterstitialAd(android.app.Activity,java.lang.String,boolean)
+    108:108:public boolean isReady()
+    120:121:public void loadAd(com.google.ads.AdRequest)
+    130:131:public void show()
+    142:143:public void setAdListener(com.google.ads.AdListener)
+    151:152:protected void setAppEventListener(com.google.ads.AppEventListener)
+    161:162:public void stopLoading()
+com.google.ads.doubleclick.DfpAdView:
+    27:28:public DfpAdView(android.app.Activity,com.google.ads.AdSize,java.lang.String)
+    38:39:public DfpAdView(android.app.Activity,com.google.ads.AdSize[],java.lang.String)
+    48:49:public DfpAdView(android.content.Context,android.util.AttributeSet)
+    59:60:public DfpAdView(android.content.Context,android.util.AttributeSet,int)
+com.google.ads.doubleclick.DfpExtras:
+    25:30:public DfpExtras(com.google.ads.doubleclick.DfpExtras)
+    46:47:public com.google.ads.doubleclick.DfpExtras setPublisherProvidedId(java.lang.String)
+    55:56:public com.google.ads.doubleclick.DfpExtras setPlusOneOptOut(boolean)
+    61:62:public com.google.ads.doubleclick.DfpExtras setUseExactAdSize(boolean)
+    67:68:public com.google.ads.doubleclick.DfpExtras setExtras(java.util.Map)
+    79:80:public com.google.ads.doubleclick.DfpExtras addExtra(java.lang.String,java.lang.Object)
+    12:12:public bridge synthetic com.google.ads.mediation.admob.AdMobAdapterExtras addExtra(java.lang.String,java.lang.Object)
+    12:12:public bridge synthetic com.google.ads.mediation.admob.AdMobAdapterExtras setExtras(java.util.Map)
+    12:12:public bridge synthetic com.google.ads.mediation.admob.AdMobAdapterExtras setUseExactAdSize(boolean)
+    12:12:public bridge synthetic com.google.ads.mediation.admob.AdMobAdapterExtras setPlusOneOptOut(boolean)
+com.google.ads.doubleclick.DfpInterstitialAd
+com.google.ads.doubleclick.SwipeableDfpAdView:
+    22:23:public SwipeableDfpAdView(android.app.Activity,com.google.ads.AdSize,java.lang.String)
+    31:32:public SwipeableDfpAdView(android.content.Context,android.util.AttributeSet)
+    38:39:public SwipeableDfpAdView(android.content.Context,android.util.AttributeSet,int)
+com.google.ads.e:
+    113:123:public void b()
+    213:219:private boolean a(com.google.ads.h,java.lang.String)
+    225:235:public void a(com.google.ads.h,boolean)
+    240:256:public void a(com.google.ads.h,android.view.View)
+    260:269:public void a(com.google.ads.h)
+    273:282:public void b(com.google.ads.h)
+    286:295:public void c(com.google.ads.h)
+    306:315:public boolean c()
+    486:488:private com.google.ads.h e()
+    52:52:static synthetic com.google.ads.h c(com.google.ads.e)
+com.google.ads.e$2
+com.google.ads.e$3
+com.google.ads.e$4
+com.google.ads.e$5
+com.google.ads.e$6
+com.google.ads.f:
+    79:79:public java.util.List e()
+com.google.ads.h:
+    116:116:public com.google.ads.f a()
+    211:237:public synchronized void g()
+    265:265:synchronized com.google.ads.mediation.MediationAdapter i()
+    272:272:com.google.ads.e j()
+    276:277:synchronized void a(android.view.View)
+com.google.ads.h$2
+com.google.ads.internal.c:
+    626:646:protected void a()
+com.google.ads.internal.d:
+    328:339:public synchronized void b()
+    534:534:public synchronized boolean s()
+    699:702:public synchronized void a(com.google.ads.f,boolean)
+    826:843:private void b(com.google.ads.f,java.lang.Boolean)
+    1035:1062:public synchronized void A()
+    1069:1078:public synchronized void B()
+com.google.ads.j:
+    private boolean b
+    34:66:public void onReceivedAd(com.google.ads.mediation.MediationBannerAdapter)
+    72:87:public void onFailedToReceiveAd(com.google.ads.mediation.MediationBannerAdapter,com.google.ads.AdRequest$ErrorCode)
+    92:95:public void onPresentScreen(com.google.ads.mediation.MediationBannerAdapter)
+    99:102:public void onDismissScreen(com.google.ads.mediation.MediationBannerAdapter)
+    106:109:public void onLeaveApplication(com.google.ads.mediation.MediationBannerAdapter)
+    113:117:public void onClick(com.google.ads.mediation.MediationBannerAdapter)
+com.google.ads.k:
+    29:40:public void onReceivedAd(com.google.ads.mediation.MediationInterstitialAdapter)
+    45:61:public void onFailedToReceiveAd(com.google.ads.mediation.MediationInterstitialAdapter,com.google.ads.AdRequest$ErrorCode)
+    66:69:public void onPresentScreen(com.google.ads.mediation.MediationInterstitialAdapter)
+    74:77:public void onDismissScreen(com.google.ads.mediation.MediationInterstitialAdapter)
+    81:84:public void onLeaveApplication(com.google.ads.mediation.MediationInterstitialAdapter)
+com.google.ads.mediation.EmptyNetworkExtras
+com.google.ads.mediation.MediationAdRequest:
+    50:50:public com.google.ads.AdRequest$Gender getGender()
+    57:57:public java.util.Date getBirthday()
+    67:81:public java.lang.Integer getAgeInYears()
+    88:92:public java.util.Set getKeywords()
+    100:104:public android.location.Location getLocation()
+    114:114:public boolean isTesting()
+com.google.ads.mediation.MediationBannerAdapter:
+    public abstract android.view.View getBannerView()
+com.google.ads.mediation.MediationBannerListener:
+    public abstract void onReceivedAd(com.google.ads.mediation.MediationBannerAdapter)
+    public abstract void onFailedToReceiveAd(com.google.ads.mediation.MediationBannerAdapter,com.google.ads.AdRequest$ErrorCode)
+    public abstract void onPresentScreen(com.google.ads.mediation.MediationBannerAdapter)
+    public abstract void onDismissScreen(com.google.ads.mediation.MediationBannerAdapter)
+    public abstract void onLeaveApplication(com.google.ads.mediation.MediationBannerAdapter)
+    public abstract void onClick(com.google.ads.mediation.MediationBannerAdapter)
+com.google.ads.mediation.MediationInterstitialAdapter:
+    public abstract void showInterstitial()
+com.google.ads.mediation.MediationInterstitialListener:
+    public abstract void onReceivedAd(com.google.ads.mediation.MediationInterstitialAdapter)
+    public abstract void onFailedToReceiveAd(com.google.ads.mediation.MediationInterstitialAdapter,com.google.ads.AdRequest$ErrorCode)
+    public abstract void onPresentScreen(com.google.ads.mediation.MediationInterstitialAdapter)
+    public abstract void onDismissScreen(com.google.ads.mediation.MediationInterstitialAdapter)
+    public abstract void onLeaveApplication(com.google.ads.mediation.MediationInterstitialAdapter)
+com.google.ads.mediation.admob.AdMobAdapter
+com.google.ads.mediation.admob.AdMobAdapter$1
+com.google.ads.mediation.admob.AdMobAdapter$a
+com.google.ads.mediation.admob.AdMobAdapter$b
+com.google.ads.mediation.admob.AdMobAdapterExtras:
+    31:38:public AdMobAdapterExtras(com.google.ads.mediation.admob.AdMobAdapterExtras)
+    51:52:public com.google.ads.mediation.admob.AdMobAdapterExtras setPlusOneOptOut(boolean)
+    77:78:public com.google.ads.mediation.admob.AdMobAdapterExtras setUseExactAdSize(boolean)
+    87:87:public boolean getUseExactAdSize()
+    110:114:public com.google.ads.mediation.admob.AdMobAdapterExtras setExtras(java.util.Map)
+    136:137:public com.google.ads.mediation.admob.AdMobAdapterExtras addExtra(java.lang.String,java.lang.Object)
+com.google.ads.mediation.admob.AdMobAdapterServerParameters
+com.google.ads.mediation.customevent.CustomEvent
+com.google.ads.mediation.customevent.CustomEventAdapter
+com.google.ads.mediation.customevent.CustomEventAdapter$a
+com.google.ads.mediation.customevent.CustomEventAdapter$b
+com.google.ads.mediation.customevent.CustomEventBanner
+com.google.ads.mediation.customevent.CustomEventBannerListener
+com.google.ads.mediation.customevent.CustomEventExtras
+com.google.ads.mediation.customevent.CustomEventInterstitial
+com.google.ads.mediation.customevent.CustomEventInterstitialListener
+com.google.ads.mediation.customevent.CustomEventListener
+com.google.ads.mediation.customevent.CustomEventServerParameters
+com.google.ads.searchads.SearchAdRequest:
+    91:92:public void setQuery(java.lang.String)
+    101:108:public void setBackgroundColor(int)
+    120:127:public void setBackgroundGradient(int,int)
+    137:138:public void setHeaderTextColor(int)
+    148:149:public void setDescriptionTextColor(int)
+    159:160:public void setAnchorTextColor(int)
+    168:169:public void setFontFace(java.lang.String)
+    178:179:public void setHeaderTextSize(int)
+    189:190:public void setBorderColor(int)
+    197:198:public void setBorderType(com.google.ads.searchads.SearchAdRequest$BorderType)
+    207:208:public void setBorderThickness(int)
+    215:216:public void setCustomChannels(java.lang.String)
+com.google.ads.util.a:
+    37:38:public static void a(boolean)
+    53:55:public static void a(java.lang.Object)
 com.google.android.gcm.GCMBaseIntentService
 com.google.android.gcm.GCMBroadcastReceiver
 com.google.android.gcm.GCMConstants
 com.google.android.gcm.GCMRegistrar
-com.koushikdutta.urlimageviewhelper.Constants
-com.koushikdutta.urlimageviewhelper.DiskLruCache:
-    static final java.lang.String JOURNAL_FILE
-    static final java.lang.String JOURNAL_FILE_TMP
-    static final java.lang.String MAGIC
-    static final java.lang.String VERSION_1
-    static final long ANY_SEQUENCE_NUMBER
-    private static final java.lang.String CLEAN
-    private static final java.lang.String DIRTY
-    private static final java.lang.String REMOVE
-    private static final java.lang.String READ
-    155:164:private static java.lang.String readFully(java.io.Reader)
-    523:523:public java.io.File getDirectory()
-    531:531:public long maxSize()
-    540:540:public synchronized long size()
-    641:641:public boolean isClosed()
-    701:701:private static java.lang.String inputStreamToString(java.io.InputStream)
-    495:495:static synthetic com.koushikdutta.urlimageviewhelper.DiskLruCache$Editor access$5(com.koushikdutta.urlimageviewhelper.DiskLruCache,java.lang.String,long)
-    700:700:static synthetic java.lang.String access$6(java.io.InputStream)
-    122:122:static synthetic java.nio.charset.Charset access$8()
-com.koushikdutta.urlimageviewhelper.DiskLruCache$Editor:
-    764:764:public java.io.InputStream newInputStream(int)
-    780:781:public java.lang.String getString(int)
-    804:811:public void set(int,java.lang.String)
-com.koushikdutta.urlimageviewhelper.DiskLruCache$Snapshot:
-    724:724:public com.koushikdutta.urlimageviewhelper.DiskLruCache$Editor edit()
-    738:738:public java.lang.String getString(int)
-com.koushikdutta.urlimageviewhelper.LruCache
-com.koushikdutta.urlimageviewhelper.SoftReferenceHashTable
-com.koushikdutta.urlimageviewhelper.UrlImageCache
-com.koushikdutta.urlimageviewhelper.UrlImageViewCallback
-com.koushikdutta.urlimageviewhelper.UrlImageViewHelper
-com.koushikdutta.urlimageviewhelper.UrlImageViewHelper$1
-com.koushikdutta.urlimageviewhelper.UrlImageViewHelper$1$1
-com.koushikdutta.urlimageviewhelper.UrlImageViewHelper$2
-com.koushikdutta.urlimageviewhelper.UrlImageViewHelper$3
-com.koushikdutta.urlimageviewhelper.UrlImageViewHelper$4
-com.koushikdutta.urlimageviewhelper.UrlImageViewHelper$Loader
-com.koushikdutta.urlimageviewhelper.UrlImageViewHelper$RequestPropertiesCallback
-com.koushikdutta.urlimageviewhelper.UrlImageViewHelper$UrlDownloader
-com.koushikdutta.urlimageviewhelper.UrlImageViewHelper$ZombieDrawable
-com.koushikdutta.urlimageviewhelper.UrlLruCache
-com.koushikdutta.urlimageviewhelper.WrapperDrawable
+com.nostra13.universalimageloader.cache.disc.BaseDiscCache:
+    38:39:public BaseDiscCache(java.io.File)
+    54:60:public void clear()
+com.nostra13.universalimageloader.cache.disc.DiscCacheAware:
+    public abstract void clear()
+com.nostra13.universalimageloader.cache.disc.LimitedDiscCache:
+    52:53:public LimitedDiscCache(java.io.File,int)
+    106:109:public void clear()
+com.nostra13.universalimageloader.cache.disc.impl.FileCountLimitedDiscCache:
+    40:41:public FileCountLimitedDiscCache(java.io.File,int)
+com.nostra13.universalimageloader.cache.disc.impl.LimitedAgeDiscCache
+com.nostra13.universalimageloader.cache.disc.impl.TotalSizeLimitedDiscCache:
+    private static final int MIN_NORMAL_CACHE_SIZE_IN_MB
+    private static final int MIN_NORMAL_CACHE_SIZE
+    45:46:public TotalSizeLimitedDiscCache(java.io.File,int)
+com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache:
+    36:37:public UnlimitedDiscCache(java.io.File)
+com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator
+com.nostra13.universalimageloader.cache.memory.LimitedMemoryCache:
+    private static final int MAX_NORMAL_CACHE_SIZE_IN_MB
+    private static final int MAX_NORMAL_CACHE_SIZE
+com.nostra13.universalimageloader.cache.memory.impl.FIFOLimitedMemoryCache
+com.nostra13.universalimageloader.cache.memory.impl.LRULimitedMemoryCache
+com.nostra13.universalimageloader.cache.memory.impl.LargestLimitedMemoryCache
+com.nostra13.universalimageloader.cache.memory.impl.LimitedAgeMemoryCache
+com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache
+com.nostra13.universalimageloader.core.DefaultConfigurationFactory:
+    45:45:public DefaultConfigurationFactory()
+com.nostra13.universalimageloader.core.DisplayImageOptions:
+    57:57:static synthetic int access$1300(com.nostra13.universalimageloader.core.DisplayImageOptions)
+    57:57:static synthetic int access$1400(com.nostra13.universalimageloader.core.DisplayImageOptions)
+    57:57:static synthetic boolean access$1500(com.nostra13.universalimageloader.core.DisplayImageOptions)
+    57:57:static synthetic boolean access$1600(com.nostra13.universalimageloader.core.DisplayImageOptions)
+    57:57:static synthetic boolean access$1700(com.nostra13.universalimageloader.core.DisplayImageOptions)
+    57:57:static synthetic com.nostra13.universalimageloader.core.assist.ImageScaleType access$1800(com.nostra13.universalimageloader.core.DisplayImageOptions)
+    57:57:static synthetic android.graphics.Bitmap$Config access$1900(com.nostra13.universalimageloader.core.DisplayImageOptions)
+    57:57:static synthetic int access$2000(com.nostra13.universalimageloader.core.DisplayImageOptions)
+    57:57:static synthetic com.nostra13.universalimageloader.core.display.BitmapDisplayer access$2100(com.nostra13.universalimageloader.core.DisplayImageOptions)
+com.nostra13.universalimageloader.core.DisplayImageOptions$Builder:
+    191:192:public com.nostra13.universalimageloader.core.DisplayImageOptions$Builder showStubImage(int)
+    202:203:public com.nostra13.universalimageloader.core.DisplayImageOptions$Builder showImageForEmptyUri(int)
+    213:214:public com.nostra13.universalimageloader.core.DisplayImageOptions$Builder showImageOnFail(int)
+    219:220:public com.nostra13.universalimageloader.core.DisplayImageOptions$Builder resetViewBeforeLoading()
+    240:241:public com.nostra13.universalimageloader.core.DisplayImageOptions$Builder imageScaleType(com.nostra13.universalimageloader.core.assist.ImageScaleType)
+    246:247:public com.nostra13.universalimageloader.core.DisplayImageOptions$Builder bitmapConfig(android.graphics.Bitmap$Config)
+    252:253:public com.nostra13.universalimageloader.core.DisplayImageOptions$Builder delayBeforeLoading(int)
+    258:259:public com.nostra13.universalimageloader.core.DisplayImageOptions$Builder extraForDownloader(java.lang.Object)
+    268:269:public com.nostra13.universalimageloader.core.DisplayImageOptions$Builder preProcessor(com.nostra13.universalimageloader.core.process.BitmapProcessor)
+    277:278:public com.nostra13.universalimageloader.core.DisplayImageOptions$Builder postProcessor(com.nostra13.universalimageloader.core.process.BitmapProcessor)
+    286:287:public com.nostra13.universalimageloader.core.DisplayImageOptions$Builder displayer(com.nostra13.universalimageloader.core.display.BitmapDisplayer)
+    292:301:public com.nostra13.universalimageloader.core.DisplayImageOptions$Builder cloneFrom(com.nostra13.universalimageloader.core.DisplayImageOptions)
+com.nostra13.universalimageloader.core.ImageLoader:
+    static final java.lang.String LOG_WAITING_FOR_RESUME
+    static final java.lang.String LOG_RESUME_AFTER_PAUSE
+    static final java.lang.String LOG_DELAY_BEFORE_LOADING
+    static final java.lang.String LOG_START_DISPLAY_IMAGE_TASK
+    static final java.lang.String LOG_WAITING_FOR_IMAGE_LOADED
+    static final java.lang.String LOG_GET_IMAGE_FROM_MEMORY_CACHE_AFTER_WAITING
+    static final java.lang.String LOG_LOAD_IMAGE_FROM_MEMORY_CACHE
+    static final java.lang.String LOG_LOAD_IMAGE_FROM_INTERNET
+    static final java.lang.String LOG_LOAD_IMAGE_FROM_DISC_CACHE
+    static final java.lang.String LOG_IMAGE_SUBSAMPLING
+    static final java.lang.String LOG_IMAGE_SCALED
+    static final java.lang.String LOG_PREPROCESS_IMAGE
+    static final java.lang.String LOG_POSTPROCESS_IMAGE
+    static final java.lang.String LOG_CACHE_IMAGE_IN_MEMORY
+    static final java.lang.String LOG_CACHE_IMAGE_ON_DISC
+    static final java.lang.String LOG_DISPLAY_IMAGE_IN_IMAGEVIEW
+    static final java.lang.String LOG_TASK_CANCELLED
+    static final java.lang.String LOG_TASK_INTERRUPTED
+    static final java.lang.String LOG_CANT_DECODE_IMAGE
+    private static final java.lang.String ERROR_WRONG_ARGUMENTS
+    private static final java.lang.String ERROR_NOT_INIT
+    private static final java.lang.String ERROR_INIT_CONFIG_WITH_NULL
+    119:119:public boolean isInited()
+    153:154:public void displayImage(java.lang.String,android.widget.ImageView,com.nostra13.universalimageloader.core.DisplayImageOptions)
+    171:172:public void displayImage(java.lang.String,android.widget.ImageView,com.nostra13.universalimageloader.core.assist.ImageLoadingListener)
+    258:259:public void loadImage(java.lang.String,com.nostra13.universalimageloader.core.assist.ImageLoadingListener)
+    277:278:public void loadImage(java.lang.String,com.nostra13.universalimageloader.core.assist.ImageSize,com.nostra13.universalimageloader.core.assist.ImageLoadingListener)
+    297:298:public void loadImage(java.lang.String,com.nostra13.universalimageloader.core.DisplayImageOptions,com.nostra13.universalimageloader.core.assist.ImageLoadingListener)
+    321:341:public void loadImage(java.lang.String,com.nostra13.universalimageloader.core.assist.ImageSize,com.nostra13.universalimageloader.core.DisplayImageOptions,com.nostra13.universalimageloader.core.assist.ImageLoadingListener)
+    360:361:public com.nostra13.universalimageloader.cache.memory.MemoryCacheAware getMemoryCache()
+    370:372:public void clearMemoryCache()
+    380:381:public com.nostra13.universalimageloader.cache.disc.DiscCacheAware getDiscCache()
+    390:392:public void clearDiscCache()
+    396:396:public java.lang.String getLoadingUriForView(android.widget.ImageView)
+    405:406:public void cancelDisplayTask(android.widget.ImageView)
+    414:415:public void denyNetworkDownloads()
+    419:420:public void allowNetworkDownloads()
+    427:428:public void pause()
+    432:433:public void resume()
+    437:438:public void stop()
+com.nostra13.universalimageloader.core.ImageLoaderConfiguration:
+    121:121:public static com.nostra13.universalimageloader.core.ImageLoaderConfiguration createDefault(android.content.Context)
+com.nostra13.universalimageloader.core.ImageLoaderConfiguration$Builder:
+    private static final java.lang.String WARNING_OVERLAP_MEMORY_CACHE_SIZE
+    private static final java.lang.String WARNING_MEMORY_CACHE_ALREADY_SET
+    private static final java.lang.String WARNING_OVERLAP_DISC_CACHE_SIZE
+    private static final java.lang.String WARNING_OVERLAP_DISC_CACHE_FILE_COUNT
+    private static final java.lang.String WARNING_OVERLAP_DISC_CACHE_FILE_NAME_GENERATOR
+    private static final java.lang.String WARNING_DISC_CACHE_ALREADY_SET
+    public static final int DEFAULT_THREAD_POOL_SIZE
+    public static final int DEFAULT_THREAD_PRIORITY
+    public static final int DEFAULT_MEMORY_CACHE_SIZE
+    185:187:public com.nostra13.universalimageloader.core.ImageLoaderConfiguration$Builder memoryCacheExtraOptions(int,int)
+    202:206:public com.nostra13.universalimageloader.core.ImageLoaderConfiguration$Builder discCacheExtraOptions(int,int,android.graphics.Bitmap$CompressFormat,int)
+    214:215:public com.nostra13.universalimageloader.core.ImageLoaderConfiguration$Builder threadPoolSize(int)
+    224:233:public com.nostra13.universalimageloader.core.ImageLoaderConfiguration$Builder threadPriority(int)
+    245:246:public com.nostra13.universalimageloader.core.ImageLoaderConfiguration$Builder denyCacheImageMultipleSizesInMemory()
+    256:257:public com.nostra13.universalimageloader.core.ImageLoaderConfiguration$Builder offOutOfMemoryHandling()
+    265:266:public com.nostra13.universalimageloader.core.ImageLoaderConfiguration$Builder tasksProcessingOrder(com.nostra13.universalimageloader.core.assist.QueueProcessingType)
+    278:282:public com.nostra13.universalimageloader.core.ImageLoaderConfiguration$Builder memoryCacheSize(int)
+    293:296:public com.nostra13.universalimageloader.core.ImageLoaderConfiguration$Builder memoryCache(com.nostra13.universalimageloader.cache.memory.MemoryCacheAware)
+    308:313:public com.nostra13.universalimageloader.core.ImageLoaderConfiguration$Builder discCacheSize(int)
+    325:331:public com.nostra13.universalimageloader.core.ImageLoaderConfiguration$Builder discCacheFileCount(int)
+    341:344:public com.nostra13.universalimageloader.core.ImageLoaderConfiguration$Builder discCacheFileNameGenerator(com.nostra13.universalimageloader.cache.disc.naming.FileNameGenerator)
+    354:355:public com.nostra13.universalimageloader.core.ImageLoaderConfiguration$Builder imageDownloader(com.nostra13.universalimageloader.core.download.ImageDownloader)
+    366:371:public com.nostra13.universalimageloader.core.ImageLoaderConfiguration$Builder discCache(com.nostra13.universalimageloader.cache.disc.DiscCacheAware)
+    387:388:public com.nostra13.universalimageloader.core.ImageLoaderConfiguration$Builder enableLogging()
+com.nostra13.universalimageloader.core.ImageLoaderEngine:
+    132:133:void denyNetworkDownloads()
+    137:138:void allowNetworkDownloads()
+    145:146:void pause()
+    150:154:void resume()
+    158:167:void stop()
+com.nostra13.universalimageloader.core.LoadAndDisplayImageTask:
+    private static final int ATTEMPT_COUNT_TO_DECODE_BITMAP
+    private static final int BUFFER_SIZE
+com.nostra13.universalimageloader.core.assist.DiscCacheUtil
+com.nostra13.universalimageloader.core.assist.FlushedInputStream:
+    14:15:public FlushedInputStream(java.io.InputStream)
+com.nostra13.universalimageloader.core.assist.ImageSize:
+    private static final java.lang.String TO_STRING_PATTERN
+com.nostra13.universalimageloader.core.assist.MemoryCacheUtil:
+    private static final java.lang.String URI_AND_SIZE_SEPARATOR
+    private static final java.lang.String MEMORY_CACHE_KEY_FORMAT
+    38:39:private MemoryCacheUtil()
+    68:74:public static java.util.List findCachedBitmapsForImageUri(java.lang.String,com.nostra13.universalimageloader.cache.memory.MemoryCacheAware)
+    84:90:public static java.util.List findCacheKeysForImageUri(java.lang.String,com.nostra13.universalimageloader.cache.memory.MemoryCacheAware)
+    100:109:public static void removeFromCache(java.lang.String,com.nostra13.universalimageloader.cache.memory.MemoryCacheAware)
+com.nostra13.universalimageloader.core.assist.PauseOnScrollListener
+com.nostra13.universalimageloader.core.assist.deque.BlockingDeque:
+    public abstract void addFirst(java.lang.Object)
+    public abstract void addLast(java.lang.Object)
+    public abstract boolean offerFirst(java.lang.Object)
+    public abstract boolean offerLast(java.lang.Object)
+    public abstract void putFirst(java.lang.Object)
+    public abstract void putLast(java.lang.Object)
+    public abstract boolean offerFirst(java.lang.Object,long,java.util.concurrent.TimeUnit)
+    public abstract boolean offerLast(java.lang.Object,long,java.util.concurrent.TimeUnit)
+    public abstract java.lang.Object takeFirst()
+    public abstract java.lang.Object takeLast()
+    public abstract java.lang.Object pollFirst(long,java.util.concurrent.TimeUnit)
+    public abstract java.lang.Object pollLast(long,java.util.concurrent.TimeUnit)
+    public abstract boolean removeFirstOccurrence(java.lang.Object)
+    public abstract boolean removeLastOccurrence(java.lang.Object)
+    public abstract boolean add(java.lang.Object)
+    public abstract boolean offer(java.lang.Object)
+    public abstract void put(java.lang.Object)
+    public abstract boolean offer(java.lang.Object,long,java.util.concurrent.TimeUnit)
+    public abstract java.lang.Object remove()
+    public abstract java.lang.Object poll()
+    public abstract java.lang.Object take()
+    public abstract java.lang.Object poll(long,java.util.concurrent.TimeUnit)
+    public abstract java.lang.Object element()
+    public abstract java.lang.Object peek()
+    public abstract boolean remove(java.lang.Object)
+    public abstract boolean contains(java.lang.Object)
+    public abstract int size()
+    public abstract java.util.Iterator iterator()
+    public abstract void push(java.lang.Object)
+com.nostra13.universalimageloader.core.assist.deque.Deque:
+    public abstract void addFirst(java.lang.Object)
+    public abstract void addLast(java.lang.Object)
+    public abstract boolean offerFirst(java.lang.Object)
+    public abstract boolean offerLast(java.lang.Object)
+    public abstract java.lang.Object removeFirst()
+    public abstract java.lang.Object removeLast()
+    public abstract java.lang.Object pollFirst()
+    public abstract java.lang.Object pollLast()
+    public abstract java.lang.Object getFirst()
+    public abstract java.lang.Object getLast()
+    public abstract java.lang.Object peekFirst()
+    public abstract java.lang.Object peekLast()
+    public abstract boolean removeFirstOccurrence(java.lang.Object)
+    public abstract boolean removeLastOccurrence(java.lang.Object)
+    public abstract boolean add(java.lang.Object)
+    public abstract boolean offer(java.lang.Object)
+    public abstract java.lang.Object remove()
+    public abstract java.lang.Object poll()
+    public abstract java.lang.Object element()
+    public abstract java.lang.Object peek()
+    public abstract void push(java.lang.Object)
+    public abstract java.lang.Object pop()
+    public abstract boolean remove(java.lang.Object)
+    public abstract boolean contains(java.lang.Object)
+    public abstract int size()
+    public abstract java.util.Iterator iterator()
+    public abstract java.util.Iterator descendingIterator()
+com.nostra13.universalimageloader.core.assist.deque.LIFOLinkedBlockingDeque:
+    private static final long serialVersionUID
+com.nostra13.universalimageloader.core.assist.deque.LinkedBlockingDeque:
+    private static final long serialVersionUID
+    165:178:public LinkedBlockingDeque(java.util.Collection)
+    294:296:public void addFirst(java.lang.Object)
+    342:352:public void putFirst(java.lang.Object)
+    377:390:public boolean offerFirst(java.lang.Object,long,java.util.concurrent.TimeUnit)
+    430:432:public java.lang.Object removeLast()
+    446:451:public java.lang.Object pollLast()
+    469:477:public java.lang.Object takeLast()
+    501:513:public java.lang.Object pollLast(long,java.util.concurrent.TimeUnit)
+    530:532:public java.lang.Object getLast()
+    546:551:public java.lang.Object peekLast()
+    573:585:public boolean removeLastOccurrence(java.lang.Object)
+    738:739:public void push(java.lang.Object)
+    745:745:public java.lang.Object pop()
+    1007:1007:public java.util.Iterator descendingIterator()
+    1133:1146:private void writeObject(java.io.ObjectOutputStream)
+    1155:1167:private void readObject(java.io.ObjectInputStream)
+com.nostra13.universalimageloader.core.assist.deque.LinkedBlockingDeque$DescendingItr
+com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer
+com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer
+com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer$1
+com.nostra13.universalimageloader.core.download.BaseImageDownloader:
+    public static final int DEFAULT_HTTP_CONNECT_TIMEOUT
+    public static final int DEFAULT_HTTP_READ_TIMEOUT
+    protected static final int BUFFER_SIZE
+    private static final java.lang.String ERROR_UNSUPPORTED_SCHEME
+    protected static final java.lang.String SCHEME_ASSETS_PREFIX
+    protected static final java.lang.String SCHEME_DRAWABLE_PREFIX
+    70:74:public BaseImageDownloader(android.content.Context,int,int)
+com.nostra13.universalimageloader.core.download.HttpClientImageDownloader
+com.nostra13.universalimageloader.core.download.ImageDownloader:
+    public static final java.lang.String SCHEME_HTTP
+    public static final java.lang.String SCHEME_HTTPS
+    public static final java.lang.String SCHEME_FILE
+    public static final java.lang.String SCHEME_CONTENT
+    public static final java.lang.String SCHEME_ASSETS
+    public static final java.lang.String SCHEME_DRAWABLE
+com.nostra13.universalimageloader.utils.IoUtils:
+    private static final int BUFFER_SIZE
+    33:34:private IoUtils()
+com.nostra13.universalimageloader.utils.L:
+    private static final java.lang.String LOG_FORMAT
+    32:33:private L()
+    36:37:public static varargs void d(java.lang.String,java.lang.Object[])
+    56:57:public static varargs void e(java.lang.Throwable,java.lang.String,java.lang.Object[])
+com.nostra13.universalimageloader.utils.StorageUtils:
+    private static final java.lang.String INDIVIDUAL_DIR_NAME
+    34:35:private StorageUtils()
+    84:91:public static java.io.File getOwnCacheDirectory(android.content.Context,java.lang.String)
 edu.selu.android.classygames.BuildConfig
-edu.selu.android.classygames.CheckersGameActivity:
-    public static final java.lang.String INTENT_DATA_GAME_ID
-    public static final java.lang.String INTENT_DATA_PERSON_CHALLENGED_ID
-    public static final java.lang.String INTENT_DATA_PERSON_CHALLENGED_NAME
-edu.selu.android.classygames.GamesListActivity:
-    public static final int NEED_TO_REFRESH
-edu.selu.android.classygames.GamesListActivity$AsyncPopulateGamesList:
-    private static final byte TOAST_NONE
-    private static final byte TOAST_NO_GAMES
-    private static final byte TOAST_SERVER_ERROR
-    private static final byte TOAST_SERVER_RESPONSE_ERROR
-edu.selu.android.classygames.ImageCache:
-    public com.koushikdutta.urlimageviewhelper.DiskLruCache mDiskCache
-    public android.support.v4.util.LruCache mMemoryCache
-    public static final int COMPRESS_QUALITY
-    public static final int APP_VERSION
-    public static final int VALUE_COUNT
-    public static final int IO_BUFFER_SIZE
-    public static final int DISK_CACHE_SIZE
-    public static final java.lang.String DISK_CACHE_SUBDIR
-    22:22:public ImageCache()
-edu.selu.android.classygames.LogoutActivity:
-    public static final int LOGGED_OUT
+edu.selu.android.classygames.ChessGameFragment:
+    private static final java.lang.String LOG_TAG
+edu.selu.android.classygames.ConfirmGameFragment:
+    public static final java.lang.String KEY_FRIEND_ID
+    public static final java.lang.String KEY_FRIEND_NAME
+    209:209:public boolean isLoaded()
+edu.selu.android.classygames.FriendsListFragment:
+    public static final int ASYNC_REFRESH_FRIENDS_LIST_IS_RUNNING
+    public static final int ASYNC_REFRESH_FRIENDS_LIST_IS_NOT_RUNNING
+edu.selu.android.classygames.GameFragmentActivity:
+    public static final int RESULT_CODE_FINISH
+    public static final int NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FRIEND_SELECTED
+    public static final java.lang.String BUNDLE_DATA_GAME_ID
+    public static final java.lang.String BUNDLE_DATA_PERSON_OPPONENT_ID
+    public static final java.lang.String BUNDLE_DATA_PERSON_OPPONENT_NAME
+    private static final java.lang.String KEY_ACTION_BAR_TITLE
+edu.selu.android.classygames.GameOverActivity:
+    public static final java.lang.String BUNDLE_DATA_MESSAGE_TYPE
+    public static final java.lang.String BUNDLE_DATA_PERSON_OPPONENT_ID
+    public static final java.lang.String BUNDLE_DATA_PERSON_OPPONENT_NAME
+edu.selu.android.classygames.GamesListFragment:
+    private static final java.lang.String LOG_TAG
+edu.selu.android.classygames.GenericGameFragment:
+    private static final java.lang.String LOG_TAG
+    public static final java.lang.String KEY_GAME_ID
+    public static final java.lang.String KEY_PERSON_ID
+    public static final java.lang.String KEY_PERSON_NAME
+    410:418:private boolean cancelRunningAsyncGetGame()
+    430:438:private boolean cancelRunningAsyncSendMove()
+    447:451:public void cancelRunningAnyAsyncTask()
+    577:577:public boolean isAnAsyncTaskRunning()
+    751:752:protected void readyToSendMove()
+edu.selu.android.classygames.MainActivity:
+    public static final int GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FINISH
 edu.selu.android.classygames.Manifest
 edu.selu.android.classygames.Manifest$permission
+edu.selu.android.classygames.NewGameFragmentActivity:
+    public static final int RESULT_CODE_DEFAULT
+    public static final int RESULT_CODE_FRIEND_SELECTED
+    public static final java.lang.String KEY_FRIEND_ID
+    public static final java.lang.String KEY_FRIEND_NAME
 edu.selu.android.classygames.R
 edu.selu.android.classygames.R$attr
 edu.selu.android.classygames.R$bool
@@ -1876,18 +2819,77 @@ edu.selu.android.classygames.R$menu
 edu.selu.android.classygames.R$string
 edu.selu.android.classygames.R$style
 edu.selu.android.classygames.R$styleable
-edu.selu.android.classygames.SecretConstants
-edu.selu.android.classygames.data.Person:
-    19:23:public Person(java.lang.String)
-edu.selu.android.classygames.games.Coordinate
-edu.selu.android.classygames.games.Game:
+edu.selu.android.classygames.games.GenericBoard:
+    protected static final byte BOARD_INVALID
+    protected static final byte BOARD_NEW_GAME
+    protected static final byte BOARD_NEW_MOVE
+    protected static final byte BOARD_WIN
+    120:136:public void flipTeams()
+    303:303:public boolean isPositionValid(byte,byte)
+    322:322:public boolean isPositionValid(int,int)
+    338:338:public boolean isPositionValid(edu.selu.android.classygames.games.Coordinate)
+    public abstract byte checkValidity()
+    public abstract byte checkValidity(org.json.JSONObject)
+edu.selu.android.classygames.games.GenericPiece:
+    private static final byte TEAM_NULL
+    public static final byte TEAM_PLAYER
+    public static final byte TEAM_OPPONENT
+    private static final byte TYPE_NULL
+edu.selu.android.classygames.games.Position:
+    54:57:public Position(edu.selu.android.classygames.games.Coordinate)
+    72:76:public Position(byte,byte,edu.selu.android.classygames.games.GenericPiece)
+    88:92:public Position(edu.selu.android.classygames.games.Coordinate,edu.selu.android.classygames.games.GenericPiece)
+edu.selu.android.classygames.games.checkers.Board:
+    private static final byte LENGTH_HORIZONTAL
+    private static final byte LENGTH_VERTICAL
+    private static final byte MAX_TEAM_SIZE
+    78:200:public byte checkValidity()
+    209:261:public byte checkValidity(org.json.JSONObject)
+edu.selu.android.classygames.games.checkers.Piece:
+    public static final byte TYPE_NORMAL
+    public static final byte TYPE_KING
+    46:47:public Piece(byte,byte)
+    90:90:public boolean isTypeNormal()
+    102:102:public boolean isTypeKing()
+edu.selu.android.classygames.games.chess.Board:
+    private static final byte LENGTH_HORIZONTAL
+    private static final byte LENGTH_VERTICAL
+    67:67:public byte checkValidity()
+    74:74:public byte checkValidity(org.json.JSONObject)
+edu.selu.android.classygames.games.chess.Piece:
+    public static final byte TYPE_PAWN
+    public static final byte TYPE_BISHOP
+    public static final byte TYPE_KNIGHT
+    public static final byte TYPE_ROOK
+    public static final byte TYPE_QUEEN
+    public static final byte TYPE_KING
+    79:79:public boolean isTypePawn()
+    91:91:public boolean isTypeBishop()
+    103:103:public boolean isTypeKnight()
+    115:115:public boolean isTypeRook()
+    127:127:public boolean isTypeQueen()
+    139:139:public boolean isTypeKing()
+edu.selu.android.classygames.models.Game:
     public static final boolean TURN_THEIRS
     public static final boolean TURN_YOURS
     public static final boolean TYPE_GAME
     public static final boolean TYPE_SEPARATOR
-    61:62:void setId(java.lang.String)
-    73:74:void setPerson(edu.selu.android.classygames.data.Person)
+    private static final byte WHICH_GAME_NULL
+    public static final byte WHICH_GAME_CHECKERS
+    public static final byte WHICH_GAME_CHESS
+    135:143:public Game(long,edu.selu.android.classygames.models.Person,java.lang.String,boolean)
+    359:359:public byte getWhichGame()
+    432:432:public boolean isTypeSeparator()
+    451:451:public boolean isValid()
+    504:511:public static boolean isWhichGameValid(byte)
+edu.selu.android.classygames.models.Person:
+    118:119:public void setId(long)
+    258:266:public static varargs boolean areIdsValid(long[])
+    286:294:public static varargs boolean areIdsValid(java.lang.String[])
+    331:339:public static varargs boolean areNamesValid(java.lang.String[])
+edu.selu.android.classygames.utilities.FacebookUtilities
 edu.selu.android.classygames.utilities.GCMIntentService:
+    private static final java.lang.String LOG_TAG
     public static final int GCM_NOTIFICATION_ID
     public static final int GCM_NOTIFICATION_LIGHTS
     public static final int GCM_NOTIFICATION_LIGHTS_ON
@@ -1895,77 +2897,54 @@ edu.selu.android.classygames.utilities.GCMIntentService:
     private static final java.lang.String PREFERENCES
     private static final java.lang.String PREFERENCES_FILE
     private static final java.lang.String PREFERENCES_REG_ID
+edu.selu.android.classygames.utilities.KeysAndConstants
 edu.selu.android.classygames.utilities.ServerUtilities:
+    public static final java.lang.String LOG_TAG
     public static final java.lang.String MIMETYPE_JSON
+    public static final java.lang.String ADDRESS_MAIN
+    public static final java.lang.String ADDRESS_GET_GAME
+    public static final java.lang.String ADDRESS_GET_GAMES
+    public static final java.lang.String ADDRESS_NEW_GAME
+    public static final java.lang.String ADDRESS_NEW_MOVE
+    public static final java.lang.String ADDRESS_NEW_REG_ID
+    public static final java.lang.String ADDRESS_REMOVE_REG_ID
     public static final java.lang.String POST_DATA
     public static final java.lang.String POST_DATA_BOARD
     public static final java.lang.String POST_DATA_ERROR
     public static final java.lang.String POST_DATA_FINISHED
     public static final java.lang.String POST_DATA_GAME_ID
+    public static final java.lang.String POST_DATA_GAME_TYPE
+    public static final byte POST_DATA_GAME_TYPE_CHECKERS
+    public static final byte POST_DATA_GAME_TYPE_CHESS
     public static final java.lang.String POST_DATA_ID
     public static final java.lang.String POST_DATA_LAST_MOVE
+    public static final java.lang.String POST_DATA_MESSAGE_TYPE
+    public static final byte POST_DATA_MESSAGE_TYPE_NEW_GAME
+    public static final byte POST_DATA_MESSAGE_TYPE_NEW_MOVE
+    public static final byte POST_DATA_MESSAGE_TYPE_GAME_OVER_LOSE
+    public static final byte POST_DATA_MESSAGE_TYPE_GAME_OVER_WIN
     public static final java.lang.String POST_DATA_NAME
     public static final java.lang.String POST_DATA_REG_ID
     public static final java.lang.String POST_DATA_RESULT
     public static final java.lang.String POST_DATA_TURN
     public static final java.lang.String POST_DATA_TURN_THEIRS
     public static final java.lang.String POST_DATA_TURN_YOURS
-    public static final java.lang.String POST_DATA_TYPE
-    public static final byte POST_DATA_TYPE_NEW_GAME
-    public static final byte POST_DATA_TYPE_NEW_MOVE
-    public static final byte POST_DATA_TYPE_GAME_OVER_LOSE
-    public static final byte POST_DATA_TYPE_GAME_OVER_WIN
     public static final java.lang.String POST_DATA_SUCCESS
     public static final java.lang.String POST_DATA_USER_CHALLENGED
     public static final java.lang.String POST_DATA_USER_CREATOR
-    public static final java.lang.String SERVER_ADDRESS
-    public static final java.lang.String SERVER_GET_GAME
-    public static final java.lang.String SERVER_GET_GAME_ADDRESS
-    public static final java.lang.String SERVER_GET_GAMES
-    public static final java.lang.String SERVER_GET_GAMES_ADDRESS
-    public static final java.lang.String SERVER_NEW_GAME
-    public static final java.lang.String SERVER_NEW_GAME_ADDRESS
-    public static final java.lang.String SERVER_NEW_MOVE
-    public static final java.lang.String SERVER_NEW_MOVE_ADDRESS
-    public static final java.lang.String SERVER_NEW_REG_ID
-    public static final java.lang.String SERVER_NEW_REG_ID_ADDRESS
-    public static final java.lang.String SERVER_REMOVE_REG_ID
-    public static final java.lang.String SERVER_REMOVE_REG_ID_ADDRESS
-    25:25:public ServerUtilities()
+    32:32:public ServerUtilities()
+edu.selu.android.classygames.utilities.TypefaceUtilities:
+    public static final byte BLUE_HIGHWAY_D
+    public static final byte SNELL_ROUNDHAND_BDSCR
+    private static final java.lang.String PATH
+    private static final java.lang.String BLUE_HIGHWAY_D_PATH
+    private static final java.lang.String SNELL_ROUNDHAND_BDSCR_PATH
+    11:11:public TypefaceUtilities()
 edu.selu.android.classygames.utilities.Utilities:
     public static final java.lang.String LOG_TAG
     public static final java.lang.String SHARED_PREFERENCES_NAME
     private static final java.lang.String WHO_AM_I_ID
     private static final java.lang.String WHO_AM_I_NAME
-    public static final int COMPRESS_QUALITY
-    public static final int APP_VERSION
-    public static final int VALUE_COUNT
-    public static final int IO_BUFFER_SIZE
-    public static final int DISK_CACHE_SIZE
-    public static final java.lang.String DISK_CACHE_SUBDIR
-    public static final int TYPEFACE_BLUE_HIGHWAY_D
-    public static final int TYPEFACE_BLUE_HIGHWAY_RG
-    public static final int TYPEFACE_SNELL_ROUNDHAND_BDSCR
-    public static final int TYPEFACE_SNELL_ROUNDHAND_BLKSCR
-    private static final java.lang.String TYPEFACE_BLUE_HIGHWAY_D_PATH
-    private static final java.lang.String TYPEFACE_BLUE_HIGHWAY_RD_PATH
-    private static final java.lang.String TYPEFACE_SNELL_ROUNDHAND_BDSCR_PATH
-    private static final java.lang.String TYPEFACE_SNELL_ROUNDHAND_BLKSCR_PATH
-    public static final java.lang.String FACEBOOK_ACCESS_TOKEN
-    public static final java.lang.String FACEBOOK_EXPIRES
-    public static final java.lang.String FACEBOOK_MY_ID
-    public static final java.lang.String FACEBOOK_MY_NAME
-    public static final java.lang.String FACEBOOK_GRAPH_API_URL
-    public static final java.lang.String FACEBOOK_GRAPH_API_URL_PICTURE
-    public static final java.lang.String FACEBOOK_GRAPH_API_URL_PICTURE_SSL
-    public static final java.lang.String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE
-    public static final java.lang.String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_LARGE
-    public static final java.lang.String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_LARGE_SSL
-    public static final java.lang.String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_NORMAL
-    public static final java.lang.String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_NORMAL_SSL
-    public static final java.lang.String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SMALL
-    public static final java.lang.String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SMALL_SSL
-    public static final java.lang.String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE
-    public static final java.lang.String FACEBOOK_GRAPH_API_URL_PICTURE_TYPE_SQUARE_SSL
-    30:30:public Utilities()
-    147:153:public static void easyToastAndLogAll(android.content.Context,java.lang.String)
+    26:26:public Utilities()
+    115:116:public static void easyToast(android.content.Context,int)
+    158:164:public static void easyToastAndLogAll(android.content.Context,java.lang.String)
