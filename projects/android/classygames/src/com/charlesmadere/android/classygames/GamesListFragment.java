@@ -37,8 +37,10 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.charlesmadere.android.classygames.models.ForfeitGame;
 import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.Person;
+import com.charlesmadere.android.classygames.models.SkipMove;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
 import com.charlesmadere.android.classygames.utilities.ServerUtilities;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
@@ -212,6 +214,16 @@ public class GamesListFragment extends SherlockFragment implements
 										@Override
 										public void onClick(final DialogInterface dialog, final int which)
 										{
+											final SkipMove skipMove = new SkipMove(context, game, new SkipMove.OnSkipMoveCompleteListener()
+											{
+												@Override
+												public void onSkipMoveComplete()
+												{
+													refreshGamesList();
+												}
+											});
+
+											skipMove.begin();
 											dialog.dismiss();
 										}
 									})
@@ -225,6 +237,16 @@ public class GamesListFragment extends SherlockFragment implements
 										@Override
 										public void onClick(final DialogInterface dialog, final int which)
 										{
+											final ForfeitGame forfeitGame = new ForfeitGame(context, game, new ForfeitGame.OnForfeitGameCompleteListener()
+											{
+												@Override
+												public void onForfeitGameComplete()
+												{
+													refreshGamesList();
+												}
+											});
+
+											forfeitGame.begin();
 											dialog.dismiss();
 										}
 									})

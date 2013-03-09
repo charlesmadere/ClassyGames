@@ -1153,7 +1153,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 				}
 			});
 
-			progressDialog.setTitle(R.string.generic_game_fragment_progressdialog_title);
+			progressDialog.setTitle(R.string.progressdialog_title_generic);
 			progressDialog.show();
 		}
 
@@ -1191,29 +1191,17 @@ public abstract class GenericGameFragment extends SherlockFragment
 				{
 					final Person whoAmI = Utilities.getWhoAmI(context);
 
-					final JSONObject boardJSON = board.makeJSON();
-					final String boardJSONString = boardJSON.toString();
-
 					final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CREATOR, whoAmI.getIdAsString()));
-					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_BOARD, boardJSONString));
+					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CHALLENGED, game.getPerson().getIdAsString()));
+					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_NAME, game.getPerson().getName()));
+					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_GAME_ID, game.getId()));
 
-					if (!isCancelled())
-					{
-						nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CHALLENGED, game.getPerson().getIdAsString()));
-						nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_NAME, game.getPerson().getName()));
-						nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_GAME_ID, game.getId()));
-
-						serverResponse = ServerUtilities.postToServer(ServerUtilities.ADDRESS_SKIP_MOVE, nameValuePairs);
-					}
+					serverResponse = ServerUtilities.postToServer(ServerUtilities.ADDRESS_SKIP_MOVE, nameValuePairs);
 				}
 				catch (final IOException e)
 				{
 					Log.e(LOG_TAG, "IOException error in AsyncSkipMove - doInBackground()!", e);
-				}
-				catch (final JSONException e)
-				{
-					Log.e(LOG_TAG, "JSONException error in AsyncSkipMove - doInBackground()!", e);
 				}
 			}
 
@@ -1275,7 +1263,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 				}
 			});
 
-			progressDialog.setTitle(R.string.generic_game_fragment_progressdialog_title);
+			progressDialog.setTitle(R.string.progressdialog_title_generic);
 			progressDialog.show();
 		}
 
