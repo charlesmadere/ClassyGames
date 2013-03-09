@@ -13,7 +13,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -21,9 +23,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnCreateContextMenuListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -42,7 +46,10 @@ import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
-public class GamesListFragment extends SherlockFragment implements OnItemClickListener
+public class GamesListFragment extends SherlockFragment implements
+	OnCreateContextMenuListener,
+	OnItemClickListener,
+	OnItemLongClickListener
 {
 
 
@@ -162,9 +169,83 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 	{
 		final Game game = gamesListAdapter.getItem(position);
 
-		if (game.isTypeGame())
+		if (game.isTypeGame() && game.isTurnYours())
 		{
 			gamesListFragmentOnGameSelectedListener.gamesListFragmentOnGameSelected(game);
+		}
+	}
+
+
+	@Override
+	public boolean onItemLongClick(final AdapterView<?> l, final View v, int position, final long id)
+	{
+		final Game game = gamesListAdapter.getItem(position);
+
+		if (game.isTypeGame())
+		{
+			v.setSelected(true);
+
+			final LayoutInflater inflater = getLayoutInflater(getArguments());
+
+			final Context context = getSherlockActivity();
+			final AlertDialog.Builder builder = new AlertDialog.Builder(context)
+				.setMessage(getString(R.string.games_list_fragment_context_menu_text, game.getPerson().getName()))
+				.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
+				{
+					@Override
+					public void onClick(final DialogInterface dialog, final int which)
+					{
+						dialog.dismiss();
+					}
+				})
+				.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener()
+				{
+					@Override
+					public void onClick(final DialogInterface dialog, final int which)
+					{
+						dialog.dismiss();
+					}
+				})
+				.setView(inflater.inflate(R.layout.games_list_fragment_context_menu, null));
+
+			final AlertDialog dialog = builder.create();
+			dialog.show();
+
+			dialog.findViewById(R.id.games_list_fragment_context_menu_forfeit_game).setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(final View v)
+				{
+					final AlertDialog.Builder builder = new AlertDialog.Builder(context)
+						.setMessage(R.string.forfeit_game_dialog_message)
+						.setNegativeButton(R.string.no, new DialogInterface.OnClickListener()
+						{
+							@Override
+							public void onClick(final DialogInterface dialog, final int which)
+							{
+								dialog.dismiss();
+							}
+						})
+						.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
+						{
+							@Override
+							public void onClick(final DialogInterface dialog, final int which)
+							{
+								dialog.dismiss();
+							}
+						})
+						.setTitle(R.string.forfeit_game_dialog_title);
+
+					builder.show();
+					dialog.dismiss();
+				}
+			});
+
+			return true;
+		}
+		else
+		{
+			return false;
 		}
 	}
 
@@ -360,11 +441,12 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 			if (games != null && games.size() >= 1)
 			{
 				inflater.inflate(R.layout.games_list_fragment, viewGroup);
-
 				gamesListAdapter = new GamesListAdapter(fragmentActivity, R.layout.games_list_fragment_listview_item, games);
+
 				final ListView listView = (ListView) viewGroup.findViewById(R.id.games_list_fragment_listview);
 				listView.setAdapter(gamesListAdapter);
 				listView.setOnItemClickListener(GamesListFragment.this);
+				listView.setOnItemLongClickListener(GamesListFragment.this);
 			}
 			else
 			{
@@ -586,11 +668,6 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 
 				final TextView time = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_time);
 				time.setText(game.getTimestampFormatted(context));
-
-				if (game.isTurnTheirs())
-				{
-					convertView.setOnClickListener(null);
-				}
 			}
 			else
 			{
@@ -604,6 +681,7 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 				}
 
 				convertView.setOnClickListener(null);
+				convertView.setOnLongClickListener(null);
 			}
 
 			return convertView;

@@ -19,6 +19,9 @@
 	<string name="empty_game_fragment_imageview_placeholder">No game is currently loaded!</string>
 	<string name="empty_game_fragment_title">Empty Game</string>
 	<string name="facebook_app_id">324400870964487</string>
+	<string name="forfeit_game">Forfeit Game</string>
+	<string name="forfeit_game_dialog_message">Are you sure that you want to forfeit this game?</string>
+	<string name="forfeit_game_dialog_title">Forfeit Game</string>
 	<string name="friends_list_fragment_cancelled_text">Cancelled loading your Facebook Friends List!</string>
 	<string name="friends_list_fragment_listview_item_picture_description">Friend\'s Picture</string>
 	<string name="friends_list_fragment_loading_text">Loading your Facebook Friends List&#8230;</string>
@@ -108,6 +111,8 @@
 	<string name="game_timestamp_almost_an_hour_ago">almost an hour ago</string>
 	<string name="game_timestamp_just_now">just now</string>
 	<string name="games_list_fragment_cancelled_text">Cancelled loading your Games List!</string>
+	<string name="games_list_fragment_context_menu_text">Select an action for this game against %1$s.</string>
+	<string name="games_list_fragment_context_menu_text_generic">Select an action for this game.</string>
 	<string name="games_list_fragment_getgames_error">Server was unable to respond with a list of games. Please try again later!</string>
 	<string name="games_list_fragment_getgames_no_games">You have no active games!</string>
 	<string name="games_list_fragment_getgames_response_error">Server was not found. Please try again later!</string>

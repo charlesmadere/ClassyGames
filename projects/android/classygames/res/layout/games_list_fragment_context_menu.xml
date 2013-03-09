@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+	android:gravity="center_vertical"
+	android:layout_height="wrap_content"
+	android:layout_width="wrap_content"
+	android:orientation="vertical"
+	android:paddingLeft="8dip"
+	android:paddingRight="8dip">
+	<RadioButton
+		android:drawableLeft="@drawable/ab_skip_move"
+		android:gravity="center_vertical"
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:text="@string/skip_move"
+		android:textSize="16sp" />
+	<RadioButton
+		android:drawableLeft="@drawable/ab_forfeit_game"
+		android:gravity="center_vertical"
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:text="@string/forfeit_game"
+		android:textSize="16sp" />
+</RadioGroup>
