@@ -9,6 +9,7 @@
 	<RadioButton
 		android:drawableLeft="@drawable/ab_skip_move"
 		android:gravity="center_vertical"
+		android:id="@+id/games_list_fragment_context_menu_radiobutton_skip_move"
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
 		android:text="@string/skip_move"
@@ -16,6 +17,7 @@
 	<RadioButton
 		android:drawableLeft="@drawable/ab_forfeit_game"
 		android:gravity="center_vertical"
+		android:id="@+id/games_list_fragment_context_menu_radiobutton_forfeit_game"
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
 		android:text="@string/forfeit_game"
