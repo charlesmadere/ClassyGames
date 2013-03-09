@@ -830,7 +830,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		if (Utilities.verifyValidString(game.getId()) && !isAsyncSkipMoveRunning)
 		{
 			final AlertDialog.Builder builder = new AlertDialog.Builder(getSherlockActivity())
-				.setMessage(R.string.generic_game_fragment_skipmove_dialog_message)
+				.setMessage(R.string.skip_move_dialog_message)
 				.setNegativeButton(R.string.no, new DialogInterface.OnClickListener()
 				{
 					@Override
@@ -853,7 +853,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 						dialog.dismiss();
 					}
 				})
-				.setTitle(R.string.generic_game_fragment_skipmove_dialog_title);
+				.setTitle(R.string.skip_move_dialog_title);
 
 			builder.show();
 		}
@@ -1264,7 +1264,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			progressDialog = new ProgressDialog(context);
 			progressDialog.setCancelable(true);
 			progressDialog.setCanceledOnTouchOutside(true);
-			progressDialog.setMessage(context.getString(R.string.generic_game_fragment_skipmove_progressdialog_message));
+			progressDialog.setMessage(context.getString(R.string.skip_move_progressdialog_message));
 
 			progressDialog.setOnCancelListener(new OnCancelListener()
 			{

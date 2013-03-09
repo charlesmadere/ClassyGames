@@ -20,8 +20,8 @@
 	<string name="empty_game_fragment_title">Empty Game</string>
 	<string name="facebook_app_id">324400870964487</string>
 	<string name="forfeit_game">Forfeit Game</string>
-	<string name="forfeit_game_dialog_message">Are you sure that you want to forfeit this game?</string>
-	<string name="forfeit_game_dialog_title">Forfeit Game</string>
+	<string name="forfeit_game_dialog_message">Are you sure that you want to forfeit this game? Really?</string>
+	<string name="forfeit_game_dialog_title">Forfeit Game?</string>
 	<string name="friends_list_fragment_cancelled_text">Cancelled loading your Facebook Friends List!</string>
 	<string name="friends_list_fragment_listview_item_picture_description">Friend\'s Picture</string>
 	<string name="friends_list_fragment_loading_text">Loading your Facebook Friends List&#8230;</string>
@@ -128,9 +128,6 @@
 	<string name="generic_game_fragment_loading_text">Loading game&#8230;</string>
 	<string name="generic_game_fragment_progressdialog_title">Classy Hamsters are working diligently!</string>
 	<string name="generic_game_fragment_sendmove_progressdialog_message">Sending your class to our server, the hamsters will process it shortly!</string>
-	<string name="generic_game_fragment_skipmove_dialog_message">Are you sure that you want to skip your turn? For real?</string>
-	<string name="generic_game_fragment_skipmove_dialog_title">Skip your turn?</string>
-	<string name="generic_game_fragment_skipmove_progressdialog_message">Sending your decision to skip your turn to our server, the hamsters are processing it&#8230;</string>
 	<string name="generic_game_fragment_title">Generic Game Fragment</string>
 	<string name="login_with_facebook">Login with Facebook</string>
 	<string name="logout">Logout</string>
@@ -176,6 +173,9 @@
 	<string name="shark_activity_imageview_description">Sharkwork</string>
 	<string name="shark_activity_title">Sharkwork</string>
 	<string name="skip_move">Skip Move</string>
+	<string name="skip_move_dialog_message">Are you sure that you want to skip your turn? For real?</string>
+	<string name="skip_move_dialog_title">Skip your turn?</string>
+	<string name="skip_move_progressdialog_message">Sending your decision to skip your turn to our server, the hamsters are processing it&#8230;</string>
 	<string name="undo_move">Undo Move</string>
 	<string name="won">won</string>
 	<string name="yes">Yes</string>

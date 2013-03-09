@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string-array
+		name="games_list_fragment_context_menu_entries">
+		<item>@string/skip_move</item>
+		<item>@string/forfeit_game</item>
+	</string-array>
+</resources>

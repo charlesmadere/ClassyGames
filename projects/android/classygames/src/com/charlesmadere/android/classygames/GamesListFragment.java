@@ -31,7 +31,6 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -186,70 +185,77 @@ public class GamesListFragment extends SherlockFragment implements
 		{
 			v.setSelected(true);
 
-			final LayoutInflater inflater = getLayoutInflater(getArguments());
-
 			final Context context = getSherlockActivity();
+			final String[] items = getResources().getStringArray(R.array.games_list_fragment_context_menu_entries);
+
 			final AlertDialog.Builder builder = new AlertDialog.Builder(context)
-				.setMessage(getString(R.string.games_list_fragment_context_menu_text, game.getPerson().getName()))
-				.setView(inflater.inflate(R.layout.games_list_fragment_context_menu, null));
-
-			final AlertDialog alertDialog = builder.create();
-
-			alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.cancel), new DialogInterface.OnClickListener()
-			{
-				@Override
-				public void onClick(final DialogInterface dialog, final int which)
+				.setItems(items, new DialogInterface.OnClickListener()
 				{
-					dialog.dismiss();
-				}
-			});
-
-			alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.okay), new DialogInterface.OnClickListener()
-			{
-				@Override
-				public void onClick(final DialogInterface dialog, final int which)
-				{
-					final RadioButton skipMove = (RadioButton) alertDialog.findViewById(R.id.games_list_fragment_context_menu_radiobutton_skip_move);
-					final RadioButton forfeitGame = (RadioButton) alertDialog.findViewById(R.id.games_list_fragment_context_menu_radiobutton_forfeit_game);
-
-					if (skipMove.isChecked() || forfeitGame.isChecked())
+					@Override
+					public void onClick(final DialogInterface dialog, final int which)
 					{
-						final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
-						if (skipMove.isChecked())
+						if (which >= 0 && which <= 1)
 						{
-							
-						}
-						else if (forfeitGame.isChecked())
-						{
-							builder.setMessage(R.string.forfeit_game_dialog_message);
-							builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener()
-							{
-								@Override
-								public void onClick(final DialogInterface dialog, final int which)
-								{
-									dialog.dismiss();
-								}
-							});
-							builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
-							{
-								@Override
-								public void onClick(final DialogInterface dialog, final int which)
-								{
-									dialog.dismiss();
-								}
-							});
-							builder.setTitle(R.string.forfeit_game_dialog_title);
-						}
+							final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-						builder.show();
+							if (which == 0)
+							{
+								builder.setMessage(R.string.skip_move_dialog_message)
+									.setNegativeButton(R.string.no, new DialogInterface.OnClickListener()
+									{
+										@Override
+										public void onClick(final DialogInterface dialog, final int which)
+										{
+											dialog.dismiss();
+										}
+									})
+									.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
+									{
+										@Override
+										public void onClick(final DialogInterface dialog, final int which)
+										{
+											dialog.dismiss();
+										}
+									})
+									.setTitle(R.string.skip_move_dialog_title);
+							}
+							else if (which == 1)
+							{
+								builder.setMessage(R.string.forfeit_game_dialog_message)
+									.setNegativeButton(R.string.no, new DialogInterface.OnClickListener()
+									{
+										@Override
+										public void onClick(final DialogInterface dialog, final int which)
+										{
+											dialog.dismiss();
+										}
+									})
+									.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
+									{
+										@Override
+										public void onClick(final DialogInterface dialog, final int which)
+										{
+											dialog.dismiss();
+										}
+									})
+									.setTitle(R.string.forfeit_game_dialog_title);
+							}
+
+							builder.show();
+						}
 					}
+				})
+				.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
+				{
+					@Override
+					public void onClick(final DialogInterface dialog, final int which)
+					{
+						dialog.dismiss();
+					}
+				})
+				.setTitle(R.string.games_list_fragment_context_menu_text_generic);
 
-					dialog.dismiss();
-				}
-			});
-
-			alertDialog.show();
+			builder.show();
 
 			return true;
 		}
