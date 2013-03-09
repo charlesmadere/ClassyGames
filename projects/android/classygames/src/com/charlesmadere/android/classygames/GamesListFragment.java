@@ -23,7 +23,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnCreateContextMenuListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -47,7 +46,6 @@ import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
 public class GamesListFragment extends SherlockFragment implements
-	OnCreateContextMenuListener,
 	OnItemClickListener,
 	OnItemLongClickListener
 {
