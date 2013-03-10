@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string-array
+		name="games_list_fragment_context_menu_entries_turn_yours">
+		<item>@string/forfeit_game</item>
+		<item>@string/skip_move</item>
+	</string-array>
+	<string-array
+		name="games_list_fragment_context_menu_entries_turn_theirs">
+		<item>@string/forfeit_game</item>
+	</string-array>
+</resources>

@@ -51,6 +51,13 @@ public abstract class GenericBoard
 
 
 	/**
+	 * Boolean indicating whether or not a piece on this board has been moved.
+	 * This is different than the board being locked.
+	 */
+	protected boolean hasMoveBeenMade;
+
+
+	/**
 	 * Boolean indicating whether or not this board is locked. If the board is
 	 * locked then pieces can't be moved.
 	 */
@@ -146,16 +153,6 @@ public abstract class GenericBoard
 
 	/**
 	 * @return
-	 * Returns whether or not the board is currently locked.
-	 */
-	public boolean getIsBoardLocked()
-	{
-		return isBoardLocked;
-	}
-
-
-	/**
-	 * @return
 	 * Returns the number of positions that the board has horizontally.
 	 */
 	public byte getLengthHorizontal()
@@ -228,6 +225,28 @@ public abstract class GenericBoard
 	public Position getPosition(final Coordinate coordinate)
 	{
 		return getPosition(coordinate.getX(), coordinate.getY());
+	}
+
+
+	/**
+	 * @return
+	 * Returns whether or not the board is in a state that could be sent to the
+	 * server.
+	 */
+	public boolean hasMoveBeenMade()
+	{
+		return hasMoveBeenMade;
+	}
+
+
+	/**
+	 * @return
+	 * Returns whether or not the board is currently locked. This means that
+	 * the board is in a state that could be sent to the server.
+	 */
+	public boolean isBoardLocked()
+	{
+		return isBoardLocked;
 	}
 
 
@@ -447,6 +466,7 @@ public abstract class GenericBoard
 	 */
 	public void reset() throws JSONException
 	{
+		hasMoveBeenMade = false;
 		isBoardLocked = false;
 		initializePositions();
 		resetBoard();
