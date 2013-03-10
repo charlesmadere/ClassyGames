@@ -11,7 +11,7 @@ Classy Games v1.5 was released on March 3rd, 2013. It features a couple of cool 
 5. More!
 
 ### Classy Games v1.5.1 ###
-Classy Games v1.5.1 was released on March X, 2013. It features:
+Classy Games v1.5.1 was released on March 9, 2013. It features:
 
 1. The ability to forfeit games.
 2. The ability to skip your turn directly from the games list.
