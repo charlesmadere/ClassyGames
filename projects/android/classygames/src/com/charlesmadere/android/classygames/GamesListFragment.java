@@ -37,10 +37,11 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.charlesmadere.android.classygames.models.ForfeitGame;
 import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.Person;
-import com.charlesmadere.android.classygames.models.SkipMove;
+import com.charlesmadere.android.classygames.server.ServerApi;
+import com.charlesmadere.android.classygames.server.ServerApiForfeitGame;
+import com.charlesmadere.android.classygames.server.ServerApiSkipMove;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
 import com.charlesmadere.android.classygames.utilities.ServerUtilities;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
@@ -66,17 +67,16 @@ public class GamesListFragment extends SherlockFragment implements
 
 
 	/**
-	 * Boolean that marks if the AsyncPopulateGamesList AsyncTask is currently
-	 * running. This is used in conjunction with cancelling that AsyncTask. If
-	 * the cancel button is pressed and the AsyncTask is currently running...
-	 */
-	private boolean isAsyncRefreshGamesListRunning = false;
-
-
-	/**
 	 * Used to perform a refresh of the Games List.
 	 */
 	private AsyncRefreshGamesList asyncRefreshGamesList;
+
+
+	/**
+	 * Holds a handle to a currently running (if it's currently running)
+	 * ServerApi object.
+	 */
+	private ServerApi serverApiTask;
 
 
 	/**
@@ -151,7 +151,7 @@ public class GamesListFragment extends SherlockFragment implements
 	@Override
 	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
 	{
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && isAsyncRefreshGamesListRunning)
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && isAsyncRefreshGamesListRunning())
 		{
 			inflater.inflate(R.menu.generic_cancel, menu);
 		}
@@ -179,105 +179,83 @@ public class GamesListFragment extends SherlockFragment implements
 	@Override
 	public boolean onItemLongClick(final AdapterView<?> l, final View v, int position, final long id)
 	{
-		final Game game = gamesListAdapter.getItem(position);
-
-		if (game.isTypeGame())
+		if (!isAnAsyncTaskRunning())
 		{
-			v.setSelected(true);
+			final Game game = gamesListAdapter.getItem(position);
 
-			final Context context = getSherlockActivity();
-			final String[] items = getResources().getStringArray(R.array.games_list_fragment_context_menu_entries);
+			if (game.isTypeGame())
+			{
+				v.setSelected(true);
 
-			final AlertDialog.Builder builder = new AlertDialog.Builder(context)
-				.setItems(items, new DialogInterface.OnClickListener()
-				{
-					@Override
-					public void onClick(final DialogInterface dialog, final int which)
+				final Context context = getSherlockActivity();
+				final String[] items = getResources().getStringArray(R.array.games_list_fragment_context_menu_entries);
+
+				final AlertDialog.Builder builder = new AlertDialog.Builder(context)
+					.setItems(items, new DialogInterface.OnClickListener()
 					{
-						if (which >= 0 && which <= 1)
+						@Override
+						public void onClick(final DialogInterface dialog, final int which)
 						{
-							final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
-							if (which == 0)
+							if (!isAnAsyncTaskRunning())
 							{
-								builder.setMessage(R.string.skip_move_dialog_message)
-									.setNegativeButton(R.string.no, new DialogInterface.OnClickListener()
-									{
-										@Override
-										public void onClick(final DialogInterface dialog, final int which)
+								switch (which)
+								{
+									case 0:
+										serverApiTask = new ServerApiSkipMove(context, game, new ServerApi.OnCompleteListener()
 										{
-											dialog.dismiss();
-										}
-									})
-									.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
-									{
-										@Override
-										public void onClick(final DialogInterface dialog, final int which)
-										{
-											final SkipMove skipMove = new SkipMove(context, game, new SkipMove.OnSkipMoveCompleteListener()
+											@Override
+											public void onComplete(final boolean wasCompleted)
 											{
-												@Override
-												public void onSkipMoveComplete()
+												if (wasCompleted)
 												{
 													refreshGamesList();
 												}
-											});
 
-											skipMove.begin();
-											dialog.dismiss();
-										}
-									})
-									.setTitle(R.string.skip_move_dialog_title);
-							}
-							else if (which == 1)
-							{
-								builder.setMessage(R.string.forfeit_game_dialog_message)
-									.setNegativeButton(R.string.no, new DialogInterface.OnClickListener()
-									{
-										@Override
-										public void onClick(final DialogInterface dialog, final int which)
+												serverApiTask = null;
+											}
+										});
+										break;
+
+									case 1:
+										serverApiTask = new ServerApiForfeitGame(context, game, new ServerApi.OnCompleteListener()
 										{
-											final ForfeitGame forfeitGame = new ForfeitGame(context, game, new ForfeitGame.OnForfeitGameCompleteListener()
+											@Override
+											public void onComplete(final boolean wasCompleted)
 											{
-												@Override
-												public void onForfeitGameComplete()
+												if (wasCompleted)
 												{
 													refreshGamesList();
 												}
-											});
 
-											forfeitGame.begin();
-											dialog.dismiss();
-										}
-									})
-									.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
-									{
-										@Override
-										public void onClick(final DialogInterface dialog, final int which)
-										{
-											dialog.dismiss();
-										}
-									})
-									.setTitle(R.string.forfeit_game_dialog_title);
+												serverApiTask = null;
+											}
+										});
+										break;
+								}
+
+								if (serverApiTask != null)
+								{
+									serverApiTask.execute();
+								}
 							}
-
-							builder.show();
 						}
-					}
-				})
-				.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
-				{
-					@Override
-					public void onClick(final DialogInterface dialog, final int which)
+					})
+					.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
 					{
-						dialog.dismiss();
-					}
-				})
-				.setTitle(R.string.games_list_fragment_context_menu_text_generic);
+						@Override
+						public void onClick(final DialogInterface dialog, final int which)
+						{
+							dialog.dismiss();
+						}
+					})
+					.setTitle(R.string.games_list_fragment_context_menu_text_generic);
 
-			builder.show();
+				builder.show();
 
-			return true;
+				return true;
+			}
+
+			return false;
 		}
 		else
 		{
@@ -292,7 +270,7 @@ public class GamesListFragment extends SherlockFragment implements
 		switch (item.getItemId())
 		{
 			case R.id.generic_cancel_menu_cancel:
-				if (isAsyncRefreshGamesListRunning)
+				if (isAsyncRefreshGamesListRunning())
 				{
 					asyncRefreshGamesList.cancel(true);
 				}
@@ -315,7 +293,7 @@ public class GamesListFragment extends SherlockFragment implements
 	{
 		final MenuItem menuItem = menu.findItem(R.id.generic_refresh_menu_refresh);
 
-		if (isAsyncRefreshGamesListRunning)
+		if (isAsyncRefreshGamesListRunning())
 		{
 			if (menuItem != null)
 			{
@@ -353,22 +331,37 @@ public class GamesListFragment extends SherlockFragment implements
 	 * Cancels the AsyncRefreshGamesList AsyncTask if it is currently
 	 * running.
 	 */
-	public void cancelAsyncRefreshGamesList()
+	public void cancelRunningAnyAsyncTask()
 	{
-		if (isAsyncRefreshGamesListRunning)
+		if (isAsyncRefreshGamesListRunning())
 		{
 			asyncRefreshGamesList.cancel(true);
+		}
+		else if (serverApiTask != null)
+		{
+			serverApiTask.cancel();
 		}
 	}
 
 
 	/**
 	 * @return
-	 * Returns true if the AsyncRefreshGamesList AsyncTask is running.
+	 * Returns true if the asyncRefreshGamesList AsyncTask is currently
+	 * running.
 	 */
-	public boolean isAsyncRefreshGamesListRunning()
+	private boolean isAsyncRefreshGamesListRunning()
 	{
-		return isAsyncRefreshGamesListRunning;
+		return asyncRefreshGamesList != null;
+	}
+
+
+	/**
+	 * @return
+	 * Returns true if an AsyncTask is running.
+	 */
+	public boolean isAnAsyncTaskRunning()
+	{
+		return isAsyncRefreshGamesListRunning() || serverApiTask != null;
 	}
 
 
@@ -377,7 +370,7 @@ public class GamesListFragment extends SherlockFragment implements
 	 */
 	public void refreshGamesList()
 	{
-		if (!isAsyncRefreshGamesListRunning)
+		if (!isAnAsyncTaskRunning())
 		{
 			asyncRefreshGamesList = new AsyncRefreshGamesList(getSherlockActivity(), getLayoutInflater(getArguments()), (ViewGroup) getView());
 			asyncRefreshGamesList.execute();
@@ -655,7 +648,11 @@ public class GamesListFragment extends SherlockFragment implements
 		 */
 		private void setRunningState(final boolean isRunning)
 		{
-			isAsyncRefreshGamesListRunning = isRunning;
+			if (!isRunning)
+			{
+				asyncRefreshGamesList = null;
+			}
+
 			Utilities.compatInvalidateOptionsMenu(fragmentActivity, true);
 		}
 

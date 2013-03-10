@@ -261,7 +261,7 @@ public class CheckersGameFragment extends GenericGameFragment
 	@Override
 	protected void onBoardClick(final ImageButton positionCurrent)
 	{
-		if (board.getIsBoardLocked())
+		if (board.isBoardLocked())
 		{
 			clearSelectedPositions();
 		}
@@ -285,7 +285,7 @@ public class CheckersGameFragment extends GenericGameFragment
 	@Override
 	protected void onBoardClick(final ImageButton positionPrevious, final ImageButton positionCurrent)
 	{
-		if (!board.getIsBoardLocked())
+		if (!board.isBoardLocked())
 		{
 			final Coordinate coordinatePrevious = new Coordinate((String) positionPrevious.getTag());
 			final Position previous = board.getPosition(coordinatePrevious);
@@ -303,7 +303,7 @@ public class CheckersGameFragment extends GenericGameFragment
 					flush();
 					readyToSendMove(true);
 
-					if (board.getIsBoardLocked())
+					if (board.isBoardLocked())
 					{
 						clearSelectedPositions();
 					}
