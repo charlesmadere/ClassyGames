@@ -36,6 +36,7 @@ import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.server.ServerApi;
 import com.charlesmadere.android.classygames.server.ServerApiForfeitGame;
 import com.charlesmadere.android.classygames.server.ServerApiSendMove;
+import com.charlesmadere.android.classygames.server.ServerApiSkipMove;
 import com.charlesmadere.android.classygames.utilities.ServerUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
@@ -390,13 +391,13 @@ public abstract class GenericGameFragment extends SherlockFragment
 			MenuItem menuItem = menu.findItem(R.id.generic_game_fragment_menu_send_move);
 			if (menuItem != null)
 			{
-				menuItem.setEnabled(board.hasMoveBeenMade());
+				menuItem.setEnabled(board == null || board.hasMoveBeenMade());
 			}
 
 			menuItem = menu.findItem(R.id.generic_game_fragment_menu_undo_move);
 			if (menuItem != null)
 			{
-				menuItem.setEnabled(board.hasMoveBeenMade());
+				menuItem.setEnabled(board == null || board.hasMoveBeenMade());
 			}
 		}
 	}
@@ -814,7 +815,21 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		if (Utilities.verifyValidString(game.getId()) && !isAnAsyncTaskRunning())
 		{
-			
+			serverApiTask = new ServerApiSkipMove(getSherlockActivity(), game, new ServerApi.OnCompleteListener()
+			{
+				@Override
+				public void onComplete(final boolean wasCompleted)
+				{
+					if (wasCompleted)
+					{
+						genericGameFragmentOnAsyncSendingFinishedListener.genericGameFragmentOnAsyncSendingFinished();
+					}
+
+					serverApiTask = null;
+				}
+			});
+
+			serverApiTask.execute();
 		}
 	}
 

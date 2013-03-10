@@ -188,7 +188,16 @@ public class GamesListFragment extends SherlockFragment implements
 				v.setSelected(true);
 
 				final Context context = getSherlockActivity();
-				final String[] items = getResources().getStringArray(R.array.games_list_fragment_context_menu_entries);
+				String[] items = null;
+
+				if (game.isTurnYours())
+				{
+					items = getResources().getStringArray(R.array.games_list_fragment_context_menu_entries_turn_yours);
+				}
+				else
+				{
+					items = getResources().getStringArray(R.array.games_list_fragment_context_menu_entries_turn_theirs);
+				}
 
 				final AlertDialog.Builder builder = new AlertDialog.Builder(context)
 					.setItems(items, new DialogInterface.OnClickListener()
@@ -201,33 +210,33 @@ public class GamesListFragment extends SherlockFragment implements
 								switch (which)
 								{
 									case 0:
-										serverApiTask = new ServerApiSkipMove(context, game, new ServerApi.OnCompleteListener()
-										{
-											@Override
-											public void onComplete(final boolean wasCompleted)
-											{
-												if (wasCompleted)
-												{
-													refreshGamesList();
-												}
-
-												serverApiTask = null;
-											}
-										});
-										break;
-
-									case 1:
 										serverApiTask = new ServerApiForfeitGame(context, game, new ServerApi.OnCompleteListener()
 										{
 											@Override
 											public void onComplete(final boolean wasCompleted)
 											{
+												serverApiTask = null;
+
 												if (wasCompleted)
 												{
 													refreshGamesList();
 												}
+											}
+										});
+										break;
 
+									case 1:
+										serverApiTask = new ServerApiSkipMove(context, game, new ServerApi.OnCompleteListener()
+										{
+											@Override
+											public void onComplete(final boolean wasCompleted)
+											{
 												serverApiTask = null;
+
+												if (wasCompleted)
+												{
+													refreshGamesList();
+												}
 											}
 										});
 										break;
