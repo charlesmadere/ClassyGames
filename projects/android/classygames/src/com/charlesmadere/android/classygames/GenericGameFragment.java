@@ -10,10 +10,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
@@ -732,7 +728,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 					serverApiTask = null;
 				}
-			});
+			}, board);
 
 			serverApiTask.execute();
 		}
