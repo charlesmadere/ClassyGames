@@ -391,13 +391,27 @@ public abstract class GenericGameFragment extends SherlockFragment
 			MenuItem menuItem = menu.findItem(R.id.generic_game_fragment_menu_send_move);
 			if (menuItem != null)
 			{
-				menuItem.setEnabled(board == null || board.hasMoveBeenMade());
+				if (board == null)
+				{
+					menuItem.setEnabled(false);
+				}
+				else
+				{
+					menuItem.setEnabled(board.hasMoveBeenMade());
+				}
 			}
 
 			menuItem = menu.findItem(R.id.generic_game_fragment_menu_undo_move);
 			if (menuItem != null)
 			{
-				menuItem.setEnabled(board == null || board.hasMoveBeenMade());
+				if (board == null)
+				{
+					menuItem.setEnabled(false);
+				}
+				else
+				{
+					menuItem.setEnabled(board.hasMoveBeenMade());
+				}
 			}
 		}
 	}
