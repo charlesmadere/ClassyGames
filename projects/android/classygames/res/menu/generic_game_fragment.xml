@@ -17,4 +17,9 @@
 		android:id="@+id/generic_game_fragment_menu_skip_move"
 		android:showAsAction="never|withText"
 		android:title="@string/skip_move" />
+	<item
+		android:icon="@drawable/ab_forfeit_game"
+		android:id="@+id/generic_game_fragment_menu_forfeit_game"
+		android:showAsAction="never|withText"
+		android:title="@string/forfeit_game" />
 </menu>

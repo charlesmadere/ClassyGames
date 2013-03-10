@@ -882,6 +882,8 @@ com.charlesmadere.android.classygames.MainActivity
 com.charlesmadere.android.classygames.MainActivity: MainActivity()
 com.charlesmadere.android.classygames.NewGameFragmentActivity
 com.charlesmadere.android.classygames.NewGameFragmentActivity: NewGameFragmentActivity()
+com.charlesmadere.android.classygames.R$array: int games_list_fragment_context_menu_entries_turn_theirs
+com.charlesmadere.android.classygames.R$array: int games_list_fragment_context_menu_entries_turn_yours
 com.charlesmadere.android.classygames.R$attr: int actionBarDivider
 com.charlesmadere.android.classygames.R$attr: int actionBarItemBackground
 com.charlesmadere.android.classygames.R$attr: int actionBarSize
@@ -1070,6 +1072,7 @@ com.charlesmadere.android.classygames.R$dimen: int com_facebook_usersettingsfrag
 com.charlesmadere.android.classygames.R$dimen: int com_facebook_usersettingsfragment_profile_picture_width
 com.charlesmadere.android.classygames.R$drawable: int ab_about
 com.charlesmadere.android.classygames.R$drawable: int ab_cancel
+com.charlesmadere.android.classygames.R$drawable: int ab_forfeit_game
 com.charlesmadere.android.classygames.R$drawable: int ab_logout
 com.charlesmadere.android.classygames.R$drawable: int ab_refresh
 com.charlesmadere.android.classygames.R$drawable: int ab_register_for_notifications
@@ -1511,12 +1514,15 @@ com.charlesmadere.android.classygames.R$id: int game_over_activity_button_return
 com.charlesmadere.android.classygames.R$id: int game_over_activity_friend_name
 com.charlesmadere.android.classygames.R$id: int game_over_activity_friend_picture
 com.charlesmadere.android.classygames.R$id: int game_over_activity_win_or_lose
+com.charlesmadere.android.classygames.R$id: int games_list_fragment_context_menu_radiobutton_forfeit_game
+com.charlesmadere.android.classygames.R$id: int games_list_fragment_context_menu_radiobutton_skip_move
 com.charlesmadere.android.classygames.R$id: int games_list_fragment_listview
 com.charlesmadere.android.classygames.R$id: int games_list_fragment_listview_item_name
 com.charlesmadere.android.classygames.R$id: int games_list_fragment_listview_item_picture
 com.charlesmadere.android.classygames.R$id: int games_list_fragment_listview_item_time
 com.charlesmadere.android.classygames.R$id: int generic_cancel_menu_cancel
 com.charlesmadere.android.classygames.R$id: int generic_game_fragment_loading_textview
+com.charlesmadere.android.classygames.R$id: int generic_game_fragment_menu_forfeit_game
 com.charlesmadere.android.classygames.R$id: int generic_game_fragment_menu_send_move
 com.charlesmadere.android.classygames.R$id: int generic_game_fragment_menu_skip_move
 com.charlesmadere.android.classygames.R$id: int generic_game_fragment_menu_undo_move
@@ -1593,6 +1599,7 @@ com.charlesmadere.android.classygames.R$layout: int game_fragment_activity
 com.charlesmadere.android.classygames.R$layout: int game_over_activity
 com.charlesmadere.android.classygames.R$layout: int games_list_fragment
 com.charlesmadere.android.classygames.R$layout: int games_list_fragment_cancelled
+com.charlesmadere.android.classygames.R$layout: int games_list_fragment_context_menu
 com.charlesmadere.android.classygames.R$layout: int games_list_fragment_listview_item
 com.charlesmadere.android.classygames.R$layout: int games_list_fragment_listview_turn_theirs
 com.charlesmadere.android.classygames.R$layout: int games_list_fragment_listview_turn_yours
@@ -1669,6 +1676,7 @@ com.charlesmadere.android.classygames.R$string: int confirm_game_fragment_friend
 com.charlesmadere.android.classygames.R$string: int empty_game_fragment_imageview_placeholder
 com.charlesmadere.android.classygames.R$string: int empty_game_fragment_title
 com.charlesmadere.android.classygames.R$string: int facebook_app_id
+com.charlesmadere.android.classygames.R$string: int forfeit_game
 com.charlesmadere.android.classygames.R$string: int friends_list_fragment_cancelled_text
 com.charlesmadere.android.classygames.R$string: int friends_list_fragment_listview_item_picture_description
 com.charlesmadere.android.classygames.R$string: int friends_list_fragment_loading_text
@@ -1758,6 +1766,8 @@ com.charlesmadere.android.classygames.R$string: int game_timestamp_x_days_ago
 com.charlesmadere.android.classygames.R$string: int game_timestamp_x_hours_ago
 com.charlesmadere.android.classygames.R$string: int game_timestamp_x_minutes_ago
 com.charlesmadere.android.classygames.R$string: int games_list_fragment_cancelled_text
+com.charlesmadere.android.classygames.R$string: int games_list_fragment_context_menu_text
+com.charlesmadere.android.classygames.R$string: int games_list_fragment_context_menu_text_generic
 com.charlesmadere.android.classygames.R$string: int games_list_fragment_getgames_error
 com.charlesmadere.android.classygames.R$string: int games_list_fragment_getgames_no_games
 com.charlesmadere.android.classygames.R$string: int games_list_fragment_getgames_progressdialog_message
@@ -1771,11 +1781,6 @@ com.charlesmadere.android.classygames.R$string: int games_list_fragment_turn_the
 com.charlesmadere.android.classygames.R$string: int games_list_fragment_turn_yours
 com.charlesmadere.android.classygames.R$string: int generic_game_fragment_data_error
 com.charlesmadere.android.classygames.R$string: int generic_game_fragment_loading_text
-com.charlesmadere.android.classygames.R$string: int generic_game_fragment_progressdialog_title
-com.charlesmadere.android.classygames.R$string: int generic_game_fragment_sendmove_progressdialog_message
-com.charlesmadere.android.classygames.R$string: int generic_game_fragment_skipmove_dialog_message
-com.charlesmadere.android.classygames.R$string: int generic_game_fragment_skipmove_dialog_title
-com.charlesmadere.android.classygames.R$string: int generic_game_fragment_skipmove_progressdialog_message
 com.charlesmadere.android.classygames.R$string: int generic_game_fragment_title
 com.charlesmadere.android.classygames.R$string: int login_with_facebook
 com.charlesmadere.android.classygames.R$string: int logout
@@ -1799,6 +1804,7 @@ com.charlesmadere.android.classygames.R$string: int piece_checkers_green_king
 com.charlesmadere.android.classygames.R$string: int piece_checkers_green_normal
 com.charlesmadere.android.classygames.R$string: int piece_checkers_orange_king
 com.charlesmadere.android.classygames.R$string: int piece_checkers_orange_normal
+com.charlesmadere.android.classygames.R$string: int progressdialog_title_generic
 com.charlesmadere.android.classygames.R$string: int refresh
 com.charlesmadere.android.classygames.R$string: int register_for_notifications
 com.charlesmadere.android.classygames.R$string: int register_for_notifications_activity_description
@@ -1811,6 +1817,15 @@ com.charlesmadere.android.classygames.R$string: int register_for_notifications_a
 com.charlesmadere.android.classygames.R$string: int register_for_notifications_activity_registration_failed_title
 com.charlesmadere.android.classygames.R$string: int register_for_notifications_activity_title
 com.charlesmadere.android.classygames.R$string: int send_move
+com.charlesmadere.android.classygames.R$string: int server_api_forfeit_game_dialog_message
+com.charlesmadere.android.classygames.R$string: int server_api_forfeit_game_dialog_title
+com.charlesmadere.android.classygames.R$string: int server_api_forfeit_game_progressdialog_message
+com.charlesmadere.android.classygames.R$string: int server_api_send_move_dialog_message
+com.charlesmadere.android.classygames.R$string: int server_api_send_move_dialog_title
+com.charlesmadere.android.classygames.R$string: int server_api_send_move_progressdialog_message
+com.charlesmadere.android.classygames.R$string: int server_api_skip_move_dialog_message
+com.charlesmadere.android.classygames.R$string: int server_api_skip_move_dialog_title
+com.charlesmadere.android.classygames.R$string: int server_api_skip_move_progressdialog_message
 com.charlesmadere.android.classygames.R$string: int server_registration_attempt
 com.charlesmadere.android.classygames.R$string: int server_registration_fail
 com.charlesmadere.android.classygames.R$string: int server_registration_success

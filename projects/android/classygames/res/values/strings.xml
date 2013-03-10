@@ -19,6 +19,7 @@
 	<string name="empty_game_fragment_imageview_placeholder">No game is currently loaded!</string>
 	<string name="empty_game_fragment_title">Empty Game</string>
 	<string name="facebook_app_id">324400870964487</string>
+	<string name="forfeit_game">Forfeit Game</string>
 	<string name="friends_list_fragment_cancelled_text">Cancelled loading your Facebook Friends List!</string>
 	<string name="friends_list_fragment_listview_item_picture_description">Friend\'s Picture</string>
 	<string name="friends_list_fragment_loading_text">Loading your Facebook Friends List&#8230;</string>
@@ -108,6 +109,8 @@
 	<string name="game_timestamp_almost_an_hour_ago">almost an hour ago</string>
 	<string name="game_timestamp_just_now">just now</string>
 	<string name="games_list_fragment_cancelled_text">Cancelled loading your Games List!</string>
+	<string name="games_list_fragment_context_menu_text">Select an action for this game against %1$s.</string>
+	<string name="games_list_fragment_context_menu_text_generic">Select an action for this game.</string>
 	<string name="games_list_fragment_getgames_error">Server was unable to respond with a list of games. Please try again later!</string>
 	<string name="games_list_fragment_getgames_no_games">You have no active games!</string>
 	<string name="games_list_fragment_getgames_response_error">Server was not found. Please try again later!</string>
@@ -121,11 +124,6 @@
 	<string name="games_list_fragment_turn_yours">Your Turn</string>
 	<string name="generic_game_fragment_data_error">Error while trying to instantiate the game.</string>
 	<string name="generic_game_fragment_loading_text">Loading game&#8230;</string>
-	<string name="generic_game_fragment_progressdialog_title">Classy Hamsters are working diligently!</string>
-	<string name="generic_game_fragment_sendmove_progressdialog_message">Sending your class to our server, the hamsters will process it shortly!</string>
-	<string name="generic_game_fragment_skipmove_dialog_message">Are you sure that you want to skip your turn? For real?</string>
-	<string name="generic_game_fragment_skipmove_dialog_title">Skip your turn?</string>
-	<string name="generic_game_fragment_skipmove_progressdialog_message">Sending your decision to skip your turn to our server, the hamsters are processing it&#8230;</string>
 	<string name="generic_game_fragment_title">Generic Game Fragment</string>
 	<string name="login_with_facebook">Login with Facebook</string>
 	<string name="logout">Logout</string>
@@ -161,6 +159,16 @@
 	<string name="register_for_notifications_activity_registration_failed_title">Registration failed!</string>
 	<string name="register_for_notifications_activity_title">Register for Notifications</string>
 	<string name="send_move">Send Move</string>
+	<string name="progressdialog_title_generic">Classy Hamsters are working diligently!</string>
+	<string name="server_api_forfeit_game_dialog_message">Are you sure that you want to forfeit this game? Really?</string>
+	<string name="server_api_forfeit_game_dialog_title">Forfeit Game</string>
+	<string name="server_api_forfeit_game_progressdialog_message">Sending your decision to forfeit the game to our server, the hamsters are processing it&#8230;</string>
+	<string name="server_api_send_move_dialog_message">Are you sure that you want to send your move? Better double check!</string>
+	<string name="server_api_send_move_dialog_title">Send Move</string>
+	<string name="server_api_send_move_progressdialog_message">Sending your class to our server, the hamsters will process it shortly!</string>
+	<string name="server_api_skip_move_dialog_message">Are you sure that you want to skip your turn? For real?</string>
+	<string name="server_api_skip_move_dialog_title">Skip Turn</string>
+	<string name="server_api_skip_move_progressdialog_message">Sending your decision to skip your turn to our server, the hamsters are processing it&#8230;</string>
 	<string name="server_registration_attempt">Trying (attempt %1$d) to register device on server.</string>
 	<string name="server_registration_fail">Could not register device on server after %1$d attempts.</string>
 	<string name="server_registration_success">Device successfully registered with server!</string>

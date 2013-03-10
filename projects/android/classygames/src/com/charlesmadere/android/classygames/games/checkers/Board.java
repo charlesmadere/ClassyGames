@@ -405,6 +405,11 @@ public class Board extends GenericBoard
 			isMoveValid = false;
 		}
 
+		if (isMoveValid)
+		{
+			hasMoveBeenMade = true;
+		}
+
 		return isMoveValid;
 	}
 

@@ -13,7 +13,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -24,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -36,13 +39,18 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.Person;
+import com.charlesmadere.android.classygames.server.ServerApi;
+import com.charlesmadere.android.classygames.server.ServerApiForfeitGame;
+import com.charlesmadere.android.classygames.server.ServerApiSkipMove;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
 import com.charlesmadere.android.classygames.utilities.ServerUtilities;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
-public class GamesListFragment extends SherlockFragment implements OnItemClickListener
+public class GamesListFragment extends SherlockFragment implements
+	OnItemClickListener,
+	OnItemLongClickListener
 {
 
 
@@ -59,17 +67,16 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 
 
 	/**
-	 * Boolean that marks if the AsyncPopulateGamesList AsyncTask is currently
-	 * running. This is used in conjunction with cancelling that AsyncTask. If
-	 * the cancel button is pressed and the AsyncTask is currently running...
-	 */
-	private boolean isAsyncRefreshGamesListRunning = false;
-
-
-	/**
 	 * Used to perform a refresh of the Games List.
 	 */
 	private AsyncRefreshGamesList asyncRefreshGamesList;
+
+
+	/**
+	 * Holds a handle to a currently running (if it's currently running)
+	 * ServerApi object.
+	 */
+	private ServerApi serverApiTask;
 
 
 	/**
@@ -144,7 +151,7 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 	@Override
 	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
 	{
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && isAsyncRefreshGamesListRunning)
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && isAsyncRefreshGamesListRunning())
 		{
 			inflater.inflate(R.menu.generic_cancel, menu);
 		}
@@ -162,9 +169,106 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 	{
 		final Game game = gamesListAdapter.getItem(position);
 
-		if (game.isTypeGame())
+		if (game.isTypeGame() && game.isTurnYours())
 		{
 			gamesListFragmentOnGameSelectedListener.gamesListFragmentOnGameSelected(game);
+		}
+	}
+
+
+	@Override
+	public boolean onItemLongClick(final AdapterView<?> l, final View v, int position, final long id)
+	{
+		if (!isAnAsyncTaskRunning())
+		{
+			final Game game = gamesListAdapter.getItem(position);
+
+			if (game.isTypeGame())
+			{
+				v.setSelected(true);
+
+				final Context context = getSherlockActivity();
+				String[] items = null;
+
+				if (game.isTurnYours())
+				{
+					items = getResources().getStringArray(R.array.games_list_fragment_context_menu_entries_turn_yours);
+				}
+				else
+				{
+					items = getResources().getStringArray(R.array.games_list_fragment_context_menu_entries_turn_theirs);
+				}
+
+				final AlertDialog.Builder builder = new AlertDialog.Builder(context)
+					.setItems(items, new DialogInterface.OnClickListener()
+					{
+						@Override
+						public void onClick(final DialogInterface dialog, final int which)
+						{
+							if (!isAnAsyncTaskRunning())
+							{
+								switch (which)
+								{
+									case 0:
+										serverApiTask = new ServerApiForfeitGame(context, game, new ServerApi.OnCompleteListener()
+										{
+											@Override
+											public void onComplete(final boolean wasCompleted)
+											{
+												serverApiTask = null;
+
+												if (wasCompleted)
+												{
+													refreshGamesList();
+												}
+											}
+										});
+										break;
+
+									case 1:
+										serverApiTask = new ServerApiSkipMove(context, game, new ServerApi.OnCompleteListener()
+										{
+											@Override
+											public void onComplete(final boolean wasCompleted)
+											{
+												serverApiTask = null;
+
+												if (wasCompleted)
+												{
+													refreshGamesList();
+												}
+											}
+										});
+										break;
+								}
+
+								if (serverApiTask != null)
+								{
+									serverApiTask.execute();
+								}
+							}
+						}
+					})
+					.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
+					{
+						@Override
+						public void onClick(final DialogInterface dialog, final int which)
+						{
+							dialog.dismiss();
+						}
+					})
+					.setTitle(R.string.games_list_fragment_context_menu_text_generic);
+
+				builder.show();
+
+				return true;
+			}
+
+			return false;
+		}
+		else
+		{
+			return false;
 		}
 	}
 
@@ -175,7 +279,7 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 		switch (item.getItemId())
 		{
 			case R.id.generic_cancel_menu_cancel:
-				if (isAsyncRefreshGamesListRunning)
+				if (isAsyncRefreshGamesListRunning())
 				{
 					asyncRefreshGamesList.cancel(true);
 				}
@@ -198,7 +302,7 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 	{
 		final MenuItem menuItem = menu.findItem(R.id.generic_refresh_menu_refresh);
 
-		if (isAsyncRefreshGamesListRunning)
+		if (isAsyncRefreshGamesListRunning())
 		{
 			if (menuItem != null)
 			{
@@ -236,22 +340,37 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 	 * Cancels the AsyncRefreshGamesList AsyncTask if it is currently
 	 * running.
 	 */
-	public void cancelAsyncRefreshGamesList()
+	public void cancelRunningAnyAsyncTask()
 	{
-		if (isAsyncRefreshGamesListRunning)
+		if (isAsyncRefreshGamesListRunning())
 		{
 			asyncRefreshGamesList.cancel(true);
+		}
+		else if (serverApiTask != null)
+		{
+			serverApiTask.cancel();
 		}
 	}
 
 
 	/**
 	 * @return
-	 * Returns true if the AsyncRefreshGamesList AsyncTask is running.
+	 * Returns true if the asyncRefreshGamesList AsyncTask is currently
+	 * running.
 	 */
-	public boolean isAsyncRefreshGamesListRunning()
+	private boolean isAsyncRefreshGamesListRunning()
 	{
-		return isAsyncRefreshGamesListRunning;
+		return asyncRefreshGamesList != null;
+	}
+
+
+	/**
+	 * @return
+	 * Returns true if an AsyncTask is running.
+	 */
+	public boolean isAnAsyncTaskRunning()
+	{
+		return isAsyncRefreshGamesListRunning() || serverApiTask != null;
 	}
 
 
@@ -260,7 +379,7 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 	 */
 	public void refreshGamesList()
 	{
-		if (!isAsyncRefreshGamesListRunning)
+		if (!isAnAsyncTaskRunning())
 		{
 			asyncRefreshGamesList = new AsyncRefreshGamesList(getSherlockActivity(), getLayoutInflater(getArguments()), (ViewGroup) getView());
 			asyncRefreshGamesList.execute();
@@ -360,11 +479,12 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 			if (games != null && games.size() >= 1)
 			{
 				inflater.inflate(R.layout.games_list_fragment, viewGroup);
-
 				gamesListAdapter = new GamesListAdapter(fragmentActivity, R.layout.games_list_fragment_listview_item, games);
+
 				final ListView listView = (ListView) viewGroup.findViewById(R.id.games_list_fragment_listview);
 				listView.setAdapter(gamesListAdapter);
 				listView.setOnItemClickListener(GamesListFragment.this);
+				listView.setOnItemLongClickListener(GamesListFragment.this);
 			}
 			else
 			{
@@ -537,7 +657,11 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 		 */
 		private void setRunningState(final boolean isRunning)
 		{
-			isAsyncRefreshGamesListRunning = isRunning;
+			if (!isRunning)
+			{
+				asyncRefreshGamesList = null;
+			}
+
 			Utilities.compatInvalidateOptionsMenu(fragmentActivity, true);
 		}
 
@@ -586,11 +710,6 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 
 				final TextView time = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_time);
 				time.setText(game.getTimestampFormatted(context));
-
-				if (game.isTurnTheirs())
-				{
-					convertView.setOnClickListener(null);
-				}
 			}
 			else
 			{
@@ -604,6 +723,7 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 				}
 
 				convertView.setOnClickListener(null);
+				convertView.setOnLongClickListener(null);
 			}
 
 			return convertView;
