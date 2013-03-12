@@ -6,11 +6,9 @@ import java.io.IOException;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import com.actionbarsherlock.app.SherlockActivity;
@@ -24,7 +22,6 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 {
 
 
-	private boolean isAsyncRegisterForNotificationsRunning = false;
 	private AsyncRegisterForNotifications asyncRegisterForNotifications;
 
 
@@ -39,7 +36,7 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 
 		final Button registerButton = (Button) findViewById(R.id.register_for_notifications_activity_register);
 		registerButton.setTypeface(TypefaceUtilities.getTypeface(getAssets(), TypefaceUtilities.BLUE_HIGHWAY_D));
-		registerButton.setOnClickListener(new OnClickListener()
+		registerButton.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(final View v)
@@ -54,7 +51,7 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 	@Override
 	protected void onDestroy()
 	{
-		if (isAsyncRegisterForNotificationsRunning)
+		if (isAnAsyncTaskRunning())
 		{
 			asyncRegisterForNotifications.cancel(true);
 		}
@@ -75,6 +72,17 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+
+	/**
+	 * @return
+	 * Returns true if the asyncRegisterForNotifications AsyncTask is currently
+	 * running.
+	 */
+	private boolean isAnAsyncTaskRunning()
+	{
+		return asyncRegisterForNotifications != null;
 	}
 
 
@@ -122,7 +130,7 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 				progressDialog.dismiss();
 			}
 
-			isAsyncRegisterForNotificationsRunning = false;
+			asyncRegisterForNotifications = null;
 			Utilities.easyToastAndLog(activity, activity.getString(R.string.register_for_notifications_activity_registration_cancelled));
 		}
 
@@ -172,21 +180,19 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 				builder.show();
 			}
 
-			isAsyncRegisterForNotificationsRunning = false;
+			asyncRegisterForNotifications = null;
 		}
 
 
 		@Override
 		protected void onPreExecute()
 		{
-			isAsyncRegisterForNotificationsRunning = true;
-
 			progressDialog = new ProgressDialog(activity);
 			progressDialog.setCancelable(true);
 			progressDialog.setCanceledOnTouchOutside(true);
 			progressDialog.setMessage(activity.getString(R.string.register_for_notifications_activity_progressdialog_message));
 
-			progressDialog.setOnCancelListener(new OnCancelListener()
+			progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
 			{
 				@Override
 				public void onCancel(final DialogInterface dialog)

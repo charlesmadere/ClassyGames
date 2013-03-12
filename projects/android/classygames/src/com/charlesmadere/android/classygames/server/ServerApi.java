@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.os.Build;
 
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.models.Game;
@@ -14,13 +15,16 @@ import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
 /**
- * A class that will hit a Classy Games server end point with some given data.
+ * A class that will hit an end point of the Classy Games server with some
+ * given data.
  */
 public abstract class ServerApi
 {
 
 
 	protected final static String LOG_TAG = Utilities.LOG_TAG + " - ServerApi";
+
+
 
 
 	/**
@@ -32,7 +36,7 @@ public abstract class ServerApi
 	/**
 	 * The Context of the class that this ServerApi class is being called from.
 	 */
-	protected Context context;
+	private Context context;
 
 
 	/**
@@ -102,36 +106,87 @@ public abstract class ServerApi
 
 
 	/**
+	 * Begins the execution of this ServerApi code.
+	 * 
+	 * @param askUserToExecute
+	 * True if you want to ask the user to confirm the execution of this
+	 * ServerApi code. False if you want the code without asking the user
+	 * anything; this will immediately begin the ServerApi code.
+	 */
+	public void execute(final boolean askUserToExecute)
+	{
+		if (askUserToExecute)
+		{
+			final AlertDialog.Builder builder = new AlertDialog.Builder(context)
+				.setMessage(getDialogMessage())
+				.setNegativeButton(R.string.no, new DialogInterface.OnClickListener()
+				{
+					@Override
+					public void onClick(final DialogInterface dialog, final int which)
+					{
+						dialog.dismiss();
+						onCompleteListener.onComplete(false);
+					}
+				})
+				.setOnCancelListener(new DialogInterface.OnCancelListener()
+				{
+					@Override
+					public void onCancel(final DialogInterface dialog)
+					{
+						dialog.dismiss();
+						onCompleteListener.onComplete(false);
+					}
+				})
+				.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
+				{
+					@Override
+					public void onClick(final DialogInterface dialog, final int which)
+					{
+						dialog.dismiss();
+						executeTask();
+					}
+				})
+				.setTitle(getDialogTitle());
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+			{
+				builder.setOnDismissListener(new DialogInterface.OnDismissListener()
+				{
+					@Override
+					public void onDismiss(final DialogInterface dialog)
+					{
+						dialog.dismiss();
+						onCompleteListener.onComplete(false);
+					}
+				});
+			}
+
+			builder.show();
+		}
+		else
+		{
+			executeTask();
+		}
+	}
+
+
+	/**
 	 * Begins the execution of this ServerApi code. Will first ask the user if
 	 * they want do in fact want to perform this server call.
 	 */
 	public void execute()
 	{
-		final AlertDialog.Builder builder = new AlertDialog.Builder(context)
-			.setMessage(getDialogMessage())
-			.setNegativeButton(R.string.no, new DialogInterface.OnClickListener()
-			{
-				@Override
-				public void onClick(final DialogInterface dialog, final int which)
-				{
-					dialog.dismiss();
-					onCompleteListener.onComplete(false);
-				}
-			})
-			.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
-			{
-				@Override
-				public void onClick(final DialogInterface dialog, final int which)
-				{
-					dialog.dismiss();
+		execute(true);
+	}
 
-					serverApiTask = new ServerApiTask(context);
-					serverApiTask.execute();
-				}
-			})
-			.setTitle(getDialogTitle());
-	
-		builder.show();
+
+	/**
+	 * Starts the execution of the ServerApiTask AsyncTask.
+	 */
+	private void executeTask()
+	{
+		serverApiTask = new ServerApiTask(context);
+		serverApiTask.execute();
 	}
 
 
@@ -171,8 +226,8 @@ public abstract class ServerApi
 
 		private void cancelled()
 		{
-			progressDialog.dismiss();
 			serverApiTask = null;
+			progressDialog.dismiss();
 			onCompleteListener.onComplete(false);
 		}
 
@@ -194,8 +249,8 @@ public abstract class ServerApi
 		@Override
 		protected void onPostExecute(final String serverResponse)
 		{
-			progressDialog.dismiss();
 			serverApiTask = null;
+			progressDialog.dismiss();
 			onCompleteListener.onComplete(true);
 		}
 
