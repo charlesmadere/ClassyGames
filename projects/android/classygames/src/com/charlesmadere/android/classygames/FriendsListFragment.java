@@ -46,20 +46,14 @@ public class FriendsListFragment extends SherlockFragment implements OnItemClick
 {
 
 
-
-
 	/**
 	 * Boolean that marks if this is the first time that the onResume() method
-	 * was hit.
+	 * was hit. We do this because we don't want to refresh the friends list
+	 * if it is not in need of refreshing.
+	 * In other words, it's not in need of a refreshment. It's not thirsty. Har
+	 * har.
 	 */
 	private boolean isFirstOnResume = true;
-
-
-	/**
-	 * Variables that holds whether or not the asyncRefreshFriendsList
-	 * AsyncTask is currently running.
-	 */
-	private boolean isAsyncRefreshFriendsListRunning = false;
 
 
 	/**
@@ -141,7 +135,7 @@ public class FriendsListFragment extends SherlockFragment implements OnItemClick
 	@Override
 	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
 	{
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && isAsyncRefreshFriendsListRunning)
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && isAnAsyncTaskRunning())
 		{
 			inflater.inflate(R.menu.generic_cancel, menu);
 		}
@@ -168,7 +162,7 @@ public class FriendsListFragment extends SherlockFragment implements OnItemClick
 		switch (item.getItemId())
 		{
 			case R.id.generic_cancel_menu_cancel:
-				if (isAsyncRefreshFriendsListRunning)
+				if (isAnAsyncTaskRunning())
 				{
 					asyncRefreshFriendsList.cancel(true);
 				}
@@ -203,12 +197,11 @@ public class FriendsListFragment extends SherlockFragment implements OnItemClick
 
 
 	/**
-	 * Cancels the AsyncRefreshFriendsList AsyncTask if it is currently
-	 * running.
+	 * Cancels the currently running AsyncTask (if any).
 	 */
-	public void cancelAsyncRefreshFriendsList()
+	public void cancelRunningAnyAsyncTask()
 	{
-		if (isAsyncRefreshFriendsListRunning)
+		if (isAnAsyncTaskRunning())
 		{
 			asyncRefreshFriendsList.cancel(true);
 		}
@@ -220,9 +213,9 @@ public class FriendsListFragment extends SherlockFragment implements OnItemClick
 	 * Returns true if the asyncRefreshFriendsList AsyncTask is currently
 	 * running.
 	 */
-	public boolean isAsyncRefreshFriendsListRunning()
+	public boolean isAnAsyncTaskRunning()
 	{
-		return isAsyncRefreshFriendsListRunning;
+		return asyncRefreshFriendsList != null;
 	}
 
 
@@ -231,7 +224,7 @@ public class FriendsListFragment extends SherlockFragment implements OnItemClick
 	 */
 	public void refreshFriendsList()
 	{
-		if (!isAsyncRefreshFriendsListRunning)
+		if (!isAnAsyncTaskRunning())
 		{
 			asyncRefreshFriendsList = new AsyncRefreshFriendsList(getSherlockActivity(), getLayoutInflater(getArguments()), Session.getActiveSession(), (ViewGroup) getView());
 			asyncRefreshFriendsList.execute();
@@ -428,7 +421,11 @@ public class FriendsListFragment extends SherlockFragment implements OnItemClick
 		 */
 		private void setRunningState(final boolean isRunning)
 		{
-			isAsyncRefreshFriendsListRunning = isRunning;
+			if (!isRunning)
+			{
+				asyncRefreshFriendsList = null;
+			}
+
 			Utilities.compatInvalidateOptionsMenu(fragmentActivity, true);
 		}
 
@@ -509,8 +506,6 @@ public class FriendsListFragment extends SherlockFragment implements OnItemClick
 			return geo.getName().compareToIgnoreCase(jarrad.getName());
 		}
 	}
-
-
 
 
 }
