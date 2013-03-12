@@ -139,7 +139,7 @@ public class MainActivity extends SherlockActivity
 		if (!hasFinished)
 		{
 			final Person whoAmI = Utilities.getWhoAmI(this);
-	
+
 			if (whoAmI != null && whoAmI.isValid())
 			{
 				startCentralFragmentActivity();
