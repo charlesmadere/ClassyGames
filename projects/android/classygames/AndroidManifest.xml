@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.charlesmadere.android.classygames"
-	android:versionCode="13"
-	android:versionName="1.5.1.2">
+	android:versionCode="14"
+	android:versionName="1.5.1.3">
 
     <!-- Check out the Android API Levels website for more information on this topic -->
     <!-- https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels -->
@@ -121,6 +121,15 @@
 		<activity
 			android:label="@string/register_for_notifications_activity_title"
 			android:name="com.charlesmadere.android.classygames.RegisterForNotificationsActivity"
+			android:theme="@style/Theme.Styled">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".GameFragmentActivity" />
+		</activity>
+
+		<activity
+			android:label="@string/settings"
+			android:name="com.charlesmadere.android.classygames.SettingsActivity"
 			android:theme="@style/Theme.Styled">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"

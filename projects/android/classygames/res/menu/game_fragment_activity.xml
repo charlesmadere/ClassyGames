@@ -5,6 +5,11 @@
 		android:showAsAction="ifRoom|withText"
 		android:title="@string/new_game" />
 	<item
+		android:icon="@drawable/ab_settings"
+		android:id="@+id/game_fragment_activity_menu_settings"
+		android:showAsAction="never|withText"
+		android:title="@string/settings" />
+	<item
 		android:icon="@drawable/ab_register_for_notifications"
 		android:id="@+id/game_fragment_activity_menu_register_for_notifications"
 		android:showAsAction="never|withText"

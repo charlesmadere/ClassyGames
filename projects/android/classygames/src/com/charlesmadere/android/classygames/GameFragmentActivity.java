@@ -248,6 +248,10 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 				startActivity(new Intent(this, RegisterForNotificationsActivity.class));
 				break;
 
+			case R.id.game_fragment_activity_menu_settings:
+				startActivity(new Intent(this, SettingsActivity.class));
+				break;
+
 			default:
 				return super.onOptionsItemSelected(item);
 		}

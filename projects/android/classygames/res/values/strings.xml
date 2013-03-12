@@ -176,6 +176,9 @@
 	<string name="server_unregistration_fail">Could not remove device registration from server. (%1$s)</string>
 	<string name="server_unregistration_success">Device successfully removed from server!</string>
 	<string name="settings">Settings</string>
+	<string name="settings_ask_before_sending_move_summary_on">A confirmation dialog box will be shown before a move is sent.</string>
+	<string name="settings_ask_before_sending_move_summary_off">A confirmation dialog box will not be shown before a move is sent.</string>
+	<string name="settings_ask_before_sending_move_title">Ask Before Sending Move</string>
 	<string name="shark_activity_description">Sharkwork by Tristan Kidder</string>
 	<string name="shark_activity_imageview_description">Sharkwork</string>
 	<string name="shark_activity_title">Sharkwork</string>
