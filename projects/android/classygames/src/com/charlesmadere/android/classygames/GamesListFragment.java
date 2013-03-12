@@ -393,6 +393,11 @@ public class GamesListFragment extends SherlockFragment implements
 	{
 
 
+		private final static byte RUN_STATUS_NORMAL = 1;
+		private final static byte RUN_STATUS_IOEXCEPTION = 2;
+		private byte runStatus;
+
+
 		private SherlockFragmentActivity fragmentActivity;
 		private LayoutInflater inflater;
 		private ViewGroup viewGroup;
@@ -410,6 +415,7 @@ public class GamesListFragment extends SherlockFragment implements
 		protected ArrayList<Game> doInBackground(final Void... params)
 		{
 			ArrayList<Game> games = null;
+			runStatus = RUN_STATUS_NORMAL;
 
 			if (!isCancelled())
 			{
@@ -439,6 +445,7 @@ public class GamesListFragment extends SherlockFragment implements
 					}
 					catch (final IOException e)
 					{
+						runStatus = RUN_STATUS_IOEXCEPTION;
 						Log.e(LOG_TAG, "IOException error in AsyncPopulateGamesList - doInBackground()!", e);
 					}
 				}
@@ -489,6 +496,16 @@ public class GamesListFragment extends SherlockFragment implements
 			else
 			{
 				inflater.inflate(R.layout.games_list_fragment_no_games, viewGroup);
+			}
+
+			switch (runStatus)
+			{
+				case RUN_STATUS_NORMAL:
+					break;
+
+				case RUN_STATUS_IOEXCEPTION:
+					Utilities.easyToastAndLogError(fragmentActivity, fragmentActivity.getString(R.string.no_internet_connection));
+					break;
 			}
 
 			setRunningState(false);

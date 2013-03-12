@@ -1792,6 +1792,7 @@ com.charlesmadere.android.classygames.R$string: int main_activity_loading_textvi
 com.charlesmadere.android.classygames.R$string: int main_activity_title
 com.charlesmadere.android.classygames.R$string: int new_game
 com.charlesmadere.android.classygames.R$string: int no
+com.charlesmadere.android.classygames.R$string: int no_internet_connection
 com.charlesmadere.android.classygames.R$string: int notification_game_over_lose_text
 com.charlesmadere.android.classygames.R$string: int notification_game_over_text
 com.charlesmadere.android.classygames.R$string: int notification_game_over_win_text

@@ -41,21 +41,28 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 			@Override
 			public void onClick(final View v)
 			{
-				asyncRegisterForNotifications = new AsyncRegisterForNotifications(RegisterForNotificationsActivity.this);
-				asyncRegisterForNotifications.execute();
+				if (!isAnAsyncTaskRunning())
+				{
+					asyncRegisterForNotifications = new AsyncRegisterForNotifications(RegisterForNotificationsActivity.this);
+					asyncRegisterForNotifications.execute();
+				}
 			}
 		});
 	}
 
 
 	@Override
+	public void onBackPressed()
+	{
+		cancelRunningAnyAsyncTask();
+		super.onBackPressed();
+	}
+
+
+	@Override
 	protected void onDestroy()
 	{
-		if (isAnAsyncTaskRunning())
-		{
-			asyncRegisterForNotifications.cancel(true);
-		}
-
+		cancelRunningAnyAsyncTask();
 		super.onDestroy();
 	}
 
@@ -71,6 +78,20 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 
 			default:
 				return super.onOptionsItemSelected(item);
+		}
+	}
+
+
+
+
+	/**
+	 * Cancels the currently running AsyncTask (if any).
+	 */
+	private void cancelRunningAnyAsyncTask()
+	{
+		if (isAnAsyncTaskRunning())
+		{
+			asyncRegisterForNotifications.cancel(true);
 		}
 	}
 
@@ -207,6 +228,8 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 
 
 	}
+
+
 
 
 }
