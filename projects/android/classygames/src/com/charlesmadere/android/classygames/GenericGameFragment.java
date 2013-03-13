@@ -147,7 +147,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * Object that allows us to run any of the methods that are defined in the
 	 * GenericGameFragmentListeners interface.
 	 */
-	private GenericGameFragmentListeners genericGameFragmentListeners;
+	private GenericGameFragmentListeners listeners;
 
 
 	/**
@@ -221,7 +221,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 		if (arguments == null || arguments.isEmpty())
 		{
-			genericGameFragmentListeners.onDataError();
+			listeners.onDataError();
 		}
 		else
 		{
@@ -279,13 +279,13 @@ public abstract class GenericGameFragment extends SherlockFragment
 					}
 					catch (final JSONException e)
 					{
-						genericGameFragmentListeners.onDataError();
+						listeners.onDataError();
 					}
 				}
 			}
 			else
 			{
-				genericGameFragmentListeners.onDataError();
+				listeners.onDataError();
 			}
 		}
 	}
@@ -301,7 +301,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 		try
 		{
-			genericGameFragmentListeners = (GenericGameFragmentListeners) activity;
+			listeners = (GenericGameFragmentListeners) activity;
 		}
 		catch (final ClassCastException e)
 		{
@@ -315,7 +315,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		menu.removeItem(R.id.generic_refresh_menu_refresh);
 
-		if (genericGameFragmentListeners.isDeviceSmall())
+		if (listeners.isDeviceSmall())
 		{
 			menu.removeItem(R.id.game_fragment_activity_menu_new_game);
 		}
@@ -585,7 +585,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 				{
 					if (wasCompleted)
 					{
-						genericGameFragmentListeners.onServerApiTaskFinished();
+						listeners.onServerApiTaskFinished();
 					}
 
 					serverApiTask = null;
@@ -735,7 +735,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 				{
 					if (wasCompleted)
 					{
-						genericGameFragmentListeners.onServerApiTaskFinished();
+						listeners.onServerApiTaskFinished();
 					}
 
 					serverApiTask = null;
@@ -833,7 +833,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 				{
 					if (wasCompleted)
 					{
-						genericGameFragmentListeners.onServerApiTaskFinished();
+						listeners.onServerApiTaskFinished();
 					}
 
 					serverApiTask = null;
@@ -861,7 +861,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			}
 			catch (final JSONException e)
 			{
-				genericGameFragmentListeners.onDataError();
+				listeners.onDataError();
 			}
 
 			flush();
@@ -920,7 +920,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		private void cancelled()
 		{
 			setRunningState(false);
-			genericGameFragmentListeners.onGetGameCancelled();
+			listeners.onGetGameCancelled();
 		}
 
 
@@ -976,7 +976,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			if (boardJSON == null)
 			{
 				Log.e(LOG_TAG, "Tried to build the board from a null JSONObject!");
-				genericGameFragmentListeners.onDataError();
+				listeners.onDataError();
 			}
 			else
 			{
@@ -987,7 +987,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 				catch (final JSONException e)
 				{
 					Log.e(LOG_TAG, "resumeOldBoard(): boardJSON is massively malformed.", e);
-					genericGameFragmentListeners.onDataError();
+					listeners.onDataError();
 				}
 			}
 		}

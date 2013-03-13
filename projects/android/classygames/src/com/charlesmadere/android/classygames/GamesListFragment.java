@@ -48,9 +48,7 @@ import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
-public class GamesListFragment extends SherlockFragment implements
-	OnItemClickListener,
-	OnItemLongClickListener
+public class GamesListFragment extends SherlockFragment implements OnItemClickListener, OnItemLongClickListener
 {
 
 
@@ -88,26 +86,35 @@ public class GamesListFragment extends SherlockFragment implements
 
 
 	/**
-	 * One of this class's callback methods. This is fired whenever one of the
-	 * games in the user's list of games is clicked on.
+	 * Object that allows us to run any of the methods that are defined in the
+	 * GamesListFragmentListeners interface.
 	 */
-	private GamesListFragmentOnGameSelectedListener gamesListFragmentOnGameSelectedListener;
-
-	public interface GamesListFragmentOnGameSelectedListener
-	{
-		public void gamesListFragmentOnGameSelected(final Game game);
-	}
+	private GamesListFragmentListeners listeners;
 
 
 	/**
-	 * One of this class's callback methods. This is fired whenever the user
-	 * has selected the Refresh button on the action bar.
+	 * A bunch of listener methods for this Fragment.
 	 */
-	private GamesListFragmentOnRefreshSelectedListener gamesListFragmentOnRefreshSelectedListener;
-
-	public interface GamesListFragmentOnRefreshSelectedListener
+	public interface GamesListFragmentListeners
 	{
-		public void gamesListFragmentOnRefreshSelected();
+
+
+		/**
+		 * This is fired when the user selects a game in their games list.
+		 * 
+		 * @param game
+		 * The Game object that the user selected.
+		 */
+		public void onGameSelected(final Game game);
+
+
+		/**
+		 * This is fired whenever the user has selected the Refresh button on
+		 * the action bar.
+		 */
+		public void onRefreshSelected();
+
+
 	}
 
 
@@ -138,8 +145,7 @@ public class GamesListFragment extends SherlockFragment implements
 
 		try
 		{
-			gamesListFragmentOnGameSelectedListener = (GamesListFragmentOnGameSelectedListener) activity;
-			gamesListFragmentOnRefreshSelectedListener = (GamesListFragmentOnRefreshSelectedListener) activity;
+			listeners = (GamesListFragmentListeners) activity;
 		}
 		catch (final ClassCastException e)
 		{
@@ -171,7 +177,7 @@ public class GamesListFragment extends SherlockFragment implements
 
 		if (game.isTypeGame() && game.isTurnYours())
 		{
-			gamesListFragmentOnGameSelectedListener.gamesListFragmentOnGameSelected(game);
+			listeners.onGameSelected(game);
 		}
 	}
 
@@ -286,7 +292,7 @@ public class GamesListFragment extends SherlockFragment implements
 				break;
 
 			case R.id.generic_refresh_menu_refresh:
-				gamesListFragmentOnRefreshSelectedListener.gamesListFragmentOnRefreshSelected();
+				listeners.onRefreshSelected();
 				break;
 
 			default:

@@ -21,12 +21,8 @@ import com.facebook.UiLifecycleHelper;
 
 
 public class GameFragmentActivity extends SherlockFragmentActivity implements
-	GamesListFragment.GamesListFragmentOnGameSelectedListener,
-	GamesListFragment.GamesListFragmentOnRefreshSelectedListener,
-	GenericGameFragment.GenericGameFragmentIsDeviceLargeListener,
-	GenericGameFragment.GenericGameFragmentOnAsyncGetGameOnCancelledListener,
-	GenericGameFragment.GenericGameFragmentOnAsyncSendOrSkipMoveFinishedListener,
-	GenericGameFragment.GenericGameFragmentOnDataErrorListener
+	GamesListFragment.GamesListFragmentListeners,
+	GenericGameFragment.GenericGameFragmentListeners
 {
 
 
@@ -143,7 +139,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 				if (Game.isIdValid(gameId) && Person.isIdValid(personId) && Person.isNameValid(personName))
 				{
 					final Game game = new Game(new Person(personId, personName), gameId);
-					gamesListFragmentOnGameSelected(game);
+					onGameSelected(game);
 				}
 			}
 		}
@@ -169,7 +165,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 				{
 					final Person friend = new Person(id, name);
 					final Game game = new Game(friend);
-					gamesListFragmentOnGameSelected(game);
+					onGameSelected(game);
 				}
 			}
 		}
@@ -351,7 +347,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 
 	@Override
-	public void gamesListFragmentOnGameSelected(final Game game)
+	public void onGameSelected(final Game game)
 	{
 		if (isDeviceLarge() || (genericGameFragment == null || !genericGameFragment.isVisible()))
 		{
@@ -402,7 +398,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 
 	@Override
-	public void gamesListFragmentOnRefreshSelected()
+	public void onRefreshSelected()
 	{
 		if (isDeviceLarge() && genericGameFragment != null && genericGameFragment.isVisible())
 		{
@@ -417,21 +413,29 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 
 	@Override
-	public boolean genericGameFragmentIsDeviceSmall()
+	public boolean isDeviceSmall()
 	{
 		return !isDeviceLarge();
 	}
 
 
 	@Override
-	public void genericGameFragmentOnAsyncGetGameOnCancelled()
+	public void onDataError()
+	{
+		Utilities.easyToastAndLogError(this, "Couldn't create a game as malformed data was detected!");
+		onBackPressed();
+	}
+
+
+	@Override
+	public void onGetGameCancelled()
 	{
 		onBackPressed();
 	}
 
 
 	@Override
-	public void genericGameFragmentOnAsyncSendingFinished()
+	public void onServerApiTaskFinished()
 	{
 		final FragmentManager fManager = getSupportFragmentManager();
 		fManager.popBackStack();
@@ -458,15 +462,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 		actionBar.setDisplayHomeAsUpEnabled(false);
 		actionBar.setTitle(R.string.games_list_fragment_title);
 
-		gamesListFragmentOnRefreshSelected();
-	}
-
-
-	@Override
-	public void genericGameFragmentOnDataError()
-	{
-		Utilities.easyToastAndLogError(this, "Couldn't create a game as malformed data was detected!");
-		onBackPressed();
+		onRefreshSelected();
 	}
 
 

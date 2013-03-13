@@ -13,12 +13,8 @@ import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
 public class NewGameFragmentActivity extends SherlockFragmentActivity implements
-	ConfirmGameFragment.ConfirmGameFragmentIsDeviceSmallListener,
-	ConfirmGameFragment.ConfirmGameFragmentOnDataErrorListener,
-	ConfirmGameFragment.ConfirmGameFragmentOnGameConfirmListener,
-	ConfirmGameFragment.ConfirmGameFragmentOnGameDenyListener,
-	FriendsListFragment.FriendsListFragmentOnFriendSelectedListener,
-	FriendsListFragment.FriendsListFragmentOnRefreshSelectedListener
+	ConfirmGameFragment.ConfirmGameFragmentListeners,
+	FriendsListFragment.FriendsListFragmentListeners
 {
 
 
@@ -157,14 +153,14 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 
 
 	@Override
-	public boolean confirmGameFragmentIsDeviceSmall()
+	public boolean isDeviceSmall()
 	{
 		return !isDeviceLarge();
 	}
 
 
 	@Override
-	public void confirmGameFragmentOnDataError()
+	public void onDataError()
 	{
 		Utilities.easyToastAndLogError(this, getString(R.string.confirm_game_fragment_data_error));
 		onBackPressed();
@@ -172,7 +168,7 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 
 
 	@Override
-	public void confirmGameFragmentOnGameConfirm(final Person friend)
+	public void onGameConfirm(final Person friend)
 	{
 		final Bundle extras = new Bundle();
 		extras.putLong(KEY_FRIEND_ID, friend.getId());
@@ -187,14 +183,14 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 
 
 	@Override
-	public void confirmGameFragmentOnGameDeny()
+	public void onGameDeny()
 	{
 		onBackPressed();
 	}
 
 
 	@Override
-	public void friendsListFragmentOnFriendSelected(final Person friend)
+	public void onFriendSelected(final Person friend)
 	{
 		if (isDeviceLarge() || (confirmGameFragment == null || !confirmGameFragment.isVisible()))
 		{
@@ -228,7 +224,7 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 
 
 	@Override
-	public void friendsListFragmentOnRefreshSelected()
+	public void onRefreshSelected()
 	{
 		if (isDeviceLarge() && confirmGameFragment != null && confirmGameFragment.isVisible())
 		{

@@ -75,7 +75,7 @@ public class FriendsListFragment extends SherlockFragment implements OnItemClick
 	 * Object that allows us to run any of the methods that are defined in the
 	 * FriendsListFragmentListeners interface.
 	 */
-	private FriendsListFragmentListeners friendsListFragmentListeners;
+	private FriendsListFragmentListeners listeners;
 
 
 	/**
@@ -132,7 +132,7 @@ public class FriendsListFragment extends SherlockFragment implements OnItemClick
 
 		try
 		{
-			friendsListFragmentListeners = (FriendsListFragmentListeners) activity;
+			listeners = (FriendsListFragmentListeners) activity;
 		}
 		catch (final ClassCastException e)
 		{
@@ -161,7 +161,7 @@ public class FriendsListFragment extends SherlockFragment implements OnItemClick
 	public void onItemClick(final AdapterView<?> l, final View v, final int position, final long id)
 	{
 		final Person friend = friendsListAdapter.getItem(position);
-		friendsListFragmentListeners.onFriendSelected(friend);
+		listeners.onFriendSelected(friend);
 	}
 
 
@@ -179,7 +179,7 @@ public class FriendsListFragment extends SherlockFragment implements OnItemClick
 
 			case R.id.generic_refresh_menu_refresh:
 				getSherlockActivity().getPreferences(Context.MODE_PRIVATE).edit().clear().commit();
-				friendsListFragmentListeners.onRefreshSelected();
+				listeners.onRefreshSelected();
 				break;
 
 			default:
