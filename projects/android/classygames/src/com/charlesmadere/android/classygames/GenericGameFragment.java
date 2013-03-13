@@ -144,50 +144,50 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * One of this class's callback methods. This is fired during this
-	 * fragment's onCreateOptionsMenu.
+	 * Object that allows us to run any of the methods that are defined in the
+	 * GenericGameFragmentListeners interface.
 	 */
-	private GenericGameFragmentIsDeviceLargeListener genericGameFragmentIsDeviceSmallListener;
-
-	public interface GenericGameFragmentIsDeviceLargeListener
-	{
-		public boolean genericGameFragmentIsDeviceSmall();
-	}
+	private GenericGameFragmentListeners genericGameFragmentListeners;
 
 
 	/**
-	 * One of this class's callback methods. This is fired in the event that
-	 * the user cancels the AsyncGetGame AsyncTask.
+	 * A bunch of listener methods for this Fragment.
 	 */
-	private GenericGameFragmentOnAsyncGetGameOnCancelledListener genericGameFragmentOnAsyncGetGameOnCancelledListener;
-
-	public interface GenericGameFragmentOnAsyncGetGameOnCancelledListener
+	public interface GenericGameFragmentListeners
 	{
-		public void genericGameFragmentOnAsyncGetGameOnCancelled();
-	}
 
 
-	/**
-	 * One of this class's callback methods. This is fired in the event that
-	 * a move has finished being sent to the server.
-	 */
-	private GenericGameFragmentOnAsyncSendOrSkipMoveFinishedListener genericGameFragmentOnAsyncSendingFinishedListener;
+		/**
+		 * This is fired during this Fragment's onCreateOptionsMenu() method.
+		 * Checks to see if the current device is considered by Android to be
+		 * small. This be basically every phone.
+		 * 
+		 * @return
+		 * Returns true if the current device is small.
+		 */
+		public boolean isDeviceSmall();
 
-	public interface GenericGameFragmentOnAsyncSendOrSkipMoveFinishedListener
-	{
-		public void genericGameFragmentOnAsyncSendingFinished();
-	}
+
+		/**
+		 * This is fired in the event that an error was detected with some of
+		 * the data needed to instantiate a game.
+		 */
+		public void onDataError();
 
 
-	/**
-	 * One of this class's callback methods. This is fired in the event that an
-	 * error was detected in some of the data needed to instantiate a game.
-	 */
-	private GenericGameFragmentOnDataErrorListener genericGameFragmentOnDataErrorListener;
+		/**
+		 * This is fired if the AsyncGetGame AsyncTask gets cancelled.
+		 */
+		public void onGetGameCancelled();
 
-	public interface GenericGameFragmentOnDataErrorListener
-	{
-		public void genericGameFragmentOnDataError();
+
+		/**
+		 * This is fired when a move (or new game) is finished being sent to
+		 * the server.
+		 */
+		public void onServerApiTaskFinished();
+
+
 	}
 
 
@@ -221,7 +221,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 		if (arguments == null || arguments.isEmpty())
 		{
-			genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataError();
+			genericGameFragmentListeners.onDataError();
 		}
 		else
 		{
@@ -279,13 +279,13 @@ public abstract class GenericGameFragment extends SherlockFragment
 					}
 					catch (final JSONException e)
 					{
-						genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataError();
+						genericGameFragmentListeners.onDataError();
 					}
 				}
 			}
 			else
 			{
-				genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataError();
+				genericGameFragmentListeners.onDataError();
 			}
 		}
 	}
@@ -301,10 +301,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 		try
 		{
-			genericGameFragmentIsDeviceSmallListener = (GenericGameFragmentIsDeviceLargeListener) activity;
-			genericGameFragmentOnAsyncGetGameOnCancelledListener = (GenericGameFragmentOnAsyncGetGameOnCancelledListener) activity;
-			genericGameFragmentOnAsyncSendingFinishedListener = (GenericGameFragmentOnAsyncSendOrSkipMoveFinishedListener) activity;
-			genericGameFragmentOnDataErrorListener = (GenericGameFragmentOnDataErrorListener) activity;
+			genericGameFragmentListeners = (GenericGameFragmentListeners) activity;
 		}
 		catch (final ClassCastException e)
 		{
@@ -318,7 +315,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		menu.removeItem(R.id.generic_refresh_menu_refresh);
 
-		if (genericGameFragmentIsDeviceSmallListener.genericGameFragmentIsDeviceSmall())
+		if (genericGameFragmentListeners.isDeviceSmall())
 		{
 			menu.removeItem(R.id.game_fragment_activity_menu_new_game);
 		}
@@ -588,7 +585,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 				{
 					if (wasCompleted)
 					{
-						genericGameFragmentOnAsyncSendingFinishedListener.genericGameFragmentOnAsyncSendingFinished();
+						genericGameFragmentListeners.onServerApiTaskFinished();
 					}
 
 					serverApiTask = null;
@@ -738,7 +735,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 				{
 					if (wasCompleted)
 					{
-						genericGameFragmentOnAsyncSendingFinishedListener.genericGameFragmentOnAsyncSendingFinished();
+						genericGameFragmentListeners.onServerApiTaskFinished();
 					}
 
 					serverApiTask = null;
@@ -836,7 +833,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 				{
 					if (wasCompleted)
 					{
-						genericGameFragmentOnAsyncSendingFinishedListener.genericGameFragmentOnAsyncSendingFinished();
+						genericGameFragmentListeners.onServerApiTaskFinished();
 					}
 
 					serverApiTask = null;
@@ -864,7 +861,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			}
 			catch (final JSONException e)
 			{
-				genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataError();
+				genericGameFragmentListeners.onDataError();
 			}
 
 			flush();
@@ -923,7 +920,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		private void cancelled()
 		{
 			setRunningState(false);
-			genericGameFragmentOnAsyncGetGameOnCancelledListener.genericGameFragmentOnAsyncGetGameOnCancelled();
+			genericGameFragmentListeners.onGetGameCancelled();
 		}
 
 
@@ -978,8 +975,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 		{
 			if (boardJSON == null)
 			{
-				Log.e(LOG_TAG, "Tried to build the board from either a null or empty JSON String!");
-				genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataError();
+				Log.e(LOG_TAG, "Tried to build the board from a null JSONObject!");
+				genericGameFragmentListeners.onDataError();
 			}
 			else
 			{
@@ -990,7 +987,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 				catch (final JSONException e)
 				{
 					Log.e(LOG_TAG, "resumeOldBoard(): boardJSON is massively malformed.", e);
-					genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataError();
+					genericGameFragmentListeners.onDataError();
 				}
 			}
 		}

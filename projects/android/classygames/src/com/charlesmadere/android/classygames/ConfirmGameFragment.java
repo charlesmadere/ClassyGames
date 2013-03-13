@@ -40,6 +40,54 @@ public class ConfirmGameFragment extends SherlockFragment
 
 
 	/**
+	 * 
+	 */
+	private ConfirmGameFragmentListeners confirmGameFragmentListeners;
+
+
+	/**
+	 * A bunch of listener methods for this Fragment.
+	 */
+	public interface ConfirmGameFragmentListeners
+	{
+
+
+		/**
+		 * 
+		 * 
+		 * @return
+		 * 
+		 */
+		public boolean isDeviceSmall();
+
+
+		/**
+		 * 
+		 */
+		public void onDataError();
+
+
+		/**
+		 * 
+		 * 
+		 * @param friend
+		 * 
+		 */
+		public void onGameConfirm(final Person friend);
+
+
+		/**
+		 * 
+		 */
+		public void onGameDeny();
+
+
+	}
+
+
+
+
+	/**
 	 * One of this class's callback methods. This is fired during this
 	 * fragment's onCreateOptionsMenu.
 	 */

@@ -179,7 +179,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	public void onBackPressed()
 	{
-		if (gamesListFragment != null && gamesListFragment.isAnAsyncTaskRunning())
+		if (gamesListFragment != null)
 		{
 			gamesListFragment.cancelRunningAnyAsyncTask();
 		}
