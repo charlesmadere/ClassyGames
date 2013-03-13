@@ -25,6 +25,7 @@
 	<string name="friends_list_fragment_loading_text">Loading your Facebook Friends List&#8230;</string>
 	<string name="friends_list_fragment_no_friends">Sorry, but you don\'t seem to have any Facebook friends. In order to play Classy Games you must have some Facebook friends.</string>
 	<string name="friends_list_fragment_title">New Game</string>
+	<string name="game_fragment_activity_game_data_error">Couldn\'t create a game as malformed data was detected!</string>
 	<string name="game_fragment_board_x0y0">0, 0</string>
 	<string name="game_fragment_board_x1y0">1, 0</string>
 	<string name="game_fragment_board_x2y0">2, 0</string>

@@ -885,7 +885,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		private ViewGroup viewGroup;
 
 
-		AsyncGetGame(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater, final ViewGroup viewGroup)
+		private AsyncGetGame(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater, final ViewGroup viewGroup)
 		{
 			this.fragmentActivity = fragmentActivity;
 			this.inflater = inflater;

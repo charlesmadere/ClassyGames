@@ -186,6 +186,27 @@ public final class Utilities
 
 
 	/**
+	 * Prints a Toast message to the screen and prints that same message to the
+	 * Log.e console.
+	 * 
+	 * <p><strong>Examples</strong><br />
+	 * Utilities.easyToastAndLogError(MainActivity.this, "Hello!");<br />
+	 * Utilities.easyToastAndLogError(getApplicationContext(), "Another message huh?");</p>
+	 * 
+	 * @param context
+	 * Just put the name of your class.this, or you can use getApplicationContext().
+	 * 
+	 * @param stringId
+	 * The int ID of the resource that you want to print.
+	 */
+	public static void easyToastAndLogError(final Context context, final int stringId)
+	{
+		easyToast(context, stringId);
+		Log.e(LOG_TAG, context.getString(stringId));
+	}
+
+
+	/**
 	 * Initializes the ImageLoader library with some specific configuration
 	 * settings (if it has not already been initialized) and returns only what
 	 * you need - the portion that will actually load an image for ya!

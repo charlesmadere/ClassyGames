@@ -422,7 +422,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	public void onDataError()
 	{
-		Utilities.easyToastAndLogError(this, "Couldn't create a game as malformed data was detected!");
+		Utilities.easyToastAndLogError(this, R.string.game_fragment_activity_game_data_error);
 		onBackPressed();
 	}
 
