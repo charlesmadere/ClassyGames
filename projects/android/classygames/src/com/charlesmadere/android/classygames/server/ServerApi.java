@@ -189,7 +189,7 @@ public abstract class ServerApi
 
 	/**
 	 * Begins the execution of this ServerApi code. Will first ask the user if
-	 * they want do in fact want to perform this server call.
+	 * they do in fact want to perform this server call.
 	 */
 	public void execute()
 	{
