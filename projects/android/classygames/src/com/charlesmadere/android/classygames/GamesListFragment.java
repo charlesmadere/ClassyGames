@@ -78,6 +78,12 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 
 
 	/**
+	 * Callback interface for the ServerApi class.
+	 */
+	private ServerApi.ServerApiListeners serverApiListeners;
+
+
+	/**
 	 * List Adapter for this Fragment's ListView layout item.
 	 */
 	private GamesListAdapter gamesListAdapter;
@@ -131,6 +137,30 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{
+		serverApiListeners = new ServerApi.ServerApiListeners()
+		{
+			@Override
+			public void onCancel()
+			{
+				serverApiTask = null;
+			}
+
+
+			@Override
+			public void onComplete()
+			{
+				serverApiTask = null;
+				listeners.onRefreshSelected();
+			}
+
+
+			@Override
+			public void onDismiss()
+			{
+				serverApiTask = null;
+			}
+		};
+
 		return inflater.inflate(R.layout.games_list_fragment, container, false);
 	}
 
@@ -213,30 +243,6 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 						{
 							if (!isAnAsyncTaskRunning())
 							{
-								final ServerApi.ServerApiListeners serverApiListeners = new ServerApi.ServerApiListeners()
-								{
-									@Override
-									public void onCancel()
-									{
-										serverApiTask = null;
-									}
-
-
-									@Override
-									public void onComplete()
-									{
-										serverApiTask = null;
-										listeners.onRefreshSelected();
-									}
-
-
-									@Override
-									public void onDismiss()
-									{
-										serverApiTask = null;
-									}
-								};
-
 								switch (which)
 								{
 									case 0:
