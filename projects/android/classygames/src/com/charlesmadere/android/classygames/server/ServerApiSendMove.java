@@ -48,7 +48,7 @@ public class ServerApiSendMove extends ServerApi
 	 * @param onCompleteListener
 	 * A listener to call once we're done running code here.
 	 */
-	public ServerApiSendMove(final Context context, final Game game, final ServerApi.OnCompleteListener onCompleteListener, final GenericBoard board)
+	public ServerApiSendMove(final Context context, final Game game, final ServerApi.ServerApiListeners onCompleteListener, final GenericBoard board)
 	{
 		super(context, game, onCompleteListener);
 		this.board = board;

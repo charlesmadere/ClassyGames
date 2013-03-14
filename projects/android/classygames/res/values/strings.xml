@@ -119,6 +119,7 @@
 	<string name="games_list_fragment_getgames_progressdialog_title">Classy Games is working&#8230;</string>
 	<string name="games_list_fragment_listview_item_picture_description">Friend\'s Picture</string>
 	<string name="games_list_fragment_no_games">You have no games! Perhaps you should start a new game?</string>
+	<string name="games_list_fragment_no_internet_connection">You don\'t have an Internet connection!</string>
 	<string name="games_list_fragment_loading_text">Loading your Games List&#8230;</string>
 	<string name="games_list_fragment_title">Games List</string>
 	<string name="games_list_fragment_turn_theirs">Their Turn</string>

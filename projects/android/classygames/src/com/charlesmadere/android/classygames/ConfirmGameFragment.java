@@ -171,7 +171,7 @@ public class ConfirmGameFragment extends SherlockFragment
 
 
 	@Override
-	public void onAttach(Activity activity)
+	public void onAttach(final Activity activity)
 	// This makes sure that the Activity containing this Fragment has
 	// implemented the callback interface. If the callback interface has not
 	// been implemented, an exception is thrown.
@@ -198,14 +198,6 @@ public class ConfirmGameFragment extends SherlockFragment
 		}
 
 		super.onCreateOptionsMenu(menu, inflater);
-	}
-
-
-
-
-	public boolean isLoaded()
-	{
-		return friend != null && friend.isValid();
 	}
 
 

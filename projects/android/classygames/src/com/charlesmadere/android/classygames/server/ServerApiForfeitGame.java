@@ -37,7 +37,7 @@ public class ServerApiForfeitGame extends ServerApi
 	 * @param onCompleteListener
 	 * A listener to call once we're done running code here.
 	 */
-	public ServerApiForfeitGame(final Context context, final Game game, final ServerApi.OnCompleteListener onCompleteListener)
+	public ServerApiForfeitGame(final Context context, final Game game, final ServerApi.ServerApiListeners onCompleteListener)
 	{
 		super(context, game, onCompleteListener);
 	}

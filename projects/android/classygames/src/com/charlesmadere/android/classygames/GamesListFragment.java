@@ -213,38 +213,38 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 						{
 							if (!isAnAsyncTaskRunning())
 							{
+								final ServerApi.ServerApiListeners serverApiListeners = new ServerApi.ServerApiListeners()
+								{
+									@Override
+									public void onCancel()
+									{
+										serverApiTask = null;
+									}
+
+
+									@Override
+									public void onComplete()
+									{
+										serverApiTask = null;
+										listeners.onRefreshSelected();
+									}
+
+
+									@Override
+									public void onDismiss()
+									{
+										serverApiTask = null;
+									}
+								};
+
 								switch (which)
 								{
 									case 0:
-										serverApiTask = new ServerApiForfeitGame(context, game, new ServerApi.OnCompleteListener()
-										{
-											@Override
-											public void onComplete(final boolean wasCompleted)
-											{
-												serverApiTask = null;
-
-												if (wasCompleted)
-												{
-													refreshGamesList();
-												}
-											}
-										});
+										serverApiTask = new ServerApiForfeitGame(context, game, serverApiListeners);
 										break;
 
 									case 1:
-										serverApiTask = new ServerApiSkipMove(context, game, new ServerApi.OnCompleteListener()
-										{
-											@Override
-											public void onComplete(final boolean wasCompleted)
-											{
-												serverApiTask = null;
-
-												if (wasCompleted)
-												{
-													refreshGamesList();
-												}
-											}
-										});
+										serverApiTask = new ServerApiSkipMove(context, game, serverApiListeners);
 										break;
 								}
 
@@ -409,7 +409,7 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 		private ViewGroup viewGroup;
 
 
-		AsyncRefreshGamesList(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater, final ViewGroup viewGroup)
+		private AsyncRefreshGamesList(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater, final ViewGroup viewGroup)
 		{
 			this.fragmentActivity = fragmentActivity;
 			this.inflater = inflater;
@@ -451,7 +451,6 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 					}
 					catch (final IOException e)
 					{
-						runStatus = RUN_STATUS_IOEXCEPTION;
 						Log.e(LOG_TAG, "IOException error in AsyncPopulateGamesList - doInBackground()!", e);
 					}
 				}
@@ -489,7 +488,7 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 		{
 			viewGroup.removeAllViews();
 
-			if (games != null && games.size() >= 1)
+			if (games != null && !games.isEmpty())
 			{
 				inflater.inflate(R.layout.games_list_fragment, viewGroup);
 				gamesListAdapter = new GamesListAdapter(fragmentActivity, R.layout.games_list_fragment_listview_item, games);
@@ -499,19 +498,13 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 				listView.setOnItemClickListener(GamesListFragment.this);
 				listView.setOnItemLongClickListener(GamesListFragment.this);
 			}
+			else if (runStatus == RUN_STATUS_IOEXCEPTION)
+			{
+				inflater.inflate(R.layout.games_list_fragment_no_internet_connection, viewGroup);
+			}
 			else
 			{
 				inflater.inflate(R.layout.games_list_fragment_no_games, viewGroup);
-			}
-
-			switch (runStatus)
-			{
-				case RUN_STATUS_NORMAL:
-					break;
-
-				case RUN_STATUS_IOEXCEPTION:
-					Utilities.easyToastAndLogError(fragmentActivity, fragmentActivity.getString(R.string.no_internet_connection));
-					break;
 			}
 
 			setRunningState(false);

@@ -37,7 +37,7 @@ public class ServerApiSkipMove extends ServerApi
 	 * @param onCompleteListener
 	 * A listener to call once we're done running code here.
 	 */
-	public ServerApiSkipMove(final Context context, final Game game, final ServerApi.OnCompleteListener onCompleteListener)
+	public ServerApiSkipMove(final Context context, final Game game, final ServerApi.ServerApiListeners onCompleteListener)
 	{
 		super(context, game, onCompleteListener);
 	}
