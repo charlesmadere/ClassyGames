@@ -29,8 +29,6 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 	public final static int RESULT_CODE_FINISH = MainActivity.GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FINISH;
 	public final static int NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FRIEND_SELECTED = 16;
 
-	public final static String GCM_RECEIVED = "edu.selu.android.classygames.GameFragmentActivity.GCM_RECEIVED";
-
 	public final static String BUNDLE_DATA_GAME_ID = "BUNDLE_DATA_GAME_ID";
 	public final static String BUNDLE_DATA_PERSON_OPPONENT_ID = "BUNDLE_DATA_PERSON_OPPONENT_ID";
 	public final static String BUNDLE_DATA_PERSON_OPPONENT_NAME = "BUNDLE_DATA_PERSON_OPPONENT_NAME";

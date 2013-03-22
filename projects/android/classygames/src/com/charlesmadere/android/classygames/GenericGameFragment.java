@@ -48,6 +48,12 @@ public abstract class GenericGameFragment extends SherlockFragment
 	private final static String LOG_TAG = Utilities.LOG_TAG + " - GenericGameFragment";
 
 
+	private final static String BUNDLE_BOARD_JSON = "BUNDLE_BOARD_JSON";
+	private final static String BUNDLE_GAME_ID = "BUNDLE_GAME_ID";
+	private final static String BUNDLE_PERSON_ID = "BUNDLE_PERSON_ID";
+	private final static String BUNDLE_PERSON_NAME = "BUNDLE_PERSON_NAME";
+
+
 	public final static String KEY_GAME_ID = "KEY_GAME_ID";
 	public final static String KEY_PERSON_ID = "KEY_PERSON_ID";
 	public final static String KEY_PERSON_NAME = "KEY_PERSON_NAME";
@@ -219,6 +225,10 @@ public abstract class GenericGameFragment extends SherlockFragment
 	public void onActivityCreated(final Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
+
+		// TODO
+		// do something with the savedInstanceState. make it so that the
+		// game's state is restored
 
 		if (arguments == null || arguments.isEmpty())
 		{
@@ -441,6 +451,21 @@ public abstract class GenericGameFragment extends SherlockFragment
 				}
 			}
 		}
+	}
+
+
+	@Override
+	public void onSaveInstanceState(final Bundle outState)
+	{
+		if (Game.isIdValid(game.getId()))
+		{
+			outState.putString(BUNDLE_BOARD_JSON, boardJSON.toString());
+			outState.putString(BUNDLE_GAME_ID, game.getId());
+		}
+
+		outState.putLong(BUNDLE_PERSON_ID, game.getPerson().getId());
+		outState.putString(BUNDLE_PERSON_NAME, game.getPerson().getName());
+		super.onSaveInstanceState(outState);
 	}
 
 
