@@ -48,9 +48,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	private final static String BUNDLE_BOARD_JSON = "BUNDLE_BOARD_JSON";
-	private final static String BUNDLE_GAME_ID = "BUNDLE_GAME_ID";
-	private final static String BUNDLE_PERSON_ID = "BUNDLE_PERSON_ID";
-	private final static String BUNDLE_PERSON_NAME = "BUNDLE_PERSON_NAME";
 
 
 	public final static String KEY_GAME_ID = "KEY_GAME_ID";
@@ -219,120 +216,120 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		super.onActivityCreated(savedInstanceState);
 
-		// TODO
-		// do something with the savedInstanceState. make it so that the
-		// game's state is restored
+		final Bundle arguments = getArguments();
 
-		if (savedInstanceState != null && !savedInstanceState.isEmpty()
-			&& savedInstanceState.containsKey(BUNDLE_PERSON_ID) && savedInstanceState.containsKey(BUNDLE_PERSON_NAME))
+		if (arguments == null || arguments.isEmpty())
 		{
-			if (savedInstanceState.containsKey(BUNDLE_BOARD_JSON) && savedInstanceState.containsKey(BUNDLE_GAME_ID))
-			{
-				
-			}
-			else
-			{
-				
-			}
+			listeners.onDataError();
 		}
 		else
 		{
-			final Bundle arguments = getArguments();
+			final String gameId = arguments.getString(KEY_GAME_ID);
+			final long personId = arguments.getLong(KEY_PERSON_ID);
+			final String personName = arguments.getString(KEY_PERSON_NAME);
 
-			if (arguments == null || arguments.isEmpty())
+			if (Person.isIdValid(personId) && Person.isNameValid(personName))
 			{
-				listeners.onDataError();
-			}
-			else
-			{
-				final String gameId = arguments.getString(KEY_GAME_ID);
-				final long personId = arguments.getLong(KEY_PERSON_ID);
-				final String personName = arguments.getString(KEY_PERSON_NAME);
-
-				if (Person.isIdValid(personId) && Person.isNameValid(personName))
+				serverApiListeners = new ServerApi.ServerApiListeners()
 				{
-					serverApiListeners = new ServerApi.ServerApiListeners()
+					@Override
+					public void onCancel()
 					{
-						@Override
-						public void onCancel()
-						{
-							serverApiTask = null;
-						}
+						serverApiTask = null;
+					}
 
 
-						@Override
-						public void onComplete()
-						{
-							serverApiTask = null;
-							listeners.onServerApiTaskFinished();
-						}
-
-
-						@Override
-						public void onDismiss()
-						{
-							serverApiTask = null;
-						}
-					};
-
-					onBoardClick = new View.OnClickListener()
+					@Override
+					public void onComplete()
 					{
-						@Override
-						public void onClick(final View v)
+						serverApiTask = null;
+						listeners.onServerApiTaskFinished();
+					}
+
+
+					@Override
+					public void onDismiss()
+					{
+						serverApiTask = null;
+					}
+				};
+
+				onBoardClick = new View.OnClickListener()
+				{
+					@Override
+					public void onClick(final View v)
+					{
+						if (positionSelectedCurrent == null)
 						{
-							if (positionSelectedCurrent == null)
+							positionSelectedCurrent = (ImageButton) v;
+							onBoardClick(positionSelectedCurrent);
+						}
+						else
+						{
+							positionSelectedPrevious = positionSelectedCurrent;
+							positionSelectedCurrent = (ImageButton) v;
+
+							if (positionSelectedPrevious == positionSelectedCurrent)
+							// The player has clicked the same position on
+							// the board twice in a row. This is the
+							// deselect action.
 							{
-								positionSelectedCurrent = (ImageButton) v;
-								onBoardClick(positionSelectedCurrent);
+								clearSelectedPositions();
 							}
 							else
 							{
-								positionSelectedPrevious = positionSelectedCurrent;
-								positionSelectedCurrent = (ImageButton) v;
-
-								if (positionSelectedPrevious == positionSelectedCurrent)
-								// The player has clicked the same position on
-								// the board twice in a row. This is the
-								// deselect action.
-								{
-									clearSelectedPositions();
-								}
-								else
-								{
-									onBoardClick(positionSelectedPrevious, positionSelectedCurrent);
-								}
+								onBoardClick(positionSelectedPrevious, positionSelectedCurrent);
 							}
 						}
-					};
-
-					final Person person = new Person(personId, personName);
-					loadBackgroundResources();
-
-					if (Game.isIdValid(gameId))
-					{
-						game = new Game(person, gameId);
-						getGame();
 					}
-					else
-					{
-						game = new Game(person);
+				};
 
+				final Person person = new Person(personId, personName);
+				loadBackgroundResources();
+
+				if (Game.isIdValid(gameId))
+				{
+					game = new Game(person, gameId);
+
+					if (savedInstanceState != null && savedInstanceState.containsKey(BUNDLE_BOARD_JSON))
+					{
 						try
 						{
-							initNewBoard();
+							boardJSON = new JSONObject(savedInstanceState.getString(BUNDLE_BOARD_JSON));
+
 							initViews();
+							resumeOldBoard();
 							flush();
 						}
 						catch (final JSONException e)
 						{
-							listeners.onDataError();
+							getGame();
 						}
+					}
+					else
+					{
+						getGame();
 					}
 				}
 				else
 				{
-					listeners.onDataError();
+					game = new Game(person);
+
+					try
+					{
+						initNewBoard();
+						initViews();
+						flush();
+					}
+					catch (final JSONException e)
+					{
+						listeners.onDataError();
+					}
 				}
+			}
+			else
+			{
+				listeners.onDataError();
 			}
 		}
 	}
@@ -459,14 +456,16 @@ public abstract class GenericGameFragment extends SherlockFragment
 	@Override
 	public void onSaveInstanceState(final Bundle outState)
 	{
-		if (Game.isIdValid(game.getId()))
+		if (Game.isIdValid(game.getId()) && boardJSON != null)
 		{
-			outState.putString(BUNDLE_BOARD_JSON, boardJSON.toString());
-			outState.putString(BUNDLE_GAME_ID, game.getId());
+			final String boardJSONString = boardJSON.toString();
+
+			if (Utilities.verifyValidString(boardJSONString))
+			{
+				outState.putString(BUNDLE_BOARD_JSON, boardJSONString);
+			}
 		}
 
-		outState.putLong(BUNDLE_PERSON_ID, game.getPerson().getId());
-		outState.putString(BUNDLE_PERSON_NAME, game.getPerson().getName());
 		super.onSaveInstanceState(outState);
 	}
 
@@ -765,6 +764,33 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
+	 * This method will initialize the game board as if this is an in progress
+	 * game. This <strong>resumes</strong> an old game. Do not use this for a
+	 * brand new game.
+	 */
+	private void resumeOldBoard()
+	{
+		if (boardJSON == null)
+		{
+			Log.e(LOG_TAG, "Tried to build the board from a null JSONObject!");
+			listeners.onDataError();
+		}
+		else
+		{
+			try
+			{
+				resumeOldBoard(boardJSON);
+			}
+			catch (final JSONException e)
+			{
+				Log.e(LOG_TAG, "resumeOldBoard(): boardJSON is massively malformed.", e);
+				listeners.onDataError();
+			}
+		}
+	}
+
+
+	/**
 	 * If the AsyncSendMove AsyncTask is not already running, then this will
 	 * execute it.
 	 */
@@ -982,33 +1008,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 			final TextView textView = (TextView) viewGroup.findViewById(R.id.generic_game_fragment_loading_textview);
 			textView.setText(getString(getLoadingText(), game.getPerson().getName()));
-		}
-
-
-		/**
-		 * This method will initialize the game board as if this is an in progress
-		 * game. This <strong>resumes</strong> an old game. Do not use this for a
-		 * brand new game.
-		 */
-		private void resumeOldBoard()
-		{
-			if (boardJSON == null)
-			{
-				Log.e(LOG_TAG, "Tried to build the board from a null JSONObject!");
-				listeners.onDataError();
-			}
-			else
-			{
-				try
-				{
-					GenericGameFragment.this.resumeOldBoard(boardJSON);
-				}
-				catch (final JSONException e)
-				{
-					Log.e(LOG_TAG, "resumeOldBoard(): boardJSON is massively malformed.", e);
-					listeners.onDataError();
-				}
-			}
 		}
 
 
