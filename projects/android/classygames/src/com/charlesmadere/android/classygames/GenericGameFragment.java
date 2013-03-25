@@ -18,7 +18,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -83,12 +82,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * Stores the arguments given to this Fragment.
-	 */
-	private Bundle arguments;
-
-
-	/**
 	 * Holds a handle to the currently running (if it's currently running)
 	 * AsyncGetGame AsyncTask. This could be null.
 	 */
@@ -150,7 +143,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * Checks to see which position on the board was clicked and then moves
 	 * pieces and / or performs actions accordingly.
 	 */
-	protected OnClickListener onBoardClick;
+	protected View.OnClickListener onBoardClick;
 
 
 
@@ -230,102 +223,116 @@ public abstract class GenericGameFragment extends SherlockFragment
 		// do something with the savedInstanceState. make it so that the
 		// game's state is restored
 
-		if (arguments == null || arguments.isEmpty())
+		if (savedInstanceState != null && !savedInstanceState.isEmpty()
+			&& savedInstanceState.containsKey(BUNDLE_PERSON_ID) && savedInstanceState.containsKey(BUNDLE_PERSON_NAME))
 		{
-			arguments = getArguments();
-		}
-
-		if (arguments == null || arguments.isEmpty())
-		{
-			listeners.onDataError();
-		}
-		else
-		{
-			final String gameId = arguments.getString(KEY_GAME_ID);
-			final long personId = arguments.getLong(KEY_PERSON_ID);
-			final String personName = arguments.getString(KEY_PERSON_NAME);
-
-			if (Person.isIdValid(personId) && Person.isNameValid(personName))
+			if (savedInstanceState.containsKey(BUNDLE_BOARD_JSON) && savedInstanceState.containsKey(BUNDLE_GAME_ID))
 			{
-				serverApiListeners = new ServerApi.ServerApiListeners()
-				{
-					@Override
-					public void onCancel()
-					{
-						serverApiTask = null;
-					}
-
-
-					@Override
-					public void onComplete()
-					{
-						serverApiTask = null;
-						listeners.onServerApiTaskFinished();
-					}
-
-
-					@Override
-					public void onDismiss()
-					{
-						serverApiTask = null;
-					}
-				};
-
-				onBoardClick = new OnClickListener()
-				{
-					@Override
-					public void onClick(final View v)
-					{
-						if (positionSelectedCurrent == null)
-						{
-							positionSelectedCurrent = (ImageButton) v;
-							onBoardClick(positionSelectedCurrent);
-						}
-						else
-						{
-							positionSelectedPrevious = positionSelectedCurrent;
-							positionSelectedCurrent = (ImageButton) v;
-
-							if (positionSelectedPrevious == positionSelectedCurrent)
-							// deselect action
-							{
-								clearSelectedPositions();
-							}
-							else
-							{
-								onBoardClick(positionSelectedPrevious, positionSelectedCurrent);
-							}
-						}
-					}
-				};
-
-				final Person person = new Person(personId, personName);
-				loadBackgroundResources();
-
-				if (Game.isIdValid(gameId))
-				{
-					game = new Game(person, gameId);
-					getGame();
-				}
-				else
-				{
-					game = new Game(person);
-
-					try
-					{
-						initNewBoard();
-						initViews();
-						flush();
-					}
-					catch (final JSONException e)
-					{
-						listeners.onDataError();
-					}
-				}
+				
 			}
 			else
 			{
+				
+			}
+		}
+		else
+		{
+			final Bundle arguments = getArguments();
+
+			if (arguments == null || arguments.isEmpty())
+			{
 				listeners.onDataError();
+			}
+			else
+			{
+				final String gameId = arguments.getString(KEY_GAME_ID);
+				final long personId = arguments.getLong(KEY_PERSON_ID);
+				final String personName = arguments.getString(KEY_PERSON_NAME);
+
+				if (Person.isIdValid(personId) && Person.isNameValid(personName))
+				{
+					serverApiListeners = new ServerApi.ServerApiListeners()
+					{
+						@Override
+						public void onCancel()
+						{
+							serverApiTask = null;
+						}
+
+
+						@Override
+						public void onComplete()
+						{
+							serverApiTask = null;
+							listeners.onServerApiTaskFinished();
+						}
+
+
+						@Override
+						public void onDismiss()
+						{
+							serverApiTask = null;
+						}
+					};
+
+					onBoardClick = new View.OnClickListener()
+					{
+						@Override
+						public void onClick(final View v)
+						{
+							if (positionSelectedCurrent == null)
+							{
+								positionSelectedCurrent = (ImageButton) v;
+								onBoardClick(positionSelectedCurrent);
+							}
+							else
+							{
+								positionSelectedPrevious = positionSelectedCurrent;
+								positionSelectedCurrent = (ImageButton) v;
+
+								if (positionSelectedPrevious == positionSelectedCurrent)
+								// The player has clicked the same position on
+								// the board twice in a row. This is the
+								// deselect action.
+								{
+									clearSelectedPositions();
+								}
+								else
+								{
+									onBoardClick(positionSelectedPrevious, positionSelectedCurrent);
+								}
+							}
+						}
+					};
+
+					final Person person = new Person(personId, personName);
+					loadBackgroundResources();
+
+					if (Game.isIdValid(gameId))
+					{
+						game = new Game(person, gameId);
+						getGame();
+					}
+					else
+					{
+						game = new Game(person);
+
+						try
+						{
+							initNewBoard();
+							initViews();
+							flush();
+						}
+						catch (final JSONException e)
+						{
+							listeners.onDataError();
+						}
+					}
+				}
+				else
+				{
+					listeners.onDataError();
+				}
 			}
 		}
 	}
@@ -369,12 +376,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			inflater.inflate(R.menu.generic_game_fragment, menu);
 		}
 
-		if (arguments == null || arguments.isEmpty())
-		{
-			arguments = getArguments();
-		}
-
-		if (!Utilities.verifyValidString(arguments.getString(KEY_GAME_ID)))
+		if (!Utilities.verifyValidString(getArguments().getString(KEY_GAME_ID)))
 		{
 			menu.removeItem(R.id.generic_game_fragment_menu_skip_move);
 			menu.removeItem(R.id.generic_game_fragment_menu_forfeit_game);
@@ -977,6 +979,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 			viewGroup.removeAllViews();
 			inflater.inflate(R.layout.generic_game_fragment_loading, viewGroup);
+
 			final TextView textView = (TextView) viewGroup.findViewById(R.id.generic_game_fragment_loading_textview);
 			textView.setText(getString(getLoadingText(), game.getPerson().getName()));
 		}
@@ -1088,8 +1091,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * Initializes some of this Fragment's view data, such as the actionbar's
-	 * title, layout configurations, and onClickListeners.
+	 * Initializes some of this Fragment's view data such as layout
+	 * configurations and onClickListeners.
 	 */
 	protected abstract void initViews();
 

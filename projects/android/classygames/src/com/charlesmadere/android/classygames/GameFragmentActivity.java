@@ -15,9 +15,6 @@ import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.utilities.Utilities;
-import com.facebook.Session;
-import com.facebook.SessionState;
-import com.facebook.UiLifecycleHelper;
 
 
 public class GameFragmentActivity extends SherlockFragmentActivity implements
@@ -29,6 +26,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 	public final static int RESULT_CODE_FINISH = MainActivity.GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FINISH;
 	public final static int NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FRIEND_SELECTED = 16;
 
+
 	public final static String BUNDLE_DATA_GAME_ID = "BUNDLE_DATA_GAME_ID";
 	public final static String BUNDLE_DATA_PERSON_OPPONENT_ID = "BUNDLE_DATA_PERSON_OPPONENT_ID";
 	public final static String BUNDLE_DATA_PERSON_OPPONENT_NAME = "BUNDLE_DATA_PERSON_OPPONENT_NAME";
@@ -36,10 +34,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 	private final static String KEY_ACTION_BAR_TITLE = "KEY_ACTION_BAR_TITLE";
 
 
-	private UiLifecycleHelper uiHelper;
-	private Session.StatusCallback sessionStatusCallback;
 
-	private boolean isResumed = false;
 
 	private EmptyGameFragment emptyGameFragment;
 	private GamesListFragment gamesListFragment;
@@ -55,18 +50,6 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 		setContentView(R.layout.game_fragment_activity);
 		setResult(RESULT_CODE_FINISH);
 		Utilities.styleActionBar(getResources(), getSupportActionBar(), false);
-
-		sessionStatusCallback = new Session.StatusCallback()
-		{
-			@Override
-			public void call(final Session session, final SessionState state, final Exception exception)
-			{
-				onSessionStateChange(session, state, exception);
-			}
-		};
-
-		uiHelper = new UiLifecycleHelper(this, sessionStatusCallback);
-		uiHelper.onCreate(savedInstanceState);
 
 		final FragmentManager fManager = getSupportFragmentManager();
 
@@ -148,7 +131,6 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data)
 	{
 		super.onActivityResult(requestCode, resultCode, data);
-		uiHelper.onActivityResult(requestCode, resultCode, data);
 
 		if (resultCode == NewGameFragmentActivity.RESULT_CODE_FRIEND_SELECTED)
 		{
@@ -210,8 +192,6 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 			genericGameFragment.cancelRunningAnyAsyncTask();
 		}
 
-		isResumed = false;
-		uiHelper.onDestroy();
 		super.onDestroy();
 	}
 
@@ -255,30 +235,11 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 
 	@Override
-	protected void onPause()
-	{
-		isResumed = false;
-		uiHelper.onPause();
-		super.onPause();
-	}
-
-
-	@Override
-	protected void onResume()
-	{
-		super.onResume();
-		uiHelper.onResume();
-		isResumed = true;
-	}
-
-
-	@Override
 	protected void onSaveInstanceState(final Bundle outState)
 	{
 		final CharSequence actionBarTitle = getSupportActionBar().getTitle();
 		outState.putCharSequence(KEY_ACTION_BAR_TITLE, actionBarTitle);
 
-		uiHelper.onSaveInstanceState(outState);
 		super.onSaveInstanceState(outState);
 	}
 
@@ -324,21 +285,6 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 	private boolean isDeviceLarge()
 	{
 		return findViewById(R.id.game_fragment_activity_container) == null;
-	}
-
-
-	private void onSessionStateChange(final Session session, final SessionState state, final Exception exception)
-	{
-		if (isResumed)
-		// only make changes if this activity is visible
-		{
-			if (!state.equals(SessionState.OPENED))
-			// if the session state is not opened then the user will have to
-			// reauthenticate with Facebook
-			{
-				finish();
-			}
-		}
 	}
 
 
@@ -390,7 +336,15 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 			final ActionBar actionBar = getSupportActionBar();
 			actionBar.setDisplayHomeAsUpEnabled(true);
-			actionBar.setTitle(getString(R.string.checkers_game_fragment_title) + " " + game.getPerson().getName());
+
+			if (game.isGameCheckers())
+			{
+				actionBar.setTitle(getString(R.string.checkers_game_fragment_title) + " " + game.getPerson().getName());
+			}
+			else if (game.isGameChess())
+			{
+				actionBar.setTitle(getString(R.string.chess_game_fragment_title) + " " + game.getPerson().getName());
+			}
 		}
 	}
 
