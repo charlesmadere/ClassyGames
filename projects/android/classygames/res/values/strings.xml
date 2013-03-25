@@ -11,6 +11,7 @@
 	<string name="checkers_game_fragment_loading_text">Loading Checkers game against %1$s&#8230;</string>
 	<string name="chess_game_fragment_title">Chess with</string>
 	<string name="chess_game_fragment_loading_text">Loading Chess game against %1$s&#8230;</string>
+	<string name="com_charlesmadere_android_classygames_settings_miscellaneous">com.charlesmadere.android.classygames.settings.miscellaneous</string>
 	<string name="confirm_game_fragment_data_error">Error when trying to store the data for the Facebook friend that you selected.</string>
 	<string name="confirm_game_fragment_button_confirm">Start Game!</string>
 	<string name="confirm_game_fragment_button_deny">Nevermind&#8230;</string>
@@ -135,6 +136,7 @@
 	<string name="lost">lost</string>
 	<string name="main_activity_loading_textview_text">Initializing settings and registering you with our servers&#8230;</string>
 	<string name="main_activity_title">Classy Games</string>
+	<string name="miscellaneous">Miscellaneous</string>
 	<string name="new_game">New Game</string>
 	<string name="no">No</string>
 	<string name="notification_game_over_text">Game with %1$s is now over!</string>
@@ -182,6 +184,7 @@
 	<string name="settings_ask_before_sending_move_summary_off">A confirmation dialog box will not be shown before a move is sent.</string>
 	<string name="settings_ask_before_sending_move_title">Ask Before Sending Move</string>
 	<string name="settings_key_ask_before_sending_move">settings_key_ask_before_sending_move</string>
+	<string name="settings_miscellaneous_summary">Settings that couldn\'t fit into any other category.</string>
 	<string name="shark_activity_description">Sharkwork by Tristan Kidder</string>
 	<string name="shark_activity_imageview_description">Sharkwork</string>
 	<string name="shark_activity_title">Sharkwork</string>

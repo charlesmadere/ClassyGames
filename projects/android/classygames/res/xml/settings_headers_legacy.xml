@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+	android:title="@string/settings">
+	<Preference
+		android:summary="@string/settings_miscellaneous_summary"
+		android:title="@string/miscellaneous">
+		<intent
+			android:action="@string/com_charlesmadere_android_classygames_settings_miscellaneous"
+			android:targetClass="com.charlesmadere.android.classygames.SettingsActivity"
+			android:targetPackage="com.charlesmadere.android.classygames" />
+	</Preference>
+</PreferenceScreen>
