@@ -181,7 +181,7 @@ public final class ServerUtilities
 	 */
 	public static boolean gcmRegister(final Context context) throws IOException
 	{
-		final SharedPreferences sPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+		final SharedPreferences sPreferences = Utilities.getDefaultSharedPreferences(context);
 		final String preferencesRegId = sPreferences.getString(GCMIntentService.PREFERENCES_REG_ID, null);
 
 		if (Utilities.verifyValidString(preferencesRegId))

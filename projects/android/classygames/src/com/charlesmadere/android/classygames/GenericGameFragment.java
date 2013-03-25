@@ -16,7 +16,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -800,7 +799,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		if (!isAnAsyncTaskRunning())
 		{
-			final SharedPreferences sPreferences = PreferenceManager.getDefaultSharedPreferences(getSherlockActivity());
+			final SharedPreferences sPreferences = Utilities.getDefaultSharedPreferences(getSherlockActivity());
 			final boolean askUserToExecute = sPreferences.getBoolean(getString(R.string.settings_key_ask_before_sending_move), true);
 
 			serverApiTask = new ServerApiSendMove(getSherlockActivity(), game, serverApiListeners, board);

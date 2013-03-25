@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.PowerManager;
-import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
@@ -175,7 +174,7 @@ public class GCMIntentService extends IntentService
 		if (Utilities.verifyValidString(regId))
 		// registration succeeded
 		{
-			final SharedPreferences sPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+			final SharedPreferences sPreferences = Utilities.getDefaultSharedPreferences(this);
 
 			// get old registration ID from shared preferences
 			final String preferencesRegId = sPreferences.getString(PREFERENCES_REG_ID, null);
@@ -205,7 +204,7 @@ public class GCMIntentService extends IntentService
 		if (Utilities.verifyValidString(unregistered))
 		// unregistration succeeded
 		{
-			final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+			final SharedPreferences sharedPreferences = Utilities.getDefaultSharedPreferences(this);
 
 			// get old registration ID from shared preferences
 			final String preferencesRegId = sharedPreferences.getString(PREFERENCES_REG_ID, null);

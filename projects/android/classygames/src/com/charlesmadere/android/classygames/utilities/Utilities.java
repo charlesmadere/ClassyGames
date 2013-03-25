@@ -28,15 +28,23 @@ public final class Utilities
 
 
 	public final static String LOG_TAG = "Classy Games";
-	public final static String SHARED_PREFERENCES_NAME = "CLASSY_PREFERENCES";
 
 
+	// need for the third party ImageLoader library
+	// https://github.com/nostra13/Android-Universal-Image-Loader
 	private static ImageLoader imageLoader;
 
 
+	// stores the Facebook user id and name of the current user of the Classy
+	// Games application
 	private static Person whoAmI;
 	private final static String WHO_AM_I_ID = "WHO_AM_I_ID";
 	private final static String WHO_AM_I_NAME = "WHO_AM_I_NAME";
+
+
+	// holds a reference to the Class Games application's default shared
+	// preferences object.
+	private static SharedPreferences defaultSharedPreferences;
 
 
 
@@ -208,6 +216,29 @@ public final class Utilities
 
 
 	/**
+	 * Gives you a handle to the Classy Games default SharedPreferences object.
+	 * 
+	 * @param context
+	 * The Context of the class that you're calling this from. If you're
+	 * calling this method from an Activity then you can usually just use the
+	 * this keyword, otherwise you may need to use something like
+	 * getSherlockActivity().
+	 * 
+	 * @return
+	 * Returns a handle to the Classy Games default SharedPreferences object.
+	 */
+	public static SharedPreferences getDefaultSharedPreferences(final Context context)
+	{
+		if (defaultSharedPreferences == null)
+		{
+			defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+		}
+
+		return defaultSharedPreferences;
+	}
+
+
+	/**
 	 * Initializes the ImageLoader library with some specific configuration
 	 * settings (if it has not already been initialized) and returns only what
 	 * you need - the portion that will actually load an image for ya!
@@ -257,15 +288,15 @@ public final class Utilities
 		// it is either of these two conditions then we will pull the user's
 		// Facebook identity from the Android SharedPreferences data.
 		{
-			final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+			final SharedPreferences sPreferences = getDefaultSharedPreferences(context);
 
 			// find the user's Facebook ID. If the ID can't be found then the
 			// id variable will be set to 0.
-			final long id = sharedPreferences.getLong(WHO_AM_I_ID, 0);
+			final long id = sPreferences.getLong(WHO_AM_I_ID, 0);
 
 			// find the user's Facebook name. If the name can't be found then
 			// the name variable will be set to null.
-			final String name = sharedPreferences.getString(WHO_AM_I_NAME, null);
+			final String name = sPreferences.getString(WHO_AM_I_NAME, null);
 
 			if (Person.isIdValid(id) && Person.isNameValid(name))
 			// check to see that we were actually able to find the user's
@@ -295,7 +326,8 @@ public final class Utilities
 	 */
 	public static void setWhoAmI(final Context context, final Person facebookIdentity)
 	{
-		final SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+		final SharedPreferences sPreferences = getDefaultSharedPreferences(context);
+		final SharedPreferences.Editor editor = sPreferences.edit();
 		editor.putLong(WHO_AM_I_ID, facebookIdentity.getId());
 		editor.putString(WHO_AM_I_NAME, facebookIdentity.getName());
 		editor.commit();

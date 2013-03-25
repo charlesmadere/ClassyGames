@@ -18,6 +18,7 @@ public class SettingsActivity extends SherlockPreferenceActivity
 		super.onCreate(savedInstanceState);
 		Utilities.styleActionBar(getResources(), getSupportActionBar(), true);
 
+		// https://developer.android.com/guide/topics/ui/settings.html
 		addPreferencesFromResource(R.xml.settings);
 	}
 
