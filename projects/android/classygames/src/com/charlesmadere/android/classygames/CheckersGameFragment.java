@@ -202,6 +202,7 @@ public class CheckersGameFragment extends GenericGameFragment
 			public void onGlobalLayout()
 			{
 				final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+				final View view = getView();
 				final View boardPosition = view.findViewById(R.id.checkers_game_fragment_x7y7);
 
 				if (resources.getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)

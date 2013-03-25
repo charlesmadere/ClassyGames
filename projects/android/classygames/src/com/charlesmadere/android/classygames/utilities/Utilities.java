@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -256,7 +257,7 @@ public final class Utilities
 		// it is either of these two conditions then we will pull the user's
 		// Facebook identity from the Android SharedPreferences data.
 		{
-			final SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+			final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
 			// find the user's Facebook ID. If the ID can't be found then the
 			// id variable will be set to 0.
@@ -294,7 +295,7 @@ public final class Utilities
 	 */
 	public static void setWhoAmI(final Context context, final Person facebookIdentity)
 	{
-		final SharedPreferences.Editor editor = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).edit();
+		final SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
 		editor.putLong(WHO_AM_I_ID, facebookIdentity.getId());
 		editor.putString(WHO_AM_I_NAME, facebookIdentity.getName());
 		editor.commit();

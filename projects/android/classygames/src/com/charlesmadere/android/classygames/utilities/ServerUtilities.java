@@ -18,13 +18,14 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.charlesmadere.android.classygames.models.Person;
-
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
+
+import com.charlesmadere.android.classygames.models.Person;
 
 
 /**
@@ -180,7 +181,7 @@ public final class ServerUtilities
 	 */
 	public static boolean gcmRegister(final Context context) throws IOException
 	{
-		final SharedPreferences sPreferences = context.getSharedPreferences(GCMIntentService.PREFERENCES_FILE, Context.MODE_PRIVATE);
+		final SharedPreferences sPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 		final String preferencesRegId = sPreferences.getString(GCMIntentService.PREFERENCES_REG_ID, null);
 
 		if (Utilities.verifyValidString(preferencesRegId))

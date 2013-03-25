@@ -181,6 +181,7 @@
 	<string name="settings_ask_before_sending_move_summary_on">A confirmation dialog box will be shown before a move is sent.</string>
 	<string name="settings_ask_before_sending_move_summary_off">A confirmation dialog box will not be shown before a move is sent.</string>
 	<string name="settings_ask_before_sending_move_title">Ask Before Sending Move</string>
+	<string name="settings_key_ask_before_sending_move">settings_key_ask_before_sending_move</string>
 	<string name="shark_activity_description">Sharkwork by Tristan Kidder</string>
 	<string name="shark_activity_imageview_description">Sharkwork</string>
 	<string name="shark_activity_title">Sharkwork</string>
