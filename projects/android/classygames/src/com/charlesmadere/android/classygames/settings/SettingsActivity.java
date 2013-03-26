@@ -1,4 +1,4 @@
-package com.charlesmadere.android.classygames;
+package com.charlesmadere.android.classygames.settings;
 
 
 import java.util.List;
@@ -8,11 +8,17 @@ import android.os.Bundle;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
 public class SettingsActivity extends SherlockPreferenceActivity
 {
+
+
+	// Some of the code used in making this class and it's corresponding XML
+	// files was taken from the official Android Documentation.
+	// https://developer.android.com/guide/topics/ui/settings.html
 
 
 	@Override
@@ -30,7 +36,14 @@ public class SettingsActivity extends SherlockPreferenceActivity
 		// below Honeycomb (v3.0).
 
 		if (action != null &&
+			action.equals(getString(R.string.com_charlesmadere_android_classygames_settings_game)))
+		// 
+		{
+			addPreferencesFromResource(R.xml.settings_game);
+		}
+		else if (action != null &&
 			action.equals(getString(R.string.com_charlesmadere_android_classygames_settings_miscellaneous)))
+		// 
 		{
 			addPreferencesFromResource(R.xml.settings_miscellaneous);
 		}

@@ -1,8 +1,10 @@
-package com.charlesmadere.android.classygames;
+package com.charlesmadere.android.classygames.settings;
 
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+
+import com.charlesmadere.android.classygames.R;
 
 
 public class MiscellaneousSettingsFragment extends PreferenceFragment

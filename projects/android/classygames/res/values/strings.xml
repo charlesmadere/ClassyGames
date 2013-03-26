@@ -11,7 +11,8 @@
 	<string name="checkers_game_fragment_loading_text">Loading Checkers game against %1$s&#8230;</string>
 	<string name="chess_game_fragment_title">Chess with</string>
 	<string name="chess_game_fragment_loading_text">Loading Chess game against %1$s&#8230;</string>
-	<string name="com_charlesmadere_android_classygames_settings_miscellaneous">com.charlesmadere.android.classygames.settings.miscellaneous</string>
+	<string name="com_charlesmadere_android_classygames_settings_game">com.charlesmadere.android.classygames.settings.GAME</string>
+	<string name="com_charlesmadere_android_classygames_settings_miscellaneous">com.charlesmadere.android.classygames.settings.MISCELLANEOUS</string>
 	<string name="confirm_game_fragment_data_error">Error when trying to store the data for the Facebook friend that you selected.</string>
 	<string name="confirm_game_fragment_button_confirm">Start Game!</string>
 	<string name="confirm_game_fragment_button_deny">Nevermind&#8230;</string>
@@ -26,6 +27,7 @@
 	<string name="friends_list_fragment_loading_text">Loading your Facebook Friends List&#8230;</string>
 	<string name="friends_list_fragment_no_friends">Sorry, but you don\'t seem to have any Facebook friends. In order to play Classy Games you must have some Facebook friends.</string>
 	<string name="friends_list_fragment_title">New Game</string>
+	<string name="game">Game</string>
 	<string name="game_fragment_activity_game_data_error">Couldn\'t create a game as malformed data was detected!</string>
 	<string name="game_fragment_board_x0y0">0, 0</string>
 	<string name="game_fragment_board_x1y0">1, 0</string>
@@ -96,6 +98,7 @@
 	<string name="game_over_activity_win_or_lose_won">You won the game! What a champ!</string>
 	<string name="game_over_activity_friend_profile_picture_description">Friend\'s Picture</string>
 	<string name="game_over_activity_title">Game Over</string>
+	<string name="game_settings">Game Settings</string>
 	<string name="game_timestamp_1_week_ago">1 week ago</string>
 	<string name="game_timestamp_2_weeks_ago">2 weeks ago</string>
 	<string name="game_timestamp_more_than_2_weeks_ago">more than 2 weeks ago</string>
@@ -137,6 +140,7 @@
 	<string name="main_activity_loading_textview_text">Initializing settings and registering you with our servers&#8230;</string>
 	<string name="main_activity_title">Classy Games</string>
 	<string name="miscellaneous">Miscellaneous</string>
+	<string name="miscellaneous_settings">Miscellaneous Settings</string>
 	<string name="new_game">New Game</string>
 	<string name="no">No</string>
 	<string name="notification_game_over_text">Game with %1$s is now over!</string>
@@ -184,12 +188,15 @@
 	<string name="settings_ask_before_sending_move_summary_off">A confirmation dialog box will not be shown before a move is sent.</string>
 	<string name="settings_ask_before_sending_move_title">Ask Before Sending Move</string>
 	<string name="settings_key_ask_before_sending_move">settings_key_ask_before_sending_move</string>
+	<string name="settings_game_summary">Settings that have to do with game play.</string>
 	<string name="settings_miscellaneous_summary">Settings that couldn\'t fit into any other category.</string>
 	<string name="shark_activity_description">Sharkwork by Tristan Kidder</string>
 	<string name="shark_activity_imageview_description">Sharkwork</string>
 	<string name="shark_activity_title">Sharkwork</string>
 	<string name="skip_move">Skip Move</string>
 	<string name="undo_move">Undo Move</string>
+	<string name="version">Version</string>
+	<string name="version_code">1.5.1.3</string>
 	<string name="won">won</string>
 	<string name="yes">Yes</string>
 </resources>

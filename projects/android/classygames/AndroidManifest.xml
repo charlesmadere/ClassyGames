@@ -112,6 +112,7 @@
 		<activity
 			android:label="@string/friends_list_fragment_title"
 			android:name="com.charlesmadere.android.classygames.NewGameFragmentActivity"
+			android:parentActivityName="com.charlesmadere.android.classygames.GameFragmentActivity"
 			android:theme="@style/Theme.Styled">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
@@ -121,6 +122,7 @@
 		<activity
 			android:label="@string/register_for_notifications_activity_title"
 			android:name="com.charlesmadere.android.classygames.RegisterForNotificationsActivity"
+			android:parentActivityName="com.charlesmadere.android.classygames.GameFragmentActivity"
 			android:theme="@style/Theme.Styled">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
@@ -129,7 +131,8 @@
 
 		<activity
 			android:label="@string/settings"
-			android:name="com.charlesmadere.android.classygames.SettingsActivity"
+			android:name="com.charlesmadere.android.classygames.settings.SettingsActivity"
+			android:parentActivityName="com.charlesmadere.android.classygames.GameFragmentActivity"
 			android:theme="@style/Theme.Styled">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
