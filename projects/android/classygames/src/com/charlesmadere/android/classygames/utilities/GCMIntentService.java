@@ -8,7 +8,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat.Builder;
@@ -38,10 +37,6 @@ public class GCMIntentService extends IntentService
 	public final static int GCM_NOTIFICATION_LIGHTS = 0xEDB3C900;
 	public final static int GCM_NOTIFICATION_LIGHTS_ON = 1000; // milliseconds
 	public final static int GCM_NOTIFICATION_LIGHTS_OFF = 16000; // milliseconds
-
-	public final static String PREFERENCES = "PREFERENCES";
-	public final static String PREFERENCES_FILE = PREFERENCES + "_GCMIntentService";
-	public final static String PREFERENCES_REG_ID = PREFERENCES + "_REG_ID";
 
 
 
@@ -103,7 +98,7 @@ public class GCMIntentService extends IntentService
 				// build a notification to show to the user
 				final Builder builder = new Builder(this)
 					.setAutoCancel(true)
-					.setContentTitle(getString(R.string.notification_title))
+					.setContentTitle(getString(R.string.classy_games))
 					.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification_raw))
 					.setLights(GCM_NOTIFICATION_LIGHTS, GCM_NOTIFICATION_LIGHTS_ON, GCM_NOTIFICATION_LIGHTS_OFF)
 					.setOnlyAlertOnce(false)
@@ -121,15 +116,15 @@ public class GCMIntentService extends IntentService
 						.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
 					stackBuilder.addNextIntentWithParentStack(gameIntent);
-					builder.setTicker(getString(R.string.notification_sent_some_class, person.getName()));
+					builder.setTicker(getString(R.string.ol_x_sent_you_some_class, person.getName()));
 
 					if (messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_GAME)
 					{
-						builder.setContentText(getString(R.string.notification_new_game_text, person.getName()));
+						builder.setContentText(getString(R.string.new_game_from_x, person.getName()));
 					}
 					else if (messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_MOVE)
 					{
-						builder.setContentText(getString(R.string.notification_new_move_text, person.getName()));
+						builder.setContentText(getString(R.string.new_move_from_x, person.getName()));
 					}
 				}
 				else if (ServerUtilities.validWinOrLoseValue(messageType.byteValue()))
@@ -141,15 +136,15 @@ public class GCMIntentService extends IntentService
 						.putExtra(GameOverActivity.BUNDLE_DATA_PERSON_OPPONENT_NAME, person.getName());
 
 					stackBuilder.addNextIntentWithParentStack(gameOverIntent);
-					builder.setTicker(getString(R.string.notification_game_over_text, person.getName()));
+					builder.setTicker(getString(R.string.game_over, person.getName()));
 
 					if (messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_GAME_OVER_LOSE)
 					{
-						builder.setContentText(getString(R.string.notification_game_over_lose_text, person.getName()));
+						builder.setContentText(getString(R.string.you_lost_the_game_with_x, person.getName()));
 					}
 					else if (messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_GAME_OVER_WIN)
 					{
-						builder.setContentText(getString(R.string.notification_game_over_win_text, person.getName()));
+						builder.setContentText(getString(R.string.you_won_the_game_with_x, person.getName()));
 					}
 				}
 
@@ -174,19 +169,14 @@ public class GCMIntentService extends IntentService
 		if (Utilities.verifyValidString(regId))
 		// registration succeeded
 		{
-			final SharedPreferences sPreferences = Utilities.getDefaultSharedPreferences(this);
+			final String oldRegId = Utilities.getRegId(this);
 
-			// get old registration ID from shared preferences
-			final String preferencesRegId = sPreferences.getString(PREFERENCES_REG_ID, null);
-
-			if (!Utilities.verifyValidString(preferencesRegId) || !preferencesRegId.equals(regId))
+			if (!Utilities.verifyValidString(oldRegId) || !oldRegId.equals(regId))
 			// the two regIds are not the the same. replace the existing stored regId
 			// with this new regId
 			{
 				// store new regId
-				final SharedPreferences.Editor editor = sPreferences.edit();
-				editor.putString(PREFERENCES_REG_ID, regId);
-				editor.commit();
+				Utilities.setRegId(this, regId);
 
 				try
 				{
@@ -204,23 +194,14 @@ public class GCMIntentService extends IntentService
 		if (Utilities.verifyValidString(unregistered))
 		// unregistration succeeded
 		{
-			final SharedPreferences sharedPreferences = Utilities.getDefaultSharedPreferences(this);
-
-			// get old registration ID from shared preferences
-			final String preferencesRegId = sharedPreferences.getString(PREFERENCES_REG_ID, null);
-
-			if (Utilities.verifyValidString(preferencesRegId))
-			// ensure that the String we obtained from shared preferences contains text
+			try
 			{
-				try
-				{
-					// notify 3rd party server about the unregistered ID
-					ServerUtilities.gcmUnregister(preferencesRegId, this);
-				}
-				catch (final IOException e)
-				{
-					Log.e(LOG_TAG, "IOException during GCMUnregister!", e);
-				}
+				// notify 3rd party server about the unregistered ID
+				ServerUtilities.gcmUnregister(this);
+			}
+			catch (final IOException e)
+			{
+				Log.e(LOG_TAG, "IOException during GCMUnregister!", e);
 			}
 		}
 
@@ -231,7 +212,7 @@ public class GCMIntentService extends IntentService
 			if (error.equals("SERVICE_NOT_AVAILABLE"))
 			{
 				// optionally retry using exponential back-off
-				// (see Advanced Topics)
+				// (see Advanced Topics in Android documentation)
 			}
 			else
 			{

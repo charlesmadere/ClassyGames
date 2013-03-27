@@ -76,6 +76,9 @@ public final class ServerUtilities
 	public final static String POST_DATA_USER_CREATOR = "user_creator";
 
 
+	public final static String REG_ID = "REG_ID";
+
+
 
 
 	/**
@@ -180,8 +183,8 @@ public final class ServerUtilities
 	 */
 	public static boolean gcmRegister(final Context context) throws IOException
 	{
-		final SharedPreferences sPreferences = Utilities.getDefaultSharedPreferences(context);
-		final String preferencesRegId = sPreferences.getString(GCMIntentService.PREFERENCES_REG_ID, null);
+		final SharedPreferences sPreferences = Utilities.getPreferences(context);
+		final String preferencesRegId = sPreferences.getString(REG_ID, null);
 
 		if (Utilities.verifyValidString(preferencesRegId))
 		{
@@ -215,10 +218,6 @@ public final class ServerUtilities
 	 * Attempts to unregister the current Android user's registration ID from
 	 * the server for GCM notifications.
 	 * 
-	 * @param regId
-	 * The Android regId to be sent to the server and used for GCM
-	 * notifications.
-	 * 
 	 * @param context
 	 * The Context of the class you're calling this method from.
 	 * 
@@ -226,14 +225,13 @@ public final class ServerUtilities
 	 * If something weird happens when trying to post the given data to the
 	 * server then this exception will be thrown.
 	 */
-	public static void gcmUnregister(final String regId, final Context context) throws IOException
+	public static void gcmUnregister(final Context context) throws IOException
 	{
-		Log.d(LOG_TAG, "Unregistering device with regId of \"" + regId + "\" from GCM server.");
+		Log.d(LOG_TAG, "Unregistering device with from GCM server.");
 
 		// build the data to be sent to the server
 		final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-		nameValuePairs.add(new BasicNameValuePair(POST_DATA_ID, Long.valueOf(Utilities.getWhoAmI(context).getId()).toString()));
-		nameValuePairs.add(new BasicNameValuePair(POST_DATA_REG_ID, regId));
+		nameValuePairs.add(new BasicNameValuePair(POST_DATA_ID, Utilities.getWhoAmI(context).getIdAsString()));
 
 		postToServer(ADDRESS_REMOVE_REG_ID, nameValuePairs);
 	}

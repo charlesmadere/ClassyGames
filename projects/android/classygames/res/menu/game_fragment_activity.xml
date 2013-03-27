@@ -10,11 +10,6 @@
 		android:showAsAction="never|withText"
 		android:title="@string/settings" />
 	<item
-		android:icon="@drawable/ab_register_for_notifications"
-		android:id="@+id/game_fragment_activity_menu_register_for_notifications"
-		android:showAsAction="never|withText"
-		android:title="@string/register_for_notifications" />
-	<item
 		android:icon="@drawable/ab_about"
 		android:id="@+id/game_fragment_activity_menu_about"
 		android:showAsAction="never|withText"

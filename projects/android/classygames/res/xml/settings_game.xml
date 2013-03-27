@@ -6,5 +6,5 @@
 		android:key="@string/settings_key_ask_before_sending_move"
 		android:summaryOff="@string/settings_ask_before_sending_move_summary_off"
 		android:summaryOn="@string/settings_ask_before_sending_move_summary_on"
-		android:title="@string/settings_ask_before_sending_move_title" />
+		android:title="@string/ask_before_sending_move" />
 </PreferenceScreen>

@@ -80,7 +80,7 @@ public class ServerApiSkipMove extends ServerApi
 	@Override
 	protected int getDialogTitle()
 	{
-		return R.string.server_api_skip_move_dialog_title;
+		return R.string.skip_move;
 	}
 
 

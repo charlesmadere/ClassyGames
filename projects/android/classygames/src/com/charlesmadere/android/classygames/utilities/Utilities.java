@@ -35,16 +35,17 @@ public final class Utilities
 	private static ImageLoader imageLoader;
 
 
+	// Stores the reg id of the current Android device. More information can be
+	// found here: https://developer.android.com/google/gcm/index.html
+	private static String regId;
+	private final static String KEY_REG_ID = "KEY_REG_ID";
+
+
 	// stores the Facebook user id and name of the current user of the Classy
 	// Games application
 	private static Person whoAmI;
-	private final static String WHO_AM_I_ID = "WHO_AM_I_ID";
-	private final static String WHO_AM_I_NAME = "WHO_AM_I_NAME";
-
-
-	// holds a reference to the Class Games application's default shared
-	// preferences object.
-	private static SharedPreferences defaultSharedPreferences;
+	private final static String KEY_WHO_AM_I_ID = "KEY_WHO_AM_I_ID";
+	private final static String KEY_WHO_AM_I_NAME = "KEY_WHO_AM_I_NAME";
 
 
 
@@ -227,14 +228,9 @@ public final class Utilities
 	 * @return
 	 * Returns a handle to the Classy Games default SharedPreferences object.
 	 */
-	public static SharedPreferences getDefaultSharedPreferences(final Context context)
+	public static SharedPreferences getPreferences(final Context context)
 	{
-		if (defaultSharedPreferences == null)
-		{
-			defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-		}
-
-		return defaultSharedPreferences;
+		return PreferenceManager.getDefaultSharedPreferences(context);
 	}
 
 
@@ -244,7 +240,7 @@ public final class Utilities
 	 * you need - the portion that will actually load an image for ya!
 	 * 
 	 * @param context
-	 * The Context of the class you're currently working in.
+	 * The context of the Activity that is calling this method.
 	 * 
 	 * @return
 	 * Returns an instance of the ImageLoader class that can load an image from
@@ -272,11 +268,60 @@ public final class Utilities
 
 
 	/**
+	 * Gives you this Android device's GCM registration ID.
+	 * 
+	 * @param context
+	 * The context of the Activity that is calling this method.
+	 * 
+	 * @return
+	 * Returns this Android device's GCM registration ID. This is typically a
+	 * somewhat long String filled with random characters. <strong>Note that
+	 * this method has a slim possibility of returning null.</strong>
+	 */
+	public static String getRegId(final Context context)
+	{
+		if (!verifyValidString(regId))
+		{
+			final SharedPreferences sPreferences = getPreferences(context);
+
+			// Grab the user's GCM registration ID from shared preferences if
+			// it already exists. Returns null if it doesn't already exist.
+			regId = sPreferences.getString(KEY_REG_ID, null);
+		}
+
+		return regId;
+	}
+
+
+	/**
+	 * Sets this Android device's GCM registration ID.
+	 * 
+	 * @param context
+	 * The context of the Activity that is calling this method.
+	 * 
+	 * @param regId
+	 * The new GCM registration ID.
+	 */
+	public static void setRegId(final Context context, final String regId)
+	{
+		final SharedPreferences sPreferences = getPreferences(context);
+		final SharedPreferences.Editor editor = sPreferences.edit();
+		editor.putString(KEY_REG_ID, regId);
+		editor.commit();
+
+		Utilities.regId = regId;
+	}
+
+
+	/**
 	 * If the user's Facebook identity is already stored in this class's static
 	 * whoAmI Person variable then that variable will be instantly returned. If
 	 * the whoAmI Person variable is currently null or is not valid, then we
 	 * will search the Android SharedPreferences data for the user's Facebook
 	 * identity.
+	 * 
+	 * @param context
+	 * The context of the Activity that is calling this method.
 	 * 
 	 * @return
 	 * A Person object that represents the user's Facebook identity.
@@ -288,15 +333,15 @@ public final class Utilities
 		// it is either of these two conditions then we will pull the user's
 		// Facebook identity from the Android SharedPreferences data.
 		{
-			final SharedPreferences sPreferences = getDefaultSharedPreferences(context);
+			final SharedPreferences sPreferences = getPreferences(context);
 
 			// find the user's Facebook ID. If the ID can't be found then the
 			// id variable will be set to 0.
-			final long id = sPreferences.getLong(WHO_AM_I_ID, 0);
+			final long id = sPreferences.getLong(KEY_WHO_AM_I_ID, 0);
 
 			// find the user's Facebook name. If the name can't be found then
 			// the name variable will be set to null.
-			final String name = sPreferences.getString(WHO_AM_I_NAME, null);
+			final String name = sPreferences.getString(KEY_WHO_AM_I_NAME, null);
 
 			if (Person.isIdValid(id) && Person.isNameValid(name))
 			// check to see that we were actually able to find the user's
@@ -326,10 +371,10 @@ public final class Utilities
 	 */
 	public static void setWhoAmI(final Context context, final Person facebookIdentity)
 	{
-		final SharedPreferences sPreferences = getDefaultSharedPreferences(context);
+		final SharedPreferences sPreferences = getPreferences(context);
 		final SharedPreferences.Editor editor = sPreferences.edit();
-		editor.putLong(WHO_AM_I_ID, facebookIdentity.getId());
-		editor.putString(WHO_AM_I_NAME, facebookIdentity.getName());
+		editor.putLong(KEY_WHO_AM_I_ID, facebookIdentity.getId());
+		editor.putString(KEY_WHO_AM_I_NAME, facebookIdentity.getName());
 		editor.commit();
 
 		whoAmI = facebookIdentity;

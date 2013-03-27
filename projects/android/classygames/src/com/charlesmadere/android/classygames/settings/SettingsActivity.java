@@ -3,6 +3,7 @@ package com.charlesmadere.android.classygames.settings;
 
 import java.util.List;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -24,33 +25,60 @@ public class SettingsActivity extends SherlockPreferenceActivity
 	@Override
 	@SuppressWarnings("deprecation")
 	protected void onCreate(final Bundle savedInstanceState)
+	// The addPreferencesFromResource methods below are causing some
+	// deprecation warnings. In this case, the fact that they're here is fine.
+	// They have to be used if the running version of Android is below
+	// Honeycomb (v3.0). See more information about API levels here:
+	// https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels
 	{
 		super.onCreate(savedInstanceState);
 		Utilities.styleActionBar(getResources(), getSupportActionBar(), true);
 
-		final String action = getIntent().getAction();
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
+		// Check to see if the running version of Android is below Honeycomb.
+		{
+			// get the intent's action
+			final String action = getIntent().getAction();
 
-		// The addPreferencesFromResource methods below are causing some
-		// deprecation warnings. In this case, the fact that they're here is
-		// fine. They have to be used if the running version of Android is
-		// below Honeycomb (v3.0).
-
-		if (action != null &&
-			action.equals(getString(R.string.com_charlesmadere_android_classygames_settings_game)))
-		// 
-		{
-			addPreferencesFromResource(R.xml.settings_game);
-		}
-		else if (action != null &&
-			action.equals(getString(R.string.com_charlesmadere_android_classygames_settings_miscellaneous)))
-		// 
-		{
-			addPreferencesFromResource(R.xml.settings_miscellaneous);
-		}
-		else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
-		// For Android devices running any version below Honeycomb. 
-		{
-			addPreferencesFromResource(R.xml.settings_headers_legacy);
+			if (Utilities.verifyValidString(action))
+			{
+				if (action.equals(getString(R.string.com_charlesmadere_android_classygames_settings_game)))
+				// the intent's action is saying that we need to show the game
+				// settings preference file
+				{
+					addPreferencesFromResource(R.xml.settings_game);
+				}
+				else if (action.equals(getString(R.string.com_charlesmadere_android_classygames_settings_miscellaneous)))
+				// the intent's action is saying that we need to show the
+				// miscellaneous settings preference file
+				{
+					addPreferencesFromResource(R.xml.settings_miscellaneous);
+				}
+				else if (action.equals(getString(R.string.com_charlesmadere_android_classygames_settings_register)))
+					// the intent's action is saying that we need to show the
+					// RegisterForNotificationsActivity
+				{
+					startActivity(new Intent(this, RegisterForNotificationsActivity.class));
+				}
+				else if (action.equals(getString(R.string.com_charlesmadere_android_classygames_settings_unregister)))
+					// the intent's action is saying that we need to show the
+					// UnregisterFromNotificationsActivity
+				{
+					startActivity(new Intent(this, UnregisterFromNotificationsActivity.class));
+				}
+				else
+				// The intent's action was something strange. We'll show the
+				// default preference file. This should (hopefully) never
+				// happen.
+				{
+					addPreferencesFromResource(R.xml.settings_headers_legacy);
+				}
+			}
+			else
+			// For Android devices running any version below Honeycomb. 
+			{
+				addPreferencesFromResource(R.xml.settings_headers_legacy);
+			}
 		}
 	}
 

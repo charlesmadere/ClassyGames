@@ -10,7 +10,7 @@
 	style="@style/ClassyGames">
 	<ImageView
 		android:adjustViewBounds="true"
-		android:contentDescription="@string/game_over_activity_friend_profile_picture_description"
+		android:contentDescription="@string/friends_picture"
 		android:id="@+id/game_over_activity_friend_picture"
 		android:layout_height="0dip"
 		android:layout_weight="1"
@@ -48,7 +48,7 @@
 				android:layout_height="wrap_content"
 				android:layout_width="match_parent"
 				android:layout_marginTop="8dip"
-				android:text="@string/game_over_activity_button_return"
+				android:text="@string/return_to_games_list"
 				style="@style/button.gray" />
 		</LinearLayout>
 	</LinearLayout>

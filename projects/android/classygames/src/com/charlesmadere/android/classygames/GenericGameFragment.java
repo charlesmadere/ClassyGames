@@ -799,7 +799,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		if (!isAnAsyncTaskRunning())
 		{
-			final SharedPreferences sPreferences = Utilities.getDefaultSharedPreferences(getSherlockActivity());
+			final SharedPreferences sPreferences = Utilities.getPreferences(getSherlockActivity());
 			final boolean askUserToExecute = sPreferences.getBoolean(getString(R.string.settings_key_ask_before_sending_move), true);
 
 			serverApiTask = new ServerApiSendMove(getSherlockActivity(), game, serverApiListeners, board);

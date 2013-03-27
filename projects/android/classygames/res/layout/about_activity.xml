@@ -8,7 +8,7 @@
 	style="@style/ClassyGames">
 	<ImageView
 		android:adjustViewBounds="true"
-		android:contentDescription="@string/app_name"
+		android:contentDescription="@string/classy_games"
 		android:layout_gravity="center"
 		android:id="@+id/about_activity_imageview_logo"
 		android:layout_height="match_parent"

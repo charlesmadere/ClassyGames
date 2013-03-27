@@ -254,15 +254,15 @@ public class Game
 			{
 				if (timeAgo == 1)
 				{
-					timestampFormatted = context.getString(R.string.game_timestamp_1_week_ago);
+					timestampFormatted = context.getString(R.string.one_week_ago);
 				}
 				else if (timeAgo == 2)
 				{
-					timestampFormatted = context.getString(R.string.game_timestamp_2_weeks_ago);
+					timestampFormatted = context.getString(R.string.two_weeks_ago);
 				}
 				else
 				{
-					timestampFormatted = context.getString(R.string.game_timestamp_more_than_2_weeks_ago);
+					timestampFormatted = context.getString(R.string.more_than_two_weeks_ago);
 				}
 			}
 			else
@@ -275,15 +275,15 @@ public class Game
 				{
 					if (timeAgo == 1)
 					{
-						timestampFormatted = context.getString(R.string.game_timestamp_1_day_ago);
+						timestampFormatted = context.getString(R.string.one_day_ago);
 					}
 					else if (timeAgo >= 2 && timeAgo <= 5)
 					{
-						timestampFormatted = context.getString(R.string.game_timestamp_x_days_ago, timeAgo);
+						timestampFormatted = context.getString(R.string.x_days_ago, timeAgo);
 					}
 					else
 					{
-						timestampFormatted = context.getString(R.string.game_timestamp_almost_a_week_ago);
+						timestampFormatted = context.getString(R.string.almost_a_week_ago);
 					}
 				}
 				else
@@ -296,19 +296,19 @@ public class Game
 					{
 						if (timeAgo == 1)
 						{
-							timestampFormatted = context.getString(R.string.game_timestamp_1_hour_ago);
+							timestampFormatted = context.getString(R.string.one_hour_ago);
 						}
 						else if (timeAgo >= 2 && timeAgo <= 12)
 						{
-							timestampFormatted = context.getString(R.string.game_timestamp_x_hours_ago, timeAgo);
+							timestampFormatted = context.getString(R.string.x_hours_ago, timeAgo);
 						}
 						else if (timeAgo > 12 && timeAgo <= 18)
 						{
-							timestampFormatted = context.getString(R.string.game_timestamp_about_half_a_day_ago);
+							timestampFormatted = context.getString(R.string.about_half_a_day_ago);
 						}
 						else
 						{
-							timestampFormatted = context.getString(R.string.game_timestamp_almost_a_day_ago);
+							timestampFormatted = context.getString(R.string.almost_a_day_ago);
 						}
 					}
 					else
@@ -321,20 +321,20 @@ public class Game
 						{
 							if (timeAgo == 1)
 							{
-								timestampFormatted = context.getString(R.string.game_timestamp_1_minute_ago);
+								timestampFormatted = context.getString(R.string.one_minute_ago);
 							}
 							else if (timeAgo >= 2 && timeAgo <= 45)
 							{
-								timestampFormatted = context.getString(R.string.game_timestamp_x_minutes_ago, timeAgo);
+								timestampFormatted = context.getString(R.string.x_minutes_ago, timeAgo);
 							}
 							else
 							{
-								timestampFormatted = context.getString(R.string.game_timestamp_almost_an_hour_ago);
+								timestampFormatted = context.getString(R.string.almost_an_hour_ago);
 							}
 						}
 						else
 						{
-							timestampFormatted = context.getString(R.string.game_timestamp_just_now);
+							timestampFormatted = context.getString(R.string.just_now);
 						}
 					}
 				}

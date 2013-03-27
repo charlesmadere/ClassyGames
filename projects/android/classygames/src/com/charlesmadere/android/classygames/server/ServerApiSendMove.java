@@ -105,7 +105,7 @@ public class ServerApiSendMove extends ServerApi
 	@Override
 	protected int getDialogTitle()
 	{
-		return R.string.server_api_send_move_dialog_title;
+		return R.string.send_move;
 	}
 
 

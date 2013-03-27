@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="com_charlesmadere_android_classygames_settings_game">com.charlesmadere.android.classygames.settings.GAME</string>
+	<string name="com_charlesmadere_android_classygames_settings_miscellaneous">com.charlesmadere.android.classygames.settings.MISCELLANEOUS</string>
+	<string name="com_charlesmadere_android_classygames_settings_register">com.charlesmadere.android.classygames.settings.REGISTER</string>
+	<string name="com_charlesmadere_android_classygames_settings_unregister">com.charlesmadere.android.classygames.settings.UNREGISTER</string>
+</resources>

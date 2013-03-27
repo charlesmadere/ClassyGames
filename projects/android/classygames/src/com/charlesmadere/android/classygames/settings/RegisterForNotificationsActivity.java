@@ -1,4 +1,4 @@
-package com.charlesmadere.android.classygames;
+package com.charlesmadere.android.classygames.settings;
 
 
 import java.io.IOException;
@@ -13,6 +13,7 @@ import android.widget.Button;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.utilities.ServerUtilities;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
@@ -22,6 +23,9 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 {
 
 
+	/**
+	 * Used to send notification registration server API request.
+	 */
 	private AsyncRegisterForNotifications asyncRegisterForNotifications;
 
 
@@ -74,11 +78,13 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 		{
 			case android.R.id.home:
 				onBackPressed();
-				return true;
+				break;
 
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+
+		return true;
 	}
 
 
@@ -117,7 +123,7 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 		private ProgressDialog progressDialog;
 
 
-		AsyncRegisterForNotifications(final SherlockActivity activity)
+		private AsyncRegisterForNotifications(final SherlockActivity activity)
 		{
 			this.activity = activity;
 		}
@@ -152,7 +158,7 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 			}
 
 			asyncRegisterForNotifications = null;
-			Utilities.easyToastAndLog(activity, activity.getString(R.string.register_for_notifications_activity_registration_cancelled));
+			Utilities.easyToast(activity, R.string.registration_cancelled);
 		}
 
 
@@ -180,7 +186,7 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 
 			if (registrationSuccess.booleanValue())
 			{
-				Utilities.easyToastAndLog(activity, activity.getString(R.string.register_for_notifications_activity_registration_complete));
+				Utilities.easyToast(activity, activity.getString(R.string.registration_complete));
 				activity.finish();
 			}
 			else
@@ -196,7 +202,7 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 							activity.finish();
 						}
 					})
-					.setTitle(R.string.register_for_notifications_activity_registration_failed_title);
+					.setTitle(R.string.registration_failed);
 
 				builder.show();
 			}
@@ -211,7 +217,7 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 			progressDialog = new ProgressDialog(activity);
 			progressDialog.setCancelable(true);
 			progressDialog.setCanceledOnTouchOutside(true);
-			progressDialog.setMessage(activity.getString(R.string.register_for_notifications_activity_progressdialog_message));
+			progressDialog.setMessage(activity.getString(R.string.registering_your_device_for_notifications_with_our_server));
 
 			progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
 			{
@@ -222,7 +228,7 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 				}
 			});
 
-			progressDialog.setTitle(R.string.register_for_notifications_activity_progressdialog_title);
+			progressDialog.setTitle(R.string.register_for_notifications);
 			progressDialog.show();
 		}
 

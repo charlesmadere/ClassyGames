@@ -269,7 +269,7 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 							dialog.dismiss();
 						}
 					})
-					.setTitle(R.string.games_list_fragment_context_menu_text_generic);
+					.setTitle(getString(R.string.select_an_action_for_this_game_against_x, game.getPerson().getName()));
 
 				builder.show();
 

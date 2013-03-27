@@ -14,6 +14,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.Person;
+import com.charlesmadere.android.classygames.settings.RegisterForNotificationsActivity;
 import com.charlesmadere.android.classygames.settings.SettingsActivity;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
@@ -164,7 +165,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 		{
 			final ActionBar actionBar = getSupportActionBar();
 			actionBar.setDisplayHomeAsUpEnabled(false);
-			actionBar.setTitle(R.string.games_list_fragment_title);
+			actionBar.setTitle(R.string.games_list);
 
 			super.onBackPressed();
 		}
@@ -217,10 +218,6 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 				}
 
 				startActivityForResult(new Intent(this, NewGameFragmentActivity.class), NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FRIEND_SELECTED);
-				break;
-
-			case R.id.game_fragment_activity_menu_register_for_notifications:
-				startActivity(new Intent(this, RegisterForNotificationsActivity.class));
 				break;
 
 			case R.id.game_fragment_activity_menu_settings:
@@ -413,7 +410,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 		final ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(false);
-		actionBar.setTitle(R.string.games_list_fragment_title);
+		actionBar.setTitle(R.string.games_list);
 
 		onRefreshSelected();
 	}

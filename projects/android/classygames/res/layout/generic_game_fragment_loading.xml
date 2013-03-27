@@ -17,6 +17,6 @@
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
 		android:textIsSelectable="false"
-		android:text="@string/generic_game_fragment_loading_text"
+		android:text="@string/loading_game"
 		style="@style/paragraph" />
 </LinearLayout>

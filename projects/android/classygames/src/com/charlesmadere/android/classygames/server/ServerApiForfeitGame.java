@@ -80,7 +80,7 @@ public class ServerApiForfeitGame extends ServerApi
 	@Override
 	protected int getDialogTitle()
 	{
-		return R.string.server_api_forfeit_game_dialog_title;
+		return R.string.forfeit_game;
 	}
 
 

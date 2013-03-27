@@ -3,29 +3,29 @@
 	android:layout_height="match_parent"
 	android:layout_width="match_parent"
 	android:orientation="vertical"
+	android:paddingBottom="8dip"
 	android:paddingLeft="4dip"
 	android:paddingRight="4dip"
-	style="@style/ClassyGamesDark">
-	<ImageView
-		android:adjustViewBounds="true"
-		android:contentDescription="@string/sharkwork"
+	android:paddingTop="8dip"
+	style="@style/ClassyGames">
+	<TextView
+	    android:gravity="center_vertical"
 		android:layout_height="match_parent"
 		android:layout_weight="2"
 		android:layout_width="match_parent"
-		android:src="@drawable/sharks" />
+		android:text="@string/unregister_from_notifications_description"
+		style="@style/paragraph" />
 	<LinearLayout
 		android:gravity="center"
 		android:layout_height="match_parent"
 		android:layout_weight="5"
-		android:layout_width="match_parent">
-		<TextView
-			android:gravity="center"
+		android:layout_width="match_parent"
+		android:orientation="vertical">
+		<Button
+			android:id="@+id/unregister_from_notifications_activity_register"
 			android:layout_height="wrap_content"
 			android:layout_width="match_parent"
-			android:paddingLeft="4dip"
-			android:paddingRight="4dip"
-			android:text="@string/sharkwork_by_tristan_kidder"
-			android:textColor="@color/gray_light"
-			style="@style/paragraph" />
+			android:text="@string/unregister_from_notifications"
+			style="@style/button.gray" />
 	</LinearLayout>
 </LinearLayout>
