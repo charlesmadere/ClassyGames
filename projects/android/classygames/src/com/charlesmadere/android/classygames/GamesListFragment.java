@@ -55,6 +55,15 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 	private final static String LOG_TAG = Utilities.LOG_TAG + " - GamesListFragment";
 
 
+	private final static String KEY_GAMES_LIST_JSON = "KEY_GAMES_LIST_JSON";
+
+
+	/**
+	 * JSONObject downloaded from the server that represents the games list.
+	 */
+	private JSONObject gamesListJSON;
+
+
 
 
 	/**
@@ -162,6 +171,30 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 		};
 
 		return inflater.inflate(R.layout.games_list_fragment, container, false);
+	}
+
+
+	@Override
+	public void onActivityCreated(final Bundle savedInstanceState)
+	{
+		super.onActivityCreated(savedInstanceState);
+
+		if (savedInstanceState != null && savedInstanceState.containsKey(KEY_GAMES_LIST_JSON))
+		{
+			final String gamesListJSONString = savedInstanceState.getString(KEY_GAMES_LIST_JSON);
+
+			if (Utilities.verifyValidString(gamesListJSONString))
+			{
+				try
+				{
+					gamesListJSON = new JSONObject(gamesListJSONString);
+				}
+				catch (final JSONException e)
+				{
+
+				}
+			}
+		}
 	}
 
 
@@ -341,8 +374,27 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 		if (isFirstOnResume)
 		{
 			isFirstOnResume = false;
-			refreshGamesList();
+
+			final boolean restoreExistingList = gamesListJSON != null;
+			refreshGamesList(restoreExistingList);
 		}
+	}
+
+
+	@Override
+	public void onSaveInstanceState(final Bundle outState)
+	{
+		if (gamesListJSON != null)
+		{
+			final String gamesListJSONString = gamesListJSON.toString();
+
+			if (Utilities.verifyValidString(gamesListJSONString))
+			{
+				outState.putString(KEY_GAMES_LIST_JSON, gamesListJSONString);
+			}
+		}
+
+		super.onSaveInstanceState(outState);
 	}
 
 
@@ -388,14 +440,28 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 
 	/**
 	 * Refreshes the Games List if a refresh is not already running.
+	 * 
+	 * @param restoreExistingList
+	 * Set this to true if you want to restore the games list from the existing
+	 * stored games list. Set this to false to force the app to download a new
+	 * games list from the server.
 	 */
-	public void refreshGamesList()
+	private void refreshGamesList(final boolean restoreExistingList)
 	{
 		if (!isAnAsyncTaskRunning())
 		{
-			asyncRefreshGamesList = new AsyncRefreshGamesList(getSherlockActivity(), getLayoutInflater(getArguments()), (ViewGroup) getView());
+			asyncRefreshGamesList = new AsyncRefreshGamesList(getSherlockActivity(), getLayoutInflater(getArguments()), (ViewGroup) getView(), restoreExistingList);
 			asyncRefreshGamesList.execute();
 		}
+	}
+
+
+	/**
+	 * Refreshes the Games List if a refresh is not already running.
+	 */
+	public void refreshGamesList()
+	{
+		refreshGamesList(false);
 	}
 
 
@@ -413,6 +479,7 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 		private SherlockFragmentActivity fragmentActivity;
 		private LayoutInflater inflater;
 		private ViewGroup viewGroup;
+		private boolean restoreExistingList;
 
 
 		private AsyncRefreshGamesList(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater, final ViewGroup viewGroup)
@@ -420,6 +487,16 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 			this.fragmentActivity = fragmentActivity;
 			this.inflater = inflater;
 			this.viewGroup = viewGroup;
+			restoreExistingList = false;
+		}
+
+
+		private AsyncRefreshGamesList(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater, final ViewGroup viewGroup, final boolean restoreExistingList)
+		{
+			this.fragmentActivity = fragmentActivity;
+			this.inflater = inflater;
+			this.viewGroup = viewGroup;
+			this.restoreExistingList = restoreExistingList;
 		}
 
 
@@ -429,8 +506,13 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 			ArrayList<Game> games = null;
 			runStatus = RUN_STATUS_NORMAL;
 
-			if (!isCancelled())
+			if (restoreExistingList && gamesListJSON != null)
 			{
+				games = parseServerResponse(null);
+			}
+			else if (!isCancelled())
+			{
+				restoreExistingList = false;
 				final Person whoAmI = Utilities.getWhoAmI(fragmentActivity);
 
 				// create the data that will be posted to the server
@@ -547,12 +629,18 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 
 			if (!isCancelled())
 			{
-				if (Utilities.verifyValidString(serverResponse))
+				if (restoreExistingList || Utilities.verifyValidString(serverResponse))
 				{
 					try
 					{
-						final JSONObject jsonRaw = new JSONObject(serverResponse);
-						final JSONObject jsonResult = jsonRaw.getJSONObject(ServerUtilities.POST_DATA_RESULT);
+						if (!restoreExistingList)
+						// Check to see if this boolean is set to true. If it
+						// is set to true, then 
+						{
+							gamesListJSON = new JSONObject(serverResponse);
+						}
+
+						final JSONObject jsonResult = gamesListJSON.getJSONObject(ServerUtilities.POST_DATA_RESULT);
 						final JSONObject jsonGameData = jsonResult.optJSONObject(ServerUtilities.POST_DATA_SUCCESS);
 
 						if (jsonGameData == null)

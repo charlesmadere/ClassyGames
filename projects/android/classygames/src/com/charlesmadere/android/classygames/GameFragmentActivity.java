@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -14,7 +15,6 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.Person;
-import com.charlesmadere.android.classygames.settings.RegisterForNotificationsActivity;
 import com.charlesmadere.android.classygames.settings.SettingsActivity;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
@@ -23,6 +23,9 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 	GamesListFragment.GamesListFragmentListeners,
 	GenericGameFragment.GenericGameFragmentListeners
 {
+
+
+	private final static String LOG_TAG = Utilities.LOG_TAG + " - GameFragmentActivity";
 
 
 	public final static int RESULT_CODE_FINISH = MainActivity.GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FINISH;
@@ -142,12 +145,17 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 			{
 				final long id = extras.getLong(NewGameFragmentActivity.KEY_FRIEND_ID);
 				final String name = extras.getString(NewGameFragmentActivity.KEY_FRIEND_NAME);
+				final byte type = extras.getByte(NewGameFragmentActivity.KEY_GAME_TYPE);
 
-				if (Person.isIdValid(id) && Person.isNameValid(name))
+				if (Person.isIdValid(id) && Person.isNameValid(name) && Game.isWhichGameValid(type))
 				{
 					final Person friend = new Person(id, name);
-					final Game game = new Game(friend);
+					final Game game = new Game(friend, type);
 					onGameSelected(game);
+				}
+				else
+				{
+					Log.e(LOG_TAG, "onActivityResult() received game data that was malformed.");
 				}
 			}
 		}
@@ -311,10 +319,6 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 			{
 				genericGameFragment = new ChessGameFragment();
 			}
-			else
-			{
-				genericGameFragment = new CheckersGameFragment();
-			}
 
 			genericGameFragment.setArguments(arguments);
 
@@ -337,11 +341,11 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 			if (game.isGameCheckers())
 			{
-				actionBar.setTitle(getString(R.string.checkers_game_fragment_title) + " " + game.getPerson().getName());
+				actionBar.setTitle(getString(R.string.checkers_with_x, game.getPerson().getName()));
 			}
 			else if (game.isGameChess())
 			{
-				actionBar.setTitle(getString(R.string.chess_game_fragment_title) + " " + game.getPerson().getName());
+				actionBar.setTitle(getString(R.string.chess_with_x, game.getPerson().getName()));
 			}
 		}
 	}

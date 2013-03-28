@@ -12,10 +12,8 @@
 	<string name="cancel">Cancel</string>
 	<string name="cancelled_loading_your_friends_list">Cancelled loading your Facebook Friends List!</string>
 	<string name="cancelled_loading_your_games_list">Cancelled loading your Games List!</string>
-	<string name="checkers_game_fragment_title">Checkers with</string>
-	<string name="checkers_game_fragment_loading_text">Loading Checkers game against %1$s&#8230;</string>
-	<string name="chess_game_fragment_title">Chess with</string>
-	<string name="chess_game_fragment_loading_text">Loading Chess game against %1$s&#8230;</string>
+	<string name="checkers_with_x">Checkers with %1$s</string>
+	<string name="chess_with_x">Chess with %1$s</string>
 	<string name="classy_games">Classy Games</string>
 	<string name="classy_hamsters_are_working_diligently">Classy Hamsters are working diligently!</string>
 	<string name="confirm_game_fragment_data_error">Error when trying to store the data for the Facebook friend that you selected.</string>
@@ -44,6 +42,8 @@
 	<string name="generic_game_fragment_data_error">Error while trying to instantiate the game.</string>
 	<string name="just_now">just now</string>
 	<string name="their_turn">Their Turn</string>
+	<string name="loading_checkers_game_against_x">Loading Checkers game against %1$s&#8230;</string>
+	<string name="loading_chess_game_against_x">Loading Chess game against %1$s&#8230;</string>
 	<string name="loading_game">Loading game&#8230;</string>
 	<string name="loading_your_friends_list">Loading your Facebook Friends List&#8230;</string>
 	<string name="loading_your_games_list">Loading your games list&#8230;</string>

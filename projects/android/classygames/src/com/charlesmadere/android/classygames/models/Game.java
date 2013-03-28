@@ -101,6 +101,25 @@ public class Game
 	 * The opposing player. If I am Charles Madere and my opponent is Geonathan
 	 * Sena, then this Person object will be for Geonathan Sena.
 	 * 
+	 * @param whichGame
+	 * The game type. Could be checkers, chess... Make sure to use the public
+	 * Game.WHICH_GAME_* byte variables for this.
+	 */
+	public Game(final Person person, final byte whichGame)
+	{
+		this.person = person;
+		this.whichGame = whichGame;
+	}
+
+
+	/**
+	 * Creates a Game object. This constructor should only be used within the
+	 * GenericGameFragment class.
+	 * 
+	 * @param person
+	 * The opposing player. If I am Charles Madere and my opponent is Geonathan
+	 * Sena, then this Person object will be for Geonathan Sena.
+	 * 
 	 * @param id
 	 * This game's ID as received from the Classy Games server. This should be
 	 * a rather long String that resembles a hash.

@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
@@ -24,6 +25,7 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 
 	public final static String KEY_FRIEND_ID = "KEY_FRIEND_ID";
 	public final static String KEY_FRIEND_NAME = "KEY_FRIEND_NAME";
+	public final static String KEY_GAME_TYPE = "KEY_GAME_TYPE";
 
 
 
@@ -176,6 +178,7 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 		final Bundle extras = new Bundle();
 		extras.putLong(KEY_FRIEND_ID, friend.getId());
 		extras.putString(KEY_FRIEND_NAME, friend.getName());
+		extras.putByte(KEY_GAME_TYPE, Game.WHICH_GAME_CHECKERS);
 
 		final Intent intent = new Intent();
 		intent.putExtras(extras);
