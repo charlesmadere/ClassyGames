@@ -33,6 +33,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 
 	public final static String BUNDLE_DATA_GAME_ID = "BUNDLE_DATA_GAME_ID";
+	public final static String BUNDLE_DATA_GAME_TYPE = "BUNDLE_DATA_GAME_TYPE";
 	public final static String BUNDLE_DATA_PERSON_OPPONENT_ID = "BUNDLE_DATA_PERSON_OPPONENT_ID";
 	public final static String BUNDLE_DATA_PERSON_OPPONENT_NAME = "BUNDLE_DATA_PERSON_OPPONENT_NAME";
 
@@ -115,14 +116,16 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 		if (intent != null)
 		{
-			if (intent.hasExtra(BUNDLE_DATA_GAME_ID) && intent.hasExtra(BUNDLE_DATA_PERSON_OPPONENT_ID)
-				&& intent.hasExtra(BUNDLE_DATA_PERSON_OPPONENT_NAME))
+			if (intent.hasExtra(BUNDLE_DATA_GAME_ID) && intent.hasExtra(BUNDLE_DATA_GAME_TYPE)
+				&& intent.hasExtra(BUNDLE_DATA_PERSON_OPPONENT_ID) && intent.hasExtra(BUNDLE_DATA_PERSON_OPPONENT_NAME))
 			{
 				final String gameId = intent.getStringExtra(BUNDLE_DATA_GAME_ID);
-				final long personId = intent.getLongExtra(BUNDLE_DATA_PERSON_OPPONENT_ID, -1);
+				final byte gameType = intent.getByteExtra(BUNDLE_DATA_GAME_TYPE, (byte) 0);
+				final long personId = intent.getLongExtra(BUNDLE_DATA_PERSON_OPPONENT_ID, 0);
 				final String personName = intent.getStringExtra(BUNDLE_DATA_PERSON_OPPONENT_NAME);
 
-				if (Game.isIdValid(gameId) && Person.isIdValid(personId) && Person.isNameValid(personName))
+				if (Game.isIdValid(gameId) && Game.isWhichGameValid(gameType)
+					&& Person.isIdValid(personId) && Person.isNameValid(personName))
 				{
 					final Game game = new Game(new Person(personId, personName), gameId);
 					onGameSelected(game);

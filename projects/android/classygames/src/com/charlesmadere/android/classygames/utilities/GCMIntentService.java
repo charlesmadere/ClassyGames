@@ -111,6 +111,7 @@ public class GCMIntentService extends IntentService
 				{
 					final Intent gameIntent = new Intent(this, GameFragmentActivity.class)
 						.putExtra(GameFragmentActivity.BUNDLE_DATA_GAME_ID, parameter_gameId)
+						.putExtra(GameFragmentActivity.BUNDLE_DATA_GAME_TYPE, parameter_gameType)
 						.putExtra(GameFragmentActivity.BUNDLE_DATA_PERSON_OPPONENT_ID, person.getId())
 						.putExtra(GameFragmentActivity.BUNDLE_DATA_PERSON_OPPONENT_NAME, person.getName())
 						.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
