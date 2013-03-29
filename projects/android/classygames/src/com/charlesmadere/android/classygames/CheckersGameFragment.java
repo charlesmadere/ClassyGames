@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
@@ -20,6 +21,7 @@ import com.charlesmadere.android.classygames.games.Coordinate;
 import com.charlesmadere.android.classygames.games.Position;
 import com.charlesmadere.android.classygames.games.checkers.Board;
 import com.charlesmadere.android.classygames.games.checkers.Piece;
+import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
 public class CheckersGameFragment extends GenericGameFragment
@@ -207,12 +209,12 @@ public class CheckersGameFragment extends GenericGameFragment
 				if (view != null)
 				{
 					final View boardPosition = view.findViewById(R.id.checkers_game_fragment_x7y7);
-	
+
 					if (resources.getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
 					{
 						final int width = boardPosition.getWidth();
 						layoutParams.height = width;
-	
+
 						view.findViewById(R.id.checkers_game_fragment_y0).setLayoutParams(layoutParams);
 						view.findViewById(R.id.checkers_game_fragment_y1).setLayoutParams(layoutParams);
 						view.findViewById(R.id.checkers_game_fragment_y2).setLayoutParams(layoutParams);
@@ -226,7 +228,7 @@ public class CheckersGameFragment extends GenericGameFragment
 					{
 						final int height = boardPosition.getHeight();
 						layoutParams.width = height;
-	
+
 						view.findViewById(R.id.checkers_game_fragment_x0).setLayoutParams(layoutParams);
 						view.findViewById(R.id.checkers_game_fragment_x1).setLayoutParams(layoutParams);
 						view.findViewById(R.id.checkers_game_fragment_x2).setLayoutParams(layoutParams);
@@ -236,7 +238,7 @@ public class CheckersGameFragment extends GenericGameFragment
 						view.findViewById(R.id.checkers_game_fragment_x6).setLayoutParams(layoutParams);
 						view.findViewById(R.id.checkers_game_fragment_x7).setLayoutParams(layoutParams);
 					}
-	
+
 					if (viewTreeObserver.isAlive())
 					{
 						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
@@ -252,14 +254,67 @@ public class CheckersGameFragment extends GenericGameFragment
 			}
 		});
 
+		final SharedPreferences sPreferences = Utilities.getPreferences(getSherlockActivity());
+		final String playerColor = sPreferences.getString(getString(R.string.settings_key_players_checkers_piece_color), getString(R.string.green));
+		final String opponentColor = sPreferences.getString(getString(R.string.settings_key_opponents_checkers_piece_color), getString(R.string.orange));
+
+		final int playerColorNormal;
+		final int playerColorKing;
+
+		if (playerColor.equalsIgnoreCase(getString(R.string.blue)))
+		{
+			playerColorNormal = R.drawable.piece_checkers_blue_normal;
+			playerColorKing = R.drawable.piece_checkers_blue_king;
+		}
+		else if (playerColor.equalsIgnoreCase(getString(R.string.orange)))
+		{
+			playerColorNormal = R.drawable.piece_checkers_orange_normal;
+			playerColorKing = R.drawable.piece_checkers_orange_king;
+		}
+		else if (playerColor.equalsIgnoreCase(getString(R.string.pink)))
+		{
+			playerColorNormal = R.drawable.piece_checkers_pink_normal;
+			playerColorKing = R.drawable.piece_checkers_pink_king;
+		}
+		else
+		{
+			playerColorNormal = R.drawable.piece_checkers_green_normal;
+			playerColorKing = R.drawable.piece_checkers_green_king;
+		}
+
+		final int opponentColorNormal;
+		final int opponentColorKing;
+
+		if (opponentColor.equalsIgnoreCase(getString(R.string.blue)))
+		{
+			opponentColorNormal = R.drawable.piece_checkers_blue_normal;
+			opponentColorKing = R.drawable.piece_checkers_blue_king;
+		}
+		else if (opponentColor.equalsIgnoreCase(getString(R.string.green)))
+		{
+			opponentColorNormal = R.drawable.piece_checkers_green_normal;
+			opponentColorKing = R.drawable.piece_checkers_green_king;
+		}
+		else if (opponentColor.equalsIgnoreCase(getString(R.string.pink)))
+		{
+			opponentColorNormal = R.drawable.piece_checkers_pink_normal;
+			opponentColorKing = R.drawable.piece_checkers_pink_king;
+		}
+		else
+		{
+			opponentColorNormal = R.drawable.piece_checkers_orange_normal;
+			opponentColorKing = R.drawable.piece_checkers_orange_king;
+		}
+
 		// Load Drawables for checkers pieces into memory. This is done so that
 		// later when we draw these checkers pieces onto the board, that draw
 		// process can be done very quickly as all of the picture data has
 		// already been loaded.
-		playerNormal = (BitmapDrawable) resources.getDrawable(R.drawable.piece_checkers_green_normal);
-		playerKing = (BitmapDrawable) resources.getDrawable(R.drawable.piece_checkers_green_king);
-		opponentNormal = (BitmapDrawable) resources.getDrawable(R.drawable.piece_checkers_orange_normal);
-		opponentKing = (BitmapDrawable) resources.getDrawable(R.drawable.piece_checkers_orange_king);
+
+		playerNormal = (BitmapDrawable) resources.getDrawable(playerColorNormal);
+		playerKing = (BitmapDrawable) resources.getDrawable(playerColorKing);
+		opponentNormal = (BitmapDrawable) resources.getDrawable(opponentColorNormal);
+		opponentKing = (BitmapDrawable) resources.getDrawable(opponentColorKing);
 	}
 
 
