@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -14,26 +15,22 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.Person;
+import com.charlesmadere.android.classygames.settings.SettingsActivity;
 import com.charlesmadere.android.classygames.utilities.Utilities;
-import com.facebook.Session;
-import com.facebook.SessionState;
-import com.facebook.UiLifecycleHelper;
 
 
 public class GameFragmentActivity extends SherlockFragmentActivity implements
-	GamesListFragment.GamesListFragmentOnGameSelectedListener,
-	GamesListFragment.GamesListFragmentOnRefreshSelectedListener,
-	GenericGameFragment.GenericGameFragmentIsDeviceLargeListener,
-	GenericGameFragment.GenericGameFragmentOnAsyncGetGameOnCancelledListener,
-	GenericGameFragment.GenericGameFragmentOnAsyncSendOrSkipMoveFinishedListener,
-	GenericGameFragment.GenericGameFragmentOnDataErrorListener
+	GamesListFragment.GamesListFragmentListeners,
+	GenericGameFragment.GenericGameFragmentListeners
 {
+
+
+	private final static String LOG_TAG = Utilities.LOG_TAG + " - GameFragmentActivity";
 
 
 	public final static int RESULT_CODE_FINISH = MainActivity.GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FINISH;
 	public final static int NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FRIEND_SELECTED = 16;
 
-	public final static String GCM_RECEIVED = "edu.selu.android.classygames.GameFragmentActivity.GCM_RECEIVED";
 
 	public final static String BUNDLE_DATA_GAME_ID = "BUNDLE_DATA_GAME_ID";
 	public final static String BUNDLE_DATA_PERSON_OPPONENT_ID = "BUNDLE_DATA_PERSON_OPPONENT_ID";
@@ -42,10 +39,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 	private final static String KEY_ACTION_BAR_TITLE = "KEY_ACTION_BAR_TITLE";
 
 
-	private UiLifecycleHelper uiHelper;
-	private Session.StatusCallback sessionStatusCallback;
 
-	private boolean isResumed = false;
 
 	private EmptyGameFragment emptyGameFragment;
 	private GamesListFragment gamesListFragment;
@@ -61,18 +55,6 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 		setContentView(R.layout.game_fragment_activity);
 		setResult(RESULT_CODE_FINISH);
 		Utilities.styleActionBar(getResources(), getSupportActionBar(), false);
-
-		sessionStatusCallback = new Session.StatusCallback()
-		{
-			@Override
-			public void call(final Session session, final SessionState state, final Exception exception)
-			{
-				onSessionStateChange(session, state, exception);
-			}
-		};
-
-		uiHelper = new UiLifecycleHelper(this, sessionStatusCallback);
-		uiHelper.onCreate(savedInstanceState);
 
 		final FragmentManager fManager = getSupportFragmentManager();
 
@@ -143,7 +125,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 				if (Game.isIdValid(gameId) && Person.isIdValid(personId) && Person.isNameValid(personName))
 				{
 					final Game game = new Game(new Person(personId, personName), gameId);
-					gamesListFragmentOnGameSelected(game);
+					onGameSelected(game);
 				}
 			}
 		}
@@ -154,7 +136,6 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data)
 	{
 		super.onActivityResult(requestCode, resultCode, data);
-		uiHelper.onActivityResult(requestCode, resultCode, data);
 
 		if (resultCode == NewGameFragmentActivity.RESULT_CODE_FRIEND_SELECTED)
 		{
@@ -164,12 +145,17 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 			{
 				final long id = extras.getLong(NewGameFragmentActivity.KEY_FRIEND_ID);
 				final String name = extras.getString(NewGameFragmentActivity.KEY_FRIEND_NAME);
+				final byte type = extras.getByte(NewGameFragmentActivity.KEY_GAME_TYPE);
 
-				if (Person.isIdValid(id) && Person.isNameValid(name))
+				if (Person.isIdValid(id) && Person.isNameValid(name) && Game.isWhichGameValid(type))
 				{
 					final Person friend = new Person(id, name);
-					final Game game = new Game(friend);
-					gamesListFragmentOnGameSelected(game);
+					final Game game = new Game(friend, type);
+					onGameSelected(game);
+				}
+				else
+				{
+					Log.e(LOG_TAG, "onActivityResult() received game data that was malformed.");
 				}
 			}
 		}
@@ -187,7 +173,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 		{
 			final ActionBar actionBar = getSupportActionBar();
 			actionBar.setDisplayHomeAsUpEnabled(false);
-			actionBar.setTitle(R.string.games_list_fragment_title);
+			actionBar.setTitle(R.string.games_list);
 
 			super.onBackPressed();
 		}
@@ -216,8 +202,6 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 			genericGameFragment.cancelRunningAnyAsyncTask();
 		}
 
-		isResumed = false;
-		uiHelper.onDestroy();
 		super.onDestroy();
 	}
 
@@ -244,8 +228,8 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 				startActivityForResult(new Intent(this, NewGameFragmentActivity.class), NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FRIEND_SELECTED);
 				break;
 
-			case R.id.game_fragment_activity_menu_register_for_notifications:
-				startActivity(new Intent(this, RegisterForNotificationsActivity.class));
+			case R.id.game_fragment_activity_menu_settings:
+				startActivity(new Intent(this, SettingsActivity.class));
 				break;
 
 			default:
@@ -257,30 +241,11 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 
 	@Override
-	protected void onPause()
-	{
-		isResumed = false;
-		uiHelper.onPause();
-		super.onPause();
-	}
-
-
-	@Override
-	protected void onResume()
-	{
-		super.onResume();
-		uiHelper.onResume();
-		isResumed = true;
-	}
-
-
-	@Override
 	protected void onSaveInstanceState(final Bundle outState)
 	{
 		final CharSequence actionBarTitle = getSupportActionBar().getTitle();
 		outState.putCharSequence(KEY_ACTION_BAR_TITLE, actionBarTitle);
 
-		uiHelper.onSaveInstanceState(outState);
 		super.onSaveInstanceState(outState);
 	}
 
@@ -329,25 +294,10 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 	}
 
 
-	private void onSessionStateChange(final Session session, final SessionState state, final Exception exception)
-	{
-		if (isResumed)
-		// only make changes if this activity is visible
-		{
-			if (!state.equals(SessionState.OPENED))
-			// if the session state is not opened then the user will have to
-			// reauthenticate with Facebook
-			{
-				finish();
-			}
-		}
-	}
-
-
 
 
 	@Override
-	public void gamesListFragmentOnGameSelected(final Game game)
+	public void onGameSelected(final Game game)
 	{
 		if (isDeviceLarge() || (genericGameFragment == null || !genericGameFragment.isVisible()))
 		{
@@ -369,10 +319,6 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 			{
 				genericGameFragment = new ChessGameFragment();
 			}
-			else
-			{
-				genericGameFragment = new CheckersGameFragment();
-			}
 
 			genericGameFragment.setArguments(arguments);
 
@@ -392,13 +338,21 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 			final ActionBar actionBar = getSupportActionBar();
 			actionBar.setDisplayHomeAsUpEnabled(true);
-			actionBar.setTitle(getString(R.string.checkers_game_fragment_title) + " " + game.getPerson().getName());
+
+			if (game.isGameCheckers())
+			{
+				actionBar.setTitle(getString(R.string.checkers_with_x, game.getPerson().getName()));
+			}
+			else if (game.isGameChess())
+			{
+				actionBar.setTitle(getString(R.string.chess_with_x, game.getPerson().getName()));
+			}
 		}
 	}
 
 
 	@Override
-	public void gamesListFragmentOnRefreshSelected()
+	public void onRefreshSelected()
 	{
 		if (isDeviceLarge() && genericGameFragment != null && genericGameFragment.isVisible())
 		{
@@ -413,21 +367,29 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 
 	@Override
-	public boolean genericGameFragmentIsDeviceSmall()
+	public boolean isDeviceSmall()
 	{
 		return !isDeviceLarge();
 	}
 
 
 	@Override
-	public void genericGameFragmentOnAsyncGetGameOnCancelled()
+	public void onDataError()
+	{
+		Utilities.easyToastAndLogError(this, R.string.couldnt_create_the_game_as_malformed_data_was_detected);
+		onBackPressed();
+	}
+
+
+	@Override
+	public void onGetGameCancelled()
 	{
 		onBackPressed();
 	}
 
 
 	@Override
-	public void genericGameFragmentOnAsyncSendingFinished()
+	public void onServerApiTaskFinished()
 	{
 		final FragmentManager fManager = getSupportFragmentManager();
 		fManager.popBackStack();
@@ -452,17 +414,9 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 		final ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(false);
-		actionBar.setTitle(R.string.games_list_fragment_title);
+		actionBar.setTitle(R.string.games_list);
 
-		gamesListFragmentOnRefreshSelected();
-	}
-
-
-	@Override
-	public void genericGameFragmentOnDataError()
-	{
-		Utilities.easyToastAndLogError(this, "Couldn't create a game as malformed data was detected!");
-		onBackPressed();
+		onRefreshSelected();
 	}
 
 

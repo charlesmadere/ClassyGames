@@ -28,6 +28,12 @@ public class ServerApiSendMove extends ServerApi
 
 
 	/**
+	 * The Game object that this API call has to deal with.
+	 */
+	private Game game;
+
+
+	/**
 	 * The game board to send to the server.
 	 */
 	private GenericBoard board;
@@ -42,15 +48,20 @@ public class ServerApiSendMove extends ServerApi
 	 * @param context
 	 * The Context of the class that you're creating this object from.
 	 * 
+	 * @param onCompleteListener
+	 * A listener to call once we're done running code here.
+	 * 
 	 * @param game
 	 * The Game object that this API call has to deal with.
 	 * 
-	 * @param onCompleteListener
-	 * A listener to call once we're done running code here.
+	 * @param board
+	 * The GenericBoard object that is being sent to the server.
 	 */
-	public ServerApiSendMove(final Context context, final Game game, final ServerApi.OnCompleteListener onCompleteListener, final GenericBoard board)
+	public ServerApiSendMove(final Context context, final ServerApi.ServerApiListeners onCompleteListener, final Game game, final GenericBoard board)
 	{
-		super(context, game, onCompleteListener);
+		super(context, onCompleteListener);
+
+		this.game = game;
 		this.board = board;
 	}
 
@@ -105,7 +116,7 @@ public class ServerApiSendMove extends ServerApi
 	@Override
 	protected int getDialogTitle()
 	{
-		return R.string.server_api_send_move_dialog_title;
+		return R.string.send_move;
 	}
 
 

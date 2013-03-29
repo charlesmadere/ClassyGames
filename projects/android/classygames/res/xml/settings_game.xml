@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+	android:title="@string/game_settings">
+	<CheckBoxPreference
+		android:defaultValue="true"
+		android:key="@string/settings_key_ask_before_sending_move"
+		android:summaryOff="@string/settings_ask_before_sending_move_summary_off"
+		android:summaryOn="@string/settings_ask_before_sending_move_summary_on"
+		android:title="@string/ask_before_sending_move" />
+	<ListPreference
+		android:defaultValue="@string/green"
+		android:dialogTitle="@string/changes_the_colors_of_your_own_checkers_pieces"
+		android:entries="@array/settings_game_list_preference_piece_colors"
+		android:entryValues="@array/settings_game_list_preference_piece_colors"
+		android:key="@string/settings_key_players_checkers_piece_color"
+		android:negativeButtonText="@string/cancel"
+		android:positiveButtonText="@string/change_color"
+		android:summary="@string/changes_the_colors_of_your_own_checkers_pieces"
+		android:title="@string/change_your_checkers_piece_colors" />
+	<ListPreference
+		android:defaultValue="@string/orange"
+		android:dialogTitle="@string/changes_the_colors_of_the_opponents_checkers_pieces"
+		android:entries="@array/settings_game_list_preference_piece_colors"
+		android:entryValues="@array/settings_game_list_preference_piece_colors"
+		android:key="@string/settings_key_opponents_checkers_piece_color"
+		android:negativeButtonText="@string/cancel"
+		android:positiveButtonText="@string/change_color"
+		android:summary="@string/changes_the_colors_of_the_opponents_checkers_pieces"
+		android:title="@string/change_the_opponents_checkers_piece_colors" />
+</PreferenceScreen>

@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -27,15 +28,24 @@ public final class Utilities
 
 
 	public final static String LOG_TAG = "Classy Games";
-	public final static String SHARED_PREFERENCES_NAME = "CLASSY_PREFERENCES";
 
 
+	// need for the third party ImageLoader library
+	// https://github.com/nostra13/Android-Universal-Image-Loader
 	private static ImageLoader imageLoader;
 
 
+	// Stores the reg id of the current Android device. More information can be
+	// found here: https://developer.android.com/google/gcm/index.html
+	private static String regId;
+	private final static String KEY_REG_ID = "KEY_REG_ID";
+
+
+	// stores the Facebook user id and name of the current user of the Classy
+	// Games application
 	private static Person whoAmI;
-	private final static String WHO_AM_I_ID = "WHO_AM_I_ID";
-	private final static String WHO_AM_I_NAME = "WHO_AM_I_NAME";
+	private final static String KEY_WHO_AM_I_ID = "KEY_WHO_AM_I_ID";
+	private final static String KEY_WHO_AM_I_NAME = "KEY_WHO_AM_I_NAME";
 
 
 
@@ -186,12 +196,51 @@ public final class Utilities
 
 
 	/**
+	 * Prints a Toast message to the screen and prints that same message to the
+	 * Log.e console.
+	 * 
+	 * <p><strong>Examples</strong><br />
+	 * Utilities.easyToastAndLogError(MainActivity.this, "Hello!");<br />
+	 * Utilities.easyToastAndLogError(getApplicationContext(), "Another message huh?");</p>
+	 * 
+	 * @param context
+	 * Just put the name of your class.this, or you can use getApplicationContext().
+	 * 
+	 * @param stringId
+	 * The int ID of the resource that you want to print.
+	 */
+	public static void easyToastAndLogError(final Context context, final int stringId)
+	{
+		easyToast(context, stringId);
+		Log.e(LOG_TAG, context.getString(stringId));
+	}
+
+
+	/**
+	 * Gives you a handle to the Classy Games default SharedPreferences object.
+	 * 
+	 * @param context
+	 * The Context of the class that you're calling this from. If you're
+	 * calling this method from an Activity then you can usually just use the
+	 * this keyword, otherwise you may need to use something like
+	 * getSherlockActivity().
+	 * 
+	 * @return
+	 * Returns a handle to the Classy Games default SharedPreferences object.
+	 */
+	public static SharedPreferences getPreferences(final Context context)
+	{
+		return PreferenceManager.getDefaultSharedPreferences(context);
+	}
+
+
+	/**
 	 * Initializes the ImageLoader library with some specific configuration
 	 * settings (if it has not already been initialized) and returns only what
 	 * you need - the portion that will actually load an image for ya!
 	 * 
 	 * @param context
-	 * The Context of the class you're currently working in.
+	 * The context of the Activity that is calling this method.
 	 * 
 	 * @return
 	 * Returns an instance of the ImageLoader class that can load an image from
@@ -219,11 +268,60 @@ public final class Utilities
 
 
 	/**
+	 * Gives you this Android device's GCM registration ID.
+	 * 
+	 * @param context
+	 * The context of the Activity that is calling this method.
+	 * 
+	 * @return
+	 * Returns this Android device's GCM registration ID. This is typically a
+	 * somewhat long String filled with random characters. <strong>Note that
+	 * this method has a slim possibility of returning null.</strong>
+	 */
+	public static String getRegId(final Context context)
+	{
+		if (!verifyValidString(regId))
+		{
+			final SharedPreferences sPreferences = getPreferences(context);
+
+			// Grab the user's GCM registration ID from shared preferences if
+			// it already exists. Returns null if it doesn't already exist.
+			regId = sPreferences.getString(KEY_REG_ID, null);
+		}
+
+		return regId;
+	}
+
+
+	/**
+	 * Sets this Android device's GCM registration ID.
+	 * 
+	 * @param context
+	 * The context of the Activity that is calling this method.
+	 * 
+	 * @param regId
+	 * The new GCM registration ID.
+	 */
+	public static void setRegId(final Context context, final String regId)
+	{
+		final SharedPreferences sPreferences = getPreferences(context);
+		final SharedPreferences.Editor editor = sPreferences.edit();
+		editor.putString(KEY_REG_ID, regId);
+		editor.commit();
+
+		Utilities.regId = regId;
+	}
+
+
+	/**
 	 * If the user's Facebook identity is already stored in this class's static
 	 * whoAmI Person variable then that variable will be instantly returned. If
 	 * the whoAmI Person variable is currently null or is not valid, then we
 	 * will search the Android SharedPreferences data for the user's Facebook
 	 * identity.
+	 * 
+	 * @param context
+	 * The context of the Activity that is calling this method.
 	 * 
 	 * @return
 	 * A Person object that represents the user's Facebook identity.
@@ -235,15 +333,15 @@ public final class Utilities
 		// it is either of these two conditions then we will pull the user's
 		// Facebook identity from the Android SharedPreferences data.
 		{
-			final SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+			final SharedPreferences sPreferences = getPreferences(context);
 
 			// find the user's Facebook ID. If the ID can't be found then the
 			// id variable will be set to 0.
-			final long id = sharedPreferences.getLong(WHO_AM_I_ID, 0);
+			final long id = sPreferences.getLong(KEY_WHO_AM_I_ID, 0);
 
 			// find the user's Facebook name. If the name can't be found then
 			// the name variable will be set to null.
-			final String name = sharedPreferences.getString(WHO_AM_I_NAME, null);
+			final String name = sPreferences.getString(KEY_WHO_AM_I_NAME, null);
 
 			if (Person.isIdValid(id) && Person.isNameValid(name))
 			// check to see that we were actually able to find the user's
@@ -273,9 +371,10 @@ public final class Utilities
 	 */
 	public static void setWhoAmI(final Context context, final Person facebookIdentity)
 	{
-		final SharedPreferences.Editor editor = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).edit();
-		editor.putLong(WHO_AM_I_ID, facebookIdentity.getId());
-		editor.putString(WHO_AM_I_NAME, facebookIdentity.getName());
+		final SharedPreferences sPreferences = getPreferences(context);
+		final SharedPreferences.Editor editor = sPreferences.edit();
+		editor.putLong(KEY_WHO_AM_I_ID, facebookIdentity.getId());
+		editor.putString(KEY_WHO_AM_I_NAME, facebookIdentity.getName());
 		editor.commit();
 
 		whoAmI = facebookIdentity;

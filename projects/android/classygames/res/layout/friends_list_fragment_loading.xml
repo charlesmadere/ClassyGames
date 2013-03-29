@@ -4,9 +4,7 @@
 	android:layout_height="match_parent"
 	android:layout_width="match_parent"
 	android:orientation="vertical"
-	android:paddingLeft="8dip"
-	android:paddingRight="8dip"
-	style="@style/ClassyGames">
+	style="@style/ClassyGames.ExtraPadding">
 	<ProgressBar
 		android:indeterminate="true"
 		android:layout_height="wrap_content"
@@ -15,6 +13,7 @@
 		android:gravity="center"
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
-		android:text="@string/friends_list_fragment_loading_text"
-		style="@style/paragraph" />
+		android:text="@string/loading_your_friends_list"
+		android:textIsSelectable="false"
+		style="@style/Paragraph" />
 </LinearLayout>

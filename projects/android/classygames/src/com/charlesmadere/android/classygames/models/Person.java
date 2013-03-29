@@ -1,9 +1,6 @@
 package com.charlesmadere.android.classygames.models;
 
 
-import com.charlesmadere.android.classygames.utilities.Utilities;
-
-
 /**
  * Class representing a real person.
  */
@@ -90,7 +87,7 @@ public class Person
 	 */
 	public String getIdAsString()
 	{
-		return Long.valueOf(id).toString();
+		return String.valueOf(id);
 	}
 
 
@@ -229,7 +226,7 @@ public class Person
 	 */
 	public static boolean isIdValid(final String id)
 	{
-		if (Utilities.verifyValidString(id))
+		if (isNameValid(id))
 		{
 			return isIdValid(Long.parseLong(id));
 		}
@@ -299,17 +296,19 @@ public class Person
 	/**
 	 * When Facebook names are acquired throughout the app's runtime they
 	 * should be checked to make sure they're not messed up in any way. Use
-	 * this method to check to make sure that they're not messed up.
-	 * 
-	 * @param name
-	 * The Facebook name to check for validity.
+	 * this method to check to make sure that they're not messed up. Valid
+	 * means three things:
+	 * <ol>
+	 * <li>This String is not null.</li>
+	 * <li>This String has a length of greater than or equal to 1.</li>
+	 * </ol>
 	 * 
 	 * @return
 	 * Returns true if the passed in Facebook name is valid.
 	 */
 	public static boolean isNameValid(final String name)
 	{
-		return Utilities.verifyValidString(name);
+		return name != null && name.length() >= 1;
 	}
 
 

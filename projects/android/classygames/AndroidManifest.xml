@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.charlesmadere.android.classygames"
-	android:versionCode="13"
-	android:versionName="1.5.1.2">
+	android:versionCode="15"
+	android:versionName="1.5.2">
 
     <!-- Check out the Android API Levels website for more information on this topic -->
     <!-- https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels -->
@@ -47,7 +47,7 @@
 	<application
 		android:allowBackup="false"
 		android:icon="@drawable/launcher"
-		android:label="@string/app_name">
+		android:label="@string/classy_games">
 
     	<!-- some Facebook v3.0 stuff -->
 		<meta-data
@@ -72,7 +72,7 @@
 		<!--  end more GCM stuff -->
 
 		<activity
-			android:label="@string/main_activity_title"
+			android:label="@string/classy_games"
 			android:name="com.charlesmadere.android.classygames.MainActivity"
 			android:theme="@style/Theme.Styled">
 			<intent-filter>
@@ -84,67 +84,89 @@
 		</activity>
 
 		<activity
-			android:label="@string/about_activity_title"
+			android:label="@string/about"
 			android:name="com.charlesmadere.android.classygames.AboutActivity"
 			android:parentActivityName="com.charlesmadere.android.classygames.GameFragmentActivity"
 			android:theme="@style/Theme.Styled">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".GameFragmentActivity" />
+				android:value="com.charlesmadere.android.classygames.GameFragmentActivity" />
 		</activity>
 
 		<activity
-			android:label="@string/games_list_fragment_title"
+			android:label="@string/games_list"
 			android:name="com.charlesmadere.android.classygames.GameFragmentActivity"
 			android:theme="@style/Theme.Styled"
 			android:uiOptions="splitActionBarWhenNarrow" />
 
 		<activity
-			android:label="@string/game_over_activity_title"
+			android:label="@string/game_over"
 			android:name="com.charlesmadere.android.classygames.GameOverActivity"
 			android:parentActivityName="com.charlesmadere.android.classygames.GameFragmentActivity"
 			android:theme="@style/Theme.Styled">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".GameFragmentActivity" />
+				android:value="com.charlesmadere.android.classygames.GameFragmentActivity" />
 		</activity>
 
 		<activity
-			android:label="@string/friends_list_fragment_title"
+			android:label="@string/friends_list"
 			android:name="com.charlesmadere.android.classygames.NewGameFragmentActivity"
+			android:parentActivityName="com.charlesmadere.android.classygames.GameFragmentActivity"
 			android:theme="@style/Theme.Styled">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".GameFragmentActivity" />
+				android:value="com.charlesmadere.android.classygames.GameFragmentActivity" />
 		</activity>
 
 		<activity
-			android:label="@string/register_for_notifications_activity_title"
-			android:name="com.charlesmadere.android.classygames.RegisterForNotificationsActivity"
+			android:label="@string/register_for_notifications"
+			android:name="com.charlesmadere.android.classygames.settings.RegisterForNotificationsActivity"
+			android:parentActivityName="com.charlesmadere.android.classygames.settings.SettingsActivity"
 			android:theme="@style/Theme.Styled">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".GameFragmentActivity" />
+				android:value="com.charlesmadere.android.classygames.settings.SettingsActivity" />
 		</activity>
 
 		<activity
-			android:label="@string/shark_activity_title"
+			android:label="@string/settings"
+			android:name="com.charlesmadere.android.classygames.settings.SettingsActivity"
+			android:parentActivityName="com.charlesmadere.android.classygames.GameFragmentActivity"
+			android:theme="@style/Theme.Styled">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value="com.charlesmadere.android.classygames.GameFragmentActivity" />
+		</activity>
+
+		<activity
+			android:label="@string/sharkwork"
 			android:name="com.charlesmadere.android.classygames.SharkActivity"
 			android:parentActivityName="com.charlesmadere.android.classygames.AboutActivity"
 			android:theme="@style/Theme.Styled">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".AboutActivity" />
+				android:value="com.charlesmadere.android.classygames.AboutActivity" />
 		</activity>
 
 		<activity
-			android:label="@string/app_name"
+			android:label="@string/unregister_from_notifications"
+			android:name="com.charlesmadere.android.classygames.settings.UnregisterFromNotificationsActivity"
+			android:parentActivityName="com.charlesmadere.android.classygames.settings.SettingsActivity"
+			android:theme="@style/Theme.Styled">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value="com.charlesmadere.android.classygames.settings.SettingsActivity" />
+		</activity>
+
+		<activity
+			android:label="@string/classy_games"
 			android:name="com.facebook.LoginActivity"
 			android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
 		<activity
 			android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
-			android:label="@string/app_name"
+			android:label="@string/classy_games"
 			android:name="com.google.ads.AdActivity" />
 	</application>
 </manifest>

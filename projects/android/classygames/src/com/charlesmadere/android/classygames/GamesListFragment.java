@@ -48,13 +48,20 @@ import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
-public class GamesListFragment extends SherlockFragment implements
-	OnItemClickListener,
-	OnItemLongClickListener
+public class GamesListFragment extends SherlockFragment implements OnItemClickListener, OnItemLongClickListener
 {
 
 
 	private final static String LOG_TAG = Utilities.LOG_TAG + " - GamesListFragment";
+
+
+	private final static String KEY_GAMES_LIST_JSON = "KEY_GAMES_LIST_JSON";
+
+
+	/**
+	 * JSONObject downloaded from the server that represents the games list.
+	 */
+	private JSONObject gamesListJSON;
 
 
 
@@ -80,6 +87,12 @@ public class GamesListFragment extends SherlockFragment implements
 
 
 	/**
+	 * Callback interface for the ServerApi class.
+	 */
+	private ServerApi.ServerApiListeners serverApiListeners;
+
+
+	/**
 	 * List Adapter for this Fragment's ListView layout item.
 	 */
 	private GamesListAdapter gamesListAdapter;
@@ -88,26 +101,35 @@ public class GamesListFragment extends SherlockFragment implements
 
 
 	/**
-	 * One of this class's callback methods. This is fired whenever one of the
-	 * games in the user's list of games is clicked on.
+	 * Object that allows us to run any of the methods that are defined in the
+	 * GamesListFragmentListeners interface.
 	 */
-	private GamesListFragmentOnGameSelectedListener gamesListFragmentOnGameSelectedListener;
-
-	public interface GamesListFragmentOnGameSelectedListener
-	{
-		public void gamesListFragmentOnGameSelected(final Game game);
-	}
+	private GamesListFragmentListeners listeners;
 
 
 	/**
-	 * One of this class's callback methods. This is fired whenever the user
-	 * has selected the Refresh button on the action bar.
+	 * A bunch of listener methods for this Fragment.
 	 */
-	private GamesListFragmentOnRefreshSelectedListener gamesListFragmentOnRefreshSelectedListener;
-
-	public interface GamesListFragmentOnRefreshSelectedListener
+	public interface GamesListFragmentListeners
 	{
-		public void gamesListFragmentOnRefreshSelected();
+
+
+		/**
+		 * This is fired when the user selects a game in their games list.
+		 * 
+		 * @param game
+		 * The Game object that the user selected.
+		 */
+		public void onGameSelected(final Game game);
+
+
+		/**
+		 * This is fired whenever the user has selected the Refresh button on
+		 * the action bar.
+		 */
+		public void onRefreshSelected();
+
+
 	}
 
 
@@ -124,7 +146,55 @@ public class GamesListFragment extends SherlockFragment implements
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{
+		serverApiListeners = new ServerApi.ServerApiListeners()
+		{
+			@Override
+			public void onCancel()
+			{
+				serverApiTask = null;
+			}
+
+
+			@Override
+			public void onComplete()
+			{
+				serverApiTask = null;
+				listeners.onRefreshSelected();
+			}
+
+
+			@Override
+			public void onDismiss()
+			{
+				serverApiTask = null;
+			}
+		};
+
 		return inflater.inflate(R.layout.games_list_fragment, container, false);
+	}
+
+
+	@Override
+	public void onActivityCreated(final Bundle savedInstanceState)
+	{
+		super.onActivityCreated(savedInstanceState);
+
+		if (savedInstanceState != null && savedInstanceState.containsKey(KEY_GAMES_LIST_JSON))
+		{
+			final String gamesListJSONString = savedInstanceState.getString(KEY_GAMES_LIST_JSON);
+
+			if (Utilities.verifyValidString(gamesListJSONString))
+			{
+				try
+				{
+					gamesListJSON = new JSONObject(gamesListJSONString);
+				}
+				catch (final JSONException e)
+				{
+
+				}
+			}
+		}
 	}
 
 
@@ -138,8 +208,7 @@ public class GamesListFragment extends SherlockFragment implements
 
 		try
 		{
-			gamesListFragmentOnGameSelectedListener = (GamesListFragmentOnGameSelectedListener) activity;
-			gamesListFragmentOnRefreshSelectedListener = (GamesListFragmentOnRefreshSelectedListener) activity;
+			listeners = (GamesListFragmentListeners) activity;
 		}
 		catch (final ClassCastException e)
 		{
@@ -171,7 +240,7 @@ public class GamesListFragment extends SherlockFragment implements
 
 		if (game.isTypeGame() && game.isTurnYours())
 		{
-			gamesListFragmentOnGameSelectedListener.gamesListFragmentOnGameSelected(game);
+			listeners.onGameSelected(game);
 		}
 	}
 
@@ -210,35 +279,11 @@ public class GamesListFragment extends SherlockFragment implements
 								switch (which)
 								{
 									case 0:
-										serverApiTask = new ServerApiForfeitGame(context, game, new ServerApi.OnCompleteListener()
-										{
-											@Override
-											public void onComplete(final boolean wasCompleted)
-											{
-												serverApiTask = null;
-
-												if (wasCompleted)
-												{
-													refreshGamesList();
-												}
-											}
-										});
+										serverApiTask = new ServerApiForfeitGame(context, serverApiListeners, game);
 										break;
 
 									case 1:
-										serverApiTask = new ServerApiSkipMove(context, game, new ServerApi.OnCompleteListener()
-										{
-											@Override
-											public void onComplete(final boolean wasCompleted)
-											{
-												serverApiTask = null;
-
-												if (wasCompleted)
-												{
-													refreshGamesList();
-												}
-											}
-										});
+										serverApiTask = new ServerApiSkipMove(context, serverApiListeners, game);
 										break;
 								}
 
@@ -257,7 +302,7 @@ public class GamesListFragment extends SherlockFragment implements
 							dialog.dismiss();
 						}
 					})
-					.setTitle(R.string.games_list_fragment_context_menu_text_generic);
+					.setTitle(getString(R.string.select_an_action_for_this_game_against_x, game.getPerson().getName()));
 
 				builder.show();
 
@@ -286,7 +331,7 @@ public class GamesListFragment extends SherlockFragment implements
 				break;
 
 			case R.id.generic_refresh_menu_refresh:
-				gamesListFragmentOnRefreshSelectedListener.gamesListFragmentOnRefreshSelected();
+				listeners.onRefreshSelected();
 				break;
 
 			default:
@@ -329,8 +374,27 @@ public class GamesListFragment extends SherlockFragment implements
 		if (isFirstOnResume)
 		{
 			isFirstOnResume = false;
-			refreshGamesList();
+
+			final boolean restoreExistingList = gamesListJSON != null;
+			refreshGamesList(restoreExistingList);
 		}
+	}
+
+
+	@Override
+	public void onSaveInstanceState(final Bundle outState)
+	{
+		if (gamesListJSON != null)
+		{
+			final String gamesListJSONString = gamesListJSON.toString();
+
+			if (Utilities.verifyValidString(gamesListJSONString))
+			{
+				outState.putString(KEY_GAMES_LIST_JSON, gamesListJSONString);
+			}
+		}
+
+		super.onSaveInstanceState(outState);
 	}
 
 
@@ -376,14 +440,28 @@ public class GamesListFragment extends SherlockFragment implements
 
 	/**
 	 * Refreshes the Games List if a refresh is not already running.
+	 * 
+	 * @param restoreExistingList
+	 * Set this to true if you want to restore the games list from the existing
+	 * stored games list. Set this to false to force the app to download a new
+	 * games list from the server.
 	 */
-	public void refreshGamesList()
+	private void refreshGamesList(final boolean restoreExistingList)
 	{
 		if (!isAnAsyncTaskRunning())
 		{
-			asyncRefreshGamesList = new AsyncRefreshGamesList(getSherlockActivity(), getLayoutInflater(getArguments()), (ViewGroup) getView());
+			asyncRefreshGamesList = new AsyncRefreshGamesList(getSherlockActivity(), getLayoutInflater(getArguments()), (ViewGroup) getView(), restoreExistingList);
 			asyncRefreshGamesList.execute();
 		}
+	}
+
+
+	/**
+	 * Refreshes the Games List if a refresh is not already running.
+	 */
+	public void refreshGamesList()
+	{
+		refreshGamesList(false);
 	}
 
 
@@ -401,13 +479,24 @@ public class GamesListFragment extends SherlockFragment implements
 		private SherlockFragmentActivity fragmentActivity;
 		private LayoutInflater inflater;
 		private ViewGroup viewGroup;
+		private boolean restoreExistingList;
 
 
-		AsyncRefreshGamesList(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater, final ViewGroup viewGroup)
+		private AsyncRefreshGamesList(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater, final ViewGroup viewGroup)
 		{
 			this.fragmentActivity = fragmentActivity;
 			this.inflater = inflater;
 			this.viewGroup = viewGroup;
+			restoreExistingList = false;
+		}
+
+
+		private AsyncRefreshGamesList(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater, final ViewGroup viewGroup, final boolean restoreExistingList)
+		{
+			this.fragmentActivity = fragmentActivity;
+			this.inflater = inflater;
+			this.viewGroup = viewGroup;
+			this.restoreExistingList = restoreExistingList;
 		}
 
 
@@ -417,8 +506,13 @@ public class GamesListFragment extends SherlockFragment implements
 			ArrayList<Game> games = null;
 			runStatus = RUN_STATUS_NORMAL;
 
-			if (!isCancelled())
+			if (restoreExistingList && gamesListJSON != null)
 			{
+				games = parseServerResponse(null);
+			}
+			else if (!isCancelled())
+			{
+				restoreExistingList = false;
 				final Person whoAmI = Utilities.getWhoAmI(fragmentActivity);
 
 				// create the data that will be posted to the server
@@ -445,7 +539,6 @@ public class GamesListFragment extends SherlockFragment implements
 					}
 					catch (final IOException e)
 					{
-						runStatus = RUN_STATUS_IOEXCEPTION;
 						Log.e(LOG_TAG, "IOException error in AsyncPopulateGamesList - doInBackground()!", e);
 					}
 				}
@@ -483,7 +576,7 @@ public class GamesListFragment extends SherlockFragment implements
 		{
 			viewGroup.removeAllViews();
 
-			if (games != null && games.size() >= 1)
+			if (games != null && !games.isEmpty())
 			{
 				inflater.inflate(R.layout.games_list_fragment, viewGroup);
 				gamesListAdapter = new GamesListAdapter(fragmentActivity, R.layout.games_list_fragment_listview_item, games);
@@ -493,19 +586,13 @@ public class GamesListFragment extends SherlockFragment implements
 				listView.setOnItemClickListener(GamesListFragment.this);
 				listView.setOnItemLongClickListener(GamesListFragment.this);
 			}
+			else if (runStatus == RUN_STATUS_IOEXCEPTION)
+			{
+				inflater.inflate(R.layout.games_list_fragment_no_internet_connection, viewGroup);
+			}
 			else
 			{
 				inflater.inflate(R.layout.games_list_fragment_no_games, viewGroup);
-			}
-
-			switch (runStatus)
-			{
-				case RUN_STATUS_NORMAL:
-					break;
-
-				case RUN_STATUS_IOEXCEPTION:
-					Utilities.easyToastAndLogError(fragmentActivity, fragmentActivity.getString(R.string.no_internet_connection));
-					break;
 			}
 
 			setRunningState(false);
@@ -542,12 +629,18 @@ public class GamesListFragment extends SherlockFragment implements
 
 			if (!isCancelled())
 			{
-				if (Utilities.verifyValidString(serverResponse))
+				if (restoreExistingList || Utilities.verifyValidString(serverResponse))
 				{
 					try
 					{
-						final JSONObject jsonRaw = new JSONObject(serverResponse);
-						final JSONObject jsonResult = jsonRaw.getJSONObject(ServerUtilities.POST_DATA_RESULT);
+						if (!restoreExistingList)
+						// Check to see if this boolean is set to true. If it
+						// is set to true, then 
+						{
+							gamesListJSON = new JSONObject(serverResponse);
+						}
+
+						final JSONObject jsonResult = gamesListJSON.getJSONObject(ServerUtilities.POST_DATA_RESULT);
 						final JSONObject jsonGameData = jsonResult.optJSONObject(ServerUtilities.POST_DATA_SUCCESS);
 
 						if (jsonGameData == null)

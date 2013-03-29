@@ -10,7 +10,7 @@
 	android:paddingTop="12dip">
 	<ImageView
 		android:adjustViewBounds="true"
-		android:contentDescription="@string/friends_list_fragment_listview_item_picture_description"
+		android:contentDescription="@string/friends_picture"
 		android:gravity="center"
 		android:id="@+id/friends_list_fragment_listview_item_picture"
 		android:layout_height="46dip"

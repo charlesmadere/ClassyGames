@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
@@ -18,7 +19,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -46,6 +46,9 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	private final static String LOG_TAG = Utilities.LOG_TAG + " - GenericGameFragment";
+
+
+	private final static String BUNDLE_BOARD_JSON = "BUNDLE_BOARD_JSON";
 
 
 	public final static String KEY_GAME_ID = "KEY_GAME_ID";
@@ -77,12 +80,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * Stores the arguments given to this Fragment.
-	 */
-	private Bundle arguments;
-
-
-	/**
 	 * Holds a handle to the currently running (if it's currently running)
 	 * AsyncGetGame AsyncTask. This could be null.
 	 */
@@ -94,6 +91,12 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * ServerApi object.
 	 */
 	private ServerApi serverApiTask;
+
+
+	/**
+	 * Callback interface for the ServerApi class.
+	 */
+	private ServerApi.ServerApiListeners serverApiListeners;
 
 
 	/**
@@ -138,56 +141,56 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * Checks to see which position on the board was clicked and then moves
 	 * pieces and / or performs actions accordingly.
 	 */
-	protected OnClickListener onBoardClick;
+	protected View.OnClickListener onBoardClick;
 
 
 
 
 	/**
-	 * One of this class's callback methods. This is fired during this
-	 * fragment's onCreateOptionsMenu.
+	 * Object that allows us to run any of the methods that are defined in the
+	 * GenericGameFragmentListeners interface.
 	 */
-	private GenericGameFragmentIsDeviceLargeListener genericGameFragmentIsDeviceSmallListener;
-
-	public interface GenericGameFragmentIsDeviceLargeListener
-	{
-		public boolean genericGameFragmentIsDeviceSmall();
-	}
+	private GenericGameFragmentListeners listeners;
 
 
 	/**
-	 * One of this class's callback methods. This is fired in the event that
-	 * the user cancels the AsyncGetGame AsyncTask.
+	 * A bunch of listener methods for this Fragment.
 	 */
-	private GenericGameFragmentOnAsyncGetGameOnCancelledListener genericGameFragmentOnAsyncGetGameOnCancelledListener;
-
-	public interface GenericGameFragmentOnAsyncGetGameOnCancelledListener
+	public interface GenericGameFragmentListeners
 	{
-		public void genericGameFragmentOnAsyncGetGameOnCancelled();
-	}
 
 
-	/**
-	 * One of this class's callback methods. This is fired in the event that
-	 * a move has finished being sent to the server.
-	 */
-	private GenericGameFragmentOnAsyncSendOrSkipMoveFinishedListener genericGameFragmentOnAsyncSendingFinishedListener;
+		/**
+		 * This is fired during this Fragment's onCreateOptionsMenu() method.
+		 * Checks to see if the current device is considered by Android to be
+		 * small. This be basically every phone.
+		 * 
+		 * @return
+		 * Returns true if the current device is small.
+		 */
+		public boolean isDeviceSmall();
 
-	public interface GenericGameFragmentOnAsyncSendOrSkipMoveFinishedListener
-	{
-		public void genericGameFragmentOnAsyncSendingFinished();
-	}
+
+		/**
+		 * This is fired in the event that an error was detected with some of
+		 * the data needed to instantiate a game.
+		 */
+		public void onDataError();
 
 
-	/**
-	 * One of this class's callback methods. This is fired in the event that an
-	 * error was detected in some of the data needed to instantiate a game.
-	 */
-	private GenericGameFragmentOnDataErrorListener genericGameFragmentOnDataErrorListener;
+		/**
+		 * This is fired if the AsyncGetGame AsyncTask gets cancelled.
+		 */
+		public void onGetGameCancelled();
 
-	public interface GenericGameFragmentOnDataErrorListener
-	{
-		public void genericGameFragmentOnDataError();
+
+		/**
+		 * This is fired when a move (or new game) is finished being sent to
+		 * the server.
+		 */
+		public void onServerApiTaskFinished();
+
+
 	}
 
 
@@ -214,14 +217,11 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		super.onActivityCreated(savedInstanceState);
 
-		if (arguments == null || arguments.isEmpty())
-		{
-			arguments = getArguments();
-		}
+		final Bundle arguments = getArguments();
 
 		if (arguments == null || arguments.isEmpty())
 		{
-			genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataError();
+			listeners.onDataError();
 		}
 		else
 		{
@@ -231,7 +231,31 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 			if (Person.isIdValid(personId) && Person.isNameValid(personName))
 			{
-				onBoardClick = new OnClickListener()
+				serverApiListeners = new ServerApi.ServerApiListeners()
+				{
+					@Override
+					public void onCancel()
+					{
+						serverApiTask = null;
+					}
+
+
+					@Override
+					public void onComplete()
+					{
+						serverApiTask = null;
+						listeners.onServerApiTaskFinished();
+					}
+
+
+					@Override
+					public void onDismiss()
+					{
+						serverApiTask = null;
+					}
+				};
+
+				onBoardClick = new View.OnClickListener()
 				{
 					@Override
 					public void onClick(final View v)
@@ -247,7 +271,9 @@ public abstract class GenericGameFragment extends SherlockFragment
 							positionSelectedCurrent = (ImageButton) v;
 
 							if (positionSelectedPrevious == positionSelectedCurrent)
-							// deselect action
+							// The player has clicked the same position on
+							// the board twice in a row. This is the
+							// deselect action.
 							{
 								clearSelectedPositions();
 							}
@@ -265,7 +291,26 @@ public abstract class GenericGameFragment extends SherlockFragment
 				if (Game.isIdValid(gameId))
 				{
 					game = new Game(person, gameId);
-					getGame();
+
+					if (savedInstanceState != null && savedInstanceState.containsKey(BUNDLE_BOARD_JSON))
+					{
+						try
+						{
+							boardJSON = new JSONObject(savedInstanceState.getString(BUNDLE_BOARD_JSON));
+
+							initViews();
+							resumeOldBoard();
+							flush();
+						}
+						catch (final JSONException e)
+						{
+							getGame();
+						}
+					}
+					else
+					{
+						getGame();
+					}
 				}
 				else
 				{
@@ -279,13 +324,13 @@ public abstract class GenericGameFragment extends SherlockFragment
 					}
 					catch (final JSONException e)
 					{
-						genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataError();
+						listeners.onDataError();
 					}
 				}
 			}
 			else
 			{
-				genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataError();
+				listeners.onDataError();
 			}
 		}
 	}
@@ -301,10 +346,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 		try
 		{
-			genericGameFragmentIsDeviceSmallListener = (GenericGameFragmentIsDeviceLargeListener) activity;
-			genericGameFragmentOnAsyncGetGameOnCancelledListener = (GenericGameFragmentOnAsyncGetGameOnCancelledListener) activity;
-			genericGameFragmentOnAsyncSendingFinishedListener = (GenericGameFragmentOnAsyncSendOrSkipMoveFinishedListener) activity;
-			genericGameFragmentOnDataErrorListener = (GenericGameFragmentOnDataErrorListener) activity;
+			listeners = (GenericGameFragmentListeners) activity;
 		}
 		catch (final ClassCastException e)
 		{
@@ -318,7 +360,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		menu.removeItem(R.id.generic_refresh_menu_refresh);
 
-		if (genericGameFragmentIsDeviceSmallListener.genericGameFragmentIsDeviceSmall())
+		if (listeners.isDeviceSmall())
 		{
 			menu.removeItem(R.id.game_fragment_activity_menu_new_game);
 		}
@@ -332,12 +374,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			inflater.inflate(R.menu.generic_game_fragment, menu);
 		}
 
-		if (arguments == null || arguments.isEmpty())
-		{
-			arguments = getArguments();
-		}
-
-		if (!Utilities.verifyValidString(arguments.getString(KEY_GAME_ID)))
+		if (!Utilities.verifyValidString(getArguments().getString(KEY_GAME_ID)))
 		{
 			menu.removeItem(R.id.generic_game_fragment_menu_skip_move);
 			menu.removeItem(R.id.generic_game_fragment_menu_forfeit_game);
@@ -414,6 +451,23 @@ public abstract class GenericGameFragment extends SherlockFragment
 				}
 			}
 		}
+	}
+
+
+	@Override
+	public void onSaveInstanceState(final Bundle outState)
+	{
+		if (Game.isIdValid(game.getId()) && boardJSON != null)
+		{
+			final String boardJSONString = boardJSON.toString();
+
+			if (Utilities.verifyValidString(boardJSONString))
+			{
+				outState.putString(BUNDLE_BOARD_JSON, boardJSONString);
+			}
+		}
+
+		super.onSaveInstanceState(outState);
 	}
 
 
@@ -581,20 +635,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		if (Utilities.verifyValidString(game.getId()) && !isAnAsyncTaskRunning())
 		{
-			serverApiTask = new ServerApiForfeitGame(getSherlockActivity(), game, new ServerApi.OnCompleteListener()
-			{
-				@Override
-				public void onComplete(final boolean wasCompleted)
-				{
-					if (wasCompleted)
-					{
-						genericGameFragmentOnAsyncSendingFinishedListener.genericGameFragmentOnAsyncSendingFinished();
-					}
-
-					serverApiTask = null;
-				}
-			});
-
+			serverApiTask = new ServerApiForfeitGame(getSherlockActivity(), serverApiListeners, game);
 			serverApiTask.execute();
 		}
 	}
@@ -724,6 +765,33 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
+	 * This method will initialize the game board as if this is an in progress
+	 * game. This <strong>resumes</strong> an old game. Do not use this for a
+	 * brand new game.
+	 */
+	private void resumeOldBoard()
+	{
+		if (boardJSON == null)
+		{
+			Log.e(LOG_TAG, "Tried to build the board from a null JSONObject!");
+			listeners.onDataError();
+		}
+		else
+		{
+			try
+			{
+				resumeOldBoard(boardJSON);
+			}
+			catch (final JSONException e)
+			{
+				Log.e(LOG_TAG, "resumeOldBoard(): boardJSON is massively malformed.", e);
+				listeners.onDataError();
+			}
+		}
+	}
+
+
+	/**
 	 * If the AsyncSendMove AsyncTask is not already running, then this will
 	 * execute it.
 	 */
@@ -731,21 +799,11 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		if (!isAnAsyncTaskRunning())
 		{
-			serverApiTask = new ServerApiSendMove(getSherlockActivity(), game, new ServerApi.OnCompleteListener()
-			{
-				@Override
-				public void onComplete(final boolean wasCompleted)
-				{
-					if (wasCompleted)
-					{
-						genericGameFragmentOnAsyncSendingFinishedListener.genericGameFragmentOnAsyncSendingFinished();
-					}
+			final SharedPreferences sPreferences = Utilities.getPreferences(getSherlockActivity());
+			final boolean askUserToExecute = sPreferences.getBoolean(getString(R.string.settings_key_ask_before_sending_move), true);
 
-					serverApiTask = null;
-				}
-			}, board);
-
-			serverApiTask.execute();
+			serverApiTask = new ServerApiSendMove(getSherlockActivity(), serverApiListeners, game, board);
+			serverApiTask.execute(askUserToExecute);
 		}
 	}
 
@@ -829,20 +887,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		if (Utilities.verifyValidString(game.getId()) && !isAnAsyncTaskRunning())
 		{
-			serverApiTask = new ServerApiSkipMove(getSherlockActivity(), game, new ServerApi.OnCompleteListener()
-			{
-				@Override
-				public void onComplete(final boolean wasCompleted)
-				{
-					if (wasCompleted)
-					{
-						genericGameFragmentOnAsyncSendingFinishedListener.genericGameFragmentOnAsyncSendingFinished();
-					}
-
-					serverApiTask = null;
-				}
-			});
-
+			serverApiTask = new ServerApiSkipMove(getSherlockActivity(), serverApiListeners, game);
 			serverApiTask.execute();
 		}
 	}
@@ -864,7 +909,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			}
 			catch (final JSONException e)
 			{
-				genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataError();
+				listeners.onDataError();
 			}
 
 			flush();
@@ -888,7 +933,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		private ViewGroup viewGroup;
 
 
-		AsyncGetGame(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater, final ViewGroup viewGroup)
+		private AsyncGetGame(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater, final ViewGroup viewGroup)
 		{
 			this.fragmentActivity = fragmentActivity;
 			this.inflater = inflater;
@@ -923,7 +968,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		private void cancelled()
 		{
 			setRunningState(false);
-			genericGameFragmentOnAsyncGetGameOnCancelledListener.genericGameFragmentOnAsyncGetGameOnCancelled();
+			listeners.onGetGameCancelled();
 		}
 
 
@@ -964,35 +1009,9 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 			viewGroup.removeAllViews();
 			inflater.inflate(R.layout.generic_game_fragment_loading, viewGroup);
+
 			final TextView textView = (TextView) viewGroup.findViewById(R.id.generic_game_fragment_loading_textview);
 			textView.setText(getString(getLoadingText(), game.getPerson().getName()));
-		}
-
-
-		/**
-		 * This method will initialize the game board as if this is an in progress
-		 * game. This <strong>resumes</strong> an old game. Do not use this for a
-		 * brand new game.
-		 */
-		private void resumeOldBoard()
-		{
-			if (boardJSON == null)
-			{
-				Log.e(LOG_TAG, "Tried to build the board from either a null or empty JSON String!");
-				genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataError();
-			}
-			else
-			{
-				try
-				{
-					GenericGameFragment.this.resumeOldBoard(boardJSON);
-				}
-				catch (final JSONException e)
-				{
-					Log.e(LOG_TAG, "resumeOldBoard(): boardJSON is massively malformed.", e);
-					genericGameFragmentOnDataErrorListener.genericGameFragmentOnDataError();
-				}
-			}
 		}
 
 
@@ -1075,8 +1094,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * Initializes some of this Fragment's view data, such as the actionbar's
-	 * title, layout configurations, and onClickListeners.
+	 * Initializes some of this Fragment's view data such as layout
+	 * configurations and onClickListeners.
 	 */
 	protected abstract void initViews();
 

@@ -61,11 +61,11 @@ public class GameOverActivity extends SherlockActivity
 				switch (messageType.byteValue())
 				{
 					case ServerUtilities.POST_DATA_MESSAGE_TYPE_GAME_OVER_LOSE:
-						winOrLose.setText(R.string.game_over_activity_win_or_lose_lost);
+						winOrLose.setText(R.string.you_lost_the_game_better_luck_next_time);
 						break;
 
 					case ServerUtilities.POST_DATA_MESSAGE_TYPE_GAME_OVER_WIN:
-						winOrLose.setText(R.string.game_over_activity_win_or_lose_won);
+						winOrLose.setText(R.string.you_won_the_game_what_a_champ);
 						break;
 				}
 

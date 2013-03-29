@@ -8,25 +8,26 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
 public class NewGameFragmentActivity extends SherlockFragmentActivity implements
-	ConfirmGameFragment.ConfirmGameFragmentIsDeviceSmallListener,
-	ConfirmGameFragment.ConfirmGameFragmentOnDataErrorListener,
-	ConfirmGameFragment.ConfirmGameFragmentOnGameConfirmListener,
-	ConfirmGameFragment.ConfirmGameFragmentOnGameDenyListener,
-	FriendsListFragment.FriendsListFragmentOnFriendSelectedListener,
-	FriendsListFragment.FriendsListFragmentOnRefreshSelectedListener
+	ConfirmGameFragment.ConfirmGameFragmentListeners,
+	FriendsListFragment.FriendsListFragmentListeners
 {
 
 
 	public final static int RESULT_CODE_DEFAULT = 0;
 	public final static int RESULT_CODE_FRIEND_SELECTED = GameFragmentActivity.NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FRIEND_SELECTED;
 
+
 	public final static String KEY_FRIEND_ID = "KEY_FRIEND_ID";
 	public final static String KEY_FRIEND_NAME = "KEY_FRIEND_NAME";
+	public final static String KEY_GAME_TYPE = "KEY_GAME_TYPE";
+
+
 
 
 	ConfirmGameFragment confirmGameFragment;
@@ -157,26 +158,27 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 
 
 	@Override
-	public boolean confirmGameFragmentIsDeviceSmall()
+	public boolean isDeviceSmall()
 	{
 		return !isDeviceLarge();
 	}
 
 
 	@Override
-	public void confirmGameFragmentOnDataError()
+	public void onDataError()
 	{
-		Utilities.easyToastAndLogError(this, getString(R.string.confirm_game_fragment_data_error));
+		Utilities.easyToastAndLogError(this, getString(R.string.error_when_trying_to_store_the_data_for_the_friend_that_you_selected));
 		onBackPressed();
 	}
 
 
 	@Override
-	public void confirmGameFragmentOnGameConfirm(final Person friend)
+	public void onGameConfirm(final Person friend)
 	{
 		final Bundle extras = new Bundle();
 		extras.putLong(KEY_FRIEND_ID, friend.getId());
 		extras.putString(KEY_FRIEND_NAME, friend.getName());
+		extras.putByte(KEY_GAME_TYPE, Game.WHICH_GAME_CHECKERS);
 
 		final Intent intent = new Intent();
 		intent.putExtras(extras);
@@ -187,14 +189,14 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 
 
 	@Override
-	public void confirmGameFragmentOnGameDeny()
+	public void onGameDeny()
 	{
 		onBackPressed();
 	}
 
 
 	@Override
-	public void friendsListFragmentOnFriendSelected(final Person friend)
+	public void onFriendSelected(final Person friend)
 	{
 		if (isDeviceLarge() || (confirmGameFragment == null || !confirmGameFragment.isVisible()))
 		{
@@ -228,7 +230,7 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 
 
 	@Override
-	public void friendsListFragmentOnRefreshSelected()
+	public void onRefreshSelected()
 	{
 		if (isDeviceLarge() && confirmGameFragment != null && confirmGameFragment.isVisible())
 		{

@@ -42,14 +42,6 @@ public class MainActivity extends SherlockActivity
 
 
 	/**
-	 * Boolean that marks if the AsyncGetFacebookIdentity AsyncTask is
-	 * currently running. This is used in conjunction with cancelling that
-	 * AsyncTask.
-	 */
-	private boolean isAsyncGetFacebookIdentityRunning = false;
-
-
-	/**
 	 * Used to obtain the current user's Facebook identity.
 	 */
 	private AsyncGetFacebookIdentity asyncGetFacebookIdentity;
@@ -58,7 +50,7 @@ public class MainActivity extends SherlockActivity
 
 
 	@Override
-	public void onCreate(final Bundle savedInstanceState)
+	protected void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -95,9 +87,9 @@ public class MainActivity extends SherlockActivity
 	@Override
 	public void onBackPressed()
 	{
-		if (isAsyncGetFacebookIdentityRunning)
+		if (isAnAsyncTaskRunning())
 		{
-			asyncGetFacebookIdentity.cancel(true);
+			cancelRunningAnyAsyncTask();
 		}
 		else
 		{
@@ -109,10 +101,7 @@ public class MainActivity extends SherlockActivity
 	@Override
 	protected void onDestroy()
 	{
-		if (isAsyncGetFacebookIdentityRunning)
-		{
-			asyncGetFacebookIdentity.cancel(true);
-		}
+		cancelRunningAnyAsyncTask();
 
 		isResumed = false;
 		uiHelper.onDestroy();
@@ -156,6 +145,29 @@ public class MainActivity extends SherlockActivity
 	}
 
 
+
+
+	/**
+	 * Cancels the AsyncRefreshGamesList AsyncTask if it is currently
+	 * running.
+	 */
+	private void cancelRunningAnyAsyncTask()
+	{
+		if (isAnAsyncTaskRunning())
+		{
+			asyncGetFacebookIdentity.cancel(true);
+		}
+	}
+
+
+	/**
+	 * @return
+	 * Returns true if an AsyncTask is running.
+	 */
+	private boolean isAnAsyncTaskRunning()
+	{
+		return asyncGetFacebookIdentity != null;
+	}
 
 
 	private void onSessionStateChange(final Session session, final SessionState state, final Exception exception)
@@ -229,7 +241,7 @@ public class MainActivity extends SherlockActivity
 		{
 			session.closeAndClearTokenInformation();
 			viewGroup.removeAllViews();
-			isAsyncGetFacebookIdentityRunning = false;
+			asyncGetFacebookIdentity = null;
 
 			finish();
 		}
@@ -256,7 +268,7 @@ public class MainActivity extends SherlockActivity
 			{
 				Utilities.setWhoAmI(context, facebookIdentity);
 				viewGroup.removeAllViews();
-				isAsyncGetFacebookIdentityRunning = false;
+				asyncGetFacebookIdentity = null;
 
 				startCentralFragmentActivity();
 			}
@@ -270,7 +282,6 @@ public class MainActivity extends SherlockActivity
 		@Override
 		protected void onPreExecute()
 		{
-			isAsyncGetFacebookIdentityRunning = true;
 			viewGroup.removeAllViews();
 			inflater.inflate(R.layout.main_activity_loading, viewGroup);
 		}
