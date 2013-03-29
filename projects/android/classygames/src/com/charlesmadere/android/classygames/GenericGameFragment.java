@@ -52,6 +52,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	public final static String KEY_GAME_ID = "KEY_GAME_ID";
+	public final static String KEY_WHICH_GAME = "KEY_WHICH_GAME";
 	public final static String KEY_PERSON_ID = "KEY_PERSON_ID";
 	public final static String KEY_PERSON_NAME = "KEY_PERSON_NAME";
 
@@ -226,6 +227,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		else
 		{
 			final String gameId = arguments.getString(KEY_GAME_ID);
+			final byte whichGame = arguments.getByte(KEY_WHICH_GAME);
 			final long personId = arguments.getLong(KEY_PERSON_ID);
 			final String personName = arguments.getString(KEY_PERSON_NAME);
 
@@ -290,7 +292,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 				if (Game.isIdValid(gameId))
 				{
-					game = new Game(person, gameId);
+					game = new Game(person, whichGame, gameId);
 
 					if (savedInstanceState != null && savedInstanceState.containsKey(BUNDLE_BOARD_JSON))
 					{
