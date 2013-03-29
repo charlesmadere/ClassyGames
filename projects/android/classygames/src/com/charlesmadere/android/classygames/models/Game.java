@@ -90,12 +90,13 @@ public class Game
 	public Game(final Person person)
 	{
 		this.person = person;
+
+		type = TYPE_GAME;
 	}
 
 
 	/**
-	 * Creates a Game object. This constructor should only be used within the
-	 * GenericGameFragment class.
+	 * Creates a Game object.
 	 * 
 	 * @param person
 	 * The opposing player. If I am Charles Madere and my opponent is Geonathan
@@ -109,25 +110,33 @@ public class Game
 	{
 		this.person = person;
 		this.whichGame = whichGame;
+
+		type = TYPE_GAME;
 	}
 
 
 	/**
-	 * Creates a Game object. This constructor should only be used within the
-	 * GenericGameFragment class.
+	 * Creates a Game object.
 	 * 
 	 * @param person
 	 * The opposing player. If I am Charles Madere and my opponent is Geonathan
 	 * Sena, then this Person object will be for Geonathan Sena.
 	 * 
+	 * @param whichGame
+	 * The type of game that this will be. Use one of this class's WHICH_GAME_*
+	 * variables for this input.
+	 * 
 	 * @param id
 	 * This game's ID as received from the Classy Games server. This should be
 	 * a rather long String that resembles a hash.
 	 */
-	public Game(final Person person, final String id)
+	public Game(final Person person, final byte whichGame, final String id)
 	{
 		this.person = person;
+		this.whichGame = whichGame;
 		this.id = id;
+
+		type = TYPE_GAME;
 	}
 
 
@@ -143,6 +152,10 @@ public class Game
 	 * The opposing player. If I am Charles Madere and my opponent is Geonathan
 	 * Sena, then this Person object will be for Geonathan Sena.
 	 * 
+	 * @param whichGame
+	 * The type of game that this will be. Use one of this class's WHICH_GAME_*
+	 * variables for this input.
+	 * 
 	 * @param id
 	 * This game's ID as received from the Classy Games server. This should be
 	 * a rather long String that resembles a hash.
@@ -152,33 +165,31 @@ public class Game
 	 * for this parameter. There are only two choices, <strong>TURN_THEIRS</strong>
 	 * or <strong>TURN_YOURS</strong>.
 	 */
-	public Game(final long timestamp, final Person person, final String id, final boolean turn)
+	public Game(final Person person, final byte whichGame, final String id, final long timestamp, final boolean turn)
 	{
-		this.turn = turn;
-		type = TYPE_GAME;
-		whichGame = WHICH_GAME_CHECKERS;
-		this.timestamp = timestamp;
 		this.person = person;
+		this.whichGame = whichGame;
 		this.id = id;
+		this.timestamp = timestamp;
+		this.turn = turn;
+
+		type = TYPE_GAME;
 	}
 
 
 	/**
-	 * Use this constructor for creating a separator in the games list. Use one of the
-	 * constants defined in this class for both of these parameters.
+	 * Use this constructor for creating a separator in the games list.
 	 * 
 	 * @param turn
-	 * Game.TURN_YOURS or Game.TURN_THEIRS
-	 * 
-	 * @param type
-	 * Game.TYPE_GAME or Game.TYPE_SEPARATOR
+	 * Use either Game.TURN_YOURS or Game.TURN_THEIRS for this parameter.
 	 */
-	public Game(final boolean turn, final boolean type)
+	public Game(final boolean turn)
 	{
 		this.turn = turn;
-		this.type = type;
+
+		timestamp = (System.currentTimeMillis() / 1000) + 14400;
+		type = TYPE_SEPARATOR;
 		whichGame = WHICH_GAME_NULL;
-		timestamp = (System.currentTimeMillis() / 1000) + 7200;
 	}
 
 
