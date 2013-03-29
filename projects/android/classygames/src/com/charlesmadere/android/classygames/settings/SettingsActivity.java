@@ -158,7 +158,7 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 
 		if (newPlayerColor.equalsIgnoreCase(opponentsColor))
 		{
-			Utilities.easyToast(this, R.string.make_sure_that_you_dont_set_both_teams_color_to_the_same_thing_this_setting_has_been_reset_to_the_default);
+			Utilities.easyToast(this, R.string.make_sure_that_you_dont_set_both_teams_color_to_the_same_thing_your_changes_to_this_setting_have_not_been_saved);
 			return false;
 		}
 		else
@@ -176,7 +176,7 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 
 		if (newOpponentColor.equalsIgnoreCase(playersColor))
 		{
-			Utilities.easyToast(this, R.string.make_sure_that_you_dont_set_both_teams_color_to_the_same_thing_this_setting_has_been_reset_to_the_default);
+			Utilities.easyToast(this, R.string.make_sure_that_you_dont_set_both_teams_color_to_the_same_thing_your_changes_to_this_setting_have_not_been_saved);
 			return false;
 		}
 		else
