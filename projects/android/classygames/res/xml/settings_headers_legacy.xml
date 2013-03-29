@@ -3,7 +3,7 @@
 	android:title="@string/settings">
 	<Preference
 		android:summary="@string/settings_game_summary"
-		android:title="@string/game">
+		android:title="@string/game_settings">
 		<intent
 			android:action="@string/com_charlesmadere_android_classygames_settings_game"
 			android:targetClass="com.charlesmadere.android.classygames.settings.SettingsActivity"
@@ -11,7 +11,7 @@
 	</Preference>
 	<Preference
 		android:summary="@string/settings_miscellaneous_summary"
-		android:title="@string/miscellaneous">
+		android:title="@string/miscellaneous_settings">
 		<intent
 			android:action="@string/com_charlesmadere_android_classygames_settings_miscellaneous"
 			android:targetClass="com.charlesmadere.android.classygames.settings.SettingsActivity"

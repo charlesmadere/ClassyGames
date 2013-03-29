@@ -4,9 +4,9 @@
 	<header
 		android:fragment="com.charlesmadere.android.classygames.settings.GameSettingsFragment"
 		android:summary="@string/settings_game_summary"
-		android:title="@string/game" />
+		android:title="@string/game_settings" />
 	<header
 		android:fragment="com.charlesmadere.android.classygames.settings.MiscellaneousSettingsFragment"
 		android:summary="@string/settings_miscellaneous_summary"
-		android:title="@string/miscellaneous" />
+		android:title="@string/miscellaneous_settings" />
 </preference-headers>

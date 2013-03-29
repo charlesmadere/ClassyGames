@@ -69,6 +69,8 @@ public class UnregisterFromNotificationsActivity extends SherlockActivity
 							serverApiTask = null;
 						}
 					});
+
+					serverApiTask.execute();
 				}
 			}
 		});

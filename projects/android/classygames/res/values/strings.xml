@@ -74,7 +74,7 @@
 	<string name="register_for_notifications">Register for Notifications</string>
 	<string name="register_for_notifications_activity_progressdialog_title">Registering your device with our server&#8230;</string>
 	<string name="register_for_notifications_activity_registration_failed_message">You will need to clear the app\'s data in order for it to register properly.</string>
-	<string name="register_for_notifications_description">Play Classy Games on more than one device? Our server can only send push notifications to one of your devices at a time. If you have a device that is getting those notifications but would rather that this device get those notifications intead, press the button below. You should probably ignore this if you only have Classy Games installed on one device.</string>
+	<string name="register_for_notifications_description">Play Classy Games on more than one device? Our server can only send push notifications to one of your devices at a time. If you have a device that is getting those notifications but would rather that this device get those notifications instead, press the button below. You should probably ignore this if you only have Classy Games installed on one device.</string>
 	<string name="register_for_notifications_summary">Enables the Classy Games notification feature on this device. Disables Classy Games notifications for all other devices.</string>
 	<string name="registering_your_device_for_notifications_with_our_server">Registering your device for notifications with our server&#8230;</string>
 	<string name="registration_cancelled">Registration cancelled.</string>

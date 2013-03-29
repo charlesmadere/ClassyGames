@@ -6,6 +6,8 @@ import java.util.List;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.ListPreference;
+import android.preference.Preference;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
@@ -13,7 +15,8 @@ import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
-public class SettingsActivity extends SherlockPreferenceActivity
+public class SettingsActivity extends SherlockPreferenceActivity implements
+	GameSettingsFragment.GameSettingsFragmentListeners
 {
 
 
@@ -79,6 +82,27 @@ public class SettingsActivity extends SherlockPreferenceActivity
 			{
 				addPreferencesFromResource(R.xml.settings_headers_legacy);
 			}
+
+			final ListPreference playersCheckersPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_players_checkers_piece_color));
+			final ListPreference opponentsCheckersPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_opponents_checkers_piece_color));
+
+			playersCheckersPieceColor.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener()
+			{
+				@Override
+				public boolean onPreferenceChange(final Preference preference, final Object newValue)
+				{
+					return onPlayersCheckersPieceColorPreferenceChange(opponentsCheckersPieceColor, newValue);
+				}
+			});
+
+			opponentsCheckersPieceColor.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener()
+			{
+				@Override
+				public boolean onPreferenceChange(final Preference preference, final Object newValue)
+				{
+					return onOpponentsCheckersPieceColorPreferenceChange(playersCheckersPieceColor, newValue);
+				}
+			});
 		}
 	}
 
@@ -107,6 +131,42 @@ public class SettingsActivity extends SherlockPreferenceActivity
 		}
 
 		return true;
+	}
+
+
+
+
+	@Override
+	public boolean onPlayersCheckersPieceColorPreferenceChange(final ListPreference opponentsCheckersPieceColor, final Object newValue)
+	{
+		final String newPlayerColor = (String) newValue;
+		final String opponentsColor = opponentsCheckersPieceColor.getValue();
+
+		if (newPlayerColor.equalsIgnoreCase(opponentsColor))
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+
+
+	@Override
+	public boolean onOpponentsCheckersPieceColorPreferenceChange(final ListPreference playersCheckersPieceColor, final Object newValue)
+	{
+		final String newOpponentColor = (String) newValue;
+		final String playersColor = playersCheckersPieceColor.getValue();
+
+		if (newOpponentColor.equalsIgnoreCase(playersColor))
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
 	}
 
 

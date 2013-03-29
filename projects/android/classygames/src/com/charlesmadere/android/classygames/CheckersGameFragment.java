@@ -254,24 +254,40 @@ public class CheckersGameFragment extends GenericGameFragment
 			}
 		});
 
+		final String blue = getString(R.string.blue);
+		final String green = getString(R.string.green);
+		final String orange = getString(R.string.orange);
+		final String pink = getString(R.string.pink);
+
 		final SharedPreferences sPreferences = Utilities.getPreferences(getSherlockActivity());
-		final String playerColor = sPreferences.getString(getString(R.string.settings_key_players_checkers_piece_color), getString(R.string.green));
-		final String opponentColor = sPreferences.getString(getString(R.string.settings_key_opponents_checkers_piece_color), getString(R.string.orange));
+		String playerColor = sPreferences.getString(getString(R.string.settings_key_players_checkers_piece_color), green);
+		String opponentColor = sPreferences.getString(getString(R.string.settings_key_opponents_checkers_piece_color), orange);
+
+		if (playerColor.equalsIgnoreCase(opponentColor))
+		{
+			playerColor = green;
+			opponentColor = orange;
+
+			final SharedPreferences.Editor editor = sPreferences.edit();
+			editor.putString(getString(R.string.settings_key_players_checkers_piece_color), playerColor);
+			editor.putString(getString(R.string.settings_key_opponents_checkers_piece_color), opponentColor);
+			editor.commit();
+		}
 
 		final int playerColorNormal;
 		final int playerColorKing;
 
-		if (playerColor.equalsIgnoreCase(getString(R.string.blue)))
+		if (playerColor.equalsIgnoreCase(blue))
 		{
 			playerColorNormal = R.drawable.piece_checkers_blue_normal;
 			playerColorKing = R.drawable.piece_checkers_blue_king;
 		}
-		else if (playerColor.equalsIgnoreCase(getString(R.string.orange)))
+		else if (playerColor.equalsIgnoreCase(orange))
 		{
 			playerColorNormal = R.drawable.piece_checkers_orange_normal;
 			playerColorKing = R.drawable.piece_checkers_orange_king;
 		}
-		else if (playerColor.equalsIgnoreCase(getString(R.string.pink)))
+		else if (playerColor.equalsIgnoreCase(pink))
 		{
 			playerColorNormal = R.drawable.piece_checkers_pink_normal;
 			playerColorKing = R.drawable.piece_checkers_pink_king;
@@ -285,17 +301,17 @@ public class CheckersGameFragment extends GenericGameFragment
 		final int opponentColorNormal;
 		final int opponentColorKing;
 
-		if (opponentColor.equalsIgnoreCase(getString(R.string.blue)))
+		if (opponentColor.equalsIgnoreCase(blue))
 		{
 			opponentColorNormal = R.drawable.piece_checkers_blue_normal;
 			opponentColorKing = R.drawable.piece_checkers_blue_king;
 		}
-		else if (opponentColor.equalsIgnoreCase(getString(R.string.green)))
+		else if (opponentColor.equalsIgnoreCase(green))
 		{
 			opponentColorNormal = R.drawable.piece_checkers_green_normal;
 			opponentColorKing = R.drawable.piece_checkers_green_king;
 		}
-		else if (opponentColor.equalsIgnoreCase(getString(R.string.pink)))
+		else if (opponentColor.equalsIgnoreCase(pink))
 		{
 			opponentColorNormal = R.drawable.piece_checkers_pink_normal;
 			opponentColorKing = R.drawable.piece_checkers_pink_king;
