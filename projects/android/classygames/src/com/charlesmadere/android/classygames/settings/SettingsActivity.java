@@ -15,14 +15,20 @@ import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
+/**
+ * Some of the code used in making this class and it's corresponding XML files
+ * was taken from the official Android Documentation.
+ * https://developer.android.com/guide/topics/ui/settings.html
+ */
 public class SettingsActivity extends SherlockPreferenceActivity implements
 	GameSettingsFragment.GameSettingsFragmentListeners
 {
 
 
-	// Some of the code used in making this class and it's corresponding XML
-	// files was taken from the official Android Documentation.
-	// https://developer.android.com/guide/topics/ui/settings.html
+	private ListPreference playersCheckersPieceColor;
+	private ListPreference opponentsCheckersPieceColor;
+
+
 
 
 	@Override
@@ -31,7 +37,8 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 	// The addPreferencesFromResource methods below are causing some
 	// deprecation warnings. In this case, the fact that they're here is fine.
 	// They have to be used if the running version of Android is below
-	// Honeycomb (v3.0). See more information about API levels here:
+	// Honeycomb (v3.0). Same situation with the findPreference methods. See
+	// more information about API levels here:
 	// https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels
 	{
 		super.onCreate(savedInstanceState);
@@ -83,14 +90,16 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 				addPreferencesFromResource(R.xml.settings_headers_legacy);
 			}
 
-			final ListPreference playersCheckersPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_players_checkers_piece_color));
-			final ListPreference opponentsCheckersPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_opponents_checkers_piece_color));
-
 			playersCheckersPieceColor.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener()
 			{
 				@Override
 				public boolean onPreferenceChange(final Preference preference, final Object newValue)
 				{
+					if (opponentsCheckersPieceColor == null)
+					{
+						opponentsCheckersPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_opponents_checkers_piece_color));
+					}
+
 					return onPlayersCheckersPieceColorPreferenceChange(opponentsCheckersPieceColor, newValue);
 				}
 			});
@@ -100,6 +109,11 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 				@Override
 				public boolean onPreferenceChange(final Preference preference, final Object newValue)
 				{
+					if (playersCheckersPieceColor == null)
+					{
+						playersCheckersPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_players_checkers_piece_color));
+					}
+
 					return onOpponentsCheckersPieceColorPreferenceChange(playersCheckersPieceColor, newValue);
 				}
 			});
@@ -144,6 +158,7 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 
 		if (newPlayerColor.equalsIgnoreCase(opponentsColor))
 		{
+			Utilities.easyToast(this, R.string.make_sure_that_you_dont_set_both_teams_color_to_the_same_thing_this_setting_has_been_reset_to_the_default);
 			return false;
 		}
 		else
@@ -161,6 +176,7 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 
 		if (newOpponentColor.equalsIgnoreCase(playersColor))
 		{
+			Utilities.easyToast(this, R.string.make_sure_that_you_dont_set_both_teams_color_to_the_same_thing_this_setting_has_been_reset_to_the_default);
 			return false;
 		}
 		else

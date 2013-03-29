@@ -51,6 +51,7 @@
 	<string name="loading_your_games_list">Loading your games list&#8230;</string>
 	<string name="lost">lost</string>
 	<string name="main_activity_loading_textview_text">Initializing settings and registering you with our servers&#8230;</string>
+	<string name="make_sure_that_you_dont_set_both_teams_color_to_the_same_thing_your_changes_to_this_setting_have_not_been_saved">Make sure that you don\'t set both teams color to the same thing! Your changes to this setting have not been saved.</string>
 	<string name="miscellaneous">Miscellaneous</string>
 	<string name="miscellaneous_settings">Miscellaneous Settings</string>
 	<string name="more_than_two_weeks_ago">more than 2 weeks ago</string>

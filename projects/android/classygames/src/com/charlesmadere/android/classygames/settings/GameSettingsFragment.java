@@ -33,7 +33,7 @@ public class GameSettingsFragment extends PreferenceFragment
 		 * checkers piece color.
 		 * 
 		 * @param opponentsCheckersPieceColor
-		 * 
+		 * The ListPreference object for the opponent's checkers piece color.
 		 * 
 		 * @param newValue
 		 * The new color value that the player has selected. Note that this
@@ -51,7 +51,7 @@ public class GameSettingsFragment extends PreferenceFragment
 		 * checkers piece color.
 		 * 
 		 * @param playersCheckersPieceColor
-		 * 
+		 * The ListPreference object for the player's checkers piece color.
 		 * 
 		 * @param newValue
 		 * The new color value that the player has selected. Note that this
