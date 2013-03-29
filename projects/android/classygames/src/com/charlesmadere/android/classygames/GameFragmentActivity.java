@@ -120,7 +120,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 				&& intent.hasExtra(BUNDLE_DATA_PERSON_OPPONENT_ID) && intent.hasExtra(BUNDLE_DATA_PERSON_OPPONENT_NAME))
 			{
 				final String gameId = intent.getStringExtra(BUNDLE_DATA_GAME_ID);
-				final byte gameType = intent.getByteExtra(BUNDLE_DATA_GAME_TYPE, (byte) 0);
+				final byte gameType = intent.getByteExtra(BUNDLE_DATA_GAME_TYPE, Game.WHICH_GAME_CHECKERS);
 				final long personId = intent.getLongExtra(BUNDLE_DATA_PERSON_OPPONENT_ID, 0);
 				final String personName = intent.getStringExtra(BUNDLE_DATA_PERSON_OPPONENT_NAME);
 
