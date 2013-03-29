@@ -193,7 +193,7 @@ public class ChessGameFragment extends GenericGameFragment
 	@Override
 	protected int getLoadingText()
 	{
-		return R.string.chess_game_fragment_loading_text;
+		return R.string.loading_chess_game_against_x;
 	}
 
 

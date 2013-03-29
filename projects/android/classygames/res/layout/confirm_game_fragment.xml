@@ -3,14 +3,10 @@
 	android:layout_height="match_parent"
 	android:layout_width="match_parent"
 	android:orientation="vertical"
-	android:paddingBottom="8dip"
-	android:paddingLeft="4dip"
-	android:paddingRight="4dip"
-	android:paddingTop="8dip"
-	style="@style/ClassyGames">
+	style="@style/ClassyGames.ExtraPadding">
 	<ImageView
 		android:adjustViewBounds="true"
-		android:contentDescription="@string/confirm_game_fragment_friend_profile_picture_description"
+		android:contentDescription="@string/friends_picture"
 		android:id="@+id/confirm_game_fragment_friend_profile_picture"
 		android:layout_height="0dip"
 		android:layout_weight="1"
@@ -33,11 +29,9 @@
 			android:id="@+id/confirm_game_fragment_description"
 			android:layout_height="wrap_content"
 			android:layout_width="match_parent"
-			android:paddingLeft="20dip"
-			android:paddingRight="20dip"
 			android:textColor="@color/gray_dark"
 			android:textIsSelectable="false"
-			style="@style/paragraph" />
+			style="@style/Paragraph.ExtraPadding" />
 		<LinearLayout
 			android:layout_height="wrap_content"
 			android:layout_marginTop="16dip"
@@ -49,16 +43,16 @@
 				android:layout_marginRight="2dip"
 				android:layout_weight="1"
 				android:layout_width="match_parent"
-				android:text="@string/confirm_game_fragment_button_confirm"
-				style="@style/button.blue" />
+				android:text="@string/start_game"
+				style="@style/Button.Blue" />
 			<Button
 				android:id="@+id/confirm_game_fragment_button_deny"
 				android:layout_height="wrap_content"
 				android:layout_marginLeft="2dip"
 				android:layout_weight="1"
 				android:layout_width="match_parent"
-				android:text="@string/confirm_game_fragment_button_deny"
-				style="@style/button.gray" />
+				android:text="@string/nevermind"
+				style="@style/Button.Gray" />
 		</LinearLayout>
 	</LinearLayout>
 </LinearLayout>

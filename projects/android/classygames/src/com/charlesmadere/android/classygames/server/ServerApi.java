@@ -9,7 +9,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 
 import com.charlesmadere.android.classygames.R;
-import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
@@ -40,31 +39,42 @@ public abstract class ServerApi
 
 
 	/**
-	 * The Game object that this API call has to deal with.
+	 * Object that allows us to run any of the methods that are defined in the
+	 * ServerApiListeners interface.
 	 */
-	protected Game game;
-
-
-	/**
-	 * A listener to call once we're done running code here.
-	 */
-	private OnCompleteListener onCompleteListener;
+	private ServerApiListeners listeners;
 
 
 	/**
 	 * An interface that will be used once we're done running code here.
 	 */
-	public interface OnCompleteListener
+	public interface ServerApiListeners
 	{
+
+
 		/**
-		 * Once this ServerApi class has finished its duty (cancelled or not),
+		 * If this class's ServerApiTask AsyncTask gets cancelled this then
 		 * this method will be run.
-		 * 
-		 * @param wasCompleted
-		 * True if everything was completed successfully. False if this was
-		 * cancelled or if the user decided to not run the AsyncTask after all.
 		 */
-		public void onComplete(final boolean wasCompleted);
+		public void onCancel();
+
+
+		/**
+		 * Once this ServerApi class has finished its duty this method will
+		 * run. If the ServerApiTask AsyncTask was cancelled, or if the user
+		 * dismissed or selected "No" on the AlertDialog that this class
+		 * prompts with, then this method will never be run.
+		 */
+		public void onComplete();
+
+
+		/**
+		 * If, on the AlertDialog that this class prompts with, the user
+		 * selects either "No" or dismisses it, then this method will be run.
+		 */
+		public void onDismiss();
+
+
 	}
 
 
@@ -77,17 +87,13 @@ public abstract class ServerApi
 	 * @param context
 	 * The Context of the class that you're creating this object from.
 	 * 
-	 * @param game
-	 * The Game object that this API call has to deal with.
-	 * 
 	 * @param onCompleteListener
 	 * A listener to call once we're done running code here.
 	 */
-	protected ServerApi(final Context context, final Game game, final OnCompleteListener onCompleteListener)
+	protected ServerApi(final Context context, final ServerApiListeners onCompleteListener)
 	{
 		this.context = context;
-		this.game = game;
-		this.onCompleteListener = onCompleteListener;
+		this.listeners = onCompleteListener;
 	}
 
 
@@ -101,7 +107,7 @@ public abstract class ServerApi
 			serverApiTask.cancel(true);
 		}
 
-		onCompleteListener.onComplete(false);
+		listeners.onCancel();
 	}
 
 
@@ -125,7 +131,7 @@ public abstract class ServerApi
 					public void onClick(final DialogInterface dialog, final int which)
 					{
 						dialog.dismiss();
-						onCompleteListener.onComplete(false);
+						listeners.onCancel();
 					}
 				})
 				.setOnCancelListener(new DialogInterface.OnCancelListener()
@@ -134,7 +140,7 @@ public abstract class ServerApi
 					public void onCancel(final DialogInterface dialog)
 					{
 						dialog.dismiss();
-						onCompleteListener.onComplete(false);
+						listeners.onDismiss();
 					}
 				})
 				.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
@@ -156,7 +162,7 @@ public abstract class ServerApi
 					public void onDismiss(final DialogInterface dialog)
 					{
 						dialog.dismiss();
-						onCompleteListener.onComplete(false);
+						listeners.onDismiss();
 					}
 				});
 			}
@@ -172,7 +178,7 @@ public abstract class ServerApi
 
 	/**
 	 * Begins the execution of this ServerApi code. Will first ask the user if
-	 * they want do in fact want to perform this server call.
+	 * they do in fact want to perform this server call.
 	 */
 	public void execute()
 	{
@@ -228,7 +234,7 @@ public abstract class ServerApi
 		{
 			serverApiTask = null;
 			progressDialog.dismiss();
-			onCompleteListener.onComplete(false);
+			listeners.onCancel();
 		}
 
 
@@ -251,7 +257,7 @@ public abstract class ServerApi
 		{
 			serverApiTask = null;
 			progressDialog.dismiss();
-			onCompleteListener.onComplete(true);
+			listeners.onComplete();
 		}
 
 

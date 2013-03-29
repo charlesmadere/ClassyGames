@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+	android:title="@string/miscellaneous_settings">
+	<Preference
+		android:summary="@string/register_for_notifications_summary"
+		android:title="@string/register_for_notifications">
+		<intent
+			android:action="@string/com_charlesmadere_android_classygames_settings_register"
+			android:targetClass="com.charlesmadere.android.classygames.settings.RegisterForNotificationsActivity"
+			android:targetPackage="com.charlesmadere.android.classygames" />
+	</Preference>
+	<Preference
+		android:summary="@string/unregister_from_notifications_summary"
+		android:title="@string/unregister_from_notifications">
+		<intent
+			android:action="@string/com_charlesmadere_android_classygames_settings_unregister"
+			android:targetClass="com.charlesmadere.android.classygames.settings.UnregisterFromNotificationsActivity"
+			android:targetPackage="com.charlesmadere.android.classygames" />
+	</Preference>
+</PreferenceScreen>

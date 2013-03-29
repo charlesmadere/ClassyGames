@@ -25,21 +25,31 @@ public class ServerApiForfeitGame extends ServerApi
 
 
 	/**
+	 * The Game object that this API call has to deal with.
+	 */
+	private Game game;
+
+
+
+
+	/**
 	 * Creates a ServerApi object. This should be used to hit the ForfeitGame
 	 * server end point.
 	 * 
 	 * @param context
 	 * The Context of the class that you're creating this object from.
 	 * 
-	 * @param game
-	 * The Game object that this API call has to deal with.
-	 * 
 	 * @param onCompleteListener
 	 * A listener to call once we're done running code here.
+	 * 
+	 * @param game
+	 * The Game object that this API call has to deal with.
 	 */
-	public ServerApiForfeitGame(final Context context, final Game game, final ServerApi.OnCompleteListener onCompleteListener)
+	public ServerApiForfeitGame(final Context context, final ServerApi.ServerApiListeners onCompleteListener, final Game game)
 	{
-		super(context, game, onCompleteListener);
+		super(context, onCompleteListener);
+
+		this.game = game;
 	}
 
 
@@ -80,7 +90,7 @@ public class ServerApiForfeitGame extends ServerApi
 	@Override
 	protected int getDialogTitle()
 	{
-		return R.string.server_api_forfeit_game_dialog_title;
+		return R.string.forfeit_game;
 	}
 
 

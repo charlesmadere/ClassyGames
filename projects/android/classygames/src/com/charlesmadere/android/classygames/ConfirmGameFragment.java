@@ -40,53 +40,56 @@ public class ConfirmGameFragment extends SherlockFragment
 
 
 	/**
-	 * One of this class's callback methods. This is fired during this
-	 * fragment's onCreateOptionsMenu.
+	 * Object that allows us to run any of the methods that are defined in the
+	 * ConfirmGameFragmentListeners interface.
 	 */
-	private ConfirmGameFragmentIsDeviceSmallListener confirmGameFragmentIsDeviceSmallListener;
-
-	public interface ConfirmGameFragmentIsDeviceSmallListener
-	{
-		public boolean confirmGameFragmentIsDeviceSmall();
-	}
+	private ConfirmGameFragmentListeners listeners;
 
 
 	/**
-	 * One of this class's callback methods. This is fired in the event that
-	 * an error was detected in some of the data needed to instantiate this
-	 * fragment.
+	 * A bunch of listener methods for this Fragment.
 	 */
-	private ConfirmGameFragmentOnDataErrorListener confirmGameFragmentOnDataErrorListener;
-
-	public interface ConfirmGameFragmentOnDataErrorListener
+	public interface ConfirmGameFragmentListeners
 	{
-		public void confirmGameFragmentOnDataError();
-	}
 
 
-	/**
-	 * One of this class's callback methods. This is fired in the event that
-	 * the current user confirms that they want to play against their selected
-	 * Facebook friend.
-	 */
-	private ConfirmGameFragmentOnGameConfirmListener confirmGameFragmentOnGameConfirmListener;
-
-	public interface ConfirmGameFragmentOnGameConfirmListener
-	{
-		public void confirmGameFragmentOnGameConfirm(final Person friend);
-	}
+		/**
+		 * This is fired during this Fragment's onCreateOptionsMenu() method.
+		 * Checks to see if the current device is considered by Android to be
+		 * small. This be basically every phone.
+		 * 
+		 * @return
+		 * Returns true if the current device is small.
+		 */
+		public boolean isDeviceSmall();
 
 
-	/**
-	 * One of this class's callback methods. This is fired in the event that
-	 * the current user decides that they do not want to play against their
-	 * selected Facebook friend.
-	 */
-	private ConfirmGameFragmentOnGameDenyListener confirmGameFragmentOnGameDenyListener;
+		/**
+		 * This is fired in the event that an error was detected with some of
+		 * the data needed to instantiate a game.
+		 */
+		public void onDataError();
 
-	public interface ConfirmGameFragmentOnGameDenyListener
-	{
-		public void confirmGameFragmentOnGameDeny();
+
+		/**
+		 * This is fired in the event that the current device's user clicks the
+		 * "Start Game!" button. This means that they've decided to play a game
+		 * against the chosen friend.
+		 * 
+		 * @param friend
+		 * The Facebook friend that the user has decided to play against.
+		 */
+		public void onGameConfirm(final Person friend);
+
+
+		/**
+		 * This is fired in the event that the current device's user clicks the
+		 * "Nevermind..." button. This means that they've decided that they'd
+		 * rather not play against the chosen friend.
+		 */
+		public void onGameDeny();
+
+
 	}
 
 
@@ -118,7 +121,7 @@ public class ConfirmGameFragment extends SherlockFragment
 			}
 			else
 			{
-				confirmGameFragmentOnDataErrorListener.confirmGameFragmentOnDataError();
+				listeners.onDataError();
 			}
 		}
 
@@ -138,7 +141,7 @@ public class ConfirmGameFragment extends SherlockFragment
 		friendName.setTypeface(TypefaceUtilities.getTypeface(getSherlockActivity().getAssets(), TypefaceUtilities.SNELL_ROUNDHAND_BDSCR));
 
 		final TextView description = (TextView) view.findViewById(R.id.confirm_game_fragment_description);
-		description.setText(getString(R.string.confirm_game_fragment_description_text, friend.getName()));
+		description.setText(getString(R.string.are_you_sure_that_you_want_to_start_a_game_with_x, friend.getName()));
 
 		final Button buttonConfirm = (Button) view.findViewById(R.id.confirm_game_fragment_button_confirm);
 		buttonConfirm.setTypeface(TypefaceUtilities.getTypeface(getSherlockActivity().getAssets(), TypefaceUtilities.BLUE_HIGHWAY_D));
@@ -147,7 +150,7 @@ public class ConfirmGameFragment extends SherlockFragment
 			@Override
 			public void onClick(final View v)
 			{
-				confirmGameFragmentOnGameConfirmListener.confirmGameFragmentOnGameConfirm(friend);
+				listeners.onGameConfirm(friend);
 			}
 		});
 
@@ -158,7 +161,7 @@ public class ConfirmGameFragment extends SherlockFragment
 			@Override
 			public void onClick(final View v)
 			{
-				confirmGameFragmentOnGameDenyListener.confirmGameFragmentOnGameDeny();
+				listeners.onGameDeny();
 			}
 		});
 
@@ -168,7 +171,7 @@ public class ConfirmGameFragment extends SherlockFragment
 
 
 	@Override
-	public void onAttach(Activity activity)
+	public void onAttach(final Activity activity)
 	// This makes sure that the Activity containing this Fragment has
 	// implemented the callback interface. If the callback interface has not
 	// been implemented, an exception is thrown.
@@ -177,10 +180,7 @@ public class ConfirmGameFragment extends SherlockFragment
 
 		try
 		{
-			confirmGameFragmentIsDeviceSmallListener = (ConfirmGameFragmentIsDeviceSmallListener) activity;
-			confirmGameFragmentOnDataErrorListener = (ConfirmGameFragmentOnDataErrorListener) activity;
-			confirmGameFragmentOnGameConfirmListener = (ConfirmGameFragmentOnGameConfirmListener) activity;
-			confirmGameFragmentOnGameDenyListener = (ConfirmGameFragmentOnGameDenyListener) activity;
+			listeners = (ConfirmGameFragmentListeners) activity;
 		}
 		catch (final ClassCastException e)
 		{
@@ -192,20 +192,12 @@ public class ConfirmGameFragment extends SherlockFragment
 	@Override
 	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
 	{
-		if (confirmGameFragmentIsDeviceSmallListener.confirmGameFragmentIsDeviceSmall())
+		if (listeners.isDeviceSmall())
 		{
 			menu.removeItem(R.id.generic_refresh_menu_refresh);
 		}
 
 		super.onCreateOptionsMenu(menu, inflater);
-	}
-
-
-
-
-	public boolean isLoaded()
-	{
-		return friend != null && friend.isValid();
 	}
 
 

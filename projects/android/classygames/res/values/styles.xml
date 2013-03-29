@@ -1,37 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-	<style name="button">
+	<style
+		name="Button">
 		<item name="android:paddingBottom">16dip</item>
 		<item name="android:paddingTop">16dip</item>
 		<item name="android:textColor">@color/gray_darker</item>
 		<item name="android:textSize">22sp</item>
 	</style>
-	<style name="button.blue">
+	<style
+		name="Button.Blue">
 		<item name="android:background">@drawable/button_blue</item>
 		<item name="android:textColor">@color/gray_light</item>
 	</style>
-	<style name="button.gray">
+	<style
+		name="Button.Gray">
 		<item name="android:background">@drawable/button_gray</item>
 	</style>
-	<style name="button.pink">
+	<style
+		name="Button.Pink">
 		<item name="android:background">@drawable/button_pink</item>
 	</style>
-	<style name="ClassyGames" parent="android:Theme">
+	<style
+		name="ClassyGames"
+		parent="android:Theme">
 		<item name="android:background">@drawable/bg_bright</item>
 	</style>
-	<style name="ClassyGamesDark" parent="android:Theme">
+	<style
+		name="ClassyGamesDark"
+		parent="android:Theme">
 		<item name="android:background">@drawable/bg_dark</item>
 	</style>
-	<style name="facebook_button">
-		<item name="android:background">@drawable/button_facebook</item>
-		<item name="android:paddingBottom">14dip</item>
+	<style
+		name="ClassyGames.ExtraPadding">
+		<item name="android:paddingBottom">8dip</item>
+		<item name="android:paddingLeft">4dip</item>
+		<item name="android:paddingRight">4dip</item>
 		<item name="android:paddingTop">8dip</item>
-		<item name="android:textColor">@color/facebook_gray</item>
-		<item name="android:textSize">20sp</item>
 	</style>
-	<style name="paragraph">
+	<style
+		name="Paragraph">
 		<item name="android:lineSpacingExtra">6dip</item>
 		<item name="android:textColor">@color/gray_darker</item>
 		<item name="android:textSize">17sp</item>
+	</style>
+	<style
+		name="Paragraph.ExtraPadding">
+		<item name="android:paddingLeft">8dip</item>
+		<item name="android:paddingRight">8dip</item>
 	</style>
 </resources>
