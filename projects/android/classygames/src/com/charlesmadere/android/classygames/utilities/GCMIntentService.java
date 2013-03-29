@@ -86,12 +86,12 @@ public class GCMIntentService extends IntentService
 
 		if (Utilities.verifyValidStrings(parameter_gameId, parameter_gameType, parameter_personId, parameter_messageType, parameter_personName))
 		{
-			final Byte gameType = Byte.valueOf(parameter_gameType);
+			final Byte whichGame = Byte.valueOf(parameter_gameType);
 			final Byte messageType = Byte.valueOf(parameter_messageType);
 			final Long personId = Long.valueOf(parameter_personId);
 
 			if (Person.isIdValid(personId.longValue()) && Person.isNameValid(parameter_personName) &&
-				(ServerUtilities.validGameTypeValue(gameType.byteValue()) || ServerUtilities.validMessageTypeValue(messageType.byteValue())))
+				(ServerUtilities.validGameTypeValue(whichGame.byteValue()) || ServerUtilities.validMessageTypeValue(messageType.byteValue())))
 			{
 				final Person person = new Person(personId, parameter_personName);
 
@@ -111,7 +111,7 @@ public class GCMIntentService extends IntentService
 				{
 					final Intent gameIntent = new Intent(this, GameFragmentActivity.class)
 						.putExtra(GameFragmentActivity.BUNDLE_DATA_GAME_ID, parameter_gameId)
-						.putExtra(GameFragmentActivity.BUNDLE_DATA_GAME_TYPE, gameType.byteValue())
+						.putExtra(GameFragmentActivity.BUNDLE_DATA_WHICH_GAME, whichGame.byteValue())
 						.putExtra(GameFragmentActivity.BUNDLE_DATA_PERSON_OPPONENT_ID, person.getId())
 						.putExtra(GameFragmentActivity.BUNDLE_DATA_PERSON_OPPONENT_NAME, person.getName())
 						.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

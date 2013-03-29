@@ -33,7 +33,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 
 	public final static String BUNDLE_DATA_GAME_ID = "BUNDLE_DATA_GAME_ID";
-	public final static String BUNDLE_DATA_GAME_TYPE = "BUNDLE_DATA_GAME_TYPE";
+	public final static String BUNDLE_DATA_WHICH_GAME = "BUNDLE_DATA_WHICH_GAME";
 	public final static String BUNDLE_DATA_PERSON_OPPONENT_ID = "BUNDLE_DATA_PERSON_OPPONENT_ID";
 	public final static String BUNDLE_DATA_PERSON_OPPONENT_NAME = "BUNDLE_DATA_PERSON_OPPONENT_NAME";
 
@@ -116,18 +116,18 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 		if (intent != null)
 		{
-			if (intent.hasExtra(BUNDLE_DATA_GAME_ID) && intent.hasExtra(BUNDLE_DATA_GAME_TYPE)
+			if (intent.hasExtra(BUNDLE_DATA_GAME_ID) && intent.hasExtra(BUNDLE_DATA_WHICH_GAME)
 				&& intent.hasExtra(BUNDLE_DATA_PERSON_OPPONENT_ID) && intent.hasExtra(BUNDLE_DATA_PERSON_OPPONENT_NAME))
 			{
 				final String gameId = intent.getStringExtra(BUNDLE_DATA_GAME_ID);
-				final byte gameType = intent.getByteExtra(BUNDLE_DATA_GAME_TYPE, Game.WHICH_GAME_CHECKERS);
-				final long personId = intent.getLongExtra(BUNDLE_DATA_PERSON_OPPONENT_ID, 0);
+				final byte whichGame = intent.getByteExtra(BUNDLE_DATA_WHICH_GAME, (byte) 0);
+				final long personId = intent.getLongExtra(BUNDLE_DATA_PERSON_OPPONENT_ID, (long) 0);
 				final String personName = intent.getStringExtra(BUNDLE_DATA_PERSON_OPPONENT_NAME);
 
-				if (Game.isIdValid(gameId) && Game.isWhichGameValid(gameType)
+				if (Game.isIdValid(gameId) && Game.isWhichGameValid(whichGame)
 					&& Person.isIdValid(personId) && Person.isNameValid(personName))
 				{
-					final Game game = new Game(new Person(personId, personName), gameId);
+					final Game game = new Game(new Person(personId, personName), whichGame, gameId);
 					onGameSelected(game);
 				}
 			}
@@ -311,6 +311,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 			final Bundle arguments = new Bundle();
 			arguments.putString(GenericGameFragment.KEY_GAME_ID, game.getId());
+			arguments.putByte(GenericGameFragment.KEY_WHICH_GAME, game.getWhichGame());
 			arguments.putLong(GenericGameFragment.KEY_PERSON_ID, game.getPerson().getId());
 			arguments.putString(GenericGameFragment.KEY_PERSON_NAME, game.getPerson().getName());
 

@@ -720,7 +720,7 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 				// ensure that we have at least one element in the JSONArray
 				{
 					games = new ArrayList<Game>();
-					games.add(new Game(whichTurn, Game.TYPE_SEPARATOR));
+					games.add(new Game(whichTurn));
 
 					for (int i = 0; i < turnLength && !isCancelled(); ++i)
 					// loop through all of the games in this turn
