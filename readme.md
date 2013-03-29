@@ -27,9 +27,10 @@ Classy Games v1.5.2 was released on March 29th, 2013. It features:
 3. Ability to disable notifications.
 4. Miscellaneous clean up and optimization.
 
-The v1.5.2 release has a bug fix release.
+The v1.5.2 release has a few bug fix releases.
 
 1. v1.5.2.1 was released on March 29th, 2013. Fixed a push notification crash bug.
+2. v1.5.2.2 was released on March 29th, 2013. Fixed another push notification crash issue.
 
 ### Classy Games v1.5.1 (and v1.5.1.x) ###
 Classy Games v1.5.1 was released on March 9th, 2013. It features:
