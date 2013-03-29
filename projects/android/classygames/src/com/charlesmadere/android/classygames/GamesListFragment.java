@@ -279,11 +279,11 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 								switch (which)
 								{
 									case 0:
-										serverApiTask = new ServerApiForfeitGame(context, game, serverApiListeners);
+										serverApiTask = new ServerApiForfeitGame(context, serverApiListeners, game);
 										break;
 
 									case 1:
-										serverApiTask = new ServerApiSkipMove(context, game, serverApiListeners);
+										serverApiTask = new ServerApiSkipMove(context, serverApiListeners, game);
 										break;
 								}
 

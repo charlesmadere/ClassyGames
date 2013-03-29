@@ -141,7 +141,7 @@ public class ConfirmGameFragment extends SherlockFragment
 		friendName.setTypeface(TypefaceUtilities.getTypeface(getSherlockActivity().getAssets(), TypefaceUtilities.SNELL_ROUNDHAND_BDSCR));
 
 		final TextView description = (TextView) view.findViewById(R.id.confirm_game_fragment_description);
-		description.setText(getString(R.string.confirm_game_fragment_description_text, friend.getName()));
+		description.setText(getString(R.string.are_you_sure_that_you_want_to_start_a_game_with_x, friend.getName()));
 
 		final Button buttonConfirm = (Button) view.findViewById(R.id.confirm_game_fragment_button_confirm);
 		buttonConfirm.setTypeface(TypefaceUtilities.getTypeface(getSherlockActivity().getAssets(), TypefaceUtilities.BLUE_HIGHWAY_D));

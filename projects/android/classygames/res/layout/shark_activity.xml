@@ -22,10 +22,8 @@
 			android:gravity="center"
 			android:layout_height="wrap_content"
 			android:layout_width="match_parent"
-			android:paddingLeft="4dip"
-			android:paddingRight="4dip"
 			android:text="@string/sharkwork_by_tristan_kidder"
 			android:textColor="@color/gray_light"
-			style="@style/paragraph" />
+			style="@style/Paragraph.ExtraPadding" />
 	</LinearLayout>
 </LinearLayout>

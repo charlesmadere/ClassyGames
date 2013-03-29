@@ -3,7 +3,5 @@
 	android:gravity="center"
 	android:layout_height="match_parent"
 	android:layout_width="match_parent"
-	android:paddingLeft="8dip"
-	android:paddingRight="8dip"
 	android:text="@string/cancelled_loading_your_friends_list"
-	style="@style/paragraph" />
+	style="@style/Paragraph.ExtraPadding" />

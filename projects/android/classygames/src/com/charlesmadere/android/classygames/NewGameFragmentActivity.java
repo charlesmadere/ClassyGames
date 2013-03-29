@@ -167,7 +167,7 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	public void onDataError()
 	{
-		Utilities.easyToastAndLogError(this, getString(R.string.confirm_game_fragment_data_error));
+		Utilities.easyToastAndLogError(this, getString(R.string.error_when_trying_to_store_the_data_for_the_friend_that_you_selected));
 		onBackPressed();
 	}
 

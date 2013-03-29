@@ -186,7 +186,7 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 
 			if (registrationSuccess.booleanValue())
 			{
-				Utilities.easyToast(activity, activity.getString(R.string.registration_complete));
+				Utilities.easyToast(activity, R.string.registration_complete);
 				activity.finish();
 			}
 			else

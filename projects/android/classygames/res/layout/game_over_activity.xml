@@ -3,11 +3,7 @@
 	android:layout_height="match_parent"
 	android:layout_width="match_parent"
 	android:orientation="vertical"
-	android:paddingBottom="8dip"
-	android:paddingLeft="4dip"
-	android:paddingRight="4dip"
-	android:paddingTop="8dip"
-	style="@style/ClassyGames">
+	style="@style/ClassyGames.ExtraPadding">
 	<ImageView
 		android:adjustViewBounds="true"
 		android:contentDescription="@string/friends_picture"
@@ -33,11 +29,9 @@
 			android:id="@+id/game_over_activity_win_or_lose"
 			android:layout_height="wrap_content"
 			android:layout_width="match_parent"
-			android:paddingLeft="20dip"
-			android:paddingRight="20dip"
 			android:textColor="@color/gray_dark"
 			android:textIsSelectable="false"
-			style="@style/paragraph" />
+			style="@style/Paragraph.ExtraPadding" />
 		<LinearLayout
 			android:layout_height="wrap_content"
 			android:layout_marginTop="16dip"
@@ -49,7 +43,7 @@
 				android:layout_width="match_parent"
 				android:layout_marginTop="8dip"
 				android:text="@string/return_to_games_list"
-				style="@style/button.gray" />
+				style="@style/Button.Gray" />
 		</LinearLayout>
 	</LinearLayout>
 </LinearLayout>

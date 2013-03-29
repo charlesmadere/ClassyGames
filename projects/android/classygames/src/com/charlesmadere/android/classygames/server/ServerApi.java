@@ -9,7 +9,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 
 import com.charlesmadere.android.classygames.R;
-import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
@@ -37,12 +36,6 @@ public abstract class ServerApi
 	 * The Context of the class that this ServerApi class is being called from.
 	 */
 	private Context context;
-
-
-	/**
-	 * The Game object that this API call has to deal with.
-	 */
-	protected Game game;
 
 
 	/**
@@ -94,16 +87,12 @@ public abstract class ServerApi
 	 * @param context
 	 * The Context of the class that you're creating this object from.
 	 * 
-	 * @param game
-	 * The Game object that this API call has to deal with.
-	 * 
 	 * @param onCompleteListener
 	 * A listener to call once we're done running code here.
 	 */
-	protected ServerApi(final Context context, final Game game, final ServerApiListeners onCompleteListener)
+	protected ServerApi(final Context context, final ServerApiListeners onCompleteListener)
 	{
 		this.context = context;
-		this.game = game;
 		this.listeners = onCompleteListener;
 	}
 

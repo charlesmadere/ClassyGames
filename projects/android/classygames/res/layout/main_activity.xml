@@ -3,9 +3,7 @@
 	android:layout_height="match_parent"
 	android:layout_width="match_parent"
 	android:orientation="vertical"
-	android:paddingLeft="4dip"
-	android:paddingRight="4dip"
-	style="@style/ClassyGames">
+	style="@style/ClassyGames.ExtraPadding">
 	<ImageView
 		android:adjustViewBounds="true"
 		android:contentDescription="@string/classy_games"

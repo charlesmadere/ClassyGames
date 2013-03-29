@@ -3,10 +3,7 @@
 	android:gravity="center"
 	android:layout_height="match_parent"
 	android:layout_width="match_parent"
-	android:orientation="vertical"
-	android:paddingLeft="8dip"
-	android:paddingRight="8dip"
-	style="@style/ClassyGames">
+	android:orientation="vertical">
 	<ProgressBar
 		android:indeterminate="true"
 		android:layout_height="wrap_content"
@@ -16,7 +13,7 @@
 		android:id="@+id/generic_game_fragment_loading_textview"
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
-		android:textIsSelectable="false"
 		android:text="@string/loading_game"
-		style="@style/paragraph" />
+		android:textIsSelectable="false"
+		style="@style/Paragraph" />
 </LinearLayout>

@@ -3,18 +3,14 @@
 	android:layout_height="match_parent"
 	android:layout_width="match_parent"
 	android:orientation="vertical"
-	android:paddingBottom="8dip"
-	android:paddingLeft="4dip"
-	android:paddingRight="4dip"
-	android:paddingTop="8dip"
-	style="@style/ClassyGames">
+	style="@style/ClassyGames.ExtraPadding">
 	<TextView
-	    android:gravity="center_vertical"
+		android:gravity="center_vertical"
 		android:layout_height="match_parent"
 		android:layout_weight="2"
 		android:layout_width="match_parent"
-		android:text="@string/unregister_from_notifications_description"
-		style="@style/paragraph" />
+		android:text="@string/unregister_from_notifications_activity_description"
+		style="@style/Paragraph.ExtraPadding" />
 	<LinearLayout
 		android:gravity="center"
 		android:layout_height="match_parent"
@@ -22,10 +18,10 @@
 		android:layout_width="match_parent"
 		android:orientation="vertical">
 		<Button
-			android:id="@+id/unregister_from_notifications_activity_register"
+			android:id="@+id/unregister_from_notifications_activity_button_unregister"
 			android:layout_height="wrap_content"
 			android:layout_width="match_parent"
 			android:text="@string/unregister_from_notifications"
-			style="@style/button.gray" />
+			style="@style/Button.Gray" />
 	</LinearLayout>
 </LinearLayout>

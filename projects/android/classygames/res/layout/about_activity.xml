@@ -3,13 +3,10 @@
 	android:layout_height="match_parent"
 	android:layout_width="match_parent"
 	android:orientation="vertical"
-	android:paddingLeft="4dip"
-	android:paddingRight="4dip"
-	style="@style/ClassyGames">
+	style="@style/ClassyGames.ExtraPadding">
 	<ImageView
 		android:adjustViewBounds="true"
 		android:contentDescription="@string/classy_games"
-		android:layout_gravity="center"
 		android:id="@+id/about_activity_imageview_logo"
 		android:layout_height="match_parent"
 		android:layout_weight="2"
@@ -24,9 +21,7 @@
 			android:gravity="center"
 			android:layout_height="wrap_content"
 			android:layout_width="match_parent"
-			android:paddingLeft="4dip"
-			android:paddingRight="4dip"
 			android:text="@string/about_activity_about"
-			style="@style/paragraph" />
+			style="@style/Paragraph.ExtraPadding" />
 	</LinearLayout>
 </LinearLayout>

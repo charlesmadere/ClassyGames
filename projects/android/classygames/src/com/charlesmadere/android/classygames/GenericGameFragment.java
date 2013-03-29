@@ -635,7 +635,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		if (Utilities.verifyValidString(game.getId()) && !isAnAsyncTaskRunning())
 		{
-			serverApiTask = new ServerApiForfeitGame(getSherlockActivity(), game, serverApiListeners);
+			serverApiTask = new ServerApiForfeitGame(getSherlockActivity(), serverApiListeners, game);
 			serverApiTask.execute();
 		}
 	}
@@ -802,7 +802,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			final SharedPreferences sPreferences = Utilities.getPreferences(getSherlockActivity());
 			final boolean askUserToExecute = sPreferences.getBoolean(getString(R.string.settings_key_ask_before_sending_move), true);
 
-			serverApiTask = new ServerApiSendMove(getSherlockActivity(), game, serverApiListeners, board);
+			serverApiTask = new ServerApiSendMove(getSherlockActivity(), serverApiListeners, game, board);
 			serverApiTask.execute(askUserToExecute);
 		}
 	}
@@ -887,7 +887,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		if (Utilities.verifyValidString(game.getId()) && !isAnAsyncTaskRunning())
 		{
-			serverApiTask = new ServerApiSkipMove(getSherlockActivity(), game, serverApiListeners);
+			serverApiTask = new ServerApiSkipMove(getSherlockActivity(), serverApiListeners, game);
 			serverApiTask.execute();
 		}
 	}
