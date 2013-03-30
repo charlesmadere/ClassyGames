@@ -21,7 +21,6 @@ import org.json.JSONObject;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.charlesmadere.android.classygames.models.Person;
@@ -183,12 +182,11 @@ public final class ServerUtilities
 	 */
 	public static boolean gcmRegister(final Context context) throws IOException
 	{
-		final SharedPreferences sPreferences = Utilities.getPreferences(context);
-		final String preferencesRegId = sPreferences.getString(REG_ID, null);
+		final String regId = Utilities.getRegId(context);
 
-		if (Utilities.verifyValidString(preferencesRegId))
+		if (Utilities.verifyValidString(regId))
 		{
-			return gcmRegister(preferencesRegId, context);
+			return gcmRegister(regId, context);
 		}
 		else
 		{
