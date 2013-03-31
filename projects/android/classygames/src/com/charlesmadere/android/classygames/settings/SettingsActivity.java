@@ -57,6 +57,37 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 				// settings preference file
 				{
 					addPreferencesFromResource(R.xml.settings_game);
+
+					playersCheckersPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_players_checkers_piece_color));
+					opponentsCheckersPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_opponents_checkers_piece_color));
+
+					playersCheckersPieceColor.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener()
+					{
+						@Override
+						public boolean onPreferenceChange(final Preference preference, final Object newValue)
+						{
+							if (opponentsCheckersPieceColor == null)
+							{
+								opponentsCheckersPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_opponents_checkers_piece_color));
+							}
+
+							return onPlayersCheckersPieceColorPreferenceChange(opponentsCheckersPieceColor, newValue);
+						}
+					});
+
+					opponentsCheckersPieceColor.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener()
+					{
+						@Override
+						public boolean onPreferenceChange(final Preference preference, final Object newValue)
+						{
+							if (playersCheckersPieceColor == null)
+							{
+								playersCheckersPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_players_checkers_piece_color));
+							}
+
+							return onOpponentsCheckersPieceColorPreferenceChange(playersCheckersPieceColor, newValue);
+						}
+					});
 				}
 				else if (action.equals(getString(R.string.com_charlesmadere_android_classygames_settings_miscellaneous)))
 				// the intent's action is saying that we need to show the
@@ -89,34 +120,6 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 			{
 				addPreferencesFromResource(R.xml.settings_headers_legacy);
 			}
-
-			playersCheckersPieceColor.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener()
-			{
-				@Override
-				public boolean onPreferenceChange(final Preference preference, final Object newValue)
-				{
-					if (opponentsCheckersPieceColor == null)
-					{
-						opponentsCheckersPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_opponents_checkers_piece_color));
-					}
-
-					return onPlayersCheckersPieceColorPreferenceChange(opponentsCheckersPieceColor, newValue);
-				}
-			});
-
-			opponentsCheckersPieceColor.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener()
-			{
-				@Override
-				public boolean onPreferenceChange(final Preference preference, final Object newValue)
-				{
-					if (playersCheckersPieceColor == null)
-					{
-						playersCheckersPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_players_checkers_piece_color));
-					}
-
-					return onOpponentsCheckersPieceColorPreferenceChange(playersCheckersPieceColor, newValue);
-				}
-			});
 		}
 	}
 
