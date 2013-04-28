@@ -16,4 +16,13 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	}
 
 
+	@Override
+	protected void setUp() throws Exception
+	{
+		super.setUp();
+
+		setActivityInitialTouchMode(false);
+	}
+
+
 }
