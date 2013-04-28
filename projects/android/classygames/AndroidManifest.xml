@@ -4,8 +4,8 @@
 	android:versionCode="19"
 	android:versionName="1.5.2.4">
 
-    <!-- Check out the Android API Levels website for more information on this topic -->
-    <!-- https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels -->
+	<!-- Check out the Android API Levels website for more information on this topic -->
+	<!-- https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels -->
 	<uses-sdk
 		android:minSdkVersion="8"
 		android:targetSdkVersion="17" />
