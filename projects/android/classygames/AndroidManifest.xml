@@ -67,6 +67,7 @@
 					android:name="com.charlesmadere.android.classygames" />
 			</intent-filter>
 		</receiver>
+
 		<service
 			android:name="com.charlesmadere.android.classygames.utilities.GCMIntentService" />
 		<!--  end more GCM stuff -->
