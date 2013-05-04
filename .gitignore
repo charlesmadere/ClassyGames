@@ -17,13 +17,13 @@ gen/
 local.properties
 
 # Eclipse project files
-.classpath
-.project
+#.classpath
+#.project
 
 
 ### Eclipse Ignores
 *.pydevproject
-.project
+#.project
 .metadata
 bin/**
 tmp/**
@@ -33,8 +33,8 @@ tmp/**/*
 *.swp
 *~.nib
 local.properties
-#project.properties
-.classpath
+project.properties
+#.classpath
 .settings/
 .loadpath
 
