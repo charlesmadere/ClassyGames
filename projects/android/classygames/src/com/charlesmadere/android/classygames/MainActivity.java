@@ -204,7 +204,7 @@ public class MainActivity extends SherlockActivity
 		private ViewGroup viewGroup;
 
 
-		AsyncGetFacebookIdentity(final Context context, final LayoutInflater inflater, final Session session, final ViewGroup viewGroup)
+		private AsyncGetFacebookIdentity(final Context context, final LayoutInflater inflater, final Session session, final ViewGroup viewGroup)
 		{
 			this.context = context;
 			this.inflater = inflater;
