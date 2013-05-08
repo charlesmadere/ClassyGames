@@ -44,7 +44,7 @@
     <file path="/a.java" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367981336962" ignored="false" />
     <file path="/a.xml" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367982581342" ignored="false" />
     <file path="/strings.xml" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367981788341" ignored="false" />
-    <file path="/GCMIntentService.java" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1368035172240" ignored="false" />
+    <file path="/GCMIntentService.java" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1368037200049" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,7 +108,7 @@
       <file leaf-file-name="GCMIntentService.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/classygames/src/com/charlesmadere/android/classygames/utilities/GCMIntentService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="107" column="0" selection-start="3586" selection-end="3586" vertical-scroll-proportion="1.8619246">
+            <state line="245" column="40" selection-start="7709" selection-end="7709" vertical-scroll-proportion="0.37238494">
               <folding />
             </state>
           </provider>
@@ -206,6 +206,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -298,7 +299,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
     </panes>
   </component>
@@ -316,11 +316,11 @@
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="restartRequiresConfirmation" value="true" />
-    <property name="FullScreen" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
+    <property name="FullScreen" value="false" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
   </component>
   <component name="RunManager" selected="Android Application.classygames">
     <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
@@ -355,6 +355,19 @@
       <option name="PORT" value="5005" />
       <method />
     </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method />
+    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <module name="" />
@@ -381,19 +394,6 @@
       <envs />
       <properties />
       <listeners />
-      <method />
-    </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -681,7 +681,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/classygames/src/com/charlesmadere/android/classygames/utilities/GCMIntentService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="107" column="0" selection-start="3586" selection-end="3586" vertical-scroll-proportion="1.8619246">
+        <state line="245" column="40" selection-start="7709" selection-end="7709" vertical-scroll-proportion="0.37238494">
           <folding />
         </state>
       </provider>

@@ -227,6 +227,30 @@ public class GCMIntentService extends IntentService
 	}
 
 
+	/**
+	 * Further acts upon a push notification message as received from the
+	 * Classy Games server. This method should only be used once all of the
+	 * data extracted from the push notification message has been validated and
+	 * verified. For a String, this means that it is both not null and not
+	 * empty.
+	 *
+	 * @param gameId
+	 * All push notifications must have a particular game that they refer to.
+	 * This is that game's ID.
+	 *
+	 * @param whichGame
+	 * This is which game the push notification is referring to. It can be
+	 * checkers, chess...
+	 *
+	 * @param messageType
+	 * The type of message that this is.
+	 *
+	 * @param personId
+	 *
+	 *
+	 * @param personName
+	 *
+	 */
 	private void handleVerifiedMessage(final String gameId, final Byte whichGame, final Byte messageType, final Long personId, final String personName)
 	{
 		final Person person = new Person(personId.longValue(), personName);
