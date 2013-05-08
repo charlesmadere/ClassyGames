@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="com_charlesmadere_android_classygames_settings_game">com.charlesmadere.android.classygames.settings.GAME</string>
-	<string name="com_charlesmadere_android_classygames_settings_miscellaneous">com.charlesmadere.android.classygames.settings.MISCELLANEOUS</string>
+	<string name="com_charlesmadere_android_classygames_settings_notifications">com.charlesmadere.android.classygames.settings.NOTIFICATIONS</string>
 	<string name="com_charlesmadere_android_classygames_settings_register">com.charlesmadere.android.classygames.settings.REGISTER</string>
 	<string name="com_charlesmadere_android_classygames_settings_unregister">com.charlesmadere.android.classygames.settings.UNREGISTER</string>
+    <string name="notification_settings">Notification Settings</string>
+    <string name="settings">Settings</string>
+	<string name="settings_ask_before_sending_move_summary_off">A confirmation dialog box will not be shown before a move is sent.</string>
+    <string name="settings_ask_before_sending_move_summary_on">A confirmation dialog box will be shown before a move is sent.</string>
+	<string name="settings_game_summary">Settings that have to do with game play.</string>
+    <string name="settings_key_ask_before_sending_move">settings_key_ask_before_sending_move</string>
+	<string name="settings_key_show_notification_light">settings_key_show_notification_light</string>
+    <string name="settings_key_opponents_checkers_piece_color">settings_key_opponents_checkers_piece_color</string>
+    <string name="settings_key_players_checkers_piece_color">settings_key_players_checkers_piece_color</string>
+    <string name="settings_notifications_summary">Settings that adjust notifications.</string>
+	<string name="settings_show_notification_light_summary_off">Your device's notification light will not blink when a notification has been received.</string>
+	<string name="settings_show_notification_light_summary_on">Your device's notification light will blink when a notification has been received.</string>
 </resources>

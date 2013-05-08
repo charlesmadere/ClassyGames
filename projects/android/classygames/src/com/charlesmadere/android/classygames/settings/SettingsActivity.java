@@ -89,11 +89,11 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 						}
 					});
 				}
-				else if (action.equals(getString(R.string.com_charlesmadere_android_classygames_settings_miscellaneous)))
+				else if (action.equals(getString(R.string.com_charlesmadere_android_classygames_settings_notifications)))
 				// the intent's action is saying that we need to show the
 				// miscellaneous settings preference file
 				{
-					addPreferencesFromResource(R.xml.settings_miscellaneous);
+					addPreferencesFromResource(R.xml.settings_notification);
 				}
 				else if (action.equals(getString(R.string.com_charlesmadere_android_classygames_settings_register)))
 					// the intent's action is saying that we need to show the

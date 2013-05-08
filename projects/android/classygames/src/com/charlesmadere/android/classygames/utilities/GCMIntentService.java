@@ -8,7 +8,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.app.TaskStackBuilder;
@@ -33,10 +35,9 @@ public class GCMIntentService extends IntentService
 	private final static Object LOCK = GCMIntentService.class;
 	private static PowerManager.WakeLock wakeLock;
 
-	public final static int GCM_NOTIFICATION_ID = 0;
-	public final static int GCM_NOTIFICATION_LIGHTS = 0xEDB3C900;
-	public final static int GCM_NOTIFICATION_LIGHTS_ON = 1000; // milliseconds
-	public final static int GCM_NOTIFICATION_LIGHTS_OFF = 16000; // milliseconds
+	private final static int GCM_NOTIFICATION_ID = 0;
+	private final static int GCM_NOTIFICATION_LIGHTS_ON = 1000; // milliseconds
+	private final static int GCM_NOTIFICATION_LIGHTS_OFF = 16000; // milliseconds
 
 
 
@@ -100,9 +101,15 @@ public class GCMIntentService extends IntentService
 					.setAutoCancel(true)
 					.setContentTitle(getString(R.string.classy_games))
 					.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification_raw))
-					.setLights(GCM_NOTIFICATION_LIGHTS, GCM_NOTIFICATION_LIGHTS_ON, GCM_NOTIFICATION_LIGHTS_OFF)
-					.setOnlyAlertOnce(false)
+					.setOnlyAlertOnce(true)
 					.setSmallIcon(R.drawable.notification_small);
+
+				if (checkIfNotificationLightIsEnabled())
+				{
+					// only turn on the notification light if the user has
+					// specified that he or she wants it on
+					builder.setLights(Color.MAGENTA, GCM_NOTIFICATION_LIGHTS_ON, GCM_NOTIFICATION_LIGHTS_OFF);
+				}
 
 				final TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 
@@ -238,6 +245,16 @@ public class GCMIntentService extends IntentService
 		wakeLock.acquire();
 		intent.setClassName(context, GCMIntentService.class.getName());
 		context.startService(intent);
+	}
+
+
+	private boolean checkIfNotificationLightIsEnabled()
+	{
+		final SharedPreferences sPreferences = Utilities.getPreferences(this);
+		final String key = getString(R.string.settings_key_show_notification_light);
+		final boolean lightIsEnabled = sPreferences.getBoolean(key, true);
+
+		return lightIsEnabled;
 	}
 
 

@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-	android:title="@string/miscellaneous_settings">
+	android:title="@string/notification_settings">
+	<CheckBoxPreference
+		android:defaultValue="true"
+		android:key="@string/settings_key_show_notification_light"
+		android:summaryOff="@string/settings_show_notification_light_summary_off"
+		android:summaryOn="@string/settings_show_notification_light_summary_on"
+		android:title="@string/show_notification_light" />
 	<Preference
 		android:summary="@string/register_for_notifications_summary"
 		android:title="@string/register_for_notifications">

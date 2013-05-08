@@ -7,7 +7,7 @@ import android.preference.PreferenceFragment;
 import com.charlesmadere.android.classygames.R;
 
 
-public class MiscellaneousSettingsFragment extends PreferenceFragment
+public class NotificationSettingsFragment extends PreferenceFragment
 {
 
 
@@ -16,7 +16,7 @@ public class MiscellaneousSettingsFragment extends PreferenceFragment
 	{
 		super.onCreate(savedInstanceState);
 
-		addPreferencesFromResource(R.xml.settings_miscellaneous);
+		addPreferencesFromResource(R.xml.settings_notification);
 	}
 
 

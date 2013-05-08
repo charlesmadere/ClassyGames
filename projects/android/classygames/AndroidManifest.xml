@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.charlesmadere.android.classygames"
 	android:versionCode="19"
-	android:versionName="1.5.2.4">
+	android:versionName="1.5.2.5">
 
 	<!-- Check out the Android API Levels website for more information on this topic -->
 	<!-- https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels -->
