@@ -57,13 +57,13 @@ public class GCMIntentService extends IntentService
 
 			if (Utilities.verifyValidString(action))
 			{
-				if (action.equals("com.google.android.c2dm.intent.REGISTRATION"))
-				{
-					handleRegistration(intent);
-				}
-				else if (action.equals("com.google.android.c2dm.intent.RECEIVE"))
+				if (action.equals("com.google.android.c2dm.intent.RECEIVE"))
 				{
 					handleMessage(intent);
+				}
+				else if (action.equals("com.google.android.c2dm.intent.REGISTRATION"))
+				{
+					handleRegistration(intent);
 				}
 			}
 		}
@@ -77,8 +77,20 @@ public class GCMIntentService extends IntentService
 	}
 
 
+	/**
+	 * Processes a received push notification. Once this method has completed,
+	 * a notification will be shown on the Android device's notification bar.
+	 * If a notification is not showing, then that means that this method
+	 * detected some sort of error with the received push notification's data.
+	 * In that case, the fact that an error occurred will be Log.e'd.
+	 *
+	 * @param intent
+	 * The Intent object as received from this class's onHandleIntent() method.
+	 */
 	private void handleMessage(final Intent intent)
 	{
+		// Retrieve input parameters for easier access. These input parameters
+		// determine what type of push notification has been received.
 		final String parameter_gameId = intent.getStringExtra(ServerUtilities.POST_DATA_GAME_ID);
 		final String parameter_gameType = intent.getStringExtra(ServerUtilities.POST_DATA_GAME_TYPE);
 		final String parameter_personId = intent.getStringExtra(ServerUtilities.POST_DATA_ID);
@@ -86,91 +98,40 @@ public class GCMIntentService extends IntentService
 		final String parameter_personName = intent.getStringExtra(ServerUtilities.POST_DATA_NAME);
 
 		if (Utilities.verifyValidStrings(parameter_gameId, parameter_gameType, parameter_personId, parameter_messageType, parameter_personName))
+		// Verify that all of these Strings are both not null and that their
+		// length is greater than or equal to 1. This way we ensure that all of
+		// this input data is not corrupt.
 		{
 			final Byte whichGame = Byte.valueOf(parameter_gameType);
 			final Byte messageType = Byte.valueOf(parameter_messageType);
 			final Long personId = Long.valueOf(parameter_personId);
 
 			if (Person.isIdValid(personId.longValue()) && Person.isNameValid(parameter_personName) &&
-				(ServerUtilities.validGameTypeValue(whichGame.byteValue()) || ServerUtilities.validMessageTypeValue(messageType.byteValue())))
+					(ServerUtilities.validGameTypeValue(whichGame.byteValue()) || ServerUtilities.validMessageTypeValue(messageType.byteValue())))
 			{
-				final Person person = new Person(personId, parameter_personName);
-
-				// build a notification to show to the user
-				final Builder builder = new Builder(this)
-					.setAutoCancel(true)
-					.setContentTitle(getString(R.string.classy_games))
-					.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification_raw))
-					.setOnlyAlertOnce(true)
-					.setSmallIcon(R.drawable.notification_small);
-
-				if (checkIfNotificationLightIsEnabled())
-				{
-					// only turn on the notification light if the user has
-					// specified that he or she wants it on
-					builder.setLights(Color.MAGENTA, GCM_NOTIFICATION_LIGHTS_ON, GCM_NOTIFICATION_LIGHTS_OFF);
-				}
-
-				final TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-
-				if (messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_GAME
-					|| messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_MOVE)
-				{
-					final Intent gameIntent = new Intent(this, GameFragmentActivity.class)
-						.putExtra(GameFragmentActivity.BUNDLE_DATA_GAME_ID, parameter_gameId)
-						.putExtra(GameFragmentActivity.BUNDLE_DATA_WHICH_GAME, whichGame.byteValue())
-						.putExtra(GameFragmentActivity.BUNDLE_DATA_PERSON_OPPONENT_ID, person.getId())
-						.putExtra(GameFragmentActivity.BUNDLE_DATA_PERSON_OPPONENT_NAME, person.getName())
-						.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-					stackBuilder.addNextIntentWithParentStack(gameIntent);
-					builder.setTicker(getString(R.string.ol_x_sent_you_some_class, person.getName()));
-
-					if (messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_GAME)
-					{
-						builder.setContentText(getString(R.string.new_game_from_x, person.getName()));
-					}
-					else if (messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_MOVE)
-					{
-						builder.setContentText(getString(R.string.new_move_from_x, person.getName()));
-					}
-				}
-				else if (ServerUtilities.validWinOrLoseValue(messageType.byteValue()))
-				// it's a GAME_OVER byte
-				{
-					final Intent gameOverIntent = new Intent(this, GameOverActivity.class)
-						.putExtra(GameOverActivity.BUNDLE_DATA_MESSAGE_TYPE, messageType.byteValue())
-						.putExtra(GameOverActivity.BUNDLE_DATA_PERSON_OPPONENT_ID, person.getId())
-						.putExtra(GameOverActivity.BUNDLE_DATA_PERSON_OPPONENT_NAME, person.getName());
-
-					stackBuilder.addNextIntentWithParentStack(gameOverIntent);
-					builder.setTicker(getString(R.string.game_over, person.getName()));
-
-					if (messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_GAME_OVER_LOSE)
-					{
-						builder.setContentText(getString(R.string.you_lost_the_game_with_x, person.getName()));
-					}
-					else if (messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_GAME_OVER_WIN)
-					{
-						builder.setContentText(getString(R.string.you_won_the_game_with_x, person.getName()));
-					}
-				}
-
-				final PendingIntent gamePendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-				builder.setContentIntent(gamePendingIntent);
-
-				// show the notification
-				final NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-				notificationManager.notify(GCM_NOTIFICATION_ID, builder.build());
+				handleVerifiedMessage(parameter_gameId, whichGame, messageType, personId, parameter_personName);
+			}
+			else
+			{
+				Log.e(LOG_TAG, "Received partially malformed GCM message!");
 			}
 		}
 		else
 		{
-			Log.e(LOG_TAG, "Received malformed GCM message!");
+			Log.e(LOG_TAG, "Received completely malformed GCM message!");
 		}
 	}
 
 
+	/**
+	 * Attempts to register the user with the Classy Games server. This means
+	 * that a server API request will have to be made. Note that because all
+	 * HTTP requests have the capability of failing, this registration attempt
+	 * may not work. But in all honesty it should work.
+	 *
+	 * @param intent
+	 * The Intent object as received from this class's onHandleIntent() method.
+	 */
 	private void handleRegistration(final Intent intent)
 	{
 		final String regId = intent.getStringExtra("registration_id");
@@ -263,6 +224,79 @@ public class GCMIntentService extends IntentService
 		final boolean lightIsEnabled = sPreferences.getBoolean(key, true);
 
 		return lightIsEnabled;
+	}
+
+
+	private void handleVerifiedMessage(final String gameId, final Byte whichGame, final Byte messageType, final Long personId, final String personName)
+	{
+		final Person person = new Person(personId.longValue(), personName);
+
+		// build a notification to show to the user
+		final Builder builder = new Builder(this)
+				.setAutoCancel(true)
+				.setContentTitle(getString(R.string.classy_games))
+				.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification_raw))
+				.setOnlyAlertOnce(true)
+				.setSmallIcon(R.drawable.notification_small);
+
+		if (checkIfNotificationLightIsEnabled())
+		{
+			// only turn on the notification light if the user has
+			// specified that he or she wants it on
+			builder.setLights(Color.MAGENTA, GCM_NOTIFICATION_LIGHTS_ON, GCM_NOTIFICATION_LIGHTS_OFF);
+		}
+
+		final TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+
+		if (messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_GAME
+				|| messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_MOVE)
+		{
+			final Intent gameIntent = new Intent(this, GameFragmentActivity.class)
+					.putExtra(GameFragmentActivity.BUNDLE_DATA_GAME_ID, gameId)
+					.putExtra(GameFragmentActivity.BUNDLE_DATA_WHICH_GAME, whichGame.byteValue())
+					.putExtra(GameFragmentActivity.BUNDLE_DATA_PERSON_OPPONENT_ID, person.getId())
+					.putExtra(GameFragmentActivity.BUNDLE_DATA_PERSON_OPPONENT_NAME, person.getName())
+					.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+			stackBuilder.addNextIntentWithParentStack(gameIntent);
+			builder.setTicker(getString(R.string.ol_x_sent_you_some_class, person.getName()));
+
+			if (messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_GAME)
+			{
+				builder.setContentText(getString(R.string.new_game_from_x, person.getName()));
+			}
+			else if (messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_MOVE)
+			{
+				builder.setContentText(getString(R.string.new_move_from_x, person.getName()));
+			}
+		}
+		else if (ServerUtilities.validWinOrLoseValue(messageType.byteValue()))
+		// it's a GAME_OVER byte
+		{
+			final Intent gameOverIntent = new Intent(this, GameOverActivity.class)
+					.putExtra(GameOverActivity.BUNDLE_DATA_MESSAGE_TYPE, messageType.byteValue())
+					.putExtra(GameOverActivity.BUNDLE_DATA_PERSON_OPPONENT_ID, person.getId())
+					.putExtra(GameOverActivity.BUNDLE_DATA_PERSON_OPPONENT_NAME, person.getName());
+
+			stackBuilder.addNextIntentWithParentStack(gameOverIntent);
+			builder.setTicker(getString(R.string.game_over, person.getName()));
+
+			if (messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_GAME_OVER_LOSE)
+			{
+				builder.setContentText(getString(R.string.you_lost_the_game_with_x, person.getName()));
+			}
+			else if (messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_GAME_OVER_WIN)
+			{
+				builder.setContentText(getString(R.string.you_won_the_game_with_x, person.getName()));
+			}
+		}
+
+		final PendingIntent gamePendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+		builder.setContentIntent(gamePendingIntent);
+
+		// show the notification
+		final NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		notificationManager.notify(GCM_NOTIFICATION_ID, builder.build());
 	}
 
 
