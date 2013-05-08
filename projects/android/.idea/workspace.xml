@@ -44,7 +44,8 @@
     <file path="/a.java" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367981336962" ignored="false" />
     <file path="/a.xml" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367982581342" ignored="false" />
     <file path="/strings.xml" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367981788341" ignored="false" />
-    <file path="/GCMIntentService.java" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1368037200049" ignored="false" />
+    <file path="/GCMIntentService.java" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1368056854874" ignored="false" />
+    <file path="/Person.java" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1368054492914" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,7 +109,7 @@
       <file leaf-file-name="GCMIntentService.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/classygames/src/com/charlesmadere/android/classygames/utilities/GCMIntentService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="245" column="40" selection-start="7709" selection-end="7709" vertical-scroll-proportion="0.37238494">
+            <state line="26" column="24" selection-start="873" selection-end="873" vertical-scroll-proportion="0.16736402">
               <folding />
             </state>
           </provider>
@@ -134,6 +135,7 @@
         <option value="$PROJECT_DIR$/classygames/res/xml/settings_notification.xml" />
         <option value="$PROJECT_DIR$/classygames/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/classygames/src/com/charlesmadere/android/classygames/CheckersGameFragment.java" />
+        <option value="$PROJECT_DIR$/classygames/src/com/charlesmadere/android/classygames/models/Person.java" />
         <option value="$PROJECT_DIR$/classygames/src/com/charlesmadere/android/classygames/utilities/GCMIntentService.java" />
       </list>
     </option>
@@ -206,7 +208,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -299,6 +300,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="PackagesPane" />
     </panes>
   </component>
@@ -494,7 +496,7 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39973614" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32972974" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32849604" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
@@ -505,7 +507,7 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22727273" sideWeight="0.6701847" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22727273" sideWeight="0.67150396" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298153" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -580,16 +582,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/classygames/src/com/charlesmadere/android/classygames/settings/NotificationSettingsFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="0" selection-start="429" selection-end="429" vertical-scroll-proportion="0.47260273" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/classygames/src/com/charlesmadere/android/classygames/settings/SettingsActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="192" column="0" selection-start="6277" selection-end="6277" vertical-scroll-proportion="0.87447697" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/classygames/src/com/charlesmadere/android/classygames/GenericGameFragment.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="45" column="0" selection-start="1716" selection-end="1716" vertical-scroll-proportion="0.059972107">
@@ -679,9 +671,23 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/classygames/src/com/charlesmadere/android/classygames/models/Person.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="351" column="38" selection-start="7985" selection-end="7985" vertical-scroll-proportion="7.212329">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/classygames/src/com/charlesmadere/android/classygames/utilities/ServerUtilities.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="367" column="28" selection-start="11940" selection-end="11940" vertical-scroll-proportion="0.6917808">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/classygames/src/com/charlesmadere/android/classygames/utilities/GCMIntentService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="245" column="40" selection-start="7709" selection-end="7709" vertical-scroll-proportion="0.37238494">
+        <state line="26" column="24" selection-start="873" selection-end="873" vertical-scroll-proportion="0.16736402">
           <folding />
         </state>
       </provider>

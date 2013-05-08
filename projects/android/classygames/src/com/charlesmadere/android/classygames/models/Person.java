@@ -340,4 +340,25 @@ public class Person
 	}
 
 
+	/**
+	 * Checks a given ID and name for validity. Some of the other validity
+	 * verifying methods in this class define exactly what <i>validity</i> is.
+	 * See those for more information!
+	 *
+	 * @param id
+	 * The Facebook ID to check for validity.
+	 *
+	 * @param name
+	 * The name to check for validity.
+	 *
+	 * @return
+	 * Returns true if the values of both given parameters are detected as
+	 * being valid.
+	 */
+	public static boolean isIdAndNameValid(final long id, final String name)
+	{
+		return isIdValid(id) && isNameValid(name);
+	}
+
+
 }

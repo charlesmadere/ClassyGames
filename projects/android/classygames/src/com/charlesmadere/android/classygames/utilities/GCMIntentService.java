@@ -23,7 +23,8 @@ import com.charlesmadere.android.classygames.models.Person;
 
 
 /**
- * Much of this was taken from the official Android documentation.
+ * Much of the code in this class was taken from the official Android
+ * documentation website.
  * https://developer.android.com/guide/google/gcm/gcm.html#receiving
  */
 public class GCMIntentService extends IntentService
@@ -77,49 +78,20 @@ public class GCMIntentService extends IntentService
 	}
 
 
-	/**
-	 * Processes a received push notification. Once this method has completed,
-	 * a notification will be shown on the Android device's notification bar.
-	 * If a notification is not showing, then that means that this method
-	 * detected some sort of error with the received push notification's data.
-	 * In that case, the fact that an error occurred will be Log.e'd.
-	 *
-	 * @param intent
-	 * The Intent object as received from this class's onHandleIntent() method.
-	 */
-	private void handleMessage(final Intent intent)
+	static void runIntentInService(final Context context, final Intent intent)
 	{
-		// Retrieve input parameters for easier access. These input parameters
-		// determine what type of push notification has been received.
-		final String parameter_gameId = intent.getStringExtra(ServerUtilities.POST_DATA_GAME_ID);
-		final String parameter_gameType = intent.getStringExtra(ServerUtilities.POST_DATA_GAME_TYPE);
-		final String parameter_personId = intent.getStringExtra(ServerUtilities.POST_DATA_ID);
-		final String parameter_messageType = intent.getStringExtra(ServerUtilities.POST_DATA_MESSAGE_TYPE);
-		final String parameter_personName = intent.getStringExtra(ServerUtilities.POST_DATA_NAME);
-
-		if (Utilities.verifyValidStrings(parameter_gameId, parameter_gameType, parameter_personId, parameter_messageType, parameter_personName))
-		// Verify that all of these Strings are both not null and that their
-		// length is greater than or equal to 1. This way we ensure that all of
-		// this input data is not corrupt.
+		synchronized (LOCK)
 		{
-			final Byte whichGame = Byte.valueOf(parameter_gameType);
-			final Byte messageType = Byte.valueOf(parameter_messageType);
-			final Long personId = Long.valueOf(parameter_personId);
-
-			if (Person.isIdValid(personId.longValue()) && Person.isNameValid(parameter_personName) &&
-					(ServerUtilities.validGameTypeValue(whichGame.byteValue()) || ServerUtilities.validMessageTypeValue(messageType.byteValue())))
+			if (wakeLock == null)
 			{
-				handleVerifiedMessage(parameter_gameId, whichGame, messageType, personId, parameter_personName);
-			}
-			else
-			{
-				Log.e(LOG_TAG, "Received partially malformed GCM message!");
+				final PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+				wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "classy_wakelock");
 			}
 		}
-		else
-		{
-			Log.e(LOG_TAG, "Received completely malformed GCM message!");
-		}
+
+		wakeLock.acquire();
+		intent.setClassName(context, GCMIntentService.class.getName());
+		context.startService(intent);
 	}
 
 
@@ -192,20 +164,51 @@ public class GCMIntentService extends IntentService
 	}
 
 
-	static void runIntentInService(final Context context, final Intent intent)
+	/**
+	 * Processes a received push notification. Once this method has completed,
+	 * a notification will be shown on the Android device's notification bar.
+	 * If a notification is not showing, then that means that this method
+	 * detected some sort of error with the received push notification's data.
+	 * In that case, the fact that an error occurred will be Log.e'd.
+	 *
+	 * @param intent
+	 * The Intent object as received from this class's onHandleIntent() method.
+	 */
+	private void handleMessage(final Intent intent)
 	{
-		synchronized (LOCK)
+		// Retrieve input parameters for easier access. These input parameters
+		// determine what type of push notification has been received.
+		final String parameter_gameId = intent.getStringExtra(ServerUtilities.POST_DATA_GAME_ID);
+		final String parameter_gameType = intent.getStringExtra(ServerUtilities.POST_DATA_GAME_TYPE);
+		final String parameter_personId = intent.getStringExtra(ServerUtilities.POST_DATA_ID);
+		final String parameter_messageType = intent.getStringExtra(ServerUtilities.POST_DATA_MESSAGE_TYPE);
+		final String parameter_personName = intent.getStringExtra(ServerUtilities.POST_DATA_NAME);
+
+		if (Utilities.verifyValidStrings(parameter_gameId, parameter_gameType, parameter_personId, parameter_messageType, parameter_personName))
+		// Verify that all of these Strings are both not null and that their
+		// length is greater than or equal to 1. This way we ensure that all of
+		// this input data is not corrupt.
 		{
-			if (wakeLock == null)
+			final byte whichGame = Byte.parseByte(parameter_gameType);
+			final byte messageType = Byte.parseByte(parameter_messageType);
+			final long personId = Long.parseLong(parameter_personId);
+
+			if (Person.isIdAndNameValid(personId, parameter_personName) &&
+					(ServerUtilities.validGameTypeValue(whichGame) || ServerUtilities.validMessageTypeValue(messageType)))
 			{
-				final PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-				wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "classy_wakelock");
+				final Person person = new Person(personId, parameter_personName);
+
+				handleVerifiedMessage(parameter_gameId, whichGame, messageType, person);
+			}
+			else
+			{
+				Log.e(LOG_TAG, "Received partially malformed GCM message!");
 			}
 		}
-
-		wakeLock.acquire();
-		intent.setClassName(context, GCMIntentService.class.getName());
-		context.startService(intent);
+		else
+		{
+			Log.e(LOG_TAG, "Received completely malformed GCM message!");
+		}
 	}
 
 
@@ -243,18 +246,14 @@ public class GCMIntentService extends IntentService
 	 * checkers, chess...
 	 *
 	 * @param messageType
-	 * The type of message that this is.
+	 * The type of message that this is. Could be new game, new move, game over
+	 * lose, or game over win.
 	 *
-	 * @param personId
-	 *
-	 *
-	 * @param personName
-	 *
+	 * @param person
+	 * The Facebook friend that caused this push notification to be sent.
 	 */
-	private void handleVerifiedMessage(final String gameId, final Byte whichGame, final Byte messageType, final Long personId, final String personName)
+	private void handleVerifiedMessage(final String gameId, final byte whichGame, final byte messageType, final Person person)
 	{
-		final Person person = new Person(personId.longValue(), personName);
-
 		// build a notification to show to the user
 		final Builder builder = new Builder(this)
 				.setAutoCancel(true)
@@ -270,51 +269,126 @@ public class GCMIntentService extends IntentService
 			builder.setLights(Color.MAGENTA, GCM_NOTIFICATION_LIGHTS_ON, GCM_NOTIFICATION_LIGHTS_OFF);
 		}
 
+		if (messageType == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_GAME
+				|| messageType == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_MOVE)
+		// Check to see if the type of the received push notification is either
+		// a new game or a new move.
+		{
+			handleNewGameOrNewMoveMessage(builder, gameId, whichGame, messageType, person);
+		}
+		else if (ServerUtilities.validWinOrLoseValue(messageType))
+		// Check to see if the type of the received push notification is either
+		// a game loss or a game won.
+		{
+			handleWinOrLoseMessage(builder, messageType, person);
+		}
+		else
+		// The received message was of a type that doesn't make any sense. Log
+		// it as an error.
+		{
+			Log.e(LOG_TAG, "Received GCM message that contained an unknown message type.");
+		}
+	}
+
+
+	/**
+	 * Handles building an Android notification that represents a new game or
+	 * a new move.
+	 *
+	 * @param builder
+	 * A partially built notification Builder object.
+	 *
+	 * @param gameId
+	 * All push notifications must have a particular game that they refer to.
+	 * This is that game's ID.
+	 *
+	 * @param whichGame
+	 * This is which game the push notification is referring to. It can be
+	 * checkers, chess...
+	 *
+	 * @param messageType
+	 * The type of message that this is. Could be new game, new move, game over
+	 * lose, or game over win.
+	 *
+	 * @param person
+	 * The Facebook friend that caused this push notification to be sent.
+	 */
+	private void handleNewGameOrNewMoveMessage(final Builder builder, final String gameId, final byte whichGame, final byte messageType, final Person person)
+	{
+		final Intent gameIntent = new Intent(this, GameFragmentActivity.class)
+				.putExtra(GameFragmentActivity.BUNDLE_DATA_GAME_ID, gameId)
+				.putExtra(GameFragmentActivity.BUNDLE_DATA_WHICH_GAME, whichGame)
+				.putExtra(GameFragmentActivity.BUNDLE_DATA_PERSON_OPPONENT_ID, person.getId())
+				.putExtra(GameFragmentActivity.BUNDLE_DATA_PERSON_OPPONENT_NAME, person.getName())
+				.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
 		final TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+		stackBuilder.addNextIntentWithParentStack(gameIntent);
+		builder.setTicker(getString(R.string.ol_x_sent_you_some_class, person.getName()));
 
-		if (messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_GAME
-				|| messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_MOVE)
+		if (messageType == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_GAME)
 		{
-			final Intent gameIntent = new Intent(this, GameFragmentActivity.class)
-					.putExtra(GameFragmentActivity.BUNDLE_DATA_GAME_ID, gameId)
-					.putExtra(GameFragmentActivity.BUNDLE_DATA_WHICH_GAME, whichGame.byteValue())
-					.putExtra(GameFragmentActivity.BUNDLE_DATA_PERSON_OPPONENT_ID, person.getId())
-					.putExtra(GameFragmentActivity.BUNDLE_DATA_PERSON_OPPONENT_NAME, person.getName())
-					.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-			stackBuilder.addNextIntentWithParentStack(gameIntent);
-			builder.setTicker(getString(R.string.ol_x_sent_you_some_class, person.getName()));
-
-			if (messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_GAME)
-			{
-				builder.setContentText(getString(R.string.new_game_from_x, person.getName()));
-			}
-			else if (messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_MOVE)
-			{
-				builder.setContentText(getString(R.string.new_move_from_x, person.getName()));
-			}
+			builder.setContentText(getString(R.string.new_game_from_x, person.getName()));
 		}
-		else if (ServerUtilities.validWinOrLoseValue(messageType.byteValue()))
-		// it's a GAME_OVER byte
+		else if (messageType == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_MOVE)
 		{
-			final Intent gameOverIntent = new Intent(this, GameOverActivity.class)
-					.putExtra(GameOverActivity.BUNDLE_DATA_MESSAGE_TYPE, messageType.byteValue())
-					.putExtra(GameOverActivity.BUNDLE_DATA_PERSON_OPPONENT_ID, person.getId())
-					.putExtra(GameOverActivity.BUNDLE_DATA_PERSON_OPPONENT_NAME, person.getName());
-
-			stackBuilder.addNextIntentWithParentStack(gameOverIntent);
-			builder.setTicker(getString(R.string.game_over, person.getName()));
-
-			if (messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_GAME_OVER_LOSE)
-			{
-				builder.setContentText(getString(R.string.you_lost_the_game_with_x, person.getName()));
-			}
-			else if (messageType.byteValue() == ServerUtilities.POST_DATA_MESSAGE_TYPE_GAME_OVER_WIN)
-			{
-				builder.setContentText(getString(R.string.you_won_the_game_with_x, person.getName()));
-			}
+			builder.setContentText(getString(R.string.new_move_from_x, person.getName()));
 		}
 
+		buildAndShowNotification(builder, stackBuilder);
+	}
+
+
+	/**
+	 * Handles building an Android notification that represents a won or a lost
+	 * game.
+	 *
+	 * @param builder
+	 * A partially built notification Builder object.
+	 *
+	 * @param messageType
+	 * The type of message that this is. Could be new game, new move, game over
+	 * lose, or game over win.
+	 *
+	 * @param person
+	 * The Facebook friend that caused this push notification to be sent.
+	 */
+	private void handleWinOrLoseMessage(final Builder builder, final byte messageType, final Person person)
+	{
+		final Intent gameOverIntent = new Intent(this, GameOverActivity.class)
+				.putExtra(GameOverActivity.BUNDLE_DATA_MESSAGE_TYPE, messageType)
+				.putExtra(GameOverActivity.BUNDLE_DATA_PERSON_OPPONENT_ID, person.getId())
+				.putExtra(GameOverActivity.BUNDLE_DATA_PERSON_OPPONENT_NAME, person.getName());
+
+		final TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+		stackBuilder.addNextIntentWithParentStack(gameOverIntent);
+		builder.setTicker(getString(R.string.game_over, person.getName()));
+
+		if (messageType == ServerUtilities.POST_DATA_MESSAGE_TYPE_GAME_OVER_LOSE)
+		{
+			builder.setContentText(getString(R.string.you_lost_the_game_with_x, person.getName()));
+		}
+		else if (messageType == ServerUtilities.POST_DATA_MESSAGE_TYPE_GAME_OVER_WIN)
+		{
+			builder.setContentText(getString(R.string.you_won_the_game_with_x, person.getName()));
+		}
+
+		buildAndShowNotification(builder, stackBuilder);
+	}
+
+
+	/**
+	 * This method will finalize and, finally, show a notification in the
+	 * Android device's notification bar.
+	 *
+	 * @param builder
+	 * A completely built notification Builder object.
+	 *
+	 * @param stackBuilder
+	 * A TaskStackBuilder object that is completely prepared.
+	 */
+	private void buildAndShowNotification(final Builder builder, final TaskStackBuilder stackBuilder)
+	{
 		final PendingIntent gamePendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 		builder.setContentIntent(gamePendingIntent);
 
