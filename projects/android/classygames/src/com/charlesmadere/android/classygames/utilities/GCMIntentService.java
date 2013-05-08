@@ -248,6 +248,14 @@ public class GCMIntentService extends IntentService
 	}
 
 
+	/**
+	 * Checks to see if the <i>Show Notification Light</li> setting is enabled.
+	 * This is a simple checkbox setting.
+	 *
+	 * @return
+	 * Returns true if the <i>Show Notification Light</i> setting is enabled.
+	 * Returns false if the <i>Show Notification Light</i> setting is disabled.
+	 */
 	private boolean checkIfNotificationLightIsEnabled()
 	{
 		final SharedPreferences sPreferences = Utilities.getPreferences(this);
