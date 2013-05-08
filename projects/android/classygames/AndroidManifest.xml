@@ -46,6 +46,7 @@
 
 	<application
 		android:allowBackup="false"
+        android:debuggable="true"
 		android:icon="@drawable/launcher"
 		android:label="@string/classy_games">
 
