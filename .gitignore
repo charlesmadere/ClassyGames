@@ -85,3 +85,4 @@ $RECYCLE.BIN/
 #*.jar
 *.war
 *.ear
+projects/android/.idea/workspace.xml
