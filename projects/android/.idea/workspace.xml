@@ -6,6 +6,34 @@
     <ignored path=".idea/workspace.xml" />
     <file path="$PROJECT_DIR$/facebook/AndroidManifest.xml" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367894165625" ignored="false" />
     <file path="/MainActivity.java" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367894232413" ignored="false" />
+    <file path="$PROJECT_DIR$/actionbarsherlock/res/values-sw600dp/abs__dimens.xml" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367977417133" ignored="false" />
+    <file path="$PROJECT_DIR$/actionbarsherlock/res/values-sw600dp/abs__bools.xml" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367977417133" ignored="false" />
+    <file path="$PROJECT_DIR$/actionbarsherlock/res/values-w360dp/abs__dimens.xml" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367977417133" ignored="false" />
+    <file path="$PROJECT_DIR$/actionbarsherlock/res/values-large-hdpi-1024x600/abs__dimens.xml" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367977417133" ignored="false" />
+    <file path="$PROJECT_DIR$/actionbarsherlock/res/values/abs__bools.xml" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367977417133" ignored="false" />
+    <file path="$PROJECT_DIR$/actionbarsherlock/res/values-w480dp/abs__config.xml" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367977417133" ignored="false" />
+    <file path="$PROJECT_DIR$/actionbarsherlock/res/values-large-mdpi-1024x600/abs__dimens.xml" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367977417133" ignored="false" />
+    <file path="$PROJECT_DIR$/actionbarsherlock/res/values/abs__themes.xml" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367977417133" ignored="false" />
+    <file path="$PROJECT_DIR$/actionbarsherlock/res/values-w480dp/abs__bools.xml" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367977417133" ignored="false" />
+    <file path="$PROJECT_DIR$/actionbarsherlock/res/values-large-land-hdpi-1024x600/abs__dimens.xml" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367977417133" ignored="false" />
+    <file path="$PROJECT_DIR$/actionbarsherlock/res/values/abs__ids.xml" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367977417133" ignored="false" />
+    <file path="$PROJECT_DIR$/actionbarsherlock/res/values-w500dp/abs__dimens.xml" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367977417133" ignored="false" />
+    <file path="$PROJECT_DIR$/actionbarsherlock/res/values-large-land-mdpi-1024x600/abs__dimens.xml" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367977417133" ignored="false" />
+    <file path="$PROJECT_DIR$/actionbarsherlock/res/values/abs__attrs.xml" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367977417133" ignored="false" />
+    <file path="$PROJECT_DIR$/actionbarsherlock/res/values-w600dp/abs__dimens.xml" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367977417133" ignored="false" />
+    <file path="$PROJECT_DIR$/actionbarsherlock/res/values/abs__colors.xml" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367977417133" ignored="false" />
+    <file path="$PROJECT_DIR$/actionbarsherlock/res/values-xlarge/abs__dimens.xml" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367977417133" ignored="false" />
+    <file path="$PROJECT_DIR$/actionbarsherlock/res/values/abs__config.xml" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367977417134" ignored="false" />
+    <file path="$PROJECT_DIR$/actionbarsherlock/res/values/abs__styles.xml" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367977417134" ignored="false" />
+    <file path="$PROJECT_DIR$/actionbarsherlock/res/values-v11/abs__themes.xml" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367977417134" ignored="false" />
+    <file path="$PROJECT_DIR$/actionbarsherlock/res/values-v14/abs__themes.xml" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367977417134" ignored="false" />
+    <file path="$PROJECT_DIR$/actionbarsherlock/res/values/abs__dimens.xml" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367977417134" ignored="false" />
+    <file path="$PROJECT_DIR$/actionbarsherlock/res/values-v14/abs__styles.xml" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367977417134" ignored="false" />
+    <file path="$PROJECT_DIR$/actionbarsherlock/res/values/abs__strings.xml" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367977417134" ignored="false" />
+    <file path="$PROJECT_DIR$/actionbarsherlock/res/values-land/abs__dimens.xml" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367977417134" ignored="false" />
+    <file path="$PROJECT_DIR$/actionbarsherlock/AndroidManifest.xml" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367977417134" ignored="false" />
+    <file path="$PROJECT_DIR$/actionbarsherlock/project.properties" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367977429851" ignored="false" />
+    <file path="/fragment.java" changelist="0af34ceb-bc22-47bc-85b2-442deec73c9e" time="1367977875535" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,7 +48,6 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -57,6 +84,7 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
+    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -66,24 +94,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="MainActivity.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="MainActivity.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/classygames/src/com/charlesmadere/android/classygames/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="29" column="0" selection-start="874" selection-end="874" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="e#1481#1689#0" expanded="true" />
-                <element signature="e#1684#1685#0" expanded="true" />
-                <element signature="e#4803#5035#0" expanded="true" />
-                <element signature="e#5028#5029#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GameFragmentActivityTest.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/classygamestest/src/com/charlesmadere/android/classygames/test/GameFragmentActivityTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="32" column="0" selection-start="551" selection-end="551" vertical-scroll-proportion="0.6320225">
+            <state line="42" column="0" selection-start="1121" selection-end="1121" vertical-scroll-proportion="0.50209206">
               <folding />
             </state>
           </provider>
@@ -107,7 +121,7 @@
     <option name="x" value="52" />
     <option name="y" value="22" />
     <option name="width" value="1388" />
-    <option name="height" value="860" />
+    <option name="height" value="878" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -208,14 +222,19 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="GoToFile.includeJavaFiles" value="false" />
+    <property name="project.structure.proportion" value="0.15" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="options.lastSelected" value="editor" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="recentsLimit" value="5" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/classygames/libs/universal-image-loader-1.8.4.jar!/" />
+    <property name="project.structure.side.proportion" value="0.2" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="restartRequiresConfirmation" value="true" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="FullScreen" value="false" />
     <property name="GoToClass.includeLibraries" value="false" />
@@ -227,6 +246,24 @@
       <module name="" />
       <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m" />
       <option name="PROGRAM_PARAMETERS" />
+      <method />
+    </configuration>
+    <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
+      <module name="" />
+      <option name="TESTING_TYPE" value="0" />
+      <option name="INSTRUMENTATION_RUNNER_CLASS" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
       <method />
     </configuration>
     <configuration default="true" type="Remote" factoryName="Remote">
@@ -335,7 +372,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <option name="MODE" value="default_activity" />
       <option name="DEPLOY" value="true" />
-      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
       <option name="PREFERRED_AVD" value="" />
       <option name="USE_COMMAND_LINE" value="true" />
       <option name="COMMAND_LINE" value="" />
@@ -344,6 +381,8 @@
       <option name="NETWORK_SPEED" value="full" />
       <option name="NETWORK_LATENCY" value="none" />
       <option name="CLEAR_LOGCAT" value="false" />
+      <RunnerSettings RunnerId="AndroidDebugRunner" />
+      <ConfigurationWrapper RunnerId="AndroidDebugRunner" />
       <method />
     </configuration>
     <list size="1">
@@ -364,34 +403,35 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="52" y="22" width="1388" height="860" extended-state="0" />
+    <frame x="52" y="22" width="1388" height="878" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32972974" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298153" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24962743" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24962743" sideWeight="0.6701847" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298153" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -454,24 +494,28 @@
   <component name="XDebuggerManager">
     <breakpoint-manager />
   </component>
+  <component name="antWorkspaceConfiguration">
+    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
+    <option name="FILTER_TARGETS" value="false" />
+  </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/classygames/src/com/charlesmadere/android/classygames/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
+        <state line="41" column="0" selection-start="1120" selection-end="1120" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/classygames/src/com/charlesmadere/android/classygames/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
         <state line="29" column="0" selection-start="874" selection-end="874" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#1481#1689#0" expanded="true" />
-            <element signature="e#1684#1685#0" expanded="true" />
-            <element signature="e#4803#5035#0" expanded="true" />
-            <element signature="e#5028#5029#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/SDKs/android-sdk-macosx/sources/android-17/android/test/ActivityInstrumentationTestCase2.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="53" selection-start="1445" selection-end="1445" vertical-scroll-proportion="0.09024745">
-          <folding />
-        </state>
+        <state line="36" column="53" selection-start="1445" selection-end="1445" vertical-scroll-proportion="0.09024745" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/classygamestest/src/com/charlesmadere/android/classygames/test/GameFragmentActivityTest.java">
@@ -481,6 +525,132 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/classygames/src/com/charlesmadere/android/classygames/FriendsListFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="51" column="42" selection-start="1755" selection-end="1755" vertical-scroll-proportion="0.27896994">
+          <folding>
+            <element signature="e#6509#6539#0" expanded="true" />
+            <element signature="e#6708#7553#0" expanded="true" />
+            <element signature="e#7545#7546#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/facebook/src/com/facebook/widget/FacebookFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="29" selection-start="718" selection-end="718" vertical-scroll-proportion="0.1875">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/actionbarsherlock/src/com/actionbarsherlock/app/ActionBar.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="29" selection-start="800" selection-end="800" vertical-scroll-proportion="0.21875">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/classygames/src/com/charlesmadere/android/classygames/utilities/Utilities.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="45" selection-start="642" selection-end="642" vertical-scroll-proportion="0.33333334">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/classygames/src/com/charlesmadere/android/classygames/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="42" column="0" selection-start="1121" selection-end="1121" vertical-scroll-proportion="0.50209206">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>Android</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.6</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>classygames</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.6</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>android-support-v4</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
   </component>
 </project>
 
