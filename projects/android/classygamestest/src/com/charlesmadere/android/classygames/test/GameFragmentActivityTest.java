@@ -13,6 +13,8 @@ public class GameFragmentActivityTest extends ActivityInstrumentationTestCase2<G
 	private GameFragmentActivity activity;
 
 
+
+
 	public GameFragmentActivityTest()
 	{
 		super(GameFragmentActivity.class);

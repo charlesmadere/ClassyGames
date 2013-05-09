@@ -33,7 +33,6 @@ public class MainActivity extends SherlockActivity
 
 
 	private UiLifecycleHelper uiHelper;
-	private Session.StatusCallback sessionStatusCallback;
 
 	private boolean isResumed = false;
 	private boolean hasFinished = false;
@@ -56,12 +55,10 @@ public class MainActivity extends SherlockActivity
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main_activity);
 
-		sessionStatusCallback = new Session.StatusCallback()
-		{
+		final Session.StatusCallback sessionStatusCallback = new Session.StatusCallback() {
 			@Override
-			public void call(final Session session, final SessionState state, final Exception exception)
-			{
-				onSessionStateChange(session, state, exception);
+			public void call(final Session session, final SessionState state, final Exception exception) {
+				onSessionStateChange(session, state);
 			}
 		};
 
@@ -170,7 +167,7 @@ public class MainActivity extends SherlockActivity
 	}
 
 
-	private void onSessionStateChange(final Session session, final SessionState state, final Exception exception)
+	private void onSessionStateChange(final Session session, final SessionState state)
 	{
 		if (isResumed)
 		// only make changes if this activity is visible
