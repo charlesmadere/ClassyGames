@@ -51,6 +51,9 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState)
+	// I'm sorry that this method is so crazy. I really am. But there's a bunch
+	// of different things that it does, so it's necessary. Check the comments
+	// throughout the method to follow along.
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.game_fragment_activity);
@@ -60,10 +63,16 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 		final FragmentManager fManager = getSupportFragmentManager();
 
 		if (savedInstanceState == null)
+		// Checks to see if the savedInstanceState object is null. If this
+		// object is null then we're not rebuilding this FragmentActivity due
+		// to an orientation change. This means that this FragmentActivity is
+		// completely fresh and brand new.
 		{
 			final FragmentTransaction fTransaction = fManager.beginTransaction();
 
 			if (isDeviceLarge())
+			// Checks to see if this is a large device. If this is a large
+			// device then we will load in the multi pane layout.
 			{
 				emptyGameFragment = new EmptyGameFragment();
 				fTransaction.add(R.id.game_fragment_activity_fragment_game, emptyGameFragment);
@@ -71,6 +80,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 				gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_games_list_fragment);
 			}
 			else
+			// This is a small device. We will load in the single pane layout.
 			{
 				gamesListFragment = new GamesListFragment();
 				fTransaction.add(R.id.game_fragment_activity_container, gamesListFragment);
@@ -79,8 +89,19 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 			fTransaction.commit();
 		}
 		else
+		// The savedInstanceState object is not null. This means that the
+		// Android device probably just went through an orientation change.
+		// We're going to recover this FragmentActivity from the data stored
+		// in the savedInstanceState object.
 		{
+			// Read in the previously stored title for the Action Bar. If the
+			// title was not found, then the R.string.games_list String will be
+			// loaded in and used instead.
+			final CharSequence actionBarTitle = savedInstanceState.getCharSequence(KEY_ACTION_BAR_TITLE, getString(R.string.games_list));
+
 			if (isDeviceLarge())
+			// Checks to see if this is a large device. If this is a large
+			// device then we will load in the multi pane layout.
 			{
 				try
 				{
@@ -92,10 +113,11 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 					final ActionBar actionBar = getSupportActionBar();
 					actionBar.setDisplayHomeAsUpEnabled(true);
-					actionBar.setTitle(savedInstanceState.getCharSequence(KEY_ACTION_BAR_TITLE));
+					actionBar.setTitle(actionBarTitle);
 				}
 			}
 			else
+			// This is a small device. We will load in the single pane layout.
 			{
 				try
 				{
@@ -107,31 +129,12 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 					final ActionBar actionBar = getSupportActionBar();
 					actionBar.setDisplayHomeAsUpEnabled(true);
-					actionBar.setTitle(savedInstanceState.getCharSequence(KEY_ACTION_BAR_TITLE));
+					actionBar.setTitle(actionBarTitle);
 				}
 			}
 		}
 
-		final Intent intent = getIntent();
-
-		if (intent != null)
-		{
-			if (intent.hasExtra(BUNDLE_DATA_GAME_ID) && intent.hasExtra(BUNDLE_DATA_WHICH_GAME)
-				&& intent.hasExtra(BUNDLE_DATA_PERSON_OPPONENT_ID) && intent.hasExtra(BUNDLE_DATA_PERSON_OPPONENT_NAME))
-			{
-				final String gameId = intent.getStringExtra(BUNDLE_DATA_GAME_ID);
-				final byte whichGame = intent.getByteExtra(BUNDLE_DATA_WHICH_GAME, (byte) 0);
-				final long personId = intent.getLongExtra(BUNDLE_DATA_PERSON_OPPONENT_ID, (long) 0);
-				final String personName = intent.getStringExtra(BUNDLE_DATA_PERSON_OPPONENT_NAME);
-
-				if (Game.isIdValid(gameId) && Game.isWhichGameValid(whichGame)
-					&& Person.isIdValid(personId) && Person.isNameValid(personName))
-				{
-					final Game game = new Game(new Person(personId, personName), whichGame, gameId);
-					onGameSelected(game);
-				}
-			}
-		}
+		checkIfNotificationWasTapped();
 	}
 
 
@@ -146,13 +149,13 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 			if (extras != null && !extras.isEmpty())
 			{
-				final long id = extras.getLong(NewGameFragmentActivity.KEY_FRIEND_ID);
-				final String name = extras.getString(NewGameFragmentActivity.KEY_FRIEND_NAME);
+				final long personId = extras.getLong(NewGameFragmentActivity.KEY_FRIEND_ID);
+				final String personName = extras.getString(NewGameFragmentActivity.KEY_FRIEND_NAME);
 				final byte type = extras.getByte(NewGameFragmentActivity.KEY_GAME_TYPE);
 
-				if (Person.isIdValid(id) && Person.isNameValid(name) && Game.isWhichGameValid(type))
+				if (Person.isIdAndNameValid(personId, personName) && Game.isWhichGameValid(type))
 				{
-					final Person friend = new Person(id, name);
+					final Person friend = new Person(personId, personName);
 					final Game game = new Game(friend, type);
 					onGameSelected(game);
 				}
@@ -253,6 +256,45 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 	}
 
 
+
+
+	/**
+	 * Checks to see if the reason that the user is currently at this class
+	 * (GameFragmentActivity) is because they tapped a notification in their
+	 * notifications bar. If that turns out to be the reason, then this method
+	 * will load in the game that the notification pertains to.
+	 */
+	private void checkIfNotificationWasTapped()
+	{
+		// Retrieve an Intent that was given to this class. It's possible that
+		// no Intent was given to this class (in this case the resulting value
+		// should be null). We need to do this because when someone taps a
+		// Classy Games notification in their notifications bar, that action
+		// triggers an Intent to be sent into this method. That Intent will
+		// then include a bunch of information about the tapped notification.
+		final Intent intent = getIntent();
+
+		if (intent != null)
+		// Check to make sure that this Intent object is not null. If it is not
+		// null then we know that the user clicked a Classy Games notification
+		// and was then sent here.
+		{
+			final String gameId = intent.getStringExtra(BUNDLE_DATA_GAME_ID);
+			final byte whichGame = intent.getByteExtra(BUNDLE_DATA_WHICH_GAME, (byte) 0);
+			final long personId = intent.getLongExtra(BUNDLE_DATA_PERSON_OPPONENT_ID, (long) 0);
+			final String personName = intent.getStringExtra(BUNDLE_DATA_PERSON_OPPONENT_NAME);
+
+			if (Game.isIdValid(gameId) && Game.isWhichGameValid(whichGame)
+					&& Person.isIdAndNameValid(personId, personName))
+			// Check the data gathered from the Intent. If a single piece of
+			// this data is found to be invalid, then we will not act upon the
+			// tapped notification.
+			{
+				final Game game = new Game(new Person(personId, personName), whichGame, gameId);
+				onGameSelected(game);
+			}
+		}
+	}
 
 
 	/**
