@@ -144,20 +144,31 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 	@Override
 	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data)
+	// This method will be run when the NewGameFragmentActivity returns some
+	// data back. That data pertains to who the current Android user wants to
+	// create a game against.
 	{
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (resultCode == NewGameFragmentActivity.RESULT_CODE_FRIEND_SELECTED)
+		// Check the result code as returned from NewGameFragmentActivity. If a
+		// friend was selected, then this means that the current Android user
+		// wants to start a new game against that selected user.
 		{
+			// Retrieve the data as returned from NewGameFragmentActivity. It
+			// could be malformed, we'll check for that below.
 			final Bundle extras = data.getExtras();
 
 			if (extras != null && !extras.isEmpty())
+			// Ensure that the returned data is not totally garbled.
 			{
 				final long personId = extras.getLong(NewGameFragmentActivity.KEY_FRIEND_ID);
 				final String personName = extras.getString(NewGameFragmentActivity.KEY_FRIEND_NAME);
 				final byte type = extras.getByte(NewGameFragmentActivity.KEY_GAME_TYPE);
 
 				if (Person.isIdAndNameValid(personId, personName) && Game.isWhichGameValid(type))
+				// Ensure that we received proper data from
+				// NewGameFragmentActivity.
 				{
 					final Person friend = new Person(personId, personName);
 					final Game game = new Game(friend, type);
@@ -349,12 +360,27 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 	public void onGameSelected(final Game game)
 	{
 		if (isDeviceLarge() || (genericGameFragment == null || !genericGameFragment.isVisible()))
+		// This statement will validate as true if this Android device is large
+		// OR if EITHER of the following two statements are two: the
+		// genericGameFragment variable is false, OR the genericGameFragment
+		// variable is not visible.
 		{
 			if (genericGameFragment != null && genericGameFragment.isVisible())
+			// If the genericGameFragment variable is both not null and is
+			// visible. This means that a game is currently open and showing.
+			// We want to remove that game before proceeding with the showing
+			// of the newly selected game.
 			{
+				// Trigger a press of the back button. This will remove the
+				// game that is currently showing.
 				onBackPressed();
 			}
 
+			// Create a new Bundle object and place a bunch of data into it.
+			// This Bundle will be passed into the GenericGameFragment that
+			// is about to be created. This Bundle tells the new
+			// GenericGameFragment details about the game that it needs to
+			// display.
 			final Bundle arguments = new Bundle();
 			arguments.putString(GenericGameFragment.KEY_GAME_ID, game.getId());
 			arguments.putByte(GenericGameFragment.KEY_WHICH_GAME, game.getWhichGame());
@@ -370,6 +396,8 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 				genericGameFragment = new ChessGameFragment();
 			}
 
+			// give the newly created GenericGameFragments the Bundle that we
+			// created just a few lines above this one
 			genericGameFragment.setArguments(arguments);
 
 			final FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();

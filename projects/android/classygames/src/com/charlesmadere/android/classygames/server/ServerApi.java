@@ -53,8 +53,8 @@ public abstract class ServerApi
 
 
 		/**
-		 * If this class's ServerApiTask AsyncTask gets cancelled this then
-		 * this method will be run.
+		 * If this class's ServerApiTask AsyncTask gets cancelled then this
+		 * method will be run.
 		 */
 		public void onCancel();
 
