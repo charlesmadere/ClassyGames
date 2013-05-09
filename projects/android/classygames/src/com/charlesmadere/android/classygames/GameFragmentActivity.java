@@ -97,7 +97,8 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 			// Read in the previously stored title for the Action Bar. If the
 			// title was not found, then the R.string.games_list String will be
 			// loaded in and used instead.
-			final CharSequence actionBarTitle = savedInstanceState.getCharSequence(KEY_ACTION_BAR_TITLE, getString(R.string.games_list));
+			final CharSequence actionBarTitle = savedInstanceState.getCharSequence(KEY_ACTION_BAR_TITLE,
+				getString(R.string.games_list));
 
 			if (isDeviceLarge())
 			// Checks to see if this is a large device. If this is a large
@@ -134,6 +135,9 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 			}
 		}
 
+		// Checks to see if the reason that this class is running is because
+		// the user tapped a Classy Games notification in their notifications
+		// bar.
 		checkIfNotificationWasTapped();
 	}
 
