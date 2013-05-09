@@ -1,6 +1,7 @@
 package com.charlesmadere.android.classygames;
 
 
+import android.view.View;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -207,7 +208,99 @@ public class ChessGameFragment extends GenericGameFragment
 	@Override
 	protected void initViews()
 	{
+		final View view = getView();
 
+		setBoardOnClickListeners
+		(
+			view.findViewById(R.id.chess_game_fragment_x0y0),
+			view.findViewById(R.id.chess_game_fragment_x1y0),
+			view.findViewById(R.id.chess_game_fragment_x2y0),
+			view.findViewById(R.id.chess_game_fragment_x3y0),
+			view.findViewById(R.id.chess_game_fragment_x4y0),
+			view.findViewById(R.id.chess_game_fragment_x5y0),
+			view.findViewById(R.id.chess_game_fragment_x6y0),
+			view.findViewById(R.id.chess_game_fragment_x7y0),
+			view.findViewById(R.id.chess_game_fragment_x0y1),
+			view.findViewById(R.id.chess_game_fragment_x1y1),
+			view.findViewById(R.id.chess_game_fragment_x2y1),
+			view.findViewById(R.id.chess_game_fragment_x3y1),
+			view.findViewById(R.id.chess_game_fragment_x4y1),
+			view.findViewById(R.id.chess_game_fragment_x5y1),
+			view.findViewById(R.id.chess_game_fragment_x6y1),
+			view.findViewById(R.id.chess_game_fragment_x7y1),
+			view.findViewById(R.id.chess_game_fragment_x0y2),
+			view.findViewById(R.id.chess_game_fragment_x1y2),
+			view.findViewById(R.id.chess_game_fragment_x2y2),
+			view.findViewById(R.id.chess_game_fragment_x3y2),
+			view.findViewById(R.id.chess_game_fragment_x4y2),
+			view.findViewById(R.id.chess_game_fragment_x5y2),
+			view.findViewById(R.id.chess_game_fragment_x6y2),
+			view.findViewById(R.id.chess_game_fragment_x7y2),
+			view.findViewById(R.id.chess_game_fragment_x0y3),
+			view.findViewById(R.id.chess_game_fragment_x1y3),
+			view.findViewById(R.id.chess_game_fragment_x2y3),
+			view.findViewById(R.id.chess_game_fragment_x3y3),
+			view.findViewById(R.id.chess_game_fragment_x4y3),
+			view.findViewById(R.id.chess_game_fragment_x5y3),
+			view.findViewById(R.id.chess_game_fragment_x6y3),
+			view.findViewById(R.id.chess_game_fragment_x7y3),
+			view.findViewById(R.id.chess_game_fragment_x0y4),
+			view.findViewById(R.id.chess_game_fragment_x1y4),
+			view.findViewById(R.id.chess_game_fragment_x2y4),
+			view.findViewById(R.id.chess_game_fragment_x3y4),
+			view.findViewById(R.id.chess_game_fragment_x4y4),
+			view.findViewById(R.id.chess_game_fragment_x5y4),
+			view.findViewById(R.id.chess_game_fragment_x6y4),
+			view.findViewById(R.id.chess_game_fragment_x7y4),
+			view.findViewById(R.id.chess_game_fragment_x0y5),
+			view.findViewById(R.id.chess_game_fragment_x1y5),
+			view.findViewById(R.id.chess_game_fragment_x2y5),
+			view.findViewById(R.id.chess_game_fragment_x3y5),
+			view.findViewById(R.id.chess_game_fragment_x4y5),
+			view.findViewById(R.id.chess_game_fragment_x5y5),
+			view.findViewById(R.id.chess_game_fragment_x6y5),
+			view.findViewById(R.id.chess_game_fragment_x7y5),
+			view.findViewById(R.id.chess_game_fragment_x0y6),
+			view.findViewById(R.id.chess_game_fragment_x1y6),
+			view.findViewById(R.id.chess_game_fragment_x2y6),
+			view.findViewById(R.id.chess_game_fragment_x3y6),
+			view.findViewById(R.id.chess_game_fragment_x4y6),
+			view.findViewById(R.id.chess_game_fragment_x5y6),
+			view.findViewById(R.id.chess_game_fragment_x6y6),
+			view.findViewById(R.id.chess_game_fragment_x7y6),
+			view.findViewById(R.id.chess_game_fragment_x0y7),
+			view.findViewById(R.id.chess_game_fragment_x1y7),
+			view.findViewById(R.id.chess_game_fragment_x2y7),
+			view.findViewById(R.id.chess_game_fragment_x3y7),
+			view.findViewById(R.id.chess_game_fragment_x4y7),
+			view.findViewById(R.id.chess_game_fragment_x5y7),
+			view.findViewById(R.id.chess_game_fragment_x6y7),
+			view.findViewById(R.id.chess_game_fragment_x7y7)
+		);
+
+		// create an array of the board's rows
+		final int [] xPositions = new int[8];
+		xPositions[0] = R.id.chess_game_fragment_x0;
+		xPositions[1] = R.id.chess_game_fragment_x1;
+		xPositions[2] = R.id.chess_game_fragment_x2;
+		xPositions[3] = R.id.chess_game_fragment_x3;
+		xPositions[4] = R.id.chess_game_fragment_x4;
+		xPositions[5] = R.id.chess_game_fragment_x5;
+		xPositions[6] = R.id.chess_game_fragment_x6;
+		xPositions[7] = R.id.chess_game_fragment_x7;
+
+		// create an array of the board's columns
+		final int [] yPositions = new int[8];
+		yPositions[0] = R.id.chess_game_fragment_y0;
+		yPositions[0] = R.id.chess_game_fragment_y1;
+		yPositions[0] = R.id.chess_game_fragment_y2;
+		yPositions[0] = R.id.chess_game_fragment_y3;
+		yPositions[0] = R.id.chess_game_fragment_y4;
+		yPositions[0] = R.id.chess_game_fragment_y5;
+		yPositions[0] = R.id.chess_game_fragment_y6;
+		yPositions[0] = R.id.chess_game_fragment_y7;
+
+		setAllBoardPositionsToEqualHeightAndWidth(view, R.id.chess_game_fragment_x7y7, xPositions, yPositions);
 	}
 
 

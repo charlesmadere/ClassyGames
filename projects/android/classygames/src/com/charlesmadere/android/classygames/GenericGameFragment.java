@@ -4,6 +4,10 @@ package com.charlesmadere.android.classygames;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import android.annotation.SuppressLint;
+import android.content.res.Configuration;
+import android.view.ViewTreeObserver;
+import android.widget.LinearLayout;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
@@ -142,7 +146,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * Checks to see which position on the board was clicked and then moves
 	 * pieces and / or performs actions accordingly.
 	 */
-	protected View.OnClickListener onBoardClick;
+	private View.OnClickListener onBoardClick;
 
 
 
@@ -811,6 +815,102 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
+	 * Applies the onBoardClick OnClickListener to all of the given View
+	 * objects.
+	 *
+	 * @param views
+	 * The set of View objects to apply the OnClickListener to.
+	 */
+	protected void setBoardOnClickListeners(final View... views)
+	{
+		for (int i = 0; i < views.length; ++i)
+		{
+			views[i].setOnClickListener(onBoardClick);
+		}
+	}
+
+
+	/**
+	 * Sets all of the positions on the game board to equal height and width.
+	 * This is needed because by default Android will not size the game board's
+	 * height and width values to the same thing, and thus the game board will
+	 * look like a misshapen rectangle crazy thing. So yeah, this method fixes
+	 * that situation and makes the board pretty instead of ugly. <b>This
+	 * method should only be called from one of the fragments that extend this
+	 * abstract class.</b>
+	 *
+	 * @param view
+	 * The View object as received from the getView() method.
+	 *
+	 * @param modelBoardPosition
+	 * The board position with height and / or width values that will be used
+	 * when resizing the rest of the game board. For checkers and chess, this
+	 * should be x7y7.
+	 *
+	 * @param xPositions
+	 * An int array of the board's rows.
+	 *
+	 * @param yPositions
+	 * An int array of the board's columns.
+	 */
+	protected void setAllBoardPositionsToEqualHeightAndWidth(final View view, final int modelBoardPosition, final int [] xPositions, final int [] yPositions)
+	{
+		final Resources resources = getResources();
+		final ViewTreeObserver viewTreeObserver = view.getViewTreeObserver();
+
+		viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
+		{
+			@SuppressLint("NewApi")
+			@SuppressWarnings("deprecation")
+			@Override
+			public void onGlobalLayout()
+			{
+				final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+				final View view = getView();
+
+				if (view != null)
+				{
+					final View boardPosition = view.findViewById(modelBoardPosition);
+
+					if (resources.getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+					{
+						final int width = boardPosition.getWidth();
+						layoutParams.height = width;
+
+						for (int i = 0; i < yPositions.length; ++i)
+						{
+							view.findViewById(yPositions[i]).setLayoutParams(layoutParams);
+						}
+					}
+					else
+					{
+						final int height = boardPosition.getHeight();
+						layoutParams.width = height;
+
+						for (int i = 0; i < xPositions.length; ++i)
+						{
+							view.findViewById(xPositions[i]).setLayoutParams(layoutParams);
+						}
+					}
+
+					if (viewTreeObserver.isAlive())
+					{
+						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+						{
+							viewTreeObserver.removeOnGlobalLayoutListener(this);
+						}
+						else
+						{
+							viewTreeObserver.removeGlobalOnLayoutListener(this);
+						}
+					}
+				}
+			}
+		});
+	}
+
+
+	/**
 	 * Sets the background of the given ImageButton to what it should be. If
 	 * the ImageButton was just now selected, it will be given a highlighted
 	 * background that signifies that fact. If the ImageButton was just now
@@ -1049,11 +1149,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * thing that this method should do. Stuff that's typically in an
 	 * Activity's onCreate() method should instead be, for fragments, placed in
 	 * the onActivityCreated() method.
-	 * 
-	 * @return
-	 * This method must return the Android int representation of its layout.
-	 * For checkers, this method will return R.layout.checkers_game_layout. For
-	 * chess, this method will return R.layout.chess_game_layout.
 	 */
 	protected abstract void onCreateView();
 
