@@ -196,37 +196,52 @@ public class CheckersGameFragment extends GenericGameFragment
 		// create an array of the board's columns
 		final int [] yPositions = new int[8];
 		yPositions[0] = R.id.checkers_game_fragment_y0;
-		yPositions[0] = R.id.checkers_game_fragment_y1;
-		yPositions[0] = R.id.checkers_game_fragment_y2;
-		yPositions[0] = R.id.checkers_game_fragment_y3;
-		yPositions[0] = R.id.checkers_game_fragment_y4;
-		yPositions[0] = R.id.checkers_game_fragment_y5;
-		yPositions[0] = R.id.checkers_game_fragment_y6;
-		yPositions[0] = R.id.checkers_game_fragment_y7;
+		yPositions[1] = R.id.checkers_game_fragment_y1;
+		yPositions[2] = R.id.checkers_game_fragment_y2;
+		yPositions[3] = R.id.checkers_game_fragment_y3;
+		yPositions[4] = R.id.checkers_game_fragment_y4;
+		yPositions[5] = R.id.checkers_game_fragment_y5;
+		yPositions[6] = R.id.checkers_game_fragment_y6;
+		yPositions[7] = R.id.checkers_game_fragment_y7;
 
-		setAllBoardPositionsToEqualHeightAndWidth(view, R.id.checkers_game_fragment_x7y7, xPositions, yPositions);
+		setAllBoardPositionsToEqualHeightAndWidth(view, R.id.checkers_game_fragment_x0y7, xPositions, yPositions);
+	}
 
-		// All of the rest of the code in this method is used to load the user
-		// selected checkers piece colors. It's a bunch of lines but it's
-		// really not all that complicated.
 
+	@Override
+	protected void loadPieces()
+	{
 		final String blue = getString(R.string.blue);
 		final String green = getString(R.string.green);
 		final String orange = getString(R.string.orange);
 		final String pink = getString(R.string.pink);
 
+		final String keyPlayerColor = getString(R.string.settings_key_players_checkers_piece_color);
+		final String keyOpponentColor = getString(R.string.settings_key_opponents_checkers_piece_color);
+
 		final SharedPreferences sPreferences = Utilities.getPreferences(getSherlockActivity());
-		String playerColor = sPreferences.getString(getString(R.string.settings_key_players_checkers_piece_color), green);
-		String opponentColor = sPreferences.getString(getString(R.string.settings_key_opponents_checkers_piece_color), orange);
+
+		// Read in the colors that the player has selected to use for their
+		// checkers pieces. If the user has not set a color, the playerColor
+		// String will default to green and the opponentColor String will
+		// default to orange.
+		String playerColor = sPreferences.getString(keyPlayerColor, green);
+		String opponentColor = sPreferences.getString(keyOpponentColor, orange);
 
 		if (playerColor.equalsIgnoreCase(opponentColor))
+		// Check to see if the color that the player has set is for their own
+		// color is the same as the one that they set for the opponent's color.
+		// This if statement will validate as true if that is the case.
 		{
 			playerColor = green;
 			opponentColor = orange;
 
 			final SharedPreferences.Editor editor = sPreferences.edit();
-			editor.putString(getString(R.string.settings_key_players_checkers_piece_color), playerColor);
-			editor.putString(getString(R.string.settings_key_opponents_checkers_piece_color), opponentColor);
+
+			// Change the value as saved in the user's preferences to the
+			// default colors. This fixes the conflicting color issue.
+			editor.putString(keyPlayerColor, playerColor);
+			editor.putString(keyOpponentColor, opponentColor);
 			editor.commit();
 		}
 

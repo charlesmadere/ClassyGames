@@ -278,7 +278,16 @@ public class ChessGameFragment extends GenericGameFragment
 			view.findViewById(R.id.chess_game_fragment_x7y7)
 		);
 
-		// create an array of the board's rows
+		// Below we're going to create two different int arrays. One will
+		// contain all of the board's ROWS and the other will contain all of
+		// the board's COLUMNS. This is needed because the board as taken
+		// directly from the raw XML file do not have each individual
+		// position's height and width dimensions equal. This means that each
+		// position is not a square. This issue can only be fixed in code, and
+		// that code requires having a handle to all of board's rows and
+		// columns.
+
+		// create an array of handles to the board's rows
 		final int [] xPositions = new int[8];
 		xPositions[0] = R.id.chess_game_fragment_x0;
 		xPositions[1] = R.id.chess_game_fragment_x1;
@@ -289,18 +298,31 @@ public class ChessGameFragment extends GenericGameFragment
 		xPositions[6] = R.id.chess_game_fragment_x6;
 		xPositions[7] = R.id.chess_game_fragment_x7;
 
-		// create an array of the board's columns
+		// create an array of handles to the board's columns
 		final int [] yPositions = new int[8];
 		yPositions[0] = R.id.chess_game_fragment_y0;
-		yPositions[0] = R.id.chess_game_fragment_y1;
-		yPositions[0] = R.id.chess_game_fragment_y2;
-		yPositions[0] = R.id.chess_game_fragment_y3;
-		yPositions[0] = R.id.chess_game_fragment_y4;
-		yPositions[0] = R.id.chess_game_fragment_y5;
-		yPositions[0] = R.id.chess_game_fragment_y6;
-		yPositions[0] = R.id.chess_game_fragment_y7;
+		yPositions[1] = R.id.chess_game_fragment_y1;
+		yPositions[2] = R.id.chess_game_fragment_y2;
+		yPositions[3] = R.id.chess_game_fragment_y3;
+		yPositions[4] = R.id.chess_game_fragment_y4;
+		yPositions[5] = R.id.chess_game_fragment_y5;
+		yPositions[6] = R.id.chess_game_fragment_y6;
+		yPositions[7] = R.id.chess_game_fragment_y7;
 
-		setAllBoardPositionsToEqualHeightAndWidth(view, R.id.chess_game_fragment_x7y7, xPositions, yPositions);
+		// run the method that will perform the actual board resizing code
+		setAllBoardPositionsToEqualHeightAndWidth(view, R.id.chess_game_fragment_x0y7, xPositions, yPositions);
+	}
+
+
+	@Override
+	protected void loadPieces()
+	{
+		// TODO
+		// Once I actually have some artwork done for the chess pieces there
+		// will be some code here that loads it all up. And, like with
+		// checkers, the user will be able to select custom colors for their
+		// pieces. So there will be some preferences loading and checking here
+		// as well.
 	}
 
 

@@ -304,7 +304,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 						{
 							boardJSON = new JSONObject(savedInstanceState.getString(BUNDLE_BOARD_JSON));
 
-							initViews();
+							initViewsAndLoadPieces();
 							resumeOldBoard();
 							flush();
 						}
@@ -325,7 +325,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 					try
 					{
 						initNewBoard();
-						initViews();
+						initViewsAndLoadPieces();
 						flush();
 					}
 					catch (final JSONException e)
@@ -662,6 +662,17 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
+	 * Executes the initViews() method and then the loadPieces() method. That's
+	 * all.
+	 */
+	private void initViewsAndLoadPieces()
+	{
+		initViews();
+		loadPieces();
+	}
+
+
+	/**
 	 * @return
 	 * Returns true if either the AsyncGetGame AsyncTask is running or if the
 	 * AsyncSendMove AsyncTask is running.
@@ -845,13 +856,13 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * @param modelBoardPosition
 	 * The board position with height and / or width values that will be used
 	 * when resizing the rest of the game board. For checkers and chess, this
-	 * should be x7y7.
+	 * should probably be x0y7.
 	 *
 	 * @param xPositions
-	 * An int array of the board's rows.
+	 * An int array of handles to all of the board's rows.
 	 *
 	 * @param yPositions
-	 * An int array of the board's columns.
+	 * An int array of handles to all of the board's columns.
 	 */
 	protected void setAllBoardPositionsToEqualHeightAndWidth(final View view, final int modelBoardPosition, final int [] xPositions, final int [] yPositions)
 	{
@@ -1096,7 +1107,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			viewGroup.removeAllViews();
 			inflater.inflate(getGameView(), viewGroup);
 
-			initViews();
+			initViewsAndLoadPieces();
 			resumeOldBoard();
 			flush();
 
@@ -1185,16 +1196,31 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * Initialize the game board as if it's a <strong>brand new game</strong>.
 	 * 
 	 * @throws JSONException
-	 * This should never happen. 
+	 * This should never happen. But still, I guess it still possibly could. So
+	 * definitely prepare for that situation in some way. If this Exception is
+	 * thrown then it can be assumed that the game we were trying to initialize
+	 * is corrupt. A corrupt game should <b>never, ever</b> be played. So this
+	 * should trigger the GenericGameFragment to destroy itself to prevent
+	 * some sort of malformity from hitting the Classy Games server.
 	 */
 	protected abstract void initNewBoard() throws JSONException;
 
 
 	/**
 	 * Initializes some of this Fragment's view data such as layout
-	 * configurations and onClickListeners.
+	 * configurations (width and height of the board's positions) and
+	 * onClickListeners.
 	 */
 	protected abstract void initViews();
+
+
+	/**
+	 * Loads in the images to be used for the game pieces on the actual game
+	 * board. If the game has the potential for custom colored pieces, then
+	 * this code should read the Android shared preferences information and
+	 * load in the respective colors.
+	 */
+	protected abstract void loadPieces();
 
 
 	/**
