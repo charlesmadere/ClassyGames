@@ -445,9 +445,9 @@ public final class Utilities
 	 */
 	public static boolean verifyValidStrings(final String... strings)
 	{
-		for (int i = 0; i < strings.length; ++i)
+		for (final String string : strings)
 		{
-			if (!verifyValidString(strings[i]))
+			if (!verifyValidString(string))
 			{
 				return false;
 			}

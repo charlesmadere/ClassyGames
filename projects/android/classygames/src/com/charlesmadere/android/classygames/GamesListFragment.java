@@ -191,7 +191,7 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 				}
 				catch (final JSONException e)
 				{
-
+                    Log.e(LOG_TAG, "JSONException in onActivityCreated()!", e);
 				}
 			}
 		}
@@ -480,15 +480,6 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 		private LayoutInflater inflater;
 		private ViewGroup viewGroup;
 		private boolean restoreExistingList;
-
-
-		private AsyncRefreshGamesList(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater, final ViewGroup viewGroup)
-		{
-			this.fragmentActivity = fragmentActivity;
-			this.inflater = inflater;
-			this.viewGroup = viewGroup;
-			restoreExistingList = false;
-		}
 
 
 		private AsyncRefreshGamesList(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater, final ViewGroup viewGroup, final boolean restoreExistingList)
@@ -790,13 +781,13 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 		private Context context;
 
 
-		GamesListAdapter(final Context context, final int textViewResourceId, final ArrayList<Game> games)
+		private GamesListAdapter(final Context context, final int textViewResourceId, final ArrayList<Game> games)
 		{
 			super(context, textViewResourceId, games);
 			this.context = context;
 			this.games = games;
 
-			emptyProfilePicture = (Drawable) context.getResources().getDrawable(R.drawable.empty_profile_picture_small);
+			emptyProfilePicture = context.getResources().getDrawable(R.drawable.empty_profile_picture_small);
 		}
 
 

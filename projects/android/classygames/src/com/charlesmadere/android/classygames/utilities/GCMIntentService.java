@@ -224,9 +224,10 @@ public class GCMIntentService extends IntentService
 	{
 		final SharedPreferences sPreferences = Utilities.getPreferences(this);
 		final String key = getString(R.string.settings_key_show_notification_light);
-		final boolean lightIsEnabled = sPreferences.getBoolean(key, true);
 
-		return lightIsEnabled;
+		// Returns the value that was found to be stored in the Android Shared
+		// Preferences. If the value was not found, then true is returned.
+		return sPreferences.getBoolean(key, true);
 	}
 
 

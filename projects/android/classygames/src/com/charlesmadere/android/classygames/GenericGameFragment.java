@@ -834,9 +834,9 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 */
 	protected void setBoardOnClickListeners(final View... views)
 	{
-		for (int i = 0; i < views.length; ++i)
+		for (final View view : views)
 		{
-			views[i].setOnClickListener(onBoardClick);
+			view.setOnClickListener(onBoardClick);
 		}
 	}
 
@@ -888,9 +888,9 @@ public abstract class GenericGameFragment extends SherlockFragment
 						final int width = boardPosition.getWidth();
 						layoutParams.height = width;
 
-						for (int i = 0; i < yPositions.length; ++i)
+						for (final int yPosition : yPositions)
 						{
-							view.findViewById(yPositions[i]).setLayoutParams(layoutParams);
+							view.findViewById(yPosition).setLayoutParams(layoutParams);
 						}
 					}
 					else
@@ -898,9 +898,9 @@ public abstract class GenericGameFragment extends SherlockFragment
 						final int height = boardPosition.getHeight();
 						layoutParams.width = height;
 
-						for (int i = 0; i < xPositions.length; ++i)
+						for (final int xPosition : xPositions)
 						{
-							view.findViewById(xPositions[i]).setLayoutParams(layoutParams);
+							view.findViewById(xPosition).setLayoutParams(layoutParams);
 						}
 					}
 

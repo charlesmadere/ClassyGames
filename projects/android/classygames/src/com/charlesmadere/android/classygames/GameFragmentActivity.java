@@ -333,7 +333,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 				}
 				catch (final ClassCastException e)
 				{
-
+                    Log.e(LOG_TAG, "ClassCastException in getGamesListFragment()!", e);
 				}
 			}
 		}

@@ -75,9 +75,6 @@ public final class ServerUtilities
 	public final static String POST_DATA_USER_CREATOR = "user_creator";
 
 
-	public final static String REG_ID = "REG_ID";
-
-
 
 
 	/**

@@ -453,13 +453,13 @@ public class FriendsListFragment extends SherlockFragment implements OnItemClick
 		private Drawable emptyProfilePicture;
 
 
-		FriendsListAdapter(final Context context, final int textViewResourceId, final ArrayList<Person> friends)
+		private FriendsListAdapter(final Context context, final int textViewResourceId, final ArrayList<Person> friends)
 		{
 			super(context, textViewResourceId, friends);
 			this.friends = friends;
 			this.context = context;
 
-			emptyProfilePicture = (Drawable) context.getResources().getDrawable(R.drawable.empty_profile_picture_small);
+			emptyProfilePicture = context.getResources().getDrawable(R.drawable.empty_profile_picture_small);
 		}
 
 

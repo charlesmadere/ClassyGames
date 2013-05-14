@@ -38,17 +38,14 @@ public class GameOverActivity extends SherlockActivity
 
 		final Intent intent = getIntent();
 
-		if (intent != null && intent.hasExtra(BUNDLE_DATA_MESSAGE_TYPE) && intent.hasExtra(BUNDLE_DATA_PERSON_OPPONENT_ID)
-			&& intent.hasExtra(BUNDLE_DATA_PERSON_OPPONENT_NAME))
+		if (intent != null)
 		{
-			final byte messageTypeString = intent.getByteExtra(BUNDLE_DATA_MESSAGE_TYPE, (byte) -1);
+			final byte messageType = intent.getByteExtra(BUNDLE_DATA_MESSAGE_TYPE, (byte) -1);
 			final long personId = intent.getLongExtra(BUNDLE_DATA_PERSON_OPPONENT_ID, -1);
 			final String personName = intent.getStringExtra(BUNDLE_DATA_PERSON_OPPONENT_NAME);
 
-			if (Utilities.verifyValidStrings(personName) && Person.isIdValid(personId))
+			if (Utilities.verifyValidStrings(personName) && Person.isIdAndNameValid(personId, personName))
 			{
-				final Byte messageType = Byte.valueOf(messageTypeString);
-
 				final ImageView friendPicture = (ImageView) findViewById(R.id.game_over_activity_friend_picture);
 				Utilities.getImageLoader(this).displayImage(FacebookUtilities.GRAPH_API_URL + personId + FacebookUtilities.GRAPH_API_URL_PICTURE_TYPE_LARGE_SSL, friendPicture);
 
@@ -58,7 +55,7 @@ public class GameOverActivity extends SherlockActivity
 
 				final TextView winOrLose = (TextView) findViewById(R.id.game_over_activity_win_or_lose);
 
-				switch (messageType.byteValue())
+				switch (messageType)
 				{
 					case ServerUtilities.POST_DATA_MESSAGE_TYPE_GAME_OVER_LOSE:
 						winOrLose.setText(R.string.you_lost_the_game_better_luck_next_time);
