@@ -26,7 +26,7 @@ public class Board extends GenericBoard
 
 
 	/**
-	 * Holds a handle to the piece that the user last moved. This isn eeded for
+	 * Holds a handle to the piece that the user last moved. This is needed for
 	 * multijump purposes.
 	 */
 	private Piece lastMovedPiece;

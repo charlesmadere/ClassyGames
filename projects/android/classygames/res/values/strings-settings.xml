@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="change_the_opponents_checkers_piece_colors">Change the Opponent\'s Checkers Piece Colors</string>
-	<string name="change_your_checkers_piece_colors">Change Your Checkers Piece Colors</string>
-	<string name="changes_the_colors_of_the_opponents_checkers_pieces">Changes the colors of the opponents checkers pieces.</string>
+	<string name="change_the_opponents_pieces_colors">Change the Opponent\'s Piece\'s Colors</string>
+	<string name="change_your_pieces_colors">Change Your Piece\'s Colors</string>
+	<string name="changes_the_colors_of_your_opponents_checkers_pieces">Changes the colors of your opponent\'s checkers pieces.</string>
+	<string name="changes_the_colors_of_your_opponents_chess_pieces">Changes the colors of your opponent\'s chess pieces.</string>
 	<string name="changes_the_colors_of_your_own_checkers_pieces">Changes the colors of your own checkers pieces.</string>
+	<string name="changes_the_colors_of_your_own_chess_pieces">Changes the colors of your own chess pieces.</string>
 	<string name="com_charlesmadere_android_classygames_settings_game">com.charlesmadere.android.classygames.settings.GAME</string>
 	<string name="com_charlesmadere_android_classygames_settings_notifications">com.charlesmadere.android.classygames.settings.NOTIFICATIONS</string>
 	<string name="com_charlesmadere_android_classygames_settings_register">com.charlesmadere.android.classygames.settings.REGISTER</string>
