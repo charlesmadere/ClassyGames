@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="change_the_opponents_pieces_colors">Change the Opponent\'s Piece\'s Colors</string>
-	<string name="change_your_pieces_colors">Change Your Piece\'s Colors</string>
+	<string name="change_the_opponents_piece_colors">Change the Opponent\'s Piece Colors</string>
+	<string name="change_your_piece_colors">Change your Piece Colors</string>
 	<string name="changes_the_colors_of_your_opponents_checkers_pieces">Changes the colors of your opponent\'s checkers pieces.</string>
 	<string name="changes_the_colors_of_your_opponents_chess_pieces">Changes the colors of your opponent\'s chess pieces.</string>
 	<string name="changes_the_colors_of_your_own_checkers_pieces">Changes the colors of your own checkers pieces.</string>

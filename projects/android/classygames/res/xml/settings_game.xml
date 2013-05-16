@@ -11,23 +11,23 @@
 		android:title="@string/checkers">
 		<ListPreference
 			android:defaultValue="@string/green"
-			android:dialogTitle="@string/change_your_pieces_colors"
+			android:dialogTitle="@string/change_your_piece_colors"
 			android:entries="@array/settings_game_list_preference_piece_colors"
 			android:entryValues="@array/settings_game_list_preference_piece_colors"
 			android:key="@string/settings_key_players_checkers_piece_color"
 			android:negativeButtonText="@string/cancel"
 			android:positiveButtonText="@string/change_color"
 			android:summary="@string/changes_the_colors_of_your_own_checkers_pieces"
-			android:title="@string/change_your_pieces_colors" />
+			android:title="@string/change_your_piece_colors" />
 		<ListPreference
 			android:defaultValue="@string/orange"
-			android:dialogTitle="@string/change_the_opponents_pieces_colors"
+			android:dialogTitle="@string/change_the_opponents_piece_colors"
 			android:entries="@array/settings_game_list_preference_piece_colors"
 			android:entryValues="@array/settings_game_list_preference_piece_colors"
 			android:key="@string/settings_key_opponents_checkers_piece_color"
 			android:negativeButtonText="@string/cancel"
 			android:positiveButtonText="@string/change_color"
 			android:summary="@string/changes_the_colors_of_your_opponents_checkers_pieces"
-			android:title="@string/change_the_opponents_pieces_colors" />
+			android:title="@string/change_the_opponents_piece_colors" />
 	</PreferenceCategory>
 </PreferenceScreen>
