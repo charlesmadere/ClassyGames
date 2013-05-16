@@ -164,14 +164,14 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 			{
 				final long personId = extras.getLong(NewGameFragmentActivity.KEY_FRIEND_ID);
 				final String personName = extras.getString(NewGameFragmentActivity.KEY_FRIEND_NAME);
-				final byte type = extras.getByte(NewGameFragmentActivity.KEY_GAME_TYPE);
+				final byte whichGame = extras.getByte(NewGameFragmentActivity.KEY_WHICH_GAME);
 
-				if (Person.isIdAndNameValid(personId, personName) && Game.isWhichGameValid(type))
+				if (Game.isWhichGameValid(whichGame) && Person.isIdAndNameValid(personId, personName))
 				// Ensure that we received proper data from
 				// NewGameFragmentActivity.
 				{
 					final Person friend = new Person(personId, personName);
-					final Game game = new Game(friend, type);
+					final Game game = new Game(friend, whichGame);
 					onGameSelected(game);
 				}
 				else

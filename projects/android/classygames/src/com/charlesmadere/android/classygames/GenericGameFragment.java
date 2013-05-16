@@ -225,17 +225,26 @@ public abstract class GenericGameFragment extends SherlockFragment
 		final Bundle arguments = getArguments();
 
 		if (arguments == null || arguments.isEmpty())
+		// Check the arguments given to this Fragment. This Fragment requires
+		// information regarding the game that it is going to load. If no data
+		// is found, then this Fragment has encountered an error and must
+		// terminate itself.
 		{
 			listeners.onDataError();
 		}
 		else
 		{
+			// Grabs data that was given to this Fragment. This data will then
+			// be checked for validity.
 			final String gameId = arguments.getString(KEY_GAME_ID);
 			final byte whichGame = arguments.getByte(KEY_WHICH_GAME);
 			final long personId = arguments.getLong(KEY_PERSON_ID);
 			final String personName = arguments.getString(KEY_PERSON_NAME);
 
-			if (Person.isIdValid(personId) && Person.isNameValid(personName))
+			if (Game.isWhichGameValid(whichGame) && Person.isIdAndNameValid(personId, personName))
+			// Check the data for validity. Note that we are not checking the
+			// gameId String for validity. This is because it is possible for a
+			// game to not have an ID. Brand new games do not have a game ID.
 			{
 				serverApiListeners = new ServerApi.ServerApiListeners()
 				{
@@ -295,6 +304,9 @@ public abstract class GenericGameFragment extends SherlockFragment
 				loadBackgroundResources();
 
 				if (Game.isIdValid(gameId))
+				// Check to see if we were given a valid game ID. We will only
+				// have a valid game ID if we are trying to recreate an already
+				// existing game. A brand new game will not have a game ID.
 				{
 					game = new Game(person, whichGame, gameId);
 
@@ -319,6 +331,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 					}
 				}
 				else
+				// We were not given a valid game ID. That means that we are
+				// going to instantiate a brand new game.
 				{
 					game = new Game(person);
 

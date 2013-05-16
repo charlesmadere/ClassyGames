@@ -25,14 +25,14 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 
 	public final static String KEY_FRIEND_ID = "KEY_FRIEND_ID";
 	public final static String KEY_FRIEND_NAME = "KEY_FRIEND_NAME";
-	public final static String KEY_GAME_TYPE = "KEY_GAME_TYPE";
+	public final static String KEY_WHICH_GAME = "KEY_WHICH_GAME";
 
 
 
 
-	ConfirmGameFragment confirmGameFragment;
-	EmptyConfirmGameFragment emptyConfirmGameFragment;
-	FriendsListFragment friendsListFragment;
+	private ConfirmGameFragment confirmGameFragment;
+	private EmptyConfirmGameFragment emptyConfirmGameFragment;
+	private FriendsListFragment friendsListFragment;
 
 
 
@@ -178,7 +178,7 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 		final Bundle extras = new Bundle();
 		extras.putLong(KEY_FRIEND_ID, friend.getId());
 		extras.putString(KEY_FRIEND_NAME, friend.getName());
-		extras.putByte(KEY_GAME_TYPE, Game.WHICH_GAME_CHECKERS);
+		extras.putByte(KEY_WHICH_GAME, Game.WHICH_GAME_CHECKERS);
 
 		final Intent intent = new Intent();
 		intent.putExtras(extras);

@@ -1,21 +1,11 @@
 package com.charlesmadere.android.classygames;
 
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -24,14 +14,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
-
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -46,6 +31,16 @@ import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
 import com.charlesmadere.android.classygames.utilities.ServerUtilities;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 
 public class GamesListFragment extends SherlockFragment implements OnItemClickListener, OnItemLongClickListener
@@ -777,6 +772,8 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 
 
 		private ArrayList<Game> games;
+		private Drawable checkersIcon;
+		private Drawable chessIcon;
 		private Drawable emptyProfilePicture;
 		private Context context;
 
@@ -787,7 +784,10 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 			this.context = context;
 			this.games = games;
 
-			emptyProfilePicture = context.getResources().getDrawable(R.drawable.empty_profile_picture_small);
+			final Resources resources = context.getResources();
+			emptyProfilePicture = resources.getDrawable(R.drawable.empty_profile_picture_small);
+			checkersIcon = resources.getDrawable(R.drawable.game_icon_checkers);
+			chessIcon = resources.getDrawable(R.drawable.game_icon_chess);
 		}
 
 
@@ -811,6 +811,17 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 
 				final TextView time = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_time);
 				time.setText(game.getTimestampFormatted(context));
+
+				final ImageView gameIcon = (ImageView) convertView.findViewById(R.id.games_list_fragment_listview_item_game_icon);
+
+				if (game.isGameCheckers())
+				{
+					gameIcon.setImageDrawable(checkersIcon);
+				}
+				else if (game.isGameChess())
+				{
+					gameIcon.setImageDrawable(chessIcon);
+				}
 			}
 			else
 			{

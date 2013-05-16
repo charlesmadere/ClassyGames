@@ -37,7 +37,6 @@
 		android:gravity="center_vertical"
 		android:id="@+id/games_list_fragment_listview_item_time"
 		android:layout_alignParentBottom="true"
-		android:layout_alignParentRight="true"
 		android:layout_alignWithParentIfMissing="true"
 		android:layout_below="@id/games_list_fragment_listview_item_name"
 		android:layout_height="wrap_content"
@@ -47,4 +46,14 @@
 		android:textColor="@color/gray_dark"
 		android:textIsSelectable="false"
 		android:textSize="17sp" />
+	<ImageView
+		android:contentDescription="@string/games_list_fragment_listview_item_game_icon_description"
+		android:id="@+id/games_list_fragment_listview_item_game_icon"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentRight="true"
+		android:layout_alignWithParentIfMissing="true"
+		android:layout_below="@id/games_list_fragment_listview_item_name"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/games_list_fragment_listview_item_time"
+		android:layout_width="20dip" />
 </RelativeLayout>
