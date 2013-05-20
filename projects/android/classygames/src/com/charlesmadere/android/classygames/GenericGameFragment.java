@@ -394,11 +394,16 @@ public abstract class GenericGameFragment extends SherlockFragment
 			inflater.inflate(R.menu.generic_game_fragment, menu);
 		}
 
-		if (!Utilities.verifyValidString(getArguments().getString(KEY_GAME_ID)))
+		final Bundle arguments = getArguments();
+
+		if (arguments != null && !Utilities.verifyValidString(arguments.getString(KEY_GAME_ID)))
 		{
 			menu.removeItem(R.id.generic_game_fragment_menu_skip_move);
 			menu.removeItem(R.id.generic_game_fragment_menu_forfeit_game);
 		}
+
+		// load any menu items as added by the classes that extend this one
+		createOptionsMenu(menu, inflater);
 
 		super.onCreateOptionsMenu(menu, inflater);
 	}
@@ -433,7 +438,11 @@ public abstract class GenericGameFragment extends SherlockFragment
 				break;
 
 			default:
-				return super.onOptionsItemSelected(item);
+			// If we hit this point then that means that the options item that
+			// was selected is not any of the above choices. That means that it
+			// was probably a menu item created by one of the classes that
+			// extend this one. So this will check that class's menu items.
+				return optionsItemSelected(item);
 		}
 
 		return true;
@@ -471,6 +480,10 @@ public abstract class GenericGameFragment extends SherlockFragment
 				}
 			}
 		}
+
+		// Allow classes that extend this one to run menu preparation
+		// operations.
+		prepareOptionsMenu(menu);
 	}
 
 
@@ -553,14 +566,16 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		if (positionSelectedPrevious != null)
 		{
-			final Coordinate previous = new Coordinate((String) positionSelectedPrevious.getTag());
+			final String tag = (String) positionSelectedPrevious.getTag();
+			final Coordinate previous = new Coordinate(tag);
 			setPositionBackground(positionSelectedPrevious, false, previous);
 			positionSelectedPrevious = null;
 		}
 
 		if (positionSelectedCurrent != null)
 		{
-			final Coordinate current = new Coordinate((String) positionSelectedCurrent.getTag());
+			final String tag = (String) positionSelectedCurrent.getTag();
+			final Coordinate current = new Coordinate(tag);
 			setPositionBackground(positionSelectedCurrent, false, current);
 			positionSelectedCurrent = null;
 		}
@@ -1179,6 +1194,46 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
+	 * This method is run at the end of the Android onCreateOptionsMenu method.
+	 * Use this method to add menu items to this Fragment's menu.
+	 *
+	 * @param menu
+	 * The Menu object as given by Android.
+	 *
+	 * @param inflater
+	 * The MenuInflater object as given by Android. Use this to inflate a menu
+	 * XML file.
+	 */
+	protected abstract void createOptionsMenu(final Menu menu, final MenuInflater inflater);
+
+
+	/**
+	 * This method is run at the end of the Android onOptionsItemSelected
+	 * method if the selected MenuItem was not already found. Use this to check
+	 * to see which MenuItem was selected by the user.
+	 *
+	 * @param item
+	 * The selected MenuItem as given by Android.
+	 *
+	 * @return
+	 * Returns true if the selected MenuItem was found. Returns
+	 * super.onOptionsItemSelected(item) if the MenuItem was not found.
+	 */
+	protected abstract boolean optionsItemSelected(final MenuItem item);
+
+
+	/**
+	 * This method is run at the end of the Android onPrepareOptionsMenu
+	 * method. Use this to make alterations to the currently alive menu.
+	 *
+	 * @param menu
+	 * The Menu object as given by Android. This is the object you'll want to
+	 * edit if you want to make changes to the currently alive menu.
+	 */
+	protected abstract void prepareOptionsMenu(final Menu menu);
+
+
+	/**
 	 * A Game specific implementation that looks at the given Position
 	 * parameter and draws a piece on that position if / as necessary.
 	 * 
@@ -1270,6 +1325,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * Classy Games server.
 	 */
 	protected abstract void resumeOldBoard(final JSONObject boardJSON) throws JSONException;
+
+
 
 
 }

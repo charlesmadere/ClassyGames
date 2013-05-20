@@ -2,6 +2,9 @@ package com.charlesmadere.android.classygames;
 
 
 import android.view.View;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -101,6 +104,27 @@ public class ChessGameFragment extends GenericGameFragment
 
 	@Override
 	protected void onCreateView()
+	{
+
+	}
+
+
+	@Override
+	protected void createOptionsMenu(final Menu menu, final MenuInflater inflater)
+	{
+
+	}
+
+
+	@Override
+	protected boolean optionsItemSelected(final MenuItem item)
+	{
+		return false;
+	}
+
+
+	@Override
+	protected void prepareOptionsMenu(final Menu menu)
 	{
 
 	}
