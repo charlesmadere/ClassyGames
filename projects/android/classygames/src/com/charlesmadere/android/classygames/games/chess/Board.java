@@ -122,9 +122,7 @@ public class Board extends GenericBoard
 	@Override
 	public boolean move(final Position previous, final Position current)
 	{
-		boolean isMoveValid = false;
-
-		return isMoveValid;
+		return false;
 	}
 
 

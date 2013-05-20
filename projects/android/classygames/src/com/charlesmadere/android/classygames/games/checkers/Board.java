@@ -304,29 +304,40 @@ public class Board extends GenericBoard
 		boolean isMoveValid = false;
 
 		if (isBoardLocked)
+		// If the board is locked, then that means that no piece is allowed to
+		// move around.
 		{
-			isMoveValid = false;
+			return false;
 		}
-		else if (previous.hasPiece() && current.hasPiece())
+		else if (current.hasPiece())
+		// If the second position that the user selected has a piece on it then
+		// this is an invalid move.
 		{
-			isMoveValid = false;
+			return false;
 		}
-		else if ((previous.hasPiece() && previous.getPiece().isTeamOpponent()) || (current.hasPiece() && current.getPiece().isTeamPlayer()))
+		else if (previous.hasPiece() && previous.getPiece().isTeamOpponent())
+		// If the first position that the user selected has an opponent's piece
+		// on it then this is an invalid move.
 		{
-			isMoveValid = false;
+			return false;
 		}
-		else if (previous.hasPiece())
+		else if (previous.hasPiece() && previous.getPiece().isTeamPlayer() && !current.hasPiece())
+		// This is the one way that a checkers move can actually be valid. The
+		// first selected position must have a friendly piece and the second
+		// position not have a piece.
 		{
 			final Piece piece = (Piece) previous.getPiece();
 
 			if (((previous.getCoordinate().getX() == current.getCoordinate().getX() - 1)
 				|| (previous.getCoordinate().getX() == current.getCoordinate().getX() + 1))
 				&& lastMovedPiece == null)
+			//
 			{
 				switch (piece.getType())
 				{
 					case Piece.TYPE_KING:
 						if (previous.getCoordinate().getY() == current.getCoordinate().getY() + 1)
+						//
 						{
 							isMoveValid = true;
 							isBoardLocked = true;
@@ -334,6 +345,7 @@ public class Board extends GenericBoard
 
 					case Piece.TYPE_NORMAL:
 						if (previous.getCoordinate().getY() == current.getCoordinate().getY() - 1)
+						//
 						{
 							isMoveValid = true;
 							isBoardLocked = true;
@@ -342,6 +354,7 @@ public class Board extends GenericBoard
 			}
 			else if ((previous.getCoordinate().getX() == current.getCoordinate().getX() - 2)
 				|| (previous.getCoordinate().getX() == current.getCoordinate().getX() + 2))
+			//
 			{
 				boolean isJumpValid = false;
 
@@ -349,25 +362,28 @@ public class Board extends GenericBoard
 				{
 					case Piece.TYPE_KING:
 						if (previous.getCoordinate().getY() == current.getCoordinate().getY() + 2)
+						//
 						{
 							isJumpValid = true;
 						}
 
 					case Piece.TYPE_NORMAL:
 						if (previous.getCoordinate().getY() == current.getCoordinate().getY() - 2)
+						//
 						{
 							isJumpValid = true;
 						}
 				}
 
 				if (isJumpValid)
+				//
 				{
 					final byte middleX = (byte) Math.abs((previous.getCoordinate().getX() + current.getCoordinate().getX()) / 2);
 					final byte middleY = (byte) Math.abs((previous.getCoordinate().getY() + current.getCoordinate().getY()) / 2);
-					final Coordinate middleCoordinate = new Coordinate(middleX, middleY);
-					final Position middlePosition = getPosition(middleCoordinate);
+					final Position middlePosition = getPosition(middleX, middleY);
 
 					if (middlePosition.hasPiece() && middlePosition.getPiece().isTeamOpponent())
+					//
 					{
 						if (lastMovedPiece == null)
 						{
@@ -385,27 +401,22 @@ public class Board extends GenericBoard
 			}
 
 			if (isMoveValid)
+			//
 			{
 				current.setPiece(new Piece(piece));
 				previous.removePiece();
 				lastMovedPiece = (Piece) current.getPiece();
 
 				if (current.getCoordinate().getY() == lengthVertical - 1)
+				//
 				{
 					((Piece) current.getPiece()).ascendToKing();
 				}
 			}
 		}
-		else if (current.hasPiece())
-		{
-			isMoveValid = false;
-		}
-		else
-		{
-			isMoveValid = false;
-		}
 
 		if (isMoveValid)
+		//
 		{
 			hasMoveBeenMade = true;
 		}
