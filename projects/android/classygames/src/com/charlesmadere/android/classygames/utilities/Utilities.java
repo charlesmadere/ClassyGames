@@ -3,15 +3,19 @@ package com.charlesmadere.android.classygames.utilities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.models.Person;
@@ -212,6 +216,178 @@ public final class Utilities
 
 
 	/**
+	 *
+	 *
+	 * @param sherlockFragmentActivity
+	 *
+	 *
+	 * @param actionBarTitle
+	 *
+	 *
+	 * @param showBackArrow
+	 *
+	 */
+	public static void setActionBar(final SherlockFragmentActivity sherlockFragmentActivity, final int actionBarTitle, final boolean showBackArrow)
+	{
+		setActionBar
+		(
+			sherlockFragmentActivity.getAssets(),
+			sherlockFragmentActivity.getSupportActionBar(),
+			sherlockFragmentActivity.getString(actionBarTitle),
+			sherlockFragmentActivity.getResources(),
+			showBackArrow
+		);
+	}
+
+
+	/**
+	 *
+	 *
+	 * @param sherlockFragmentActivity
+	 *
+	 *
+	 * @param actionBarTitle
+	 *
+	 *
+	 * @param showBackArrow
+	 *
+	 */
+	public static void setActionBar(final SherlockFragmentActivity sherlockFragmentActivity, final CharSequence actionBarTitle, final boolean showBackArrow)
+	{
+		setActionBar
+		(
+			sherlockFragmentActivity.getAssets(),
+			sherlockFragmentActivity.getSupportActionBar(),
+			actionBarTitle,
+			sherlockFragmentActivity.getResources(),
+			showBackArrow
+		);
+	}
+
+
+	/**
+	 *
+	 *
+	 * @param sherlockActivity
+	 *
+	 *
+	 * @param actionBarTitle
+	 *
+	 *
+	 * @param showBackArrow
+	 *
+	 */
+	public static void setActionBar(final SherlockActivity sherlockActivity, final int actionBarTitle, final boolean showBackArrow)
+	{
+		setActionBar
+		(
+			sherlockActivity.getAssets(),
+			sherlockActivity.getSupportActionBar(),
+			sherlockActivity.getString(actionBarTitle),
+			sherlockActivity.getResources(),
+			showBackArrow
+		);
+	}
+
+
+	/**
+	 *
+	 *
+	 * @param sherlockActivity
+	 *
+	 *
+	 * @param actionBarTitle
+	 *
+	 *
+	 * @param showBackArrow
+	 *
+	 */
+	public static void setActionBar(final SherlockActivity sherlockActivity, final CharSequence actionBarTitle, final boolean showBackArrow)
+	{
+		setActionBar
+		(
+			sherlockActivity.getAssets(),
+			sherlockActivity.getSupportActionBar(),
+			actionBarTitle,
+			sherlockActivity.getResources(),
+			showBackArrow
+		);
+	}
+
+
+	/**
+	 *
+	 *
+	 * @param assetManager
+	 *
+	 *
+	 * @param actionBar
+	 *
+	 *
+	 * @param actionBarTitle
+	 *
+	 *
+	 * @param resources
+	 *
+	 *
+	 * @param showBackArrow
+	 *
+	 */
+	private static void setActionBar(final AssetManager assetManager, final ActionBar actionBar, final CharSequence actionBarTitle, final Resources resources, final boolean showBackArrow)
+	{
+		final SpannableString styledActionBarTitle = new SpannableString(actionBarTitle);
+		styledActionBarTitle.setSpan(new TypefaceSpan
+				(assetManager, TypefaceUtilities.BLUE_HIGHWAY_D), 0, styledActionBarTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+		actionBar.setDisplayHomeAsUpEnabled(showBackArrow);
+		actionBar.setTitle(styledActionBarTitle);
+
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+		// if the running version of Android is lower than API Level 14 (below Ice Cream Sandwich 4.0)
+		// https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels
+		{
+			final BitmapDrawable background = (BitmapDrawable) resources.getDrawable(R.drawable.bg_actionbar);
+			background.setAntiAlias(true);
+			background.setDither(true);
+			background.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
+
+			actionBar.setBackgroundDrawable(background);
+		}
+	}
+
+
+	/**
+	 * Initializes the ImageLoader library with some specific configuration
+	 * settings (if it has not already been initialized) and returns only what
+	 * you need - the portion that will actually load an image for ya!
+	 * https://github.com/nostra13/Android-Universal-Image-Loader
+	 *
+	 * @param context
+	 * The context of the Activity that is calling this method.
+	 *
+	 * @return
+	 * Returns an instance of the ImageLoader class that can load an image from
+	 * a URL for you.
+	 */
+	public static ImageLoader getImageLoader(final Context context)
+	{
+		final DisplayImageOptions displayOptions = new DisplayImageOptions.Builder()
+				.cacheInMemory()
+				.cacheOnDisc()
+				.build();
+
+		final ImageLoaderConfiguration loaderConfiguration = new ImageLoaderConfiguration.Builder(context)
+				.defaultDisplayImageOptions(displayOptions)
+				.build();
+
+		final ImageLoader imageLoader = ImageLoader.getInstance();
+		imageLoader.init(loaderConfiguration);
+
+		return imageLoader;
+	}
+
+
+	/**
 	 * Gives you a handle to the Classy Games default SharedPreferences object.
 	 * 
 	 * @param context
@@ -226,37 +402,6 @@ public final class Utilities
 	public static SharedPreferences getPreferences(final Context context)
 	{
 		return PreferenceManager.getDefaultSharedPreferences(context);
-	}
-
-
-	/**
-	 * Initializes the ImageLoader library with some specific configuration
-	 * settings (if it has not already been initialized) and returns only what
-	 * you need - the portion that will actually load an image for ya!
-	 * https://github.com/nostra13/Android-Universal-Image-Loader
-	 * 
-	 * @param context
-	 * The context of the Activity that is calling this method.
-	 * 
-	 * @return
-	 * Returns an instance of the ImageLoader class that can load an image from
-	 * a URL for you.
-	 */
-	public static ImageLoader getImageLoader(final Context context)
-	{
-		final DisplayImageOptions displayOptions = new DisplayImageOptions.Builder()
-			.cacheInMemory()
-			.cacheOnDisc()
-			.build();
-
-		final ImageLoaderConfiguration loaderConfiguration = new ImageLoaderConfiguration.Builder(context)
-			.defaultDisplayImageOptions(displayOptions)
-			.build();
-
-		final ImageLoader imageLoader = ImageLoader.getInstance();
-		imageLoader.init(loaderConfiguration);
-
-		return imageLoader;
 	}
 
 
@@ -388,27 +533,24 @@ public final class Utilities
 	 * @param actionBar
 	 * getSupportActionBar()
 	 * 
-	 * @param backArrow
+	 * @param showBackArrow
 	 * Whether or not you want to have a back arrow drawn next to the app icon in the actionbar.
 	 */
-	public static void styleActionBar(final Resources resources, final ActionBar actionBar, final boolean backArrow)
+	public static void styleActionBar(final Resources resources, final ActionBar actionBar, final boolean showBackArrow)
 	{
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 		// if the running version of Android is lower than API Level 14 (below Ice Cream Sandwich 4.0)
 		// https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels
 		{
-			final BitmapDrawable bg = (BitmapDrawable) resources.getDrawable(R.drawable.bg_actionbar);
-			bg.setAntiAlias(true);
-			bg.setDither(true);
-			bg.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
+			final BitmapDrawable background = (BitmapDrawable) resources.getDrawable(R.drawable.bg_actionbar);
+			background.setAntiAlias(true);
+			background.setDither(true);
+			background.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
 
-			actionBar.setBackgroundDrawable(bg);
+			actionBar.setBackgroundDrawable(background);
 		}
 
-		if (backArrow)
-		{
-			actionBar.setDisplayHomeAsUpEnabled(true);
-		}
+		actionBar.setDisplayHomeAsUpEnabled(showBackArrow);
 	}
 
 

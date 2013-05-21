@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -58,7 +56,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.game_fragment_activity);
 		setResult(RESULT_CODE_FINISH);
-		Utilities.styleActionBar(getResources(), getSupportActionBar(), false);
+		Utilities.setActionBar(this, R.string.games_list, false);
 
 		final FragmentManager fManager = getSupportFragmentManager();
 
@@ -111,10 +109,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 				catch (final ClassCastException e)
 				{
 					genericGameFragment = (GenericGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_game);
-
-					final ActionBar actionBar = getSupportActionBar();
-					actionBar.setDisplayHomeAsUpEnabled(true);
-					actionBar.setTitle(actionBarTitle);
+					Utilities.setActionBar(this, actionBarTitle, true);
 				}
 			}
 			else
@@ -127,10 +122,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 				catch (final ClassCastException e)
 				{
 					genericGameFragment = (GenericGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_container);
-
-					final ActionBar actionBar = getSupportActionBar();
-					actionBar.setDisplayHomeAsUpEnabled(true);
-					actionBar.setTitle(actionBarTitle);
+					Utilities.setActionBar(this, actionBarTitle, true);
 				}
 			}
 		}
@@ -192,10 +184,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 		}
 		else
 		{
-			final ActionBar actionBar = getSupportActionBar();
-			actionBar.setDisplayHomeAsUpEnabled(false);
-			actionBar.setTitle(R.string.games_list);
-
+			Utilities.setActionBar(this, R.string.games_list, false);
 			super.onBackPressed();
 		}
 	}
@@ -414,16 +403,13 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 			fTransaction.commit();
 
-			final ActionBar actionBar = getSupportActionBar();
-			actionBar.setDisplayHomeAsUpEnabled(true);
-
 			if (game.isGameCheckers())
 			{
-				actionBar.setTitle(getString(R.string.checkers_with_x, game.getPerson().getName()));
+				Utilities.setActionBar(this, getString(R.string.checkers_with_x, game.getPerson().getName()), true);
 			}
 			else if (game.isGameChess())
 			{
-				actionBar.setTitle(getString(R.string.chess_with_x, game.getPerson().getName()));
+				Utilities.setActionBar(this, getString(R.string.chess_with_x, game.getPerson().getName()), true);
 			}
 		}
 	}
@@ -489,10 +475,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 		fTransaction.commit();
 		fManager.executePendingTransactions();
-
-		final ActionBar actionBar = getSupportActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(false);
-		actionBar.setTitle(R.string.games_list);
+		Utilities.setActionBar(this, R.string.games_list, false);
 
 		onRefreshSelected();
 	}
