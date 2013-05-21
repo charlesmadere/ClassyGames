@@ -1,8 +1,6 @@
 package com.charlesmadere.android.classygames.utilities;
 
 
-import java.io.IOException;
-
 import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -15,11 +13,12 @@ import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
-
 import com.charlesmadere.android.classygames.GameFragmentActivity;
 import com.charlesmadere.android.classygames.GameOverActivity;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.models.Person;
+
+import java.io.IOException;
 
 
 /**
@@ -150,10 +149,11 @@ public class GCMIntentService extends IntentService
 		if (Utilities.verifyValidString(error))
 		// last operation (registration or unregistration) returned an error
 		{
-			if (error.equals("SERVICE_NOT_AVAILABLE"))
+			if (error.equalsIgnoreCase("SERVICE_NOT_AVAILABLE"))
 			{
 				// optionally retry using exponential back-off
 				// (see Advanced Topics in Android documentation)
+				Log.d(LOG_TAG, "Received error: " + error);
 			}
 			else
 			{

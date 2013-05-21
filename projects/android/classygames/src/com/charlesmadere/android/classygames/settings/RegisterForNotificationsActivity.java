@@ -1,8 +1,6 @@
 package com.charlesmadere.android.classygames.settings;
 
 
-import java.io.IOException;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -12,13 +10,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.utilities.ServerUtilities;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
+
+import java.io.IOException;
 
 
 public class RegisterForNotificationsActivity extends SherlockActivity
@@ -38,7 +37,7 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.register_for_notifications_activity);
-		Utilities.styleActionBar(getResources(), getSupportActionBar(), true);
+		Utilities.setActionBar(this, R.string.register_for_notifications, true);
 
 		final Button registerButton = (Button) findViewById(R.id.register_for_notifications_activity_register);
 		registerButton.setTypeface(TypefaceUtilities.getTypeface(getAssets(), TypefaceUtilities.BLUE_HIGHWAY_D));

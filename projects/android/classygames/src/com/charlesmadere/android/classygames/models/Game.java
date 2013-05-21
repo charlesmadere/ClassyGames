@@ -1,14 +1,12 @@
 package com.charlesmadere.android.classygames.models;
 
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Context;
-
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.utilities.ServerUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 /**
@@ -480,15 +478,6 @@ public class Game
 	public boolean isValid()
 	{
 		return isIdValid(id) && person.isValid() && isWhichGameValid(whichGame);
-	}
-
-
-
-	@Override
-	public boolean equals(final Object o)
-	{
-		final Game game = (Game) o;
-		return game.getId().equalsIgnoreCase(id);
 	}
 
 

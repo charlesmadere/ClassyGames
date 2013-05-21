@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
-
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.utilities.Utilities;
@@ -21,7 +20,7 @@ public class AboutActivity extends SherlockActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.about_activity);
-		Utilities.styleActionBar(getResources(), getSupportActionBar(), true);
+		Utilities.setActionBar(this, R.string.about, true);
 
 		final ImageView logo = (ImageView) findViewById(R.id.about_activity_imageview_logo);
 		logo.setOnClickListener(new OnClickListener()

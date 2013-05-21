@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.models.Game;
@@ -42,8 +41,8 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.new_game_fragment_activity);
+		Utilities.setActionBar(this, R.string.friends_list, true);
 		setResult(RESULT_CODE_DEFAULT);
-		Utilities.styleActionBar(getResources(), getSupportActionBar(), true);
 
 		final FragmentManager fManager = getSupportFragmentManager();
 

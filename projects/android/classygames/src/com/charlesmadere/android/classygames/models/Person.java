@@ -168,14 +168,6 @@ public class Person
 
 
 	@Override
-	public boolean equals(final Object o)
-	{
-		final Person person = (Person) o;
-		return person.getId() == id && person.getName().equals(name);
-	}
-
-
-	@Override
 	public String toString()
 	{
 		return name;
@@ -253,9 +245,9 @@ public class Person
 	 */
 	public static boolean areIdsValid(final long... ids)
 	{
-		for (int i = 0; i < ids.length; ++i)
+		for (final long id : ids)
 		{
-			if (!isIdValid(ids[i]))
+			if (!isIdValid(id))
 			{
 				return false;
 			}
@@ -281,9 +273,9 @@ public class Person
 	 */
 	public static boolean areIdsValid(final String... ids)
 	{
-		for (int i = 0; i < ids.length; ++i)
+		for (final String id : ids)
 		{
-			if (!isIdValid(ids[i]))
+			if (!isIdValid(id))
 			{
 				return false;
 			}
@@ -328,9 +320,9 @@ public class Person
 	 */
 	public static boolean areNamesValid(final String... names)
 	{
-		for (int i = 0; i < names.length; ++i)
+		for (final String name : names)
 		{
-			if (!isNameValid(names[i]))
+			if (!isNameValid(name))
 			{
 				return false;
 			}

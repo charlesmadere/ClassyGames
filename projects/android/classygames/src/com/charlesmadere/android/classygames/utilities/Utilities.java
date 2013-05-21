@@ -13,10 +13,10 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.models.Person;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -218,7 +218,7 @@ public final class Utilities
 	/**
 	 *
 	 *
-	 * @param sherlockFragmentActivity
+	 * @param activity
 	 *
 	 *
 	 * @param actionBarTitle
@@ -227,23 +227,23 @@ public final class Utilities
 	 * @param showBackArrow
 	 *
 	 */
-	public static void setActionBar(final SherlockFragmentActivity sherlockFragmentActivity, final int actionBarTitle, final boolean showBackArrow)
+	public static void setActionBar(final SherlockActivity activity, final CharSequence actionBarTitle, final boolean showBackArrow)
 	{
 		setActionBar
-		(
-			sherlockFragmentActivity.getAssets(),
-			sherlockFragmentActivity.getSupportActionBar(),
-			sherlockFragmentActivity.getString(actionBarTitle),
-			sherlockFragmentActivity.getResources(),
-			showBackArrow
-		);
+				(
+						activity.getAssets(),
+						activity.getSupportActionBar(),
+						actionBarTitle,
+						activity.getResources(),
+						showBackArrow
+				);
 	}
 
 
 	/**
 	 *
 	 *
-	 * @param sherlockFragmentActivity
+	 * @param activity
 	 *
 	 *
 	 * @param actionBarTitle
@@ -252,14 +252,39 @@ public final class Utilities
 	 * @param showBackArrow
 	 *
 	 */
-	public static void setActionBar(final SherlockFragmentActivity sherlockFragmentActivity, final CharSequence actionBarTitle, final boolean showBackArrow)
+	public static void setActionBar(final SherlockActivity activity, final int actionBarTitle, final boolean showBackArrow)
+	{
+		setActionBar
+				(
+						activity.getAssets(),
+						activity.getSupportActionBar(),
+						activity.getString(actionBarTitle),
+						activity.getResources(),
+						showBackArrow
+				);
+	}
+
+
+	/**
+	 *
+	 *
+	 * @param activity
+	 *
+	 *
+	 * @param actionBarTitle
+	 *
+	 *
+	 * @param showBackArrow
+	 *
+	 */
+	public static void setActionBar(final SherlockFragmentActivity activity, final CharSequence actionBarTitle, final boolean showBackArrow)
 	{
 		setActionBar
 		(
-			sherlockFragmentActivity.getAssets(),
-			sherlockFragmentActivity.getSupportActionBar(),
+			activity.getAssets(),
+			activity.getSupportActionBar(),
 			actionBarTitle,
-			sherlockFragmentActivity.getResources(),
+			activity.getResources(),
 			showBackArrow
 		);
 	}
@@ -268,7 +293,7 @@ public final class Utilities
 	/**
 	 *
 	 *
-	 * @param sherlockActivity
+	 * @param activity
 	 *
 	 *
 	 * @param actionBarTitle
@@ -277,14 +302,14 @@ public final class Utilities
 	 * @param showBackArrow
 	 *
 	 */
-	public static void setActionBar(final SherlockActivity sherlockActivity, final int actionBarTitle, final boolean showBackArrow)
+	public static void setActionBar(final SherlockFragmentActivity activity, final int actionBarTitle, final boolean showBackArrow)
 	{
 		setActionBar
 		(
-			sherlockActivity.getAssets(),
-			sherlockActivity.getSupportActionBar(),
-			sherlockActivity.getString(actionBarTitle),
-			sherlockActivity.getResources(),
+			activity.getAssets(),
+			activity.getSupportActionBar(),
+			activity.getString(actionBarTitle),
+			activity.getResources(),
 			showBackArrow
 		);
 	}
@@ -293,23 +318,20 @@ public final class Utilities
 	/**
 	 *
 	 *
-	 * @param sherlockActivity
-	 *
-	 *
-	 * @param actionBarTitle
+	 * @param activity
 	 *
 	 *
 	 * @param showBackArrow
 	 *
 	 */
-	public static void setActionBar(final SherlockActivity sherlockActivity, final CharSequence actionBarTitle, final boolean showBackArrow)
+	public static void setActionBar(final SherlockPreferenceActivity activity, final int actionBarTitle, final boolean showBackArrow)
 	{
 		setActionBar
 		(
-			sherlockActivity.getAssets(),
-			sherlockActivity.getSupportActionBar(),
-			actionBarTitle,
-			sherlockActivity.getResources(),
+			activity.getAssets(),
+			activity.getSupportActionBar(),
+			activity.getString(actionBarTitle),
+			activity.getResources(),
 			showBackArrow
 		);
 	}
@@ -372,13 +394,13 @@ public final class Utilities
 	public static ImageLoader getImageLoader(final Context context)
 	{
 		final DisplayImageOptions displayOptions = new DisplayImageOptions.Builder()
-				.cacheInMemory()
-				.cacheOnDisc()
-				.build();
+			.cacheInMemory()
+			.cacheOnDisc()
+			.build();
 
 		final ImageLoaderConfiguration loaderConfiguration = new ImageLoaderConfiguration.Builder(context)
-				.defaultDisplayImageOptions(displayOptions)
-				.build();
+			.defaultDisplayImageOptions(displayOptions)
+			.build();
 
 		final ImageLoader imageLoader = ImageLoader.getInstance();
 		imageLoader.init(loaderConfiguration);
