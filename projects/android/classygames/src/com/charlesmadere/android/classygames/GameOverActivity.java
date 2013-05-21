@@ -16,6 +16,7 @@ import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
 import com.charlesmadere.android.classygames.utilities.ServerUtilities;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 
 public class GameOverActivity extends SherlockActivity
@@ -27,6 +28,9 @@ public class GameOverActivity extends SherlockActivity
 	public final static String BUNDLE_DATA_PERSON_OPPONENT_NAME = "BUNDLE_DATA_PERSON_OPPONENT_NAME";
 
 
+	private ImageLoader imageLoader;
+
+
 
 
 	@Override
@@ -35,6 +39,7 @@ public class GameOverActivity extends SherlockActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.game_over_activity);
 		Utilities.styleActionBar(getResources(), getSupportActionBar(), true);
+		imageLoader = Utilities.getImageLoader(this);
 
 		final Intent intent = getIntent();
 
@@ -47,7 +52,7 @@ public class GameOverActivity extends SherlockActivity
 			if (Utilities.verifyValidStrings(personName) && Person.isIdAndNameValid(personId, personName))
 			{
 				final ImageView friendPicture = (ImageView) findViewById(R.id.game_over_activity_friend_picture);
-				Utilities.getImageLoader(this).displayImage(FacebookUtilities.GRAPH_API_URL + personId + FacebookUtilities.GRAPH_API_URL_PICTURE_TYPE_LARGE_SSL, friendPicture);
+				imageLoader.displayImage(FacebookUtilities.GRAPH_API_URL + personId + FacebookUtilities.GRAPH_API_URL_PICTURE_TYPE_LARGE_SSL, friendPicture);
 
 				final TextView friendName = (TextView) findViewById(R.id.game_over_activity_friend_name);
 				friendName.setText(personName);

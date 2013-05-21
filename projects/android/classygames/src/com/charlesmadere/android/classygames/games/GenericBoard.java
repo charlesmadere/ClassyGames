@@ -470,6 +470,7 @@ public abstract class GenericBoard
 	{
 		hasMoveBeenMade = false;
 		isBoardLocked = false;
+
 		initializePositions();
 		resetBoard();
 

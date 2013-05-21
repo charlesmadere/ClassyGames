@@ -40,9 +40,11 @@ import com.facebook.Request.GraphUserListCallback;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 
-public class FriendsListFragment extends SherlockFragment implements OnItemClickListener
+public class FriendsListFragment extends SherlockFragment implements
+	OnItemClickListener
 {
 
 
@@ -331,7 +333,14 @@ public class FriendsListFragment extends SherlockFragment implements OnItemClick
 				}
 			}
 
-			Collections.sort(friends, new FriendsListSorter());
+			Collections.sort(friends, new Comparator<Person>()
+			{
+				@Override
+				public int compare(final Person geo, final Person jarrad)
+				{
+					return geo.getName().compareToIgnoreCase(jarrad.getName());
+				}
+			});
 
 			return friends;
 		}
@@ -451,6 +460,7 @@ public class FriendsListFragment extends SherlockFragment implements OnItemClick
 		private ArrayList<Person> friends;
 		private Context context;
 		private Drawable emptyProfilePicture;
+		private ImageLoader imageLoader;
 
 
 		private FriendsListAdapter(final Context context, final int textViewResourceId, final ArrayList<Person> friends)
@@ -460,6 +470,7 @@ public class FriendsListFragment extends SherlockFragment implements OnItemClick
 			this.context = context;
 
 			emptyProfilePicture = context.getResources().getDrawable(R.drawable.empty_profile_picture_small);
+			imageLoader = Utilities.getImageLoader(context);
 		}
 
 
@@ -483,7 +494,7 @@ public class FriendsListFragment extends SherlockFragment implements OnItemClick
 			viewHolder.name.setText(friend.getName());
 			viewHolder.name.setTypeface(TypefaceUtilities.getTypeface(context.getAssets(), TypefaceUtilities.BLUE_HIGHWAY_D));
 			viewHolder.picture.setImageDrawable(emptyProfilePicture);
-			Utilities.getImageLoader(context).displayImage(FacebookUtilities.GRAPH_API_URL + friend.getId() + FacebookUtilities.GRAPH_API_URL_PICTURE_TYPE_SMALL_SSL, viewHolder.picture);
+			imageLoader.displayImage(FacebookUtilities.GRAPH_API_URL + friend.getId() + FacebookUtilities.GRAPH_API_URL_PICTURE_TYPE_SMALL_SSL, viewHolder.picture);
 
 			return convertView;
 		}
@@ -498,23 +509,13 @@ public class FriendsListFragment extends SherlockFragment implements OnItemClick
 	{
 
 
-		ImageView picture;
-		TextView name;
+		private ImageView picture;
+		private TextView name;
 
 
 	}
 
 
-
-
-	private final class FriendsListSorter implements Comparator<Person>
-	{
-		@Override
-		public int compare(final Person geo, final Person jarrad)
-		{
-			return geo.getName().compareToIgnoreCase(jarrad.getName());
-		}
-	}
 
 
 }

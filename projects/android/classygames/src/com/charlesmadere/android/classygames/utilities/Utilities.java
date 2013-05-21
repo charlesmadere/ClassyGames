@@ -30,11 +30,6 @@ public final class Utilities
 	public final static String LOG_TAG = "Classy Games";
 
 
-	// need for the third party ImageLoader library
-	// https://github.com/nostra13/Android-Universal-Image-Loader
-	private static ImageLoader imageLoader;
-
-
 	// Stores the reg id of the current Android device. More information can be
 	// found here: https://developer.android.com/google/gcm/index.html
 	private static String regId;
@@ -238,30 +233,28 @@ public final class Utilities
 	 * Initializes the ImageLoader library with some specific configuration
 	 * settings (if it has not already been initialized) and returns only what
 	 * you need - the portion that will actually load an image for ya!
+	 * https://github.com/nostra13/Android-Universal-Image-Loader
 	 * 
 	 * @param context
 	 * The context of the Activity that is calling this method.
 	 * 
 	 * @return
 	 * Returns an instance of the ImageLoader class that can load an image from
-	 * a website for ya!
+	 * a URL for you.
 	 */
 	public static ImageLoader getImageLoader(final Context context)
 	{
-		if (imageLoader == null)
-		{
-			final DisplayImageOptions displayOptions = new DisplayImageOptions.Builder()
-				.cacheInMemory()
-				.cacheOnDisc()
-				.build();
+		final DisplayImageOptions displayOptions = new DisplayImageOptions.Builder()
+			.cacheInMemory()
+			.cacheOnDisc()
+			.build();
 
-			final ImageLoaderConfiguration loaderConfiguration = new ImageLoaderConfiguration.Builder(context)
-				.defaultDisplayImageOptions(displayOptions)
-				.build();
+		final ImageLoaderConfiguration loaderConfiguration = new ImageLoaderConfiguration.Builder(context)
+			.defaultDisplayImageOptions(displayOptions)
+			.build();
 
-			imageLoader = ImageLoader.getInstance();
-			imageLoader.init(loaderConfiguration);
-		}
+		final ImageLoader imageLoader = ImageLoader.getInstance();
+		imageLoader.init(loaderConfiguration);
 
 		return imageLoader;
 	}

@@ -19,6 +19,8 @@ public class Piece extends GenericPiece
 	public final static byte TYPE_KING = 6;
 
 
+
+
 	/**
 	 * Creates a Piece object. As this constructor <strong>does not</strong>
 	 * take a type parameter, this Piece's type will be set to the default

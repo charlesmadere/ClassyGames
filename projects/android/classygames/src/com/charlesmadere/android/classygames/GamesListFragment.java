@@ -31,6 +31,7 @@ import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
 import com.charlesmadere.android.classygames.utilities.ServerUtilities;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
@@ -43,22 +44,23 @@ import java.util.Collections;
 import java.util.Comparator;
 
 
-public class GamesListFragment extends SherlockFragment implements OnItemClickListener, OnItemLongClickListener
+public class GamesListFragment extends SherlockFragment implements
+	OnItemClickListener,
+	OnItemLongClickListener
 {
 
 
 	private final static String LOG_TAG = Utilities.LOG_TAG + " - GamesListFragment";
 
-
 	private final static String KEY_GAMES_LIST_JSON = "KEY_GAMES_LIST_JSON";
+
+
 
 
 	/**
 	 * JSONObject downloaded from the server that represents the games list.
 	 */
 	private JSONObject gamesListJSON;
-
-
 
 
 	/**
@@ -724,7 +726,14 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 						}
 					}
 
-					Collections.sort(games, new GamesListSorter());
+					Collections.sort(games, new Comparator<Game>()
+					{
+						@Override
+						public int compare(final Game gameOne, final Game gameTwo)
+						{
+							return (int) (gameTwo.getTimestamp() - gameOne.getTimestamp());
+						}
+					});
 				}
 			}
 			catch (final JSONException e)
@@ -772,10 +781,11 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 
 
 		private ArrayList<Game> games;
+		private Context context;
 		private Drawable checkersIcon;
 		private Drawable chessIcon;
 		private Drawable emptyProfilePicture;
-		private Context context;
+		private ImageLoader imageLoader;
 
 
 		private GamesListAdapter(final Context context, final int textViewResourceId, final ArrayList<Game> games)
@@ -783,6 +793,8 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 			super(context, textViewResourceId, games);
 			this.context = context;
 			this.games = games;
+
+			imageLoader = Utilities.getImageLoader(context);
 
 			final Resources resources = context.getResources();
 			emptyProfilePicture = resources.getDrawable(R.drawable.empty_profile_picture_small);
@@ -803,7 +815,7 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 
 				final ImageView picture = (ImageView) convertView.findViewById(R.id.games_list_fragment_listview_item_picture);
 				picture.setImageDrawable(emptyProfilePicture);
-				Utilities.getImageLoader(context).displayImage(FacebookUtilities.GRAPH_API_URL + game.getPerson().getId() + FacebookUtilities.GRAPH_API_URL_PICTURE_TYPE_SMALL_SSL, picture);
+				imageLoader.displayImage(FacebookUtilities.GRAPH_API_URL + game.getPerson().getId() + FacebookUtilities.GRAPH_API_URL_PICTURE_TYPE_SMALL_SSL, picture);
 
 				final TextView name = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_name);
 				name.setText(game.getPerson().getName());
@@ -842,18 +854,6 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 		}
 
 
-	}
-
-
-
-
-	private final class GamesListSorter implements Comparator<Game>
-	{
-		@Override
-		public int compare(final Game gameOne, final Game gameTwo)
-		{
-			return (int) (gameTwo.getTimestamp() - gameOne.getTimestamp());
-		}
 	}
 
 
