@@ -358,8 +358,8 @@ public final class Utilities
 	private static void setActionBar(final AssetManager assetManager, final ActionBar actionBar, final CharSequence actionBarTitle, final Resources resources, final boolean showBackArrow)
 	{
 		final SpannableString styledActionBarTitle = new SpannableString(actionBarTitle);
-		styledActionBarTitle.setSpan(new TypefaceSpan
-				(assetManager, TypefaceUtilities.BLUE_HIGHWAY_D), 0, styledActionBarTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		styledActionBarTitle.setSpan(new ActionBarTypeface
+			(assetManager, TypefaceUtilities.BLUE_HIGHWAY_D), 0, styledActionBarTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 		actionBar.setDisplayHomeAsUpEnabled(showBackArrow);
 		actionBar.setTitle(styledActionBarTitle);

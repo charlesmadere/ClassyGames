@@ -78,6 +78,7 @@
 	<string name="registration_failed">Registration failed!</string>
 	<string name="retrieving_all_of_your_games">Retrieving all of your games&#8230;</string>
 	<string name="return_to_games_list">Return to Games List</string>
+	<string name="search">Search</string>
 	<string name="select_an_action_for_this_game_against_x">Select an action for this game against %1$s.</string>
 	<string name="send_move">Send Move</string>
 	<string name="server_api_forfeit_game_dialog_message">Are you sure that you want to forfeit this game? Really?</string>

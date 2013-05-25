@@ -1,14 +1,6 @@
 package com.charlesmadere.android.classygames;
 
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -19,13 +11,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
-
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -41,6 +28,8 @@ import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
+import java.util.*;
 
 
 public class FriendsListFragment extends SherlockFragment implements
@@ -152,7 +141,7 @@ public class FriendsListFragment extends SherlockFragment implements
 		}
 		else
 		{
-			inflater.inflate(R.menu.generic_refresh, menu);
+			inflater.inflate(R.menu.new_game_fragment_activity, menu);
 		}
 
 		super.onCreateOptionsMenu(menu, inflater);
@@ -179,9 +168,13 @@ public class FriendsListFragment extends SherlockFragment implements
 				}
 				break;
 
-			case R.id.generic_refresh_menu_refresh:
+			case R.id.new_game_fragment_activity_menu_refresh:
 				getSherlockActivity().getPreferences(Context.MODE_PRIVATE).edit().clear().commit();
 				listeners.onRefreshSelected();
+				break;
+
+			case R.id.new_game_fragment_activity_menu_search:
+				Utilities.easyToast(getSherlockActivity(), R.string.okay);
 				break;
 
 			default:

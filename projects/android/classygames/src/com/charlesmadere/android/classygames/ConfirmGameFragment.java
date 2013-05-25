@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -18,7 +17,6 @@ import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 
 public class ConfirmGameFragment extends SherlockFragment
@@ -195,7 +193,8 @@ public class ConfirmGameFragment extends SherlockFragment
 	{
 		if (listeners.isDeviceSmall())
 		{
-			menu.removeItem(R.id.generic_refresh_menu_refresh);
+			menu.removeItem(R.id.new_game_fragment_activity_menu_refresh);
+			menu.removeItem(R.id.new_game_fragment_activity_menu_search);
 		}
 
 		super.onCreateOptionsMenu(menu, inflater);
