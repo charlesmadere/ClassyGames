@@ -357,9 +357,9 @@ public class GCMIntentService extends IntentService
 	private void handleWinOrLoseMessage(final Builder builder, final byte messageType, final Person person)
 	{
 		final Intent gameOverIntent = new Intent(this, GameOverActivity.class)
-				.putExtra(GameOverActivity.BUNDLE_DATA_MESSAGE_TYPE, messageType)
-				.putExtra(GameOverActivity.BUNDLE_DATA_PERSON_OPPONENT_ID, person.getId())
-				.putExtra(GameOverActivity.BUNDLE_DATA_PERSON_OPPONENT_NAME, person.getName());
+				.putExtra(GameOverActivity.BUNDLE_MESSAGE_TYPE, messageType)
+				.putExtra(GameOverActivity.BUNDLE_PERSON_OPPONENT_ID, person.getId())
+				.putExtra(GameOverActivity.BUNDLE_PERSON_OPPONENT_NAME, person.getName());
 
 		final TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 		stackBuilder.addNextIntentWithParentStack(gameOverIntent);

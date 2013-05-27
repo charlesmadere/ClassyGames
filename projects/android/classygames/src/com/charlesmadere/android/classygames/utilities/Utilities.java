@@ -230,13 +230,13 @@ public final class Utilities
 	public static void setActionBar(final SherlockActivity activity, final CharSequence actionBarTitle, final boolean showBackArrow)
 	{
 		setActionBar
-				(
-						activity.getAssets(),
-						activity.getSupportActionBar(),
-						actionBarTitle,
-						activity.getResources(),
-						showBackArrow
-				);
+		(
+			activity.getAssets(),
+			activity.getSupportActionBar(),
+			actionBarTitle,
+			activity.getResources(),
+			showBackArrow
+		);
 	}
 
 
@@ -255,13 +255,13 @@ public final class Utilities
 	public static void setActionBar(final SherlockActivity activity, final int actionBarTitle, final boolean showBackArrow)
 	{
 		setActionBar
-				(
-						activity.getAssets(),
-						activity.getSupportActionBar(),
-						activity.getString(actionBarTitle),
-						activity.getResources(),
-						showBackArrow
-				);
+		(
+			activity.getAssets(),
+			activity.getSupportActionBar(),
+			activity.getString(actionBarTitle),
+			activity.getResources(),
+			showBackArrow
+		);
 	}
 
 

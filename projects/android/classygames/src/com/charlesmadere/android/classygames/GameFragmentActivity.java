@@ -32,8 +32,8 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 	public final static String BUNDLE_DATA_GAME_ID = "BUNDLE_DATA_GAME_ID";
 	public final static String BUNDLE_DATA_WHICH_GAME = "BUNDLE_DATA_WHICH_GAME";
-	public final static String BUNDLE_DATA_PERSON_OPPONENT_ID = "BUNDLE_DATA_PERSON_OPPONENT_ID";
-	public final static String BUNDLE_DATA_PERSON_OPPONENT_NAME = "BUNDLE_DATA_PERSON_OPPONENT_NAME";
+	public final static String BUNDLE_DATA_PERSON_OPPONENT_ID = "BUNDLE_PERSON_OPPONENT_ID";
+	public final static String BUNDLE_DATA_PERSON_OPPONENT_NAME = "BUNDLE_PERSON_OPPONENT_NAME";
 
 	private final static String KEY_ACTION_BAR_TITLE = "KEY_ACTION_BAR_TITLE";
 
@@ -154,9 +154,9 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 			if (extras != null && !extras.isEmpty())
 			// Ensure that the returned data is not totally garbled.
 			{
-				final long personId = extras.getLong(NewGameFragmentActivity.KEY_FRIEND_ID);
-				final String personName = extras.getString(NewGameFragmentActivity.KEY_FRIEND_NAME);
-				final byte whichGame = extras.getByte(NewGameFragmentActivity.KEY_WHICH_GAME);
+				final long personId = extras.getLong(NewGameFragmentActivity.BUNDLE_FRIEND_ID);
+				final String personName = extras.getString(NewGameFragmentActivity.BUNDLE_FRIEND_NAME);
+				final byte whichGame = extras.getByte(NewGameFragmentActivity.BUNDLE_WHICH_GAME);
 
 				if (Game.isWhichGameValid(whichGame) && Person.isIdAndNameValid(personId, personName))
 				// Ensure that we received proper data from

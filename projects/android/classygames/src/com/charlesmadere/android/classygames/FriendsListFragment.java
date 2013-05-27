@@ -487,7 +487,7 @@ public class FriendsListFragment extends SherlockFragment implements
 			viewHolder.name.setText(friend.getName());
 			viewHolder.name.setTypeface(TypefaceUtilities.getTypeface(context.getAssets(), TypefaceUtilities.BLUE_HIGHWAY_D));
 			viewHolder.picture.setImageDrawable(emptyProfilePicture);
-			imageLoader.displayImage(FacebookUtilities.GRAPH_API_URL + friend.getId() + FacebookUtilities.GRAPH_API_URL_PICTURE_TYPE_SMALL_SSL, viewHolder.picture);
+			imageLoader.displayImage(FacebookUtilities.getFriendsPictureSquare(friend.getId()), viewHolder.picture);
 
 			return convertView;
 		}

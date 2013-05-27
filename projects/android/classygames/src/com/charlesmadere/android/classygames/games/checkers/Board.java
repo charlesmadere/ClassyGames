@@ -1,12 +1,11 @@
 package com.charlesmadere.android.classygames.games.checkers;
 
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.charlesmadere.android.classygames.games.Coordinate;
 import com.charlesmadere.android.classygames.games.GenericBoard;
 import com.charlesmadere.android.classygames.games.Position;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 

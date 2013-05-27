@@ -23,8 +23,8 @@ public class ConfirmGameFragment extends SherlockFragment
 {
 
 
-	public final static String KEY_FRIEND_ID = "KEY_FRIEND_ID";
-	public final static String KEY_FRIEND_NAME = "KEY_FRIEND_NAME";
+	public final static String BUNDLE_FRIEND_ID = "BUNDLE_FRIEND_ID";
+	public final static String BUNDLE_FRIEND_NAME = "BUNDLE_FRIEND_NAME";
 
 
 
@@ -111,10 +111,10 @@ public class ConfirmGameFragment extends SherlockFragment
 
 		if (arguments != null && !arguments.isEmpty())
 		{
-			final long friendId = arguments.getLong(KEY_FRIEND_ID);
-			final String friendName = arguments.getString(KEY_FRIEND_NAME);
+			final long friendId = arguments.getLong(BUNDLE_FRIEND_ID);
+			final String friendName = arguments.getString(BUNDLE_FRIEND_NAME);
 
-			if (Person.isIdValid(friendId) && Person.isNameValid(friendName))
+			if (Person.isIdAndNameValid(friendId, friendName))
 			{
 				friend = new Person(friendId, friendName);
 			}
@@ -165,7 +165,7 @@ public class ConfirmGameFragment extends SherlockFragment
 		});
 
 		final ImageView profilePicture = (ImageView) view.findViewById(R.id.confirm_game_fragment_friend_profile_picture);
-		Utilities.getImageLoader(getSherlockActivity()).displayImage(FacebookUtilities.GRAPH_API_URL + friend.getId() + FacebookUtilities.GRAPH_API_URL_PICTURE_TYPE_LARGE_SSL, profilePicture);
+		Utilities.getImageLoader(getSherlockActivity()).displayImage(FacebookUtilities.getFriendsPictureLarge(friend.getId()), profilePicture);
 	}
 
 

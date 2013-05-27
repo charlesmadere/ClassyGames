@@ -1,22 +1,20 @@
 package com.charlesmadere.android.classygames;
 
 
+import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.graphics.drawable.BitmapDrawable;
-import android.util.Log;
-import android.widget.ImageButton;
-
 import com.charlesmadere.android.classygames.games.Coordinate;
 import com.charlesmadere.android.classygames.games.Position;
 import com.charlesmadere.android.classygames.games.chess.Board;
 import com.charlesmadere.android.classygames.games.chess.Piece;
 import com.charlesmadere.android.classygames.utilities.Utilities;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class ChessGameFragment extends GenericGameFragment

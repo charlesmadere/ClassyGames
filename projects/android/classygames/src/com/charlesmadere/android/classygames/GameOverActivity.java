@@ -8,7 +8,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.models.Person;
@@ -23,12 +22,9 @@ public class GameOverActivity extends SherlockActivity
 {
 
 
-	public final static String BUNDLE_DATA_MESSAGE_TYPE = "BUNDLE_DATA_MESSAGE_TYPE";
-	public final static String BUNDLE_DATA_PERSON_OPPONENT_ID = "BUNDLE_DATA_PERSON_OPPONENT_ID";
-	public final static String BUNDLE_DATA_PERSON_OPPONENT_NAME = "BUNDLE_DATA_PERSON_OPPONENT_NAME";
-
-
-	private ImageLoader imageLoader;
+	public final static String BUNDLE_MESSAGE_TYPE = "BUNDLE_MESSAGE_TYPE";
+	public final static String BUNDLE_PERSON_OPPONENT_ID = "BUNDLE_PERSON_OPPONENT_ID";
+	public final static String BUNDLE_PERSON_OPPONENT_NAME = "BUNDLE_PERSON_OPPONENT_NAME";
 
 
 
@@ -39,20 +35,20 @@ public class GameOverActivity extends SherlockActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.game_over_activity);
 		Utilities.styleActionBar(getResources(), getSupportActionBar(), true);
-		imageLoader = Utilities.getImageLoader(this);
+		final ImageLoader imageLoader = Utilities.getImageLoader(this);
 
 		final Intent intent = getIntent();
 
 		if (intent != null)
 		{
-			final byte messageType = intent.getByteExtra(BUNDLE_DATA_MESSAGE_TYPE, (byte) -1);
-			final long personId = intent.getLongExtra(BUNDLE_DATA_PERSON_OPPONENT_ID, -1);
-			final String personName = intent.getStringExtra(BUNDLE_DATA_PERSON_OPPONENT_NAME);
+			final byte messageType = intent.getByteExtra(BUNDLE_MESSAGE_TYPE, (byte) -1);
+			final long personId = intent.getLongExtra(BUNDLE_PERSON_OPPONENT_ID, -1);
+			final String personName = intent.getStringExtra(BUNDLE_PERSON_OPPONENT_NAME);
 
 			if (Utilities.verifyValidStrings(personName) && Person.isIdAndNameValid(personId, personName))
 			{
 				final ImageView friendPicture = (ImageView) findViewById(R.id.game_over_activity_friend_picture);
-				imageLoader.displayImage(FacebookUtilities.GRAPH_API_URL + personId + FacebookUtilities.GRAPH_API_URL_PICTURE_TYPE_LARGE_SSL, friendPicture);
+				imageLoader.displayImage(FacebookUtilities.getFriendsPictureLarge(personId), friendPicture);
 
 				final TextView friendName = (TextView) findViewById(R.id.game_over_activity_friend_name);
 				friendName.setText(personName);

@@ -6,7 +6,11 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.text.Spannable;
+import android.text.SpannableString;
 import com.charlesmadere.android.classygames.R;
+import com.charlesmadere.android.classygames.utilities.ActionBarTypeface;
+import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 
 
 public class GameSettingsFragment extends PreferenceFragment
@@ -72,6 +76,12 @@ public class GameSettingsFragment extends PreferenceFragment
 	public void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+
+		final String actionBarTitle = getString(R.string.game_settings);
+		final SpannableString styledActionBarTitle = new SpannableString(actionBarTitle);
+		styledActionBarTitle.setSpan(new ActionBarTypeface
+			(getActivity().getAssets(), TypefaceUtilities.BLUE_HIGHWAY_D), 0, styledActionBarTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		getActivity().getActionBar().setTitle(styledActionBarTitle);
 
 		addPreferencesFromResource(R.xml.settings_game);
 	}
