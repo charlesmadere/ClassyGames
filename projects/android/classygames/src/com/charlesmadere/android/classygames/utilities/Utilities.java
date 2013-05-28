@@ -197,14 +197,14 @@ public final class Utilities
 	/**
 	 * Prints a Toast message to the screen and prints that same message to the
 	 * Log.e console.
-	 * 
+	 *
 	 * <p><strong>Examples</strong><br />
 	 * Utilities.easyToastAndLogError(MainActivity.this, "Hello!");<br />
 	 * Utilities.easyToastAndLogError(getApplicationContext(), "Another message huh?");</p>
-	 * 
+	 *
 	 * @param context
 	 * Just put the name of your class.this, or you can use getApplicationContext().
-	 * 
+	 *
 	 * @param stringId
 	 * The int ID of the resource that you want to print.
 	 */
@@ -216,20 +216,52 @@ public final class Utilities
 
 
 	/**
+	 * Makes and then returns a styled String. This is useful for obtaining a
+	 * String that makes use of a custom typeface. As of right now, this should
+	 * probably only be used to customize the Android Action Bar.
 	 *
+	 * @param assetManager
+	 * A handle to the Activity's AssetManager. This can usually be obtained by
+	 * just doing getAssets(), getSherlockActivity().getAssets(), or
+	 * getActivity().getAssets().
+	 *
+	 * @param string
+	 * The String to apply the custom typeface to.
+	 *
+	 * @param typeface
+	 * The custom typeface that you want to use. This needs to be one of the
+	 * public bytes as found in the TypefaceUtilities class. If an invalid
+	 * value is passed in here then there will definitely be a problem.
+	 *
+	 * @return
+	 * Returns the styled String as created with your specifications.
+	 */
+	public static SpannableString makeStyledString(final AssetManager assetManager, final CharSequence string, final byte typeface)
+	{
+		final SpannableString styledString = new SpannableString(string);
+		styledString.setSpan(new StyledString(assetManager, typeface), 0, styledString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+		return styledString;
+	}
+
+
+	/**
+	 * Stylizes the Android Action Bar, sets its title, and enables or disables
+	 * its back arrow.
 	 *
 	 * @param activity
-	 *
+	 * The activity that you're currently working in. This can usually be
+	 * obtained by just using the this keyword or getSherlockActivity().
 	 *
 	 * @param actionBarTitle
-	 *
+	 * The title to be shown on the Android Action Bar.
 	 *
 	 * @param showBackArrow
-	 *
+	 * Want to show the back arrow on the Action Bar? Pass in true to show it.
 	 */
 	public static void setActionBar(final SherlockActivity activity, final CharSequence actionBarTitle, final boolean showBackArrow)
 	{
-		setActionBar
+		setAndStyleActionBar
 		(
 			activity.getAssets(),
 			activity.getSupportActionBar(),
@@ -241,20 +273,22 @@ public final class Utilities
 
 
 	/**
-	 *
+	 * Stylizes the Android Action Bar, sets its title, and enables or disables
+	 * its back arrow.
 	 *
 	 * @param activity
-	 *
+	 * The activity that you're currently working in. This can usually be
+	 * obtained by just using the this keyword or getSherlockActivity().
 	 *
 	 * @param actionBarTitle
-	 *
+	 * The R.string.* title to be shown on the Android Action Bar.
 	 *
 	 * @param showBackArrow
-	 *
+	 * Want to show the back arrow on the Action Bar? Pass in true to show it.
 	 */
 	public static void setActionBar(final SherlockActivity activity, final int actionBarTitle, final boolean showBackArrow)
 	{
-		setActionBar
+		setAndStyleActionBar
 		(
 			activity.getAssets(),
 			activity.getSupportActionBar(),
@@ -266,20 +300,22 @@ public final class Utilities
 
 
 	/**
-	 *
+	 * Stylizes the Android Action Bar, sets its title, and enables or disables
+	 * its back arrow.
 	 *
 	 * @param activity
-	 *
+	 * The activity that you're currently working in. This can usually be
+	 * obtained by just using the this keyword or getSherlockActivity().
 	 *
 	 * @param actionBarTitle
-	 *
+	 * The title to be shown on the Android Action Bar.
 	 *
 	 * @param showBackArrow
-	 *
+	 * Want to show the back arrow on the Action Bar? Pass in true to show it.
 	 */
 	public static void setActionBar(final SherlockFragmentActivity activity, final CharSequence actionBarTitle, final boolean showBackArrow)
 	{
-		setActionBar
+		setAndStyleActionBar
 		(
 			activity.getAssets(),
 			activity.getSupportActionBar(),
@@ -291,20 +327,22 @@ public final class Utilities
 
 
 	/**
-	 *
+	 * Stylizes the Android Action Bar, sets its title, and enables or disables
+	 * its back arrow.
 	 *
 	 * @param activity
-	 *
+	 * The activity that you're currently working in. This can usually be
+	 * obtained by just using the this keyword or getSherlockActivity().
 	 *
 	 * @param actionBarTitle
-	 *
+	 * The R.string.* title to be shown on the Android Action Bar.
 	 *
 	 * @param showBackArrow
-	 *
+	 * Want to show the back arrow on the Action Bar? Pass in true to show it.
 	 */
 	public static void setActionBar(final SherlockFragmentActivity activity, final int actionBarTitle, final boolean showBackArrow)
 	{
-		setActionBar
+		setAndStyleActionBar
 		(
 			activity.getAssets(),
 			activity.getSupportActionBar(),
@@ -316,17 +354,22 @@ public final class Utilities
 
 
 	/**
-	 *
+	 * Stylizes the Android Action Bar, sets its title, and enables or disables
+	 * its back arrow.
 	 *
 	 * @param activity
+	 * The activity that you're currently working in. This can usually be
+	 * obtained by just using the this keyword or getSherlockActivity().
 	 *
+	 * @param actionBarTitle
+	 * The R.string.* title to be shown on the Android Action Bar.
 	 *
 	 * @param showBackArrow
-	 *
+	 * Want to show the back arrow on the Action Bar? Pass in true to show it.
 	 */
 	public static void setActionBar(final SherlockPreferenceActivity activity, final int actionBarTitle, final boolean showBackArrow)
 	{
-		setActionBar
+		setAndStyleActionBar
 		(
 			activity.getAssets(),
 			activity.getSupportActionBar(),
@@ -338,28 +381,29 @@ public final class Utilities
 
 
 	/**
-	 *
+	 * Performs final setting and stylizing on the Android Action Bar.
 	 *
 	 * @param assetManager
-	 *
+	 * A handle to the Activity's AssetManager. This can usually be obtained by
+	 * using getAssets().
 	 *
 	 * @param actionBar
-	 *
+	 * A handle to the Activity's Sherlock Action Bar. This can usually be
+	 * obtained by using getSupportActionBar().
 	 *
 	 * @param actionBarTitle
-	 *
+	 * The actual string to be shown as the title of the Action Bar.
 	 *
 	 * @param resources
-	 *
+	 * A handle to the Activity's resources. This can usually be obtained by
+	 * using getResources().
 	 *
 	 * @param showBackArrow
-	 *
+	 * Want to show the back arrow on the Action Bar? Pass in true to show it.
 	 */
-	private static void setActionBar(final AssetManager assetManager, final ActionBar actionBar, final CharSequence actionBarTitle, final Resources resources, final boolean showBackArrow)
+	private static void setAndStyleActionBar(final AssetManager assetManager, final ActionBar actionBar, final CharSequence actionBarTitle, final Resources resources, final boolean showBackArrow)
 	{
-		final SpannableString styledActionBarTitle = new SpannableString(actionBarTitle);
-		styledActionBarTitle.setSpan(new ActionBarTypeface
-			(assetManager, TypefaceUtilities.BLUE_HIGHWAY_D), 0, styledActionBarTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		final SpannableString styledActionBarTitle = makeStyledString(assetManager, actionBarTitle, TypefaceUtilities.BLUE_HIGHWAY_D);
 
 		actionBar.setDisplayHomeAsUpEnabled(showBackArrow);
 		actionBar.setTitle(styledActionBarTitle);
@@ -503,7 +547,7 @@ public final class Utilities
 			// the name variable will be set to null.
 			final String name = sPreferences.getString(KEY_WHO_AM_I_NAME, null);
 
-			if (Person.isIdValid(id) && Person.isNameValid(name))
+			if (Person.isIdAndNameValid(id, name))
 			// check to see that we were actually able to find the user's
 			// Facebook ID and Facebook name. If we were able to find both
 			// then we will create a new Person object out of that data. That
@@ -538,41 +582,6 @@ public final class Utilities
 		editor.commit();
 
 		whoAmI = facebookIdentity;
-	}
-
-
-	/**
-	 * This is a workaround for http://b.android.com/15340 from http://stackoverflow.com/a/5852198/132047.
-	 * This ensures that pre ice cream sandwich devices properly render our customized actionbar.
-	 * This method should always be run immediately after the setContentView() method is run.
-	 * 
-	 * <p><strong>Examples</strong><br />
-	 * Utilities.styleActionBar(getResources(), getSupportActionBar(), false);</p>
-	 * 
-	 * @param resources
-	 * getResources()
-	 * 
-	 * @param actionBar
-	 * getSupportActionBar()
-	 * 
-	 * @param showBackArrow
-	 * Whether or not you want to have a back arrow drawn next to the app icon in the actionbar.
-	 */
-	public static void styleActionBar(final Resources resources, final ActionBar actionBar, final boolean showBackArrow)
-	{
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-		// if the running version of Android is lower than API Level 14 (below Ice Cream Sandwich 4.0)
-		// https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels
-		{
-			final BitmapDrawable background = (BitmapDrawable) resources.getDrawable(R.drawable.bg_actionbar);
-			background.setAntiAlias(true);
-			background.setDither(true);
-			background.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
-
-			actionBar.setBackgroundDrawable(background);
-		}
-
-		actionBar.setDisplayHomeAsUpEnabled(showBackArrow);
 	}
 
 

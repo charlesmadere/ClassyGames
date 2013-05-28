@@ -34,9 +34,9 @@ public class GameOverActivity extends SherlockActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.game_over_activity);
-		Utilities.styleActionBar(getResources(), getSupportActionBar(), true);
-		final ImageLoader imageLoader = Utilities.getImageLoader(this);
+		Utilities.setActionBar(this, R.string.game_over, true);
 
+		final ImageLoader imageLoader = Utilities.getImageLoader(this);
 		final Intent intent = getIntent();
 
 		if (intent != null)
@@ -45,7 +45,7 @@ public class GameOverActivity extends SherlockActivity
 			final long personId = intent.getLongExtra(BUNDLE_PERSON_OPPONENT_ID, -1);
 			final String personName = intent.getStringExtra(BUNDLE_PERSON_OPPONENT_NAME);
 
-			if (Utilities.verifyValidStrings(personName) && Person.isIdAndNameValid(personId, personName))
+			if (ServerUtilities.validMessageTypeValue(messageType) && Person.isIdAndNameValid(personId, personName))
 			{
 				final ImageView friendPicture = (ImageView) findViewById(R.id.game_over_activity_friend_picture);
 				imageLoader.displayImage(FacebookUtilities.getFriendsPictureLarge(personId), friendPicture);

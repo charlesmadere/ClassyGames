@@ -33,7 +33,7 @@ import android.text.style.MetricAffectingSpan;
  *
  * @author Tristan Waddington
  */
-public class ActionBarTypeface extends MetricAffectingSpan
+public class StyledString extends MetricAffectingSpan
 {
 
 
@@ -43,7 +43,7 @@ public class ActionBarTypeface extends MetricAffectingSpan
 	/**
 	 * Load the {@link Typeface} and apply to a {@link Spannable}.
 	 */
-	public ActionBarTypeface(final AssetManager assetManager, final byte typeface)
+	public StyledString(final AssetManager assetManager, final byte typeface)
 	{
 		this.typeface = TypefaceUtilities.getTypeface(assetManager, typeface);
 	}

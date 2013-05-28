@@ -24,13 +24,14 @@ public final class FacebookUtilities
 
 
 	/**
-	 *
+	 * Returns the large profile picture URL for the given user ID.
 	 *
 	 * @param id
-	 *
+	 * The Facebook user ID of the person that you want a profile picture for.
 	 *
 	 * @return
-	 *
+	 * Returns the URL as a String. This URL could be typed directly into a
+	 * browser if you wanted to test to make sure that it works.
 	 */
 	public static String getFriendsPictureLarge(final long id)
 	{
@@ -39,13 +40,14 @@ public final class FacebookUtilities
 
 
 	/**
-	 *
+	 * Returns the normal profile picture URL for the given user ID.
 	 *
 	 * @param id
-	 *
+	 * The Facebook user ID of the person that you want a profile picture for.
 	 *
 	 * @return
-	 *
+	 * Returns the URL as a String. This URL could be typed directly into a
+	 * browser if you wanted to test to make sure that it works.
 	 */
 	public static String getFriendsPictureNormal(final long id)
 	{
@@ -54,13 +56,14 @@ public final class FacebookUtilities
 
 
 	/**
-	 *
+	 * Returns the small profile picture URL for the given user ID.
 	 *
 	 * @param id
-	 *
+	 * The Facebook user ID of the person that you want a profile picture for.
 	 *
 	 * @return
-	 *
+	 * Returns the URL as a String. This URL could be typed directly into a
+	 * browser if you wanted to test to make sure that it works.
 	 */
 	public static String getFriendsPictureSmall(final long id)
 	{
@@ -69,13 +72,14 @@ public final class FacebookUtilities
 
 
 	/**
-	 *
+	 * Returns the square profile picture URL for the given user ID.
 	 *
 	 * @param id
-	 *
+	 * The Facebook user ID of the person that you want a profile picture for.
 	 *
 	 * @return
-	 *
+	 * Returns the URL as a String. This URL could be typed directly into a
+	 * browser if you wanted to test to make sure that it works.
 	 */
 	public static String getFriendsPictureSquare(final long id)
 	{
