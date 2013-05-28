@@ -18,6 +18,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.widget.SearchView;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
@@ -52,6 +53,25 @@ public class FriendsListFragment extends SherlockFragment implements
 	 * AsyncRefreshFriendsList AsyncTask.
 	 */
 	private AsyncRefreshFriendsList asyncRefreshFriendsList;
+
+
+	/**
+	 * The search icon as found on the Android Action Bar.
+	 */
+	private MenuItem searchMenuItem;
+
+
+	/**
+	 * The search box as found on the Android Action Bar whenever the search
+	 * icon is tapped.
+	 */
+	private SearchView searchView;
+
+
+	/**
+	 * Performs the actual filtering of the friends list.
+	 */
+	private FriendsListFilter searchFilter;
 
 
 	/**
@@ -109,6 +129,8 @@ public class FriendsListFragment extends SherlockFragment implements
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{
+		searchFilter = new FriendsListFilter();
+
 		return inflater.inflate(R.layout.friends_list_fragment, container, false);
 	}
 
@@ -141,7 +163,11 @@ public class FriendsListFragment extends SherlockFragment implements
 		}
 		else
 		{
-			inflater.inflate(R.menu.new_game_fragment_activity, menu);
+			inflater.inflate(R.menu.friends_list_fragment, menu);
+
+			searchMenuItem = menu.findItem(R.id.friends_list_fragment_menu_search);
+			searchView = (SearchView) searchMenuItem.getActionView();
+			searchView.setOnQueryTextListener(searchFilter);
 		}
 
 		super.onCreateOptionsMenu(menu, inflater);
@@ -168,13 +194,9 @@ public class FriendsListFragment extends SherlockFragment implements
 				}
 				break;
 
-			case R.id.new_game_fragment_activity_menu_refresh:
+			case R.id.friends_list_fragment_menu_refresh:
 				getSherlockActivity().getPreferences(Context.MODE_PRIVATE).edit().clear().commit();
 				listeners.onRefreshSelected();
-				break;
-
-			case R.id.new_game_fragment_activity_menu_search:
-				Utilities.easyToast(getSherlockActivity(), R.string.okay);
 				break;
 
 			default:
@@ -233,6 +255,37 @@ public class FriendsListFragment extends SherlockFragment implements
 			asyncRefreshFriendsList = new AsyncRefreshFriendsList(getSherlockActivity(), getLayoutInflater(getArguments()), Session.getActiveSession(), (ViewGroup) getView());
 			asyncRefreshFriendsList.execute();
 		}
+	}
+
+
+
+
+	/**
+	 *
+	 */
+	private final class FriendsListFilter implements SearchView.OnQueryTextListener
+	{
+
+
+		@Override
+		public boolean onQueryTextChange(final String newText)
+		{
+			// TODO
+			// fix this filter!
+			friendsListAdapter.getFilter().filter(newText);
+
+			return false;
+		}
+
+
+		@Override
+		public boolean onQueryTextSubmit(final String query)
+		{
+			searchMenuItem.collapseActionView();
+			return false;
+		}
+
+
 	}
 
 

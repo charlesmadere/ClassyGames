@@ -193,9 +193,10 @@ public class ConfirmGameFragment extends SherlockFragment
 	{
 		if (listeners.isDeviceSmall())
 		{
-			menu.removeItem(R.id.new_game_fragment_activity_menu_refresh);
-			menu.removeItem(R.id.new_game_fragment_activity_menu_search);
+			menu.removeItem(R.id.friends_list_fragment_menu_refresh);
 		}
+
+		menu.removeItem(R.id.friends_list_fragment_menu_search);
 
 		super.onCreateOptionsMenu(menu, inflater);
 	}
