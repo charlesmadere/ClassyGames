@@ -56,25 +56,6 @@ public class FriendsListFragment extends SherlockFragment implements
 
 
 	/**
-	 * The search icon as found on the Android Action Bar.
-	 */
-	private MenuItem searchMenuItem;
-
-
-	/**
-	 * The search box as found on the Android Action Bar whenever the search
-	 * icon is tapped.
-	 */
-	private SearchView searchView;
-
-
-	/**
-	 * Performs the actual filtering of the friends list.
-	 */
-	private FriendsListFilter searchFilter;
-
-
-	/**
 	 * List Adapter for this Fragment's ListView layout item.
 	 */
 	private FriendsListAdapter friendsListAdapter;
@@ -129,8 +110,6 @@ public class FriendsListFragment extends SherlockFragment implements
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{
-		searchFilter = new FriendsListFilter();
-
 		return inflater.inflate(R.layout.friends_list_fragment, container, false);
 	}
 
@@ -165,9 +144,26 @@ public class FriendsListFragment extends SherlockFragment implements
 		{
 			inflater.inflate(R.menu.friends_list_fragment, menu);
 
-			searchMenuItem = menu.findItem(R.id.friends_list_fragment_menu_search);
-			searchView = (SearchView) searchMenuItem.getActionView();
-			searchView.setOnQueryTextListener(searchFilter);
+			final MenuItem searchMenuItem = menu.findItem(R.id.friends_list_fragment_menu_search);
+			final SearchView searchView = (SearchView) searchMenuItem.getActionView();
+
+			searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
+			{
+				@Override
+				public boolean onQueryTextSubmit(final String query)
+				{
+					searchMenuItem.collapseActionView();
+					return false;
+				}
+
+
+				@Override
+				public boolean onQueryTextChange(final String newText)
+				{
+					friendsListAdapter.getFilter().filter(newText);
+					return false;
+				}
+			});
 		}
 
 		super.onCreateOptionsMenu(menu, inflater);
@@ -255,37 +251,6 @@ public class FriendsListFragment extends SherlockFragment implements
 			asyncRefreshFriendsList = new AsyncRefreshFriendsList(getSherlockActivity(), getLayoutInflater(getArguments()), Session.getActiveSession(), (ViewGroup) getView());
 			asyncRefreshFriendsList.execute();
 		}
-	}
-
-
-
-
-	/**
-	 *
-	 */
-	private final class FriendsListFilter implements SearchView.OnQueryTextListener
-	{
-
-
-		@Override
-		public boolean onQueryTextChange(final String newText)
-		{
-			// TODO
-			// fix this filter!
-			friendsListAdapter.getFilter().filter(newText);
-
-			return false;
-		}
-
-
-		@Override
-		public boolean onQueryTextSubmit(final String query)
-		{
-			searchMenuItem.collapseActionView();
-			return false;
-		}
-
-
 	}
 
 
@@ -499,13 +464,15 @@ public class FriendsListFragment extends SherlockFragment implements
 
 
 
-	private final class FriendsListAdapter extends ArrayAdapter<Person>
+	private final class FriendsListAdapter extends ArrayAdapter<Person> implements Filterable
 	{
 
 
 		private ArrayList<Person> friends;
+		private ArrayList<Person> friendsCopy;
 		private Context context;
 		private Drawable emptyProfilePicture;
+		private Filter filter;
 		private ImageLoader imageLoader;
 
 
@@ -515,8 +482,18 @@ public class FriendsListFragment extends SherlockFragment implements
 			this.friends = friends;
 			this.context = context;
 
+			friendsCopy = new ArrayList<Person>(friends);
+
 			emptyProfilePicture = context.getResources().getDrawable(R.drawable.empty_profile_picture_small);
+			filter = new FriendsListFilter();
 			imageLoader = Utilities.getImageLoader(context);
+		}
+
+
+		@Override
+		public Filter getFilter()
+		{
+			return filter;
 		}
 
 
@@ -544,6 +521,69 @@ public class FriendsListFragment extends SherlockFragment implements
 
 			return convertView;
 		}
+
+
+
+
+		private final class FriendsListFilter extends Filter
+		{
+
+
+			// TODO
+			// we got some crashing going on in here
+
+
+			@Override
+			protected FilterResults performFiltering(final CharSequence constraint)
+			{
+				final ArrayList<Person> filteredFriends = new ArrayList<Person>();
+
+				if (constraint == null || constraint.length() < 1)
+				{
+					friends = new ArrayList<Person>(friendsCopy);
+				}
+				else
+				{
+					final String query = constraint.toString().toLowerCase();
+
+					for (final Person friend : friends)
+					{
+						final String name = friend.getName().toLowerCase();
+
+						if (name.contains(query))
+						{
+							filteredFriends.add(friend);
+						}
+					}
+				}
+
+				final FilterResults filterResults = new FilterResults();
+				filterResults.count = filteredFriends.size();
+				filterResults.values = filteredFriends;
+
+				return filterResults;
+			}
+
+
+			@Override
+			protected void publishResults(final CharSequence constraint, final FilterResults results)
+			{
+				if (results.count >= 1)
+				{
+					friends.clear();
+					friends.addAll((ArrayList<Person>) results.values);
+					notifyDataSetChanged();
+				}
+				else
+				{
+					notifyDataSetInvalidated();
+				}
+			}
+
+
+		}
+
+
 
 
 	}
