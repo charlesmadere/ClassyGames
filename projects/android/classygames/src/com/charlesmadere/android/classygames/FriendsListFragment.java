@@ -61,6 +61,9 @@ public class FriendsListFragment extends SherlockFragment implements
 	private FriendsListAdapter friendsListAdapter;
 
 
+	private ListView friendsList;
+
+
 
 
 	/**
@@ -146,21 +149,38 @@ public class FriendsListFragment extends SherlockFragment implements
 
 			final MenuItem searchMenuItem = menu.findItem(R.id.friends_list_fragment_menu_search);
 			final SearchView searchView = (SearchView) searchMenuItem.getActionView();
+			searchView.setQueryHint(getString(R.string.search));
 
 			searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
 			{
+				// TODO
+				// The search works but has a few strange issues. First off, if
+				// the user deletes their existing search query from the search
+				// bar, the list is not updated. Second, searches for
+				// nonexistant stuff, like not many people I know have the
+				// letter 'Z' in their name, will cause no change in the list.
+				// So if I typed 'Z' into the search bar then my list would
+				// remain completely unchanged.
+
 				@Override
-				public boolean onQueryTextSubmit(final String query)
+				public boolean onQueryTextChange(final String newText)
 				{
-					searchMenuItem.collapseActionView();
+					if (friendsListAdapter != null)
+					{
+						if (Utilities.verifyValidString(newText))
+						{
+							friendsListAdapter.getFilter().filter(newText);
+						}
+					}
+
 					return false;
 				}
 
 
 				@Override
-				public boolean onQueryTextChange(final String newText)
+				public boolean onQueryTextSubmit(final String query)
 				{
-					friendsListAdapter.getFilter().filter(newText);
+					searchMenuItem.collapseActionView();
 					return false;
 				}
 			});
@@ -417,9 +437,10 @@ public class FriendsListFragment extends SherlockFragment implements
 				inflater.inflate(R.layout.friends_list_fragment, viewGroup);
 
 				friendsListAdapter = new FriendsListAdapter(fragmentActivity, R.layout.friends_list_fragment_listview_item, friends);
-				final ListView listView = (ListView) viewGroup.findViewById(R.id.friends_list_fragment_listview);
-				listView.setAdapter(friendsListAdapter);
-				listView.setOnItemClickListener(FriendsListFragment.this);
+				friendsList = (ListView) viewGroup.findViewById(R.id.friends_list_fragment_listview);
+				friendsList.setAdapter(friendsListAdapter);
+				friendsList.setOnItemClickListener(FriendsListFragment.this);
+				friendsList.setTextFilterEnabled(true);
 			}
 			else
 			{
@@ -469,7 +490,6 @@ public class FriendsListFragment extends SherlockFragment implements
 
 
 		private ArrayList<Person> friends;
-		private ArrayList<Person> friendsCopy;
 		private Context context;
 		private Drawable emptyProfilePicture;
 		private Filter filter;
@@ -482,8 +502,6 @@ public class FriendsListFragment extends SherlockFragment implements
 			this.friends = friends;
 			this.context = context;
 
-			friendsCopy = new ArrayList<Person>(friends);
-
 			emptyProfilePicture = context.getResources().getDrawable(R.drawable.empty_profile_picture_small);
 			filter = new FriendsListFilter();
 			imageLoader = Utilities.getImageLoader(context);
@@ -491,9 +509,23 @@ public class FriendsListFragment extends SherlockFragment implements
 
 
 		@Override
+		public int getCount()
+		{
+			return friends.size();
+		}
+
+
+		@Override
 		public Filter getFilter()
 		{
 			return filter;
+		}
+
+
+		@Override
+		public Person getItem(int position)
+		{
+			return friends.get(position);
 		}
 
 
@@ -540,7 +572,7 @@ public class FriendsListFragment extends SherlockFragment implements
 
 				if (constraint == null || constraint.length() < 1)
 				{
-					friends = new ArrayList<Person>(friendsCopy);
+					friends = new ArrayList<Person>();
 				}
 				else
 				{
@@ -571,7 +603,11 @@ public class FriendsListFragment extends SherlockFragment implements
 				if (results.count >= 1)
 				{
 					friends.clear();
-					friends.addAll((ArrayList<Person>) results.values);
+
+					@SuppressWarnings("unchecked")
+					final ArrayList<Person> values = (ArrayList<Person>) results.values;
+
+					friends.addAll(values);
 					notifyDataSetChanged();
 				}
 				else
@@ -586,22 +622,20 @@ public class FriendsListFragment extends SherlockFragment implements
 
 
 
+		private final class ViewHolder
+		{
+
+
+			private ImageView picture;
+			private TextView name;
+
+
+		}
+
+
+
+
 	}
-
-
-
-
-	private final static class ViewHolder
-	{
-
-
-		private ImageView picture;
-		private TextView name;
-
-
-	}
-
-
 
 
 }

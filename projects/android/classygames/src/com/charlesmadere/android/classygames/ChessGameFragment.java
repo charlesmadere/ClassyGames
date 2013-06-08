@@ -340,11 +340,9 @@ public class ChessGameFragment extends GenericGameFragment
 	protected void loadPieces()
 	{
 		// TODO
-		// Once I actually have some artwork done for the chess pieces there
-		// will be some code here that loads it all up. And, like with
-		// checkers, the user will be able to select custom colors for their
-		// pieces. So there will be some preferences loading and checking here
-		// as well.
+		// Artwork for the chess pieces has been created but is not yet
+		// included in the app. Once that artwork is added to the app, then
+		// this method will need to be filled out.
 	}
 
 
