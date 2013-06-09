@@ -55,6 +55,7 @@
 	<string name="no">No</string>
 	<string name="new_game_from_x">New game from %1$s!</string>
 	<string name="new_move_from_x">New move from %1$s!</string>
+	<string name="no_friends_found">No friends found!</string>
 	<string name="no_friend_is_currently_selected">No friend is currently selected.</string>
 	<string name="no_game_is_currently_loaded">No game is currently loaded.</string>
 	<string name="no_internet_connection">You don\'t have a connection to the Internet!</string>

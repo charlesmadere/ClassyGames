@@ -465,6 +465,7 @@ public class GamesListFragment extends SherlockFragment implements
 
 
 	private final class AsyncRefreshGamesList extends AsyncTask<Void, Void, ArrayList<Game>>
+		implements Comparator<Game>
 	{
 
 
@@ -479,7 +480,8 @@ public class GamesListFragment extends SherlockFragment implements
 		private boolean restoreExistingList;
 
 
-		private AsyncRefreshGamesList(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater, final ViewGroup viewGroup, final boolean restoreExistingList)
+		private AsyncRefreshGamesList(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater,
+			final ViewGroup viewGroup, final boolean restoreExistingList)
 		{
 			this.fragmentActivity = fragmentActivity;
 			this.inflater = inflater;
@@ -542,6 +544,13 @@ public class GamesListFragment extends SherlockFragment implements
 			inflater.inflate(R.layout.games_list_fragment_cancelled, viewGroup);
 
 			setRunningState(false);
+		}
+
+
+		@Override
+		public int compare(final Game gameOne, final Game gameTwo)
+		{
+			return (int) (gameTwo.getTimestamp() - gameOne.getTimestamp());
 		}
 
 
@@ -726,14 +735,7 @@ public class GamesListFragment extends SherlockFragment implements
 						}
 					}
 
-					Collections.sort(games, new Comparator<Game>()
-					{
-						@Override
-						public int compare(final Game gameOne, final Game gameTwo)
-						{
-							return (int) (gameTwo.getTimestamp() - gameOne.getTimestamp());
-						}
-					});
+					Collections.sort(games, this);
 				}
 			}
 			catch (final JSONException e)

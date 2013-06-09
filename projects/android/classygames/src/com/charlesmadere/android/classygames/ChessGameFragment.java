@@ -110,14 +110,38 @@ public class ChessGameFragment extends GenericGameFragment
 	@Override
 	protected void createOptionsMenu(final Menu menu, final MenuInflater inflater)
 	{
+		// TODO
+		// Chess will require an options menu to perform some moves like
+		// castling. Off the top of my head right now that's the only one that
+		// I can think of, but there may be more.
+	}
 
+
+	@Override
+	protected void destroyBitmapDrawables()
+	{
+		destroyBitmapDrawables
+		(
+			playerPawn,
+			playerBishop,
+			playerKnight,
+			playerRook,
+			playerQueen,
+			playerKing,
+			opponentPawn,
+			opponentBishop,
+			opponentKnight,
+			opponentRook,
+			opponentQueen,
+			opponentKing
+		);
 	}
 
 
 	@Override
 	protected boolean optionsItemSelected(final MenuItem item)
 	{
-		return false;
+		return super.onOptionsItemSelected(item);
 	}
 
 

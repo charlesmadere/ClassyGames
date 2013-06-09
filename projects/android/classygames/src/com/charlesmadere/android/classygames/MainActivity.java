@@ -173,6 +173,7 @@ public class MainActivity extends SherlockActivity
 			if (state.equals(SessionState.OPENED))
 			// if the session state is open, show the authenticated activity
 			{
+				// store the user's Facebook Access Token for retrieval later
 				FacebookUtilities.setAccessToken(session.getAccessToken());
 
 				asyncGetFacebookIdentity = new AsyncGetFacebookIdentity(this,

@@ -216,6 +216,13 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	@Override
+	public void onDestroyView()
+	{
+		destroyBitmapDrawables();
+		super.onDestroyView();
+	}
+
+	@Override
 	public void onActivityCreated(final Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
@@ -479,7 +486,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			}
 		}
 
-		// Allow classes that extend this one to run menu preparation
+		// Allow the classes that extend this one to run menu preparation
 		// operations.
 		prepareOptionsMenu(menu);
 	}
@@ -620,6 +627,32 @@ public abstract class GenericGameFragment extends SherlockFragment
 	protected String createTag(final Coordinate coordinate)
 	{
 		return createTag(coordinate.getX(), coordinate.getY());
+	}
+
+
+	/**
+	 * Recycles all of the BitmapDrawable objects passed in to this method.
+	 * After all of those objects have been recycled, this method will then
+	 * recycle all of the board's BitmapDrawable background objects. <strong>
+	 * This method should only be run on versions of Android below Honeycomb!
+	 * So that means Gingerbread and below.</strong>
+	 *
+	 * @param drawables
+	 * All of the BitmapDrawable objects that you want recycled. This should be
+	 * every single BitmapDrawable that is used in the classes that extend this
+	 * one.
+	 */
+	protected void destroyBitmapDrawables(final BitmapDrawable... drawables)
+	{
+		for (final BitmapDrawable drawable : drawables)
+		{
+			drawable.getBitmap().recycle();
+		}
+
+		backgroundBoardBright.getBitmap().recycle();
+		backgroundBoardBrightSelected.getBitmap().recycle();
+		backgroundBoardDark.getBitmap().recycle();
+		backgroundBoardDarkSelected.getBitmap().recycle();
 	}
 
 
@@ -891,7 +924,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * @param yPositions
 	 * An int array of handles to all of the board's columns.
 	 */
-	protected void setAllBoardPositionsToEqualHeightAndWidth(final View view, final int modelBoardPosition, final int [] xPositions, final int [] yPositions)
+	protected void setAllBoardPositionsToEqualHeightAndWidth(final View view, final int modelBoardPosition,
+		final int [] xPositions, final int [] yPositions)
 	{
 		final Resources resources = getResources();
 		final ViewTreeObserver viewTreeObserver = view.getViewTreeObserver();
@@ -903,7 +937,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 			@Override
 			public void onGlobalLayout()
 			{
-				final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+				final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams
+					(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 				final View view = getView();
 
 				if (view != null)
@@ -1203,6 +1238,16 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * XML file.
 	 */
 	protected abstract void createOptionsMenu(final Menu menu, final MenuInflater inflater);
+
+
+	/**
+	 * Versions of Android below Honeycomb (v3.0) do not properly garbage
+	 * collect Drawable objects. Use this method to perform the proper
+	 * releasing and removal of any Drawable objects from memory. <strong>This
+	 * method only runs when the version of Android running this app is
+	 * Gingerbread and below.</strong>
+	 */
+	protected abstract void destroyBitmapDrawables();
 
 
 	/**

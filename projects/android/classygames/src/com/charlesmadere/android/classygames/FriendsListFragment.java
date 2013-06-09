@@ -265,6 +265,7 @@ public class FriendsListFragment extends SherlockFragment implements
 
 
 	private final class AsyncRefreshFriendsList extends AsyncTask<Void, Void, ArrayList<Person>>
+		implements Comparator<Person>
 	{
 
 
@@ -352,14 +353,9 @@ public class FriendsListFragment extends SherlockFragment implements
 				}
 			}
 
-			Collections.sort(friends, new Comparator<Person>()
-			{
-				@Override
-				public int compare(final Person geo, final Person jarrad)
-				{
-					return geo.getName().compareToIgnoreCase(jarrad.getName());
-				}
-			});
+			// sorts the list of friends using the Comparator method found in
+			// this class
+			Collections.sort(friends, this);
 
 			return friends;
 		}
@@ -398,6 +394,13 @@ public class FriendsListFragment extends SherlockFragment implements
 			inflater.inflate(R.layout.friends_list_fragment_cancelled, viewGroup);
 
 			setRunningState(false);
+		}
+
+
+		@Override
+		public int compare(final Person geo, final Person jarrad)
+		{
+			return geo.getName().compareToIgnoreCase(jarrad.getName());
 		}
 
 
@@ -477,12 +480,10 @@ public class FriendsListFragment extends SherlockFragment implements
 
 
 		private ArrayList<Person> friends;
-		private ArrayList<Person> friendsCopy;
 		private Context context;
 		private Drawable emptyProfilePicture;
 		private Filter filter;
 		private ImageLoader imageLoader;
-		private String previousQuery;
 
 
 		private FriendsListAdapter(final Context context, final int textViewResourceId, final ArrayList<Person> friends)
@@ -492,8 +493,7 @@ public class FriendsListFragment extends SherlockFragment implements
 			this.context = context;
 
 			emptyProfilePicture = context.getResources().getDrawable(R.drawable.empty_profile_picture_small);
-			friendsCopy = new ArrayList<Person>(friends);
-			filter = new FriendsListFilter();
+			filter = new FriendsListFilter(friends);
 			imageLoader = Utilities.getImageLoader(context);
 		}
 
@@ -553,6 +553,16 @@ public class FriendsListFragment extends SherlockFragment implements
 		 */
 		private final class FriendsListFilter extends Filter
 		{
+
+
+			private ArrayList<Person> friendsCopy;
+			private String previousQuery;
+
+
+			private FriendsListFilter(final ArrayList<Person> friends)
+			{
+				friendsCopy = new ArrayList<Person>(friends);
+			}
 
 
 			@Override
