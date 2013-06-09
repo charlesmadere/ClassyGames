@@ -61,11 +61,6 @@ public class FriendsListFragment extends SherlockFragment implements
 	private FriendsListAdapter friendsListAdapter;
 
 
-	private ListView friendsList;
-
-
-
-
 	/**
 	 * Object that allows us to run any of the methods that are defined in the
 	 * FriendsListFragmentListeners interface.
@@ -167,7 +162,7 @@ public class FriendsListFragment extends SherlockFragment implements
 				{
 					if (friendsListAdapter != null)
 					{
-						if (Utilities.verifyValidString(newText))
+						if (newText != null)
 						{
 							friendsListAdapter.getFilter().filter(newText);
 						}
@@ -432,15 +427,14 @@ public class FriendsListFragment extends SherlockFragment implements
 		{
 			viewGroup.removeAllViews();
 
-			if (friends != null && friends.size() >= 1)
+			if (friends != null && !friends.isEmpty())
 			{
 				inflater.inflate(R.layout.friends_list_fragment, viewGroup);
-
 				friendsListAdapter = new FriendsListAdapter(fragmentActivity, R.layout.friends_list_fragment_listview_item, friends);
-				friendsList = (ListView) viewGroup.findViewById(R.id.friends_list_fragment_listview);
+
+				final ListView friendsList = (ListView) viewGroup.findViewById(R.id.friends_list_fragment_listview);
 				friendsList.setAdapter(friendsListAdapter);
 				friendsList.setOnItemClickListener(FriendsListFragment.this);
-				friendsList.setTextFilterEnabled(true);
 			}
 			else
 			{
@@ -490,6 +484,7 @@ public class FriendsListFragment extends SherlockFragment implements
 
 
 		private ArrayList<Person> friends;
+		private ArrayList<Person> friendsCopy;
 		private Context context;
 		private Drawable emptyProfilePicture;
 		private Filter filter;
@@ -503,6 +498,7 @@ public class FriendsListFragment extends SherlockFragment implements
 			this.context = context;
 
 			emptyProfilePicture = context.getResources().getDrawable(R.drawable.empty_profile_picture_small);
+			friendsCopy = new ArrayList<Person>(friends);
 			filter = new FriendsListFilter();
 			imageLoader = Utilities.getImageLoader(context);
 		}
@@ -557,41 +553,68 @@ public class FriendsListFragment extends SherlockFragment implements
 
 
 
+		/**
+		 * This class performs the actual filtering of the friends in the
+		 * friends list.
+		 */
 		private final class FriendsListFilter extends Filter
 		{
 
 
-			// TODO
-			// we got some crashing going on in here
-
-
 			@Override
 			protected FilterResults performFiltering(final CharSequence constraint)
+			// The CharSequence constraint variable is the actual text that the
+			// user is searching for.
 			{
-				final ArrayList<Person> filteredFriends = new ArrayList<Person>();
+				final FilterResults filterResults = new FilterResults();
 
 				if (constraint == null || constraint.length() < 1)
+				// Check to see if the text that the user searched for is null
+				// or empty. If either of these checks prove true, then we know
+				// that the user wants to clear their search, which means that
+				// they want to see their entire, unfiltered, friends list.
 				{
-					friends = new ArrayList<Person>();
+					if (friends.size() != friendsCopy.size())
+					// The friendsCopy object contains the original unsorted
+					// list of friends. This check compares the sizes of the
+					// two lists, if they are the same size then we know that
+					// the friends list has not been altered / filtered and
+					// this means that we don't need to waste the performance
+					// power needed to create a copy of the original list.
+					{
+						// Creates a copy of the original, unaltered friends
+						// list.
+						friends = new ArrayList<Person>(friendsCopy);
+					}
+
+					filterResults.count = friendsCopy.size();
+					filterResults.values = friendsCopy;
 				}
 				else
 				{
+					// The friends that are found to contain the text that the
+					// user has searched for will be placed in this ArrayList.
+					final ArrayList<Person> filteredFriends = new ArrayList<Person>();
+
 					final String query = constraint.toString().toLowerCase();
 
 					for (final Person friend : friends)
+					// search through every friend in the list of friends
 					{
 						final String name = friend.getName().toLowerCase();
 
 						if (name.contains(query))
 						{
+							// This friend's name was found to contain the text
+							// that the user is searching for. Add this friend
+							// to the list of filtered friends.
 							filteredFriends.add(friend);
 						}
 					}
-				}
 
-				final FilterResults filterResults = new FilterResults();
-				filterResults.count = filteredFriends.size();
-				filterResults.values = filteredFriends;
+					filterResults.count = filteredFriends.size();
+					filterResults.values = filteredFriends;
+				}
 
 				return filterResults;
 			}
@@ -600,20 +623,19 @@ public class FriendsListFragment extends SherlockFragment implements
 			@Override
 			protected void publishResults(final CharSequence constraint, final FilterResults results)
 			{
-				if (results.count >= 1)
-				{
-					friends.clear();
+				// Clear the list of friends that is currently being shown on
+				// the screen.
+				friends.clear();
 
-					@SuppressWarnings("unchecked")
-					final ArrayList<Person> values = (ArrayList<Person>) results.values;
+				@SuppressWarnings("unchecked")
+				final ArrayList<Person> values = (ArrayList<Person>) results.values;
 
-					friends.addAll(values);
-					notifyDataSetChanged();
-				}
-				else
-				{
-					notifyDataSetInvalidated();
-				}
+				// Add the list of filtered friends to the newly cleared list.
+				friends.addAll(values);
+
+				// This refreshes the friends list as shown on the device's
+				// screen.
+				notifyDataSetChanged();
 			}
 
 
@@ -631,8 +653,6 @@ public class FriendsListFragment extends SherlockFragment implements
 
 
 		}
-
-
 
 
 	}
