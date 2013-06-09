@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Window;
 import com.charlesmadere.android.classygames.models.Person;
+import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
 import com.charlesmadere.android.classygames.utilities.ServerUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 import com.facebook.*;
@@ -50,9 +51,11 @@ public class MainActivity extends SherlockActivity
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main_activity);
 
-		final Session.StatusCallback sessionStatusCallback = new Session.StatusCallback() {
+		final Session.StatusCallback sessionStatusCallback = new Session.StatusCallback()
+		{
 			@Override
-			public void call(final Session session, final SessionState state, final Exception exception) {
+			public void call(final Session session, final SessionState state, final Exception exception)
+			{
 				onSessionStateChange(session, state);
 			}
 		};
@@ -170,7 +173,10 @@ public class MainActivity extends SherlockActivity
 			if (state.equals(SessionState.OPENED))
 			// if the session state is open, show the authenticated activity
 			{
-				asyncGetFacebookIdentity = new AsyncGetFacebookIdentity(this, (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE), session, (ViewGroup) findViewById(R.id.main_activity_listview));
+				FacebookUtilities.setAccessToken(session.getAccessToken());
+
+				asyncGetFacebookIdentity = new AsyncGetFacebookIdentity(this,
+					(LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE), session, (ViewGroup) findViewById(R.id.main_activity_listview));
 				asyncGetFacebookIdentity.execute();
 			}
 		}

@@ -61,6 +61,8 @@ public class FriendsListFragment extends SherlockFragment implements
 	private FriendsListAdapter friendsListAdapter;
 
 
+
+
 	/**
 	 * Object that allows us to run any of the methods that are defined in the
 	 * FriendsListFragmentListeners interface.
