@@ -148,15 +148,6 @@ public class FriendsListFragment extends SherlockFragment implements
 
 			searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
 			{
-				// TODO
-				// The search works but has a few strange issues. First off, if
-				// the user deletes their existing search query from the search
-				// bar, the list is not updated. Second, searches for
-				// nonexistant stuff, like not many people I know have the
-				// letter 'Z' in their name, will cause no change in the list.
-				// So if I typed 'Z' into the search bar then my list would
-				// remain completely unchanged.
-
 				@Override
 				public boolean onQueryTextChange(final String newText)
 				{
@@ -489,6 +480,7 @@ public class FriendsListFragment extends SherlockFragment implements
 		private Drawable emptyProfilePicture;
 		private Filter filter;
 		private ImageLoader imageLoader;
+		private String previousQuery;
 
 
 		private FriendsListAdapter(final Context context, final int textViewResourceId, final ArrayList<Person> friends)
@@ -589,6 +581,7 @@ public class FriendsListFragment extends SherlockFragment implements
 
 					filterResults.count = friendsCopy.size();
 					filterResults.values = friendsCopy;
+					previousQuery = null;
 				}
 				else
 				{
@@ -596,7 +589,22 @@ public class FriendsListFragment extends SherlockFragment implements
 					// user has searched for will be placed in this ArrayList.
 					final ArrayList<Person> filteredFriends = new ArrayList<Person>();
 
+					// Grab a String version of the user's search text and
+					// convert it to lower case form.
 					final String query = constraint.toString().toLowerCase();
+
+					if (previousQuery != null && previousQuery.length() > query.length())
+					// Check the previous query and see if it was a bigger
+					// String than the current query. This is needed because if
+					// the user entered "Ka", but then deleted it down to just
+					// "K", the friends list would only continue to filter
+					// based on the results found from the "Ka" search.
+					{
+						friends = new ArrayList<Person>(friendsCopy);
+					}
+
+					// store the user's current search query
+					previousQuery = query;
 
 					for (final Person friend : friends)
 					// search through every friend in the list of friends
