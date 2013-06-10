@@ -2,6 +2,7 @@ package com.charlesmadere.android.classygames;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 
 public class ConfirmGameFragment extends SherlockFragment
@@ -164,8 +166,10 @@ public class ConfirmGameFragment extends SherlockFragment
 			}
 		});
 
+		final Context context = getSherlockActivity();
+		final ImageLoader imageLoader = Utilities.getImageLoader(context);
 		final ImageView profilePicture = (ImageView) view.findViewById(R.id.confirm_game_fragment_friend_profile_picture);
-		Utilities.getImageLoader(getSherlockActivity()).displayImage(FacebookUtilities.getFriendsPictureLarge(friend.getId()), profilePicture);
+		imageLoader.displayImage(FacebookUtilities.getFriendsPictureLarge(context, friend.getId()), profilePicture);
 	}
 
 

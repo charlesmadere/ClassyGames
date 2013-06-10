@@ -1,6 +1,9 @@
 package com.charlesmadere.android.classygames.utilities;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 /**
  * Class for constants and methods relating to Facebook. Further documentation
  * on what this class is doing can be found on the Facebook website:
@@ -28,6 +31,7 @@ public final class FacebookUtilities
 	 * https://developers.facebook.com/docs/getting-started/graphapi/#login
 	 */
 	private static String accessToken;
+	private static final String KEY_ACCESS_TOKEN = "KEY_ACCESS_TOKEN";
 
 
 
@@ -37,13 +41,33 @@ public final class FacebookUtilities
 	 * would be "&access_token=FC030F". Please only use this method if the
 	 * user's Facebook access token is not null or empty!
 	 *
+	 * @param context
+	 * The context of the Activity that is calling this method.
+	 *
 	 * @return
 	 * Returns the complete Facebook API access token query string, ready to be
 	 * used in a Facebook Graph API request.
 	 */
-	private static String getAccessToken()
+	private static String getAccessToken(final Context context)
 	{
-		return ACCESS_TOKEN + accessToken;
+		if (Utilities.verifyValidString(accessToken))
+		{
+			return ACCESS_TOKEN + accessToken;
+		}
+		else
+		{
+			final SharedPreferences sPreferences = Utilities.getPreferences(context);
+			accessToken = sPreferences.getString(KEY_ACCESS_TOKEN, null);
+
+			if (Utilities.verifyValidString(accessToken))
+			{
+				return ACCESS_TOKEN + accessToken;
+			}
+			else
+			{
+				return null;
+			}
+		}
 	}
 
 
@@ -53,17 +77,28 @@ public final class FacebookUtilities
 	 * worriment of hitting an API rate limit. More on the subject here:
 	 * https://developers.facebook.com/docs/reference/api/using-pictures/#ratelimits
 	 *
+	 * @param context
+	 * The context of the Activity that is calling this method.
+	 *
 	 * @param accessToken
 	 * The user's Facebook Access Token.
 	 */
-	public static void setAccessToken(final String accessToken)
+	public static void setAccessToken(final Context context, final String accessToken)
 	{
+		final SharedPreferences sPreferences = Utilities.getPreferences(context);
+		final SharedPreferences.Editor editor = sPreferences.edit();
+		editor.putString(KEY_ACCESS_TOKEN, accessToken);
+		editor.commit();
+
 		FacebookUtilities.accessToken = accessToken;
 	}
 
 
 	/**
 	 * Returns the large profile picture URL for the given user ID.
+	 *
+	 * @param context
+	 * The context of the Activity that is calling this method.
 	 *
 	 * @param id
 	 * The Facebook user ID of the person that you want a profile picture for.
@@ -72,11 +107,11 @@ public final class FacebookUtilities
 	 * Returns the URL as a String. This URL could be typed directly into a
 	 * browser if you wanted to test to make sure that it works.
 	 */
-	public static String getFriendsPictureLarge(final long id)
+	public static String getFriendsPictureLarge(final Context context, final long id)
 	{
-		if (Utilities.verifyValidString(accessToken))
+		if (Utilities.verifyValidString(getAccessToken(context)))
 		{
-			return GRAPH_API_URL + id + PICTURE_LARGE + getAccessToken();
+			return GRAPH_API_URL + id + PICTURE_LARGE + accessToken;
 		}
 		else
 		{
@@ -88,6 +123,9 @@ public final class FacebookUtilities
 	/**
 	 * Returns the normal profile picture URL for the given user ID.
 	 *
+	 * @param context
+	 * The context of the Activity that is calling this method.
+	 *
 	 * @param id
 	 * The Facebook user ID of the person that you want a profile picture for.
 	 *
@@ -95,11 +133,11 @@ public final class FacebookUtilities
 	 * Returns the URL as a String. This URL could be typed directly into a
 	 * browser if you wanted to test to make sure that it works.
 	 */
-	public static String getFriendsPictureNormal(final long id)
+	public static String getFriendsPictureNormal(final Context context, final long id)
 	{
-		if (Utilities.verifyValidString(accessToken))
+		if (Utilities.verifyValidString(getAccessToken(context)))
 		{
-			return GRAPH_API_URL + id + PICTURE_NORMAL + getAccessToken();
+			return GRAPH_API_URL + id + PICTURE_NORMAL + accessToken;
 		}
 		else
 		{
@@ -111,6 +149,9 @@ public final class FacebookUtilities
 	/**
 	 * Returns the small profile picture URL for the given user ID.
 	 *
+	 * @param context
+	 * The context of the Activity that is calling this method.
+	 *
 	 * @param id
 	 * The Facebook user ID of the person that you want a profile picture for.
 	 *
@@ -118,11 +159,11 @@ public final class FacebookUtilities
 	 * Returns the URL as a String. This URL could be typed directly into a
 	 * browser if you wanted to test to make sure that it works.
 	 */
-	public static String getFriendsPictureSmall(final long id)
+	public static String getFriendsPictureSmall(final Context context, final long id)
 	{
-		if (Utilities.verifyValidString(accessToken))
+		if (Utilities.verifyValidString(getAccessToken(context)))
 		{
-			return GRAPH_API_URL + id + PICTURE_SMALL + getAccessToken();
+			return GRAPH_API_URL + id + PICTURE_SMALL + accessToken;
 		}
 		else
 		{
@@ -134,6 +175,9 @@ public final class FacebookUtilities
 	/**
 	 * Returns the square profile picture URL for the given user ID.
 	 *
+	 * @param context
+	 * The context of the Activity that is calling this method.
+	 *
 	 * @param id
 	 * The Facebook user ID of the person that you want a profile picture for.
 	 *
@@ -141,11 +185,11 @@ public final class FacebookUtilities
 	 * Returns the URL as a String. This URL could be typed directly into a
 	 * browser if you wanted to test to make sure that it works.
 	 */
-	public static String getFriendsPictureSquare(final long id)
+	public static String getFriendsPictureSquare(final Context context, final long id)
 	{
-		if (Utilities.verifyValidString(accessToken))
+		if (Utilities.verifyValidString(getAccessToken(context)))
 		{
-			return GRAPH_API_URL + id + PICTURE_SQUARE + getAccessToken();
+			return GRAPH_API_URL + id + PICTURE_SQUARE + accessToken;
 		}
 		else
 		{

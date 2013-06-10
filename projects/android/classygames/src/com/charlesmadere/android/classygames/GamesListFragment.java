@@ -817,7 +817,7 @@ public class GamesListFragment extends SherlockFragment implements
 
 				final ImageView picture = (ImageView) convertView.findViewById(R.id.games_list_fragment_listview_item_picture);
 				picture.setImageDrawable(emptyProfilePicture);
-				imageLoader.displayImage(FacebookUtilities.getFriendsPictureSquare(game.getPerson().getId()), picture);
+				imageLoader.displayImage(FacebookUtilities.getFriendsPictureSquare(context, game.getPerson().getId()), picture);
 
 				final TextView name = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_name);
 				name.setText(game.getPerson().getName());
