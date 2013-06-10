@@ -111,7 +111,7 @@ public final class FacebookUtilities
 	{
 		if (Utilities.verifyValidString(getAccessToken(context)))
 		{
-			return GRAPH_API_URL + id + PICTURE_LARGE + accessToken;
+			return GRAPH_API_URL + id + PICTURE_LARGE + ACCESS_TOKEN + accessToken;
 		}
 		else
 		{
@@ -137,7 +137,7 @@ public final class FacebookUtilities
 	{
 		if (Utilities.verifyValidString(getAccessToken(context)))
 		{
-			return GRAPH_API_URL + id + PICTURE_NORMAL + accessToken;
+			return GRAPH_API_URL + id + PICTURE_NORMAL + ACCESS_TOKEN + accessToken;
 		}
 		else
 		{
@@ -163,7 +163,7 @@ public final class FacebookUtilities
 	{
 		if (Utilities.verifyValidString(getAccessToken(context)))
 		{
-			return GRAPH_API_URL + id + PICTURE_SMALL + accessToken;
+			return GRAPH_API_URL + id + PICTURE_SMALL + ACCESS_TOKEN + accessToken;
 		}
 		else
 		{
@@ -189,7 +189,7 @@ public final class FacebookUtilities
 	{
 		if (Utilities.verifyValidString(getAccessToken(context)))
 		{
-			return GRAPH_API_URL + id + PICTURE_SQUARE + accessToken;
+			return GRAPH_API_URL + id + PICTURE_SQUARE + ACCESS_TOKEN + accessToken;
 		}
 		else
 		{
