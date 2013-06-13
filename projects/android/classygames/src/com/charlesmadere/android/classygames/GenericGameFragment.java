@@ -216,13 +216,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	@Override
-	public void onDestroyView()
-	{
-		destroyBitmapDrawables();
-		super.onDestroyView();
-	}
-
-	@Override
 	public void onActivityCreated(final Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
@@ -411,6 +404,18 @@ public abstract class GenericGameFragment extends SherlockFragment
 		createOptionsMenu(menu, inflater);
 
 		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+
+	@Override
+	public void onDestroyView()
+	{
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
+		{
+//			destroyBitmapDrawables();
+		}
+
+		super.onDestroyView();
 	}
 
 
