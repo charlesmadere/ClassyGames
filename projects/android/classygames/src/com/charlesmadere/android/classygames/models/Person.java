@@ -1,6 +1,9 @@
 package com.charlesmadere.android.classygames.models;
 
 
+import com.charlesmadere.android.classygames.utilities.Utilities;
+
+
 /**
  * Class representing a real person.
  */
@@ -218,7 +221,10 @@ public class Person
 	 */
 	public static boolean isIdValid(final String id)
 	{
-		if (isNameValid(id))
+		if (Utilities.verifyValidString(id))
+		// First, ensure that we were given a valid String. If this proves true
+		// then we will check to see that the long value of this String is a
+		// valid ID value.
 		{
 			return isIdValid(Long.parseLong(id));
 		}
@@ -300,7 +306,7 @@ public class Person
 	 */
 	public static boolean isNameValid(final String name)
 	{
-		return name != null && name.length() >= 1;
+		return Utilities.verifyValidString(name);
 	}
 
 
