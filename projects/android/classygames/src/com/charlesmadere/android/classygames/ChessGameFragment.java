@@ -118,27 +118,6 @@ public class ChessGameFragment extends GenericGameFragment
 
 
 	@Override
-	protected void destroyBitmapDrawables()
-	{
-		destroyBitmapDrawables
-		(
-			playerPawn,
-			playerBishop,
-			playerKnight,
-			playerRook,
-			playerQueen,
-			playerKing,
-			opponentPawn,
-			opponentBishop,
-			opponentKnight,
-			opponentRook,
-			opponentQueen,
-			opponentKing
-		);
-	}
-
-
-	@Override
 	protected boolean optionsItemSelected(final MenuItem item)
 	{
 		return super.onOptionsItemSelected(item);

@@ -408,18 +408,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	@Override
-	public void onDestroyView()
-	{
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
-		{
-//			destroyBitmapDrawables();
-		}
-
-		super.onDestroyView();
-	}
-
-
-	@Override
 	public boolean onOptionsItemSelected(final MenuItem item)
 	{
 		switch (item.getItemId())
@@ -1243,16 +1231,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * XML file.
 	 */
 	protected abstract void createOptionsMenu(final Menu menu, final MenuInflater inflater);
-
-
-	/**
-	 * Versions of Android below Honeycomb (v3.0) do not properly garbage
-	 * collect Drawable objects. Use this method to perform the proper
-	 * releasing and removal of any Drawable objects from memory. <strong>This
-	 * method only runs when the version of Android running this app is
-	 * Gingerbread and below.</strong>
-	 */
-	protected abstract void destroyBitmapDrawables();
 
 
 	/**

@@ -63,19 +63,6 @@ public class CheckersGameFragment extends GenericGameFragment
 
 
 	@Override
-	protected void destroyBitmapDrawables()
-	{
-		destroyBitmapDrawables
-		(
-			playerNormal,
-			playerKing,
-			opponentNormal,
-			opponentKing
-		);
-	}
-
-
-	@Override
 	protected boolean optionsItemSelected(final MenuItem item)
 	{
 		return super.onOptionsItemSelected(item);
