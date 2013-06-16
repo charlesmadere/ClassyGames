@@ -42,6 +42,7 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 	{
 		super.onCreate(savedInstanceState);
 		Utilities.setActionBar(this, R.string.settings, true);
+		Utilities.setBackground(this, getListView());
 
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
 		// Check to see if the running version of Android is below Honeycomb.

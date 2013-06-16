@@ -7,6 +7,7 @@ import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -14,6 +15,7 @@ import android.preference.PreferenceManager;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
@@ -410,6 +412,33 @@ public final class Utilities
 			background.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
 
 			actionBar.setBackgroundDrawable(background);
+		}
+	}
+
+
+	/**
+	 * Styles the background of a preference activity so that it's not just the
+	 * plain ol' white. This method should only be called from a class that
+	 * extends from either SherlockPreferenceActivity or PreferenceFragment.
+	 *
+	 * @param context
+	 * The context of the Activity or Fragment that is calling this method.
+	 *
+	 * @param view
+	 * The View that you want the background applied to.
+	 */
+	@SuppressWarnings("deprecation")
+	public static void setBackground(final Context context, final View view)
+	{
+		final Drawable background = context.getResources().getDrawable(R.drawable.bg_bright);
+
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN)
+		{
+			view.setBackgroundDrawable(background);
+		}
+		else
+		{
+			view.setBackground(background);
 		}
 	}
 
