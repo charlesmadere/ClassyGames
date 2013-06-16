@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.PowerManager;
+import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
@@ -295,7 +296,8 @@ public class GCMIntentService extends IntentService
 	 * @param person
 	 * The Facebook friend that caused this push notification to be sent.
 	 */
-	private void handleNewGameOrNewMoveMessage(final Builder builder, final String gameId, final byte whichGame, final byte messageType, final Person person)
+	private void handleNewGameOrNewMoveMessage(final Builder builder, final String gameId, final byte whichGame,
+		final byte messageType, final Person person)
 	{
 		final Intent gameIntent = new Intent(this, GameFragmentActivity.class)
 			.putExtra(GameFragmentActivity.BUNDLE_DATA_GAME_ID, gameId)
@@ -377,6 +379,12 @@ public class GCMIntentService extends IntentService
 		// show the notification
 		final NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.notify(GCM_NOTIFICATION_ID, builder.build());
+
+		if (Utilities.checkIfSettingIsEnabled(this, R.string.settings_key_vibrate, false))
+		{
+			final Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+			vibrator.vibrate(50);
+		}
 	}
 
 
