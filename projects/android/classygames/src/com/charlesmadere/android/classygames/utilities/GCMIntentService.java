@@ -36,8 +36,9 @@ public class GCMIntentService extends IntentService
 	private static PowerManager.WakeLock wakeLock;
 
 	private final static int GCM_NOTIFICATION_ID = 0;
-	private final static int GCM_NOTIFICATION_LIGHTS_ON = 1000; // milliseconds
-	private final static int GCM_NOTIFICATION_LIGHTS_OFF = 16000; // milliseconds
+	private final static int GCM_NOTIFICATION_LIGHTS_DURATION_ON = 1024; // milliseconds
+	private final static int GCM_NOTIFICATION_LIGHTS_DURATION_OFF = 15360; // milliseconds
+	private final static int GCM_NOTIFICATION_VIBRATION_DURATION = 160; // milliseconds
 
 
 
@@ -249,7 +250,7 @@ public class GCMIntentService extends IntentService
 		{
 			// only turn on the notification light if the user has
 			// specified that he or she wants it on
-			builder.setLights(Color.MAGENTA, GCM_NOTIFICATION_LIGHTS_ON, GCM_NOTIFICATION_LIGHTS_OFF);
+			builder.setLights(Color.MAGENTA, GCM_NOTIFICATION_LIGHTS_DURATION_ON, GCM_NOTIFICATION_LIGHTS_DURATION_OFF);
 		}
 
 		if (messageType == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_GAME
@@ -383,7 +384,7 @@ public class GCMIntentService extends IntentService
 		if (Utilities.checkIfSettingIsEnabled(this, R.string.settings_key_vibrate, false))
 		{
 			final Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-			vibrator.vibrate(50);
+			vibrator.vibrate(GCM_NOTIFICATION_VIBRATION_DURATION);
 		}
 	}
 
