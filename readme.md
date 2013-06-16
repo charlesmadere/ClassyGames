@@ -49,8 +49,16 @@ Both of these tutorials assume that your IDE is somewhat configured. By that I m
 + v0.0.X.0 This would be a relatively small update. Maybe one or two new features or tweaks; some may be completely unnoticeable by the user.
 + v0.0.0.X This would be a bug fix release.
 
+## Classy Games v1.6 ##
+Classy Games v1.6 was released on June 16th, 2013.
+
+1. More settings! You can now disable the notification light and even enable vibration on notification. Also related: the notification light color is now magenta instead of the old and out-of-place red-green thing. Only some devices support this color change though.
+2. You can now quick search through the friends list when creating a new game.
+3. Added `xxhdpi` icons for the checkers pieces. This is good for newer devices that have an extremely high number of pixels per inch in their displays.
+4. Throughout the entire app, the Action Bar's typeface now fits in with the rest of the app's design.
+
 ## Classy Games v1.5 ##
-Classy Games v1.5 was released on March 3rd, 2013. It features a couple of cool things.
+Classy Games v1.5 was released on March 3rd, 2013. It features many cool things.
 
 1. Fragments! Classy Games is now far better on an Android powered tablet.
 2. Facebook SDK v3.0 upgrade
