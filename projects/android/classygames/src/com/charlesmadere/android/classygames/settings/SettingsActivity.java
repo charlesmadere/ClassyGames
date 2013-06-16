@@ -1,18 +1,17 @@
 package com.charlesmadere.android.classygames.settings;
 
 
-import java.util.List;
-
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
-
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.utilities.Utilities;
+
+import java.util.List;
 
 
 /**
@@ -42,7 +41,8 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 	// https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels
 	{
 		super.onCreate(savedInstanceState);
-		Utilities.styleActionBar(getResources(), getSupportActionBar(), true);
+		Utilities.setActionBar(this, R.string.settings, true);
+		Utilities.setBackground(this, getListView());
 
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
 		// Check to see if the running version of Android is below Honeycomb.
@@ -57,6 +57,7 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 				// settings preference file
 				{
 					addPreferencesFromResource(R.xml.settings_game);
+					Utilities.setActionBar(this, R.string.game_settings, true);
 
 					playersCheckersPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_players_checkers_piece_color));
 					opponentsCheckersPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_opponents_checkers_piece_color));
@@ -89,21 +90,22 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 						}
 					});
 				}
-				else if (action.equals(getString(R.string.com_charlesmadere_android_classygames_settings_miscellaneous)))
+				else if (action.equals(getString(R.string.com_charlesmadere_android_classygames_settings_notifications)))
 				// the intent's action is saying that we need to show the
 				// miscellaneous settings preference file
 				{
-					addPreferencesFromResource(R.xml.settings_miscellaneous);
+					addPreferencesFromResource(R.xml.settings_notification);
+					Utilities.setActionBar(this, R.string.notification_settings, true);
 				}
 				else if (action.equals(getString(R.string.com_charlesmadere_android_classygames_settings_register)))
-					// the intent's action is saying that we need to show the
-					// RegisterForNotificationsActivity
+				// the intent's action is saying that we need to show the
+				// RegisterForNotificationsActivity
 				{
 					startActivity(new Intent(this, RegisterForNotificationsActivity.class));
 				}
 				else if (action.equals(getString(R.string.com_charlesmadere_android_classygames_settings_unregister)))
-					// the intent's action is saying that we need to show the
-					// UnregisterFromNotificationsActivity
+				// the intent's action is saying that we need to show the
+				// UnregisterFromNotificationsActivity
 				{
 					startActivity(new Intent(this, UnregisterFromNotificationsActivity.class));
 				}
@@ -116,7 +118,7 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 				}
 			}
 			else
-			// For Android devices running any version below Honeycomb. 
+			// For Android devices running any version below Honeycomb.
 			{
 				addPreferencesFromResource(R.xml.settings_headers_legacy);
 			}

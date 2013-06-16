@@ -1,16 +1,9 @@
 package com.charlesmadere.android.classygames;
 
 
-import java.io.IOException;
-import java.util.ArrayList;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
@@ -20,9 +13,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -39,6 +33,13 @@ import com.charlesmadere.android.classygames.server.ServerApiSendMove;
 import com.charlesmadere.android.classygames.server.ServerApiSkipMove;
 import com.charlesmadere.android.classygames.utilities.ServerUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 
 public abstract class GenericGameFragment extends SherlockFragment
@@ -52,7 +53,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	public final static String KEY_GAME_ID = "KEY_GAME_ID";
-	public final static String KEY_WHICH_GAME = "KEY_WHICH_GAME";
+	public final static String KEY_WHICH_GAME = "BUNDLE_WHICH_GAME";
 	public final static String KEY_PERSON_ID = "KEY_PERSON_ID";
 	public final static String KEY_PERSON_NAME = "KEY_PERSON_NAME";
 
@@ -142,7 +143,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * Checks to see which position on the board was clicked and then moves
 	 * pieces and / or performs actions accordingly.
 	 */
-	protected View.OnClickListener onBoardClick;
+	private View.OnClickListener onBoardClick;
 
 
 
@@ -221,17 +222,26 @@ public abstract class GenericGameFragment extends SherlockFragment
 		final Bundle arguments = getArguments();
 
 		if (arguments == null || arguments.isEmpty())
+		// Check the arguments given to this Fragment. This Fragment requires
+		// information regarding the game that it is going to load. If no data
+		// is found, then this Fragment has encountered an error and must
+		// terminate itself.
 		{
 			listeners.onDataError();
 		}
 		else
 		{
+			// Grabs data that was given to this Fragment. This data will then
+			// be checked for validity.
 			final String gameId = arguments.getString(KEY_GAME_ID);
 			final byte whichGame = arguments.getByte(KEY_WHICH_GAME);
 			final long personId = arguments.getLong(KEY_PERSON_ID);
 			final String personName = arguments.getString(KEY_PERSON_NAME);
 
-			if (Person.isIdValid(personId) && Person.isNameValid(personName))
+			if (Game.isWhichGameValid(whichGame) && Person.isIdAndNameValid(personId, personName))
+			// Check the data for validity. Note that we are not checking the
+			// gameId String for validity. This is because it is possible for a
+			// game to not have an ID. Brand new games do not have a game ID.
 			{
 				serverApiListeners = new ServerApi.ServerApiListeners()
 				{
@@ -291,6 +301,9 @@ public abstract class GenericGameFragment extends SherlockFragment
 				loadBackgroundResources();
 
 				if (Game.isIdValid(gameId))
+				// Check to see if we were given a valid game ID. We will only
+				// have a valid game ID if we are trying to recreate an already
+				// existing game. A brand new game will not have a game ID.
 				{
 					game = new Game(person, whichGame, gameId);
 
@@ -300,7 +313,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 						{
 							boardJSON = new JSONObject(savedInstanceState.getString(BUNDLE_BOARD_JSON));
 
-							initViews();
+							initViewsAndLoadPieces();
 							resumeOldBoard();
 							flush();
 						}
@@ -315,13 +328,15 @@ public abstract class GenericGameFragment extends SherlockFragment
 					}
 				}
 				else
+				// We were not given a valid game ID. That means that we are
+				// going to instantiate a brand new game.
 				{
 					game = new Game(person);
 
 					try
 					{
 						initNewBoard();
-						initViews();
+						initViewsAndLoadPieces();
 						flush();
 					}
 					catch (final JSONException e)
@@ -376,11 +391,16 @@ public abstract class GenericGameFragment extends SherlockFragment
 			inflater.inflate(R.menu.generic_game_fragment, menu);
 		}
 
-		if (!Utilities.verifyValidString(getArguments().getString(KEY_GAME_ID)))
+		final Bundle arguments = getArguments();
+
+		if (arguments != null && !Utilities.verifyValidString(arguments.getString(KEY_GAME_ID)))
 		{
 			menu.removeItem(R.id.generic_game_fragment_menu_skip_move);
 			menu.removeItem(R.id.generic_game_fragment_menu_forfeit_game);
 		}
+
+		// load any menu items as added by the classes that extend this one
+		createOptionsMenu(menu, inflater);
 
 		super.onCreateOptionsMenu(menu, inflater);
 	}
@@ -415,7 +435,11 @@ public abstract class GenericGameFragment extends SherlockFragment
 				break;
 
 			default:
-				return super.onOptionsItemSelected(item);
+			// If we hit this point then that means that the options item that
+			// was selected is not any of the above choices. That means that it
+			// was probably a menu item created by one of the classes that
+			// extend this one. So this will check that class's menu items.
+				return optionsItemSelected(item);
 		}
 
 		return true;
@@ -453,6 +477,10 @@ public abstract class GenericGameFragment extends SherlockFragment
 				}
 			}
 		}
+
+		// Allow the classes that extend this one to run menu preparation
+		// operations.
+		prepareOptionsMenu(menu);
 	}
 
 
@@ -535,14 +563,16 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		if (positionSelectedPrevious != null)
 		{
-			final Coordinate previous = new Coordinate((String) positionSelectedPrevious.getTag());
+			final String tag = (String) positionSelectedPrevious.getTag();
+			final Coordinate previous = new Coordinate(tag);
 			setPositionBackground(positionSelectedPrevious, false, previous);
 			positionSelectedPrevious = null;
 		}
 
 		if (positionSelectedCurrent != null)
 		{
-			final Coordinate current = new Coordinate((String) positionSelectedCurrent.getTag());
+			final String tag = (String) positionSelectedCurrent.getTag();
+			final Coordinate current = new Coordinate(tag);
 			setPositionBackground(positionSelectedCurrent, false, current);
 			positionSelectedCurrent = null;
 		}
@@ -654,6 +684,17 @@ public abstract class GenericGameFragment extends SherlockFragment
 			asyncGetGame = new AsyncGetGame(getSherlockActivity(), getLayoutInflater(getArguments()), (ViewGroup) getView());
 			asyncGetGame.execute();
 		}
+	}
+
+
+	/**
+	 * Executes the initViews() method and then the loadPieces() method. That's
+	 * all.
+	 */
+	private void initViewsAndLoadPieces()
+	{
+		initViews();
+		loadPieces();
 	}
 
 
@@ -801,12 +842,110 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		if (!isAnAsyncTaskRunning())
 		{
-			final SharedPreferences sPreferences = Utilities.getPreferences(getSherlockActivity());
-			final boolean askUserToExecute = sPreferences.getBoolean(getString(R.string.settings_key_ask_before_sending_move), true);
+			final boolean askUserToExecute = Utilities.checkIfSettingIsEnabled(getSherlockActivity(),
+				R.string.settings_key_ask_before_sending_move, true);
 
 			serverApiTask = new ServerApiSendMove(getSherlockActivity(), serverApiListeners, game, board);
 			serverApiTask.execute(askUserToExecute);
 		}
+	}
+
+
+	/**
+	 * Applies the onBoardClick OnClickListener to all of the given View
+	 * objects.
+	 *
+	 * @param views
+	 * The set of View objects to apply the OnClickListener to.
+	 */
+	protected void setBoardOnClickListeners(final View... views)
+	{
+		for (final View view : views)
+		{
+			view.setOnClickListener(onBoardClick);
+		}
+	}
+
+
+	/**
+	 * Sets all of the positions on the game board to equal height and width.
+	 * This is needed because by default Android will not size the game board's
+	 * height and width values to the same thing, and thus the game board will
+	 * look like a misshapen rectangle crazy thing. So yeah, this method fixes
+	 * that situation and makes the board pretty instead of ugly. <b>This
+	 * method should only be called from one of the fragments that extend this
+	 * abstract class.</b>
+	 *
+	 * @param view
+	 * The View object as received from the getView() method.
+	 *
+	 * @param modelBoardPosition
+	 * The board position with height and / or width values that will be used
+	 * when resizing the rest of the game board. For checkers and chess, this
+	 * should probably be x0y7.
+	 *
+	 * @param xPositions
+	 * An int array of handles to all of the board's rows.
+	 *
+	 * @param yPositions
+	 * An int array of handles to all of the board's columns.
+	 */
+	protected void setAllBoardPositionsToEqualHeightAndWidth(final View view, final int modelBoardPosition,
+		final int [] xPositions, final int [] yPositions)
+	{
+		final Resources resources = getResources();
+		final ViewTreeObserver viewTreeObserver = view.getViewTreeObserver();
+
+		viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
+		{
+			@SuppressLint("NewApi")
+			@SuppressWarnings("deprecation")
+			@Override
+			public void onGlobalLayout()
+			{
+				final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams
+					(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+				final View view = getView();
+
+				if (view != null)
+				{
+					final View boardPosition = view.findViewById(modelBoardPosition);
+
+					if (resources.getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+					{
+						final int width = boardPosition.getWidth();
+						layoutParams.height = width;
+
+						for (final int yPosition : yPositions)
+						{
+							view.findViewById(yPosition).setLayoutParams(layoutParams);
+						}
+					}
+					else
+					{
+						final int height = boardPosition.getHeight();
+						layoutParams.width = height;
+
+						for (final int xPosition : xPositions)
+						{
+							view.findViewById(xPosition).setLayoutParams(layoutParams);
+						}
+					}
+
+					if (viewTreeObserver.isAlive())
+					{
+						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+						{
+							viewTreeObserver.removeOnGlobalLayoutListener(this);
+						}
+						else
+						{
+							viewTreeObserver.removeGlobalOnLayoutListener(this);
+						}
+					}
+				}
+			}
+		});
 	}
 
 
@@ -935,7 +1074,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 		private ViewGroup viewGroup;
 
 
-		private AsyncGetGame(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater, final ViewGroup viewGroup)
+		private AsyncGetGame(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater,
+			final ViewGroup viewGroup)
 		{
 			this.fragmentActivity = fragmentActivity;
 			this.inflater = inflater;
@@ -996,7 +1136,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			viewGroup.removeAllViews();
 			inflater.inflate(getGameView(), viewGroup);
 
-			initViews();
+			initViewsAndLoadPieces();
 			resumeOldBoard();
 			flush();
 
@@ -1049,13 +1189,48 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * thing that this method should do. Stuff that's typically in an
 	 * Activity's onCreate() method should instead be, for fragments, placed in
 	 * the onActivityCreated() method.
-	 * 
-	 * @return
-	 * This method must return the Android int representation of its layout.
-	 * For checkers, this method will return R.layout.checkers_game_layout. For
-	 * chess, this method will return R.layout.chess_game_layout.
 	 */
 	protected abstract void onCreateView();
+
+
+	/**
+	 * This method is run at the end of the Android onCreateOptionsMenu method.
+	 * Use this method to add menu items to this Fragment's menu.
+	 *
+	 * @param menu
+	 * The Menu object as given by Android.
+	 *
+	 * @param inflater
+	 * The MenuInflater object as given by Android. Use this to inflate a menu
+	 * XML file.
+	 */
+	protected abstract void createOptionsMenu(final Menu menu, final MenuInflater inflater);
+
+
+	/**
+	 * This method is run at the end of the Android onOptionsItemSelected
+	 * method if the selected MenuItem was not already found. Use this to check
+	 * to see which MenuItem was selected by the user.
+	 *
+	 * @param item
+	 * The selected MenuItem as given by Android.
+	 *
+	 * @return
+	 * Returns true if the selected MenuItem was found. Returns
+	 * super.onOptionsItemSelected(item) if the MenuItem was not found.
+	 */
+	protected abstract boolean optionsItemSelected(final MenuItem item);
+
+
+	/**
+	 * This method is run at the end of the Android onPrepareOptionsMenu
+	 * method. Use this to make alterations to the currently alive menu.
+	 *
+	 * @param menu
+	 * The Menu object as given by Android. This is the object you'll want to
+	 * edit if you want to make changes to the currently alive menu.
+	 */
+	protected abstract void prepareOptionsMenu(final Menu menu);
 
 
 	/**
@@ -1090,16 +1265,31 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * Initialize the game board as if it's a <strong>brand new game</strong>.
 	 * 
 	 * @throws JSONException
-	 * This should never happen. 
+	 * This should never happen. But still, I guess it still possibly could. So
+	 * definitely prepare for that situation in some way. If this Exception is
+	 * thrown then it can be assumed that the game we were trying to initialize
+	 * is corrupt. A corrupt game should <b>never, ever</b> be played. So this
+	 * should trigger the GenericGameFragment to destroy itself to prevent
+	 * some sort of malformity from hitting the Classy Games server.
 	 */
 	protected abstract void initNewBoard() throws JSONException;
 
 
 	/**
 	 * Initializes some of this Fragment's view data such as layout
-	 * configurations and onClickListeners.
+	 * configurations (width and height of the board's positions) and
+	 * onClickListeners.
 	 */
 	protected abstract void initViews();
+
+
+	/**
+	 * Loads in the images to be used for the game pieces on the actual game
+	 * board. If the game has the potential for custom colored pieces, then
+	 * this code should read the Android shared preferences information and
+	 * load in the respective colors.
+	 */
+	protected abstract void loadPieces();
 
 
 	/**
@@ -1135,6 +1325,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * Classy Games server.
 	 */
 	protected abstract void resumeOldBoard(final JSONObject boardJSON) throws JSONException;
+
+
 
 
 }

@@ -1,11 +1,10 @@
 package com.charlesmadere.android.classygames.games.chess;
 
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.charlesmadere.android.classygames.games.GenericBoard;
 import com.charlesmadere.android.classygames.games.Position;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 
@@ -122,9 +121,7 @@ public class Board extends GenericBoard
 	@Override
 	public boolean move(final Position previous, final Position current)
 	{
-		boolean isMoveValid = false;
-
-		return isMoveValid;
+		return false;
 	}
 
 

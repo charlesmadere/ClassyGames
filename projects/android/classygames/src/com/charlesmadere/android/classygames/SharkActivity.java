@@ -2,7 +2,6 @@ package com.charlesmadere.android.classygames;
 
 
 import android.os.Bundle;
-
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.utilities.Utilities;
@@ -17,7 +16,7 @@ public class SharkActivity extends SherlockActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.shark_activity);
-		Utilities.styleActionBar(getResources(), getSupportActionBar(), true);
+		Utilities.setActionBar(this, R.string.sharkwork, true);
 	}
 
 

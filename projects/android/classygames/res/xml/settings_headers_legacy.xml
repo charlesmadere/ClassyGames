@@ -10,10 +10,10 @@
 			android:targetPackage="com.charlesmadere.android.classygames" />
 	</Preference>
 	<Preference
-		android:summary="@string/settings_miscellaneous_summary"
-		android:title="@string/miscellaneous_settings">
+		android:summary="@string/settings_notifications_summary"
+		android:title="@string/notification_settings">
 		<intent
-			android:action="@string/com_charlesmadere_android_classygames_settings_miscellaneous"
+			android:action="@string/com_charlesmadere_android_classygames_settings_notifications"
 			android:targetClass="com.charlesmadere.android.classygames.settings.SettingsActivity"
 			android:targetPackage="com.charlesmadere.android.classygames" />
 	</Preference>

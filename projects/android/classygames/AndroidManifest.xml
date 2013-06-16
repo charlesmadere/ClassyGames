@@ -1,29 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.charlesmadere.android.classygames"
-	android:versionCode="19"
-	android:versionName="1.5.2.4">
+	android:versionCode="20"
+	android:versionName="1.6">
 
-    <!-- Check out the Android API Levels website for more information on this topic -->
-    <!-- https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels -->
+	<!--
+		SDK version 8 is Android v2.2 (Froyo)
+		SDK version 17 is Android v4.2 (Jelly Bean)
+		Check out the Android API Levels website for more information on this topic:
+		https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels
+	-->
 	<uses-sdk
 		android:minSdkVersion="8"
 		android:targetSdkVersion="17" />
 
+	<!-- Internet connectivity is needed to communicate with the Classy Games server. -->
 	<uses-permission
 		android:name="android.permission.INTERNET" />
+
+	<!--
+		Profile pictures of Facebook friends need to be cached to external storage and
+		read back from there as well.
+	-->
 	<uses-permission 
 		android:name="android.permission.READ_EXTERNAL_STORAGE" />
 	<uses-permission 
 		android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-	<!-- begin GCM stuff -->
-	<!-- this GCM stuff was taken from this official google tutorial -->
-	<!-- https://developer.android.com/guide/google/gcm/gs.html -->
+	<!-- New to Classy Games v1.6, the user has the option to enable vibration. -->
+	<uses-permission
+		android:name="android.permission.VIBRATE" />
+
+	<!--
+		BEGIN GCM STUFF
+		this GCM markup was taken from this official google tutorial
+		https://developer.android.com/guide/google/gcm/gs.html
+	-->
 	<permission
 		android:name="com.charlesmadere.android.classygames.permission.C2D_MESSAGE"
 		android:protectionLevel="signature" />
-
 	<uses-permission
 		android:name="com.charlesmadere.android.classygames.permission.C2D_MESSAGE" />
 
@@ -67,6 +82,7 @@
 					android:name="com.charlesmadere.android.classygames" />
 			</intent-filter>
 		</receiver>
+
 		<service
 			android:name="com.charlesmadere.android.classygames.utilities.GCMIntentService" />
 		<!--  end more GCM stuff -->

@@ -6,7 +6,7 @@
 		android:summary="@string/settings_game_summary"
 		android:title="@string/game_settings" />
 	<header
-		android:fragment="com.charlesmadere.android.classygames.settings.MiscellaneousSettingsFragment"
-		android:summary="@string/settings_miscellaneous_summary"
-		android:title="@string/miscellaneous_settings" />
+		android:fragment="com.charlesmadere.android.classygames.settings.NotificationSettingsFragment"
+		android:summary="@string/settings_notifications_summary"
+		android:title="@string/notification_settings" />
 </preference-headers>

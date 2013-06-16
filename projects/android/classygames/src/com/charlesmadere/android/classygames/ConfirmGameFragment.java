@@ -2,6 +2,7 @@ package com.charlesmadere.android.classygames;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -18,14 +18,15 @@ import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 
 public class ConfirmGameFragment extends SherlockFragment
 {
 
 
-	public final static String KEY_FRIEND_ID = "KEY_FRIEND_ID";
-	public final static String KEY_FRIEND_NAME = "KEY_FRIEND_NAME";
+	public final static String BUNDLE_FRIEND_ID = "BUNDLE_FRIEND_ID";
+	public final static String BUNDLE_FRIEND_NAME = "BUNDLE_FRIEND_NAME";
 
 
 
@@ -112,10 +113,10 @@ public class ConfirmGameFragment extends SherlockFragment
 
 		if (arguments != null && !arguments.isEmpty())
 		{
-			final long friendId = arguments.getLong(KEY_FRIEND_ID);
-			final String friendName = arguments.getString(KEY_FRIEND_NAME);
+			final long friendId = arguments.getLong(BUNDLE_FRIEND_ID);
+			final String friendName = arguments.getString(BUNDLE_FRIEND_NAME);
 
-			if (Person.isIdValid(friendId) && Person.isNameValid(friendName))
+			if (Person.isIdAndNameValid(friendId, friendName))
 			{
 				friend = new Person(friendId, friendName);
 			}
@@ -165,8 +166,10 @@ public class ConfirmGameFragment extends SherlockFragment
 			}
 		});
 
+		final Context context = getSherlockActivity();
+		final ImageLoader imageLoader = Utilities.getImageLoader(context);
 		final ImageView profilePicture = (ImageView) view.findViewById(R.id.confirm_game_fragment_friend_profile_picture);
-		Utilities.getImageLoader(getSherlockActivity()).displayImage(FacebookUtilities.GRAPH_API_URL + friend.getId() + FacebookUtilities.GRAPH_API_URL_PICTURE_TYPE_LARGE_SSL, profilePicture);
+		imageLoader.displayImage(FacebookUtilities.getFriendsPictureLarge(context, friend.getId()), profilePicture);
 	}
 
 
@@ -194,8 +197,10 @@ public class ConfirmGameFragment extends SherlockFragment
 	{
 		if (listeners.isDeviceSmall())
 		{
-			menu.removeItem(R.id.generic_refresh_menu_refresh);
+			menu.removeItem(R.id.friends_list_fragment_menu_refresh);
 		}
+
+		menu.removeItem(R.id.friends_list_fragment_menu_search);
 
 		super.onCreateOptionsMenu(menu, inflater);
 	}
