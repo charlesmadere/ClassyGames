@@ -19,7 +19,10 @@
 	<string name="settings_key_show_notification_light">settings_key_show_notification_light</string>
     <string name="settings_key_opponents_checkers_piece_color">settings_key_opponents_checkers_piece_color</string>
     <string name="settings_key_players_checkers_piece_color">settings_key_players_checkers_piece_color</string>
+	<string name="settings_key_vibrate">settings_key_vibrate</string>
     <string name="settings_notifications_summary">Settings that adjust push notifications.</string>
 	<string name="settings_show_notification_light_summary_off">Your device\'s notification light will not blink when a notification has been received.</string>
 	<string name="settings_show_notification_light_summary_on">Your device\'s notification light will blink when a notification has been received.</string>
+	<string name="settings_vibrate_summary_off">Your device will not rumble when a notification has been received.</string>
+	<string name="settings_vibrate_summary_on">Your device will rumble when a notification has been received.</string>
 </resources>

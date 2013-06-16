@@ -447,7 +447,8 @@ public class GamesListFragment extends SherlockFragment implements
 	{
 		if (!isAnAsyncTaskRunning())
 		{
-			asyncRefreshGamesList = new AsyncRefreshGamesList(getSherlockActivity(), getLayoutInflater(getArguments()), (ViewGroup) getView(), restoreExistingList);
+			asyncRefreshGamesList = new AsyncRefreshGamesList(getSherlockActivity(),
+				getLayoutInflater(getArguments()), (ViewGroup) getView(), restoreExistingList);
 			asyncRefreshGamesList.execute();
 		}
 	}
@@ -471,6 +472,7 @@ public class GamesListFragment extends SherlockFragment implements
 
 		private final static byte RUN_STATUS_NORMAL = 1;
 		private final static byte RUN_STATUS_IOEXCEPTION = 2;
+		private final static byte RUN_STATUS_NO_NETWORK_CONNECTION = 3;
 		private byte runStatus;
 
 
@@ -493,8 +495,8 @@ public class GamesListFragment extends SherlockFragment implements
 		@Override
 		protected ArrayList<Game> doInBackground(final Void... params)
 		{
-			ArrayList<Game> games = null;
 			runStatus = RUN_STATUS_NORMAL;
+			ArrayList<Game> games = null;
 
 			if (restoreExistingList && gamesListJSON != null)
 			{
@@ -509,7 +511,7 @@ public class GamesListFragment extends SherlockFragment implements
 				final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, whoAmI.getIdAsString()));
 
-				if (!isCancelled())
+				if (!isCancelled() && Utilities.checkForNetworkConnectivity(fragmentActivity))
 				{
 					try
 					{
@@ -531,6 +533,10 @@ public class GamesListFragment extends SherlockFragment implements
 					{
 						Log.e(LOG_TAG, "IOException error in AsyncPopulateGamesList - doInBackground()!", e);
 					}
+				}
+				else
+				{
+					runStatus = RUN_STATUS_NO_NETWORK_CONNECTION;
 				}
 			}
 
@@ -573,7 +579,7 @@ public class GamesListFragment extends SherlockFragment implements
 		{
 			viewGroup.removeAllViews();
 
-			if (games != null && !games.isEmpty())
+			if (runStatus == RUN_STATUS_NORMAL && games != null && !games.isEmpty())
 			{
 				inflater.inflate(R.layout.games_list_fragment, viewGroup);
 				gamesListAdapter = new GamesListAdapter(fragmentActivity, R.layout.games_list_fragment_listview_item, games);
@@ -583,9 +589,9 @@ public class GamesListFragment extends SherlockFragment implements
 				listView.setOnItemClickListener(GamesListFragment.this);
 				listView.setOnItemLongClickListener(GamesListFragment.this);
 			}
-			else if (runStatus == RUN_STATUS_IOEXCEPTION)
+			else if (runStatus == RUN_STATUS_IOEXCEPTION || runStatus == RUN_STATUS_NO_NETWORK_CONNECTION)
 			{
-				inflater.inflate(R.layout.games_list_fragment_no_internet_connection, viewGroup);
+				inflater.inflate(R.layout.fragment_no_internet_connection, viewGroup);
 			}
 			else
 			{

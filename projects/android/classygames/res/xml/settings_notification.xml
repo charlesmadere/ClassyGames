@@ -7,6 +7,12 @@
 		android:summaryOff="@string/settings_show_notification_light_summary_off"
 		android:summaryOn="@string/settings_show_notification_light_summary_on"
 		android:title="@string/show_notification_light" />
+	<CheckBoxPreference
+		android:defaultValue="false"
+		android:key="@string/settings_key_vibrate"
+		android:summaryOff="@string/settings_vibrate_summary_off"
+		android:summaryOn="@string/settings_vibrate_summary_on"
+		android:title="@string/vibrate" />
 	<Preference
 		android:summary="@string/register_for_notifications_summary"
 		android:title="@string/register_for_notifications">

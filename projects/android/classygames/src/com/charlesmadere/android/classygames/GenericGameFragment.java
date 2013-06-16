@@ -3,7 +3,6 @@ package com.charlesmadere.android.classygames;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
@@ -624,32 +623,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * Recycles all of the BitmapDrawable objects passed in to this method.
-	 * After all of those objects have been recycled, this method will then
-	 * recycle all of the board's BitmapDrawable background objects. <strong>
-	 * This method should only be run on versions of Android below Honeycomb!
-	 * So that means Gingerbread and below.</strong>
-	 *
-	 * @param drawables
-	 * All of the BitmapDrawable objects that you want recycled. This should be
-	 * every single BitmapDrawable that is used in the classes that extend this
-	 * one.
-	 */
-	protected void destroyBitmapDrawables(final BitmapDrawable... drawables)
-	{
-		for (final BitmapDrawable drawable : drawables)
-		{
-			drawable.getBitmap().recycle();
-		}
-
-		backgroundBoardBright.getBitmap().recycle();
-		backgroundBoardBrightSelected.getBitmap().recycle();
-		backgroundBoardDark.getBitmap().recycle();
-		backgroundBoardDarkSelected.getBitmap().recycle();
-	}
-
-
-	/**
 	 * Renders all of the game's pieces on the board by first clearing all of
 	 * the existing pieces from it and then placing all of the current pieces.
 	 */
@@ -869,8 +842,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		if (!isAnAsyncTaskRunning())
 		{
-			final SharedPreferences sPreferences = Utilities.getPreferences(getSherlockActivity());
-			final boolean askUserToExecute = sPreferences.getBoolean(getString(R.string.settings_key_ask_before_sending_move), true);
+			final boolean askUserToExecute = Utilities.checkIfSettingIsEnabled(getSherlockActivity(),
+				R.string.settings_key_ask_before_sending_move, true);
 
 			serverApiTask = new ServerApiSendMove(getSherlockActivity(), serverApiListeners, game, board);
 			serverApiTask.execute(askUserToExecute);
@@ -1101,7 +1074,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 		private ViewGroup viewGroup;
 
 
-		private AsyncGetGame(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater, final ViewGroup viewGroup)
+		private AsyncGetGame(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater,
+			final ViewGroup viewGroup)
 		{
 			this.fragmentActivity = fragmentActivity;
 			this.inflater = inflater;

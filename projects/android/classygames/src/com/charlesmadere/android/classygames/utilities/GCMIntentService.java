@@ -6,7 +6,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.PowerManager;
@@ -184,7 +183,8 @@ public class GCMIntentService extends IntentService
 		final String parameter_messageType = intent.getStringExtra(ServerUtilities.POST_DATA_MESSAGE_TYPE);
 		final String parameter_personName = intent.getStringExtra(ServerUtilities.POST_DATA_NAME);
 
-		if (Utilities.verifyValidStrings(parameter_gameId, parameter_gameType, parameter_personId, parameter_messageType, parameter_personName))
+		if (Utilities.verifyValidStrings(parameter_gameId, parameter_gameType, parameter_personId,
+			parameter_messageType, parameter_personName))
 		// Verify that all of these Strings are both not null and that their
 		// length is greater than or equal to 1. This way we ensure that all of
 		// this input data is not corrupt.
@@ -209,25 +209,6 @@ public class GCMIntentService extends IntentService
 		{
 			Log.e(LOG_TAG, "Received completely malformed GCM message!");
 		}
-	}
-
-
-	/**
-	 * Checks to see if the <i>Show Notification Light</li> setting is enabled.
-	 * This is a simple checkbox setting.
-	 *
-	 * @return
-	 * Returns true if the <i>Show Notification Light</i> setting is enabled.
-	 * Returns false if the <i>Show Notification Light</i> setting is disabled.
-	 */
-	private boolean checkIfNotificationLightIsEnabled()
-	{
-		final SharedPreferences sPreferences = Utilities.getPreferences(this);
-		final String key = getString(R.string.settings_key_show_notification_light);
-
-		// Returns the value that was found to be stored in the Android Shared
-		// Preferences. If the value was not found, then true is returned.
-		return sPreferences.getBoolean(key, true);
 	}
 
 
@@ -257,13 +238,13 @@ public class GCMIntentService extends IntentService
 	{
 		// build a notification to show to the user
 		final Builder builder = new Builder(this)
-				.setAutoCancel(true)
-				.setContentTitle(getString(R.string.classy_games))
-				.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification_raw))
-				.setOnlyAlertOnce(true)
-				.setSmallIcon(R.drawable.notification_small);
+			.setAutoCancel(true)
+			.setContentTitle(getString(R.string.classy_games))
+			.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification_raw))
+			.setOnlyAlertOnce(true)
+			.setSmallIcon(R.drawable.notification_small);
 
-		if (checkIfNotificationLightIsEnabled())
+		if (Utilities.checkIfSettingIsEnabled(this, R.string.settings_key_show_notification_light, true))
 		{
 			// only turn on the notification light if the user has
 			// specified that he or she wants it on
@@ -287,7 +268,7 @@ public class GCMIntentService extends IntentService
 		// The received message was of a type that doesn't make any sense. Log
 		// it as an error.
 		{
-			Log.e(LOG_TAG, "Received GCM message that contained an unknown message type.");
+			Log.e(LOG_TAG, "Received GCM message that contained an unknown message type of \"" + messageType + "\".");
 		}
 	}
 
@@ -317,11 +298,11 @@ public class GCMIntentService extends IntentService
 	private void handleNewGameOrNewMoveMessage(final Builder builder, final String gameId, final byte whichGame, final byte messageType, final Person person)
 	{
 		final Intent gameIntent = new Intent(this, GameFragmentActivity.class)
-				.putExtra(GameFragmentActivity.BUNDLE_DATA_GAME_ID, gameId)
-				.putExtra(GameFragmentActivity.BUNDLE_DATA_WHICH_GAME, whichGame)
-				.putExtra(GameFragmentActivity.BUNDLE_DATA_PERSON_OPPONENT_ID, person.getId())
-				.putExtra(GameFragmentActivity.BUNDLE_DATA_PERSON_OPPONENT_NAME, person.getName())
-				.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			.putExtra(GameFragmentActivity.BUNDLE_DATA_GAME_ID, gameId)
+			.putExtra(GameFragmentActivity.BUNDLE_DATA_WHICH_GAME, whichGame)
+			.putExtra(GameFragmentActivity.BUNDLE_DATA_PERSON_OPPONENT_ID, person.getId())
+			.putExtra(GameFragmentActivity.BUNDLE_DATA_PERSON_OPPONENT_NAME, person.getName())
+			.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
 		final TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 		stackBuilder.addNextIntentWithParentStack(gameIntent);
@@ -357,9 +338,9 @@ public class GCMIntentService extends IntentService
 	private void handleWinOrLoseMessage(final Builder builder, final byte messageType, final Person person)
 	{
 		final Intent gameOverIntent = new Intent(this, GameOverActivity.class)
-				.putExtra(GameOverActivity.BUNDLE_MESSAGE_TYPE, messageType)
-				.putExtra(GameOverActivity.BUNDLE_PERSON_OPPONENT_ID, person.getId())
-				.putExtra(GameOverActivity.BUNDLE_PERSON_OPPONENT_NAME, person.getName());
+			.putExtra(GameOverActivity.BUNDLE_MESSAGE_TYPE, messageType)
+			.putExtra(GameOverActivity.BUNDLE_PERSON_OPPONENT_ID, person.getId())
+			.putExtra(GameOverActivity.BUNDLE_PERSON_OPPONENT_NAME, person.getName());
 
 		final TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 		stackBuilder.addNextIntentWithParentStack(gameOverIntent);

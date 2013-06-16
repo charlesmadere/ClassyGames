@@ -7,6 +7,8 @@ import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.text.Spannable;
@@ -47,6 +49,23 @@ public final class Utilities
 	private final static String KEY_WHO_AM_I_NAME = "KEY_WHO_AM_I_NAME";
 
 
+	/**
+	 * Checks to see if this Android device currently has network connectivity.
+	 *
+	 * @param context
+	 * The context of the Activity or Fragment that you're calling this method
+	 * from.
+	 *
+	 * @return
+	 * Returns true if this Android device is currently connected to a network.
+	 */
+	public static boolean checkForNetworkConnectivity(final Context context)
+	{
+		final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		final NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+
+		return networkInfo != null && networkInfo.isConnected();
+	}
 
 
 	/**
@@ -254,33 +273,6 @@ public final class Utilities
 	 * obtained by just using the this keyword or getSherlockActivity().
 	 *
 	 * @param actionBarTitle
-	 * The title to be shown on the Android Action Bar.
-	 *
-	 * @param showBackArrow
-	 * Want to show the back arrow on the Action Bar? Pass in true to show it.
-	 */
-	public static void setActionBar(final SherlockActivity activity, final CharSequence actionBarTitle, final boolean showBackArrow)
-	{
-		setAndStyleActionBar
-		(
-			activity.getAssets(),
-			activity.getSupportActionBar(),
-			actionBarTitle,
-			activity.getResources(),
-			showBackArrow
-		);
-	}
-
-
-	/**
-	 * Stylizes the Android Action Bar, sets its title, and enables or disables
-	 * its back arrow.
-	 *
-	 * @param activity
-	 * The activity that you're currently working in. This can usually be
-	 * obtained by just using the this keyword or getSherlockActivity().
-	 *
-	 * @param actionBarTitle
 	 * The R.string.* title to be shown on the Android Action Bar.
 	 *
 	 * @param showBackArrow
@@ -468,6 +460,36 @@ public final class Utilities
 	public static SharedPreferences getPreferences(final Context context)
 	{
 		return PreferenceManager.getDefaultSharedPreferences(context);
+	}
+
+
+	/**
+	 * Checks to see if a given user preference is enabled or disabled. This
+	 * method should only be used to check on preferences that must be either
+	 * on or off (true or false).
+	 *
+	 * @param context
+	 * The context of the Activity or Fragment that you're calling this method
+	 * from.
+	 *
+	 * @param key
+	 * The R.string.* value for the settings key that you're trying to
+	 * retrieve.
+	 *
+	 * @param defaultValue
+	 * The default value that you want returned in case the setting that you
+	 * searched for does not exist.
+	 *
+	 * @return
+	 * Returns the value for the given user preference from the universal
+	 * Android default shared preferences cache if it can be found. If it can't
+	 * be found, then the value that will instead be returned is the value of
+	 * the defaultValue variable that you passed in.
+	 */
+	public static boolean checkIfSettingIsEnabled(final Context context, final int key, final boolean defaultValue)
+	{
+		final String string = context.getString(key);
+		return getPreferences(context).getBoolean(string, defaultValue);
 	}
 
 

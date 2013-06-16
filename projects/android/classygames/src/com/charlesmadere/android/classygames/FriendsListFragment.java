@@ -256,7 +256,8 @@ public class FriendsListFragment extends SherlockFragment implements
 	{
 		if (!isAnAsyncTaskRunning())
 		{
-			asyncRefreshFriendsList = new AsyncRefreshFriendsList(getSherlockActivity(), getLayoutInflater(getArguments()), Session.getActiveSession(), (ViewGroup) getView());
+			asyncRefreshFriendsList = new AsyncRefreshFriendsList(getSherlockActivity(),
+				getLayoutInflater(getArguments()), Session.getActiveSession(), (ViewGroup) getView());
 			asyncRefreshFriendsList.execute();
 		}
 	}
@@ -269,13 +270,19 @@ public class FriendsListFragment extends SherlockFragment implements
 	{
 
 
+		private final static byte RUN_STATUS_NORMAL = 1;
+		private final static byte RUN_STATUS_NO_NETWORK_CONNECTION = 2;
+		private byte runStatus;
+
+
 		private SherlockFragmentActivity fragmentActivity;
 		private LayoutInflater inflater;
 		private Session session;
 		private ViewGroup viewGroup;
 
 
-		private AsyncRefreshFriendsList(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater, final Session session, final ViewGroup viewGroup)
+		private AsyncRefreshFriendsList(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater,
+			final Session session, final ViewGroup viewGroup)
 		{
 			this.fragmentActivity = fragmentActivity;
 			this.inflater = inflater;
@@ -287,6 +294,7 @@ public class FriendsListFragment extends SherlockFragment implements
 		@Override
 		protected ArrayList<Person> doInBackground(final Void... params)
 		{
+			runStatus = RUN_STATUS_NORMAL;
 			final ArrayList<Person> friends = new ArrayList<Person>();
 
 			if (!isCancelled())
@@ -298,39 +306,46 @@ public class FriendsListFragment extends SherlockFragment implements
 
 				if (map == null || map.isEmpty())
 				{
-					Request.newMyFriendsRequest(session, new GraphUserListCallback()
+					if (Utilities.checkForNetworkConnectivity(fragmentActivity))
 					{
-						@Override
-						public void onCompleted(final List<GraphUser> users, final Response response)
+						Request.newMyFriendsRequest(session, new GraphUserListCallback()
 						{
-							for (int i = 0; i < users.size() && !isCancelled(); ++i)
+							@Override
+							public void onCompleted(final List<GraphUser> users, final Response response)
 							{
-								final GraphUser user = users.get(i);
-								final String id = user.getId();
-								final String name = user.getName();
-
-								final Person friend = addFriend(id, name);
-
-								if (friend != null)
+								for (int i = 0; i < users.size() && !isCancelled(); ++i)
 								{
-									friends.add(friend);
+									final GraphUser user = users.get(i);
+									final String id = user.getId();
+									final String name = user.getName();
+
+									final Person friend = addFriend(id, name);
+
+									if (friend != null)
+									{
+										friends.add(friend);
+									}
 								}
+
+								friends.trimToSize();
+
+								final SharedPreferences.Editor editor = sPreferences.edit();
+								editor.clear();
+
+								for (int i = 0; i < friends.size() && !isCancelled(); ++i)
+								{
+									final Person friend = friends.get(i);
+									editor.putString(friend.getIdAsString(), friend.getName());
+								}
+
+								editor.commit();
 							}
-
-							friends.trimToSize();
-
-							final SharedPreferences.Editor editor = sPreferences.edit();
-							editor.clear();
-
-							for (int i = 0; i < friends.size() && !isCancelled(); ++i)
-							{
-								final Person friend = friends.get(i);
-								editor.putString(friend.getIdAsString(), friend.getName());
-							}
-
-							editor.commit();
-						}
-					}).executeAndWait();
+						}).executeAndWait();
+					}
+					else
+					{
+						runStatus = RUN_STATUS_NO_NETWORK_CONNECTION;
+					}
 				}
 				else
 				{
@@ -423,7 +438,7 @@ public class FriendsListFragment extends SherlockFragment implements
 		{
 			viewGroup.removeAllViews();
 
-			if (friends != null && !friends.isEmpty())
+			if (runStatus == RUN_STATUS_NORMAL && friends != null && !friends.isEmpty())
 			{
 				inflater.inflate(R.layout.friends_list_fragment, viewGroup);
 				friendsListAdapter = new FriendsListAdapter(fragmentActivity, R.layout.friends_list_fragment_listview_item, friends);
@@ -431,6 +446,10 @@ public class FriendsListFragment extends SherlockFragment implements
 				final ListView friendsList = (ListView) viewGroup.findViewById(R.id.friends_list_fragment_listview);
 				friendsList.setAdapter(friendsListAdapter);
 				friendsList.setOnItemClickListener(FriendsListFragment.this);
+			}
+			else if (runStatus == RUN_STATUS_NO_NETWORK_CONNECTION)
+			{
+				inflater.inflate(R.layout.fragment_no_internet_connection, viewGroup);
 			}
 			else
 			{

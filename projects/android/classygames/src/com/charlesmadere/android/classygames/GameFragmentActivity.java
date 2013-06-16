@@ -351,7 +351,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 		if (isDeviceLarge() || (genericGameFragment == null || !genericGameFragment.isVisible()))
 		// This statement will validate as true if this Android device is large
 		// OR if EITHER of the following two statements are two: the
-		// genericGameFragment variable is false, OR the genericGameFragment
+		// genericGameFragment variable is null, OR the genericGameFragment
 		// variable is not visible.
 		{
 			if (genericGameFragment != null && genericGameFragment.isVisible())
