@@ -3,16 +3,24 @@ package com.charlesmadere.android.classygames.utilities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
-
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.models.Person;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -30,11 +38,6 @@ public final class Utilities
 	public final static String LOG_TAG = "Classy Games";
 
 
-	// need for the third party ImageLoader library
-	// https://github.com/nostra13/Android-Universal-Image-Loader
-	private static ImageLoader imageLoader;
-
-
 	// Stores the reg id of the current Android device. More information can be
 	// found here: https://developer.android.com/google/gcm/index.html
 	private static String regId;
@@ -48,6 +51,23 @@ public final class Utilities
 	private final static String KEY_WHO_AM_I_NAME = "KEY_WHO_AM_I_NAME";
 
 
+	/**
+	 * Checks to see if this Android device currently has network connectivity.
+	 *
+	 * @param context
+	 * The context of the Activity or Fragment that you're calling this method
+	 * from.
+	 *
+	 * @return
+	 * Returns true if this Android device is currently connected to a network.
+	 */
+	public static boolean checkForNetworkConnectivity(final Context context)
+	{
+		final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		final NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+
+		return networkInfo != null && networkInfo.isConnected();
+	}
 
 
 	/**
@@ -198,14 +218,14 @@ public final class Utilities
 	/**
 	 * Prints a Toast message to the screen and prints that same message to the
 	 * Log.e console.
-	 * 
+	 *
 	 * <p><strong>Examples</strong><br />
 	 * Utilities.easyToastAndLogError(MainActivity.this, "Hello!");<br />
 	 * Utilities.easyToastAndLogError(getApplicationContext(), "Another message huh?");</p>
-	 * 
+	 *
 	 * @param context
 	 * Just put the name of your class.this, or you can use getApplicationContext().
-	 * 
+	 *
 	 * @param stringId
 	 * The int ID of the resource that you want to print.
 	 */
@@ -213,6 +233,244 @@ public final class Utilities
 	{
 		easyToast(context, stringId);
 		Log.e(LOG_TAG, context.getString(stringId));
+	}
+
+
+	/**
+	 * Makes and then returns a styled String. This is useful for obtaining a
+	 * String that makes use of a custom typeface. As of right now, this should
+	 * probably only be used to customize the Android Action Bar.
+	 *
+	 * @param assetManager
+	 * A handle to the Activity's AssetManager. This can usually be obtained by
+	 * just doing getAssets(), getSherlockActivity().getAssets(), or
+	 * getActivity().getAssets().
+	 *
+	 * @param string
+	 * The String to apply the custom typeface to.
+	 *
+	 * @param typeface
+	 * The custom typeface that you want to use. This needs to be one of the
+	 * public bytes as found in the TypefaceUtilities class. If an invalid
+	 * value is passed in here then there will definitely be a problem.
+	 *
+	 * @return
+	 * Returns the styled String as created with your specifications.
+	 */
+	public static SpannableString makeStyledString(final AssetManager assetManager, final CharSequence string, final byte typeface)
+	{
+		final SpannableString styledString = new SpannableString(string);
+		styledString.setSpan(new StyledString(assetManager, typeface), 0, styledString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+		return styledString;
+	}
+
+
+	/**
+	 * Stylizes the Android Action Bar, sets its title, and enables or disables
+	 * its back arrow.
+	 *
+	 * @param activity
+	 * The activity that you're currently working in. This can usually be
+	 * obtained by just using the this keyword or getSherlockActivity().
+	 *
+	 * @param actionBarTitle
+	 * The R.string.* title to be shown on the Android Action Bar.
+	 *
+	 * @param showBackArrow
+	 * Want to show the back arrow on the Action Bar? Pass in true to show it.
+	 */
+	public static void setActionBar(final SherlockActivity activity, final int actionBarTitle, final boolean showBackArrow)
+	{
+		setAndStyleActionBar
+		(
+			activity.getAssets(),
+			activity.getSupportActionBar(),
+			activity.getString(actionBarTitle),
+			activity.getResources(),
+			showBackArrow
+		);
+	}
+
+
+	/**
+	 * Stylizes the Android Action Bar, sets its title, and enables or disables
+	 * its back arrow.
+	 *
+	 * @param activity
+	 * The activity that you're currently working in. This can usually be
+	 * obtained by just using the this keyword or getSherlockActivity().
+	 *
+	 * @param actionBarTitle
+	 * The title to be shown on the Android Action Bar.
+	 *
+	 * @param showBackArrow
+	 * Want to show the back arrow on the Action Bar? Pass in true to show it.
+	 */
+	public static void setActionBar(final SherlockFragmentActivity activity, final CharSequence actionBarTitle, final boolean showBackArrow)
+	{
+		setAndStyleActionBar
+		(
+			activity.getAssets(),
+			activity.getSupportActionBar(),
+			actionBarTitle,
+			activity.getResources(),
+			showBackArrow
+		);
+	}
+
+
+	/**
+	 * Stylizes the Android Action Bar, sets its title, and enables or disables
+	 * its back arrow.
+	 *
+	 * @param activity
+	 * The activity that you're currently working in. This can usually be
+	 * obtained by just using the this keyword or getSherlockActivity().
+	 *
+	 * @param actionBarTitle
+	 * The R.string.* title to be shown on the Android Action Bar.
+	 *
+	 * @param showBackArrow
+	 * Want to show the back arrow on the Action Bar? Pass in true to show it.
+	 */
+	public static void setActionBar(final SherlockFragmentActivity activity, final int actionBarTitle, final boolean showBackArrow)
+	{
+		setAndStyleActionBar
+		(
+			activity.getAssets(),
+			activity.getSupportActionBar(),
+			activity.getString(actionBarTitle),
+			activity.getResources(),
+			showBackArrow
+		);
+	}
+
+
+	/**
+	 * Stylizes the Android Action Bar, sets its title, and enables or disables
+	 * its back arrow.
+	 *
+	 * @param activity
+	 * The activity that you're currently working in. This can usually be
+	 * obtained by just using the this keyword or getSherlockActivity().
+	 *
+	 * @param actionBarTitle
+	 * The R.string.* title to be shown on the Android Action Bar.
+	 *
+	 * @param showBackArrow
+	 * Want to show the back arrow on the Action Bar? Pass in true to show it.
+	 */
+	public static void setActionBar(final SherlockPreferenceActivity activity, final int actionBarTitle, final boolean showBackArrow)
+	{
+		setAndStyleActionBar
+		(
+			activity.getAssets(),
+			activity.getSupportActionBar(),
+			activity.getString(actionBarTitle),
+			activity.getResources(),
+			showBackArrow
+		);
+	}
+
+
+	/**
+	 * Performs final setting and stylizing on the Android Action Bar.
+	 *
+	 * @param assetManager
+	 * A handle to the Activity's AssetManager. This can usually be obtained by
+	 * using getAssets().
+	 *
+	 * @param actionBar
+	 * A handle to the Activity's Sherlock Action Bar. This can usually be
+	 * obtained by using getSupportActionBar().
+	 *
+	 * @param actionBarTitle
+	 * The actual string to be shown as the title of the Action Bar.
+	 *
+	 * @param resources
+	 * A handle to the Activity's resources. This can usually be obtained by
+	 * using getResources().
+	 *
+	 * @param showBackArrow
+	 * Want to show the back arrow on the Action Bar? Pass in true to show it.
+	 */
+	private static void setAndStyleActionBar(final AssetManager assetManager, final ActionBar actionBar, final CharSequence actionBarTitle, final Resources resources, final boolean showBackArrow)
+	{
+		final SpannableString styledActionBarTitle = makeStyledString(assetManager, actionBarTitle, TypefaceUtilities.BLUE_HIGHWAY_D);
+
+		actionBar.setDisplayHomeAsUpEnabled(showBackArrow);
+		actionBar.setTitle(styledActionBarTitle);
+
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+		// if the running version of Android is lower than API Level 14 (below Ice Cream Sandwich 4.0)
+		// https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels
+		{
+			final BitmapDrawable background = (BitmapDrawable) resources.getDrawable(R.drawable.bg_actionbar);
+			background.setAntiAlias(true);
+			background.setDither(true);
+			background.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
+
+			actionBar.setBackgroundDrawable(background);
+		}
+	}
+
+
+	/**
+	 * Styles the background of a preference activity so that it's not just the
+	 * plain ol' white. This method should only be called from a class that
+	 * extends from either SherlockPreferenceActivity or PreferenceFragment.
+	 *
+	 * @param context
+	 * The context of the Activity or Fragment that is calling this method.
+	 *
+	 * @param view
+	 * The View that you want the background applied to.
+	 */
+	@SuppressWarnings("deprecation")
+	public static void setBackground(final Context context, final View view)
+	{
+		final Drawable background = context.getResources().getDrawable(R.drawable.bg_bright);
+
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN)
+		{
+			view.setBackgroundDrawable(background);
+		}
+		else
+		{
+			view.setBackground(background);
+		}
+	}
+
+
+	/**
+	 * Initializes the ImageLoader library with some specific configuration
+	 * settings (if it has not already been initialized) and returns only what
+	 * you need - the portion that will actually load an image for ya!
+	 * https://github.com/nostra13/Android-Universal-Image-Loader
+	 *
+	 * @param context
+	 * The context of the Activity that is calling this method.
+	 *
+	 * @return
+	 * Returns an instance of the ImageLoader class that can load an image from
+	 * a URL for you.
+	 */
+	public static ImageLoader getImageLoader(final Context context)
+	{
+		final DisplayImageOptions displayOptions = new DisplayImageOptions.Builder()
+			.cacheInMemory()
+			.cacheOnDisc()
+			.build();
+
+		final ImageLoaderConfiguration loaderConfiguration = new ImageLoaderConfiguration.Builder(context)
+			.defaultDisplayImageOptions(displayOptions)
+			.build();
+
+		final ImageLoader imageLoader = ImageLoader.getInstance();
+		imageLoader.init(loaderConfiguration);
+
+		return imageLoader;
 	}
 
 
@@ -235,35 +493,32 @@ public final class Utilities
 
 
 	/**
-	 * Initializes the ImageLoader library with some specific configuration
-	 * settings (if it has not already been initialized) and returns only what
-	 * you need - the portion that will actually load an image for ya!
-	 * 
+	 * Checks to see if a given user preference is enabled or disabled. This
+	 * method should only be used to check on preferences that must be either
+	 * on or off (true or false).
+	 *
 	 * @param context
-	 * The context of the Activity that is calling this method.
-	 * 
+	 * The context of the Activity or Fragment that you're calling this method
+	 * from.
+	 *
+	 * @param key
+	 * The R.string.* value for the settings key that you're trying to
+	 * retrieve.
+	 *
+	 * @param defaultValue
+	 * The default value that you want returned in case the setting that you
+	 * searched for does not exist.
+	 *
 	 * @return
-	 * Returns an instance of the ImageLoader class that can load an image from
-	 * a website for ya!
+	 * Returns the value for the given user preference from the universal
+	 * Android default shared preferences cache if it can be found. If it can't
+	 * be found, then the value that will instead be returned is the value of
+	 * the defaultValue variable that you passed in.
 	 */
-	public static ImageLoader getImageLoader(final Context context)
+	public static boolean checkIfSettingIsEnabled(final Context context, final int key, final boolean defaultValue)
 	{
-		if (imageLoader == null)
-		{
-			final DisplayImageOptions displayOptions = new DisplayImageOptions.Builder()
-				.cacheInMemory()
-				.cacheOnDisc()
-				.build();
-
-			final ImageLoaderConfiguration loaderConfiguration = new ImageLoaderConfiguration.Builder(context)
-				.defaultDisplayImageOptions(displayOptions)
-				.build();
-
-			imageLoader = ImageLoader.getInstance();
-			imageLoader.init(loaderConfiguration);
-		}
-
-		return imageLoader;
+		final String string = context.getString(key);
+		return getPreferences(context).getBoolean(string, defaultValue);
 	}
 
 
@@ -343,7 +598,7 @@ public final class Utilities
 			// the name variable will be set to null.
 			final String name = sPreferences.getString(KEY_WHO_AM_I_NAME, null);
 
-			if (Person.isIdValid(id) && Person.isNameValid(name))
+			if (Person.isIdAndNameValid(id, name))
 			// check to see that we were actually able to find the user's
 			// Facebook ID and Facebook name. If we were able to find both
 			// then we will create a new Person object out of that data. That
@@ -382,44 +637,6 @@ public final class Utilities
 
 
 	/**
-	 * This is a workaround for http://b.android.com/15340 from http://stackoverflow.com/a/5852198/132047.
-	 * This ensures that pre ice cream sandwich devices properly render our customized actionbar.
-	 * This method should always be run immediately after the setContentView() method is run.
-	 * 
-	 * <p><strong>Examples</strong><br />
-	 * Utilities.styleActionBar(getResources(), getSupportActionBar(), false);</p>
-	 * 
-	 * @param resources
-	 * getResources()
-	 * 
-	 * @param actionBar
-	 * getSupportActionBar()
-	 * 
-	 * @param backArrow
-	 * Whether or not you want to have a back arrow drawn next to the app icon in the actionbar.
-	 */
-	public static void styleActionBar(final Resources resources, final ActionBar actionBar, final boolean backArrow)
-	{
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-		// if the running version of Android is lower than API Level 14 (below Ice Cream Sandwich 4.0)
-		// https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels
-		{
-			final BitmapDrawable bg = (BitmapDrawable) resources.getDrawable(R.drawable.bg_actionbar);
-			bg.setAntiAlias(true);
-			bg.setDither(true);
-			bg.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
-
-			actionBar.setBackgroundDrawable(bg);
-		}
-
-		if (backArrow)
-		{
-			actionBar.setDisplayHomeAsUpEnabled(true);
-		}
-	}
-
-
-	/**
 	 * Verifies a String object for validity.
 	 * 
 	 * @param string
@@ -445,9 +662,9 @@ public final class Utilities
 	 */
 	public static boolean verifyValidStrings(final String... strings)
 	{
-		for (int i = 0; i < strings.length; ++i)
+		for (final String string : strings)
 		{
-			if (!verifyValidString(strings[i]))
+			if (!verifyValidString(string))
 			{
 				return false;
 			}

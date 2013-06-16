@@ -4,7 +4,6 @@ package com.charlesmadere.android.classygames.settings;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.R;
@@ -32,7 +31,7 @@ public class UnregisterFromNotificationsActivity extends SherlockActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.unregister_from_notifications_activity);
-		Utilities.styleActionBar(getResources(), getSupportActionBar(), true);
+		Utilities.setActionBar(this, R.string.unregister_from_notifications, true);
 
 		final Button unregisterButton = (Button) findViewById(R.id.unregister_from_notifications_activity_button_unregister);
 		unregisterButton.setTypeface(TypefaceUtilities.getTypeface(getAssets(), TypefaceUtilities.BLUE_HIGHWAY_D));

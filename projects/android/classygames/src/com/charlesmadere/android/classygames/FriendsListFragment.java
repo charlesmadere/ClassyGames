@@ -1,14 +1,6 @@
 package com.charlesmadere.android.classygames;
 
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -19,18 +11,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
-
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.widget.SearchView;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
@@ -40,9 +28,13 @@ import com.facebook.Request.GraphUserListCallback;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
+import java.util.*;
 
 
-public class FriendsListFragment extends SherlockFragment implements OnItemClickListener
+public class FriendsListFragment extends SherlockFragment implements
+	OnItemClickListener
 {
 
 
@@ -150,7 +142,36 @@ public class FriendsListFragment extends SherlockFragment implements OnItemClick
 		}
 		else
 		{
-			inflater.inflate(R.menu.generic_refresh, menu);
+			inflater.inflate(R.menu.friends_list_fragment, menu);
+
+			final MenuItem searchMenuItem = menu.findItem(R.id.friends_list_fragment_menu_search);
+			final SearchView searchView = (SearchView) searchMenuItem.getActionView();
+			searchView.setQueryHint(getString(R.string.search));
+
+			searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
+			{
+				@Override
+				public boolean onQueryTextChange(final String newText)
+				{
+					if (friendsListAdapter != null)
+					{
+						if (newText != null)
+						{
+							friendsListAdapter.getFilter().filter(newText);
+						}
+					}
+
+					return false;
+				}
+
+
+				@Override
+				public boolean onQueryTextSubmit(final String query)
+				{
+					searchMenuItem.collapseActionView();
+					return false;
+				}
+			});
 		}
 
 		super.onCreateOptionsMenu(menu, inflater);
@@ -177,7 +198,7 @@ public class FriendsListFragment extends SherlockFragment implements OnItemClick
 				}
 				break;
 
-			case R.id.generic_refresh_menu_refresh:
+			case R.id.friends_list_fragment_menu_refresh:
 				getSherlockActivity().getPreferences(Context.MODE_PRIVATE).edit().clear().commit();
 				listeners.onRefreshSelected();
 				break;
@@ -235,7 +256,8 @@ public class FriendsListFragment extends SherlockFragment implements OnItemClick
 	{
 		if (!isAnAsyncTaskRunning())
 		{
-			asyncRefreshFriendsList = new AsyncRefreshFriendsList(getSherlockActivity(), getLayoutInflater(getArguments()), Session.getActiveSession(), (ViewGroup) getView());
+			asyncRefreshFriendsList = new AsyncRefreshFriendsList(getSherlockActivity(),
+				getLayoutInflater(getArguments()), Session.getActiveSession(), (ViewGroup) getView());
 			asyncRefreshFriendsList.execute();
 		}
 	}
@@ -244,7 +266,13 @@ public class FriendsListFragment extends SherlockFragment implements OnItemClick
 
 
 	private final class AsyncRefreshFriendsList extends AsyncTask<Void, Void, ArrayList<Person>>
+		implements Comparator<Person>
 	{
+
+
+		private final static byte RUN_STATUS_NORMAL = 1;
+		private final static byte RUN_STATUS_NO_NETWORK_CONNECTION = 2;
+		private byte runStatus;
 
 
 		private SherlockFragmentActivity fragmentActivity;
@@ -253,7 +281,8 @@ public class FriendsListFragment extends SherlockFragment implements OnItemClick
 		private ViewGroup viewGroup;
 
 
-		private AsyncRefreshFriendsList(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater, final Session session, final ViewGroup viewGroup)
+		private AsyncRefreshFriendsList(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater,
+			final Session session, final ViewGroup viewGroup)
 		{
 			this.fragmentActivity = fragmentActivity;
 			this.inflater = inflater;
@@ -265,6 +294,7 @@ public class FriendsListFragment extends SherlockFragment implements OnItemClick
 		@Override
 		protected ArrayList<Person> doInBackground(final Void... params)
 		{
+			runStatus = RUN_STATUS_NORMAL;
 			final ArrayList<Person> friends = new ArrayList<Person>();
 
 			if (!isCancelled())
@@ -276,39 +306,46 @@ public class FriendsListFragment extends SherlockFragment implements OnItemClick
 
 				if (map == null || map.isEmpty())
 				{
-					Request.newMyFriendsRequest(session, new GraphUserListCallback()
+					if (Utilities.checkForNetworkConnectivity(fragmentActivity))
 					{
-						@Override
-						public void onCompleted(final List<GraphUser> users, final Response response)
+						Request.newMyFriendsRequest(session, new GraphUserListCallback()
 						{
-							for (int i = 0; i < users.size() && !isCancelled(); ++i)
+							@Override
+							public void onCompleted(final List<GraphUser> users, final Response response)
 							{
-								final GraphUser user = users.get(i);
-								final String id = user.getId();
-								final String name = user.getName();
-
-								final Person friend = addFriend(id, name);
-
-								if (friend != null)
+								for (int i = 0; i < users.size() && !isCancelled(); ++i)
 								{
-									friends.add(friend);
+									final GraphUser user = users.get(i);
+									final String id = user.getId();
+									final String name = user.getName();
+
+									final Person friend = addFriend(id, name);
+
+									if (friend != null)
+									{
+										friends.add(friend);
+									}
 								}
+
+								friends.trimToSize();
+
+								final SharedPreferences.Editor editor = sPreferences.edit();
+								editor.clear();
+
+								for (int i = 0; i < friends.size() && !isCancelled(); ++i)
+								{
+									final Person friend = friends.get(i);
+									editor.putString(friend.getIdAsString(), friend.getName());
+								}
+
+								editor.commit();
 							}
-
-							friends.trimToSize();
-
-							final SharedPreferences.Editor editor = sPreferences.edit();
-							editor.clear();
-
-							for (int i = 0; i < friends.size() && !isCancelled(); ++i)
-							{
-								final Person friend = friends.get(i);
-								editor.putString(friend.getIdAsString(), friend.getName());
-							}
-
-							editor.commit();
-						}
-					}).executeAndWait();
+						}).executeAndWait();
+					}
+					else
+					{
+						runStatus = RUN_STATUS_NO_NETWORK_CONNECTION;
+					}
 				}
 				else
 				{
@@ -331,7 +368,9 @@ public class FriendsListFragment extends SherlockFragment implements OnItemClick
 				}
 			}
 
-			Collections.sort(friends, new FriendsListSorter());
+			// sorts the list of friends using the Comparator method found in
+			// this class
+			Collections.sort(friends, this);
 
 			return friends;
 		}
@@ -374,6 +413,13 @@ public class FriendsListFragment extends SherlockFragment implements OnItemClick
 
 
 		@Override
+		public int compare(final Person geo, final Person jarrad)
+		{
+			return geo.getName().compareToIgnoreCase(jarrad.getName());
+		}
+
+
+		@Override
 		protected void onCancelled()
 		{
 			cancelled();
@@ -392,14 +438,18 @@ public class FriendsListFragment extends SherlockFragment implements OnItemClick
 		{
 			viewGroup.removeAllViews();
 
-			if (friends != null && friends.size() >= 1)
+			if (runStatus == RUN_STATUS_NORMAL && friends != null && !friends.isEmpty())
 			{
 				inflater.inflate(R.layout.friends_list_fragment, viewGroup);
-
 				friendsListAdapter = new FriendsListAdapter(fragmentActivity, R.layout.friends_list_fragment_listview_item, friends);
-				final ListView listView = (ListView) viewGroup.findViewById(R.id.friends_list_fragment_listview);
-				listView.setAdapter(friendsListAdapter);
-				listView.setOnItemClickListener(FriendsListFragment.this);
+
+				final ListView friendsList = (ListView) viewGroup.findViewById(R.id.friends_list_fragment_listview);
+				friendsList.setAdapter(friendsListAdapter);
+				friendsList.setOnItemClickListener(FriendsListFragment.this);
+			}
+			else if (runStatus == RUN_STATUS_NO_NETWORK_CONNECTION)
+			{
+				inflater.inflate(R.layout.fragment_no_internet_connection, viewGroup);
 			}
 			else
 			{
@@ -444,22 +494,47 @@ public class FriendsListFragment extends SherlockFragment implements OnItemClick
 
 
 
-	private final class FriendsListAdapter extends ArrayAdapter<Person>
+	private final class FriendsListAdapter extends ArrayAdapter<Person> implements Filterable
 	{
 
 
 		private ArrayList<Person> friends;
 		private Context context;
 		private Drawable emptyProfilePicture;
+		private Filter filter;
+		private ImageLoader imageLoader;
 
 
-		FriendsListAdapter(final Context context, final int textViewResourceId, final ArrayList<Person> friends)
+		private FriendsListAdapter(final Context context, final int textViewResourceId, final ArrayList<Person> friends)
 		{
 			super(context, textViewResourceId, friends);
 			this.friends = friends;
 			this.context = context;
 
-			emptyProfilePicture = (Drawable) context.getResources().getDrawable(R.drawable.empty_profile_picture_small);
+			emptyProfilePicture = context.getResources().getDrawable(R.drawable.empty_profile_picture_small);
+			filter = new FriendsListFilter(friends);
+			imageLoader = Utilities.getImageLoader(context);
+		}
+
+
+		@Override
+		public int getCount()
+		{
+			return friends.size();
+		}
+
+
+		@Override
+		public Filter getFilter()
+		{
+			return filter;
+		}
+
+
+		@Override
+		public Person getItem(int position)
+		{
+			return friends.get(position);
 		}
 
 
@@ -483,37 +558,142 @@ public class FriendsListFragment extends SherlockFragment implements OnItemClick
 			viewHolder.name.setText(friend.getName());
 			viewHolder.name.setTypeface(TypefaceUtilities.getTypeface(context.getAssets(), TypefaceUtilities.BLUE_HIGHWAY_D));
 			viewHolder.picture.setImageDrawable(emptyProfilePicture);
-			Utilities.getImageLoader(context).displayImage(FacebookUtilities.GRAPH_API_URL + friend.getId() + FacebookUtilities.GRAPH_API_URL_PICTURE_TYPE_SMALL_SSL, viewHolder.picture);
+			imageLoader.displayImage(FacebookUtilities.getFriendsPictureSquare(context, friend.getId()), viewHolder.picture);
 
 			return convertView;
 		}
 
 
-	}
 
 
-
-
-	private final static class ViewHolder
-	{
-
-
-		ImageView picture;
-		TextView name;
-
-
-	}
-
-
-
-
-	private final class FriendsListSorter implements Comparator<Person>
-	{
-		@Override
-		public int compare(final Person geo, final Person jarrad)
+		/**
+		 * This class performs the actual filtering of the friends in the
+		 * friends list.
+		 */
+		private final class FriendsListFilter extends Filter
 		{
-			return geo.getName().compareToIgnoreCase(jarrad.getName());
+
+
+			private ArrayList<Person> friendsCopy;
+			private String previousQuery;
+
+
+			private FriendsListFilter(final ArrayList<Person> friends)
+			{
+				friendsCopy = new ArrayList<Person>(friends);
+			}
+
+
+			@Override
+			protected FilterResults performFiltering(final CharSequence constraint)
+			// The CharSequence constraint variable is the actual text that the
+			// user is searching for.
+			{
+				final FilterResults filterResults = new FilterResults();
+
+				if (constraint == null || constraint.length() < 1)
+				// Check to see if the text that the user searched for is null
+				// or empty. If either of these checks prove true, then we know
+				// that the user wants to clear their search, which means that
+				// they want to see their entire, unfiltered, friends list.
+				{
+					if (friends.size() != friendsCopy.size())
+					// The friendsCopy object contains the original unsorted
+					// list of friends. This check compares the sizes of the
+					// two lists, if they are the same size then we know that
+					// the friends list has not been altered / filtered and
+					// this means that we don't need to waste the performance
+					// power needed to create a copy of the original list.
+					{
+						// Creates a copy of the original, unaltered friends
+						// list.
+						friends = new ArrayList<Person>(friendsCopy);
+					}
+
+					filterResults.count = friendsCopy.size();
+					filterResults.values = friendsCopy;
+					previousQuery = null;
+				}
+				else
+				{
+					// The friends that are found to contain the text that the
+					// user has searched for will be placed in this ArrayList.
+					final ArrayList<Person> filteredFriends = new ArrayList<Person>();
+
+					// Grab a String version of the user's search text and
+					// convert it to lower case form.
+					final String query = constraint.toString().toLowerCase();
+
+					if (previousQuery != null && previousQuery.length() > query.length())
+					// Check the previous query and see if it was a bigger
+					// String than the current query. This is needed because if
+					// the user entered "Ka", but then deleted it down to just
+					// "K", the friends list would only continue to filter
+					// based on the results found from the "Ka" search.
+					{
+						friends = new ArrayList<Person>(friendsCopy);
+					}
+
+					// store the user's current search query
+					previousQuery = query;
+
+					for (final Person friend : friends)
+					// search through every friend in the list of friends
+					{
+						final String name = friend.getName().toLowerCase();
+
+						if (name.contains(query))
+						{
+							// This friend's name was found to contain the text
+							// that the user is searching for. Add this friend
+							// to the list of filtered friends.
+							filteredFriends.add(friend);
+						}
+					}
+
+					filterResults.count = filteredFriends.size();
+					filterResults.values = filteredFriends;
+				}
+
+				return filterResults;
+			}
+
+
+			@Override
+			protected void publishResults(final CharSequence constraint, final FilterResults results)
+			{
+				// Clear the list of friends that is currently being shown on
+				// the screen.
+				friends.clear();
+
+				@SuppressWarnings("unchecked")
+				final ArrayList<Person> values = (ArrayList<Person>) results.values;
+
+				// Add the list of filtered friends to the newly cleared list.
+				friends.addAll(values);
+
+				// This refreshes the friends list as shown on the device's
+				// screen.
+				notifyDataSetChanged();
+			}
+
+
 		}
+
+
+
+
+		private final class ViewHolder
+		{
+
+
+			private ImageView picture;
+			private TextView name;
+
+
+		}
+
+
 	}
 
 

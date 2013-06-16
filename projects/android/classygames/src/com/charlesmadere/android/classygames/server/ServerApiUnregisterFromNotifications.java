@@ -1,18 +1,16 @@
 package com.charlesmadere.android.classygames.server;
 
 
-import java.io.IOException;
-import java.util.ArrayList;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
 import android.content.Context;
 import android.util.Log;
-
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.utilities.ServerUtilities;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 
 /**

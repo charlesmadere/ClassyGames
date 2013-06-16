@@ -1,22 +1,23 @@
 package com.charlesmadere.android.classygames.settings;
 
 
-import java.io.IOException;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.utilities.ServerUtilities;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
+
+import java.io.IOException;
 
 
 public class RegisterForNotificationsActivity extends SherlockActivity
@@ -36,7 +37,7 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.register_for_notifications_activity);
-		Utilities.styleActionBar(getResources(), getSupportActionBar(), true);
+		Utilities.setActionBar(this, R.string.register_for_notifications, true);
 
 		final Button registerButton = (Button) findViewById(R.id.register_for_notifications_activity_register);
 		registerButton.setTypeface(TypefaceUtilities.getTypeface(getAssets(), TypefaceUtilities.BLUE_HIGHWAY_D));
@@ -119,13 +120,13 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 	{
 
 
-		private SherlockActivity activity;
+		private Context context;
 		private ProgressDialog progressDialog;
 
 
-		private AsyncRegisterForNotifications(final SherlockActivity activity)
+		private AsyncRegisterForNotifications(final Context context)
 		{
-			this.activity = activity;
+			this.context = context;
 		}
 
 
@@ -138,11 +139,11 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 			{
 				try
 				{
-					registrationSuccess = Boolean.valueOf(ServerUtilities.gcmRegister(activity));
+					registrationSuccess = Boolean.valueOf(ServerUtilities.gcmRegister(context));
 				}
 				catch (final IOException e)
 				{
-
+					Log.e(Utilities.LOG_TAG, "IOException in doInBackground() of AsyncRegisterForNotifications class!", e);
 				}
 			}
 
@@ -158,7 +159,7 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 			}
 
 			asyncRegisterForNotifications = null;
-			Utilities.easyToast(activity, R.string.registration_cancelled);
+			Utilities.easyToast(context, R.string.registration_cancelled);
 		}
 
 
@@ -186,12 +187,12 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 
 			if (registrationSuccess.booleanValue())
 			{
-				Utilities.easyToast(activity, R.string.registration_complete);
-				activity.finish();
+				Utilities.easyToast(context, R.string.registration_complete);
+				finish();
 			}
 			else
 			{
-				final AlertDialog.Builder builder = new AlertDialog.Builder(activity)
+				final AlertDialog.Builder builder = new AlertDialog.Builder(context)
 					.setMessage(R.string.register_for_notifications_activity_registration_failed_message)
 					.setNeutralButton(R.string.okay, new DialogInterface.OnClickListener()
 					{
@@ -199,7 +200,7 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 						public void onClick(final DialogInterface dialog, final int which)
 						{
 							dialog.dismiss();
-							activity.finish();
+							finish();
 						}
 					})
 					.setTitle(R.string.registration_failed);
@@ -214,10 +215,10 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 		@Override
 		protected void onPreExecute()
 		{
-			progressDialog = new ProgressDialog(activity);
+			progressDialog = new ProgressDialog(context);
 			progressDialog.setCancelable(true);
 			progressDialog.setCanceledOnTouchOutside(true);
-			progressDialog.setMessage(activity.getString(R.string.registering_your_device_for_notifications_with_our_server));
+			progressDialog.setMessage(getString(R.string.registering_your_device_for_notifications_with_our_server));
 
 			progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
 			{

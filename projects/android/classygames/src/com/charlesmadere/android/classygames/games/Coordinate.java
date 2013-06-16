@@ -76,9 +76,9 @@ public class Coordinate
 	{
 		boolean inDigits = false;
 
-		// used to store positions in the tag String in order to make
-		// substrings
-		int beginIndex = 0, endIndex = 0;
+		// used to store positions in the tag in order to make substrings
+		int beginIndex = 0;
+		int endIndex = 0;
 
 		// store the position we're currently at in the tag String
 		int i = 0;

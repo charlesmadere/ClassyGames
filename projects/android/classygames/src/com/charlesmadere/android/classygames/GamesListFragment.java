@@ -1,21 +1,11 @@
 package com.charlesmadere.android.classygames;
 
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -24,14 +14,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
-
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -46,24 +31,36 @@ import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
 import com.charlesmadere.android.classygames.utilities.ServerUtilities;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 
-public class GamesListFragment extends SherlockFragment implements OnItemClickListener, OnItemLongClickListener
+public class GamesListFragment extends SherlockFragment implements
+	OnItemClickListener,
+	OnItemLongClickListener
 {
 
 
 	private final static String LOG_TAG = Utilities.LOG_TAG + " - GamesListFragment";
 
-
 	private final static String KEY_GAMES_LIST_JSON = "KEY_GAMES_LIST_JSON";
+
+
 
 
 	/**
 	 * JSONObject downloaded from the server that represents the games list.
 	 */
 	private JSONObject gamesListJSON;
-
-
 
 
 	/**
@@ -191,7 +188,7 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 				}
 				catch (final JSONException e)
 				{
-
+                    Log.e(LOG_TAG, "JSONException in onActivityCreated()!", e);
 				}
 			}
 		}
@@ -450,7 +447,8 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 	{
 		if (!isAnAsyncTaskRunning())
 		{
-			asyncRefreshGamesList = new AsyncRefreshGamesList(getSherlockActivity(), getLayoutInflater(getArguments()), (ViewGroup) getView(), restoreExistingList);
+			asyncRefreshGamesList = new AsyncRefreshGamesList(getSherlockActivity(),
+				getLayoutInflater(getArguments()), (ViewGroup) getView(), restoreExistingList);
 			asyncRefreshGamesList.execute();
 		}
 	}
@@ -468,11 +466,13 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 
 
 	private final class AsyncRefreshGamesList extends AsyncTask<Void, Void, ArrayList<Game>>
+		implements Comparator<Game>
 	{
 
 
 		private final static byte RUN_STATUS_NORMAL = 1;
 		private final static byte RUN_STATUS_IOEXCEPTION = 2;
+		private final static byte RUN_STATUS_NO_NETWORK_CONNECTION = 3;
 		private byte runStatus;
 
 
@@ -482,16 +482,8 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 		private boolean restoreExistingList;
 
 
-		private AsyncRefreshGamesList(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater, final ViewGroup viewGroup)
-		{
-			this.fragmentActivity = fragmentActivity;
-			this.inflater = inflater;
-			this.viewGroup = viewGroup;
-			restoreExistingList = false;
-		}
-
-
-		private AsyncRefreshGamesList(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater, final ViewGroup viewGroup, final boolean restoreExistingList)
+		private AsyncRefreshGamesList(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater,
+			final ViewGroup viewGroup, final boolean restoreExistingList)
 		{
 			this.fragmentActivity = fragmentActivity;
 			this.inflater = inflater;
@@ -503,8 +495,8 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 		@Override
 		protected ArrayList<Game> doInBackground(final Void... params)
 		{
-			ArrayList<Game> games = null;
 			runStatus = RUN_STATUS_NORMAL;
+			ArrayList<Game> games = null;
 
 			if (restoreExistingList && gamesListJSON != null)
 			{
@@ -519,7 +511,7 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 				final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, whoAmI.getIdAsString()));
 
-				if (!isCancelled())
+				if (!isCancelled() && Utilities.checkForNetworkConnectivity(fragmentActivity))
 				{
 					try
 					{
@@ -542,6 +534,10 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 						Log.e(LOG_TAG, "IOException error in AsyncPopulateGamesList - doInBackground()!", e);
 					}
 				}
+				else
+				{
+					runStatus = RUN_STATUS_NO_NETWORK_CONNECTION;
+				}
 			}
 
 			return games;
@@ -554,6 +550,13 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 			inflater.inflate(R.layout.games_list_fragment_cancelled, viewGroup);
 
 			setRunningState(false);
+		}
+
+
+		@Override
+		public int compare(final Game gameOne, final Game gameTwo)
+		{
+			return (int) (gameTwo.getTimestamp() - gameOne.getTimestamp());
 		}
 
 
@@ -576,7 +579,7 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 		{
 			viewGroup.removeAllViews();
 
-			if (games != null && !games.isEmpty())
+			if (runStatus == RUN_STATUS_NORMAL && games != null && !games.isEmpty())
 			{
 				inflater.inflate(R.layout.games_list_fragment, viewGroup);
 				gamesListAdapter = new GamesListAdapter(fragmentActivity, R.layout.games_list_fragment_listview_item, games);
@@ -586,9 +589,9 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 				listView.setOnItemClickListener(GamesListFragment.this);
 				listView.setOnItemLongClickListener(GamesListFragment.this);
 			}
-			else if (runStatus == RUN_STATUS_IOEXCEPTION)
+			else if (runStatus == RUN_STATUS_IOEXCEPTION || runStatus == RUN_STATUS_NO_NETWORK_CONNECTION)
 			{
-				inflater.inflate(R.layout.games_list_fragment_no_internet_connection, viewGroup);
+				inflater.inflate(R.layout.fragment_no_internet_connection, viewGroup);
 			}
 			else
 			{
@@ -738,7 +741,7 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 						}
 					}
 
-					Collections.sort(games, new GamesListSorter());
+					Collections.sort(games, this);
 				}
 			}
 			catch (final JSONException e)
@@ -786,17 +789,25 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 
 
 		private ArrayList<Game> games;
-		private Drawable emptyProfilePicture;
 		private Context context;
+		private Drawable checkersIcon;
+		private Drawable chessIcon;
+		private Drawable emptyProfilePicture;
+		private ImageLoader imageLoader;
 
 
-		GamesListAdapter(final Context context, final int textViewResourceId, final ArrayList<Game> games)
+		private GamesListAdapter(final Context context, final int textViewResourceId, final ArrayList<Game> games)
 		{
 			super(context, textViewResourceId, games);
 			this.context = context;
 			this.games = games;
 
-			emptyProfilePicture = (Drawable) context.getResources().getDrawable(R.drawable.empty_profile_picture_small);
+			imageLoader = Utilities.getImageLoader(context);
+
+			final Resources resources = context.getResources();
+			emptyProfilePicture = resources.getDrawable(R.drawable.empty_profile_picture_small);
+			checkersIcon = resources.getDrawable(R.drawable.game_icon_checkers);
+			chessIcon = resources.getDrawable(R.drawable.game_icon_chess);
 		}
 
 
@@ -812,7 +823,7 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 
 				final ImageView picture = (ImageView) convertView.findViewById(R.id.games_list_fragment_listview_item_picture);
 				picture.setImageDrawable(emptyProfilePicture);
-				Utilities.getImageLoader(context).displayImage(FacebookUtilities.GRAPH_API_URL + game.getPerson().getId() + FacebookUtilities.GRAPH_API_URL_PICTURE_TYPE_SMALL_SSL, picture);
+				imageLoader.displayImage(FacebookUtilities.getFriendsPictureSquare(context, game.getPerson().getId()), picture);
 
 				final TextView name = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_name);
 				name.setText(game.getPerson().getName());
@@ -820,6 +831,17 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 
 				final TextView time = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_time);
 				time.setText(game.getTimestampFormatted(context));
+
+				final ImageView gameIcon = (ImageView) convertView.findViewById(R.id.games_list_fragment_listview_item_game_icon);
+
+				if (game.isGameCheckers())
+				{
+					gameIcon.setImageDrawable(checkersIcon);
+				}
+				else if (game.isGameChess())
+				{
+					gameIcon.setImageDrawable(chessIcon);
+				}
 			}
 			else
 			{
@@ -840,18 +862,6 @@ public class GamesListFragment extends SherlockFragment implements OnItemClickLi
 		}
 
 
-	}
-
-
-
-
-	private final class GamesListSorter implements Comparator<Game>
-	{
-		@Override
-		public int compare(final Game gameOne, final Game gameTwo)
-		{
-			return (int) (gameTwo.getTimestamp() - gameOne.getTimestamp());
-		}
 	}
 
 

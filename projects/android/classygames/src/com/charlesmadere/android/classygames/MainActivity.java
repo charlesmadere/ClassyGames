@@ -7,18 +7,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Window;
 import com.charlesmadere.android.classygames.models.Person;
+import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
 import com.charlesmadere.android.classygames.utilities.ServerUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
-import com.facebook.Request;
+import com.facebook.*;
 import com.facebook.Request.GraphUserCallback;
-import com.facebook.Response;
-import com.facebook.Session;
-import com.facebook.SessionState;
-import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 
 
@@ -33,7 +29,6 @@ public class MainActivity extends SherlockActivity
 
 
 	private UiLifecycleHelper uiHelper;
-	private Session.StatusCallback sessionStatusCallback;
 
 	private boolean isResumed = false;
 	private boolean hasFinished = false;
@@ -56,12 +51,12 @@ public class MainActivity extends SherlockActivity
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main_activity);
 
-		sessionStatusCallback = new Session.StatusCallback()
+		final Session.StatusCallback sessionStatusCallback = new Session.StatusCallback()
 		{
 			@Override
 			public void call(final Session session, final SessionState state, final Exception exception)
 			{
-				onSessionStateChange(session, state, exception);
+				onSessionStateChange(session, state);
 			}
 		};
 
@@ -170,7 +165,7 @@ public class MainActivity extends SherlockActivity
 	}
 
 
-	private void onSessionStateChange(final Session session, final SessionState state, final Exception exception)
+	private void onSessionStateChange(final Session session, final SessionState state)
 	{
 		if (isResumed)
 		// only make changes if this activity is visible
@@ -178,7 +173,11 @@ public class MainActivity extends SherlockActivity
 			if (state.equals(SessionState.OPENED))
 			// if the session state is open, show the authenticated activity
 			{
-				asyncGetFacebookIdentity = new AsyncGetFacebookIdentity(this, (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE), session, (ViewGroup) findViewById(R.id.main_activity_listview));
+				// store the user's Facebook Access Token for retrieval later
+				FacebookUtilities.setAccessToken(this, session.getAccessToken());
+
+				asyncGetFacebookIdentity = new AsyncGetFacebookIdentity(this,
+					(LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE), session, (ViewGroup) findViewById(R.id.main_activity_listview));
 				asyncGetFacebookIdentity.execute();
 			}
 		}
@@ -204,7 +203,7 @@ public class MainActivity extends SherlockActivity
 		private ViewGroup viewGroup;
 
 
-		AsyncGetFacebookIdentity(final Context context, final LayoutInflater inflater, final Session session, final ViewGroup viewGroup)
+		private AsyncGetFacebookIdentity(final Context context, final LayoutInflater inflater, final Session session, final ViewGroup viewGroup)
 		{
 			this.context = context;
 			this.inflater = inflater;

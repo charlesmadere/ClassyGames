@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-
+import android.text.SpannableString;
 import com.charlesmadere.android.classygames.R;
+import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
+import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
 public class GameSettingsFragment extends PreferenceFragment
@@ -43,7 +45,8 @@ public class GameSettingsFragment extends PreferenceFragment
 		 * Return true if you want to save this new color. False if you do not
 		 * want to save this new color.
 		 */
-		public boolean onPlayersCheckersPieceColorPreferenceChange(final ListPreference opponentsCheckersPieceColor, final Object newValue);
+		public boolean onPlayersCheckersPieceColorPreferenceChange(final ListPreference opponentsCheckersPieceColor,
+			final Object newValue);
 
 
 		/**
@@ -61,7 +64,8 @@ public class GameSettingsFragment extends PreferenceFragment
 		 * Return true if you want to save this new color. False if you do not
 		 * want to save this new color.
 		 */
-		public boolean onOpponentsCheckersPieceColorPreferenceChange(final ListPreference playersCheckersPieceColor, final Object newValue);
+		public boolean onOpponentsCheckersPieceColorPreferenceChange(final ListPreference playersCheckersPieceColor,
+			final Object newValue);
 
 
 	}
@@ -74,6 +78,11 @@ public class GameSettingsFragment extends PreferenceFragment
 	{
 		super.onCreate(savedInstanceState);
 
+		final String actionBarTitle = getString(R.string.game_settings);
+		final SpannableString styledActionBarTitle = Utilities.makeStyledString(getActivity().getAssets(),
+			actionBarTitle, TypefaceUtilities.BLUE_HIGHWAY_D);
+		getActivity().getActionBar().setTitle(styledActionBarTitle);
+
 		addPreferencesFromResource(R.xml.settings_game);
 	}
 
@@ -82,6 +91,7 @@ public class GameSettingsFragment extends PreferenceFragment
 	public void onActivityCreated(final Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
+		Utilities.setBackground(getActivity(), getView());
 
 		final ListPreference playersCheckersPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_players_checkers_piece_color));
 		final ListPreference opponentsCheckersPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_opponents_checkers_piece_color));

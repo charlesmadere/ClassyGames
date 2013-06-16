@@ -1,12 +1,11 @@
 package com.charlesmadere.android.classygames.utilities;
 
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
+import com.charlesmadere.android.classygames.models.Person;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -18,12 +17,11 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
-
-import com.charlesmadere.android.classygames.models.Person;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 
 /**
@@ -73,9 +71,6 @@ public final class ServerUtilities
 	public final static String POST_DATA_SUCCESS = "success";
 	public final static String POST_DATA_USER_CHALLENGED = "user_challenged";
 	public final static String POST_DATA_USER_CREATOR = "user_creator";
-
-
-	public final static String REG_ID = "REG_ID";
 
 
 
@@ -287,9 +282,12 @@ public final class ServerUtilities
 			final BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 			final StringBuilder stringBuilder = new StringBuilder();
 
-			for (String line = new String(); line != null; line = bufferedReader.readLine())
+			String line = new String();
+
+			while (line != null)
 			{
 				stringBuilder.append(line);
+				line = bufferedReader.readLine();
 			}
 
 			serverResponse = stringBuilder.toString();

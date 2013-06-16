@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Build;
-
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.utilities.Utilities;
@@ -53,8 +52,8 @@ public abstract class ServerApi
 
 
 		/**
-		 * If this class's ServerApiTask AsyncTask gets cancelled this then
-		 * this method will be run.
+		 * If this class's ServerApiTask AsyncTask gets cancelled then this
+		 * method will be run.
 		 */
 		public void onCancel();
 

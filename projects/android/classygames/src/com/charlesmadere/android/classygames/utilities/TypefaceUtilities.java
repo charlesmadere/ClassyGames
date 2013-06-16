@@ -18,9 +18,11 @@ public final class TypefaceUtilities
 
 	public final static byte BLUE_HIGHWAY_D = 0;
 	public final static byte SNELL_ROUNDHAND_BDSCR = 10;
-	private final static String PATH = "typefaces/";
-	private final static String BLUE_HIGHWAY_D_PATH = PATH + "blue_highway_d.ttf";
-	private final static String SNELL_ROUNDHAND_BDSCR_PATH = PATH + "snell_roundhand_bdscr.otf";
+
+
+	private final static String TYPEFACE_PATH = "typefaces/";
+	private final static String BLUE_HIGHWAY_D_PATH = TYPEFACE_PATH + "blue_highway_d.ttf";
+	private final static String SNELL_ROUNDHAND_BDSCR_PATH = TYPEFACE_PATH + "snell_roundhand_bdscr.otf";
 
 
 

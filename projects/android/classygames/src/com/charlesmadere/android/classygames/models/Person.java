@@ -1,6 +1,9 @@
 package com.charlesmadere.android.classygames.models;
 
 
+import com.charlesmadere.android.classygames.utilities.Utilities;
+
+
 /**
  * Class representing a real person.
  */
@@ -168,14 +171,6 @@ public class Person
 
 
 	@Override
-	public boolean equals(final Object o)
-	{
-		final Person person = (Person) o;
-		return person.getId() == id && person.getName().equals(name);
-	}
-
-
-	@Override
 	public String toString()
 	{
 		return name;
@@ -226,7 +221,10 @@ public class Person
 	 */
 	public static boolean isIdValid(final String id)
 	{
-		if (isNameValid(id))
+		if (Utilities.verifyValidString(id))
+		// First, ensure that we were given a valid String. If this proves true
+		// then we will check to see that the long value of this String is a
+		// valid ID value.
 		{
 			return isIdValid(Long.parseLong(id));
 		}
@@ -253,9 +251,9 @@ public class Person
 	 */
 	public static boolean areIdsValid(final long... ids)
 	{
-		for (int i = 0; i < ids.length; ++i)
+		for (final long id : ids)
 		{
-			if (!isIdValid(ids[i]))
+			if (!isIdValid(id))
 			{
 				return false;
 			}
@@ -281,9 +279,9 @@ public class Person
 	 */
 	public static boolean areIdsValid(final String... ids)
 	{
-		for (int i = 0; i < ids.length; ++i)
+		for (final String id : ids)
 		{
-			if (!isIdValid(ids[i]))
+			if (!isIdValid(id))
 			{
 				return false;
 			}
@@ -308,7 +306,7 @@ public class Person
 	 */
 	public static boolean isNameValid(final String name)
 	{
-		return name != null && name.length() >= 1;
+		return Utilities.verifyValidString(name);
 	}
 
 
@@ -328,15 +326,36 @@ public class Person
 	 */
 	public static boolean areNamesValid(final String... names)
 	{
-		for (int i = 0; i < names.length; ++i)
+		for (final String name : names)
 		{
-			if (!isNameValid(names[i]))
+			if (!isNameValid(name))
 			{
 				return false;
 			}
 		}
 
 		return true;
+	}
+
+
+	/**
+	 * Checks a given ID and name for validity. Some of the other validity
+	 * verifying methods in this class define exactly what <i>validity</i> is.
+	 * See those for more information!
+	 *
+	 * @param id
+	 * The Facebook ID to check for validity.
+	 *
+	 * @param name
+	 * The name to check for validity.
+	 *
+	 * @return
+	 * Returns true if the values of both given parameters are detected as
+	 * being valid.
+	 */
+	public static boolean isIdAndNameValid(final long id, final String name)
+	{
+		return isIdValid(id) && isNameValid(name);
 	}
 
 
