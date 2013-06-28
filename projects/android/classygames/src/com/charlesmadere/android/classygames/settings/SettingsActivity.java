@@ -191,4 +191,20 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 	}
 
 
+	@Override
+	public boolean onPlayersChessPieceColorPreferenceChange(final ListPreference opponentsChessPieceColor, final Object newValue)
+	{
+		// TODO
+		return false;
+	}
+
+
+	@Override
+	public boolean onOpponentsChessPieceColorPreferenceChange(final ListPreference playersChessPieceColor, final Object newValue)
+	{
+		// TODO
+		return false;
+	}
+
+
 }

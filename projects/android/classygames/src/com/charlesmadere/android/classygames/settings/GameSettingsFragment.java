@@ -68,6 +68,38 @@ public class GameSettingsFragment extends PreferenceFragment
 			final Object newValue);
 
 
+		/**
+		 *
+		 *
+		 * @param opponentsChessPieceColor
+		 *
+		 *
+		 * @param newValue
+		 *
+		 *
+		 * @return
+		 *
+		 */
+		public boolean onPlayersChessPieceColorPreferenceChange(final ListPreference opponentsChessPieceColor,
+			final Object newValue);
+
+
+		/**
+		 *
+		 *
+		 * @param playersChessPieceColor
+		 *
+		 *
+		 * @param newValue
+		 *
+		 *
+		 * @return
+		 *
+		 */
+		public boolean onOpponentsChessPieceColorPreferenceChange(final ListPreference playersChessPieceColor,
+			final Object newValue);
+
+
 	}
 
 
@@ -95,6 +127,8 @@ public class GameSettingsFragment extends PreferenceFragment
 
 		final ListPreference playersCheckersPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_players_checkers_piece_color));
 		final ListPreference opponentsCheckersPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_opponents_checkers_piece_color));
+		final ListPreference playersChessPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_players_chess_piece_color));
+		final ListPreference opponentsChessPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_opponents_chess_piece_color));
 
 		playersCheckersPieceColor.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener()
 		{
@@ -111,6 +145,24 @@ public class GameSettingsFragment extends PreferenceFragment
 			public boolean onPreferenceChange(final Preference preference, final Object newValue)
 			{
 				return listeners.onOpponentsCheckersPieceColorPreferenceChange(playersCheckersPieceColor, newValue);
+			}
+		});
+
+		playersChessPieceColor.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener()
+		{
+			@Override
+			public boolean onPreferenceChange(final Preference preference, final Object newValue)
+			{
+				return listeners.onPlayersChessPieceColorPreferenceChange(opponentsChessPieceColor, newValue);
+			}
+		});
+
+		opponentsChessPieceColor.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener()
+		{
+			@Override
+			public boolean onPreferenceChange(final Preference preference, final Object newValue)
+			{
+				return listeners.onOpponentsChessPieceColorPreferenceChange(playersChessPieceColor, newValue);
 			}
 		});
 	}

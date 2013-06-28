@@ -1,6 +1,8 @@
 package com.charlesmadere.android.classygames;
 
 
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.View;
@@ -210,6 +212,20 @@ public class ChessGameFragment extends GenericGameFragment
 
 
 	@Override
+	protected String getDefaultPlayersPieceColor()
+	{
+		return getString(R.string.pink);
+	}
+
+
+	@Override
+	protected String getDefaultOpponentsPieceColor()
+	{
+		return getString(R.string.blue);
+	}
+
+
+	@Override
 	protected int getGameView()
 	{
 		return R.layout.chess_game_fragment;
@@ -220,6 +236,20 @@ public class ChessGameFragment extends GenericGameFragment
 	protected int getLoadingText()
 	{
 		return R.string.loading_chess_game_against_x;
+	}
+
+
+	@Override
+	protected int getSettingsKeyForPlayersPieceColor()
+	{
+		return R.string.settings_key_players_chess_piece_color;
+	}
+
+
+	@Override
+	protected int getSettingsKeyForOpponentsPieceColor()
+	{
+		return R.string.settings_key_opponents_chess_piece_color;
 	}
 
 
@@ -340,12 +370,115 @@ public class ChessGameFragment extends GenericGameFragment
 
 
 	@Override
-	protected void loadPieces()
+	protected void loadPieceResources(final String opponentsColor, final String playersColor,
+		final String blue, final String green, final String pink, final String orange)
 	{
-		// TODO
-		// Artwork for the chess pieces has been created but is not yet
-		// included in the app. Once that artwork is added to the app, then
-		// this method will need to be filled out.
+		final int opponentsPawnColor;
+		final int opponentsBishopColor;
+		final int opponentsKnightColor;
+		final int opponentsRookColor;
+		final int opponentsQueenColor;
+		final int opponentsKingColor;
+
+		if (opponentsColor.equalsIgnoreCase(blue))
+		{
+			opponentsPawnColor = R.drawable.piece_chess_pawn_blue;
+			opponentsBishopColor = R.drawable.piece_chess_bishop_blue;
+			opponentsKnightColor = R.drawable.piece_chess_knight_blue;
+			opponentsRookColor = R.drawable.piece_chess_rook_blue;
+			opponentsQueenColor = R.drawable.piece_chess_queen_blue;
+			opponentsKingColor = R.drawable.piece_chess_king_blue;
+		}
+		else if (opponentsColor.equalsIgnoreCase(green))
+		{
+			opponentsPawnColor = R.drawable.piece_chess_pawn_green;
+			opponentsBishopColor = R.drawable.piece_chess_bishop_green;
+			opponentsKnightColor = R.drawable.piece_chess_knight_green;
+			opponentsRookColor = R.drawable.piece_chess_rook_green;
+			opponentsQueenColor = R.drawable.piece_chess_queen_green;
+			opponentsKingColor = R.drawable.piece_chess_king_green;
+		}
+		else if (opponentsColor.equalsIgnoreCase(pink))
+		{
+			opponentsPawnColor = R.drawable.piece_chess_pawn_pink;
+			opponentsBishopColor = R.drawable.piece_chess_bishop_pink;
+			opponentsKnightColor = R.drawable.piece_chess_knight_pink;
+			opponentsRookColor = R.drawable.piece_chess_rook_pink;
+			opponentsQueenColor = R.drawable.piece_chess_queen_pink;
+			opponentsKingColor = R.drawable.piece_chess_king_pink;
+		}
+		else
+		{
+			opponentsPawnColor = R.drawable.piece_chess_pawn_orange;
+			opponentsBishopColor = R.drawable.piece_chess_bishop_orange;
+			opponentsKnightColor = R.drawable.piece_chess_knight_orange;
+			opponentsRookColor = R.drawable.piece_chess_rook_orange;
+			opponentsQueenColor = R.drawable.piece_chess_queen_orange;
+			opponentsKingColor = R.drawable.piece_chess_king_orange;
+		}
+
+		final int playersPawnColor;
+		final int playersBishopColor;
+		final int playersKnightColor;
+		final int playersRookColor;
+		final int playersQueenColor;
+		final int playersKingColor;
+
+		if (playersColor.equalsIgnoreCase(blue))
+		{
+			playersPawnColor = R.drawable.piece_chess_pawn_blue;
+			playersBishopColor = R.drawable.piece_chess_bishop_blue;
+			playersKnightColor = R.drawable.piece_chess_knight_blue;
+			playersRookColor = R.drawable.piece_chess_rook_blue;
+			playersQueenColor = R.drawable.piece_chess_queen_blue;
+			playersKingColor = R.drawable.piece_chess_king_blue;
+		}
+		else if (playersColor.equalsIgnoreCase(green))
+		{
+			playersPawnColor = R.drawable.piece_chess_pawn_green;
+			playersBishopColor = R.drawable.piece_chess_bishop_green;
+			playersKnightColor = R.drawable.piece_chess_knight_green;
+			playersRookColor = R.drawable.piece_chess_rook_green;
+			playersQueenColor = R.drawable.piece_chess_queen_green;
+			playersKingColor = R.drawable.piece_chess_king_green;
+		}
+		else if (playersColor.equalsIgnoreCase(pink))
+		{
+			playersPawnColor = R.drawable.piece_chess_pawn_pink;
+			playersBishopColor = R.drawable.piece_chess_bishop_pink;
+			playersKnightColor = R.drawable.piece_chess_knight_pink;
+			playersRookColor = R.drawable.piece_chess_rook_pink;
+			playersQueenColor = R.drawable.piece_chess_queen_pink;
+			playersKingColor = R.drawable.piece_chess_king_pink;
+		}
+		else
+		{
+			playersPawnColor = R.drawable.piece_chess_pawn_orange;
+			playersBishopColor = R.drawable.piece_chess_bishop_orange;
+			playersKnightColor = R.drawable.piece_chess_knight_orange;
+			playersRookColor = R.drawable.piece_chess_rook_orange;
+			playersQueenColor = R.drawable.piece_chess_queen_orange;
+			playersKingColor = R.drawable.piece_chess_king_orange;
+		}
+
+		// Load BitmapDrawables for chess pieces into memory. This is done so
+		// that later when we draw these checkers pieces onto the board, that
+		// draw process can be done very quickly as all of the picture data
+		// will have already been loaded.
+
+		final Resources resources = getResources();
+		opponentPawn = (BitmapDrawable) resources.getDrawable(opponentsPawnColor);
+		opponentBishop = (BitmapDrawable) resources.getDrawable(opponentsBishopColor);
+		opponentKnight = (BitmapDrawable) resources.getDrawable(opponentsKnightColor);
+		opponentRook = (BitmapDrawable) resources.getDrawable(opponentsRookColor);
+		opponentQueen = (BitmapDrawable) resources.getDrawable(opponentsQueenColor);
+		opponentKing = (BitmapDrawable) resources.getDrawable(opponentsKingColor);
+		playerPawn = (BitmapDrawable) resources.getDrawable(playersPawnColor);
+		playerBishop = (BitmapDrawable) resources.getDrawable(playersBishopColor);
+		playerKnight = (BitmapDrawable) resources.getDrawable(playersKnightColor);
+		playerRook = (BitmapDrawable) resources.getDrawable(playersRookColor);
+		playerQueen = (BitmapDrawable) resources.getDrawable(playersQueenColor);
+		playerKing = (BitmapDrawable) resources.getDrawable(playersKingColor);
 	}
 
 

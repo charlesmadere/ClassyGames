@@ -111,6 +111,20 @@ public class CheckersGameFragment extends GenericGameFragment
 
 
 	@Override
+	protected String getDefaultPlayersPieceColor()
+	{
+		return getString(R.string.green);
+	}
+
+
+	@Override
+	protected String getDefaultOpponentsPieceColor()
+	{
+		return getString(R.string.orange);
+	}
+
+
+	@Override
 	protected int getGameView()
 	{
 		return R.layout.checkers_game_fragment;
@@ -121,6 +135,20 @@ public class CheckersGameFragment extends GenericGameFragment
 	protected int getLoadingText()
 	{
 		return R.string.loading_checkers_game_against_x;
+	}
+
+
+	@Override
+	protected int getSettingsKeyForPlayersPieceColor()
+	{
+		return R.string.settings_key_players_checkers_piece_color;
+	}
+
+
+	@Override
+	protected int getSettingsKeyForOpponentsPieceColor()
+	{
+		return R.string.settings_key_opponents_checkers_piece_color;
 	}
 
 
@@ -231,100 +259,67 @@ public class CheckersGameFragment extends GenericGameFragment
 
 
 	@Override
-	protected void loadPieces()
+	protected void loadPieceResources(final String opponentsColor, final String playersColor,
+		final String blue, final String green, final String pink, final String orange)
 	{
-		final String blue = getString(R.string.blue);
-		final String green = getString(R.string.green);
-		final String orange = getString(R.string.orange);
-		final String pink = getString(R.string.pink);
-
-		final String keyPlayerColor = getString(R.string.settings_key_players_checkers_piece_color);
-		final String keyOpponentColor = getString(R.string.settings_key_opponents_checkers_piece_color);
-
-		final SharedPreferences sPreferences = Utilities.getPreferences(getSherlockActivity());
-
-		// Read in the colors that the player has selected to use for their
-		// checkers pieces. If the user has not set a color, the playerColor
-		// String will default to green and the opponentColor String will
-		// default to orange.
-		String playerColor = sPreferences.getString(keyPlayerColor, green);
-		String opponentColor = sPreferences.getString(keyOpponentColor, orange);
-
-		if (playerColor.equalsIgnoreCase(opponentColor))
-		// Check to see if the color that the player has set is for their own
-		// color is the same as the one that they set for the opponent's color.
-		// This if statement will validate as true if that is the case.
-		{
-			playerColor = green;
-			opponentColor = orange;
-
-			final SharedPreferences.Editor editor = sPreferences.edit();
-
-			// Change the value as saved in the user's preferences to the
-			// default colors. This fixes the conflicting color issue.
-			editor.putString(keyPlayerColor, playerColor);
-			editor.putString(keyOpponentColor, opponentColor);
-			editor.commit();
-		}
-
-		final int playerColorNormal;
-		final int playerColorKing;
-
-		if (playerColor.equalsIgnoreCase(blue))
-		{
-			playerColorNormal = R.drawable.piece_checkers_blue_normal;
-			playerColorKing = R.drawable.piece_checkers_blue_king;
-		}
-		else if (playerColor.equalsIgnoreCase(orange))
-		{
-			playerColorNormal = R.drawable.piece_checkers_orange_normal;
-			playerColorKing = R.drawable.piece_checkers_orange_king;
-		}
-		else if (playerColor.equalsIgnoreCase(pink))
-		{
-			playerColorNormal = R.drawable.piece_checkers_pink_normal;
-			playerColorKing = R.drawable.piece_checkers_pink_king;
-		}
-		else
-		{
-			playerColorNormal = R.drawable.piece_checkers_green_normal;
-			playerColorKing = R.drawable.piece_checkers_green_king;
-		}
-
 		final int opponentColorNormal;
 		final int opponentColorKing;
 
-		if (opponentColor.equalsIgnoreCase(blue))
+		if (opponentsColor.equalsIgnoreCase(blue))
 		{
-			opponentColorNormal = R.drawable.piece_checkers_blue_normal;
-			opponentColorKing = R.drawable.piece_checkers_blue_king;
+			opponentColorNormal = R.drawable.piece_checkers_normal_blue;
+			opponentColorKing = R.drawable.piece_checkers_king_blue;
 		}
-		else if (opponentColor.equalsIgnoreCase(green))
+		else if (opponentsColor.equalsIgnoreCase(green))
 		{
-			opponentColorNormal = R.drawable.piece_checkers_green_normal;
-			opponentColorKing = R.drawable.piece_checkers_green_king;
+			opponentColorNormal = R.drawable.piece_checkers_normal_green;
+			opponentColorKing = R.drawable.piece_checkers_king_green;
 		}
-		else if (opponentColor.equalsIgnoreCase(pink))
+		else if (opponentsColor.equalsIgnoreCase(pink))
 		{
-			opponentColorNormal = R.drawable.piece_checkers_pink_normal;
-			opponentColorKing = R.drawable.piece_checkers_pink_king;
+			opponentColorNormal = R.drawable.piece_checkers_normal_pink;
+			opponentColorKing = R.drawable.piece_checkers_king_pink;
 		}
 		else
 		{
-			opponentColorNormal = R.drawable.piece_checkers_orange_normal;
-			opponentColorKing = R.drawable.piece_checkers_orange_king;
+			opponentColorNormal = R.drawable.piece_checkers_normal_orange;
+			opponentColorKing = R.drawable.piece_checkers_king_orange;
 		}
 
-		// Load Drawables for checkers pieces into memory. This is done so that
-		// later when we draw these checkers pieces onto the board, that draw
-		// process can be done very quickly as all of the picture data has
-		// already been loaded.
+		final int playerNormalColor;
+		final int playerKingColor;
+
+		if (playersColor.equalsIgnoreCase(blue))
+		{
+			playerNormalColor = R.drawable.piece_checkers_normal_blue;
+			playerKingColor = R.drawable.piece_checkers_king_blue;
+		}
+		else if (playersColor.equalsIgnoreCase(orange))
+		{
+			playerNormalColor = R.drawable.piece_checkers_normal_orange;
+			playerKingColor = R.drawable.piece_checkers_king_orange;
+		}
+		else if (playersColor.equalsIgnoreCase(pink))
+		{
+			playerNormalColor = R.drawable.piece_checkers_normal_pink;
+			playerKingColor = R.drawable.piece_checkers_king_pink;
+		}
+		else
+		{
+			playerNormalColor = R.drawable.piece_checkers_normal_green;
+			playerKingColor = R.drawable.piece_checkers_king_green;
+		}
+
+		// Load BitmapDrawables for checkers pieces into memory. This is done
+		// so that later when we draw these checkers pieces onto the board,
+		// that draw process can be done very quickly as all of the picture
+		// data will have already been loaded.
 
 		final Resources resources = getResources();
-		playerNormal = (BitmapDrawable) resources.getDrawable(playerColorNormal);
-		playerKing = (BitmapDrawable) resources.getDrawable(playerColorKing);
 		opponentNormal = (BitmapDrawable) resources.getDrawable(opponentColorNormal);
 		opponentKing = (BitmapDrawable) resources.getDrawable(opponentColorKing);
+		playerNormal = (BitmapDrawable) resources.getDrawable(playerNormalColor);
+		playerKing = (BitmapDrawable) resources.getDrawable(playerKingColor);
 	}
 
 

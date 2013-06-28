@@ -3,6 +3,7 @@ package com.charlesmadere.android.classygames;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
@@ -694,7 +695,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	private void initViewsAndLoadPieces()
 	{
 		initViews();
-		loadPieces();
+		loadPieceResources();
 	}
 
 
@@ -721,6 +722,54 @@ public abstract class GenericGameFragment extends SherlockFragment
 		backgroundBoardBrightSelected = (BitmapDrawable) resources.getDrawable(R.drawable.bg_board_bright_selected);
 		backgroundBoardDark = (BitmapDrawable) resources.getDrawable(R.drawable.bg_board_dark);
 		backgroundBoardDarkSelected = (BitmapDrawable) resources.getDrawable(R.drawable.bg_board_dark_selected);
+	}
+
+
+	/**
+	 * Loads in the images to be used for the game pieces as shown on the game
+	 * board. Checks user's preferences to see which image files to load.
+	 */
+	private void loadPieceResources()
+	{
+		final String blue = getString(R.string.blue);
+		final String green = getString(R.string.green);
+		final String orange = getString(R.string.orange);
+		final String pink = getString(R.string.pink);
+
+		final String defaultOpponentsColor = getDefaultOpponentsPieceColor();
+		final String defaultPlayersColor = getDefaultPlayersPieceColor();
+
+		final int opponentsColorKey = getSettingsKeyForOpponentsPieceColor();
+		final String opponentsColorKeyString = getString(opponentsColorKey);
+		final int playersColorKey = getSettingsKeyForPlayersPieceColor();
+		final String playersColorKeyString = getString(playersColorKey);
+
+		final SharedPreferences sPreferences = Utilities.getPreferences(getSherlockActivity());
+
+		// Read in the colors that the player has selected to use for their
+		// pieces. If the user has not set a color, the playerColor and
+		// opponentColor Strings will both be set to the game's default color.
+		String opponentsColor = sPreferences.getString(opponentsColorKeyString, defaultOpponentsColor);
+		String playersColor = sPreferences.getString(playersColorKeyString, defaultPlayersColor);
+
+		if (opponentsColor.equalsIgnoreCase(playersColor))
+		// Check to see if the color that the player has set for their own
+		// color is the same as the one that they set for the opponent's color.
+		// This if statement will validate as true if that is the case.
+		{
+			opponentsColor = defaultOpponentsColor;
+			playersColor = defaultPlayersColor;
+
+			final SharedPreferences.Editor editor = sPreferences.edit();
+
+			// Change the value as saved in the user's preferences to the
+			// default colors. This fixes the conflicting color issue.
+			editor.putString(opponentsColorKeyString, defaultOpponentsColor);
+			editor.putString(playersColorKeyString, defaultPlayersColor);
+			editor.commit();
+		}
+
+		loadPieceResources(opponentsColor, playersColor, blue, green, orange, pink);
 	}
 
 
@@ -1245,6 +1294,20 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 	/**
 	 * @return
+	 * Returns the actual String for the players's default piece color.
+	 */
+	protected abstract String getDefaultPlayersPieceColor();
+
+
+	/**
+	 * @return
+	 * Returns the actual String for the opponent's default piece color.
+	 */
+	protected abstract String getDefaultOpponentsPieceColor();
+
+
+	/**
+	 * @return
 	 * Returns the int value for the XML layout to use as the standard game
 	 * board layout. For checkers, this method will return
 	 * R.layout.checkers_game_layout. For chess, this method will return
@@ -1259,6 +1322,20 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * as a loading message when the AsyncGetGame AsyncTask is running.
 	 */
 	protected abstract int getLoadingText();
+
+
+	/**
+	 * @return
+	 * Returns the int string ID for the player's settings key.
+	 */
+	protected abstract int getSettingsKeyForPlayersPieceColor();
+
+
+	/**
+	 * @return
+	 * Returns the int string ID for the opponent's settings key.
+	 */
+	protected abstract int getSettingsKeyForOpponentsPieceColor();
 
 
 	/**
@@ -1284,12 +1361,11 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * Loads in the images to be used for the game pieces on the actual game
-	 * board. If the game has the potential for custom colored pieces, then
-	 * this code should read the Android shared preferences information and
-	 * load in the respective colors.
+	 * Loads in the images to be used for the game pieces as shown on the game
+	 * board.
 	 */
-	protected abstract void loadPieces();
+	protected abstract void loadPieceResources(final String opponentsColor, final String playersColor,
+		final String blue, final String green, final String orange, final String pink);
 
 
 	/**

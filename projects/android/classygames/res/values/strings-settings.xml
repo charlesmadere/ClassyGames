@@ -17,8 +17,10 @@
 	<string name="settings_game_summary">Settings that relate with the actual game.</string>
     <string name="settings_key_ask_before_sending_move">settings_key_ask_before_sending_move</string>
 	<string name="settings_key_show_notification_light">settings_key_show_notification_light</string>
-    <string name="settings_key_opponents_checkers_piece_color">settings_key_opponents_checkers_piece_color</string>
-    <string name="settings_key_players_checkers_piece_color">settings_key_players_checkers_piece_color</string>
+	<string name="settings_key_opponents_checkers_piece_color">settings_key_opponents_checkers_piece_color</string>
+	<string name="settings_key_players_checkers_piece_color">settings_key_players_checkers_piece_color</string>
+	<string name="settings_key_opponents_chess_piece_color">settings_key_opponents_chess_piece_color</string>
+	<string name="settings_key_players_chess_piece_color">settings_key_players_chess_piece_color</string>
 	<string name="settings_key_vibrate">settings_key_vibrate</string>
     <string name="settings_notifications_summary">Settings that adjust push notifications.</string>
 	<string name="settings_show_notification_light_summary_off">Your device\'s notification light will not blink when a notification has been received.</string>
