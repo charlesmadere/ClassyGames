@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<!--
+		TODO
+		add an icon to the below menu item
+	-->
+	<item
+		android:enabled="false"
+		android:id="@+id/chess_game_fragment_menu_castle"
+		android:showAsAction="never"
+		android:title="@string/castle" />
+</menu>

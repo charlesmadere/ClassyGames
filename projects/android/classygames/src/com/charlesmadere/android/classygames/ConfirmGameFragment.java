@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
@@ -25,8 +26,8 @@ public class ConfirmGameFragment extends SherlockFragment
 {
 
 
-	public final static String BUNDLE_FRIEND_ID = "BUNDLE_FRIEND_ID";
-	public final static String BUNDLE_FRIEND_NAME = "BUNDLE_FRIEND_NAME";
+	public final static String KEY_FRIEND_ID = "KEY_FRIEND_ID";
+	public final static String KEY_FRIEND_NAME = "KEY_FRIEND_NAME";
 
 
 
@@ -79,8 +80,12 @@ public class ConfirmGameFragment extends SherlockFragment
 		 * 
 		 * @param friend
 		 * The Facebook friend that the user has decided to play against.
+		 *
+		 * @param whichGame
+		 * Which game that the user decided to play. This could be checkers,
+		 * chess...
 		 */
-		public void onGameConfirm(final Person friend);
+		public void onGameConfirm(final Person friend, final byte whichGame);
 
 
 		/**
@@ -113,8 +118,8 @@ public class ConfirmGameFragment extends SherlockFragment
 
 		if (arguments != null && !arguments.isEmpty())
 		{
-			final long friendId = arguments.getLong(BUNDLE_FRIEND_ID);
-			final String friendName = arguments.getString(BUNDLE_FRIEND_NAME);
+			final long friendId = arguments.getLong(KEY_FRIEND_ID);
+			final String friendName = arguments.getString(KEY_FRIEND_NAME);
 
 			if (Person.isIdAndNameValid(friendId, friendName))
 			{
@@ -151,7 +156,10 @@ public class ConfirmGameFragment extends SherlockFragment
 			@Override
 			public void onClick(final View v)
 			{
-				listeners.onGameConfirm(friend);
+				// TODO
+				// ask the user which game they'd like to play
+
+				listeners.onGameConfirm(friend, Game.WHICH_GAME_CHECKERS);
 			}
 		});
 

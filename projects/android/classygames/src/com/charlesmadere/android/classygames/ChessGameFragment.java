@@ -1,7 +1,6 @@
 package com.charlesmadere.android.classygames;
 
 
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
@@ -112,10 +111,7 @@ public class ChessGameFragment extends GenericGameFragment
 	@Override
 	protected void createOptionsMenu(final Menu menu, final MenuInflater inflater)
 	{
-		// TODO
-		// Chess will require an options menu to perform some moves like
-		// castling. Off the top of my head right now that's the only one that
-		// I can think of, but there may be more.
+		inflater.inflate(R.menu.chess_game_fragment, menu);
 	}
 
 

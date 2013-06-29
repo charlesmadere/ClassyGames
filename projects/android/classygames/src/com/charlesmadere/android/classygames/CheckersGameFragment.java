@@ -1,7 +1,6 @@
 package com.charlesmadere.android.classygames;
 
 
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.View;
@@ -13,7 +12,6 @@ import com.charlesmadere.android.classygames.games.Coordinate;
 import com.charlesmadere.android.classygames.games.Position;
 import com.charlesmadere.android.classygames.games.checkers.Board;
 import com.charlesmadere.android.classygames.games.checkers.Piece;
-import com.charlesmadere.android.classygames.utilities.Utilities;
 import org.json.JSONException;
 import org.json.JSONObject;
 
