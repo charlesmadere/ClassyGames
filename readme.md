@@ -5,20 +5,24 @@ This project has a server side component with it's own repository. It utilizes A
 
 This project actually has a third repository too! This repository, [ClassyGames-Resources](https://github.com/ScootrNova/ClassyGames-Resources), stores all of the app's images and other media files. For instance, I used Adobe Illustrator a whole bunch in order to create some custom icons. The original `.ai` file for those icons, as well as their exported `.png` files in a ton of different resolutions are all available there.
 
+
 ## How to import Classy Games into your IDE ##
 Both of these tutorials assume that your IDE is somewhat configured. By that I mean you already have the [Java Development Kit](http://www.oracle.com/technetwork/java/javase/downloads/index.html) (JDK) as well as the [Android SDK](https://developer.android.com/sdk/index.html). Please ensure that both are completely up-to-date! The version of Android that Classy Games requires (as of the time of this writing, 05/10/2013) is *Android 4.2.2 Google APIs*, so be sure to download that too. I will try to keep the Android version that this app uses in tandem with the latest from Google, but that may take time.
 
+
 ### Eclipse ###
-1. Download Eclipse from [their website](http://www.eclipse.org/downloads/). I am writing this tutorial for Juno but other versions should work almost identically. Install the ADT Plugin ([here is the Android guide for that](https://developer.android.com/sdk/installing/installing-adt.html)), and make sure that you've got it, the Android SDK, and Eclipse all updated.
-2. Once Eclipse is open and completely ready, go to *File* > *New* > *Project*. A *New Project* dialog should open up. From here, open up the *Android* folder, select *Android Project from Existing Code*, and then click *Next >*.
-3. This screen should be asking you to specify a directory to search for existing Android projects. So then for *Root Directory:*, click *Browse...* and find the `/projects/android/` folder of this repository. On Windows mine is `D:\Users\CMadere\Documents\GitHub\ClassyGames\projects\android`. On OS X mine is `/Users/cmadere/Documents/GitHub/ClassyGames/projects/android`.
-4. Once you've chosen the root directory, four projects should fill the *Projects:* portion of this dialog. You should see *actionbarsherlock*, *classygames*, *classygamestest*, and *facebook*. Make sure that all of their checkboxes are checked, and then click *Finish*.
-5. At this point, if you want to develop without headaches, I strongly recommend going to the *Project* menu and unchecking *Build Automatically*.
-6. This step will need to be done to three of the four projects (actionbarsherlock, classygames, and facebook). On the left of the Eclipse window you should see either the *Project Explorer* or the *Package Explorer*. As far as I can tell, these are the exact same thing, and so whichever one you see will work fine. (My OS X installation of Eclipse shows the *Project Explorer*.) Right click on one of those three above mentioned projects > *Android Tools* > *Add Support Library*. This will open an Android SDK window that will ask you to accept a license agreement. Accept the license and then click *Install* at the bottom right. You should see a progress dialog show up for a little while and then disappear on its own. Repeat this process for each of the three above mentioned projects.
-7. Go to the *Project* menu and then click on *Clean*. A *Clean* dialog will open — make sure that the *Clean all projects* radio button is checked, that *Start a build immediately* is checked, and that the *Build the entire workspace* radio button is checked. Click *OK*. A build should begin running and should result in no errors. Depending on your computer, you may want to wait a minute or so to make sure that the build completes before playing around more in Eclipse. Sometimes this IDE gets angry if you don't give it plenty of time to do its thing.
-8. Go to the *Run* menu and then click on *Run Configurations*. A *Run Configurations* window will open. On the left, open the *Android Application* collapsable folder thing and click on *classygames*. Now on the right go to the *Target* tab and check the *Always prompt to pick device* radio button. Then click *Apply* and then *Run*!
-9. Once your computer has finished preparing the project to run, an *Android Device Chooser* window should open. From here you can run the application on your Android phone or an emulator, it's your choice. Select one and then click *OK*!
-10. The Classy Games app should start up on the device you chose. Congratulations! Thanks for following my tutorial. :)
+1. Download Eclipse from [their website](http://www.eclipse.org/downloads/). I am writing this tutorial for Juno (v4.2) but other versions should work almost identically (so I do recommend downloading the latest one). Open it up and go to *Help* > *Check for Updates*.
+2. Install the ADT Plugin ([here is the Android guide for that](https://developer.android.com/sdk/installing/installing-adt.html)). You'll probably have to restart Eclipse after this.
+3. Once Eclipse is open and completely ready, go to *File* > *New* > *Project*. A *New Project* dialog should open up. From here, open up the *Android* folder, select *Android Project from Existing Code*, and then click *Next >*.
+4. This screen should be asking you to specify a directory to search for existing Android projects. So then for *Root Directory:*, click *Browse...* and find the `/projects/android/` folder of this repository. On Windows mine is `D:\Users\CMadere\Documents\GitHub\ClassyGames\projects\android`. On OS X mine is `/Users/cmadere/Documents/GitHub/ClassyGames/projects/android`.
+5. Once you've chosen the root directory, four projects should fill the *Projects:* portion of this dialog. You should see *actionbarsherlock*, *classygames*, *classygamestest*, and *facebook*. Make sure that all of their checkboxes are checked, and then click *Finish*.
+6. At this point, if you want to develop without headaches, I strongly recommend going to the *Project* menu and unchecking *Build Automatically*.
+7. This step will need to be done to three of the four projects (actionbarsherlock, classygames, and facebook). On the left of the Eclipse window you should see either the *Project Explorer* or the *Package Explorer*. As far as I can tell, these are the exact same thing, and so whichever one you see will work fine. (My OS X installation of Eclipse shows the *Project Explorer*.) Right click on one of those three above mentioned projects > *Android Tools* > *Add Support Library*. This will open an Android SDK window that will ask you to accept a license agreement. Accept the license and then click *Install* at the bottom right. You should see a progress dialog show up for a little while and then disappear on its own. Repeat this process for each of the three above mentioned projects.
+8. Go to the *Project* menu and then click on *Clean*. A *Clean* dialog will open — make sure that the *Clean all projects* radio button is checked, that *Start a build immediately* is checked, and that the *Build the entire workspace* radio button is checked. Click *OK*. A build should begin running and should result in no errors. Depending on your computer, you may want to wait a minute or so to make sure that the build completes before playing around more in Eclipse. Sometimes this IDE gets angry if you don't give it plenty of time to do its thing.
+9. Go to the *Run* menu and then click on *Run Configurations*. A *Run Configurations* window will open. On the left, open the *Android Application* collapsable folder thing and click on *classygames*. Now on the right go to the *Target* tab and check the *Always prompt to pick device* radio button. Then click *Apply* and then *Run*!
+10. Once your computer has finished preparing the project to run, an *Android Device Chooser* window should open. From here you can run the application on your Android phone or an emulator, it's your choice. Select one and then click *OK*!
+11. The Classy Games app should start up on the device you chose. Congratulations! Thanks for following my tutorial. :)
+
 
 ### IntelliJ IDEA ###
 1. Download IntelliJ IDEA from [their website](https://www.jetbrains.com/idea/). The exact version that I am writing this tutorial for is `12.1.3`, but it should work just fine for others too.
@@ -42,12 +46,21 @@ Both of these tutorials assume that your IDE is somewhat configured. By that I m
 19. You should soon see Classy Games running on the device of your choice. Congratulations and thanks for following my tutorial!
 
 
-## More Information about the App ##
+### Android Studio ###
+This new IDE is probably gonna be really cool (at the very least way better than Eclipse), but I haven't tried using it at all. You can try setting it up for this project but I've never done it before. [Check out Android Studio here](https://developer.android.com/sdk/installing/studio.html).
+
+
+## Changelog ##
 ### Versioning Explained ###
 + vX.0.0.0 This would be massive release that includes many big new features.
 + v0.X.0.0 This would be a pretty decent update. Maybe nothing huge in terms of new features, but definitely some nice updates.
 + v0.0.X.0 This would be a relatively small update. Maybe one or two new features or tweaks; some may be completely unnoticeable by the user.
 + v0.0.0.X This would be a bug fix release.
+
+
+## Classy Games v2.0 ##
+Classy Games v2.0 was released on **BLAH BLAH**. It features chess! You can now, with just one app, play both checkers and chess against your friends!
+
 
 ## Classy Games v1.6 ##
 Classy Games v1.6 was released on June 16th, 2013.
@@ -56,6 +69,7 @@ Classy Games v1.6 was released on June 16th, 2013.
 2. You can now quick search through the friends list when creating a new game.
 3. Added `xxhdpi` icons for the checkers pieces. This is good for newer devices that have an extremely high number of pixels per inch in their displays.
 4. Throughout the entire app, the Action Bar's typeface now fits in with the rest of the app's design.
+
 
 ## Classy Games v1.5 ##
 Classy Games v1.5 was released on March 3rd, 2013. It features many cool things.
@@ -67,7 +81,8 @@ Classy Games v1.5 was released on March 3rd, 2013. It features many cool things.
 5. AdMob support
 6. More!
 
-### Classy Games v1.5.2 ###
+
+### Classy Games v1.5.2 (and v1.5.2.x) ###
 Classy Games v1.5.2 was released on March 29th, 2013. It features:
 
 1. Settings!
@@ -81,6 +96,7 @@ The v1.5.2 release has a few bug fix releases.
 2. v1.5.2.2 was released on March 29th, 2013. Fixed another push notification crash issue.
 3. v1.5.2.3 was released on March 30th, 2013. Fixed an issue where the app wasn't properly retrieving the device's stored registration ID when registering for notifications.
 4. v1.5.2.4 was released on March 30th, 2013. Fixed an issue where devices running versions of Android below Honeycomb were crashing at the settings screens.
+
 
 ### Classy Games v1.5.1 (and v1.5.1.x) ###
 Classy Games v1.5.1 was released on March 9th, 2013. It features:
