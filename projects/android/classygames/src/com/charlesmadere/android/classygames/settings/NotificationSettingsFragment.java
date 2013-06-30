@@ -19,8 +19,8 @@ public class NotificationSettingsFragment extends PreferenceFragment
 		super.onCreate(savedInstanceState);
 
 		final String actionBarTitle = getString(R.string.notification_settings);
-		final SpannableString styledActionBarTitle = Utilities.makeStyledString(getActivity().getAssets(),
-			actionBarTitle, TypefaceUtilities.BLUE_HIGHWAY_D);
+		final SpannableString styledActionBarTitle = Utilities.makeStyledString(actionBarTitle,
+			TypefaceUtilities.getBlueHighwayTypeface(getResources().getAssets()));
 		getActivity().getActionBar().setTitle(styledActionBarTitle);
 
 		addPreferencesFromResource(R.xml.settings_notification);

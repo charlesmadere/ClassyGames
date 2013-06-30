@@ -39,9 +39,10 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 		setContentView(R.layout.register_for_notifications_activity);
 		Utilities.setActionBar(this, R.string.register_for_notifications, true);
 
-		final Button registerButton = (Button) findViewById(R.id.register_for_notifications_activity_register);
-		registerButton.setTypeface(TypefaceUtilities.getTypeface(getAssets(), TypefaceUtilities.BLUE_HIGHWAY_D));
-		registerButton.setOnClickListener(new View.OnClickListener()
+		final Button register = (Button) findViewById(R.id.register_for_notifications_activity_register);
+		TypefaceUtilities.applyTypefaceBlueHighway(getAssets(), register);
+
+		register.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(final View v)
@@ -133,13 +134,13 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 		@Override
 		protected Boolean doInBackground(final Void... params)
 		{
-			Boolean registrationSuccess = Boolean.valueOf(false);
+			Boolean registrationSuccess = false;
 
 			if (!isCancelled())
 			{
 				try
 				{
-					registrationSuccess = Boolean.valueOf(ServerUtilities.gcmRegister(context));
+					registrationSuccess = ServerUtilities.gcmRegister(context);
 				}
 				catch (final IOException e)
 				{
@@ -185,7 +186,7 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 				progressDialog.dismiss();
 			}
 
-			if (registrationSuccess.booleanValue())
+			if (registrationSuccess)
 			{
 				Utilities.easyToast(context, R.string.registration_complete);
 				finish();

@@ -8,8 +8,8 @@ import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -40,6 +40,9 @@ public class ConfirmGameFragment extends SherlockFragment
 	 * which game they want to play.
 	 */
 	private AlertDialog alertDialog;
+
+
+	private AssetManager assetManager;
 
 
 	/**
@@ -157,17 +160,19 @@ public class ConfirmGameFragment extends SherlockFragment
 		super.onActivityCreated(savedInstanceState);
 
 		final View view = getView();
+		final AssetManager assetManager = getAssetManager();
 
-		final TextView friendName = (TextView) view.findViewById(R.id.confirm_game_fragment_friend_name);
-		friendName.setText(friend.getName());
-		friendName.setTypeface(TypefaceUtilities.getTypeface(getSherlockActivity().getAssets(), TypefaceUtilities.SNELL_ROUNDHAND_BDSCR));
+		final TextView friendsName = (TextView) view.findViewById(R.id.confirm_game_fragment_friend_name);
+		friendsName.setText(friend.getName());
+		TypefaceUtilities.applyTypefaceSnellRoundhand(assetManager, friendsName);
 
 		final TextView description = (TextView) view.findViewById(R.id.confirm_game_fragment_description);
 		description.setText(getString(R.string.are_you_sure_that_you_want_to_start_a_game_with_x, friend.getName()));
 
-		final Button buttonConfirm = (Button) view.findViewById(R.id.confirm_game_fragment_button_confirm);
-		buttonConfirm.setTypeface(TypefaceUtilities.getTypeface(getSherlockActivity().getAssets(), TypefaceUtilities.BLUE_HIGHWAY_D));
-		buttonConfirm.setOnClickListener(new View.OnClickListener()
+		final Button confirm = (Button) view.findViewById(R.id.confirm_game_fragment_button_confirm);
+		TypefaceUtilities.applyTypefaceBlueHighway(assetManager, confirm);
+
+		confirm.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(final View v)
@@ -176,9 +181,10 @@ public class ConfirmGameFragment extends SherlockFragment
 			}
 		});
 
-		final Button buttonDeny = (Button) view.findViewById(R.id.confirm_game_fragment_button_deny);
-		buttonDeny.setTypeface(TypefaceUtilities.getTypeface(getSherlockActivity().getAssets(), TypefaceUtilities.BLUE_HIGHWAY_D));
-		buttonDeny.setOnClickListener(new View.OnClickListener()
+		final Button deny = (Button) view.findViewById(R.id.confirm_game_fragment_button_deny);
+		TypefaceUtilities.applyTypefaceBlueHighway(assetManager, deny);
+
+		deny.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(final View v)
@@ -241,12 +247,13 @@ public class ConfirmGameFragment extends SherlockFragment
 	{
 		if (alertDialog == null)
 		{
-			final AssetManager assets = getResources().getAssets();
 			final View dialogView = inflater.inflate(R.layout.choose_which_game_dialog, null);
+			final AssetManager assetManager = getAssetManager();
 
 			final Button checkers = (Button) dialogView.findViewById(R.id.choose_which_game_dialog_button_checkers);
-			checkers.setTypeface(TypefaceUtilities.getTypeface(assets, TypefaceUtilities.BLUE_HIGHWAY_D));
-			checkers.setOnClickListener(new View.OnClickListener()
+			TypefaceUtilities.applyTypefaceBlueHighway(assetManager, checkers);
+
+			checkers.setOnClickListener(new OnClickListener()
 			{
 				@Override
 				public void onClick(final View v)
@@ -256,8 +263,9 @@ public class ConfirmGameFragment extends SherlockFragment
 			});
 
 			final Button chess = (Button) dialogView.findViewById(R.id.choose_which_game_dialog_button_chess);
-			chess.setTypeface(TypefaceUtilities.getTypeface(assets, TypefaceUtilities.BLUE_HIGHWAY_D));
-			chess.setOnClickListener(new View.OnClickListener()
+			TypefaceUtilities.applyTypefaceBlueHighway(assetManager, chess);
+
+			chess.setOnClickListener(new OnClickListener()
 			{
 				@Override
 				public void onClick(final View v)
@@ -272,6 +280,23 @@ public class ConfirmGameFragment extends SherlockFragment
 		}
 
 		return alertDialog;
+	}
+
+
+	/**
+	 * Retrieves a usable AssetManager object.
+	 *
+	 * @return
+	 * Returns a ready-to-use AssetManager object.
+	 */
+	private AssetManager getAssetManager()
+	{
+		if (assetManager == null)
+		{
+			assetManager = getResources().getAssets();
+		}
+
+		return assetManager;
 	}
 
 

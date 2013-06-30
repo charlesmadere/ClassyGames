@@ -3,6 +3,7 @@ package com.charlesmadere.android.classygames.utilities;
 
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
+import android.widget.TextView;
 
 
 /**
@@ -12,64 +13,92 @@ public final class TypefaceUtilities
 {
 
 
-	private static Typeface typefaceBlueHighwayD;
-	private static Typeface typefaceSnellRoundHandBDSCR;
+	private static Typeface blueHighway;
+	private static Typeface snellRoundhand;
 
 
-	public final static byte BLUE_HIGHWAY_D = 0;
-	public final static byte SNELL_ROUNDHAND_BDSCR = 10;
-
-
-	private final static String TYPEFACE_PATH = "typefaces/";
-	private final static String BLUE_HIGHWAY_D_PATH = TYPEFACE_PATH + "blue_highway_d.ttf";
-	private final static String SNELL_ROUNDHAND_BDSCR_PATH = TYPEFACE_PATH + "snell_roundhand_bdscr.otf";
+	private final static String TYPEFACES_PATH = "typefaces/";
+	private final static String BLUE_HIGHWAY_PATH = TYPEFACES_PATH + "blue_highway.ttf";
+	private final static String SNELL_ROUNDHAND_PATH = TYPEFACES_PATH + "snell_roundhand.otf";
 
 
 
 
 	/**
-	 * Returns to you a Typeface that you request.
-	 * 
-	 * <p><strong>Examples</strong><br />
-	 * Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_BLUE_HIGHWAY_D);<br />
-	 * Utilities.getTypeface(getAssets(), Utilities.TYPEFACE_SNELL_ROUND_HAND_BDSCR);</p>
-	 * <p><strong>An invalid example</strong><br />
-	 * Utilities.getTypeface(getAssets(), -1);</p>
-	 * 
+	 * Applies the BlueHighway typeface to the supplied TextView object.
+	 *
 	 * @param assetManager
-	 * The getAssets() method. Just pass that sucker in here.
-	 * 
-	 * @param typeface
-	 * The int ID of the Typeface object that you want. This must be a valid int ID, as if
-	 * it's not, this method will return null.
-	 * 
-	 * @return
-	 * Returns the Typeface object that you requested. If an invalid int ID was passed into
-	 * this method, this method will then return null.
+	 * The AssetManager from the calling Activity or Fragment class. Usually
+	 * this can be obtained from an Activity by just directly using the
+	 * getAssets() method. From a Fragment you'll need to use the
+	 * getResources().getAssets() method chain.
+	 *
+	 * @param view
+	 * The TextView object to apply the typeface to.
 	 */
-	public static Typeface getTypeface(final AssetManager assetManager, final byte typeface)
+	public static void applyTypefaceBlueHighway(final AssetManager assetManager, final TextView view)
 	{
-		switch (typeface)
+		view.setTypeface(getBlueHighwayTypeface(assetManager));
+	}
+
+
+	/**
+	 * Applies the Snell Roundhand typeface to the supplied TextView object.
+	 *
+	 * @param assetManager
+	 * The AssetManager from the calling Activity or Fragment class. Usually
+	 * this can be obtained from an Activity by just directly using the
+	 * getAssets() method. From a Fragment you'll need to use the
+	 * getResources().getAssets() method chain.
+	 *
+	 * @param view
+	 * The TextView object to apply the typeface to.
+	 */
+	public static void applyTypefaceSnellRoundhand(final AssetManager assetManager, final TextView view)
+	{
+		view.setTypeface(getSnellRoundhandTypeface(assetManager));
+	}
+
+
+	/**
+	 * Retrieves a usable Blue Highway typeface object.
+	 *
+	 * @param assetManager
+	 * The AssetManager from the Activity or Fragment class that is calling
+	 * this method.
+	 *
+	 * @return
+	 * Returns a ready-to-use typeface object.
+	 */
+	public static Typeface getBlueHighwayTypeface(final AssetManager assetManager)
+	{
+		if (blueHighway == null)
 		{
-			case BLUE_HIGHWAY_D:
-				if (typefaceBlueHighwayD == null)
-				{
-					typefaceBlueHighwayD = Typeface.createFromAsset(assetManager, BLUE_HIGHWAY_D_PATH);
-				}
-
-				return typefaceBlueHighwayD;
-
-			case SNELL_ROUNDHAND_BDSCR:
-				if (typefaceSnellRoundHandBDSCR == null)
-				{
-					typefaceSnellRoundHandBDSCR = Typeface.createFromAsset(assetManager, SNELL_ROUNDHAND_BDSCR_PATH);
-				}
-
-				return typefaceSnellRoundHandBDSCR;
-
-			default:
-				return null;
+			blueHighway = Typeface.createFromAsset(assetManager, BLUE_HIGHWAY_PATH);
 		}
+
+		return blueHighway;
+	}
+
+
+	/**
+	 * Retrieves a usable Snell Roundhand typeface object.
+	 *
+	 * @param assetManager
+	 * The AssetManager from the Activity or Fragment class that is calling
+	 * this method.
+	 *
+	 * @return
+	 * Returns a ready-to-use typeface object.
+	 */
+	public static Typeface getSnellRoundhandTypeface(final AssetManager assetManager)
+	{
+		if (snellRoundhand == null)
+		{
+			snellRoundhand = Typeface.createFromAsset(assetManager, SNELL_ROUNDHAND_PATH);
+		}
+
+		return snellRoundhand;
 	}
 
 

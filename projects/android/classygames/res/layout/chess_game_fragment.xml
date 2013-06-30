@@ -6,6 +6,7 @@
 	android:orientation="vertical"
 	style="@style/ClassyGames">
 	<com.google.ads.AdView
+		android:layout_gravity="center_horizontal"
 		android:layout_height="wrap_content"
 		android:layout_width="wrap_content"
 		ads:adSize="BANNER"

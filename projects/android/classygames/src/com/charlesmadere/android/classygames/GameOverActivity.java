@@ -47,12 +47,12 @@ public class GameOverActivity extends SherlockActivity
 
 			if (ServerUtilities.validMessageTypeValue(messageType) && Person.isIdAndNameValid(personId, personName))
 			{
-				final ImageView friendPicture = (ImageView) findViewById(R.id.game_over_activity_friend_picture);
-				imageLoader.displayImage(FacebookUtilities.getFriendsPictureLarge(this, personId), friendPicture);
+				final ImageView friendsPicture = (ImageView) findViewById(R.id.game_over_activity_friend_picture);
+				imageLoader.displayImage(FacebookUtilities.getFriendsPictureLarge(this, personId), friendsPicture);
 
-				final TextView friendName = (TextView) findViewById(R.id.game_over_activity_friend_name);
-				friendName.setText(personName);
-				friendName.setTypeface(TypefaceUtilities.getTypeface(getAssets(), TypefaceUtilities.SNELL_ROUNDHAND_BDSCR));
+				final TextView friendsName = (TextView) findViewById(R.id.game_over_activity_friend_name);
+				friendsName.setText(personName);
+				TypefaceUtilities.applyTypefaceSnellRoundhand(getAssets(), friendsName);
 
 				final TextView winOrLose = (TextView) findViewById(R.id.game_over_activity_win_or_lose);
 
@@ -68,7 +68,8 @@ public class GameOverActivity extends SherlockActivity
 				}
 
 				final Button returnToGamesList = (Button) findViewById(R.id.game_over_activity_button_return);
-				returnToGamesList.setTypeface(TypefaceUtilities.getTypeface(getAssets(), TypefaceUtilities.BLUE_HIGHWAY_D));
+				TypefaceUtilities.applyTypefaceBlueHighway(getAssets(), returnToGamesList);
+
 				returnToGamesList.setOnClickListener(new OnClickListener()
 				{
 					@Override

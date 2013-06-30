@@ -3,6 +3,7 @@
 	android:background="@drawable/bg_subtle_gray"
 	android:layout_height="wrap_content"
 	android:layout_width="match_parent"
+	android:paddingBottom="8dip"
 	android:paddingLeft="4dip"
 	android:paddingRight="4dip"
 	android:paddingTop="8dip">
@@ -10,24 +11,32 @@
 		android:gravity="center"
 		android:id="@+id/choose_which_game_dialog_textview"
 		android:layout_height="wrap_content"
+		android:layout_marginBottom="2dip"
+		android:layout_marginTop="2dip"
 		android:layout_width="match_parent"
 		android:text="@string/which_game_would_you_like_to_play"
 		android:textColor="@color/gray_darker"
 		android:textSize="18sp" />
 	<LinearLayout
+		android:gravity="center"
 		android:layout_below="@id/choose_which_game_dialog_textview"
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
 		android:orientation="horizontal"
-		android:paddingBottom="24dip"
-		android:paddingTop="24dip">
+		android:paddingBottom="16dip"
+		android:paddingLeft="8dip"
+		android:paddingRight="8dip"
+		android:paddingTop="16dip">
 		<Button
 			android:background="@drawable/choose_which_game_button"
 			android:drawableTop="@drawable/game_icon_checkers"
 			android:id="@+id/choose_which_game_dialog_button_checkers"
 			android:layout_height="wrap_content"
+			android:layout_marginRight="8dip"
 			android:layout_weight="1"
 			android:layout_width="wrap_content"
+			android:paddingBottom="20dip"
+			android:paddingTop="20dip"
 			android:text="@string/checkers"
 			android:textColor="@color/gray_dark" />
 		<Button
@@ -35,8 +44,11 @@
 			android:drawableTop="@drawable/game_icon_chess"
 			android:id="@+id/choose_which_game_dialog_button_chess"
 			android:layout_height="wrap_content"
+			android:layout_marginLeft="8dip"
 			android:layout_weight="1"
 			android:layout_width="wrap_content"
+			android:paddingBottom="20dip"
+			android:paddingTop="20dip"
 			android:text="@string/chess"
 			android:textColor="@color/gray_dark" />
 	</LinearLayout>

@@ -18,7 +18,6 @@
 package com.charlesmadere.android.classygames.utilities;
 
 
-import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.text.TextPaint;
 import android.text.style.MetricAffectingSpan;
@@ -29,9 +28,10 @@ import android.text.style.MetricAffectingSpan;
  * a blog post found here:
  * http://www.tristanwaddington.com/2013/03/styling-the-android-action-bar-with-a-custom-font/
  *
- * This class gives the action bar a custom typeface.
+ * This class is primarily used to give the action bar a custom typeface.
  *
- * @author Tristan Waddington
+ * @author
+ * Tristan Waddington
  */
 public class StyledString extends MetricAffectingSpan
 {
@@ -41,11 +41,11 @@ public class StyledString extends MetricAffectingSpan
 
 
 	/**
-	 * Load the {@link Typeface} and apply to a {@link Spannable}.
+	 * Applies the given Typeface to a Spannable String.
 	 */
-	public StyledString(final AssetManager assetManager, final byte typeface)
+	public StyledString(final Typeface typeface)
 	{
-		this.typeface = TypefaceUtilities.getTypeface(assetManager, typeface);
+		this.typeface = typeface;
 	}
 
 

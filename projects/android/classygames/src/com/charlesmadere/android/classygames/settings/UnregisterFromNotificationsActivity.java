@@ -3,6 +3,7 @@ package com.charlesmadere.android.classygames.settings;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
@@ -33,41 +34,43 @@ public class UnregisterFromNotificationsActivity extends SherlockActivity
 		setContentView(R.layout.unregister_from_notifications_activity);
 		Utilities.setActionBar(this, R.string.unregister_from_notifications, true);
 
-		final Button unregisterButton = (Button) findViewById(R.id.unregister_from_notifications_activity_button_unregister);
-		unregisterButton.setTypeface(TypefaceUtilities.getTypeface(getAssets(), TypefaceUtilities.BLUE_HIGHWAY_D));
-		unregisterButton.setOnClickListener(new View.OnClickListener()
+		final Button unregister = (Button) findViewById(R.id.unregister_from_notifications_activity_button_unregister);
+		TypefaceUtilities.applyTypefaceBlueHighway(getAssets(), unregister);
+
+		unregister.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(final View v)
 			{
 				if (serverApiTask == null)
 				{
-					serverApiTask = new ServerApiUnregisterFromNotifications(UnregisterFromNotificationsActivity.this, new ServerApi.ServerApiListeners()
-					{
-						@Override
-						public void onCancel()
+					serverApiTask = new ServerApiUnregisterFromNotifications(UnregisterFromNotificationsActivity.this,
+						new ServerApi.ServerApiListeners()
 						{
-							serverApiTask = null;
-							Utilities.easyToast(UnregisterFromNotificationsActivity.this, R.string.unregistration_cancelled);
-							finish();
-						}
+							@Override
+							public void onCancel()
+							{
+								serverApiTask = null;
+								Utilities.easyToast(UnregisterFromNotificationsActivity.this, R.string.unregistration_cancelled);
+								finish();
+							}
 
 
-						@Override
-						public void onComplete()
-						{
-							serverApiTask = null;
-							Utilities.easyToast(UnregisterFromNotificationsActivity.this, R.string.unregistration_complete);
-							finish();
-						}
+							@Override
+							public void onComplete()
+							{
+								serverApiTask = null;
+								Utilities.easyToast(UnregisterFromNotificationsActivity.this, R.string.unregistration_complete);
+								finish();
+							}
 
 
-						@Override
-						public void onDismiss()
-						{
-							serverApiTask = null;
-						}
-					});
+							@Override
+							public void onDismiss()
+							{
+								serverApiTask = null;
+							}
+						});
 
 					serverApiTask.execute();
 				}

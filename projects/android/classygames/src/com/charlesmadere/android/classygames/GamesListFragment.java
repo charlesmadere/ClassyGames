@@ -253,7 +253,7 @@ public class GamesListFragment extends SherlockFragment implements
 				v.setSelected(true);
 
 				final Context context = getSherlockActivity();
-				String[] items = null;
+				String[] items;
 
 				if (game.isTurnYours())
 				{
@@ -826,7 +826,7 @@ public class GamesListFragment extends SherlockFragment implements
 
 				final TextView name = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_name);
 				name.setText(game.getPerson().getName());
-				name.setTypeface(TypefaceUtilities.getTypeface(context.getAssets(), TypefaceUtilities.BLUE_HIGHWAY_D));
+				TypefaceUtilities.applyTypefaceSnellRoundhand(context.getAssets(), name);
 
 				final TextView time = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_time);
 				time.setText(game.getTimestampFormatted(context));

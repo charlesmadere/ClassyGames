@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Shader.TileMode;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
@@ -49,6 +50,8 @@ public final class Utilities
 	private static Person whoAmI;
 	private final static String KEY_WHO_AM_I_ID = "KEY_WHO_AM_I_ID";
 	private final static String KEY_WHO_AM_I_NAME = "KEY_WHO_AM_I_NAME";
+
+
 
 
 	/**
@@ -146,54 +149,6 @@ public final class Utilities
 
 
 	/**
-	 * Prints a Toast message to the screen and prints that same message to the Log.d
-	 * console.
-	 * 
-	 * <p><strong>Examples</strong><br />
-	 * Utilities.easyToastAndLog(MainActivity.this, "Hello!");<br />
-	 * Utilities.easyToastAndLog(getApplicationContext(), "Another message huh?");</p>
-	 * 
-	 * @param context
-	 * Just put the name of your class.this, or you can use getApplicationContext().
-	 * 
-	 * @param message
-	 * The String that you want to be shown as a toast message. This exact String will also
-	 * be printed to the Log.d console.
-	 */
-	public static void easyToastAndLog(final Context context, final String message)
-	{
-		easyToast(context, message);
-		Log.d(LOG_TAG, message);
-	}
-
-
-	/**
-	 * Prints a Toast message to the screen and prints that same message to each and
-	 * every log console.
-	 * 
-	 * <p><strong>Examples</strong><br />
-	 * Utilities.easyToastAndLogAll(MainActivity.this, "Hello!");<br />
-	 * Utilities.easyToastAndLogAll(getApplicationContext(), "Another message huh?");</p>
-	 * 
-	 * @param context
-	 * Just put the name of your class.this, or you can use getApplicationContext().
-	 * 
-	 * @param message
-	 * The String that you want to be shown as a toast message. This exact String will also
-	 * be printed to the Log.d console.
-	 */
-	public static void easyToastAndLogAll(final Context context, final String message)
-	{
-		easyToast(context, message);
-		Log.d(LOG_TAG, message);
-		Log.e(LOG_TAG, message);
-		Log.i(LOG_TAG, message);
-		Log.v(LOG_TAG, message);
-		Log.wtf(LOG_TAG, message);
-	}
-
-
-	/**
 	 * Prints a Toast message to the screen and prints that same message to the
 	 * Log.e console.
 	 * 
@@ -241,11 +196,6 @@ public final class Utilities
 	 * String that makes use of a custom typeface. As of right now, this should
 	 * probably only be used to customize the Android Action Bar.
 	 *
-	 * @param assetManager
-	 * A handle to the Activity's AssetManager. This can usually be obtained by
-	 * just doing getAssets(), getSherlockActivity().getAssets(), or
-	 * getActivity().getAssets().
-	 *
 	 * @param string
 	 * The String to apply the custom typeface to.
 	 *
@@ -257,10 +207,11 @@ public final class Utilities
 	 * @return
 	 * Returns the styled String as created with your specifications.
 	 */
-	public static SpannableString makeStyledString(final AssetManager assetManager, final CharSequence string, final byte typeface)
+	public static SpannableString makeStyledString(final CharSequence string,
+		final Typeface typeface)
 	{
 		final SpannableString styledString = new SpannableString(string);
-		styledString.setSpan(new StyledString(assetManager, typeface), 0, styledString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		styledString.setSpan(new StyledString(typeface), 0, styledString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 		return styledString;
 	}
@@ -280,7 +231,8 @@ public final class Utilities
 	 * @param showBackArrow
 	 * Want to show the back arrow on the Action Bar? Pass in true to show it.
 	 */
-	public static void setActionBar(final SherlockActivity activity, final int actionBarTitle, final boolean showBackArrow)
+	public static void setActionBar(final SherlockActivity activity, final int actionBarTitle,
+		final boolean showBackArrow)
 	{
 		setAndStyleActionBar
 		(
@@ -395,9 +347,10 @@ public final class Utilities
 	 * @param showBackArrow
 	 * Want to show the back arrow on the Action Bar? Pass in true to show it.
 	 */
-	private static void setAndStyleActionBar(final AssetManager assetManager, final ActionBar actionBar, final CharSequence actionBarTitle, final Resources resources, final boolean showBackArrow)
+	private static void setAndStyleActionBar(final AssetManager assetManager, final ActionBar actionBar,
+		final CharSequence actionBarTitle, final Resources resources, final boolean showBackArrow)
 	{
-		final SpannableString styledActionBarTitle = makeStyledString(assetManager, actionBarTitle, TypefaceUtilities.BLUE_HIGHWAY_D);
+		final SpannableString styledActionBarTitle = makeStyledString(actionBarTitle, TypefaceUtilities.getBlueHighwayTypeface(assetManager));
 
 		actionBar.setDisplayHomeAsUpEnabled(showBackArrow);
 		actionBar.setTitle(styledActionBarTitle);
@@ -409,6 +362,7 @@ public final class Utilities
 			final BitmapDrawable background = (BitmapDrawable) resources.getDrawable(R.drawable.bg_actionbar);
 			background.setAntiAlias(true);
 			background.setDither(true);
+			background.setFilterBitmap(true);
 			background.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
 
 			actionBar.setBackgroundDrawable(background);

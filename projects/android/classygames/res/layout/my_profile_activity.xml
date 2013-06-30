@@ -5,7 +5,8 @@
 	android:orientation="vertical"
 	style="@style/ClassyGames.ExtraPadding">
 	<TextView
+		android:id="@+id/my_profile_activity_textview_my_name"
+		android:layout_gravity="center"
 		android:layout_height="wrap_content"
-		android:layout_width="wrap_content"
-		android:text="@string/my_profile" />
+		android:layout_width="match_parent" />
 </LinearLayout>
