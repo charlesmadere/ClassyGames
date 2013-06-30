@@ -299,7 +299,7 @@ public class CheckersGameFragment extends GenericGameFragment
 		else
 		{
 			opponentNormal = (BitmapDrawable) res.getDrawable(R.drawable.piece_checkers_normal_orange);
-			opponentKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_checkers_king_green);
+			opponentKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_checkers_king_orange);
 		}
 	}
 
@@ -310,12 +310,12 @@ public class CheckersGameFragment extends GenericGameFragment
 		if (isPlayersColor)
 		{
 			playerNormal = (BitmapDrawable) res.getDrawable(R.drawable.piece_checkers_normal_pink);
-			playerKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_checkers_king_green);
+			playerKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_checkers_king_pink);
 		}
 		else
 		{
 			opponentNormal = (BitmapDrawable) res.getDrawable(R.drawable.piece_checkers_normal_pink);
-			opponentKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_checkers_king_green);
+			opponentKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_checkers_king_pink);
 		}
 	}
 
