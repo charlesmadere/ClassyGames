@@ -826,7 +826,7 @@ public class GamesListFragment extends SherlockFragment implements
 
 				final TextView name = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_name);
 				name.setText(game.getPerson().getName());
-				TypefaceUtilities.applyTypefaceSnellRoundhand(context.getAssets(), name);
+				TypefaceUtilities.applyTypefaceBlueHighway(context.getAssets(), name);
 
 				final TextView time = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_time);
 				time.setText(game.getTimestampFormatted(context));
