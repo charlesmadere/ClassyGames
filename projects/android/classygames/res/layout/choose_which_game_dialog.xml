@@ -1,42 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:background="@drawable/bg_subtle_gray"
-	android:layout_height="match_parent"
+	android:layout_height="wrap_content"
 	android:layout_width="match_parent"
-	android:orientation="vertical">
+	android:paddingLeft="4dip"
+	android:paddingRight="4dip"
+	android:paddingTop="8dip">
 	<TextView
-		android:background="@drawable/bg_actionbar"
 		android:gravity="center"
+		android:id="@+id/choose_which_game_dialog_textview"
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
 		android:text="@string/which_game_would_you_like_to_play"
-		android:textColor="@color/white"
+		android:textColor="@color/gray_darker"
 		android:textSize="18sp" />
 	<LinearLayout
+		android:layout_below="@id/choose_which_game_dialog_textview"
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
 		android:orientation="horizontal"
 		android:paddingBottom="24dip"
-		android:paddingLeft="8dip"
-		android:paddingRight="8dip"
 		android:paddingTop="24dip">
 		<Button
-			android:background="@color/transparent"
+			android:background="@drawable/choose_which_game_button"
 			android:drawableTop="@drawable/game_icon_checkers"
 			android:id="@+id/choose_which_game_dialog_button_checkers"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
 			android:layout_width="wrap_content"
 			android:text="@string/checkers"
-			android:textColor="@color/gray_darker" />
+			android:textColor="@color/gray_dark" />
 		<Button
-			android:background="@color/transparent"
+			android:background="@drawable/choose_which_game_button"
 			android:drawableTop="@drawable/game_icon_chess"
 			android:id="@+id/choose_which_game_dialog_button_chess"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
 			android:layout_width="wrap_content"
 			android:text="@string/chess"
-			android:textColor="@color/gray_darker" />
+			android:textColor="@color/gray_dark" />
 	</LinearLayout>
-</LinearLayout>
+</RelativeLayout>

@@ -18,6 +18,8 @@
 	<color name="pink_dark">#EF9CBB</color>
 	<color name="pink_medium">#EDB3C9</color>
 	<color name="pink_light">#F1D4DF</color>
-	<color name="overlay_red">#55FF0000</color>
+	<color name="overlay_pink_darker">#44C9839D</color>
+	<color name="overlay_pink_dark">#44EF9CBB</color>
+	<color name="overlay_red">#44FF0000</color>
 	<color name="transparent">#00000000</color>
 </resources>
