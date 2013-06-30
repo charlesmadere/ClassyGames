@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -258,6 +259,11 @@ public class ConfirmGameFragment extends SherlockFragment
 				@Override
 				public void onClick(final View v)
 				{
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+					{
+						v.setActivated(true);
+					}
+
 					listeners.onGameConfirm(friend, Game.WHICH_GAME_CHECKERS);
 				}
 			});
@@ -270,6 +276,11 @@ public class ConfirmGameFragment extends SherlockFragment
 				@Override
 				public void onClick(final View v)
 				{
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+					{
+						v.setActivated(true);
+					}
+
 					listeners.onGameConfirm(friend, Game.WHICH_GAME_CHESS);
 				}
 			});

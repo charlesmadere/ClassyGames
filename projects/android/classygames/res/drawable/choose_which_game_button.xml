@@ -3,4 +3,7 @@
 	<item
 		android:state_pressed="true"
 		android:drawable="@drawable/choose_which_game_button_pressed" />
+	<item
+		android:state_activated="true"
+		android:drawable="@drawable/choose_which_game_button_activated" />
 </selector>

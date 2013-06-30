@@ -125,13 +125,22 @@ public class ChessGameFragment extends GenericGameFragment
 	@Override
 	protected void prepareOptionsMenu(final Menu menu)
 	{
-		if (((Board) board).canCastle())
+		final MenuItem castle = menu.findItem(R.id.chess_game_fragment_menu_castle);
+
+		if (board == null)
 		{
-			menu.findItem(R.id.chess_game_fragment_menu_castle).setEnabled(true);
+			castle.setEnabled(false);
 		}
 		else
 		{
-			menu.findItem(R.id.chess_game_fragment_menu_castle).setEnabled(false);
+			if (((Board) board).canCastle())
+			{
+				castle.setEnabled(true);
+			}
+			else
+			{
+				castle.setEnabled(false);
+			}
 		}
 	}
 
