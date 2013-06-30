@@ -391,7 +391,7 @@ public class ChessGameFragment extends GenericGameFragment
 			playerKnight = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_knight_blue);
 			playerRook = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_rook_blue);
 			playerQueen = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_queen_blue);
-			playerKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_checkers_king_blue);
+			playerKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_king_blue);
 		}
 		else
 		{
@@ -400,7 +400,7 @@ public class ChessGameFragment extends GenericGameFragment
 			opponentKnight = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_knight_blue);
 			opponentRook = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_rook_blue);
 			opponentQueen = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_queen_blue);
-			opponentKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_checkers_king_blue);
+			opponentKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_king_blue);
 		}
 	}
 
@@ -415,7 +415,7 @@ public class ChessGameFragment extends GenericGameFragment
 			playerKnight = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_knight_green);
 			playerRook = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_rook_green);
 			playerQueen = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_queen_green);
-			playerKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_checkers_king_green);
+			playerKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_king_green);
 		}
 		else
 		{
