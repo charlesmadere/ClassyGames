@@ -42,6 +42,7 @@
 	<string name="games_list_fragment_loading_text">Loading your Games List&#8230;</string>
 	<string name="generic_game_fragment_data_error">Error while trying to instantiate the game.</string>
 	<string name="just_now">just now</string>
+	<string name="lets_play">Let\'s play!</string>
 	<string name="loading_checkers_game_against_x">Loading Checkers game against %1$s&#8230;</string>
 	<string name="loading_chess_game_against_x">Loading Chess game against %1$s&#8230;</string>
 	<string name="loading_game">Loading game&#8230;</string>
@@ -61,6 +62,7 @@
 	<string name="no_friend_is_currently_selected">No friend is currently selected.</string>
 	<string name="no_game_is_currently_loaded">No game is currently loaded.</string>
 	<string name="no_internet_connection">You don\'t have a connection to the Internet!</string>
+	<string name="no_thanks">No thanks!</string>
 	<string name="okay">Okay</string>
 	<string name="ol_x_sent_you_some_class">Ol\' %1$s sent you some class.</string>
 	<string name="one_day_ago">1 day ago</string>
@@ -102,7 +104,7 @@
 	<string name="sharkwork_by_tristan_kidder">Sharkwork by Tristan Kidder</string>
 	<string name="show_notification_light">Show Notification Light</string>
 	<string name="skip_move">Skip Move</string>
-	<string name="start_game">Start Game!</string>
+	<string name="start_game">Start game!</string>
 	<string name="their_turn">Their Turn</string>
 	<string name="two_weeks_ago">2 weeks ago</string>
 	<string name="undo_move">Undo Move</string>
@@ -114,6 +116,7 @@
 	<string name="unregistration_complete">Unregistration complete!</string>
 	<string name="version">Version</string>
 	<string name="vibrate">Vibrate</string>
+	<string name="which_game_would_you_like_to_play">Which game would you like to play?</string>
 	<string name="won">won</string>
 	<string name="x_days_ago">%1$d days ago</string>
 	<string name="x_hours_ago">%1$d hours ago</string>

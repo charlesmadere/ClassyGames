@@ -43,7 +43,7 @@
 				android:layout_marginRight="2dip"
 				android:layout_weight="1"
 				android:layout_width="match_parent"
-				android:text="@string/start_game"
+				android:text="@string/lets_play"
 				style="@style/Button.Blue" />
 			<Button
 				android:id="@+id/confirm_game_fragment_button_deny"

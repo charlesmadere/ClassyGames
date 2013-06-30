@@ -2,12 +2,14 @@ package com.charlesmadere.android.classygames;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,6 +32,21 @@ public class ConfirmGameFragment extends SherlockFragment
 	public final static String KEY_FRIEND_NAME = "KEY_FRIEND_NAME";
 
 
+
+
+	/**
+	 * The AlertDialog that is shown whenever the user decides to play a game
+	 * against the chosen friend. This AlertDialog asks the user to choose
+	 * which game they want to play.
+	 */
+	private AlertDialog alertDialog;
+
+
+	/**
+	 * The LayoutInflater object that was passed in to this Fragment in the
+	 * onCreateView() method.
+	 */
+	private LayoutInflater inflater;
 
 
 	/**
@@ -112,8 +129,7 @@ public class ConfirmGameFragment extends SherlockFragment
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{
-		View view = inflater.inflate(R.layout.confirm_game_fragment, null);
-
+		this.inflater = inflater;
 		final Bundle arguments = getArguments();
 
 		if (arguments != null && !arguments.isEmpty())
@@ -131,7 +147,7 @@ public class ConfirmGameFragment extends SherlockFragment
 			}
 		}
 
-		return view;
+		return inflater.inflate(R.layout.confirm_game_fragment, null);
 	}
 
 
@@ -151,21 +167,18 @@ public class ConfirmGameFragment extends SherlockFragment
 
 		final Button buttonConfirm = (Button) view.findViewById(R.id.confirm_game_fragment_button_confirm);
 		buttonConfirm.setTypeface(TypefaceUtilities.getTypeface(getSherlockActivity().getAssets(), TypefaceUtilities.BLUE_HIGHWAY_D));
-		buttonConfirm.setOnClickListener(new OnClickListener()
+		buttonConfirm.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(final View v)
 			{
-				// TODO
-				// ask the user which game they'd like to play
-
-				listeners.onGameConfirm(friend, Game.WHICH_GAME_CHECKERS);
+				getAlertDialog().show();
 			}
 		});
 
 		final Button buttonDeny = (Button) view.findViewById(R.id.confirm_game_fragment_button_deny);
 		buttonDeny.setTypeface(TypefaceUtilities.getTypeface(getSherlockActivity().getAssets(), TypefaceUtilities.BLUE_HIGHWAY_D));
-		buttonDeny.setOnClickListener(new OnClickListener()
+		buttonDeny.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(final View v)
@@ -211,6 +224,54 @@ public class ConfirmGameFragment extends SherlockFragment
 		menu.removeItem(R.id.friends_list_fragment_menu_search);
 
 		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+
+
+
+	/**
+	 * Builds the AlertDialog that asks the user which game they'd like to play
+	 * against their friend.
+	 *
+	 * @return
+	 * Returns the AlertDialog completely built and ready to go. Simply use its
+	 * show() method to draw it onto the screen.
+	 */
+	private AlertDialog getAlertDialog()
+	{
+		if (alertDialog == null)
+		{
+			final AssetManager assets = getResources().getAssets();
+			final View dialogView = inflater.inflate(R.layout.choose_which_game_dialog, null);
+
+			final Button checkers = (Button) dialogView.findViewById(R.id.choose_which_game_dialog_button_checkers);
+			checkers.setTypeface(TypefaceUtilities.getTypeface(assets, TypefaceUtilities.BLUE_HIGHWAY_D));
+			checkers.setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(final View v)
+				{
+					listeners.onGameConfirm(friend, Game.WHICH_GAME_CHECKERS);
+				}
+			});
+
+			final Button chess = (Button) dialogView.findViewById(R.id.choose_which_game_dialog_button_chess);
+			chess.setTypeface(TypefaceUtilities.getTypeface(assets, TypefaceUtilities.BLUE_HIGHWAY_D));
+			chess.setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(final View v)
+				{
+					listeners.onGameConfirm(friend, Game.WHICH_GAME_CHESS);
+				}
+			});
+
+			alertDialog = new AlertDialog.Builder(getSherlockActivity())
+				.setView(dialogView)
+				.create();
+		}
+
+		return alertDialog;
 	}
 
 
