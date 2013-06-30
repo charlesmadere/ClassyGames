@@ -472,7 +472,7 @@ public class ChessGameFragment extends GenericGameFragment
 	protected void onBoardClick(final ImageButton positionCurrent)
 	{
 		final Coordinate coordinateCurrent = new Coordinate((String) positionCurrent.getTag());
-		setPositionBackground(positionCurrent, true, coordinateCurrent);
+		setPositionBackground(positionCurrent, true);
 
 		final Position current = board.getPosition(coordinateCurrent);
 		Log.d(LOG_TAG, "Click! " + coordinateCurrent + " - has piece? " + current.getPiece());
@@ -483,10 +483,10 @@ public class ChessGameFragment extends GenericGameFragment
 	protected void onBoardClick(final ImageButton positionPrevious, final ImageButton positionCurrent)
 	{
 		final Coordinate coordinatePrevious = new Coordinate((String) positionPrevious.getTag());
-		setPositionBackground(positionPrevious, false, coordinatePrevious);
+		setPositionBackground(positionPrevious, false);
 
 		final Coordinate coordinateCurrent = new Coordinate((String) positionCurrent.getTag());
-		setPositionBackground(positionCurrent, true, coordinateCurrent);
+		setPositionBackground(positionCurrent, true);
 
 		final Position current = board.getPosition(coordinateCurrent);
 		final Position previous = board.getPosition(coordinatePrevious);

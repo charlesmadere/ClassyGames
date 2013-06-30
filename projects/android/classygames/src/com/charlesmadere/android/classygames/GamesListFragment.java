@@ -51,7 +51,6 @@ public class GamesListFragment extends SherlockFragment implements
 
 
 	private final static String LOG_TAG = Utilities.LOG_TAG + " - GamesListFragment";
-
 	private final static String KEY_GAMES_LIST_JSON = "KEY_GAMES_LIST_JSON";
 
 

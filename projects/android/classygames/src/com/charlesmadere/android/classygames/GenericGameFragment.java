@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -54,7 +53,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	public final static String KEY_GAME_ID = "KEY_GAME_ID";
-	public final static String KEY_WHICH_GAME = "BUNDLE_WHICH_GAME";
+	public final static String KEY_WHICH_GAME = "KEY_WHICH_GAME";
 	public final static String KEY_PERSON_ID = "KEY_PERSON_ID";
 	public final static String KEY_PERSON_NAME = "KEY_PERSON_NAME";
 
@@ -112,32 +111,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * The position on the game board that the user selected last time.
 	 */
 	private ImageButton positionSelectedPrevious;
-
-
-	/**
-	 * A bright position's default background.
-	 */
-	private BitmapDrawable backgroundBoardBright;
-
-
-	/**
-	 * When a position is selected that has a bright background then this
-	 * BitmapDrawable should be applied as its background.
-	 */
-	private BitmapDrawable backgroundBoardBrightSelected;
-
-
-	/**
-	 * A dark position's defeault background.
-	 */
-	private BitmapDrawable backgroundBoardDark;
-
-
-	/**
-	 * When a position is selected that has a dark background then this
-	 * BitmapDrawable should be applied as its background.
-	 */
-	private BitmapDrawable backgroundBoardDarkSelected;
 
 
 	/**
@@ -299,7 +272,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 				};
 
 				final Person person = new Person(personId, personName);
-				loadBackgroundResources();
 
 				if (Game.isIdValid(gameId))
 				// Check to see if we were given a valid game ID. We will only
@@ -564,17 +536,13 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		if (positionSelectedPrevious != null)
 		{
-			final String tag = (String) positionSelectedPrevious.getTag();
-			final Coordinate previous = new Coordinate(tag);
-			setPositionBackground(positionSelectedPrevious, false, previous);
+			setPositionBackground(positionSelectedPrevious, false);
 			positionSelectedPrevious = null;
 		}
 
 		if (positionSelectedCurrent != null)
 		{
-			final String tag = (String) positionSelectedCurrent.getTag();
-			final Coordinate current = new Coordinate(tag);
-			setPositionBackground(positionSelectedCurrent, false, current);
+			setPositionBackground(positionSelectedCurrent, false);
 			positionSelectedCurrent = null;
 		}
 	}
@@ -707,21 +675,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 	public boolean isAnAsyncTaskRunning()
 	{
 		return asyncGetGame != null || serverApiTask != null;
-	}
-
-
-	/**
-	 * Loads BitmapDrawables that are needed for applying to ImageButtons as
-	 * their background image.
-	 */
-	private void loadBackgroundResources()
-	{
-		final Resources resources = getResources();
-
-		backgroundBoardBright = (BitmapDrawable) resources.getDrawable(R.drawable.bg_board_bright);
-//		backgroundBoardBrightSelected = (BitmapDrawable) resources.getDrawable(R.drawable.bg_board_bright_selected);
-		backgroundBoardDark = (BitmapDrawable) resources.getDrawable(R.drawable.bg_board_dark);
-//		backgroundBoardDarkSelected = (BitmapDrawable) resources.getDrawable(R.drawable.bg_board_dark_selected);
 	}
 
 
@@ -1078,65 +1031,11 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * 
 	 * @param newlySelected
 	 * True if this ImageButton was just now selected.
-	 * 
-	 * @param coordinate
-	 * The coordinate for the given ImageButton.
 	 */
 	@SuppressWarnings("deprecation")
-	protected void setPositionBackground(final ImageButton position, final boolean newlySelected, final Coordinate coordinate)
+	protected void setPositionBackground(final ImageButton position, final boolean newlySelected)
 	{
-		if (coordinate.areBothEitherEvenOrOdd())
-		{
-			position.setSelected(newlySelected);
-//			if (newlySelected)
-//			{
-//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-//				{
-//					position.setBackground(backgroundBoardDarkSelected);
-//				}
-//				else
-//				{
-//					position.setBackgroundDrawable(backgroundBoardDarkSelected);
-//				}
-//			}
-//			else
-//			{
-//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-//				{
-//					position.setBackground(backgroundBoardDark);
-//				}
-//				else
-//				{
-//					position.setBackgroundDrawable(backgroundBoardDark);
-//				}
-//			}
-		}
-		else
-		{
-			position.setSelected(newlySelected);
-//			if (newlySelected)
-//			{
-//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-//				{
-//					position.setBackground(backgroundBoardBrightSelected);
-//				}
-//				else
-//				{
-//					position.setBackgroundDrawable(backgroundBoardBrightSelected);
-//				}
-//			}
-//			else
-//			{
-//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-//				{
-//					position.setBackground(backgroundBoardBright);
-//				}
-//				else
-//				{
-//					position.setBackgroundDrawable(backgroundBoardBright);
-//				}
-//			}
-		}
+		position.setSelected(newlySelected);
 	}
 
 
