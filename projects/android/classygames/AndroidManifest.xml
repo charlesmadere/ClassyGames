@@ -126,6 +126,16 @@
 		</activity>
 
 		<activity
+			android:label="@string/my_profile"
+			android:name="com.charlesmadere.android.classygames.MyProfileActivity"
+			android:parentActivityName="com.charlesmadere.android.classygames.GameFragmentActivity"
+			android:theme="@style/Theme.Styled">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value="com.charlesmadere.android.classygames.GameFragmentActivity" />
+		</activity>
+
+		<activity
 			android:label="@string/friends_list"
 			android:name="com.charlesmadere.android.classygames.NewGameFragmentActivity"
 			android:parentActivityName="com.charlesmadere.android.classygames.GameFragmentActivity"

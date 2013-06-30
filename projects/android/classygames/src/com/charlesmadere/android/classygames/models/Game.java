@@ -139,43 +139,6 @@ public class Game
 
 
 	/**
-	 * Creates a Game object.
-	 * 
-	 * @param timestamp
-	 * The timestamp as received from the Classy Games server. This should be
-	 * the system epoch. What is the system epoch?
-	 * https://en.wikipedia.org/wiki/Unix_epoch
-	 * 
-	 * @param person
-	 * The opposing player. If I am Charles Madere and my opponent is Geonathan
-	 * Sena, then this Person object will be for Geonathan Sena.
-	 * 
-	 * @param whichGame
-	 * The type of game that this will be. Use one of this class's WHICH_GAME_*
-	 * variables for this input.
-	 * 
-	 * @param id
-	 * This game's ID as received from the Classy Games server. This should be
-	 * a rather long String that resembles a hash.
-	 * 
-	 * @param turn
-	 * Who's turn is it? Use one of the TURN_* variables as defined in this class
-	 * for this parameter. There are only two choices, <strong>TURN_THEIRS</strong>
-	 * or <strong>TURN_YOURS</strong>.
-	 */
-	public Game(final Person person, final byte whichGame, final String id, final long timestamp, final boolean turn)
-	{
-		this.person = person;
-		this.whichGame = whichGame;
-		this.id = id;
-		this.timestamp = timestamp;
-		this.turn = turn;
-
-		type = TYPE_GAME;
-	}
-
-
-	/**
 	 * Use this constructor for creating a separator in the games list.
 	 * 
 	 * @param turn

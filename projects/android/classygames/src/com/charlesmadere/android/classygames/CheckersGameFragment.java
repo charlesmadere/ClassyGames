@@ -21,18 +21,6 @@ public class CheckersGameFragment extends GenericGameFragment
 
 
 	/**
-	 * Bitmap representing the player's normal piece.
-	 */
-	private BitmapDrawable playerNormal;
-
-
-	/**
-	 * Bitmap representing the player's king piece.
-	 */
-	private BitmapDrawable playerKing;
-
-
-	/**
 	 * Bitmap representing the opponent's normal piece.
 	 */
 	private BitmapDrawable opponentNormal;
@@ -42,6 +30,18 @@ public class CheckersGameFragment extends GenericGameFragment
 	 * Bitmap representing the opponent's king piece.
 	 */
 	private BitmapDrawable opponentKing;
+
+
+	/**
+	 * Bitmap representing the player's normal piece.
+	 */
+	private BitmapDrawable playerNormal;
+
+
+	/**
+	 * Bitmap representing the player's king piece.
+	 */
+	private BitmapDrawable playerKing;
 
 
 

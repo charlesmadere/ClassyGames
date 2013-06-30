@@ -229,6 +229,10 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 				startActivity(new Intent(this, AboutActivity.class));
 				break;
 
+			case R.id.game_fragment_activity_menu_my_profile:
+				startActivity(new Intent(this, MyProfileActivity.class));
+				break;
+
 			case R.id.game_fragment_activity_menu_new_game:
 				if (isDeviceLarge() && genericGameFragment != null && genericGameFragment.isVisible())
 				{

@@ -28,42 +28,6 @@ public class ChessGameFragment extends GenericGameFragment
 
 
 	/**
-	 * Bitmap representing the player's pawn piece.
-	 */
-	private BitmapDrawable playerPawn;
-
-
-	/**
-	 * Bitmap representing the player's bishop piece.
-	 */
-	private BitmapDrawable playerBishop;
-
-
-	/**
-	 * Bitmap representing the player's knight piece.
-	 */
-	private BitmapDrawable playerKnight;
-
-
-	/**
-	 * Bitmap representing the player's rook piece.
-	 */
-	private BitmapDrawable playerRook;
-
-
-	/**
-	 * Bitmap representing the player's queen piece.
-	 */
-	private BitmapDrawable playerQueen;
-
-
-	/**
-	 * Bitmap representing the player's king piece.
-	 */
-	private BitmapDrawable playerKing;
-
-
-	/**
 	 * Bitmap representing the opponent's pawn piece.
 	 */
 	private BitmapDrawable opponentPawn;
@@ -97,6 +61,42 @@ public class ChessGameFragment extends GenericGameFragment
 	 * Bitmap representing the opponent's king piece.
 	 */
 	private BitmapDrawable opponentKing;
+
+
+	/**
+	 * Bitmap representing the player's pawn piece.
+	 */
+	private BitmapDrawable playerPawn;
+
+
+	/**
+	 * Bitmap representing the player's bishop piece.
+	 */
+	private BitmapDrawable playerBishop;
+
+
+	/**
+	 * Bitmap representing the player's knight piece.
+	 */
+	private BitmapDrawable playerKnight;
+
+
+	/**
+	 * Bitmap representing the player's rook piece.
+	 */
+	private BitmapDrawable playerRook;
+
+
+	/**
+	 * Bitmap representing the player's queen piece.
+	 */
+	private BitmapDrawable playerQueen;
+
+
+	/**
+	 * Bitmap representing the player's king piece.
+	 */
+	private BitmapDrawable playerKing;
 
 
 

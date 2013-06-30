@@ -51,6 +51,7 @@
 	<string name="main_activity_loading_textview_text">Initializing settings and registering you with our servers&#8230;</string>
 	<string name="make_sure_that_you_dont_set_both_teams_color_to_the_same_thing_your_changes_to_this_setting_have_not_been_saved">Make sure that you don\'t set both teams color to the same thing! Your changes to this setting have not been saved.</string>
 	<string name="more_than_two_weeks_ago">more than 2 weeks ago</string>
+	<string name="my_profile">My Profile</string>
 	<string name="nevermind">Nevermind&#8230;</string>
 	<string name="new_game">New Game</string>
 	<string name="no">No</string>
@@ -68,6 +69,7 @@
 	<string name="one_week_ago">1 week ago</string>
 	<string name="orange">Orange</string>
 	<string name="pink">Pink</string>
+	<string name="profile">Profile</string>
 	<string name="refresh">Refresh</string>
 	<string name="register_for_notifications">Register for Notifications</string>
 	<string name="register_for_notifications_activity_progressdialog_title">Registering your device with our server&#8230;</string>

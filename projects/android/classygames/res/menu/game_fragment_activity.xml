@@ -5,6 +5,11 @@
 		android:showAsAction="ifRoom|withText"
 		android:title="@string/new_game" />
 	<item
+		android:id="@+id/game_fragment_activity_menu_my_profile"
+		android:showAsAction="never|withText"
+		android:title="@string/my_profile"
+		android:titleCondensed="@string/profile" />
+	<item
 		android:icon="@drawable/ab_settings"
 		android:id="@+id/game_fragment_activity_menu_settings"
 		android:showAsAction="never|withText"
