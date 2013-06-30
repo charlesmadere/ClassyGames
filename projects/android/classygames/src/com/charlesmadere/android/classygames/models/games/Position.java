@@ -1,4 +1,4 @@
-package com.charlesmadere.android.classygames.games;
+package com.charlesmadere.android.classygames.models.games;
 
 
 import org.json.JSONArray;

@@ -1,9 +1,9 @@
-package com.charlesmadere.android.classygames.games.checkers;
+package com.charlesmadere.android.classygames.models.games.checkers;
 
 
-import com.charlesmadere.android.classygames.games.Coordinate;
-import com.charlesmadere.android.classygames.games.GenericBoard;
-import com.charlesmadere.android.classygames.games.Position;
+import com.charlesmadere.android.classygames.models.games.Coordinate;
+import com.charlesmadere.android.classygames.models.games.GenericBoard;
+import com.charlesmadere.android.classygames.models.games.Position;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -477,6 +477,13 @@ public class Board extends GenericBoard
 		}
 
 		return isMoveValid;
+	}
+
+
+	@Override
+	public void performGameSpecificJSONChecks() throws JSONException
+	{
+
 	}
 
 

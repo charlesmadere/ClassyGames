@@ -8,10 +8,10 @@ import android.widget.ImageButton;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.charlesmadere.android.classygames.games.Coordinate;
-import com.charlesmadere.android.classygames.games.Position;
-import com.charlesmadere.android.classygames.games.checkers.Board;
-import com.charlesmadere.android.classygames.games.checkers.Piece;
+import com.charlesmadere.android.classygames.models.games.Coordinate;
+import com.charlesmadere.android.classygames.models.games.Position;
+import com.charlesmadere.android.classygames.models.games.checkers.Board;
+import com.charlesmadere.android.classygames.models.games.checkers.Piece;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -47,7 +47,7 @@ public class CheckersGameFragment extends GenericGameFragment
 
 
 	@Override
-	protected void onCreateView()
+	protected void createView()
 	{
 
 	}
@@ -257,67 +257,66 @@ public class CheckersGameFragment extends GenericGameFragment
 
 
 	@Override
-	protected void loadPieceResources(final String opponentsColor, final String playersColor,
-		final String blue, final String green, final String pink, final String orange)
+	protected void loadBluePieceResources(final Resources res, final boolean isPlayersColor)
 	{
-		final int opponentColorNormal;
-		final int opponentColorKing;
-
-		if (opponentsColor.equalsIgnoreCase(blue))
+		if (isPlayersColor)
 		{
-			opponentColorNormal = R.drawable.piece_checkers_normal_blue;
-			opponentColorKing = R.drawable.piece_checkers_king_blue;
-		}
-		else if (opponentsColor.equalsIgnoreCase(green))
-		{
-			opponentColorNormal = R.drawable.piece_checkers_normal_green;
-			opponentColorKing = R.drawable.piece_checkers_king_green;
-		}
-		else if (opponentsColor.equalsIgnoreCase(pink))
-		{
-			opponentColorNormal = R.drawable.piece_checkers_normal_pink;
-			opponentColorKing = R.drawable.piece_checkers_king_pink;
+			playerNormal = (BitmapDrawable) res.getDrawable(R.drawable.piece_checkers_normal_blue);
+			playerKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_checkers_king_blue);
 		}
 		else
 		{
-			opponentColorNormal = R.drawable.piece_checkers_normal_orange;
-			opponentColorKing = R.drawable.piece_checkers_king_orange;
+			opponentNormal = (BitmapDrawable) res.getDrawable(R.drawable.piece_checkers_normal_blue);
+			opponentKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_checkers_king_blue);
 		}
+	}
 
-		final int playerNormalColor;
-		final int playerKingColor;
 
-		if (playersColor.equalsIgnoreCase(blue))
+	@Override
+	protected void loadGreenPieceResources(final Resources res, final boolean isPlayersColor)
+	{
+		if (isPlayersColor)
 		{
-			playerNormalColor = R.drawable.piece_checkers_normal_blue;
-			playerKingColor = R.drawable.piece_checkers_king_blue;
-		}
-		else if (playersColor.equalsIgnoreCase(orange))
-		{
-			playerNormalColor = R.drawable.piece_checkers_normal_orange;
-			playerKingColor = R.drawable.piece_checkers_king_orange;
-		}
-		else if (playersColor.equalsIgnoreCase(pink))
-		{
-			playerNormalColor = R.drawable.piece_checkers_normal_pink;
-			playerKingColor = R.drawable.piece_checkers_king_pink;
+			playerNormal = (BitmapDrawable) res.getDrawable(R.drawable.piece_checkers_normal_green);
+			playerKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_checkers_king_green);
 		}
 		else
 		{
-			playerNormalColor = R.drawable.piece_checkers_normal_green;
-			playerKingColor = R.drawable.piece_checkers_king_green;
+			opponentNormal = (BitmapDrawable) res.getDrawable(R.drawable.piece_checkers_normal_green);
+			opponentKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_checkers_king_green);
 		}
+	}
 
-		// Load BitmapDrawables for checkers pieces into memory. This is done
-		// so that later when we draw these checkers pieces onto the board,
-		// that draw process can be done very quickly as all of the picture
-		// data will have already been loaded.
 
-		final Resources resources = getResources();
-		opponentNormal = (BitmapDrawable) resources.getDrawable(opponentColorNormal);
-		opponentKing = (BitmapDrawable) resources.getDrawable(opponentColorKing);
-		playerNormal = (BitmapDrawable) resources.getDrawable(playerNormalColor);
-		playerKing = (BitmapDrawable) resources.getDrawable(playerKingColor);
+	@Override
+	protected void loadOrangePieceResources(final Resources res, final boolean isPlayersColor)
+	{
+		if (isPlayersColor)
+		{
+			playerNormal = (BitmapDrawable) res.getDrawable(R.drawable.piece_checkers_normal_orange);
+			playerKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_checkers_king_orange);
+		}
+		else
+		{
+			opponentNormal = (BitmapDrawable) res.getDrawable(R.drawable.piece_checkers_normal_orange);
+			opponentKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_checkers_king_green);
+		}
+	}
+
+
+	@Override
+	protected void loadPinkPieceResources(final Resources res, final boolean isPlayersColor)
+	{
+		if (isPlayersColor)
+		{
+			playerNormal = (BitmapDrawable) res.getDrawable(R.drawable.piece_checkers_normal_pink);
+			playerKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_checkers_king_green);
+		}
+		else
+		{
+			opponentNormal = (BitmapDrawable) res.getDrawable(R.drawable.piece_checkers_normal_pink);
+			opponentKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_checkers_king_green);
+		}
 	}
 
 

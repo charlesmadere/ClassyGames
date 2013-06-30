@@ -1,7 +1,7 @@
-package com.charlesmadere.android.classygames.games.chess;
+package com.charlesmadere.android.classygames.models.games.chess;
 
 
-import com.charlesmadere.android.classygames.games.GenericPiece;
+import com.charlesmadere.android.classygames.models.games.GenericPiece;
 
 
 /**

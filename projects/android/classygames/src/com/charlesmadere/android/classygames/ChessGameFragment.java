@@ -9,10 +9,10 @@ import android.widget.ImageButton;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.charlesmadere.android.classygames.games.Coordinate;
-import com.charlesmadere.android.classygames.games.Position;
-import com.charlesmadere.android.classygames.games.chess.Board;
-import com.charlesmadere.android.classygames.games.chess.Piece;
+import com.charlesmadere.android.classygames.models.games.Coordinate;
+import com.charlesmadere.android.classygames.models.games.Position;
+import com.charlesmadere.android.classygames.models.games.chess.Board;
+import com.charlesmadere.android.classygames.models.games.chess.Piece;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -102,7 +102,7 @@ public class ChessGameFragment extends GenericGameFragment
 
 
 	@Override
-	protected void onCreateView()
+	protected void createView()
 	{
 
 	}
@@ -125,7 +125,14 @@ public class ChessGameFragment extends GenericGameFragment
 	@Override
 	protected void prepareOptionsMenu(final Menu menu)
 	{
-
+		if (((Board) board).canCastle())
+		{
+			menu.findItem(R.id.chess_game_fragment_menu_castle).setEnabled(true);
+		}
+		else
+		{
+			menu.findItem(R.id.chess_game_fragment_menu_castle).setEnabled(false);
+		}
 	}
 
 
@@ -366,115 +373,98 @@ public class ChessGameFragment extends GenericGameFragment
 
 
 	@Override
-	protected void loadPieceResources(final String opponentsColor, final String playersColor,
-		final String blue, final String green, final String pink, final String orange)
+	protected void loadBluePieceResources(final Resources res, final boolean isPlayersColor)
 	{
-		final int opponentsPawnColor;
-		final int opponentsBishopColor;
-		final int opponentsKnightColor;
-		final int opponentsRookColor;
-		final int opponentsQueenColor;
-		final int opponentsKingColor;
-
-		if (opponentsColor.equalsIgnoreCase(blue))
+		if (isPlayersColor)
 		{
-			opponentsPawnColor = R.drawable.piece_chess_pawn_blue;
-			opponentsBishopColor = R.drawable.piece_chess_bishop_blue;
-			opponentsKnightColor = R.drawable.piece_chess_knight_blue;
-			opponentsRookColor = R.drawable.piece_chess_rook_blue;
-			opponentsQueenColor = R.drawable.piece_chess_queen_blue;
-			opponentsKingColor = R.drawable.piece_chess_king_blue;
-		}
-		else if (opponentsColor.equalsIgnoreCase(green))
-		{
-			opponentsPawnColor = R.drawable.piece_chess_pawn_green;
-			opponentsBishopColor = R.drawable.piece_chess_bishop_green;
-			opponentsKnightColor = R.drawable.piece_chess_knight_green;
-			opponentsRookColor = R.drawable.piece_chess_rook_green;
-			opponentsQueenColor = R.drawable.piece_chess_queen_green;
-			opponentsKingColor = R.drawable.piece_chess_king_green;
-		}
-		else if (opponentsColor.equalsIgnoreCase(pink))
-		{
-			opponentsPawnColor = R.drawable.piece_chess_pawn_pink;
-			opponentsBishopColor = R.drawable.piece_chess_bishop_pink;
-			opponentsKnightColor = R.drawable.piece_chess_knight_pink;
-			opponentsRookColor = R.drawable.piece_chess_rook_pink;
-			opponentsQueenColor = R.drawable.piece_chess_queen_pink;
-			opponentsKingColor = R.drawable.piece_chess_king_pink;
+			playerPawn = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_pawn_blue);
+			playerBishop = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_bishop_blue);
+			playerKnight = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_knight_blue);
+			playerRook = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_rook_blue);
+			playerQueen = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_queen_blue);
+			playerKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_checkers_king_blue);
 		}
 		else
 		{
-			opponentsPawnColor = R.drawable.piece_chess_pawn_orange;
-			opponentsBishopColor = R.drawable.piece_chess_bishop_orange;
-			opponentsKnightColor = R.drawable.piece_chess_knight_orange;
-			opponentsRookColor = R.drawable.piece_chess_rook_orange;
-			opponentsQueenColor = R.drawable.piece_chess_queen_orange;
-			opponentsKingColor = R.drawable.piece_chess_king_orange;
+			opponentPawn = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_pawn_blue);
+			opponentBishop = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_bishop_blue);
+			opponentKnight = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_knight_blue);
+			opponentRook = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_rook_blue);
+			opponentQueen = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_queen_blue);
+			opponentKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_checkers_king_blue);
 		}
+	}
 
-		final int playersPawnColor;
-		final int playersBishopColor;
-		final int playersKnightColor;
-		final int playersRookColor;
-		final int playersQueenColor;
-		final int playersKingColor;
 
-		if (playersColor.equalsIgnoreCase(blue))
+	@Override
+	protected void loadGreenPieceResources(final Resources res, final boolean isPlayersColor)
+	{
+		if (isPlayersColor)
 		{
-			playersPawnColor = R.drawable.piece_chess_pawn_blue;
-			playersBishopColor = R.drawable.piece_chess_bishop_blue;
-			playersKnightColor = R.drawable.piece_chess_knight_blue;
-			playersRookColor = R.drawable.piece_chess_rook_blue;
-			playersQueenColor = R.drawable.piece_chess_queen_blue;
-			playersKingColor = R.drawable.piece_chess_king_blue;
-		}
-		else if (playersColor.equalsIgnoreCase(green))
-		{
-			playersPawnColor = R.drawable.piece_chess_pawn_green;
-			playersBishopColor = R.drawable.piece_chess_bishop_green;
-			playersKnightColor = R.drawable.piece_chess_knight_green;
-			playersRookColor = R.drawable.piece_chess_rook_green;
-			playersQueenColor = R.drawable.piece_chess_queen_green;
-			playersKingColor = R.drawable.piece_chess_king_green;
-		}
-		else if (playersColor.equalsIgnoreCase(pink))
-		{
-			playersPawnColor = R.drawable.piece_chess_pawn_pink;
-			playersBishopColor = R.drawable.piece_chess_bishop_pink;
-			playersKnightColor = R.drawable.piece_chess_knight_pink;
-			playersRookColor = R.drawable.piece_chess_rook_pink;
-			playersQueenColor = R.drawable.piece_chess_queen_pink;
-			playersKingColor = R.drawable.piece_chess_king_pink;
+			playerPawn = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_pawn_green);
+			playerBishop = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_bishop_green);
+			playerKnight = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_knight_green);
+			playerRook = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_rook_green);
+			playerQueen = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_queen_green);
+			playerKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_checkers_king_green);
 		}
 		else
 		{
-			playersPawnColor = R.drawable.piece_chess_pawn_orange;
-			playersBishopColor = R.drawable.piece_chess_bishop_orange;
-			playersKnightColor = R.drawable.piece_chess_knight_orange;
-			playersRookColor = R.drawable.piece_chess_rook_orange;
-			playersQueenColor = R.drawable.piece_chess_queen_orange;
-			playersKingColor = R.drawable.piece_chess_king_orange;
+			opponentPawn = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_pawn_green);
+			opponentBishop = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_bishop_green);
+			opponentKnight = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_knight_green);
+			opponentRook = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_rook_green);
+			opponentQueen = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_queen_green);
+			opponentKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_king_green);
 		}
+	}
 
-		// Load BitmapDrawables for chess pieces into memory. This is done so
-		// that later when we draw these checkers pieces onto the board, that
-		// draw process can be done very quickly as all of the picture data
-		// will have already been loaded.
 
-		final Resources resources = getResources();
-		opponentPawn = (BitmapDrawable) resources.getDrawable(opponentsPawnColor);
-		opponentBishop = (BitmapDrawable) resources.getDrawable(opponentsBishopColor);
-		opponentKnight = (BitmapDrawable) resources.getDrawable(opponentsKnightColor);
-		opponentRook = (BitmapDrawable) resources.getDrawable(opponentsRookColor);
-		opponentQueen = (BitmapDrawable) resources.getDrawable(opponentsQueenColor);
-		opponentKing = (BitmapDrawable) resources.getDrawable(opponentsKingColor);
-		playerPawn = (BitmapDrawable) resources.getDrawable(playersPawnColor);
-		playerBishop = (BitmapDrawable) resources.getDrawable(playersBishopColor);
-		playerKnight = (BitmapDrawable) resources.getDrawable(playersKnightColor);
-		playerRook = (BitmapDrawable) resources.getDrawable(playersRookColor);
-		playerQueen = (BitmapDrawable) resources.getDrawable(playersQueenColor);
-		playerKing = (BitmapDrawable) resources.getDrawable(playersKingColor);
+	@Override
+	protected void loadOrangePieceResources(final Resources res, final boolean isPlayersColor)
+	{
+		if (isPlayersColor)
+		{
+			playerPawn = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_pawn_orange);
+			playerBishop = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_bishop_orange);
+			playerKnight = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_knight_orange);
+			playerRook = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_rook_orange);
+			playerQueen = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_queen_orange);
+			playerKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_king_orange);
+		}
+		else
+		{
+			opponentPawn = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_pawn_orange);
+			opponentBishop = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_bishop_orange);
+			opponentKnight = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_knight_orange);
+			opponentRook = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_rook_orange);
+			opponentQueen = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_queen_orange);
+			opponentKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_king_orange);
+		}
+	}
+
+
+	@Override
+	protected void loadPinkPieceResources(final Resources res, final boolean isPlayersColor)
+	{
+		if (isPlayersColor)
+		{
+			playerPawn = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_pawn_pink);
+			playerBishop = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_bishop_pink);
+			playerKnight = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_knight_pink);
+			playerRook = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_rook_pink);
+			playerQueen = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_queen_pink);
+			playerKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_king_pink);
+		}
+		else
+		{
+			opponentPawn = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_pawn_pink);
+			opponentBishop = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_bishop_pink);
+			opponentKnight = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_knight_pink);
+			opponentRook = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_rook_pink);
+			opponentQueen = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_queen_pink);
+			opponentKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_king_pink);
+		}
 	}
 
 

@@ -23,9 +23,9 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.charlesmadere.android.classygames.games.Coordinate;
-import com.charlesmadere.android.classygames.games.GenericBoard;
-import com.charlesmadere.android.classygames.games.Position;
+import com.charlesmadere.android.classygames.models.games.Coordinate;
+import com.charlesmadere.android.classygames.models.games.GenericBoard;
+import com.charlesmadere.android.classygames.models.games.Position;
 import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.server.ServerApi;
@@ -210,7 +210,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{
-		onCreateView();
+		createView();
 		return inflater.inflate(getGameView(), container, false);
 	}
 
@@ -719,9 +719,9 @@ public abstract class GenericGameFragment extends SherlockFragment
 		final Resources resources = getResources();
 
 		backgroundBoardBright = (BitmapDrawable) resources.getDrawable(R.drawable.bg_board_bright);
-		backgroundBoardBrightSelected = (BitmapDrawable) resources.getDrawable(R.drawable.bg_board_bright_selected);
+//		backgroundBoardBrightSelected = (BitmapDrawable) resources.getDrawable(R.drawable.bg_board_bright_selected);
 		backgroundBoardDark = (BitmapDrawable) resources.getDrawable(R.drawable.bg_board_dark);
-		backgroundBoardDarkSelected = (BitmapDrawable) resources.getDrawable(R.drawable.bg_board_dark_selected);
+//		backgroundBoardDarkSelected = (BitmapDrawable) resources.getDrawable(R.drawable.bg_board_dark_selected);
 	}
 
 
@@ -740,8 +740,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 		final String defaultPlayersColor = getDefaultPlayersPieceColor();
 
 		final int opponentsColorKey = getSettingsKeyForOpponentsPieceColor();
-		final String opponentsColorKeyString = getString(opponentsColorKey);
 		final int playersColorKey = getSettingsKeyForPlayersPieceColor();
+		final String opponentsColorKeyString = getString(opponentsColorKey);
 		final String playersColorKeyString = getString(playersColorKey);
 
 		final SharedPreferences sPreferences = Utilities.getPreferences(getSherlockActivity());
@@ -752,24 +752,93 @@ public abstract class GenericGameFragment extends SherlockFragment
 		String opponentsColor = sPreferences.getString(opponentsColorKeyString, defaultOpponentsColor);
 		String playersColor = sPreferences.getString(playersColorKeyString, defaultPlayersColor);
 
-		if (opponentsColor.equalsIgnoreCase(playersColor))
-		// Check to see if the color that the player has set for their own
-		// color is the same as the one that they set for the opponent's color.
-		// This if statement will validate as true if that is the case.
+		boolean recheckColorSettings;
+
+		do
 		{
-			opponentsColor = defaultOpponentsColor;
-			playersColor = defaultPlayersColor;
+			recheckColorSettings = false;
 
-			final SharedPreferences.Editor editor = sPreferences.edit();
+			if (opponentsColor.equalsIgnoreCase(playersColor))
+			// Check to see if the color that the player has set for their own
+			// color is the same as the one that they set for the opponent's color.
+			// This if statement will validate as true if that is the case.
+			{
+				opponentsColor = defaultOpponentsColor;
+				playersColor = defaultPlayersColor;
 
-			// Change the value as saved in the user's preferences to the
-			// default colors. This fixes the conflicting color issue.
-			editor.putString(opponentsColorKeyString, defaultOpponentsColor);
-			editor.putString(playersColorKeyString, defaultPlayersColor);
-			editor.commit();
+				final SharedPreferences.Editor editor = sPreferences.edit();
+
+				// Change the value as saved in the user's preferences to the
+				// default colors. This fixes the conflicting color issue.
+				editor.putString(opponentsColorKeyString, defaultOpponentsColor);
+				editor.putString(playersColorKeyString, defaultPlayersColor);
+				editor.commit();
+			}
+
+			// The code below will load BitmapDrawables for game pieces into
+			// memory. This is done so that later when we draw these game pieces
+			// onto the board, that draw process can be done very quickly as all of
+			// the picture data will have already been loaded.
+
+			final Resources res = getResources();
+
+			if (opponentsColor.equalsIgnoreCase(blue))
+			{
+				loadBluePieceResources(res, false);
+			}
+			else if (opponentsColor.equalsIgnoreCase(green))
+			{
+				loadGreenPieceResources(res, false);
+			}
+			else if (opponentsColor.equalsIgnoreCase(orange))
+			{
+				loadOrangePieceResources(res, false);
+			}
+			else if (opponentsColor.equalsIgnoreCase(pink))
+			{
+				loadPinkPieceResources(res, false);
+			}
+			else
+			{
+				// If we've gotten to this point then that means that the user
+				// setting for the opponent's piece color is corrupted or
+				// malformed or something. So let's clear that setting back to
+				// the default and load in the opponent's default piece colors.
+				opponentsColor = "";
+				playersColor = "";
+
+				recheckColorSettings = true;
+			}
+
+			if (playersColor.equalsIgnoreCase(blue))
+			{
+				loadBluePieceResources(res, true);
+			}
+			else if (playersColor.equalsIgnoreCase(green))
+			{
+				loadGreenPieceResources(res, true);
+			}
+			else if (playersColor.equalsIgnoreCase(orange))
+			{
+				loadOrangePieceResources(res, true);
+			}
+			else if (playersColor.equalsIgnoreCase(pink))
+			{
+				loadPinkPieceResources(res, true);
+			}
+			else
+			{
+				// If we've gotten to this point then that means that the user
+				// setting for the player's piece color is corrupted or
+				// malformed or something. So let's clear that setting back to
+				// the default and load in the player's default piece colors.
+				opponentsColor = "";
+				playersColor = "";
+
+				recheckColorSettings = true;
+			}
 		}
-
-		loadPieceResources(opponentsColor, playersColor, blue, green, orange, pink);
+		while (recheckColorSettings);
 	}
 
 
@@ -1018,53 +1087,55 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		if (coordinate.areBothEitherEvenOrOdd())
 		{
-			if (newlySelected)
-			{
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-				{
-					position.setBackground(backgroundBoardDarkSelected);
-				}
-				else
-				{
-					position.setBackgroundDrawable(backgroundBoardDarkSelected);
-				}
-			}
-			else
-			{
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-				{
-					position.setBackground(backgroundBoardDark);
-				}
-				else
-				{
-					position.setBackgroundDrawable(backgroundBoardDark);
-				}
-			}
+			position.setSelected(newlySelected);
+//			if (newlySelected)
+//			{
+//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+//				{
+//					position.setBackground(backgroundBoardDarkSelected);
+//				}
+//				else
+//				{
+//					position.setBackgroundDrawable(backgroundBoardDarkSelected);
+//				}
+//			}
+//			else
+//			{
+//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+//				{
+//					position.setBackground(backgroundBoardDark);
+//				}
+//				else
+//				{
+//					position.setBackgroundDrawable(backgroundBoardDark);
+//				}
+//			}
 		}
 		else
 		{
-			if (newlySelected)
-			{
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-				{
-					position.setBackground(backgroundBoardBrightSelected);
-				}
-				else
-				{
-					position.setBackgroundDrawable(backgroundBoardBrightSelected);
-				}
-			}
-			else
-			{
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-				{
-					position.setBackground(backgroundBoardBright);
-				}
-				else
-				{
-					position.setBackgroundDrawable(backgroundBoardBright);
-				}
-			}
+			position.setSelected(newlySelected);
+//			if (newlySelected)
+//			{
+//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+//				{
+//					position.setBackground(backgroundBoardBrightSelected);
+//				}
+//				else
+//				{
+//					position.setBackgroundDrawable(backgroundBoardBrightSelected);
+//				}
+//			}
+//			else
+//			{
+//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+//				{
+//					position.setBackground(backgroundBoardBright);
+//				}
+//				else
+//				{
+//					position.setBackgroundDrawable(backgroundBoardBright);
+//				}
+//			}
 		}
 	}
 
@@ -1239,7 +1310,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * Activity's onCreate() method should instead be, for fragments, placed in
 	 * the onActivityCreated() method.
 	 */
-	protected abstract void onCreateView();
+	protected abstract void createView();
 
 
 	/**
@@ -1361,11 +1432,59 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * Loads in the images to be used for the game pieces as shown on the game
-	 * board.
+	 * Loads in the images used for the game pieces as shown on the game board.
+	 *
+	 * @param res
+	 * A handle to the results of a call to the getResources() method.
+	 *
+	 * @param isPlayersColor
+	 * This value will be true if this color is what should be loaded for the
+	 * player's pieces. This value will be false if this color is what should
+	 * be loaded for the opponent's pieces.
 	 */
-	protected abstract void loadPieceResources(final String opponentsColor, final String playersColor,
-		final String blue, final String green, final String orange, final String pink);
+	protected abstract void loadBluePieceResources(final Resources res, final boolean isPlayersColor);
+
+
+	/**
+	 * Loads in the images used for the game pieces as shown on the game board.
+	 *
+	 * @param res
+	 * A handle to the results of a call to the getResources() method.
+	 *
+	 * @param isPlayersColor
+	 * This value will be true if this color is what should be loaded for the
+	 * player's pieces. This value will be false if this color is what should
+	 * be loaded for the opponent's pieces.
+	 */
+	protected abstract void loadGreenPieceResources(final Resources res, final boolean isPlayersColor);
+
+
+	/**
+	 * Loads in the images used for the game pieces as shown on the game board.
+	 *
+	 * @param res
+	 * A handle to the results of a call to the getResources() method.
+	 *
+	 * @param isPlayersColor
+	 * This value will be true if this color is what should be loaded for the
+	 * player's pieces. This value will be false if this color is what should
+	 * be loaded for the opponent's pieces.
+	 */
+	protected abstract void loadOrangePieceResources(final Resources res, final boolean isPlayersColor);
+
+
+	/**
+	 * Loads in the images used for the game pieces as shown on the game board.
+	 *
+	 * @param res
+	 * A handle to the results of a call to the getResources() method.
+	 *
+	 * @param isPlayersColor
+	 * This value will be true if this color is what should be loaded for the
+	 * player's pieces. This value will be false if this color is what should
+	 * be loaded for the opponent's pieces.
+	 */
+	protected abstract void loadPinkPieceResources(final Resources res, final boolean isPlayersColor);
 
 
 	/**

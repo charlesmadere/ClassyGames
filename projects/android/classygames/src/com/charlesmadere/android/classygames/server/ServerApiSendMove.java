@@ -4,7 +4,7 @@ package com.charlesmadere.android.classygames.server;
 import android.content.Context;
 import android.util.Log;
 import com.charlesmadere.android.classygames.R;
-import com.charlesmadere.android.classygames.games.GenericBoard;
+import com.charlesmadere.android.classygames.models.games.GenericBoard;
 import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.utilities.ServerUtilities;

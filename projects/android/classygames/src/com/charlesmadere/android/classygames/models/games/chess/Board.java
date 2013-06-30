@@ -1,8 +1,8 @@
-package com.charlesmadere.android.classygames.games.chess;
+package com.charlesmadere.android.classygames.models.games.chess;
 
 
-import com.charlesmadere.android.classygames.games.GenericBoard;
-import com.charlesmadere.android.classygames.games.Position;
+import com.charlesmadere.android.classygames.models.games.GenericBoard;
+import com.charlesmadere.android.classygames.models.games.Position;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -18,6 +18,14 @@ public class Board extends GenericBoard
 
 	private final static byte LENGTH_HORIZONTAL = 8;
 	private final static byte LENGTH_VERTICAL = 8;
+
+
+	/**
+	 * The castle move can only be performed once per game. The value of this
+	 * variable will be true if it has already been used. Otherwise, this will
+	 * only be set when the user actually does the castle technique.
+	 */
+	private boolean hasCastled = false;
 
 
 
@@ -126,9 +134,41 @@ public class Board extends GenericBoard
 
 
 	@Override
+	public void performGameSpecificJSONChecks() throws JSONException
+	{
+		// TODO
+		// find the has_castled key-value pair in the boardJSON object
+	}
+
+
+	@Override
 	protected void resetBoard()
 	{
 
+	}
+
+
+	/**
+	 * Performs a check to see if the user can perform a castle. Note this move
+	 * can only be performed once per game. More on the castle technique can be
+	 * found here: https://en.wikipedia.org/wiki/Chess#Castling
+	 *
+	 * @return
+	 * Returns true if the user can perform a castle.
+	 */
+	public boolean canCastle()
+	{
+		if (hasCastled)
+		{
+			return false;
+		}
+		else
+		{
+			// TODO
+			// Check to see if the castle technique can be used.
+
+			return false;
+		}
 	}
 
 

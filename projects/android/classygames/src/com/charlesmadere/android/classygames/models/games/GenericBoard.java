@@ -1,4 +1,4 @@
-package com.charlesmadere.android.classygames.games;
+package com.charlesmadere.android.classygames.models.games;
 
 
 import org.json.JSONArray;
@@ -264,6 +264,8 @@ public abstract class GenericBoard
 		final JSONArray teams = boardJSON.getJSONObject("board").getJSONArray("teams");
 		initializeTeamFromJSON(teams.getJSONArray(0), GenericPiece.TEAM_PLAYER);
 		initializeTeamFromJSON(teams.getJSONArray(1), GenericPiece.TEAM_OPPONENT);
+
+		performGameSpecificJSONChecks();
 	}
 
 
@@ -554,6 +556,16 @@ public abstract class GenericBoard
 	 * Returns true if the given move is a valid one.
 	 */
 	public abstract boolean move(final Position previous, final Position current);
+
+
+	/**
+	 * Does some final JSON parsing to finish the setting up of the game board.
+	 *
+	 * @throws JSONException
+	 * If there was an error when trying to parse the JSON, then this Exception
+	 * will be thrown.
+	 */
+	public abstract void performGameSpecificJSONChecks() throws JSONException;
 
 
 	/**
