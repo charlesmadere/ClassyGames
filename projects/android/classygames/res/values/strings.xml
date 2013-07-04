@@ -43,6 +43,7 @@
 	<string name="generic_game_fragment_data_error">Error while trying to instantiate the game.</string>
 	<string name="just_now">just now</string>
 	<string name="lets_play">Let\'s play!</string>
+	<string name="loading">Loading&#8230;</string>
 	<string name="loading_checkers_game_against_x">Loading Checkers game against %1$s&#8230;</string>
 	<string name="loading_chess_game_against_x">Loading Chess game against %1$s&#8230;</string>
 	<string name="loading_game">Loading game&#8230;</string>

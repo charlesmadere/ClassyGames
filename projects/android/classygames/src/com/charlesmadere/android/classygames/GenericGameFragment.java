@@ -3,6 +3,7 @@ package com.charlesmadere.android.classygames;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -50,6 +51,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	private final static String BUNDLE_BOARD_JSON = "BUNDLE_BOARD_JSON";
+	public final static String PREFERENCES_NAME = "GenericGameFragment_Preferences";
 
 
 	public final static String KEY_GAME_ID = "KEY_GAME_ID";
@@ -849,7 +851,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		}
 		else
 		{
-			Log.e(LOG_TAG, "Either null or empty String received from server on send move!");
+			Log.e(LOG_TAG, "Either null or empty String was attempted to be parsed!");
 		}
 
 		return parsedServerResponse;
@@ -1105,18 +1107,33 @@ public abstract class GenericGameFragment extends SherlockFragment
 		{
 			String serverResponse = null;
 
-			if (!isCancelled() && Utilities.checkForNetworkConnectivity(fragmentActivity))
+			if (!isCancelled())
 			{
-				final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, game.getId()));
+				final SharedPreferences sPreferences = fragmentActivity.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+				final String boardJSON = sPreferences.getString(game.getId(), null);
 
-				try
+				if (Utilities.verifyValidString(boardJSON))
 				{
-					serverResponse = ServerUtilities.postToServer(ServerUtilities.ADDRESS_GET_GAME, nameValuePairs);
+					serverResponse = boardJSON;
 				}
-				catch (final IOException e)
+				else if (Utilities.checkForNetworkConnectivity(fragmentActivity) && !isCancelled())
 				{
-					Log.e(LOG_TAG, "IOException error in AsyncGetGame - doInBackground()!", e);
+					final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, game.getId()));
+
+					try
+					{
+						serverResponse = ServerUtilities.postToServer(ServerUtilities.ADDRESS_GET_GAME, nameValuePairs);
+
+						// store the just now downloaded instance of the board
+						final SharedPreferences.Editor editor = sPreferences.edit();
+						editor.putString(game.getId(), serverResponse);
+						editor.commit();
+					}
+					catch (final IOException e)
+					{
+						Log.e(LOG_TAG, "IOException error in AsyncGetGame - doInBackground()!", e);
+					}
 				}
 			}
 

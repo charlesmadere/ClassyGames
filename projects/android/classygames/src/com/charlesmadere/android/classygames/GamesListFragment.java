@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -505,6 +506,12 @@ public class GamesListFragment extends SherlockFragment implements
 			{
 				restoreExistingList = false;
 				final Person whoAmI = Utilities.getWhoAmI(fragmentActivity);
+
+				// clear all cached game boards
+				final SharedPreferences sPreferences = fragmentActivity.getSharedPreferences(GenericGameFragment.PREFERENCES_NAME, Context.MODE_PRIVATE);
+				final SharedPreferences.Editor editor = sPreferences.edit();
+				editor.clear();
+				editor.commit();
 
 				// create the data that will be posted to the server
 				final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();

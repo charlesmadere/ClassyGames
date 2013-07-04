@@ -6,7 +6,75 @@
 	style="@style/ClassyGames.ExtraPadding">
 	<TextView
 		android:id="@+id/my_profile_activity_textview_my_name"
-		android:layout_gravity="center"
+		android:gravity="center"
 		android:layout_height="wrap_content"
-		android:layout_width="match_parent" />
+		android:layout_marginBottom="16dip"
+		android:layout_width="match_parent"
+		android:textColor="@color/gray_darker"
+		android:textSize="24sp" />
+	<LinearLayout
+		android:baselineAligned="false"
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:padding="4dip"
+		android:orientation="horizontal">
+		<LinearLayout
+			android:layout_height="wrap_content"
+			android:layout_marginRight="4dip"
+			android:layout_weight="1"
+			android:layout_width="0dip"
+			android:orientation="vertical">
+			<TextView
+				android:drawableTop="@drawable/game_icon_checkers"
+				android:gravity="center"
+				android:id="@+id/my_profile_activity_textview_checkers"
+				android:layout_height="wrap_content"
+				android:layout_width="match_parent"
+				android:text="@string/checkers"
+				android:textColor="@color/gray_darker" />
+			<TextView
+				android:id="@+id/my_profile_activity_textview_checkers_wins"
+				android:layout_height="wrap_content"
+				android:layout_width="match_parent"
+				android:text="@string/loading"
+				android:textColor="@color/gray_dark"
+				android:typeface="monospace" />
+			<TextView
+				android:id="@+id/my_profile_activity_textview_checkers_loses"
+				android:layout_height="wrap_content"
+				android:layout_width="match_parent"
+				android:text="@string/loading"
+				android:textColor="@color/gray_dark"
+				android:typeface="monospace" />
+		</LinearLayout>
+		<LinearLayout
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="4dip"
+			android:layout_weight="1"
+			android:layout_width="0dip"
+			android:orientation="vertical">
+			<TextView
+				android:drawableTop="@drawable/game_icon_chess"
+				android:gravity="center"
+				android:id="@+id/my_profile_activity_textview_chess"
+				android:layout_height="wrap_content"
+				android:layout_width="match_parent"
+				android:text="@string/chess"
+				android:textColor="@color/gray_darker" />
+			<TextView
+				android:id="@+id/my_profile_activity_textview_chess_wins"
+				android:layout_height="wrap_content"
+				android:layout_width="match_parent"
+				android:text="@string/loading"
+				android:textColor="@color/gray_dark"
+				android:typeface="monospace" />
+			<TextView
+				android:id="@+id/my_profile_activity_textview_chess_loses"
+				android:layout_height="wrap_content"
+				android:layout_width="match_parent"
+				android:text="@string/loading"
+				android:textColor="@color/gray_dark"
+				android:typeface="monospace" />
+		</LinearLayout>
+	</LinearLayout>
 </LinearLayout>
