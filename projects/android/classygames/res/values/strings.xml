@@ -49,6 +49,7 @@
 	<string name="loading_game">Loading game&#8230;</string>
 	<string name="loading_your_friends_list">Loading your Facebook Friends List&#8230;</string>
 	<string name="loading_your_games_list">Loading your games list&#8230;</string>
+	<string name="loading_your_scores">Loading your scores&#8230;</string>
 	<string name="lost">lost</string>
 	<string name="main_activity_loading_textview_text">Initializing settings and registering you with our servers&#8230;</string>
 	<string name="make_sure_that_you_dont_set_both_teams_color_to_the_same_thing_your_changes_to_this_setting_have_not_been_saved">Make sure that you don\'t set both teams color to the same thing! Your changes to this setting have not been saved.</string>
@@ -66,7 +67,10 @@
 	<string name="no_thanks">No thanks!</string>
 	<string name="okay">Okay</string>
 	<string name="ol_x_sent_you_some_class">Ol\' %1$s sent you some class.</string>
+	<string name="one_loss">1 loss</string>
+	<string name="one_win">1 win</string>
 	<string name="one_day_ago">1 day ago</string>
+	<string name="one_game_played">1 game played</string>
 	<string name="one_hour_ago">1 hour ago</string>
 	<string name="one_minute_ago">1 minute ago</string>
 	<string name="one_week_ago">1 week ago</string>
@@ -119,7 +123,10 @@
 	<string name="vibrate">Vibrate</string>
 	<string name="which_game_would_you_like_to_play">Which game would you like to play?</string>
 	<string name="won">won</string>
+	<string name="x_losses">%1$d losses</string>
+	<string name="x_wins">%1$d wins</string>
 	<string name="x_days_ago">%1$d days ago</string>
+	<string name="x_games_played">%1$d games played</string>
 	<string name="x_hours_ago">%1$d hours ago</string>
 	<string name="x_minutes_ago">%1$d minutes ago</string>
 	<string name="yes">Yes</string>

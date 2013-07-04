@@ -43,6 +43,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 	private EmptyGameFragment emptyGameFragment;
 	private GamesListFragment gamesListFragment;
 	private GenericGameFragment genericGameFragment;
+	private MyProfileDialogFragment myProfileDialogFragment;
 
 
 
@@ -182,6 +183,14 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 		{
 			gamesListFragment.cancelRunningAnyAsyncTask();
 		}
+		else if (genericGameFragment != null && genericGameFragment.isAnAsyncTaskRunning())
+		{
+			genericGameFragment.cancelRunningAnyAsyncTask();
+		}
+		else if (myProfileDialogFragment != null && myProfileDialogFragment.isAnAsyncTaskRunning())
+		{
+			myProfileDialogFragment.cancelRunningAnyAsyncTask();
+		}
 		else
 		{
 			Utilities.setActionBar(this, R.string.games_list, false);
@@ -212,6 +221,11 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 			genericGameFragment.cancelRunningAnyAsyncTask();
 		}
 
+		if (myProfileDialogFragment != null)
+		{
+			myProfileDialogFragment.cancelRunningAnyAsyncTask();
+		}
+
 		super.onDestroy();
 	}
 
@@ -230,7 +244,11 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 				break;
 
 			case R.id.game_fragment_activity_menu_my_profile:
-				startActivity(new Intent(this, MyProfileActivity.class));
+				final FragmentManager fManager = getSupportFragmentManager();
+				final FragmentTransaction fTransaction = fManager.beginTransaction();
+				fTransaction.addToBackStack(null);
+				myProfileDialogFragment = new MyProfileDialogFragment();
+				myProfileDialogFragment.show(fTransaction, null);
 				break;
 
 			case R.id.game_fragment_activity_menu_new_game:

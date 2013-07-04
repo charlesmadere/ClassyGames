@@ -38,6 +38,9 @@ public class FriendsListFragment extends SherlockFragment implements
 {
 
 
+	private final static String PREFERENCES_NAME = "FriendsListFragment_Preferences";
+
+
 	/**
 	 * Boolean that marks if this is the first time that the onResume() method
 	 * was hit. We do this because we don't want to refresh the friends list
@@ -59,6 +62,9 @@ public class FriendsListFragment extends SherlockFragment implements
 	 * List Adapter for this Fragment's ListView layout item.
 	 */
 	private FriendsListAdapter friendsListAdapter;
+
+
+	private SharedPreferences sPreferences;
 
 
 
@@ -199,7 +205,10 @@ public class FriendsListFragment extends SherlockFragment implements
 				break;
 
 			case R.id.friends_list_fragment_menu_refresh:
-				getSherlockActivity().getPreferences(Context.MODE_PRIVATE).edit().clear().commit();
+				final SharedPreferences.Editor editor = getPreferences().edit();
+				editor.clear();
+				editor.commit();
+
 				listeners.onRefreshSelected();
 				break;
 
@@ -238,6 +247,17 @@ public class FriendsListFragment extends SherlockFragment implements
 	}
 
 
+	private SharedPreferences getPreferences()
+	{
+		if (sPreferences == null)
+		{
+			sPreferences = getSherlockActivity().getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+		}
+
+		return sPreferences;
+	}
+
+
 	/**
 	 * @return
 	 * Returns true if the asyncRefreshFriendsList AsyncTask is currently
@@ -257,7 +277,7 @@ public class FriendsListFragment extends SherlockFragment implements
 		if (!isAnAsyncTaskRunning())
 		{
 			asyncRefreshFriendsList = new AsyncRefreshFriendsList(getSherlockActivity(),
-				getLayoutInflater(getArguments()), Session.getActiveSession(), (ViewGroup) getView());
+				getLayoutInflater(getArguments()), Session.getActiveSession(), getPreferences(), (ViewGroup) getView());
 			asyncRefreshFriendsList.execute();
 		}
 	}
@@ -278,15 +298,17 @@ public class FriendsListFragment extends SherlockFragment implements
 		private SherlockFragmentActivity fragmentActivity;
 		private LayoutInflater inflater;
 		private Session session;
+		private SharedPreferences sPreferences;
 		private ViewGroup viewGroup;
 
 
 		private AsyncRefreshFriendsList(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater,
-			final Session session, final ViewGroup viewGroup)
+			final Session session, final SharedPreferences sPreferences, final ViewGroup viewGroup)
 		{
 			this.fragmentActivity = fragmentActivity;
 			this.inflater = inflater;
 			this.session = session;
+			this.sPreferences = sPreferences;
 			this.viewGroup = viewGroup;
 		}
 
@@ -299,8 +321,6 @@ public class FriendsListFragment extends SherlockFragment implements
 
 			if (!isCancelled())
 			{
-				final SharedPreferences sPreferences = fragmentActivity.getPreferences(Context.MODE_PRIVATE);
-
 				@SuppressWarnings("unchecked")
 				final Map<String, String> map = (Map<String, String>) sPreferences.getAll();
 

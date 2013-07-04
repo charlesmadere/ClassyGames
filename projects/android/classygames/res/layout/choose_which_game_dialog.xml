@@ -3,7 +3,7 @@
 	android:background="@drawable/bg_subtle_gray"
 	android:layout_height="wrap_content"
 	android:layout_width="match_parent"
-	android:paddingBottom="8dip"
+	android:paddingBottom="2dip"
 	android:paddingLeft="4dip"
 	android:paddingRight="4dip"
 	android:paddingTop="8dip">
@@ -11,8 +11,6 @@
 		android:gravity="center"
 		android:id="@+id/choose_which_game_dialog_textview"
 		android:layout_height="wrap_content"
-		android:layout_marginBottom="2dip"
-		android:layout_marginTop="2dip"
 		android:layout_width="match_parent"
 		android:text="@string/which_game_would_you_like_to_play"
 		android:textColor="@color/gray_darker"
@@ -38,7 +36,8 @@
 			android:paddingBottom="20dip"
 			android:paddingTop="20dip"
 			android:text="@string/checkers"
-			android:textColor="@color/gray_dark" />
+			android:textColor="@color/gray_dark"
+			android:textSize="18sp" />
 		<Button
 			android:background="@drawable/choose_which_game_button"
 			android:drawableTop="@drawable/game_icon_chess"
@@ -50,6 +49,7 @@
 			android:paddingBottom="20dip"
 			android:paddingTop="20dip"
 			android:text="@string/chess"
-			android:textColor="@color/gray_dark" />
+			android:textColor="@color/gray_dark"
+			android:textSize="18sp" />
 	</LinearLayout>
 </RelativeLayout>

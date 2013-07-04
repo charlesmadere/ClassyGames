@@ -508,8 +508,14 @@ public class GamesListFragment extends SherlockFragment implements
 				final Person whoAmI = Utilities.getWhoAmI(fragmentActivity);
 
 				// clear all cached game boards
-				final SharedPreferences sPreferences = fragmentActivity.getSharedPreferences(GenericGameFragment.PREFERENCES_NAME, Context.MODE_PRIVATE);
-				final SharedPreferences.Editor editor = sPreferences.edit();
+				SharedPreferences sPreferences = fragmentActivity.getSharedPreferences(GenericGameFragment.PREFERENCES_NAME, Context.MODE_PRIVATE);
+				SharedPreferences.Editor editor = sPreferences.edit();
+				editor.clear();
+				editor.commit();
+
+				// clear all cached profile loss and win data
+				sPreferences = fragmentActivity.getSharedPreferences(MyProfileDialogFragment.PREFERENCES_NAME, Context.MODE_PRIVATE);
+				editor = sPreferences.edit();
 				editor.clear();
 				editor.commit();
 
