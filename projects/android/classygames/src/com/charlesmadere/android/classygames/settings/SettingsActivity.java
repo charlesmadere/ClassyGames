@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.R;
@@ -24,8 +25,10 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 {
 
 
-	private ListPreference playersCheckersPieceColor;
-	private ListPreference opponentsCheckersPieceColor;
+	private ListPreference checkersPieceColorOpponents;
+	private ListPreference checkersPieceColorPlayers;
+	private ListPreference chessPieceColorOpponents;
+	private ListPreference chessPieceColorPlayers;
 
 
 
@@ -59,34 +62,68 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 					addPreferencesFromResource(R.xml.settings_game);
 					Utilities.setActionBar(this, R.string.game_settings, true);
 
-					playersCheckersPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_players_checkers_piece_color));
-					opponentsCheckersPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_opponents_checkers_piece_color));
+					checkersPieceColorOpponents = (ListPreference) findPreference(getString(R.string.settings_key_opponents_checkers_piece_color));
+					checkersPieceColorPlayers = (ListPreference) findPreference(getString(R.string.settings_key_players_checkers_piece_color));
+					chessPieceColorOpponents = (ListPreference) findPreference(getString(R.string.settings_key_opponents_chess_piece_color));
+					chessPieceColorPlayers = (ListPreference) findPreference(getString(R.string.settings_key_players_chess_piece_color));
 
-					playersCheckersPieceColor.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener()
+					checkersPieceColorOpponents.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
 					{
 						@Override
 						public boolean onPreferenceChange(final Preference preference, final Object newValue)
 						{
-							if (opponentsCheckersPieceColor == null)
+							if (checkersPieceColorPlayers == null)
 							{
-								opponentsCheckersPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_opponents_checkers_piece_color));
+								checkersPieceColorPlayers =
+									(ListPreference) findPreference(getString(R.string.settings_key_players_checkers_piece_color));
 							}
 
-							return onPlayersCheckersPieceColorPreferenceChange(opponentsCheckersPieceColor, newValue);
+							return onOpponentCheckersPieceColorPreferenceChange(checkersPieceColorPlayers, newValue);
 						}
 					});
 
-					opponentsCheckersPieceColor.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener()
+					checkersPieceColorPlayers.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
 					{
 						@Override
 						public boolean onPreferenceChange(final Preference preference, final Object newValue)
 						{
-							if (playersCheckersPieceColor == null)
+							if (checkersPieceColorOpponents == null)
 							{
-								playersCheckersPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_players_checkers_piece_color));
+								checkersPieceColorOpponents =
+									(ListPreference) findPreference(getString(R.string.settings_key_opponents_checkers_piece_color));
 							}
 
-							return onOpponentsCheckersPieceColorPreferenceChange(playersCheckersPieceColor, newValue);
+							return onPlayerCheckersPieceColorPreferenceChange(checkersPieceColorOpponents, newValue);
+						}
+					});
+
+					chessPieceColorOpponents.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
+					{
+						@Override
+						public boolean onPreferenceChange(final Preference preference, final Object newValue)
+						{
+							if (chessPieceColorPlayers == null)
+							{
+								chessPieceColorPlayers =
+									(ListPreference) findPreference(getString(R.string.settings_key_opponents_chess_piece_color));
+							}
+
+							return onPlayerChessPieceColorPreferenceChange(chessPieceColorPlayers, newValue);
+						}
+					});
+
+					chessPieceColorPlayers.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
+					{
+						@Override
+						public boolean onPreferenceChange(final Preference preference, final Object newValue)
+						{
+							if (chessPieceColorOpponents == null)
+							{
+								chessPieceColorOpponents =
+									(ListPreference) findPreference(getString(R.string.settings_key_players_chess_piece_color));
+							}
+
+							return onPlayerChessPieceColorPreferenceChange(chessPieceColorOpponents, newValue);
 						}
 					});
 				}
@@ -111,7 +148,7 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 				}
 				else
 				// The intent's action was something strange. We'll show the
-				// default preference file. This should (hopefully) never
+				// default preference file. This else case shouldn't ever
 				// happen.
 				{
 					addPreferencesFromResource(R.xml.settings_headers_legacy);
@@ -131,7 +168,6 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 	// Called only when this Android device is running Honeycomb and above.
 	{
 		super.onBuildHeaders(target);
-
 		loadHeadersFromResource(R.xml.settings_headers, target);
 	}
 
@@ -155,13 +191,28 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 
 
 
-	@Override
-	public boolean onPlayersCheckersPieceColorPreferenceChange(final ListPreference opponentsCheckersPieceColor, final Object newValue)
+	/**
+	 * Checks the values on both of the inputs to see if they're equal. This is
+	 * to be used whenever a user changes a value in a ListPreference. We don't
+	 * want the user to set the same value for both of the ListPreferences.
+	 * This will return true if both values are the same.
+	 *
+	 * @param otherTeamPreference
+	 * A reference to the ListPreference object that was NOT just now modified.
+	 *
+	 * @param newTeamValue
+	 * The new value for the ListPreference object that the user just now
+	 * changed.
+	 *
+	 * @return
+	 * Returns false if both of the given values are equal.
+	 */
+	private boolean makeSureBothTeamsArentTheSameColor(final ListPreference otherTeamPreference, final Object newTeamValue)
 	{
-		final String newPlayerColor = (String) newValue;
-		final String opponentsColor = opponentsCheckersPieceColor.getValue();
+		final String newlySetColor = (String) newTeamValue;
+		final String otherTeamColor = otherTeamPreference.getValue();
 
-		if (newPlayerColor.equalsIgnoreCase(opponentsColor))
+		if (newlySetColor.equalsIgnoreCase(otherTeamColor))
 		{
 			Utilities.easyToast(this, R.string.make_sure_that_you_dont_set_both_teams_color_to_the_same_thing_your_changes_to_this_setting_have_not_been_saved);
 			return false;
@@ -173,37 +224,33 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 	}
 
 
-	@Override
-	public boolean onOpponentsCheckersPieceColorPreferenceChange(final ListPreference playersCheckersPieceColor, final Object newValue)
-	{
-		final String newOpponentColor = (String) newValue;
-		final String playersColor = playersCheckersPieceColor.getValue();
 
-		if (newOpponentColor.equalsIgnoreCase(playersColor))
-		{
-			Utilities.easyToast(this, R.string.make_sure_that_you_dont_set_both_teams_color_to_the_same_thing_your_changes_to_this_setting_have_not_been_saved);
-			return false;
-		}
-		else
-		{
-			return true;
-		}
+
+	@Override
+	public boolean onOpponentCheckersPieceColorPreferenceChange(final ListPreference playerCheckersPieceColor, final Object newValue)
+	{
+		return makeSureBothTeamsArentTheSameColor(playerCheckersPieceColor, newValue);
 	}
 
 
 	@Override
-	public boolean onPlayersChessPieceColorPreferenceChange(final ListPreference opponentsChessPieceColor, final Object newValue)
+	public boolean onPlayerCheckersPieceColorPreferenceChange(final ListPreference opponentCheckersPieceColor, final Object newValue)
 	{
-		// TODO
-		return false;
+		return makeSureBothTeamsArentTheSameColor(opponentCheckersPieceColor, newValue);
 	}
 
 
 	@Override
-	public boolean onOpponentsChessPieceColorPreferenceChange(final ListPreference playersChessPieceColor, final Object newValue)
+	public boolean onOpponentChessPieceColorPreferenceChange(final ListPreference playerChessPieceColor, final Object newValue)
 	{
-		// TODO
-		return false;
+		return makeSureBothTeamsArentTheSameColor(playerChessPieceColor, newValue);
+	}
+
+
+	@Override
+	public boolean onPlayerChessPieceColorPreferenceChange(final ListPreference opponentChessPieceColor, final Object newValue)
+	{
+		return makeSureBothTeamsArentTheSameColor(opponentChessPieceColor, newValue);
 	}
 
 

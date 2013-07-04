@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceFragment;
 import android.text.SpannableString;
 import com.charlesmadere.android.classygames.R;
@@ -31,10 +32,29 @@ public class GameSettingsFragment extends PreferenceFragment
 
 
 		/**
+		 * This method is called whenever the user changes the opponent's
+		 * checkers piece color.
+		 *
+		 * @param playerCheckersPieceColor
+		 * The ListPreference object for the player's checkers piece color.
+		 *
+		 * @param newValue
+		 * The new color value that the player has selected. Note that this
+		 * value has not been saved in the app's shared preferences system yet.
+		 *
+		 * @return
+		 * Return true if you want to save this new color. False if you do not
+		 * want to save this new color.
+		 */
+		public boolean onOpponentCheckersPieceColorPreferenceChange(final ListPreference playerCheckersPieceColor,
+			final Object newValue);
+
+
+		/**
 		 * This method is called whenever the user changes the player's
 		 * checkers piece color.
 		 * 
-		 * @param opponentsCheckersPieceColor
+		 * @param opponentCheckersPieceColor
 		 * The ListPreference object for the opponent's checkers piece color.
 		 * 
 		 * @param newValue
@@ -45,58 +65,45 @@ public class GameSettingsFragment extends PreferenceFragment
 		 * Return true if you want to save this new color. False if you do not
 		 * want to save this new color.
 		 */
-		public boolean onPlayersCheckersPieceColorPreferenceChange(final ListPreference opponentsCheckersPieceColor,
+		public boolean onPlayerCheckersPieceColorPreferenceChange(final ListPreference opponentCheckersPieceColor,
 			final Object newValue);
 
 
 		/**
 		 * This method is called whenever the user changes the opponent's
-		 * checkers piece color.
-		 * 
-		 * @param playersCheckersPieceColor
-		 * The ListPreference object for the player's checkers piece color.
-		 * 
+		 * chess piece color.
+		 *
+		 * @param playerChessPieceColor
+		 * The ListPreference object for the player's chess piece color.
+		 *
 		 * @param newValue
 		 * The new color value that the player has selected. Note that this
 		 * value has not been saved in the app's shared preferences system yet.
-		 * 
+		 *
 		 * @return
 		 * Return true if you want to save this new color. False if you do not
 		 * want to save this new color.
 		 */
-		public boolean onOpponentsCheckersPieceColorPreferenceChange(final ListPreference playersCheckersPieceColor,
+		public boolean onOpponentChessPieceColorPreferenceChange(final ListPreference playerChessPieceColor,
 			final Object newValue);
 
 
 		/**
+		 * This method is called whenever the user changes the player's chess
+		 * piece color.
 		 *
-		 *
-		 * @param opponentsChessPieceColor
-		 *
-		 *
-		 * @param newValue
-		 *
-		 *
-		 * @return
-		 *
-		 */
-		public boolean onPlayersChessPieceColorPreferenceChange(final ListPreference opponentsChessPieceColor,
-			final Object newValue);
-
-
-		/**
-		 *
-		 *
-		 * @param playersChessPieceColor
-		 *
+		 * @param opponentChessPieceColor
+		 * The ListPreference object for the opponent's chess piece color.
 		 *
 		 * @param newValue
-		 *
+		 * The new color value that the player has selected. Note that this
+		 * value has not been saved in the app's shared preferences system yet.
 		 *
 		 * @return
-		 *
+		 * Return true if you want to save this new color. False if you do not
+		 * want to save this new color.
 		 */
-		public boolean onOpponentsChessPieceColorPreferenceChange(final ListPreference playersChessPieceColor,
+		public boolean onPlayerChessPieceColorPreferenceChange(final ListPreference opponentChessPieceColor,
 			final Object newValue);
 
 
@@ -130,39 +137,39 @@ public class GameSettingsFragment extends PreferenceFragment
 		final ListPreference playersChessPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_players_chess_piece_color));
 		final ListPreference opponentsChessPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_opponents_chess_piece_color));
 
-		playersCheckersPieceColor.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener()
+		opponentsCheckersPieceColor.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
 		{
 			@Override
 			public boolean onPreferenceChange(final Preference preference, final Object newValue)
 			{
-				return listeners.onPlayersCheckersPieceColorPreferenceChange(opponentsCheckersPieceColor, newValue);
+				return listeners.onOpponentCheckersPieceColorPreferenceChange(playersCheckersPieceColor, newValue);
 			}
 		});
 
-		opponentsCheckersPieceColor.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener()
+		playersCheckersPieceColor.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
 		{
 			@Override
 			public boolean onPreferenceChange(final Preference preference, final Object newValue)
 			{
-				return listeners.onOpponentsCheckersPieceColorPreferenceChange(playersCheckersPieceColor, newValue);
+				return listeners.onPlayerCheckersPieceColorPreferenceChange(opponentsCheckersPieceColor, newValue);
 			}
 		});
 
-		playersChessPieceColor.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener()
+		opponentsChessPieceColor.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
 		{
 			@Override
 			public boolean onPreferenceChange(final Preference preference, final Object newValue)
 			{
-				return listeners.onPlayersChessPieceColorPreferenceChange(opponentsChessPieceColor, newValue);
+				return listeners.onOpponentChessPieceColorPreferenceChange(playersChessPieceColor, newValue);
 			}
 		});
 
-		opponentsChessPieceColor.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener()
+		playersChessPieceColor.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
 		{
 			@Override
 			public boolean onPreferenceChange(final Preference preference, final Object newValue)
 			{
-				return listeners.onOpponentsChessPieceColorPreferenceChange(playersChessPieceColor, newValue);
+				return listeners.onPlayerChessPieceColorPreferenceChange(opponentsChessPieceColor, newValue);
 			}
 		});
 	}

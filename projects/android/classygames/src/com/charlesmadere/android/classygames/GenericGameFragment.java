@@ -22,11 +22,11 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.charlesmadere.android.classygames.models.Game;
+import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.models.games.Coordinate;
 import com.charlesmadere.android.classygames.models.games.GenericBoard;
 import com.charlesmadere.android.classygames.models.games.Position;
-import com.charlesmadere.android.classygames.models.Game;
-import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.server.ServerApi;
 import com.charlesmadere.android.classygames.server.ServerApiForfeitGame;
 import com.charlesmadere.android.classygames.server.ServerApiSendMove;
@@ -969,9 +969,9 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 		viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
 		{
+			@Override
 			@SuppressLint("NewApi")
 			@SuppressWarnings("deprecation")
-			@Override
 			public void onGlobalLayout()
 			{
 				final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams
@@ -984,8 +984,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 					if (resources.getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
 					{
-						final int width = boardPosition.getWidth();
-						layoutParams.height = width;
+						layoutParams.height = boardPosition.getWidth();
 
 						for (final int yPosition : yPositions)
 						{
@@ -994,8 +993,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 					}
 					else
 					{
-						final int height = boardPosition.getHeight();
-						layoutParams.width = height;
+						layoutParams.width = boardPosition.getHeight();
 
 						for (final int xPosition : xPositions)
 						{
@@ -1107,7 +1105,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		{
 			String serverResponse = null;
 
-			if (!isCancelled())
+			if (!isCancelled() && Utilities.checkForNetworkConnectivity(fragmentActivity))
 			{
 				final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, game.getId()));
