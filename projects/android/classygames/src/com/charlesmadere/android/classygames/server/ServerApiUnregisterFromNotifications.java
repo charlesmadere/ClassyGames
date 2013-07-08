@@ -5,7 +5,6 @@ import android.content.Context;
 import android.util.Log;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.models.Person;
-import com.charlesmadere.android.classygames.utilities.ServerUtilities;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -27,12 +26,12 @@ public class ServerApiUnregisterFromNotifications extends ServerApi
 	 * @param context
 	 * The Context of the class that you're creating this object from.
 	 * 
-	 * @param onCompleteListener
+	 * @param listeners
 	 * A listener to call once we're done running code here.
 	 */
-	public ServerApiUnregisterFromNotifications(final Context context, final ServerApi.ServerApiListeners onCompleteListener)
+	public ServerApiUnregisterFromNotifications(final Context context, final ServerApiListeners listeners)
 	{
-		super(context, onCompleteListener);
+		super(context, listeners);
 	}
 
 
@@ -44,9 +43,9 @@ public class ServerApiUnregisterFromNotifications extends ServerApi
 		try
 		{
 			final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-			nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, whoAmI.getIdAsString()));
+			nameValuePairs.add(new BasicNameValuePair(Server.POST_DATA_ID, whoAmI.getIdAsString()));
 
-			serverResponse = ServerUtilities.postToServer(ServerUtilities.ADDRESS_REMOVE_REG_ID, nameValuePairs);
+			serverResponse = Server.postToServer(Server.ADDRESS_REMOVE_REG_ID, nameValuePairs);
 		}
 		catch (final IOException e)
 		{

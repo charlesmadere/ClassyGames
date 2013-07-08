@@ -3,7 +3,7 @@ package com.charlesmadere.android.classygames.models;
 
 import android.content.Context;
 import com.charlesmadere.android.classygames.R;
-import com.charlesmadere.android.classygames.utilities.ServerUtilities;
+import com.charlesmadere.android.classygames.server.Server;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -171,15 +171,15 @@ public class Game
 	 */
 	public Game(final JSONObject gameData, final boolean whichTurn) throws JSONException
 	{
-		id = gameData.getString(ServerUtilities.POST_DATA_GAME_ID);
-		timestamp = gameData.getLong(ServerUtilities.POST_DATA_LAST_MOVE);
+		id = gameData.getString(Server.POST_DATA_GAME_ID);
+		timestamp = gameData.getLong(Server.POST_DATA_LAST_MOVE);
 		turn = whichTurn;
 
-		final long personId = gameData.getLong(ServerUtilities.POST_DATA_ID);
-		final String personName = gameData.getString(ServerUtilities.POST_DATA_NAME);
+		final long personId = gameData.getLong(Server.POST_DATA_ID);
+		final String personName = gameData.getString(Server.POST_DATA_NAME);
 		person = new Person(personId, personName);
 
-		whichGame = (byte) gameData.optInt(ServerUtilities.POST_DATA_GAME_TYPE);
+		whichGame = (byte) gameData.optInt(Server.POST_DATA_GAME_TYPE);
 	}
 
 

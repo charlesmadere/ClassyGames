@@ -1,4 +1,4 @@
-package com.charlesmadere.android.classygames.utilities;
+package com.charlesmadere.android.classygames.server;
 
 
 import android.app.PendingIntent;
@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import com.charlesmadere.android.classygames.models.Person;
+import com.charlesmadere.android.classygames.utilities.KeysAndConstants;
+import com.charlesmadere.android.classygames.utilities.Utilities;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -28,11 +30,11 @@ import java.util.ArrayList;
  * Class for tons of stuff relating to communication with the Classy Games
  * server.
  */
-public final class ServerUtilities
+public final class Server
 {
 
 
-	public final static String LOG_TAG = Utilities.LOG_TAG + " - ServerUtilities";
+	public final static String LOG_TAG = Utilities.LOG_TAG + " - Server";
 	public final static String MIMETYPE_JSON = "application/json";
 
 
@@ -236,8 +238,8 @@ public final class ServerUtilities
 	 * server. The String that this method returns is the server's response.
 	 * 
 	 * <p><strong>Examples</strong><br />
-	 * ServerUtilities.postToServer(ServerUtilities.SERVER_NEW_MOVE_ADDRESS, postData);<br />
-	 * ServerUtilities.postToServer(ServerUtilities.SERVER_GET_GAMES_ADDRESS, postData);</p>
+	 * Server.postToServer(Server.SERVER_NEW_MOVE_ADDRESS, postData);<br />
+	 * Server.postToServer(Server.SERVER_GET_GAMES_ADDRESS, postData);</p>
 	 * 
 	 * @param url
 	 * The URL that you want to send your data to. This should be formulated
@@ -249,8 +251,8 @@ public final class ServerUtilities
 	 * 
 	 * <p><strong>Example of data creation</strong><br />
 	 * ArrayList&#60;NameValuePair&#62; postData = new ArrayList&#60;NameValuePair&#62;();<br />
-	 * postData.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, Long.valueOf(id).toString());<br />
-	 * postData.add(new BasicNameValuePair(ServerUtilities.POST_DATA_REG_ID, reg_id);<br />
+	 * postData.add(new BasicNameValuePair(Server.POST_DATA_ID, Long.valueOf(id).toString());<br />
+	 * postData.add(new BasicNameValuePair(Server.POST_DATA_REG_ID, reg_id);<br />
 	 * Note that both values in the BasicNameValuePair <strong>must</strong>
 	 * be a String.</p>
 	 * 

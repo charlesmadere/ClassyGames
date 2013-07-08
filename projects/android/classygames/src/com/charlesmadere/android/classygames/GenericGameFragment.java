@@ -28,11 +28,7 @@ import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.models.games.Coordinate;
 import com.charlesmadere.android.classygames.models.games.GenericBoard;
 import com.charlesmadere.android.classygames.models.games.Position;
-import com.charlesmadere.android.classygames.server.ServerApi;
-import com.charlesmadere.android.classygames.server.ServerApiForfeitGame;
-import com.charlesmadere.android.classygames.server.ServerApiSendMove;
-import com.charlesmadere.android.classygames.server.ServerApiSkipMove;
-import com.charlesmadere.android.classygames.utilities.ServerUtilities;
+import com.charlesmadere.android.classygames.server.*;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -229,7 +225,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 					@Override
-					public void onComplete()
+					public void onComplete(final String serverResponse)
 					{
 						serverApiTask = null;
 						listeners.onServerApiTaskFinished();
@@ -822,11 +818,11 @@ public abstract class GenericGameFragment extends SherlockFragment
 			try
 			{
 				final JSONObject jsonData = new JSONObject(serverResponse);
-				final JSONObject jsonResult = jsonData.getJSONObject(ServerUtilities.POST_DATA_RESULT);
+				final JSONObject jsonResult = jsonData.getJSONObject(Server.POST_DATA_RESULT);
 
 				try
 				{
-					final String successMessage = jsonResult.getString(ServerUtilities.POST_DATA_SUCCESS);
+					final String successMessage = jsonResult.getString(Server.POST_DATA_SUCCESS);
 					Log.i(LOG_TAG, "Server returned success message: " + successMessage);
 
 					parsedServerResponse = new JSONObject(successMessage);
@@ -835,7 +831,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 				{
 					try
 					{
-						final String errorMessage = jsonResult.getString(ServerUtilities.POST_DATA_ERROR);
+						final String errorMessage = jsonResult.getString(Server.POST_DATA_ERROR);
 						Log.e(LOG_TAG, "Server returned error message: " + errorMessage);
 					}
 					catch (final JSONException e1)
@@ -1119,11 +1115,11 @@ public abstract class GenericGameFragment extends SherlockFragment
 				else if (Utilities.checkForNetworkConnectivity(fragmentActivity) && !isCancelled())
 				{
 					final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-					nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, game.getId()));
+					nameValuePairs.add(new BasicNameValuePair(Server.POST_DATA_ID, game.getId()));
 
 					try
 					{
-						serverResponse = ServerUtilities.postToServer(ServerUtilities.ADDRESS_GET_GAME, nameValuePairs);
+						serverResponse = Server.postToServer(Server.ADDRESS_GET_GAME, nameValuePairs);
 
 						// store the just now downloaded instance of the board
 						final SharedPreferences.Editor editor = sPreferences.edit();

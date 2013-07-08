@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Window;
 import com.charlesmadere.android.classygames.models.Person;
+import com.charlesmadere.android.classygames.server.Server;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
-import com.charlesmadere.android.classygames.utilities.ServerUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 import com.facebook.*;
 import com.facebook.Request.GraphUserCallback;
@@ -229,7 +229,7 @@ public class MainActivity extends SherlockActivity
 					}
 				}).executeAndWait();
 
-				ServerUtilities.gcmPerformRegister(context);
+				Server.gcmPerformRegister(context);
 			}
 
 			return facebookIdentity;

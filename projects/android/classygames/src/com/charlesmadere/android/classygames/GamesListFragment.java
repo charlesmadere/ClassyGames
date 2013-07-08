@@ -25,11 +25,11 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.Person;
+import com.charlesmadere.android.classygames.server.Server;
 import com.charlesmadere.android.classygames.server.ServerApi;
 import com.charlesmadere.android.classygames.server.ServerApiForfeitGame;
 import com.charlesmadere.android.classygames.server.ServerApiSkipMove;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
-import com.charlesmadere.android.classygames.utilities.ServerUtilities;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -153,7 +153,7 @@ public class GamesListFragment extends SherlockFragment implements
 
 
 			@Override
-			public void onComplete()
+			public void onComplete(final String serverResponse)
 			{
 				serverApiTask = null;
 				listeners.onRefreshSelected();
@@ -521,7 +521,7 @@ public class GamesListFragment extends SherlockFragment implements
 
 				// create the data that will be posted to the server
 				final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, whoAmI.getIdAsString()));
+				nameValuePairs.add(new BasicNameValuePair(Server.POST_DATA_ID, whoAmI.getIdAsString()));
 
 				if (!isCancelled() && Utilities.checkForNetworkConnectivity(fragmentActivity))
 				{
@@ -532,7 +532,7 @@ public class GamesListFragment extends SherlockFragment implements
 						// the nameValuePairs variable that we just created.
 						// The server requires we send it some information in
 						// order for us to get a meaningful response back.
-						final String serverResponse = ServerUtilities.postToServer(ServerUtilities.ADDRESS_GET_GAMES, nameValuePairs);
+						final String serverResponse = Server.postToServer(Server.ADDRESS_GET_GAMES, nameValuePairs);
 
 						// This line does a lot. Check the parseServerResponse()
 						// method below to get detailed information. This will
@@ -655,12 +655,12 @@ public class GamesListFragment extends SherlockFragment implements
 							gamesListJSON = new JSONObject(serverResponse);
 						}
 
-						final JSONObject jsonResult = gamesListJSON.getJSONObject(ServerUtilities.POST_DATA_RESULT);
-						final JSONObject jsonGameData = jsonResult.optJSONObject(ServerUtilities.POST_DATA_SUCCESS);
+						final JSONObject jsonResult = gamesListJSON.getJSONObject(Server.POST_DATA_RESULT);
+						final JSONObject jsonGameData = jsonResult.optJSONObject(Server.POST_DATA_SUCCESS);
 
 						if (jsonGameData == null)
 						{
-							final String successMessage = jsonResult.optString(ServerUtilities.POST_DATA_SUCCESS);
+							final String successMessage = jsonResult.optString(Server.POST_DATA_SUCCESS);
 
 							if (Utilities.verifyValidString(successMessage))
 							{
@@ -668,19 +668,19 @@ public class GamesListFragment extends SherlockFragment implements
 							}
 							else
 							{
-								final String errorMessage = jsonResult.getString(ServerUtilities.POST_DATA_ERROR);
+								final String errorMessage = jsonResult.getString(Server.POST_DATA_ERROR);
 								Log.e(LOG_TAG, "Server returned error message: " + errorMessage);
 							}
 						}
 						else
 						{
-							ArrayList<Game> turn = parseTurn(jsonGameData, ServerUtilities.POST_DATA_TURN_YOURS, Game.TURN_YOURS);
+							ArrayList<Game> turn = parseTurn(jsonGameData, Server.POST_DATA_TURN_YOURS, Game.TURN_YOURS);
 							if (turn != null && !turn.isEmpty())
 							{
 								games.addAll(turn);
 							}
 
-							turn = parseTurn(jsonGameData, ServerUtilities.POST_DATA_TURN_THEIRS, Game.TURN_THEIRS);
+							turn = parseTurn(jsonGameData, Server.POST_DATA_TURN_THEIRS, Game.TURN_THEIRS);
 							if (turn != null && !turn.isEmpty())
 							{
 								games.addAll(turn);
@@ -712,7 +712,7 @@ public class GamesListFragment extends SherlockFragment implements
 		 * 
 		 * @param postDataTurn
 		 * Which turn to pull from the JSON game data. This variable's value
-		 * should be one of the ServerUtilities.POST_DATA_TURN_* variables.
+		 * should be one of the Server.POST_DATA_TURN_* variables.
 		 * 
 		 * @param whichTurn
 		 * Who's turn is this? This variable's value should be one of the

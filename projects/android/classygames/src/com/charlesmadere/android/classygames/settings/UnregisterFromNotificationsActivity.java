@@ -57,7 +57,7 @@ public class UnregisterFromNotificationsActivity extends SherlockActivity
 
 
 							@Override
-							public void onComplete()
+							public void onComplete(final String serverResponse)
 							{
 								serverApiTask = null;
 								Utilities.easyToast(UnregisterFromNotificationsActivity.this, R.string.unregistration_complete);

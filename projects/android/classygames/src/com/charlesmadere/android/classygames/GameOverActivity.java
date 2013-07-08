@@ -11,8 +11,8 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.models.Person;
+import com.charlesmadere.android.classygames.server.Server;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
-import com.charlesmadere.android.classygames.utilities.ServerUtilities;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -45,7 +45,7 @@ public class GameOverActivity extends SherlockActivity
 			final long personId = intent.getLongExtra(BUNDLE_PERSON_OPPONENT_ID, -1);
 			final String personName = intent.getStringExtra(BUNDLE_PERSON_OPPONENT_NAME);
 
-			if (ServerUtilities.validMessageTypeValue(messageType) && Person.isIdAndNameValid(personId, personName))
+			if (Server.validMessageTypeValue(messageType) && Person.isIdAndNameValid(personId, personName))
 			{
 				final ImageView friendsPicture = (ImageView) findViewById(R.id.game_over_activity_friend_picture);
 				imageLoader.displayImage(FacebookUtilities.getFriendsPictureLarge(this, personId), friendsPicture);
@@ -58,11 +58,11 @@ public class GameOverActivity extends SherlockActivity
 
 				switch (messageType)
 				{
-					case ServerUtilities.POST_DATA_MESSAGE_TYPE_GAME_OVER_LOSE:
+					case Server.POST_DATA_MESSAGE_TYPE_GAME_OVER_LOSE:
 						winOrLose.setText(R.string.you_lost_the_game_better_luck_next_time);
 						break;
 
-					case ServerUtilities.POST_DATA_MESSAGE_TYPE_GAME_OVER_WIN:
+					case Server.POST_DATA_MESSAGE_TYPE_GAME_OVER_WIN:
 						winOrLose.setText(R.string.you_won_the_game_what_a_champ);
 						break;
 				}

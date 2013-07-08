@@ -4,10 +4,9 @@ package com.charlesmadere.android.classygames.server;
 import android.content.Context;
 import android.util.Log;
 import com.charlesmadere.android.classygames.R;
-import com.charlesmadere.android.classygames.models.games.GenericBoard;
 import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.Person;
-import com.charlesmadere.android.classygames.utilities.ServerUtilities;
+import com.charlesmadere.android.classygames.models.games.GenericBoard;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -46,7 +45,7 @@ public class ServerApiSendMove extends ServerApi
 	 * @param context
 	 * The Context of the class that you're creating this object from.
 	 * 
-	 * @param onCompleteListener
+	 * @param listeners
 	 * A listener to call once we're done running code here.
 	 * 
 	 * @param game
@@ -55,10 +54,9 @@ public class ServerApiSendMove extends ServerApi
 	 * @param board
 	 * The GenericBoard object that is being sent to the server.
 	 */
-	public ServerApiSendMove(final Context context, final ServerApi.ServerApiListeners onCompleteListener, final Game game, final GenericBoard board)
+	public ServerApiSendMove(final Context context, final ServerApiListeners listeners, final Game game, final GenericBoard board)
 	{
-		super(context, onCompleteListener);
-
+		super(context, listeners);
 		this.game = game;
 		this.board = board;
 	}
@@ -75,20 +73,20 @@ public class ServerApiSendMove extends ServerApi
 			final String boardJSONString = boardJSON.toString();
 
 			final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-			nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CREATOR, whoAmI.getIdAsString()));
-			nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_BOARD, boardJSONString));
-			nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_USER_CHALLENGED, game.getPerson().getIdAsString()));
-			nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_NAME, game.getPerson().getName()));
+			nameValuePairs.add(new BasicNameValuePair(Server.POST_DATA_USER_CREATOR, whoAmI.getIdAsString()));
+			nameValuePairs.add(new BasicNameValuePair(Server.POST_DATA_USER_CHALLENGED, game.getPerson().getIdAsString()));
+			nameValuePairs.add(new BasicNameValuePair(Server.POST_DATA_NAME, game.getPerson().getName()));
+			nameValuePairs.add(new BasicNameValuePair(Server.POST_DATA_BOARD, boardJSONString));
 
 			if (Utilities.verifyValidString(game.getId()))
 			{
-				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_GAME_ID, game.getId()));
+				nameValuePairs.add(new BasicNameValuePair(Server.POST_DATA_GAME_ID, game.getId()));
 
-				serverResponse = ServerUtilities.postToServer(ServerUtilities.ADDRESS_NEW_MOVE, nameValuePairs);
+				serverResponse = Server.postToServer(Server.ADDRESS_NEW_MOVE, nameValuePairs);
 			}
 			else
 			{
-				serverResponse = ServerUtilities.postToServer(ServerUtilities.ADDRESS_NEW_GAME, nameValuePairs);
+				serverResponse = Server.postToServer(Server.ADDRESS_NEW_GAME, nameValuePairs);
 			}
 		}
 		catch (final IOException e)

@@ -13,7 +13,7 @@ import android.widget.Button;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.R;
-import com.charlesmadere.android.classygames.utilities.ServerUtilities;
+import com.charlesmadere.android.classygames.server.Server;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
@@ -140,7 +140,7 @@ public class RegisterForNotificationsActivity extends SherlockActivity
 			{
 				try
 				{
-					registrationSuccess = ServerUtilities.gcmRegister(context);
+					registrationSuccess = Server.gcmRegister(context);
 				}
 				catch (final IOException e)
 				{

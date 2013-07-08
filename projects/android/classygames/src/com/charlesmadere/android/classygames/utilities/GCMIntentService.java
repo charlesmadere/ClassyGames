@@ -17,6 +17,7 @@ import com.charlesmadere.android.classygames.GameFragmentActivity;
 import com.charlesmadere.android.classygames.GameOverActivity;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.models.Person;
+import com.charlesmadere.android.classygames.server.Server;
 
 import java.io.IOException;
 
@@ -122,7 +123,7 @@ public class GCMIntentService extends IntentService
 				try
 				{
 					// notify 3rd party server about the new regId
-					ServerUtilities.gcmRegister(regId, this);
+					Server.gcmRegister(regId, this);
 				}
 				catch (final IOException e)
 				{
@@ -138,7 +139,7 @@ public class GCMIntentService extends IntentService
 			try
 			{
 				// notify 3rd party server about the unregistered ID
-				ServerUtilities.gcmUnregister(this);
+				Server.gcmUnregister(this);
 			}
 			catch (final IOException e)
 			{
@@ -179,11 +180,11 @@ public class GCMIntentService extends IntentService
 	{
 		// Retrieve input parameters for easier access. These input parameters
 		// determine what type of push notification has been received.
-		final String parameter_gameId = intent.getStringExtra(ServerUtilities.POST_DATA_GAME_ID);
-		final String parameter_gameType = intent.getStringExtra(ServerUtilities.POST_DATA_GAME_TYPE);
-		final String parameter_personId = intent.getStringExtra(ServerUtilities.POST_DATA_ID);
-		final String parameter_messageType = intent.getStringExtra(ServerUtilities.POST_DATA_MESSAGE_TYPE);
-		final String parameter_personName = intent.getStringExtra(ServerUtilities.POST_DATA_NAME);
+		final String parameter_gameId = intent.getStringExtra(Server.POST_DATA_GAME_ID);
+		final String parameter_gameType = intent.getStringExtra(Server.POST_DATA_GAME_TYPE);
+		final String parameter_personId = intent.getStringExtra(Server.POST_DATA_ID);
+		final String parameter_messageType = intent.getStringExtra(Server.POST_DATA_MESSAGE_TYPE);
+		final String parameter_personName = intent.getStringExtra(Server.POST_DATA_NAME);
 
 		if (Utilities.verifyValidStrings(parameter_gameId, parameter_gameType, parameter_personId,
 			parameter_messageType, parameter_personName))
@@ -196,7 +197,7 @@ public class GCMIntentService extends IntentService
 			final long personId = Long.parseLong(parameter_personId);
 
 			if (Person.isIdAndNameValid(personId, parameter_personName) &&
-					(ServerUtilities.validGameTypeValue(whichGame) || ServerUtilities.validMessageTypeValue(messageType)))
+					(Server.validGameTypeValue(whichGame) || Server.validMessageTypeValue(messageType)))
 			{
 				final Person person = new Person(personId, parameter_personName);
 
@@ -253,14 +254,14 @@ public class GCMIntentService extends IntentService
 			builder.setLights(Color.MAGENTA, GCM_NOTIFICATION_LIGHTS_DURATION_ON, GCM_NOTIFICATION_LIGHTS_DURATION_OFF);
 		}
 
-		if (messageType == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_GAME
-				|| messageType == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_MOVE)
+		if (messageType == Server.POST_DATA_MESSAGE_TYPE_NEW_GAME
+				|| messageType == Server.POST_DATA_MESSAGE_TYPE_NEW_MOVE)
 		// Check to see if the type of the received push notification is either
 		// a new game or a new move.
 		{
 			handleNewGameOrNewMoveMessage(builder, gameId, whichGame, messageType, person);
 		}
-		else if (ServerUtilities.validWinOrLoseValue(messageType))
+		else if (Server.validWinOrLoseValue(messageType))
 		// Check to see if the type of the received push notification is either
 		// a game loss or a game won.
 		{
@@ -311,11 +312,11 @@ public class GCMIntentService extends IntentService
 		stackBuilder.addNextIntentWithParentStack(gameIntent);
 		builder.setTicker(getString(R.string.ol_x_sent_you_some_class, person.getName()));
 
-		if (messageType == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_GAME)
+		if (messageType == Server.POST_DATA_MESSAGE_TYPE_NEW_GAME)
 		{
 			builder.setContentText(getString(R.string.new_game_from_x, person.getName()));
 		}
-		else if (messageType == ServerUtilities.POST_DATA_MESSAGE_TYPE_NEW_MOVE)
+		else if (messageType == Server.POST_DATA_MESSAGE_TYPE_NEW_MOVE)
 		{
 			builder.setContentText(getString(R.string.new_move_from_x, person.getName()));
 		}
@@ -349,11 +350,11 @@ public class GCMIntentService extends IntentService
 		stackBuilder.addNextIntentWithParentStack(gameOverIntent);
 		builder.setTicker(getString(R.string.game_over, person.getName()));
 
-		if (messageType == ServerUtilities.POST_DATA_MESSAGE_TYPE_GAME_OVER_LOSE)
+		if (messageType == Server.POST_DATA_MESSAGE_TYPE_GAME_OVER_LOSE)
 		{
 			builder.setContentText(getString(R.string.you_lost_the_game_with_x, person.getName()));
 		}
-		else if (messageType == ServerUtilities.POST_DATA_MESSAGE_TYPE_GAME_OVER_WIN)
+		else if (messageType == Server.POST_DATA_MESSAGE_TYPE_GAME_OVER_WIN)
 		{
 			builder.setContentText(getString(R.string.you_won_the_game_with_x, person.getName()));
 		}
