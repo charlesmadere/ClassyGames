@@ -40,6 +40,7 @@ public final class ServerUtilities
 	public final static String ADDRESS_FORFEIT_GAME = ADDRESS_MAIN + "ForfeitGame";
 	public final static String ADDRESS_GET_GAME = ADDRESS_MAIN + "GetGame";
 	public final static String ADDRESS_GET_GAMES = ADDRESS_MAIN + "GetGames";
+	public final static String ADDRESS_GET_STATS = ADDRESS_MAIN + "GetStats";
 	public final static String ADDRESS_NEW_GAME = ADDRESS_MAIN + "NewGame";
 	public final static String ADDRESS_NEW_MOVE = ADDRESS_MAIN + "NewMove";
 	public final static String ADDRESS_NEW_REG_ID = ADDRESS_MAIN + "NewRegId";

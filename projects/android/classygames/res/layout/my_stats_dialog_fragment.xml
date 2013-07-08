@@ -11,11 +11,13 @@
 	android:paddingTop="16dip">
 	<LinearLayout
 		android:baselineAligned="false"
+		android:id="@+id/my_stats_dialog_fragment_linearlayout_stats"
 		android:layout_height="wrap_content"
 		android:layout_marginBottom="16dip"
 		android:layout_width="match_parent"
 		android:padding="4dip"
-		android:orientation="horizontal">
+		android:orientation="horizontal"
+		android:visibility="gone">
 		<LinearLayout
 			android:layout_height="wrap_content"
 			android:layout_marginRight="16dip"
@@ -31,22 +33,20 @@
 				android:layout_width="match_parent" />
 			<TextView
 				android:gravity="center"
-				android:id="@+id/my_profile_dialog_fragment_textview_checkers_wins"
+				android:id="@+id/my_stats_dialog_fragment_textview_checkers_wins"
 				android:layout_height="wrap_content"
 				android:layout_width="match_parent"
 				android:text="@string/loading"
 				android:textColor="@color/gray_darker"
-				android:textSize="16sp"
-				android:visibility="gone" />
+				android:textSize="16sp" />
 			<TextView
 				android:gravity="center"
-				android:id="@+id/my_profile_dialog_fragment_textview_checkers_losses"
+				android:id="@+id/my_stats_dialog_fragment_textview_checkers_losses"
 				android:layout_height="wrap_content"
 				android:layout_width="match_parent"
 				android:text="@string/loading"
 				android:textColor="@color/gray_darker"
-				android:textSize="16sp"
-				android:visibility="gone" />
+				android:textSize="16sp" />
 		</LinearLayout>
 		<LinearLayout
 			android:layout_height="wrap_content"
@@ -63,25 +63,23 @@
 				android:layout_width="match_parent" />
 			<TextView
 				android:gravity="center"
-				android:id="@+id/my_profile_dialog_fragment_textview_chess_wins"
+				android:id="@+id/my_stats_dialog_fragment_textview_chess_wins"
 				android:layout_height="wrap_content"
 				android:layout_width="match_parent"
 				android:textColor="@color/gray_darker"
-				android:textSize="16sp"
-				android:visibility="gone" />
+				android:textSize="16sp" />
 			<TextView
 				android:gravity="center"
-				android:id="@+id/my_profile_dialog_fragment_textview_chess_losses"
+				android:id="@+id/my_stats_dialog_fragment_textview_chess_losses"
 				android:layout_height="wrap_content"
 				android:layout_width="match_parent"
 				android:textColor="@color/gray_darker"
-				android:textSize="16sp"
-				android:visibility="gone" />
+				android:textSize="16sp" />
 		</LinearLayout>
 	</LinearLayout>
 	<TextView
 		android:gravity="center"
-		android:id="@+id/my_profile_dialog_fragment_textview_games_played"
+		android:id="@+id/my_stats_dialog_fragment_textview_games_played"
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
 		android:textColor="@color/gray_dark"
@@ -89,7 +87,7 @@
 		android:visibility="gone" />
 	<TextView
 		android:gravity="center"
-		android:id="@+id/my_profile_dialog_fragment_textview_loading"
+		android:id="@+id/my_stats_dialog_fragment_textview_loading"
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
 		android:text="@string/loading_your_scores"

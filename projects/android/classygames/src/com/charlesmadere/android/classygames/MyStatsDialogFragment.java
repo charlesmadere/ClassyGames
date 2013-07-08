@@ -3,39 +3,37 @@ package com.charlesmadere.android.classygames;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockDialogFragment;
-import com.charlesmadere.android.classygames.models.Person;
-import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
 /**
  * This Fragment shows the user their stats and scores and stuff.
  */
-public class MyProfileDialogFragment extends SherlockDialogFragment
+public class MyStatsDialogFragment extends SherlockDialogFragment
 {
 
 
-	private final static String LOG_TAG = Utilities.LOG_TAG + " - MyProfileDialogFragment";
-
-
 	public final static String PREFERENCES_NAME = "MyProfileFragment_Preferences";
+	private final static String LOG_TAG = Utilities.LOG_TAG + " - MyStatsDialogFragment";
 	private final static String KEY_CHECKERS_LOSES = "KEY_CHECKERS_LOSES";
 	private final static String KEY_CHECKERS_WINS = "KEY_CHECKERS_WINS";
 	private final static String KEY_CHESS_LOSES = "KEY_CHESS_LOSES";
 	private final static String KEY_CHESS_WINS = "KEY_CHESS_WINS";
 
 
-	private AsyncGetProfile asyncGetProfile;
-	private Person whoAmI;
+	private AsyncGetStats asyncGetStats;
 	private SharedPreferences sPreferences;
-	private SharedPreferences.Editor sPreferencesEditor;
+	private Editor sPreferencesEditor;
+	private LinearLayout stats;
 	private TextView checkersLosses;
 	private TextView checkersWins;
 	private TextView chessLosses;
@@ -51,7 +49,7 @@ public class MyProfileDialogFragment extends SherlockDialogFragment
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{
 		getDialog().requestWindowFeature(STYLE_NO_TITLE);
-		return inflater.inflate(R.layout.my_profile_dialog_fragment, container, false);
+		return inflater.inflate(R.layout.my_stats_dialog_fragment, container, false);
 	}
 
 
@@ -59,7 +57,6 @@ public class MyProfileDialogFragment extends SherlockDialogFragment
 	public void onActivityCreated(final Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
-		whoAmI = Utilities.getWhoAmI(getSherlockActivity());
 
 		findViews();
 		getPreferences();
@@ -76,8 +73,8 @@ public class MyProfileDialogFragment extends SherlockDialogFragment
 		}
 		else
 		{
-			asyncGetProfile = new AsyncGetProfile(getPreferencesEditor());
-			asyncGetProfile.execute();
+			asyncGetStats = new AsyncGetStats(getPreferencesEditor());
+			asyncGetStats.execute();
 		}
 	}
 
@@ -87,8 +84,11 @@ public class MyProfileDialogFragment extends SherlockDialogFragment
 	 */
 	public void cancelRunningAnyAsyncTask()
 	{
-		asyncGetProfile.cancel(true);
-		asyncGetProfile = null;
+		if (isAnAsyncTaskRunning())
+		{
+			asyncGetStats.cancel(true);
+			asyncGetStats = null;
+		}
 	}
 
 
@@ -98,12 +98,13 @@ public class MyProfileDialogFragment extends SherlockDialogFragment
 			|| chessWins == null || gamesPlayed == null || loading == null)
 		{
 			view = getView();
-			checkersLosses = (TextView) view.findViewById(R.id.my_profile_dialog_fragment_textview_checkers_losses);
-			checkersWins = (TextView) view.findViewById(R.id.my_profile_dialog_fragment_textview_checkers_wins);
-			chessLosses = (TextView) view.findViewById(R.id.my_profile_dialog_fragment_textview_chess_losses);
-			chessWins = (TextView) view.findViewById(R.id.my_profile_dialog_fragment_textview_chess_wins);
-			gamesPlayed = (TextView) view.findViewById(R.id.my_profile_dialog_fragment_textview_games_played);
-			loading = (TextView) view.findViewById(R.id.my_profile_dialog_fragment_textview_loading);
+			stats = (LinearLayout) view.findViewById(R.id.my_stats_dialog_fragment_linearlayout_stats);
+			checkersLosses = (TextView) view.findViewById(R.id.my_stats_dialog_fragment_textview_checkers_losses);
+			checkersWins = (TextView) view.findViewById(R.id.my_stats_dialog_fragment_textview_checkers_wins);
+			chessLosses = (TextView) view.findViewById(R.id.my_stats_dialog_fragment_textview_chess_losses);
+			chessWins = (TextView) view.findViewById(R.id.my_stats_dialog_fragment_textview_chess_wins);
+			gamesPlayed = (TextView) view.findViewById(R.id.my_stats_dialog_fragment_textview_games_played);
+			loading = (TextView) view.findViewById(R.id.my_stats_dialog_fragment_textview_loading);
 		}
 	}
 
@@ -112,23 +113,16 @@ public class MyProfileDialogFragment extends SherlockDialogFragment
 	{
 		findViews();
 
-		if (checkersLosses.getVisibility() == View.GONE || checkersLosses.getVisibility() == View.GONE ||
-			chessLosses.getVisibility() == View.GONE || chessWins.getVisibility() == View.GONE ||
-			gamesPlayed.getVisibility() == View.GONE || loading.getVisibility() == View.VISIBLE)
+		if (stats.getVisibility() == View.GONE || gamesPlayed.getVisibility() == View.GONE
+			|| loading.getVisibility() == View.VISIBLE)
 		{
-			checkersLosses.setVisibility(View.VISIBLE);
-			checkersWins.setVisibility(View.VISIBLE);
-			chessLosses.setVisibility(View.VISIBLE);
-			chessWins.setVisibility(View.VISIBLE);
+			stats.setVisibility(View.VISIBLE);
 			gamesPlayed.setVisibility(View.VISIBLE);
 			loading.setVisibility(View.GONE);
 		}
 		else
 		{
-			checkersLosses.setVisibility(View.GONE);
-			checkersWins.setVisibility(View.GONE);
-			chessLosses.setVisibility(View.GONE);
-			chessWins.setVisibility(View.GONE);
+			stats.setVisibility(View.GONE);
 			gamesPlayed.setVisibility(View.GONE);
 			loading.setVisibility(View.VISIBLE);
 		}
@@ -198,7 +192,7 @@ public class MyProfileDialogFragment extends SherlockDialogFragment
 	}
 
 
-	private SharedPreferences.Editor getPreferencesEditor()
+	private Editor getPreferencesEditor()
 	{
 		if (sPreferencesEditor == null)
 		{
@@ -208,26 +202,27 @@ public class MyProfileDialogFragment extends SherlockDialogFragment
 		return sPreferencesEditor;
 	}
 
+
 	/**
 	 * @return
-	 * Returns true if either the AsyncGetProfile AsyncTask is running.
+	 * Returns true if the AsyncGetStats AsyncTask is running.
 	 */
 	public boolean isAnAsyncTaskRunning()
 	{
-		return asyncGetProfile != null;
+		return asyncGetStats != null;
 	}
 
 
 
 
-	private final class AsyncGetProfile extends AsyncTask<Void, Void, String>
+	private final class AsyncGetStats extends AsyncTask<Void, Void, String>
 	{
 
 
-		private SharedPreferences.Editor sPreferencesEditor;
+		private Editor sPreferencesEditor;
 
 
-		private AsyncGetProfile(final SharedPreferences.Editor sPreferencesEditor)
+		private AsyncGetStats(final Editor sPreferencesEditor)
 		{
 			this.sPreferencesEditor = sPreferencesEditor;
 		}
@@ -240,22 +235,39 @@ public class MyProfileDialogFragment extends SherlockDialogFragment
 		}
 
 
+		private void cancelled()
+		{
+
+		}
+
+
+		@Override
+		protected void onCancelled()
+		{
+			cancelled();
+		}
+
+
+		@Override
+		protected void onCancelled(final String serverResponse)
+		{
+			cancelled();
+		}
+
+
 		@Override
 		protected void onPostExecute(final String serverResponse)
 		{
-			super.onPostExecute(serverResponse);
-
 			flipViews();
 			flushViews(10, 1, 0, 2);
 
-			asyncGetProfile = null;
+			asyncGetStats = null;
 		}
 
 
 		@Override
 		protected void onPreExecute()
 		{
-			super.onPreExecute();
 			sPreferencesEditor.clear();
 			sPreferencesEditor.commit();
 		}

@@ -25,6 +25,7 @@
 	<string name="couldnt_create_the_game_as_malformed_data_was_detected">Couldn\'t create the game as malformed data was detected!</string>
 	<string name="error_when_trying_to_store_the_data_for_the_friend_that_you_selected">Error when trying to store the data for the friend that you selected.</string>
 	<string name="facebook_app_id">324400870964487</string>
+	<string name="forfeit">Forfeit</string>
 	<string name="forfeit_game">Forfeit Game</string>
 	<string name="friends_list">Friends List</string>
 	<string name="friends_list_fragment_no_friends">Sorry, but you don\'t seem to have any Facebook friends. In order to play Classy Games you must have some Facebook friends.</string>
@@ -55,6 +56,7 @@
 	<string name="make_sure_that_you_dont_set_both_teams_color_to_the_same_thing_your_changes_to_this_setting_have_not_been_saved">Make sure that you don\'t set both teams color to the same thing! Your changes to this setting have not been saved.</string>
 	<string name="more_than_two_weeks_ago">more than 2 weeks ago</string>
 	<string name="my_profile">My Profile</string>
+	<string name="my_stats">My Stats</string>
 	<string name="nevermind">Nevermind&#8230;</string>
 	<string name="new_game">New Game</string>
 	<string name="no">No</string>
@@ -90,7 +92,9 @@
 	<string name="retrieving_all_of_your_games">Retrieving all of your games&#8230;</string>
 	<string name="return_to_games_list">Return to Games List</string>
 	<string name="search">Search</string>
+	<string name="search_friends">Search Friends&#8230;</string>
 	<string name="select_an_action_for_this_game_against_x">Select an action for this game against %1$s.</string>
+	<string name="send">Send</string>
 	<string name="send_move">Send Move</string>
 	<string name="server_api_forfeit_game_dialog_message">Are you sure that you want to forfeit this game? Really?</string>
 	<string name="server_api_forfeit_game_progressdialog_message">Sending your decision to forfeit the game to our server, the hamsters are processing it&#8230;</string>
@@ -108,10 +112,13 @@
 	<string name="sharkwork">Sharkwork</string>
 	<string name="sharkwork_by_tristan_kidder">Sharkwork by Tristan Kidder</string>
 	<string name="show_notification_light">Show Notification Light</string>
+	<string name="skip">Skip</string>
 	<string name="skip_move">Skip Move</string>
 	<string name="start_game">Start game!</string>
+	<string name="stats">Stats</string>
 	<string name="their_turn">Their Turn</string>
 	<string name="two_weeks_ago">2 weeks ago</string>
+	<string name="undo">Undo</string>
 	<string name="undo_move">Undo Move</string>
 	<string name="unregister_from_notifications">Unregister from Notifications</string>
 	<string name="unregister_from_notifications_activity_description">Tired of notifications? This will cause any of your devices that currently have Classy Games installed on them to quit receiving notifications. This process is easily reversible (just go back to settings and hit \"Register for Notifications\"!).</string>

@@ -43,7 +43,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 	private EmptyGameFragment emptyGameFragment;
 	private GamesListFragment gamesListFragment;
 	private GenericGameFragment genericGameFragment;
-	private MyProfileDialogFragment myProfileDialogFragment;
+	private MyStatsDialogFragment myStatsDialogFragment;
 
 
 
@@ -187,9 +187,9 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 		{
 			genericGameFragment.cancelRunningAnyAsyncTask();
 		}
-		else if (myProfileDialogFragment != null && myProfileDialogFragment.isAnAsyncTaskRunning())
+		else if (myStatsDialogFragment != null && myStatsDialogFragment.isAnAsyncTaskRunning())
 		{
-			myProfileDialogFragment.cancelRunningAnyAsyncTask();
+			myStatsDialogFragment.cancelRunningAnyAsyncTask();
 		}
 		else
 		{
@@ -221,9 +221,9 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 			genericGameFragment.cancelRunningAnyAsyncTask();
 		}
 
-		if (myProfileDialogFragment != null)
+		if (myStatsDialogFragment != null)
 		{
-			myProfileDialogFragment.cancelRunningAnyAsyncTask();
+			myStatsDialogFragment.cancelRunningAnyAsyncTask();
 		}
 
 		super.onDestroy();
@@ -243,12 +243,12 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 				startActivity(new Intent(this, AboutActivity.class));
 				break;
 
-			case R.id.game_fragment_activity_menu_my_profile:
+			case R.id.game_fragment_activity_menu_my_stats:
 				final FragmentManager fManager = getSupportFragmentManager();
 				final FragmentTransaction fTransaction = fManager.beginTransaction();
 				fTransaction.addToBackStack(null);
-				myProfileDialogFragment = new MyProfileDialogFragment();
-				myProfileDialogFragment.show(fTransaction, null);
+				myStatsDialogFragment = new MyStatsDialogFragment();
+				myStatsDialogFragment.show(fTransaction, null);
 				break;
 
 			case R.id.game_fragment_activity_menu_new_game:

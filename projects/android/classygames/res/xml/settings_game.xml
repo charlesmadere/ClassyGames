@@ -40,7 +40,7 @@
 			android:key="@string/settings_key_players_chess_piece_color"
 			android:negativeButtonText="@string/cancel"
 			android:positiveButtonText="@string/change_color"
-			android:summary="@string/changes_the_colors_of_your_own_checkers_pieces"
+			android:summary="@string/changes_the_colors_of_your_own_chess_pieces"
 			android:title="@string/change_your_piece_colors" />
 		<ListPreference
 			android:defaultValue="@string/blue"
@@ -50,7 +50,7 @@
 			android:key="@string/settings_key_opponents_chess_piece_color"
 			android:negativeButtonText="@string/cancel"
 			android:positiveButtonText="@string/change_color"
-			android:summary="@string/changes_the_colors_of_your_opponents_checkers_pieces"
+			android:summary="@string/changes_the_colors_of_your_opponents_chess_pieces"
 			android:title="@string/change_the_opponents_piece_colors" />
 	</PreferenceCategory>
 </PreferenceScreen>

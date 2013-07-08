@@ -3,7 +3,7 @@
 	android:dither="true">
 	<item
 		android:state_selected="true"
-		android:drawable="@drawable/bg_subtle_gray_red" />
+		android:drawable="@drawable/bg_board_bright_selected" />
 	<item
 		android:drawable="@drawable/bg_subtle_gray" />
 </selector>

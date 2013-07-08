@@ -18,8 +18,12 @@
 	<color name="pink_light">#F1D4DF</color>
 	<color name="pink_medium">#EDB3C9</color>
 	<color name="overlay_pink_dark">#44EF9CBB</color>
-	<color name="overlay_pink_darker">#44C9839D</color>
+	<color name="overlay_pink_darker">#77C9839D</color>
+	<color name="overlay_pink_darkest">#BBC9839D</color>
 	<color name="overlay_pink_light">#44F1D4DF</color>
 	<color name="overlay_pink_medium">#44EDB3C9</color>
+	<color name="overlay_red_dark">#88990000</color>
+	<color name="overlay_red_medium">#88BB0000</color>
+	<color name="overlay_red_light">#88FF0000</color>
 	<color name="white">#FFFFFF</color>
 </resources>

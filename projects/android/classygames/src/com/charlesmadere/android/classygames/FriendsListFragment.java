@@ -152,7 +152,7 @@ public class FriendsListFragment extends SherlockFragment implements
 
 			final MenuItem searchMenuItem = menu.findItem(R.id.friends_list_fragment_menu_search);
 			final SearchView searchView = (SearchView) searchMenuItem.getActionView();
-			searchView.setQueryHint(getString(R.string.search));
+			searchView.setQueryHint(getString(R.string.search_friends));
 
 			searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
 			{

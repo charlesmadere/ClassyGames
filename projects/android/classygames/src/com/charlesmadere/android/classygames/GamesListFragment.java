@@ -514,7 +514,7 @@ public class GamesListFragment extends SherlockFragment implements
 				editor.commit();
 
 				// clear all cached profile loss and win data
-				sPreferences = fragmentActivity.getSharedPreferences(MyProfileDialogFragment.PREFERENCES_NAME, Context.MODE_PRIVATE);
+				sPreferences = fragmentActivity.getSharedPreferences(MyStatsDialogFragment.PREFERENCES_NAME, Context.MODE_PRIVATE);
 				editor = sPreferences.edit();
 				editor.clear();
 				editor.commit();
