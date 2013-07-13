@@ -146,7 +146,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		 * This is fired in the event that an error was detected with some of
 		 * the data needed to instantiate a game.
 		 */
-		public void onDataError();
+		public void onGetGameDataError();
 
 
 		/**
@@ -196,7 +196,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		// is found, then this Fragment has encountered an error and must
 		// terminate itself.
 		{
-			listeners.onDataError();
+			listeners.onGetGameDataError();
 		}
 		else
 		{
@@ -309,13 +309,13 @@ public abstract class GenericGameFragment extends SherlockFragment
 					}
 					catch (final JSONException e)
 					{
-						listeners.onDataError();
+						listeners.onGetGameDataError();
 					}
 				}
 			}
 			else
 			{
-				listeners.onDataError();
+				listeners.onGetGameDataError();
 			}
 		}
 	}
@@ -495,7 +495,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * Attempts to cancel the currently running ServerApiTask.
 	 * 
 	 * @return
-	 * Returns true if the AsyncTask was cancelled.
+	 * Returns true if the ServerApiTask was cancelled.
 	 */
 	private boolean cancelRunningServerApiTask()
 	{
@@ -664,8 +664,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 	/**
 	 * @return
-	 * Returns true if either the AsyncGetGame AsyncTask is running or if the
-	 * AsyncSendMove AsyncTask is running.
+	 * Returns true if either the AsyncGetGame AsyncTask is running or if a
+	 * ServerApi is running.
 	 */
 	public boolean isAnAsyncTaskRunning()
 	{
@@ -883,7 +883,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		if (boardJSON == null)
 		{
 			Log.e(LOG_TAG, "Tried to build the board from a null JSONObject!");
-			listeners.onDataError();
+			listeners.onGetGameDataError();
 		}
 		else
 		{
@@ -894,7 +894,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			catch (final JSONException e)
 			{
 				Log.e(LOG_TAG, "resumeOldBoard(): boardJSON is massively malformed.", e);
-				listeners.onDataError();
+				listeners.onGetGameDataError();
 			}
 		}
 	}
@@ -1062,7 +1062,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			}
 			catch (final JSONException e)
 			{
-				listeners.onDataError();
+				listeners.onGetGameDataError();
 			}
 
 			flush();

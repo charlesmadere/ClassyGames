@@ -1,18 +1,24 @@
 package com.charlesmadere.android.classygames;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockDialogFragment;
+import com.charlesmadere.android.classygames.server.Server;
+import com.charlesmadere.android.classygames.server.ServerApi;
+import com.charlesmadere.android.classygames.server.ServerApiGetStats;
 import com.charlesmadere.android.classygames.utilities.Utilities;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 /**
@@ -22,25 +28,40 @@ public class MyStatsDialogFragment extends SherlockDialogFragment
 {
 
 
-	public final static String PREFERENCES_NAME = "MyProfileFragment_Preferences";
 	private final static String LOG_TAG = Utilities.LOG_TAG + " - MyStatsDialogFragment";
+	public final static String PREFERENCES_NAME = "MyProfileFragment_Preferences";
 	private final static String KEY_CHECKERS_LOSES = "KEY_CHECKERS_LOSES";
 	private final static String KEY_CHECKERS_WINS = "KEY_CHECKERS_WINS";
 	private final static String KEY_CHESS_LOSES = "KEY_CHESS_LOSES";
 	private final static String KEY_CHESS_WINS = "KEY_CHESS_WINS";
 
 
-	private AsyncGetStats asyncGetStats;
+	private ServerApi serverTask;
 	private SharedPreferences sPreferences;
 	private Editor sPreferencesEditor;
 	private LinearLayout stats;
-	private TextView checkersLosses;
+	private TextView checkersLoses;
 	private TextView checkersWins;
-	private TextView chessLosses;
+	private TextView chessLoses;
 	private TextView chessWins;
 	private TextView gamesPlayed;
-	private TextView loading;
+	private LinearLayout loading;
 	private View view;
+
+
+
+	private Listeners listeners;
+
+
+	public interface  Listeners
+	{
+		/**
+		 * This method is fired whenever there was an error when trying to
+		 * parse data as received from the server when performing the GetStats
+		 * server api call.
+		 */
+		public void onGetStatsDataError();
+	}
 
 
 
@@ -73,8 +94,51 @@ public class MyStatsDialogFragment extends SherlockDialogFragment
 		}
 		else
 		{
-			asyncGetStats = new AsyncGetStats(getPreferencesEditor());
-			asyncGetStats.execute();
+			getPreferencesEditor();
+			sPreferencesEditor.clear();
+			sPreferencesEditor.commit();
+
+			serverTask = new ServerApiGetStats(getSherlockActivity(), new ServerApi.Listeners()
+			{
+				@Override
+				public void onCancel()
+				{
+					serverTask = null;
+				}
+
+
+				@Override
+				public void onComplete(final String serverResponse)
+				{
+					parseServerResponse(serverResponse);
+					serverTask = null;
+				}
+
+
+				@Override
+				public void onDismiss()
+				{
+					serverTask = null;
+				}
+			});
+
+			serverTask.execute(false);
+		}
+	}
+
+
+	@Override
+	public void onAttach(final Activity activity)
+	{
+		super.onAttach(activity);
+
+		try
+		{
+			listeners = (Listeners) activity;
+		}
+		catch (final ClassCastException e)
+		{
+			throw new ClassCastException(activity.toString() + " must implement listeners!");
 		}
 	}
 
@@ -82,29 +146,28 @@ public class MyStatsDialogFragment extends SherlockDialogFragment
 	/**
 	 * Cancels the currently running AsyncTask (if any).
 	 */
-	public void cancelRunningAnyAsyncTask()
+	public void cancelRunningServerTask()
 	{
-		if (isAnAsyncTaskRunning())
+		if (isServerTaskRunning())
 		{
-			asyncGetStats.cancel(true);
-			asyncGetStats = null;
+			serverTask.cancel();
 		}
 	}
 
 
 	private void findViews()
 	{
-		if (view == null || checkersLosses == null || checkersWins == null || chessLosses == null
+		if (view == null || checkersLoses == null || checkersWins == null || chessLoses == null
 			|| chessWins == null || gamesPlayed == null || loading == null)
 		{
 			view = getView();
 			stats = (LinearLayout) view.findViewById(R.id.my_stats_dialog_fragment_linearlayout_stats);
-			checkersLosses = (TextView) view.findViewById(R.id.my_stats_dialog_fragment_textview_checkers_losses);
+			checkersLoses = (TextView) view.findViewById(R.id.my_stats_dialog_fragment_textview_checkers_loses);
 			checkersWins = (TextView) view.findViewById(R.id.my_stats_dialog_fragment_textview_checkers_wins);
-			chessLosses = (TextView) view.findViewById(R.id.my_stats_dialog_fragment_textview_chess_losses);
+			chessLoses = (TextView) view.findViewById(R.id.my_stats_dialog_fragment_textview_chess_loses);
 			chessWins = (TextView) view.findViewById(R.id.my_stats_dialog_fragment_textview_chess_wins);
 			gamesPlayed = (TextView) view.findViewById(R.id.my_stats_dialog_fragment_textview_games_played);
-			loading = (TextView) view.findViewById(R.id.my_stats_dialog_fragment_textview_loading);
+			loading = (LinearLayout) view.findViewById(R.id.my_stats_dialog_fragment_textview_loading);
 		}
 	}
 
@@ -129,16 +192,22 @@ public class MyStatsDialogFragment extends SherlockDialogFragment
 	}
 
 
-	private void flushViews(final int checkersLosses, final int checkersWins, final int chessLosses,
+	private void flushViews(final int[] checkers, final int[] chess)
+	{
+		flushViews(checkers[0], checkers[1], chess[0], chess[1]);
+	}
+
+
+	private void flushViews(final int checkersLoses, final int checkersWins, final int chessLoses,
 		final int chessWins)
 	{
-		if (checkersLosses == 1)
+		if (checkersLoses == 1)
 		{
-			this.checkersLosses.setText(getString(R.string.one_loss));
+			this.checkersLoses.setText(getString(R.string.one_loss));
 		}
 		else
 		{
-			this.checkersLosses.setText(getString(R.string.x_losses, checkersLosses));
+			this.checkersLoses.setText(getString(R.string.x_loses, checkersLoses));
 		}
 
 		if (checkersWins == 1)
@@ -150,13 +219,13 @@ public class MyStatsDialogFragment extends SherlockDialogFragment
 			this.checkersWins.setText(getString(R.string.x_wins, checkersWins));
 		}
 
-		if (chessLosses == 1)
+		if (chessLoses == 1)
 		{
-			this.chessLosses.setText(getString(R.string.one_loss));
+			this.chessLoses.setText(getString(R.string.one_loss));
 		}
 		else
 		{
-			this.chessLosses.setText(getString(R.string.x_losses, chessLosses));
+			this.chessLoses.setText(getString(R.string.x_loses, chessLoses));
 		}
 
 		if (chessWins == 1)
@@ -168,7 +237,7 @@ public class MyStatsDialogFragment extends SherlockDialogFragment
 			this.chessWins.setText(getString(R.string.x_wins, chessWins));
 		}
 
-		final int gamesPlayed = checkersLosses + checkersWins + chessLosses + chessWins;
+		final int gamesPlayed = checkersLoses + checkersWins + chessLoses + chessWins;
 
 		if (gamesPlayed == 1)
 		{
@@ -205,77 +274,72 @@ public class MyStatsDialogFragment extends SherlockDialogFragment
 
 	/**
 	 * @return
-	 * Returns true if the AsyncGetStats AsyncTask is running.
+	 * Returns true if a ServerApi Task is running.
 	 */
-	public boolean isAnAsyncTaskRunning()
+	public boolean isServerTaskRunning()
 	{
-		return asyncGetStats != null;
+		return serverTask != null;
 	}
 
 
-
-
-	private final class AsyncGetStats extends AsyncTask<Void, Void, String>
+	/**
+	 * Reads in the server response and gets the user's win and lose data out
+	 * of it.
+	 *
+	 * @param serverResponse
+	 * The raw String data as received from the Classy Games server.
+	 */
+	private void parseServerResponse(final String serverResponse)
 	{
-
-
-		private Editor sPreferencesEditor;
-
-
-		private AsyncGetStats(final Editor sPreferencesEditor)
+		if (Utilities.verifyValidString(serverResponse))
 		{
-			this.sPreferencesEditor = sPreferencesEditor;
+			try
+			{
+				final JSONObject jsonResult = new JSONObject(serverResponse);
+				final JSONObject jsonStatsData = jsonResult.optJSONObject(Server.POST_DATA_SUCCESS);
+
+				if (jsonStatsData == null)
+				{
+					final String successMessage = jsonResult.optString(Server.POST_DATA_SUCCESS);
+
+					if (Utilities.verifyValidString(successMessage))
+					{
+						Log.d(LOG_TAG, "Server returned success message: " + successMessage);
+					}
+					else
+					{
+						final String errorMessage = jsonResult.getString(Server.POST_DATA_ERROR);
+						Log.e(LOG_TAG, "Server returned error message: " + errorMessage);
+					}
+				}
+				else
+				{
+					final int[] checkers = parseLosesAndWins(jsonStatsData, Server.POST_DATA_CHECKERS);
+					final int[] chess = parseLosesAndWins(jsonStatsData, Server.POST_DATA_CHESS);
+					flushViews(checkers, chess);
+				}
+			}
+			catch (final JSONException e)
+			{
+				Log.e(LOG_TAG, "JSON String is massively malformed.", e);
+				listeners.onGetStatsDataError();
+			}
 		}
-
-
-		@Override
-		protected String doInBackground(final Void... params)
+		else
 		{
-			return null;
+			listeners.onGetStatsDataError();
 		}
-
-
-		private void cancelled()
-		{
-
-		}
-
-
-		@Override
-		protected void onCancelled()
-		{
-			cancelled();
-		}
-
-
-		@Override
-		protected void onCancelled(final String serverResponse)
-		{
-			cancelled();
-		}
-
-
-		@Override
-		protected void onPostExecute(final String serverResponse)
-		{
-			flipViews();
-			flushViews(10, 1, 0, 2);
-
-			asyncGetStats = null;
-		}
-
-
-		@Override
-		protected void onPreExecute()
-		{
-			sPreferencesEditor.clear();
-			sPreferencesEditor.commit();
-		}
-
-
 	}
 
 
+	private int[] parseLosesAndWins(final JSONObject statsData, final String game)
+		throws JSONException
+	{
+		final JSONObject gameStats = statsData.getJSONObject(game);
+		final int loses = gameStats.getInt(Server.POST_DATA_LOSES);
+		final int wins = gameStats.getInt(Server.POST_DATA_WINS);
+		return new int[] { loses, wins };
+	}
 
 
 }

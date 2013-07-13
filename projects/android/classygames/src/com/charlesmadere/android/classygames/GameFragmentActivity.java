@@ -19,7 +19,8 @@ import com.charlesmadere.android.classygames.utilities.Utilities;
 
 public class GameFragmentActivity extends SherlockFragmentActivity implements
 	GamesListFragment.Listeners,
-	GenericGameFragment.Listeners
+	GenericGameFragment.Listeners,
+	MyStatsDialogFragment.Listeners
 {
 
 
@@ -187,9 +188,9 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 		{
 			genericGameFragment.cancelRunningAnyAsyncTask();
 		}
-		else if (myStatsDialogFragment != null && myStatsDialogFragment.isAnAsyncTaskRunning())
+		else if (myStatsDialogFragment != null && myStatsDialogFragment.isServerTaskRunning())
 		{
-			myStatsDialogFragment.cancelRunningAnyAsyncTask();
+			myStatsDialogFragment.cancelRunningServerTask();
 		}
 		else
 		{
@@ -223,7 +224,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 		if (myStatsDialogFragment != null)
 		{
-			myStatsDialogFragment.cancelRunningAnyAsyncTask();
+			myStatsDialogFragment.cancelRunningServerTask();
 		}
 
 		super.onDestroy();
@@ -460,16 +461,16 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 
 	@Override
-	public void onDataError()
+	public void onGetGameCancelled()
 	{
-		Utilities.easyToastAndLogError(this, R.string.couldnt_create_the_game_as_malformed_data_was_detected);
 		onBackPressed();
 	}
 
 
 	@Override
-	public void onGetGameCancelled()
+	public void onGetGameDataError()
 	{
+		Utilities.easyToastAndLogError(this, R.string.couldnt_create_the_game_as_malformed_data_was_detected);
 		onBackPressed();
 	}
 

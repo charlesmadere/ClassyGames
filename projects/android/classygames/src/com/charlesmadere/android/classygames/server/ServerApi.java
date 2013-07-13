@@ -343,23 +343,33 @@ public abstract class ServerApi
 
 	/**
 	 * @return
-	 * The R.string.* value for the message to show in the dialog box.
+	 * The R.string.* value for the message to show in the dialog box. This
+	 * should ask the user something like "are you sure you want to blah blah?"
 	 */
-	protected abstract int getDialogMessage();
+	protected int getDialogMessage()
+	{
+		return R.string.are_you_sure_that_you_want_to_send_this_data_to_the_classy_games_servers;
+	}
 
 
 	/**
 	 * @return
 	 * The R.string.* value for the title to show in the dialog box.
 	 */
-	protected abstract int getDialogTitle();
+	protected int getDialogTitle()
+	{
+		return R.string.server_exchange;
+	}
 
 
 	/**
 	 * @return
 	 * The R.string.* value for the message to show in the progress dialog box.
 	 */
-	protected abstract int getProgressDialogMessage();
+	protected int getProgressDialogMessage()
+	{
+		return R.string.sending_data_to_the_classy_games_servers;
+	}
 
 
 	/**

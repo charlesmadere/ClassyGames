@@ -69,7 +69,7 @@ public class ServerApiUnregisterFromNotifications extends ServerApi
 		}
 		catch (final IOException e)
 		{
-			Log.e(LOG_TAG, "IOException error in AsyncForfeitGame - doInBackground()!", e);
+			Log.e(LOG_TAG, "IOException error in ServerApiUnregisterFromNotifications - postToServer()!", e);
 		}
 
 		return serverResponse;

@@ -465,10 +465,10 @@ public class GamesListFragment extends SherlockFragment implements
 	{
 
 
+		private byte runStatus;
 		private final static byte RUN_STATUS_NORMAL = 1;
 		private final static byte RUN_STATUS_IOEXCEPTION = 2;
 		private final static byte RUN_STATUS_NO_NETWORK_CONNECTION = 3;
-		private byte runStatus;
 
 
 		private SherlockFragmentActivity fragmentActivity;
@@ -484,13 +484,13 @@ public class GamesListFragment extends SherlockFragment implements
 			this.inflater = inflater;
 			this.viewGroup = viewGroup;
 			this.restoreExistingList = restoreExistingList;
+			runStatus = RUN_STATUS_NORMAL;
 		}
 
 
 		@Override
 		protected ArrayList<Game> doInBackground(final Void... params)
 		{
-			runStatus = RUN_STATUS_NORMAL;
 			ArrayList<Game> games = null;
 
 			if (restoreExistingList && gamesListJSON != null)
@@ -644,8 +644,9 @@ public class GamesListFragment extends SherlockFragment implements
 					try
 					{
 						if (!restoreExistingList)
-						// Check to see if this boolean is set to true. If it
-						// is set to true, then 
+						// Check to see if this boolean is set to false. If it
+						// is set to false, then we're restoring an existing
+						// games list.
 						{
 							gamesListJSON = new JSONObject(serverResponse);
 						}
@@ -684,7 +685,7 @@ public class GamesListFragment extends SherlockFragment implements
 					}
 					catch (final JSONException e)
 					{
-						Log.e(LOG_TAG, "JSON String is massively malformed.");
+						Log.e(LOG_TAG, "JSON String is massively malformed.", e);
 					}
 
 					games.trimToSize();

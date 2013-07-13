@@ -38,14 +38,16 @@
 				android:layout_width="match_parent"
 				android:text="@string/loading"
 				android:textColor="@color/gray_darker"
+				android:textIsSelectable="true"
 				android:textSize="16sp" />
 			<TextView
 				android:gravity="center"
-				android:id="@+id/my_stats_dialog_fragment_textview_checkers_losses"
+				android:id="@+id/my_stats_dialog_fragment_textview_checkers_loses"
 				android:layout_height="wrap_content"
 				android:layout_width="match_parent"
 				android:text="@string/loading"
 				android:textColor="@color/gray_darker"
+				android:textIsSelectable="true"
 				android:textSize="16sp" />
 		</LinearLayout>
 		<LinearLayout
@@ -67,13 +69,15 @@
 				android:layout_height="wrap_content"
 				android:layout_width="match_parent"
 				android:textColor="@color/gray_darker"
+				android:textIsSelectable="true"
 				android:textSize="16sp" />
 			<TextView
 				android:gravity="center"
-				android:id="@+id/my_stats_dialog_fragment_textview_chess_losses"
+				android:id="@+id/my_stats_dialog_fragment_textview_chess_loses"
 				android:layout_height="wrap_content"
 				android:layout_width="match_parent"
 				android:textColor="@color/gray_darker"
+				android:textIsSelectable="true"
 				android:textSize="16sp" />
 		</LinearLayout>
 	</LinearLayout>
@@ -83,15 +87,25 @@
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
 		android:textColor="@color/gray_dark"
+		android:textIsSelectable="true"
 		android:textSize="18sp"
 		android:visibility="gone" />
-	<TextView
+	<LinearLayout
 		android:gravity="center"
 		android:id="@+id/my_stats_dialog_fragment_textview_loading"
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
-		android:text="@string/loading_your_scores"
-		android:textColor="@color/pink_dark"
-		android:textSize="18sp"
-		android:typeface="monospace" />
+		android:orientation="vertical">
+		<ProgressBar
+			android:indeterminate="true"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content" />
+		<TextView
+			android:gravity="center"
+			android:layout_height="wrap_content"
+			android:layout_width="match_parent"
+			android:text="@string/loading_your_scores"
+			android:textIsSelectable="false"
+			style="@style/Paragraph" />
+	</LinearLayout>
 </LinearLayout>

@@ -9,6 +9,7 @@
 	<string name="almost_a_week_ago">almost a week ago</string>
 	<string name="almost_an_hour_ago">almost an hour ago</string>
 	<string name="are_you_sure_that_you_want_to_start_a_game_with_x">Are you sure that you want to start a game with %1$s?</string>
+	<string name="are_you_sure_that_you_want_to_send_this_data_to_the_classy_games_servers">Are you sure that you want to send this data to the Classy Games servers?</string>
 	<string name="ask_before_sending_move">Ask Before Sending Move</string>
 	<string name="blue">Blue</string>
 	<string name="cancel">Cancel</string>
@@ -95,7 +96,9 @@
 	<string name="search_friends">Search Friends&#8230;</string>
 	<string name="select_an_action_for_this_game_against_x">Select an action for this game against %1$s.</string>
 	<string name="send">Send</string>
+	<string name="sending_data_to_the_classy_games_servers">Sending data to the Classy Games servers&#8230;</string>
 	<string name="send_move">Send Move</string>
+	<string name="send_data_to_the_server">Send Data to the Server</string>
 	<string name="server_api_forfeit_game_dialog_message">Are you sure that you want to forfeit this game? Really?</string>
 	<string name="server_api_forfeit_game_progressdialog_message">Sending your decision to forfeit the game to our server, the hamsters are processing it&#8230;</string>
 	<string name="server_api_send_move_dialog_message">Are you sure that you want to send your move? Better double check!</string>
@@ -104,6 +107,7 @@
 	<string name="server_api_skip_move_progressdialog_message">Sending your decision to skip your turn to our server, the hamsters are processing it&#8230;</string>
 	<string name="server_api_unregister_from_server_dialog_message">Are you sure that you want to unregister from notifications?</string>
 	<string name="server_api_unregister_from_server_progressdialog_message">Unregistering your devices from our server\'s notification system&#8230;</string>
+	<string name="server_exchange">Server Exchange</string>
 	<string name="server_registration_attempt">Trying (attempt %1$d) to register device on server.</string>
 	<string name="server_registration_fail">Could not register device on server after %1$d attempts.</string>
 	<string name="server_registration_success">Device successfully registered with server!</string>
@@ -130,7 +134,7 @@
 	<string name="vibrate">Vibrate</string>
 	<string name="which_game_would_you_like_to_play">Which game would you like to play?</string>
 	<string name="won">won</string>
-	<string name="x_losses">%1$d losses</string>
+	<string name="x_loses">%1$d loses</string>
 	<string name="x_wins">%1$d wins</string>
 	<string name="x_days_ago">%1$d days ago</string>
 	<string name="x_games_played">%1$d games played</string>

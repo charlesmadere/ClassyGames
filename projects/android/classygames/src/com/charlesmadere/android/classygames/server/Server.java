@@ -48,6 +48,8 @@ public final class Server
 
 	public final static String POST_DATA = "json";
 	public final static String POST_DATA_BOARD = "board";
+	public final static String POST_DATA_CHECKERS = "checkers";
+	public final static String POST_DATA_CHESS = "chess";
 	public final static String POST_DATA_ERROR = "error";
 	public final static String POST_DATA_FINISHED = "finished";
 	public final static String POST_DATA_GAME_ID = "game_id";
@@ -56,6 +58,7 @@ public final class Server
 	public final static byte POST_DATA_GAME_TYPE_CHESS = 2;
 	public final static String POST_DATA_ID = "id";
 	public final static String POST_DATA_LAST_MOVE = "last_move";
+	public final static String POST_DATA_LOSES = "loses";
 	public final static String POST_DATA_MESSAGE_TYPE = "message_type";
 	public final static byte POST_DATA_MESSAGE_TYPE_NEW_GAME = 1;
 	public final static byte POST_DATA_MESSAGE_TYPE_NEW_MOVE = 2;
@@ -70,6 +73,7 @@ public final class Server
 	public final static String POST_DATA_SUCCESS = "success";
 	public final static String POST_DATA_USER_CHALLENGED = "user_challenged";
 	public final static String POST_DATA_USER_CREATOR = "user_creator";
+	public final static String POST_DATA_WINS = "wins";
 
 
 
