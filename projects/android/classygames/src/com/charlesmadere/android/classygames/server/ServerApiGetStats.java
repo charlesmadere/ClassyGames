@@ -9,16 +9,9 @@ public class ServerApiGetStats extends ServerApi
 {
 
 
-	protected ServerApiGetStats(final Context context, final ServerApiListeners listeners)
+	protected ServerApiGetStats(final Context context, final Listeners listeners)
 	{
 		super(context, listeners, false);
-	}
-
-
-	@Override
-	protected String doInBackground(final Person whoAmI)
-	{
-		return null;
 	}
 
 
@@ -40,6 +33,13 @@ public class ServerApiGetStats extends ServerApi
 	protected int getProgressDialogMessage()
 	{
 		return 0;
+	}
+
+
+	@Override
+	protected String postToServer(final Person whoAmI)
+	{
+		return null;
 	}
 
 

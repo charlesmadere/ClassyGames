@@ -9,12 +9,10 @@ import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.utilities.KeysAndConstants;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,7 +21,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 
 
 /**
@@ -35,19 +32,18 @@ public final class Server
 
 
 	public final static String LOG_TAG = Utilities.LOG_TAG + " - Server";
-	public final static String MIMETYPE_JSON = "application/json";
 
 
-	public final static String ADDRESS_MAIN = "http://classygames.elasticbeanstalk.com/";
-	public final static String ADDRESS_FORFEIT_GAME = ADDRESS_MAIN + "ForfeitGame";
-	public final static String ADDRESS_GET_GAME = ADDRESS_MAIN + "GetGame";
-	public final static String ADDRESS_GET_GAMES = ADDRESS_MAIN + "GetGames";
-	public final static String ADDRESS_GET_STATS = ADDRESS_MAIN + "GetStats";
-	public final static String ADDRESS_NEW_GAME = ADDRESS_MAIN + "NewGame";
-	public final static String ADDRESS_NEW_MOVE = ADDRESS_MAIN + "NewMove";
-	public final static String ADDRESS_NEW_REG_ID = ADDRESS_MAIN + "NewRegId";
-	public final static String ADDRESS_REMOVE_REG_ID = ADDRESS_MAIN + "RemoveRegId";
-	public final static String ADDRESS_SKIP_MOVE = ADDRESS_MAIN + "SkipMove";
+	private final static String ADDRESS_MAIN = "http://classygames.elasticbeanstalk.com/";
+	private final static String ADDRESS_FORFEIT_GAME = ADDRESS_MAIN + "ForfeitGame";
+	private final static String ADDRESS_GET_GAME = ADDRESS_MAIN + "GetGame";
+	private final static String ADDRESS_GET_GAMES = ADDRESS_MAIN + "GetGames";
+	private final static String ADDRESS_GET_STATS = ADDRESS_MAIN + "GetStats";
+	private final static String ADDRESS_NEW_GAME = ADDRESS_MAIN + "NewGame";
+	private final static String ADDRESS_NEW_MOVE = ADDRESS_MAIN + "NewMove";
+	private final static String ADDRESS_NEW_REG_ID = ADDRESS_MAIN + "NewRegId";
+	private final static String ADDRESS_REMOVE_REG_ID = ADDRESS_MAIN + "RemoveRegId";
+	private final static String ADDRESS_SKIP_MOVE = ADDRESS_MAIN + "SkipMove";
 
 
 	public final static String POST_DATA = "json";
@@ -146,12 +142,12 @@ public final class Server
 		final Person whoAmI = Utilities.getWhoAmI(context);
 
 		// build the data to be sent to the server
-		final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-		nameValuePairs.add(new BasicNameValuePair(POST_DATA_ID, whoAmI.getIdAsString()));
-		nameValuePairs.add(new BasicNameValuePair(POST_DATA_NAME, whoAmI.getName()));
-		nameValuePairs.add(new BasicNameValuePair(POST_DATA_REG_ID, regId));
+		final ApiData data = new ApiData();
+		data.addKeyValuePair(POST_DATA_ID, whoAmI.getId());
+		data.addKeyValuePair(POST_DATA_NAME, whoAmI.getName());
+		data.addKeyValuePair(POST_DATA_REG_ID, regId);
 
-		if (gcmParseServerResults(postToServer(ADDRESS_NEW_REG_ID, nameValuePairs)))
+		if (gcmParseServerResults(postToServer(ADDRESS_NEW_REG_ID, data)))
 		{
 			Log.d(LOG_TAG, "Server successfully completed all the regId stuff.");
 
@@ -216,30 +212,233 @@ public final class Server
 	 * 
 	 * @param context
 	 * The Context of the class you're calling this method from.
-	 * 
+	 *
 	 * @throws IOException
-	 * If something weird happens when trying to post the given data to the
-	 * server then this exception will be thrown.
+	 * If something weird happens when trying to POST to the server then this
+	 * exception will be thrown.
 	 */
 	public static void gcmUnregister(final Context context) throws IOException
 	{
 		Log.d(LOG_TAG, "Unregistering device with from GCM server.");
 
 		// build the data to be sent to the server
-		final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-		nameValuePairs.add(new BasicNameValuePair(POST_DATA_ID, Utilities.getWhoAmI(context).getIdAsString()));
+		final ApiData data = new ApiData();
+		data.addKeyValuePair(POST_DATA_ID, Utilities.getWhoAmI(context).getId());
 
-		postToServer(ADDRESS_REMOVE_REG_ID, nameValuePairs);
+		postToServer(ADDRESS_REMOVE_REG_ID, data);
 	}
 
 
 	/**
-	 * Use this method to send data to and then receive a response from the
-	 * server. The String that this method returns is the server's response.
-	 * 
-	 * <p><strong>Examples</strong><br />
-	 * Server.postToServer(Server.SERVER_NEW_MOVE_ADDRESS, postData);<br />
-	 * Server.postToServer(Server.SERVER_GET_GAMES_ADDRESS, postData);</p>
+	 * Makes an HTTP POST request to the Classy Games server on the ForfeitGame
+	 * end point.
+	 *
+	 * @param data
+	 * A list of key-value pairs to be sent to the server.
+	 *
+	 * @return
+	 * The server's response as a String. This will need to be parsed as it is
+	 * JSON data. <strong>There is a slight possibility that the data String
+	 * returned from this method will be null.</strong> Please check for that
+	 * <strong>as well as</strong> if the String is empty.
+	 *
+	 * @throws IOException
+	 * If something weird happens when trying to POST to the server then this
+	 * exception will be thrown.
+	 */
+	public static String postToServerForfeitGame(final ApiData data) throws IOException
+	{
+		return postToServer(ADDRESS_FORFEIT_GAME, data);
+	}
+
+
+	/**
+	 * Makes an HTTP POST request to the Classy Games server on the GetGame end
+	 * point.
+	 *
+	 * @param data
+	 * A list of key-value pairs to be sent to the server.
+	 *
+	 * @return
+	 * The server's response as a String. This will need to be parsed as it is
+	 * JSON data. <strong>There is a slight possibility that the data String
+	 * returned from this method will be null.</strong> Please check for that
+	 * <strong>as well as</strong> if the String is empty.
+	 *
+	 * @throws IOException
+	 * If something weird happens when trying to POST to the server then this
+	 * exception will be thrown.
+	 */
+	public static String postToServerGetGame(final ApiData data) throws IOException
+	{
+		return postToServer(ADDRESS_GET_GAME, data);
+	}
+
+
+	/**
+	 * Makes an HTTP POST request to the Classy Games server on the GetGames
+	 * end point.
+	 *
+	 * @param data
+	 * A list of key-value pairs to be sent to the server.
+	 *
+	 * @return
+	 * The server's response as a String. This will need to be parsed as it is
+	 * JSON data. <strong>There is a slight possibility that the data String
+	 * returned from this method will be null.</strong> Please check for that
+	 * <strong>as well as</strong> if the String is empty.
+	 *
+	 * @throws IOException
+	 * If something weird happens when trying to POST to the server then this
+	 * exception will be thrown.
+	 */
+	public static String postToServerGetGames(final ApiData data) throws IOException
+	{
+		return postToServer(ADDRESS_GET_GAMES, data);
+	}
+
+
+	/**
+	 * Makes an HTTP POST request to the Classy Games server on the GetStats
+	 * end point.
+	 *
+	 * @param data
+	 * A list of key-value pairs to be sent to the server.
+	 *
+	 * @return
+	 * The server's response as a String. This will need to be parsed as it is
+	 * JSON data. <strong>There is a slight possibility that the data String
+	 * returned from this method will be null.</strong> Please check for that
+	 * <strong>as well as</strong> if the String is empty.
+	 *
+	 * @throws IOException
+	 * If something weird happens when trying to POST to the server then this
+	 * exception will be thrown.
+	 */
+	public static String postToServerGetStats(final ApiData data) throws IOException
+	{
+		return postToServer(ADDRESS_GET_STATS, data);
+	}
+
+
+	/**
+	 * Makes an HTTP POST request to the Classy Games server on the NewGame end
+	 * point.
+	 *
+	 * @param data
+	 * A list of key-value pairs to be sent to the server.
+	 *
+	 * @return
+	 * The server's response as a String. This will need to be parsed as it is
+	 * JSON data. <strong>There is a slight possibility that the data String
+	 * returned from this method will be null.</strong> Please check for that
+	 * <strong>as well as</strong> if the String is empty.
+	 *
+	 * @throws IOException
+	 * If something weird happens when trying to POST to the server then this
+	 * exception will be thrown.
+	 */
+	public static String postToServerNewGame(final ApiData data) throws IOException
+	{
+		return postToServer(ADDRESS_NEW_GAME, data);
+	}
+
+
+	/**
+	 * Makes an HTTP POST request to the Classy Games server on the NewMove end
+	 * point.
+	 *
+	 * @param data
+	 * A list of key-value pairs to be sent to the server.
+	 *
+	 * @return
+	 * The server's response as a String. This will need to be parsed as it is
+	 * JSON data. <strong>There is a slight possibility that the data String
+	 * returned from this method will be null.</strong> Please check for that
+	 * <strong>as well as</strong> if the String is empty.
+	 *
+	 * @throws IOException
+	 * If something weird happens when trying to POST to the server then this
+	 * exception will be thrown.
+	 */
+	public static String postToServerNewMove(final ApiData data) throws IOException
+	{
+		return postToServer(ADDRESS_NEW_MOVE, data);
+	}
+
+
+	/**
+	 * Makes an HTTP POST request to the Classy Games server on the NewRegId
+	 * end point.
+	 *
+	 * @param data
+	 * A list of key-value pairs to be sent to the server.
+	 *
+	 * @return
+	 * The server's response as a String. This will need to be parsed as it is
+	 * JSON data. <strong>There is a slight possibility that the data String
+	 * returned from this method will be null.</strong> Please check for that
+	 * <strong>as well as</strong> if the String is empty.
+	 *
+	 * @throws IOException
+	 * If something weird happens when trying to POST to the server then this
+	 * exception will be thrown.
+	 */
+	public static String postToServerNewRegId(final ApiData data) throws IOException
+	{
+		return postToServer(ADDRESS_NEW_REG_ID, data);
+	}
+
+
+	/**
+	 * Makes an HTTP POST request to the Classy Games server on the RemoveRegId
+	 * end point.
+	 *
+	 * @param data
+	 * A list of key-value pairs to be sent to the server.
+	 *
+	 * @return
+	 * The server's response as a String. This will need to be parsed as it is
+	 * JSON data. <strong>There is a slight possibility that the data String
+	 * returned from this method will be null.</strong> Please check for that
+	 * <strong>as well as</strong> if the String is empty.
+	 *
+	 * @throws IOException
+	 * If something weird happens when trying to POST to the server then this
+	 * exception will be thrown.
+	 */
+	public static String postToServerRemoveRegId(final ApiData data) throws IOException
+	{
+		return postToServer(ADDRESS_REMOVE_REG_ID, data);
+	}
+
+
+	/**
+	 * Makes an HTTP POST request to the Classy Games server on the SkipMove
+	 * end point.
+	 *
+	 * @param data
+	 * A list of key-value pairs to be sent to the server.
+	 *
+	 * @return
+	 * The server's response as a String. This will need to be parsed as it is
+	 * JSON data. <strong>There is a slight possibility that the data String
+	 * returned from this method will be null.</strong> Please check for that
+	 * <strong>as well as</strong> if the String is empty.
+	 *
+	 * @throws IOException
+	 * If something weird happens when trying to POST to the server then this
+	 * exception will be thrown.
+	 */
+	public static String postToServerSkipMove(final ApiData data) throws IOException
+	{
+		return postToServer(ADDRESS_SKIP_MOVE, data);
+	}
+
+
+	/**
+	 * Use this method to send data to and receive a response from the server.
+	 * The String that this method returns is the server's response.
 	 * 
 	 * @param url
 	 * The URL that you want to send your data to. This should be formulated
@@ -263,17 +462,17 @@ public final class Server
 	 * <strong>as well as</strong> if the String is empty.
 	 * 
 	 * @throws IOException
-	 * If something weird happens when trying to post the given data to the
-	 * server then this exception will be thrown.
+	 * If something weird happens when trying to POST to the server then this
+	 * exception will be thrown.
 	 */
-	public static String postToServer(final String url, final ArrayList<NameValuePair> data) throws IOException
+	private static String postToServer(final String url, final ApiData data) throws IOException
 	{
 		String serverResponse = null;
 
 		Log.d(LOG_TAG, "Posting data to server at " + url);
 
 		final HttpPost httpPost = new HttpPost(url);
-		httpPost.setEntity(new UrlEncodedFormEntity(data));
+		httpPost.setEntity(new UrlEncodedFormEntity(data.getKeyValuePairs()));
 
 		final HttpClient httpClient = new DefaultHttpClient();
 		final HttpResponse httpResponse = httpClient.execute(httpPost);
@@ -285,7 +484,7 @@ public final class Server
 			final BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 			final StringBuilder stringBuilder = new StringBuilder();
 
-			String line = new String();
+			String line = "";
 
 			while (line != null)
 			{

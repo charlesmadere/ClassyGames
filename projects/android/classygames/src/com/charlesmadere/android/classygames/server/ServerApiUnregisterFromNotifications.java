@@ -29,30 +29,9 @@ public class ServerApiUnregisterFromNotifications extends ServerApi
 	 * @param listeners
 	 * A listener to call once we're done running code here.
 	 */
-	public ServerApiUnregisterFromNotifications(final Context context, final ServerApiListeners listeners)
+	public ServerApiUnregisterFromNotifications(final Context context, final Listeners listeners)
 	{
 		super(context, listeners);
-	}
-
-
-	@Override
-	protected String doInBackground(final Person whoAmI)
-	{
-		String serverResponse = null;
-
-		try
-		{
-			final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-			nameValuePairs.add(new BasicNameValuePair(Server.POST_DATA_ID, whoAmI.getIdAsString()));
-
-			serverResponse = Server.postToServer(Server.ADDRESS_REMOVE_REG_ID, nameValuePairs);
-		}
-		catch (final IOException e)
-		{
-			Log.e(LOG_TAG, "IOException error in AsyncForfeitGame - doInBackground()!", e);
-		}
-
-		return serverResponse;
 	}
 
 
@@ -74,6 +53,26 @@ public class ServerApiUnregisterFromNotifications extends ServerApi
 	protected int getProgressDialogMessage()
 	{
 		return R.string.server_api_unregister_from_server_progressdialog_message;
+	}
+
+
+	@Override
+	protected String postToServer(final Person whoAmI)
+	{
+		String serverResponse = null;
+
+		try
+		{
+			final ApiData data = new ApiData();
+			data.addKeyValuePair(Server.POST_DATA_ID, whoAmI.getId());
+			serverResponse = Server.postToServerRemoveRegId(data);
+		}
+		catch (final IOException e)
+		{
+			Log.e(LOG_TAG, "IOException error in AsyncForfeitGame - doInBackground()!", e);
+		}
+
+		return serverResponse;
 	}
 
 

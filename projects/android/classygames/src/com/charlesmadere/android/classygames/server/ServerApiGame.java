@@ -5,12 +5,9 @@ import android.content.Context;
 import android.util.Log;
 import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.Person;
-import com.charlesmadere.android.classygames.utilities.Utilities;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 
 /**
@@ -44,7 +41,7 @@ public abstract class ServerApiGame extends ServerApi
 	 * @param game
 	 * The game data to send to the server.
 	 */
-	protected ServerApiGame(final Context context, final ServerApiListeners listeners, final Game game)
+	protected ServerApiGame(final Context context, final Listeners listeners, final Game game)
 	{
 		super(context, listeners);
 		this.game = game;
@@ -52,32 +49,54 @@ public abstract class ServerApiGame extends ServerApi
 
 
 	@Override
-	protected String doInBackground(final Person whoAmI)
+	protected String postToServer(final Person whoAmI)
 	{
 		String serverResponse = null;
 
-		if (Utilities.verifyValidString(game.getId()))
+		try
 		{
-			final String serverEndPoint = getServerEndPoint();
+			final ApiData data = new ApiData();
+			data.addKeyValuePair(Server.POST_DATA_USER_CREATOR, whoAmI.getId());
+			data.addKeyValuePair(Server.POST_DATA_USER_CHALLENGED, game.getPerson().getId());
+			data.addKeyValuePair(Server.POST_DATA_NAME, game.getPerson().getName());
+			data.addKeyValuePair(Server.POST_DATA_GAME_ID, game.getId());
 
-			try
-			{
-				final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-				nameValuePairs.add(new BasicNameValuePair(Server.POST_DATA_USER_CREATOR, whoAmI.getIdAsString()));
-				nameValuePairs.add(new BasicNameValuePair(Server.POST_DATA_USER_CHALLENGED, game.getPerson().getIdAsString()));
-				nameValuePairs.add(new BasicNameValuePair(Server.POST_DATA_NAME, game.getPerson().getName()));
-				nameValuePairs.add(new BasicNameValuePair(Server.POST_DATA_GAME_ID, game.getId()));
-
-				serverResponse = Server.postToServer(serverEndPoint, nameValuePairs);
-			}
-			catch (final IOException e)
-			{
-				Log.e(LOG_TAG, "IOException error in ServerApiGame to " + serverEndPoint +  " - doInBackground()!", e);
-			}
+			serverResponse = postToServer(data, game);
+		}
+		catch (final IOException e)
+		{
+			Log.e(LOG_TAG, "IOException error in ServerApiGame's doInBackground()!", e);
+		}
+		catch (final JSONException e)
+		{
+			Log.e(LOG_TAG, "JSONException error in ServerApiGame's doInBackground()!", e);
 		}
 
 		return serverResponse;
 	}
+
+
+	/**
+	 * Performs the actual API call against the Classy Games server.
+	 *
+	 * @param data
+	 * The actual data that needs to be sent to the server.
+	 *
+	 * @param game
+	 * Holds data specific to the actual game that you're currently dealing with. Like the game's
+	 * ID, the person that the current user is playing against...
+	 *
+	 * @return
+	 * The String response as received from the server. This will be a JSON String.
+	 *
+	 * @throws IOException
+	 * An IOException may occur when performing the HTTP POST request to the Classy Games server.
+	 *
+	 * @throws JSONException
+	 * A JSONException may occur if this method performs any JSON encoding or parsing.
+	 */
+	protected abstract String postToServer(final ApiData data, final Game game)
+		throws IOException, JSONException;
 
 
 	@Override
@@ -90,14 +109,6 @@ public abstract class ServerApiGame extends ServerApi
 
 	@Override
 	protected abstract int getProgressDialogMessage();
-
-
-	/**
-	 * @return
-	 * Returns the server address that this Classy Games API end point needs to
-	 * hit.
-	 */
-	protected abstract String getServerEndPoint();
 
 
 }

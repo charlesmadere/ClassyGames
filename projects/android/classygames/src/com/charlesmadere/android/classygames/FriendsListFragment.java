@@ -71,15 +71,15 @@ public class FriendsListFragment extends SherlockFragment implements
 
 	/**
 	 * Object that allows us to run any of the methods that are defined in the
-	 * FriendsListFragmentListeners interface.
+	 * Listeners interface.
 	 */
-	private FriendsListFragmentListeners listeners;
+	private Listeners listeners;
 
 
 	/**
 	 * A bunch of listener methods for this Fragment.
 	 */
-	public interface FriendsListFragmentListeners
+	public interface Listeners
 	{
 
 
@@ -130,7 +130,7 @@ public class FriendsListFragment extends SherlockFragment implements
 
 		try
 		{
-			listeners = (FriendsListFragmentListeners) activity;
+			listeners = (Listeners) activity;
 		}
 		catch (final ClassCastException e)
 		{

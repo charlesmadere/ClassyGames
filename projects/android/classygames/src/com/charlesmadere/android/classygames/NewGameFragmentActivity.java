@@ -13,8 +13,8 @@ import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
 public class NewGameFragmentActivity extends SherlockFragmentActivity implements
-	ConfirmGameFragment.ConfirmGameFragmentListeners,
-	FriendsListFragment.FriendsListFragmentListeners
+	ConfirmGameFragment.Listeners,
+	FriendsListFragment.Listeners
 {
 
 
@@ -24,7 +24,7 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 
 	public final static String BUNDLE_FRIEND_ID = "KEY_FRIEND_ID";
 	public final static String BUNDLE_FRIEND_NAME = "KEY_FRIEND_NAME";
-	public final static String BUNDLE_WHICH_GAME = "BUNDLE_WHICH_GAME";
+	public final static String BUNDLE_WHICH_GAME = "KEY_WHICH_GAME";
 
 
 

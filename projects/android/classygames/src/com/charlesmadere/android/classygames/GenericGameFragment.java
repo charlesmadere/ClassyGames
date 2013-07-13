@@ -30,13 +30,10 @@ import com.charlesmadere.android.classygames.models.games.GenericBoard;
 import com.charlesmadere.android.classygames.models.games.Position;
 import com.charlesmadere.android.classygames.server.*;
 import com.charlesmadere.android.classygames.utilities.Utilities;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 
 public abstract class GenericGameFragment extends SherlockFragment
@@ -96,7 +93,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	/**
 	 * Callback interface for the ServerApi class.
 	 */
-	private ServerApi.ServerApiListeners serverApiListeners;
+	private ServerApi.Listeners serverApiListeners;
 
 
 	/**
@@ -122,15 +119,15 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 	/**
 	 * Object that allows us to run any of the methods that are defined in the
-	 * GenericGameFragmentListeners interface.
+	 * Listeners interface.
 	 */
-	private GenericGameFragmentListeners listeners;
+	private Listeners listeners;
 
 
 	/**
 	 * A bunch of listener methods for this Fragment.
 	 */
-	public interface GenericGameFragmentListeners
+	public interface Listeners
 	{
 
 
@@ -215,7 +212,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			// gameId String for validity. This is because it is possible for a
 			// game to not have an ID. Brand new games do not have a game ID.
 			{
-				serverApiListeners = new ServerApi.ServerApiListeners()
+				serverApiListeners = new ServerApi.Listeners()
 				{
 					@Override
 					public void onCancel()
@@ -334,7 +331,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 		try
 		{
-			listeners = (GenericGameFragmentListeners) activity;
+			listeners = (Listeners) activity;
 		}
 		catch (final ClassCastException e)
 		{
@@ -1114,12 +1111,12 @@ public abstract class GenericGameFragment extends SherlockFragment
 				}
 				else if (Utilities.checkForNetworkConnectivity(fragmentActivity) && !isCancelled())
 				{
-					final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-					nameValuePairs.add(new BasicNameValuePair(Server.POST_DATA_ID, game.getId()));
+					final ApiData data = new ApiData();
+					data.addKeyValuePair(Server.POST_DATA_ID, game.getId());
 
 					try
 					{
-						serverResponse = Server.postToServer(Server.ADDRESS_GET_GAME, nameValuePairs);
+						serverResponse = Server.postToServerGetGame(data);
 
 						// store the just now downloaded instance of the board
 						final SharedPreferences.Editor editor = sPreferences.edit();

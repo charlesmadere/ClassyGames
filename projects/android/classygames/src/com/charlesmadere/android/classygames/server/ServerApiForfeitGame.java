@@ -4,12 +4,17 @@ package com.charlesmadere.android.classygames.server;
 import android.content.Context;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.models.Game;
+import org.apache.http.NameValuePair;
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 
 /**
  * A class that will hit the Classy Games ForfeitGame end point.
  */
-public class ServerApiForfeitGame extends ServerApiGame
+public final class ServerApiForfeitGame extends ServerApiGame
 {
 
 
@@ -26,7 +31,7 @@ public class ServerApiForfeitGame extends ServerApiGame
 	 * @param game
 	 * The game data to send to the server.
 	 */
-	public ServerApiForfeitGame(final Context context, final ServerApiListeners listeners, final Game game)
+	public ServerApiForfeitGame(final Context context, final Listeners listeners, final Game game)
 	{
 		super(context, listeners, game);
 	}
@@ -54,9 +59,10 @@ public class ServerApiForfeitGame extends ServerApiGame
 
 
 	@Override
-	protected String getServerEndPoint()
+	protected String postToServer(final ApiData data, final Game game)
+		throws IOException, JSONException
 	{
-		return Server.ADDRESS_FORFEIT_GAME;
+		return Server.postToServerForfeitGame(data);
 	}
 
 

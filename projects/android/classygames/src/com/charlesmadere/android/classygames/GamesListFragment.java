@@ -25,16 +25,11 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.Person;
-import com.charlesmadere.android.classygames.server.Server;
-import com.charlesmadere.android.classygames.server.ServerApi;
-import com.charlesmadere.android.classygames.server.ServerApiForfeitGame;
-import com.charlesmadere.android.classygames.server.ServerApiSkipMove;
+import com.charlesmadere.android.classygames.server.*;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -86,7 +81,7 @@ public class GamesListFragment extends SherlockFragment implements
 	/**
 	 * Callback interface for the ServerApi class.
 	 */
-	private ServerApi.ServerApiListeners serverApiListeners;
+	private ServerApi.Listeners serverApiListeners;
 
 
 	/**
@@ -99,15 +94,15 @@ public class GamesListFragment extends SherlockFragment implements
 
 	/**
 	 * Object that allows us to run any of the methods that are defined in the
-	 * GamesListFragmentListeners interface.
+	 * Listeners interface.
 	 */
-	private GamesListFragmentListeners listeners;
+	private Listeners listeners;
 
 
 	/**
 	 * A bunch of listener methods for this Fragment.
 	 */
-	public interface GamesListFragmentListeners
+	public interface Listeners
 	{
 
 
@@ -143,7 +138,7 @@ public class GamesListFragment extends SherlockFragment implements
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{
-		serverApiListeners = new ServerApi.ServerApiListeners()
+		serverApiListeners = new ServerApi.Listeners()
 		{
 			@Override
 			public void onCancel()
@@ -205,7 +200,7 @@ public class GamesListFragment extends SherlockFragment implements
 
 		try
 		{
-			listeners = (GamesListFragmentListeners) activity;
+			listeners = (Listeners) activity;
 		}
 		catch (final ClassCastException e)
 		{
@@ -520,8 +515,8 @@ public class GamesListFragment extends SherlockFragment implements
 				editor.commit();
 
 				// create the data that will be posted to the server
-				final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-				nameValuePairs.add(new BasicNameValuePair(Server.POST_DATA_ID, whoAmI.getIdAsString()));
+				final ApiData data = new ApiData();
+				data.addKeyValuePair(Server.POST_DATA_ID, whoAmI.getId());
 
 				if (!isCancelled() && Utilities.checkForNetworkConnectivity(fragmentActivity))
 				{
@@ -532,7 +527,7 @@ public class GamesListFragment extends SherlockFragment implements
 						// the nameValuePairs variable that we just created.
 						// The server requires we send it some information in
 						// order for us to get a meaningful response back.
-						final String serverResponse = Server.postToServer(Server.ADDRESS_GET_GAMES, nameValuePairs);
+						final String serverResponse = Server.postToServerGetGames(data);
 
 						// This line does a lot. Check the parseServerResponse()
 						// method below to get detailed information. This will

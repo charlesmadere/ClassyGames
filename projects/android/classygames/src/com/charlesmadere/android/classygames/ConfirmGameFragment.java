@@ -64,15 +64,15 @@ public class ConfirmGameFragment extends SherlockFragment
 
 	/**
 	 * Object that allows us to run any of the methods that are defined in the
-	 * ConfirmGameFragmentListeners interface.
+	 * Listeners interface.
 	 */
-	private ConfirmGameFragmentListeners listeners;
+	private Listeners listeners;
 
 
 	/**
 	 * A bunch of listener methods for this Fragment.
 	 */
-	public interface ConfirmGameFragmentListeners
+	public interface Listeners
 	{
 
 
@@ -211,7 +211,7 @@ public class ConfirmGameFragment extends SherlockFragment
 
 		try
 		{
-			listeners = (ConfirmGameFragmentListeners) activity;
+			listeners = (Listeners) activity;
 		}
 		catch (final ClassCastException e)
 		{

@@ -45,7 +45,7 @@ public class UnregisterFromNotificationsActivity extends SherlockActivity
 				if (serverApiTask == null)
 				{
 					serverApiTask = new ServerApiUnregisterFromNotifications(UnregisterFromNotificationsActivity.this,
-						new ServerApi.ServerApiListeners()
+						new ServerApi.Listeners()
 						{
 							@Override
 							public void onCancel()

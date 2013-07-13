@@ -18,8 +18,8 @@ import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
 public class GameFragmentActivity extends SherlockFragmentActivity implements
-	GamesListFragment.GamesListFragmentListeners,
-	GenericGameFragment.GenericGameFragmentListeners
+	GamesListFragment.Listeners,
+	GenericGameFragment.Listeners
 {
 
 

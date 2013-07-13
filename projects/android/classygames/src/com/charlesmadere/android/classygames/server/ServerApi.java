@@ -49,15 +49,15 @@ public abstract class ServerApi
 
 	/**
 	 * Object that allows us to run any of the methods that are defined in the
-	 * ServerApiListeners interface.
+	 * Listeners interface.
 	 */
-	private ServerApiListeners listeners;
+	private Listeners listeners;
 
 
 	/**
 	 * An interface that will be used once we're done running code here.
 	 */
-	public interface ServerApiListeners
+	public interface Listeners
 	{
 
 
@@ -103,7 +103,7 @@ public abstract class ServerApi
 	 * @param listeners
 	 * A set of listener to call once we're done running code here.
 	 */
-	protected ServerApi(final Context context, final ServerApiListeners listeners)
+	protected ServerApi(final Context context, final Listeners listeners)
 	{
 		this.context = context;
 		this.listeners = listeners;
@@ -127,7 +127,7 @@ public abstract class ServerApi
 	 * Set this to true if you want the user to see a ProgressDialog while this
 	 * ServerApi object is running.
 	 */
-	protected ServerApi(final Context context, final ServerApiListeners listeners, final boolean showProgressDialog)
+	protected ServerApi(final Context context, final Listeners listeners, final boolean showProgressDialog)
 	{
 		this.context = context;
 		this.listeners = listeners;
@@ -263,7 +263,7 @@ public abstract class ServerApi
 			if (!isCancelled() && Utilities.checkForNetworkConnectivity(context))
 			{
 				final Person whoAmI = Utilities.getWhoAmI(context);
-				serverResponse = ServerApi.this.doInBackground(whoAmI);
+				serverResponse = postToServer(whoAmI);
 			}
 
 			return serverResponse;
@@ -342,19 +342,6 @@ public abstract class ServerApi
 
 
 	/**
-	 * The heart of the AsyncTask's code.
-	 * 
-	 * @param whoAmI
-	 * A Person object that represents the user of this Android device.
-	 * 
-	 * @return
-	 * A String that contains the responding result from the server or null if
-	 * a problem happened.
-	 */
-	protected abstract String doInBackground(final Person whoAmI);
-
-
-	/**
 	 * @return
 	 * The R.string.* value for the message to show in the dialog box.
 	 */
@@ -373,6 +360,19 @@ public abstract class ServerApi
 	 * The R.string.* value for the message to show in the progress dialog box.
 	 */
 	protected abstract int getProgressDialogMessage();
+
+
+	/**
+	 * The heart of the AsyncTask's code.
+	 *
+	 * @param whoAmI
+	 * A Person object that represents the user of this Android device.
+	 *
+	 * @return
+	 * A String that contains the responding result from the server or null if
+	 * a problem happened.
+	 */
+	protected abstract String postToServer(final Person whoAmI);
 
 
 }

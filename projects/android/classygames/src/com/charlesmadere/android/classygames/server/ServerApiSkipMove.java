@@ -4,6 +4,11 @@ package com.charlesmadere.android.classygames.server;
 import android.content.Context;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.models.Game;
+import org.apache.http.NameValuePair;
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 
 /**
@@ -26,9 +31,16 @@ public class ServerApiSkipMove extends ServerApiGame
 	 * @param game
 	 * The game data to send to the server.
 	 */
-	public ServerApiSkipMove(final Context context, final ServerApiListeners listeners, final Game game)
+	public ServerApiSkipMove(final Context context, final Listeners listeners, final Game game)
 	{
 		super(context, listeners, game);
+	}
+
+
+	@Override
+	protected String postToServer(final ApiData data, final Game game) throws IOException, JSONException
+	{
+		return Server.postToServerSkipMove(data);
 	}
 
 
@@ -50,13 +62,6 @@ public class ServerApiSkipMove extends ServerApiGame
 	protected int getProgressDialogMessage()
 	{
 		return R.string.server_api_skip_move_progressdialog_message;
-	}
-
-
-	@Override
-	protected String getServerEndPoint()
-	{
-		return Server.ADDRESS_SKIP_MOVE;
 	}
 
 
