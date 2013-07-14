@@ -13,7 +13,7 @@ import org.json.JSONObject;
  * Class representing a single Game. This is most obviously represented when
  * seen in the app's Games List.
  */
-public class Game
+public final class Game
 {
 
 

@@ -234,6 +234,18 @@ public abstract class ServerApi
 	}
 
 
+	/**
+	 * This method is run at the very beginning of the onPostExecute() method.
+	 *
+	 * @param serverResponse
+	 * The raw data as received from the Classy Games server.
+	 */
+	protected void finishUp(final String serverResponse)
+	{
+
+	}
+
+
 
 
 	/**
@@ -300,13 +312,14 @@ public abstract class ServerApi
 		@Override
 		protected void onPostExecute(final String serverResponse)
 		{
-			serverApiTask = null;
+			finishUp(serverResponse);
 
 			if (progressDialog != null)
 			{
 				progressDialog.dismiss();
 			}
 
+			serverApiTask = null;
 			listeners.onComplete(serverResponse);
 		}
 

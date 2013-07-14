@@ -7,7 +7,7 @@ import com.charlesmadere.android.classygames.models.games.GenericPiece;
 /**
  * Class representing a single Chess piece.
  */
-public class Piece extends GenericPiece
+public final class Piece extends GenericPiece
 {
 
 

@@ -13,7 +13,7 @@ import org.json.JSONObject;
  * Class representing a Checkers board. This board is made up of a bunch of
  * positions. Checkers is 8 by 8, so that's 64 positions.
  */
-public class Board extends GenericBoard
+public final class Board extends GenericBoard
 {
 
 

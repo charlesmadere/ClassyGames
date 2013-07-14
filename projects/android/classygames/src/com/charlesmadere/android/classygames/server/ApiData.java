@@ -9,7 +9,7 @@ import java.util.LinkedList;
 /**
  * Allows data to be easily bundled up and sent to the Classy Games server.
  */
-public class ApiData
+public final class ApiData
 {
 
 

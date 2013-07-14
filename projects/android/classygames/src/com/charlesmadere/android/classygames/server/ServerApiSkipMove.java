@@ -14,7 +14,7 @@ import java.util.ArrayList;
 /**
  * A class that will hit the SkipMove end point.
  */
-public class ServerApiSkipMove extends ServerApiGame
+public final class ServerApiSkipMove extends ServerApiGame
 {
 
 

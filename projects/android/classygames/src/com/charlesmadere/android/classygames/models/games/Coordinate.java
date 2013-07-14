@@ -1,7 +1,7 @@
 package com.charlesmadere.android.classygames.models.games;
 
 
-public class Coordinate
+public final class Coordinate
 {
 
 

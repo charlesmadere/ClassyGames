@@ -141,8 +141,7 @@ public final class Server
 	 */
 	public static boolean gcmRegister(final String regId, final Context context) throws IOException
 	{
-		Log.d(LOG_TAG, "Registering device with regId of \"" + regId + "\" with GCM server.");
-
+		Log.d(LOG_TAG, "Registering device with regId of \"" + regId + "\" with the Classy Games server.");
 		final Person whoAmI = Utilities.getWhoAmI(context);
 
 		// build the data to be sent to the server
@@ -151,10 +150,9 @@ public final class Server
 		data.addKeyValuePair(POST_DATA_NAME, whoAmI.getName());
 		data.addKeyValuePair(POST_DATA_REG_ID, regId);
 
-		if (gcmParseServerResults(postToServer(ADDRESS_NEW_REG_ID, data)))
+		if (gcmParseServerResults(postToServerNewRegId(data)))
 		{
 			Log.d(LOG_TAG, "Server successfully completed all the regId stuff.");
-
 			return true;
 		}
 		else

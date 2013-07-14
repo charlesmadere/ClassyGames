@@ -7,7 +7,7 @@ import com.charlesmadere.android.classygames.utilities.Utilities;
 /**
  * Class representing a real person.
  */
-public class Person
+public final class Person
 {
 
 

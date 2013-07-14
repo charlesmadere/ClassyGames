@@ -18,7 +18,7 @@ import java.util.ArrayList;
 /**
  * A class that will hit the Classy Games SendMove end point.
  */
-public class ServerApiSendMove extends ServerApiGame
+public final class ServerApiSendMove extends ServerApiGame
 {
 
 

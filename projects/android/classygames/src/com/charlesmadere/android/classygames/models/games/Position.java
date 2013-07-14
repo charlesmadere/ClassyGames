@@ -9,7 +9,7 @@ import org.json.JSONObject;
 /**
  * Class representing a single position, or spot, on the game board.
  */
-public class Position
+public final class Position
 {
 
 

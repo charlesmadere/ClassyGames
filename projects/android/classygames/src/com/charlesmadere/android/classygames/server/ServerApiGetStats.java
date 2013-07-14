@@ -12,7 +12,7 @@ import java.io.IOException;
 /**
  * A class that will hit the Classy Games GetStats end point.
  */
-public class ServerApiGetStats extends ServerApi
+public final class ServerApiGetStats extends ServerApi
 {
 
 

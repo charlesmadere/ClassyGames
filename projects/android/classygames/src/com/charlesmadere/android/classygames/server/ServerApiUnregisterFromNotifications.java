@@ -5,17 +5,14 @@ import android.content.Context;
 import android.util.Log;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.models.Person;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 
 /**
  * A class that will hit the Classy Games RemoveRegId end point.
  */
-public class ServerApiUnregisterFromNotifications extends ServerApi
+public final class ServerApiUnregisterFromNotifications extends ServerApi
 {
 
 
