@@ -481,13 +481,6 @@ public class Board extends GenericBoard
 
 
 	@Override
-	public void performGameSpecificJSONChecks() throws JSONException
-	{
-
-	}
-
-
-	@Override
 	protected void resetBoard()
 	{
 		lastMovedPiece = null;

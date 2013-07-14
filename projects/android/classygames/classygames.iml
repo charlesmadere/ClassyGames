@@ -29,7 +29,7 @@
     <orderEntry type="library" name="android-support-v4" level="project" />
     <orderEntry type="library" name="gcm" level="project" />
     <orderEntry type="library" name="GoogleAdMobAdsSdk-6.4.1" level="project" />
-    <orderEntry type="library" name="universal-image-loader-1.8.4" level="project" />
+    <orderEntry type="library" name="universal-image-loader-1.8.5" level="project" />
   </component>
 </module>
 

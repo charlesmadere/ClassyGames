@@ -476,6 +476,14 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 
 	@Override
+	public void onGetStatsDataError()
+	{
+		Utilities.easyToastAndLogError(this, R.string.we_couldnt_get_your_stats_data_there_was_a_server_error);
+		onBackPressed();
+	}
+
+
+	@Override
 	public void onServerApiTaskFinished()
 	{
 		final FragmentManager fManager = getSupportFragmentManager();

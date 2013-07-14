@@ -413,8 +413,8 @@ public final class Utilities
 	public static ImageLoader getImageLoader(final Context context)
 	{
 		final DisplayImageOptions displayOptions = new DisplayImageOptions.Builder()
-			.cacheInMemory()
-			.cacheOnDisc()
+			.cacheInMemory(true)
+			.cacheOnDisc(true)
 			.build();
 
 		final ImageLoaderConfiguration loaderConfiguration = new ImageLoaderConfiguration.Builder(context)

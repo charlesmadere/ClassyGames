@@ -129,6 +129,8 @@ public class Board extends GenericBoard
 	@Override
 	public boolean move(final Position previous, final Position current)
 	{
+		// TODO
+
 		return false;
 	}
 

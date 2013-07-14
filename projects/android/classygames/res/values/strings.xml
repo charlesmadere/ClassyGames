@@ -132,6 +132,7 @@
 	<string name="unregistration_complete">Unregistration complete!</string>
 	<string name="version">Version</string>
 	<string name="vibrate">Vibrate</string>
+	<string name="we_couldnt_get_your_stats_data_there_was_a_server_error">We couldn\'t get your stats data! There was a server error!</string>
 	<string name="which_game_would_you_like_to_play">Which game would you like to play?</string>
 	<string name="won">won</string>
 	<string name="x_loses">%1$d loses</string>
