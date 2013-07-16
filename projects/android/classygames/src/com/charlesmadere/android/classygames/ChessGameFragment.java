@@ -3,7 +3,6 @@ package com.charlesmadere.android.classygames;
 
 import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import com.actionbarsherlock.view.Menu;
@@ -473,26 +472,63 @@ public class ChessGameFragment extends GenericGameFragment
 	@Override
 	protected void onBoardClick(final ImageButton positionCurrent)
 	{
-		final Coordinate coordinateCurrent = new Coordinate((String) positionCurrent.getTag());
-		setPositionBackground(positionCurrent, true);
+		if (board.isBoardLocked())
+		{
+			clearSelectedPositions();
+		}
+		else
+		{
+			final Coordinate coordinateCurrent = new Coordinate((String) positionCurrent.getTag());
+			final Position current = board.getPosition(coordinateCurrent);
 
-		final Position current = board.getPosition(coordinateCurrent);
-		Log.d(LOG_TAG, "Click! " + coordinateCurrent + " - has piece? " + current.getPiece());
+			if (current.hasPiece() && current.getPiece().isTeamPlayer())
+			{
+				setPositionBackground(positionCurrent, true);
+			}
+			else
+			{
+				clearSelectedPositions();
+			}
+		}
 	}
 
 
 	@Override
 	protected void onBoardClick(final ImageButton positionPrevious, final ImageButton positionCurrent)
 	{
-		final Coordinate coordinatePrevious = new Coordinate((String) positionPrevious.getTag());
-		setPositionBackground(positionPrevious, false);
+		if (!board.isBoardLocked())
+		{
+			final Coordinate coordinatePrevious = new Coordinate((String) positionPrevious.getTag());
+			final Position previous = board.getPosition(coordinatePrevious);
+			setPositionBackground(positionPrevious, false);
 
-		final Coordinate coordinateCurrent = new Coordinate((String) positionCurrent.getTag());
-		setPositionBackground(positionCurrent, true);
+			final Coordinate coordinateCurrent = new Coordinate((String) positionCurrent.getTag());
+			final Position current = board.getPosition(coordinateCurrent);
 
-		final Position current = board.getPosition(coordinateCurrent);
-		final Position previous = board.getPosition(coordinatePrevious);
-		Log.d(LOG_TAG, "Click! Old: " + coordinatePrevious + " has piece? " + previous.getPiece() + ", New: " + coordinateCurrent + " has piece? " + current.getPiece());
+			if (!current.hasPiece())
+			{
+				setPositionBackground(positionCurrent, true);
+
+				if (board.move(previous, current))
+				{
+					flush();
+					Utilities.compatInvalidateOptionsMenu(getSherlockActivity(), true);
+
+					if (board.isBoardLocked())
+					{
+						clearSelectedPositions();
+					}
+				}
+				else
+				{
+					clearSelectedPositions();
+				}
+			}
+			else
+			{
+				clearSelectedPositions();
+			}
+		}
 	}
 
 
