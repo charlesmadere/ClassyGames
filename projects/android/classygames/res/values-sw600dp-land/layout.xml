@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<item name="checkers_and_chess_game_fragment" type="layout">@layout/checkers_and_chess_game_fragment_large_land</item>
+	<item name="game_fragment_activity" type="layout">@layout/game_fragment_activity_large_land</item>
+	<item name="new_game_fragment_activity" type="layout">@layout/new_game_fragment_activity_large_land</item>
+</resources>
