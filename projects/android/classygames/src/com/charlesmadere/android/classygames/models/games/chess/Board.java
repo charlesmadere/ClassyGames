@@ -1,6 +1,7 @@
 package com.charlesmadere.android.classygames.models.games.chess;
 
 
+import com.charlesmadere.android.classygames.models.games.Coordinate;
 import com.charlesmadere.android.classygames.models.games.GenericBoard;
 import com.charlesmadere.android.classygames.models.games.Position;
 import org.json.JSONException;
@@ -125,13 +126,99 @@ public final class Board extends GenericBoard
 
 
 
-
 	@Override
 	public boolean move(final Position previous, final Position current)
 	{
-		// TODO
+		boolean isMoveValid = false;
 
-		return false;
+		if (isBoardLocked)
+		// If the board is locked, then that means that no piece is allowed to
+		// move around.
+		{
+			return false;
+		}
+		else if (previous.hasPiece() && previous.getPiece().isTeamOpponent())
+		// If the first position that the user selected has an opponent's piece
+		// on it then this is an invalid move.
+		{
+			return false;
+		}
+		else if (previous.hasPiece() && previous.getPiece().isTeamPlayer())
+		// This is the one way that a chess move can actually be valid.
+		{
+			final Piece piece = (Piece) previous.getPiece();
+			final Coordinate start = previous.getCoordinate();
+			final byte startX = start.getX();
+			final byte startY = start.getY();
+			final Coordinate end = current.getCoordinate();
+			final byte endX = end.getX();
+			final byte endY = end.getY();
+
+			switch (piece.getType())
+			{
+				case Piece.TYPE_PAWN:
+					break;
+
+				case Piece.TYPE_KNIGHT:
+					if (Math.abs(startX - endX) == 1)
+					{
+						if (Math.abs(startY - endY) == 2)
+						{
+							if (current.hasPiece())
+							{
+								final Piece p = (Piece) current.getPiece();
+
+								if (p.isTeamOpponent())
+								{
+									current.removePiece();
+									isMoveValid = true;
+								}
+								else
+								{
+									return false;
+								}
+							}
+							else
+							{
+								isMoveValid = true;
+							}
+						}
+						else
+						{
+							return false;
+						}
+					}
+					else if (Math.abs(startX - endX) == 2)
+					{
+						if (Math.abs(startY - endY) == 1)
+						{
+
+						}
+						else
+						{
+							return false;
+						}
+					}
+					else
+					{
+						return false;
+					}
+					break;
+
+				case Piece.TYPE_ROOK:
+					if (startX == endX && startY != endY)
+					{
+
+					}
+					else if (startX != endX && startY == endY)
+					{
+
+					}
+					break;
+			}
+		}
+
+		return isMoveValid;
 	}
 
 
