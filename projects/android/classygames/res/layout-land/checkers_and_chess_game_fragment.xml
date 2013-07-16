@@ -6,14 +6,14 @@
 	android:orientation="horizontal"
 	style="@style/ClassyGames">
 	<LinearLayout
-		android:id="@+id/chess_game_fragment_x0"
+		android:id="@+id/checkers_and_chess_game_fragment_x0"
 		android:layout_height="match_parent"
 		android:layout_width="1dip"
 		android:orientation="vertical">
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x0y7"
-			android:id="@+id/chess_game_fragment_x0y7"
+			android:id="@+id/checkers_and_chess_game_fragment_x0y7"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -23,7 +23,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x0y6"
-			android:id="@+id/chess_game_fragment_x0y6"
+			android:id="@+id/checkers_and_chess_game_fragment_x0y6"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -33,7 +33,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x0y5"
-			android:id="@+id/chess_game_fragment_x0y5"
+			android:id="@+id/checkers_and_chess_game_fragment_x0y5"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -43,7 +43,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x0y4"
-			android:id="@+id/chess_game_fragment_x0y4"
+			android:id="@+id/checkers_and_chess_game_fragment_x0y4"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -53,7 +53,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x0y3"
-			android:id="@+id/chess_game_fragment_x0y3"
+			android:id="@+id/checkers_and_chess_game_fragment_x0y3"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -63,7 +63,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x0y2"
-			android:id="@+id/chess_game_fragment_x0y2"
+			android:id="@+id/checkers_and_chess_game_fragment_x0y2"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -73,7 +73,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x0y1"
-			android:id="@+id/chess_game_fragment_x0y1"
+			android:id="@+id/checkers_and_chess_game_fragment_x0y1"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -83,7 +83,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x0y0"
-			android:id="@+id/chess_game_fragment_x0y0"
+			android:id="@+id/checkers_and_chess_game_fragment_x0y0"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -92,14 +92,14 @@
 			android:tag="x0y0" />
 	</LinearLayout>
 	<LinearLayout
-		android:id="@+id/chess_game_fragment_x1"
+		android:id="@+id/checkers_and_chess_game_fragment_x1"
 		android:layout_height="match_parent"
 		android:layout_width="1dip"
 		android:orientation="vertical">
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x1y7"
-			android:id="@+id/chess_game_fragment_x1y7"
+			android:id="@+id/checkers_and_chess_game_fragment_x1y7"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -109,7 +109,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x1y6"
-			android:id="@+id/chess_game_fragment_x1y6"
+			android:id="@+id/checkers_and_chess_game_fragment_x1y6"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -119,7 +119,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x1y5"
-			android:id="@+id/chess_game_fragment_x1y5"
+			android:id="@+id/checkers_and_chess_game_fragment_x1y5"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -129,7 +129,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x1y4"
-			android:id="@+id/chess_game_fragment_x1y4"
+			android:id="@+id/checkers_and_chess_game_fragment_x1y4"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -139,7 +139,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x1y3"
-			android:id="@+id/chess_game_fragment_x1y3"
+			android:id="@+id/checkers_and_chess_game_fragment_x1y3"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -149,7 +149,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x1y2"
-			android:id="@+id/chess_game_fragment_x1y2"
+			android:id="@+id/checkers_and_chess_game_fragment_x1y2"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -159,7 +159,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x1y1"
-			android:id="@+id/chess_game_fragment_x1y1"
+			android:id="@+id/checkers_and_chess_game_fragment_x1y1"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -169,7 +169,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x1y0"
-			android:id="@+id/chess_game_fragment_x1y0"
+			android:id="@+id/checkers_and_chess_game_fragment_x1y0"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -178,14 +178,14 @@
 			android:tag="x1y0" />
 	</LinearLayout>
 	<LinearLayout
-		android:id="@+id/chess_game_fragment_x2"
+		android:id="@+id/checkers_and_chess_game_fragment_x2"
 		android:layout_height="match_parent"
 		android:layout_width="1dip"
 		android:orientation="vertical">
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x2y7"
-			android:id="@+id/chess_game_fragment_x2y7"
+			android:id="@+id/checkers_and_chess_game_fragment_x2y7"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -195,7 +195,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x2y6"
-			android:id="@+id/chess_game_fragment_x2y6"
+			android:id="@+id/checkers_and_chess_game_fragment_x2y6"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -205,7 +205,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x2y5"
-			android:id="@+id/chess_game_fragment_x2y5"
+			android:id="@+id/checkers_and_chess_game_fragment_x2y5"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -215,7 +215,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x2y4"
-			android:id="@+id/chess_game_fragment_x2y4"
+			android:id="@+id/checkers_and_chess_game_fragment_x2y4"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -225,7 +225,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x2y3"
-			android:id="@+id/chess_game_fragment_x2y3"
+			android:id="@+id/checkers_and_chess_game_fragment_x2y3"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -235,7 +235,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x2y2"
-			android:id="@+id/chess_game_fragment_x2y2"
+			android:id="@+id/checkers_and_chess_game_fragment_x2y2"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -245,7 +245,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x2y1"
-			android:id="@+id/chess_game_fragment_x2y1"
+			android:id="@+id/checkers_and_chess_game_fragment_x2y1"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -255,7 +255,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x2y0"
-			android:id="@+id/chess_game_fragment_x2y0"
+			android:id="@+id/checkers_and_chess_game_fragment_x2y0"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -264,14 +264,14 @@
 			android:tag="x2y0" />
 	</LinearLayout>
 	<LinearLayout
-		android:id="@+id/chess_game_fragment_x3"
+		android:id="@+id/checkers_and_chess_game_fragment_x3"
 		android:layout_height="match_parent"
 		android:layout_width="1dip"
 		android:orientation="vertical">
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x3y7"
-			android:id="@+id/chess_game_fragment_x3y7"
+			android:id="@+id/checkers_and_chess_game_fragment_x3y7"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -281,7 +281,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x3y6"
-			android:id="@+id/chess_game_fragment_x3y6"
+			android:id="@+id/checkers_and_chess_game_fragment_x3y6"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -291,7 +291,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x3y5"
-			android:id="@+id/chess_game_fragment_x3y5"
+			android:id="@+id/checkers_and_chess_game_fragment_x3y5"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -301,7 +301,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x3y4"
-			android:id="@+id/chess_game_fragment_x3y4"
+			android:id="@+id/checkers_and_chess_game_fragment_x3y4"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -311,7 +311,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x3y3"
-			android:id="@+id/chess_game_fragment_x3y3"
+			android:id="@+id/checkers_and_chess_game_fragment_x3y3"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -321,7 +321,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x3y2"
-			android:id="@+id/chess_game_fragment_x3y2"
+			android:id="@+id/checkers_and_chess_game_fragment_x3y2"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -331,7 +331,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x3y1"
-			android:id="@+id/chess_game_fragment_x3y1"
+			android:id="@+id/checkers_and_chess_game_fragment_x3y1"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -341,7 +341,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x3y0"
-			android:id="@+id/chess_game_fragment_x3y0"
+			android:id="@+id/checkers_and_chess_game_fragment_x3y0"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -350,14 +350,14 @@
 			android:tag="x3y0" />
 	</LinearLayout>
 	<LinearLayout
-		android:id="@+id/chess_game_fragment_x4"
+		android:id="@+id/checkers_and_chess_game_fragment_x4"
 		android:layout_height="match_parent"
 		android:layout_width="1dip"
 		android:orientation="vertical">
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x4y7"
-			android:id="@+id/chess_game_fragment_x4y7"
+			android:id="@+id/checkers_and_chess_game_fragment_x4y7"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -367,7 +367,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x4y6"
-			android:id="@+id/chess_game_fragment_x4y6"
+			android:id="@+id/checkers_and_chess_game_fragment_x4y6"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -377,7 +377,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x4y5"
-			android:id="@+id/chess_game_fragment_x4y5"
+			android:id="@+id/checkers_and_chess_game_fragment_x4y5"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -387,7 +387,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x4y4"
-			android:id="@+id/chess_game_fragment_x4y4"
+			android:id="@+id/checkers_and_chess_game_fragment_x4y4"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -397,7 +397,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x4y3"
-			android:id="@+id/chess_game_fragment_x4y3"
+			android:id="@+id/checkers_and_chess_game_fragment_x4y3"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -407,7 +407,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x4y2"
-			android:id="@+id/chess_game_fragment_x4y2"
+			android:id="@+id/checkers_and_chess_game_fragment_x4y2"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -417,7 +417,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x4y1"
-			android:id="@+id/chess_game_fragment_x4y1"
+			android:id="@+id/checkers_and_chess_game_fragment_x4y1"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -427,7 +427,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x4y0"
-			android:id="@+id/chess_game_fragment_x4y0"
+			android:id="@+id/checkers_and_chess_game_fragment_x4y0"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -436,14 +436,14 @@
 			android:tag="x4y0" />
 	</LinearLayout>
 	<LinearLayout
-		android:id="@+id/chess_game_fragment_x5"
+		android:id="@+id/checkers_and_chess_game_fragment_x5"
 		android:layout_height="match_parent"
 		android:layout_width="1dip"
 		android:orientation="vertical">
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x5y7"
-			android:id="@+id/chess_game_fragment_x5y7"
+			android:id="@+id/checkers_and_chess_game_fragment_x5y7"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -453,7 +453,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x5y6"
-			android:id="@+id/chess_game_fragment_x5y6"
+			android:id="@+id/checkers_and_chess_game_fragment_x5y6"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -463,7 +463,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x5y5"
-			android:id="@+id/chess_game_fragment_x5y5"
+			android:id="@+id/checkers_and_chess_game_fragment_x5y5"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -473,7 +473,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x5y4"
-			android:id="@+id/chess_game_fragment_x5y4"
+			android:id="@+id/checkers_and_chess_game_fragment_x5y4"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -483,7 +483,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x5y3"
-			android:id="@+id/chess_game_fragment_x5y3"
+			android:id="@+id/checkers_and_chess_game_fragment_x5y3"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -493,7 +493,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x5y2"
-			android:id="@+id/chess_game_fragment_x5y2"
+			android:id="@+id/checkers_and_chess_game_fragment_x5y2"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -503,7 +503,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x5y1"
-			android:id="@+id/chess_game_fragment_x5y1"
+			android:id="@+id/checkers_and_chess_game_fragment_x5y1"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -513,7 +513,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x5y0"
-			android:id="@+id/chess_game_fragment_x5y0"
+			android:id="@+id/checkers_and_chess_game_fragment_x5y0"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -522,14 +522,14 @@
 			android:tag="x5y0" />
 	</LinearLayout>
 	<LinearLayout
-		android:id="@+id/chess_game_fragment_x6"
+		android:id="@+id/checkers_and_chess_game_fragment_x6"
 		android:layout_height="match_parent"
 		android:layout_width="1dip"
 		android:orientation="vertical">
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x6y7"
-			android:id="@+id/chess_game_fragment_x6y7"
+			android:id="@+id/checkers_and_chess_game_fragment_x6y7"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -539,7 +539,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x6y6"
-			android:id="@+id/chess_game_fragment_x6y6"
+			android:id="@+id/checkers_and_chess_game_fragment_x6y6"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -549,7 +549,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x6y5"
-			android:id="@+id/chess_game_fragment_x6y5"
+			android:id="@+id/checkers_and_chess_game_fragment_x6y5"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -559,7 +559,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x6y4"
-			android:id="@+id/chess_game_fragment_x6y4"
+			android:id="@+id/checkers_and_chess_game_fragment_x6y4"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -569,7 +569,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x6y3"
-			android:id="@+id/chess_game_fragment_x6y3"
+			android:id="@+id/checkers_and_chess_game_fragment_x6y3"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -579,7 +579,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x6y2"
-			android:id="@+id/chess_game_fragment_x6y2"
+			android:id="@+id/checkers_and_chess_game_fragment_x6y2"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -589,7 +589,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x6y1"
-			android:id="@+id/chess_game_fragment_x6y1"
+			android:id="@+id/checkers_and_chess_game_fragment_x6y1"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -599,7 +599,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x6y0"
-			android:id="@+id/chess_game_fragment_x6y0"
+			android:id="@+id/checkers_and_chess_game_fragment_x6y0"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -608,14 +608,14 @@
 			android:tag="x6y0" />
 	</LinearLayout>
 	<LinearLayout
-		android:id="@+id/chess_game_fragment_x7"
+		android:id="@+id/checkers_and_chess_game_fragment_x7"
 		android:layout_height="match_parent"
 		android:layout_width="1dip"
 		android:orientation="vertical">
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x7y7"
-			android:id="@+id/chess_game_fragment_x7y7"
+			android:id="@+id/checkers_and_chess_game_fragment_x7y7"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -625,7 +625,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x7y6"
-			android:id="@+id/chess_game_fragment_x7y6"
+			android:id="@+id/checkers_and_chess_game_fragment_x7y6"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -635,7 +635,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x7y5"
-			android:id="@+id/chess_game_fragment_x7y5"
+			android:id="@+id/checkers_and_chess_game_fragment_x7y5"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -645,7 +645,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x7y4"
-			android:id="@+id/chess_game_fragment_x7y4"
+			android:id="@+id/checkers_and_chess_game_fragment_x7y4"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -655,7 +655,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x7y3"
-			android:id="@+id/chess_game_fragment_x7y3"
+			android:id="@+id/checkers_and_chess_game_fragment_x7y3"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -665,7 +665,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x7y2"
-			android:id="@+id/chess_game_fragment_x7y2"
+			android:id="@+id/checkers_and_chess_game_fragment_x7y2"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -675,7 +675,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_dark"
 			android:contentDescription="@string/board_x7y1"
-			android:id="@+id/chess_game_fragment_x7y1"
+			android:id="@+id/checkers_and_chess_game_fragment_x7y1"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
@@ -685,7 +685,7 @@
 		<ImageButton
 			android:background="@drawable/bg_board_bright"
 			android:contentDescription="@string/board_x7y0"
-			android:id="@+id/chess_game_fragment_x7y0"
+			android:id="@+id/checkers_and_chess_game_fragment_x7y0"
 			android:layout_height="0dip"
 			android:layout_weight="1"
 			android:layout_width="match_parent"

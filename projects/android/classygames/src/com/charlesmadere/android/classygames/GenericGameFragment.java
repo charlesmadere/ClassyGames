@@ -178,7 +178,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{
-		createView();
 		return inflater.inflate(getGameView(), container, false);
 	}
 
@@ -852,28 +851,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * Puts the board in a state so that the move is now ready to be sent.
-	 * 
-	 * @param force
-	 * If you want to force a pre honeycomb device to refresh it's menu then
-	 * set this to true.
-	 */
-	protected void readyToSendMove(final boolean force)
-	{
-		Utilities.compatInvalidateOptionsMenu(getSherlockActivity(), force);
-	}
-
-
-	/**
-	 * Puts the board in a state so that the move is now ready to be sent.
-	 */
-	protected void readyToSendMove()
-	{
-		readyToSendMove(false);
-	}
-
-
-	/**
 	 * This method will initialize the game board as if this is an in progress
 	 * game. This <strong>resumes</strong> an old game. Do not use this for a
 	 * brand new game.
@@ -919,16 +896,18 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 	/**
 	 * Applies the onBoardClick OnClickListener to all of the given View
-	 * objects.
+	 * IDs.
 	 *
 	 * @param views
-	 * The set of View objects to apply the OnClickListener to.
+	 * The set of View IDs to apply the OnClickListener to.
 	 */
-	protected void setBoardOnClickListeners(final View... views)
+	protected void setBoardOnClickListeners(final int... views)
 	{
-		for (final View view : views)
+		final View view = getView();
+
+		for (final int i : views)
 		{
-			view.setOnClickListener(onBoardClick);
+			view.findViewById(i).setOnClickListener(onBoardClick);
 		}
 	}
 
@@ -1206,18 +1185,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 	}
 
 
-
-
-	/**
-	 * Can be looked at as a main method for classes that extend this one. This
-	 * method is very important because it must returns which layout this
-	 * fragment will need to inflate. Returning the needed layout is really the
-	 * only thing that this method needs to do. In fact, it's probably the only
-	 * thing that this method should do. Stuff that's typically in an
-	 * Activity's onCreate() method should instead be, for fragments, placed in
-	 * the onActivityCreated() method.
-	 */
-	protected abstract void createView();
 
 
 	/**

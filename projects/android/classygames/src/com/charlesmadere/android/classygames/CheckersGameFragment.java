@@ -12,6 +12,7 @@ import com.charlesmadere.android.classygames.models.games.Coordinate;
 import com.charlesmadere.android.classygames.models.games.Position;
 import com.charlesmadere.android.classygames.models.games.checkers.Board;
 import com.charlesmadere.android.classygames.models.games.checkers.Piece;
+import com.charlesmadere.android.classygames.utilities.Utilities;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -44,13 +45,6 @@ public class CheckersGameFragment extends GenericGameFragment
 	private BitmapDrawable playerKing;
 
 
-
-
-	@Override
-	protected void createView()
-	{
-
-	}
 
 
 	@Override
@@ -125,7 +119,7 @@ public class CheckersGameFragment extends GenericGameFragment
 	@Override
 	protected int getGameView()
 	{
-		return R.layout.checkers_game_fragment;
+		return R.layout.checkers_and_chess_game_fragment;
 	}
 
 
@@ -164,95 +158,95 @@ public class CheckersGameFragment extends GenericGameFragment
 
 		setBoardOnClickListeners
 		(
-			view.findViewById(R.id.checkers_game_fragment_x0y0),
-			view.findViewById(R.id.checkers_game_fragment_x1y0),
-			view.findViewById(R.id.checkers_game_fragment_x2y0),
-			view.findViewById(R.id.checkers_game_fragment_x3y0),
-			view.findViewById(R.id.checkers_game_fragment_x4y0),
-			view.findViewById(R.id.checkers_game_fragment_x5y0),
-			view.findViewById(R.id.checkers_game_fragment_x6y0),
-			view.findViewById(R.id.checkers_game_fragment_x7y0),
-			view.findViewById(R.id.checkers_game_fragment_x0y1),
-			view.findViewById(R.id.checkers_game_fragment_x1y1),
-			view.findViewById(R.id.checkers_game_fragment_x2y1),
-			view.findViewById(R.id.checkers_game_fragment_x3y1),
-			view.findViewById(R.id.checkers_game_fragment_x4y1),
-			view.findViewById(R.id.checkers_game_fragment_x5y1),
-			view.findViewById(R.id.checkers_game_fragment_x6y1),
-			view.findViewById(R.id.checkers_game_fragment_x7y1),
-			view.findViewById(R.id.checkers_game_fragment_x0y2),
-			view.findViewById(R.id.checkers_game_fragment_x1y2),
-			view.findViewById(R.id.checkers_game_fragment_x2y2),
-			view.findViewById(R.id.checkers_game_fragment_x3y2),
-			view.findViewById(R.id.checkers_game_fragment_x4y2),
-			view.findViewById(R.id.checkers_game_fragment_x5y2),
-			view.findViewById(R.id.checkers_game_fragment_x6y2),
-			view.findViewById(R.id.checkers_game_fragment_x7y2),
-			view.findViewById(R.id.checkers_game_fragment_x0y3),
-			view.findViewById(R.id.checkers_game_fragment_x1y3),
-			view.findViewById(R.id.checkers_game_fragment_x2y3),
-			view.findViewById(R.id.checkers_game_fragment_x3y3),
-			view.findViewById(R.id.checkers_game_fragment_x4y3),
-			view.findViewById(R.id.checkers_game_fragment_x5y3),
-			view.findViewById(R.id.checkers_game_fragment_x6y3),
-			view.findViewById(R.id.checkers_game_fragment_x7y3),
-			view.findViewById(R.id.checkers_game_fragment_x0y4),
-			view.findViewById(R.id.checkers_game_fragment_x1y4),
-			view.findViewById(R.id.checkers_game_fragment_x2y4),
-			view.findViewById(R.id.checkers_game_fragment_x3y4),
-			view.findViewById(R.id.checkers_game_fragment_x4y4),
-			view.findViewById(R.id.checkers_game_fragment_x5y4),
-			view.findViewById(R.id.checkers_game_fragment_x6y4),
-			view.findViewById(R.id.checkers_game_fragment_x7y4),
-			view.findViewById(R.id.checkers_game_fragment_x0y5),
-			view.findViewById(R.id.checkers_game_fragment_x1y5),
-			view.findViewById(R.id.checkers_game_fragment_x2y5),
-			view.findViewById(R.id.checkers_game_fragment_x3y5),
-			view.findViewById(R.id.checkers_game_fragment_x4y5),
-			view.findViewById(R.id.checkers_game_fragment_x5y5),
-			view.findViewById(R.id.checkers_game_fragment_x6y5),
-			view.findViewById(R.id.checkers_game_fragment_x7y5),
-			view.findViewById(R.id.checkers_game_fragment_x0y6),
-			view.findViewById(R.id.checkers_game_fragment_x1y6),
-			view.findViewById(R.id.checkers_game_fragment_x2y6),
-			view.findViewById(R.id.checkers_game_fragment_x3y6),
-			view.findViewById(R.id.checkers_game_fragment_x4y6),
-			view.findViewById(R.id.checkers_game_fragment_x5y6),
-			view.findViewById(R.id.checkers_game_fragment_x6y6),
-			view.findViewById(R.id.checkers_game_fragment_x7y6),
-			view.findViewById(R.id.checkers_game_fragment_x0y7),
-			view.findViewById(R.id.checkers_game_fragment_x1y7),
-			view.findViewById(R.id.checkers_game_fragment_x2y7),
-			view.findViewById(R.id.checkers_game_fragment_x3y7),
-			view.findViewById(R.id.checkers_game_fragment_x4y7),
-			view.findViewById(R.id.checkers_game_fragment_x5y7),
-			view.findViewById(R.id.checkers_game_fragment_x6y7),
-			view.findViewById(R.id.checkers_game_fragment_x7y7)
+			R.id.checkers_and_chess_game_fragment_x0y0,
+			R.id.checkers_and_chess_game_fragment_x1y0,
+			R.id.checkers_and_chess_game_fragment_x2y0,
+			R.id.checkers_and_chess_game_fragment_x3y0,
+			R.id.checkers_and_chess_game_fragment_x4y0,
+			R.id.checkers_and_chess_game_fragment_x5y0,
+			R.id.checkers_and_chess_game_fragment_x6y0,
+			R.id.checkers_and_chess_game_fragment_x7y0,
+			R.id.checkers_and_chess_game_fragment_x0y1,
+			R.id.checkers_and_chess_game_fragment_x1y1,
+			R.id.checkers_and_chess_game_fragment_x2y1,
+			R.id.checkers_and_chess_game_fragment_x3y1,
+			R.id.checkers_and_chess_game_fragment_x4y1,
+			R.id.checkers_and_chess_game_fragment_x5y1,
+			R.id.checkers_and_chess_game_fragment_x6y1,
+			R.id.checkers_and_chess_game_fragment_x7y1,
+			R.id.checkers_and_chess_game_fragment_x0y2,
+			R.id.checkers_and_chess_game_fragment_x1y2,
+			R.id.checkers_and_chess_game_fragment_x2y2,
+			R.id.checkers_and_chess_game_fragment_x3y2,
+			R.id.checkers_and_chess_game_fragment_x4y2,
+			R.id.checkers_and_chess_game_fragment_x5y2,
+			R.id.checkers_and_chess_game_fragment_x6y2,
+			R.id.checkers_and_chess_game_fragment_x7y2,
+			R.id.checkers_and_chess_game_fragment_x0y3,
+			R.id.checkers_and_chess_game_fragment_x1y3,
+			R.id.checkers_and_chess_game_fragment_x2y3,
+			R.id.checkers_and_chess_game_fragment_x3y3,
+			R.id.checkers_and_chess_game_fragment_x4y3,
+			R.id.checkers_and_chess_game_fragment_x5y3,
+			R.id.checkers_and_chess_game_fragment_x6y3,
+			R.id.checkers_and_chess_game_fragment_x7y3,
+			R.id.checkers_and_chess_game_fragment_x0y4,
+			R.id.checkers_and_chess_game_fragment_x1y4,
+			R.id.checkers_and_chess_game_fragment_x2y4,
+			R.id.checkers_and_chess_game_fragment_x3y4,
+			R.id.checkers_and_chess_game_fragment_x4y4,
+			R.id.checkers_and_chess_game_fragment_x5y4,
+			R.id.checkers_and_chess_game_fragment_x6y4,
+			R.id.checkers_and_chess_game_fragment_x7y4,
+			R.id.checkers_and_chess_game_fragment_x0y5,
+			R.id.checkers_and_chess_game_fragment_x1y5,
+			R.id.checkers_and_chess_game_fragment_x2y5,
+			R.id.checkers_and_chess_game_fragment_x3y5,
+			R.id.checkers_and_chess_game_fragment_x4y5,
+			R.id.checkers_and_chess_game_fragment_x5y5,
+			R.id.checkers_and_chess_game_fragment_x6y5,
+			R.id.checkers_and_chess_game_fragment_x7y5,
+			R.id.checkers_and_chess_game_fragment_x0y6,
+			R.id.checkers_and_chess_game_fragment_x1y6,
+			R.id.checkers_and_chess_game_fragment_x2y6,
+			R.id.checkers_and_chess_game_fragment_x3y6,
+			R.id.checkers_and_chess_game_fragment_x4y6,
+			R.id.checkers_and_chess_game_fragment_x5y6,
+			R.id.checkers_and_chess_game_fragment_x6y6,
+			R.id.checkers_and_chess_game_fragment_x7y6,
+			R.id.checkers_and_chess_game_fragment_x0y7,
+			R.id.checkers_and_chess_game_fragment_x1y7,
+			R.id.checkers_and_chess_game_fragment_x2y7,
+			R.id.checkers_and_chess_game_fragment_x3y7,
+			R.id.checkers_and_chess_game_fragment_x4y7,
+			R.id.checkers_and_chess_game_fragment_x5y7,
+			R.id.checkers_and_chess_game_fragment_x6y7,
+			R.id.checkers_and_chess_game_fragment_x7y7
 		);
 
 		// create an array of the board's rows
 		final int [] xPositions = new int[8];
-		xPositions[0] = R.id.checkers_game_fragment_x0;
-		xPositions[1] = R.id.checkers_game_fragment_x1;
-		xPositions[2] = R.id.checkers_game_fragment_x2;
-		xPositions[3] = R.id.checkers_game_fragment_x3;
-		xPositions[4] = R.id.checkers_game_fragment_x4;
-		xPositions[5] = R.id.checkers_game_fragment_x5;
-		xPositions[6] = R.id.checkers_game_fragment_x6;
-		xPositions[7] = R.id.checkers_game_fragment_x7;
+		xPositions[0] = R.id.checkers_and_chess_game_fragment_x0;
+		xPositions[1] = R.id.checkers_and_chess_game_fragment_x1;
+		xPositions[2] = R.id.checkers_and_chess_game_fragment_x2;
+		xPositions[3] = R.id.checkers_and_chess_game_fragment_x3;
+		xPositions[4] = R.id.checkers_and_chess_game_fragment_x4;
+		xPositions[5] = R.id.checkers_and_chess_game_fragment_x5;
+		xPositions[6] = R.id.checkers_and_chess_game_fragment_x6;
+		xPositions[7] = R.id.checkers_and_chess_game_fragment_x7;
 
 		// create an array of the board's columns
 		final int [] yPositions = new int[8];
-		yPositions[0] = R.id.checkers_game_fragment_y0;
-		yPositions[1] = R.id.checkers_game_fragment_y1;
-		yPositions[2] = R.id.checkers_game_fragment_y2;
-		yPositions[3] = R.id.checkers_game_fragment_y3;
-		yPositions[4] = R.id.checkers_game_fragment_y4;
-		yPositions[5] = R.id.checkers_game_fragment_y5;
-		yPositions[6] = R.id.checkers_game_fragment_y6;
-		yPositions[7] = R.id.checkers_game_fragment_y7;
+		yPositions[0] = R.id.checkers_and_chess_game_fragment_y0;
+		yPositions[1] = R.id.checkers_and_chess_game_fragment_y1;
+		yPositions[2] = R.id.checkers_and_chess_game_fragment_y2;
+		yPositions[3] = R.id.checkers_and_chess_game_fragment_y3;
+		yPositions[4] = R.id.checkers_and_chess_game_fragment_y4;
+		yPositions[5] = R.id.checkers_and_chess_game_fragment_y5;
+		yPositions[6] = R.id.checkers_and_chess_game_fragment_y6;
+		yPositions[7] = R.id.checkers_and_chess_game_fragment_y7;
 
-		setAllBoardPositionsToEqualHeightAndWidth(view, R.id.checkers_game_fragment_x0y7, xPositions, yPositions);
+		setAllBoardPositionsToEqualHeightAndWidth(view, R.id.checkers_and_chess_game_fragment_x0y7, xPositions, yPositions);
 	}
 
 
@@ -363,7 +357,7 @@ public class CheckersGameFragment extends GenericGameFragment
 				if (board.move(previous, current))
 				{
 					flush();
-					readyToSendMove(true);
+					Utilities.compatInvalidateOptionsMenu(getSherlockActivity(), true);
 
 					if (board.isBoardLocked())
 					{
