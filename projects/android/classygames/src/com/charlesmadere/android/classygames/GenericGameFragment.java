@@ -1,7 +1,6 @@
 package com.charlesmadere.android.classygames;
 
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -43,14 +42,12 @@ public abstract class GenericGameFragment extends SherlockFragment
 	private final static String LOG_TAG = Utilities.LOG_TAG + " - GenericGameFragment";
 
 
-	private final static String BUNDLE_BOARD_JSON = "BUNDLE_BOARD_JSON";
 	public final static String PREFERENCES_NAME = "GenericGameFragment_Preferences";
-
-
 	public final static String KEY_GAME_ID = "KEY_GAME_ID";
 	public final static String KEY_WHICH_GAME = "KEY_WHICH_GAME";
 	public final static String KEY_PERSON_ID = "KEY_PERSON_ID";
 	public final static String KEY_PERSON_NAME = "KEY_PERSON_NAME";
+	private final static String BUNDLE_BOARD_JSON = "BUNDLE_BOARD_JSON";
 
 
 
@@ -530,13 +527,13 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		if (positionSelectedPrevious != null)
 		{
-			setPositionBackground(positionSelectedPrevious, false);
+			positionSelectedPrevious.setSelected(false);
 			positionSelectedPrevious = null;
 		}
 
 		if (positionSelectedCurrent != null)
 		{
-			setPositionBackground(positionSelectedCurrent, false);
+			positionSelectedCurrent.setSelected(false);
 			positionSelectedCurrent = null;
 		}
 	}
@@ -944,7 +941,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 		viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
 		{
 			@Override
-			@SuppressLint("NewApi")
 			@SuppressWarnings("deprecation")
 			public void onGlobalLayout()
 			{
@@ -989,25 +985,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 				}
 			}
 		});
-	}
-
-
-	/**
-	 * Sets the background of the given ImageButton to what it should be. If
-	 * the ImageButton was just now selected, it will be given a highlighted
-	 * background that signifies that fact. If the ImageButton was just now
-	 * deselected then it will have its background set back to its default.
-	 * 
-	 * @param position
-	 * The ImageButton to change the background of.
-	 * 
-	 * @param newlySelected
-	 * True if this ImageButton was just now selected.
-	 */
-	@SuppressWarnings("deprecation")
-	protected void setPositionBackground(final ImageButton position, final boolean newlySelected)
-	{
-		position.setSelected(newlySelected);
 	}
 
 
