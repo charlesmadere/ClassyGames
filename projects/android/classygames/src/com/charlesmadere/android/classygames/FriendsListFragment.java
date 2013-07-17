@@ -161,21 +161,34 @@ public class FriendsListFragment extends SherlockFragment implements
 				{
 					if (friendsListAdapter != null)
 					{
-						if (newText != null)
-						{
-							friendsListAdapter.getFilter().filter(newText);
-						}
+						friendsListAdapter.getFilter().filter(newText);
 					}
 
-					return false;
+					return true;
 				}
 
 
 				@Override
 				public boolean onQueryTextSubmit(final String query)
 				{
-					searchMenuItem.collapseActionView();
-					return false;
+					return true;
+				}
+			});
+
+			searchMenuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener()
+			{
+				@Override
+				public boolean onMenuItemActionCollapse(final MenuItem item)
+				{
+					searchView.setQuery(null, true);
+					return true;
+				}
+
+
+				@Override
+				public boolean onMenuItemActionExpand(final MenuItem item)
+				{
+					return true;
 				}
 			});
 		}
@@ -523,6 +536,7 @@ public class FriendsListFragment extends SherlockFragment implements
 		private Drawable emptyProfilePicture;
 		private Filter filter;
 		private ImageLoader imageLoader;
+		private LayoutInflater inflater;
 
 
 		private FriendsListAdapter(final Context context, final int textViewResourceId, final ArrayList<Person> friends)
@@ -531,6 +545,7 @@ public class FriendsListFragment extends SherlockFragment implements
 			this.friends = friends;
 			this.context = context;
 
+			inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			emptyProfilePicture = context.getResources().getDrawable(R.drawable.empty_profile_picture_small);
 			filter = new FriendsListFilter(friends);
 			imageLoader = Utilities.getImageLoader(context);
@@ -563,7 +578,6 @@ public class FriendsListFragment extends SherlockFragment implements
 		{
 			if (convertView == null)
 			{
-				final LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				convertView = inflater.inflate(R.layout.friends_list_fragment_listview_item, null);
 
 				final ViewHolder viewHolder = new ViewHolder();

@@ -802,6 +802,7 @@ public class GamesListFragment extends SherlockFragment implements
 		private Drawable chessIcon;
 		private Drawable emptyProfilePicture;
 		private ImageLoader imageLoader;
+		private LayoutInflater inflater;
 
 
 		private GamesListAdapter(final Context context, final int textViewResourceId, final ArrayList<Game> games)
@@ -810,19 +811,18 @@ public class GamesListFragment extends SherlockFragment implements
 			this.context = context;
 			this.games = games;
 
-			imageLoader = Utilities.getImageLoader(context);
-
+			inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			final Resources resources = context.getResources();
 			emptyProfilePicture = resources.getDrawable(R.drawable.empty_profile_picture_small);
 			checkersIcon = resources.getDrawable(R.drawable.game_icon_checkers);
 			chessIcon = resources.getDrawable(R.drawable.game_icon_chess);
+			imageLoader = Utilities.getImageLoader(context);
 		}
 
 
 		@Override
 		public View getView(final int position, View convertView, final ViewGroup parent)
 		{
-			final LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			final Game game = games.get(position);
 
 			if (game.isTypeGame())
