@@ -84,12 +84,6 @@ public class GamesListFragment extends SherlockFragment implements
 	private ServerApi.Listeners serverApiListeners;
 
 
-	/**
-	 * List Adapter for this Fragment's ListView layout item.
-	 */
-	private GamesListAdapter gamesListAdapter;
-
-
 
 
 	/**
@@ -228,7 +222,7 @@ public class GamesListFragment extends SherlockFragment implements
 	@Override
 	public void onItemClick(final AdapterView<?> l, final View v, final int position, final long id)
 	{
-		final Game game = gamesListAdapter.getItem(position);
+		final Game game = (Game) l.getItemAtPosition(position);
 
 		if (game.isTypeGame() && game.isTurnYours())
 		{
@@ -242,7 +236,7 @@ public class GamesListFragment extends SherlockFragment implements
 	{
 		if (!isAnAsyncTaskRunning())
 		{
-			final Game game = gamesListAdapter.getItem(position);
+			final Game game = (Game) l.getItemAtPosition(position);
 
 			if (game.isTypeGame())
 			{
@@ -589,7 +583,7 @@ public class GamesListFragment extends SherlockFragment implements
 			if (runStatus == RUN_STATUS_NORMAL && games != null && !games.isEmpty())
 			{
 				inflater.inflate(R.layout.games_list_fragment, viewGroup);
-				gamesListAdapter = new GamesListAdapter(fragmentActivity, R.layout.games_list_fragment_listview_item, games);
+				final GamesListAdapter gamesListAdapter = new GamesListAdapter(fragmentActivity, R.layout.games_list_fragment_listview_item, games);
 
 				final ListView listView = (ListView) viewGroup.findViewById(R.id.games_list_fragment_listview);
 				listView.setAdapter(gamesListAdapter);
