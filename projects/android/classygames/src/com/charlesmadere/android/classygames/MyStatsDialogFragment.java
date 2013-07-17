@@ -59,8 +59,11 @@ public class MyStatsDialogFragment extends SherlockDialogFragment
 		 * This method is fired whenever there was an error when trying to
 		 * parse data as received from the server when performing the GetStats
 		 * server api call.
+		 *
+		 * @param e
+		 * The Exception that was raised which caused this error.
 		 */
-		public void onGetStatsDataError();
+		public void onGetStatsDataError(final Exception e);
 	}
 
 
@@ -321,13 +324,14 @@ public class MyStatsDialogFragment extends SherlockDialogFragment
 			}
 			catch (final JSONException e)
 			{
-				Log.e(LOG_TAG, "JSON String is massively malformed.", e);
-				listeners.onGetStatsDataError();
+				serverTask = null;
+				listeners.onGetStatsDataError(e);
 			}
 		}
 		else
 		{
-			listeners.onGetStatsDataError();
+			serverTask = null;
+			listeners.onGetStatsDataError(new JSONException("JSON String was massively malformed!"));
 		}
 	}
 

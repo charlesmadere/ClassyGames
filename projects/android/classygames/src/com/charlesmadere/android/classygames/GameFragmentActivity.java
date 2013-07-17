@@ -35,7 +35,6 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 	public final static String BUNDLE_DATA_WHICH_GAME = "BUNDLE_DATA_WHICH_GAME";
 	public final static String BUNDLE_DATA_PERSON_OPPONENT_ID = "BUNDLE_PERSON_OPPONENT_ID";
 	public final static String BUNDLE_DATA_PERSON_OPPONENT_NAME = "BUNDLE_PERSON_OPPONENT_NAME";
-
 	private final static String KEY_ACTION_BAR_TITLE = "KEY_ACTION_BAR_TITLE";
 
 
@@ -438,6 +437,10 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 			{
 				Utilities.setActionBar(this, getString(R.string.chess_with_x, game.getPerson().getName()), true);
 			}
+			else
+			{
+				Log.wtf(LOG_TAG, "Player tried creating a game which was not one we recognize...");
+			}
 		}
 	}
 
@@ -480,8 +483,9 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 
 	@Override
-	public void onGetStatsDataError()
+	public void onGetStatsDataError(final Exception e)
 	{
+		Log.e(LOG_TAG, "Exception in onGetStatsDataError!", e);
 		Utilities.easyToastAndLogError(this, R.string.we_couldnt_get_your_stats_data_there_was_a_server_error);
 		onBackPressed();
 	}
