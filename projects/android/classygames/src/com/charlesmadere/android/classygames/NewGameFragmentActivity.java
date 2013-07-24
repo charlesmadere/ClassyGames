@@ -12,7 +12,7 @@ import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
-public class NewGameFragmentActivity extends SherlockFragmentActivity implements
+public final class NewGameFragmentActivity extends SherlockFragmentActivity implements
 	ConfirmGameFragment.Listeners,
 	FriendsListFragment.Listeners
 {

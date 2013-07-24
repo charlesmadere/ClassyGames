@@ -33,7 +33,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.util.*;
 
 
-public class FriendsListFragment extends SherlockFragment implements
+public final class FriendsListFragment extends SherlockFragment implements
 	OnItemClickListener
 {
 

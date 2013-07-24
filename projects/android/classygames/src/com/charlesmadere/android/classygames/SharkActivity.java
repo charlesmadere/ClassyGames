@@ -7,7 +7,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
-public class SharkActivity extends SherlockActivity
+public final class SharkActivity extends SherlockActivity
 {
 
 

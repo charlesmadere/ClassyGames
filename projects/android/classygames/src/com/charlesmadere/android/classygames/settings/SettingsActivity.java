@@ -20,7 +20,7 @@ import java.util.List;
  * was taken from the official Android Documentation.
  * https://developer.android.com/guide/topics/ui/settings.html
  */
-public class SettingsActivity extends SherlockPreferenceActivity implements
+public final class SettingsActivity extends SherlockPreferenceActivity implements
 	GameSettingsFragment.GameSettingsFragmentListeners
 {
 

@@ -25,7 +25,7 @@ import com.charlesmadere.android.classygames.utilities.Utilities;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 
-public class ConfirmGameFragment extends SherlockFragment
+public final class ConfirmGameFragment extends SherlockFragment
 {
 
 

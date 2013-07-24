@@ -17,7 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class ChessGameFragment extends GenericGameFragment
+public final class ChessGameFragment extends GenericGameFragment
 {
 
 

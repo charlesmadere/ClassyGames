@@ -21,7 +21,7 @@ import com.facebook.model.GraphUser;
 /**
  * This class is the app's entry point.
  */
-public class MainActivity extends SherlockActivity
+public final class MainActivity extends SherlockActivity
 {
 
 
@@ -186,7 +186,7 @@ public class MainActivity extends SherlockActivity
 
 	private void startCentralFragmentActivity()
 	{
-		final Intent intent = new Intent(MainActivity.this, GameFragmentActivity.class);
+		final Intent intent = new Intent(this, GameFragmentActivity.class);
 		startActivityForResult(intent, GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FINISH);
 	}
 

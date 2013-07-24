@@ -40,7 +40,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 
-public class GamesListFragment extends SherlockFragment implements
+public final class GamesListFragment extends SherlockFragment implements
 	OnItemClickListener,
 	OnItemLongClickListener
 {

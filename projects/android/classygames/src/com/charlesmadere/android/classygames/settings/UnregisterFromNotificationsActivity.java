@@ -14,7 +14,7 @@ import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
-public class UnregisterFromNotificationsActivity extends SherlockActivity
+public final class UnregisterFromNotificationsActivity extends SherlockActivity
 {
 
 

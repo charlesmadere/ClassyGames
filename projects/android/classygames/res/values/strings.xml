@@ -38,6 +38,7 @@
 	<string name="games_list">Games List</string>
 	<string name="games_list_fragment_listview_item_picture_description">Friend\'s Picture</string>
 	<string name="games_list_fragment_listview_item_game_icon_description">Game\'s Icon</string>
+	<string name="github">GitHub</string>
 	<string name="green">Green</string>
 	<string name="you_have_no_games_perhaps_you_should_start_a_new_game">You have no games! Perhaps you should start a new game?</string>
 	<string name="you_dont_have_an_internet_connection">You don\'t have an Internet connection!</string>
@@ -77,6 +78,7 @@
 	<string name="one_hour_ago">1 hour ago</string>
 	<string name="one_minute_ago">1 minute ago</string>
 	<string name="one_week_ago">1 week ago</string>
+	<string name="open_source_on_github">Open Source on GitHub</string>
 	<string name="orange">Orange</string>
 	<string name="pink">Pink</string>
 	<string name="profile">Profile</string>

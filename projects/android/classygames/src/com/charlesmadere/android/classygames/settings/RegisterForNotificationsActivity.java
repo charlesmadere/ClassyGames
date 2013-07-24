@@ -20,7 +20,7 @@ import com.charlesmadere.android.classygames.utilities.Utilities;
 import java.io.IOException;
 
 
-public class RegisterForNotificationsActivity extends SherlockActivity
+public final class RegisterForNotificationsActivity extends SherlockActivity
 {
 
 

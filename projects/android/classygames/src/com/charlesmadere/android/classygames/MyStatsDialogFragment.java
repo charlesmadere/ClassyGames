@@ -24,7 +24,7 @@ import org.json.JSONObject;
 /**
  * This Fragment shows the user their stats and scores and stuff.
  */
-public class MyStatsDialogFragment extends SherlockDialogFragment
+public final class MyStatsDialogFragment extends SherlockDialogFragment
 {
 
 

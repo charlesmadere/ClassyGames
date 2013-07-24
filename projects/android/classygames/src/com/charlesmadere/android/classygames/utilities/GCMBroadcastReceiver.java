@@ -11,7 +11,7 @@ import android.content.Intent;
  * Much of this was taken from the official Android documentation.
  * https://developer.android.com/guide/google/gcm/gcm.html#receiving
  */
-public class GCMBroadcastReceiver extends BroadcastReceiver
+public final class GCMBroadcastReceiver extends BroadcastReceiver
 {
 
 

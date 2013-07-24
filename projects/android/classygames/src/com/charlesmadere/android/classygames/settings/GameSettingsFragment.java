@@ -13,7 +13,7 @@ import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
-public class GameSettingsFragment extends PreferenceFragment
+public final class GameSettingsFragment extends PreferenceFragment
 {
 
 

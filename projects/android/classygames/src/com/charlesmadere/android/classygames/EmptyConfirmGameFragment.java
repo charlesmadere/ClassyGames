@@ -12,7 +12,7 @@ import com.actionbarsherlock.app.SherlockFragment;
  * This Fragment is used when there is no friend in the Friends List currently
  * selected.
  */
-public class EmptyConfirmGameFragment extends SherlockFragment
+public final class EmptyConfirmGameFragment extends SherlockFragment
 {
 
 

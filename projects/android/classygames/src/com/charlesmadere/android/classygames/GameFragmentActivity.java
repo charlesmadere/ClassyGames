@@ -17,7 +17,7 @@ import com.charlesmadere.android.classygames.settings.SettingsActivity;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
-public class GameFragmentActivity extends SherlockFragmentActivity implements
+public final class GameFragmentActivity extends SherlockFragmentActivity implements
 	GamesListFragment.Listeners,
 	GenericGameFragment.Listeners,
 	MyStatsDialogFragment.Listeners

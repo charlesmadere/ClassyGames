@@ -33,7 +33,7 @@ import android.text.style.MetricAffectingSpan;
  * @author
  * Tristan Waddington
  */
-public class StyledString extends MetricAffectingSpan
+public final class StyledString extends MetricAffectingSpan
 {
 
 

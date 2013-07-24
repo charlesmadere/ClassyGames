@@ -18,7 +18,7 @@ import com.charlesmadere.android.classygames.utilities.Utilities;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 
-public class GameOverActivity extends SherlockActivity
+public final class GameOverActivity extends SherlockActivity
 {
 
 

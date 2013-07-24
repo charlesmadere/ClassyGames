@@ -9,7 +9,7 @@ import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
-public class NotificationSettingsFragment extends PreferenceFragment
+public final class NotificationSettingsFragment extends PreferenceFragment
 {
 
 

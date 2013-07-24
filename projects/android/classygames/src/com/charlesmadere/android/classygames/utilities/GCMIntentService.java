@@ -27,7 +27,7 @@ import java.io.IOException;
  * documentation website.
  * https://developer.android.com/guide/google/gcm/gcm.html#receiving
  */
-public class GCMIntentService extends IntentService
+public final class GCMIntentService extends IntentService
 {
 
 
