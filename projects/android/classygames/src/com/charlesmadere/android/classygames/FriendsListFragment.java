@@ -474,7 +474,7 @@ public final class FriendsListFragment extends SherlockFragment implements
 			if (runStatus == RUN_STATUS_NORMAL && friends != null && !friends.isEmpty())
 			{
 				inflater.inflate(R.layout.friends_list_fragment, viewGroup);
-				friendsListAdapter = new FriendsListAdapter(fragmentActivity, R.layout.friends_list_fragment_listview_item, friends);
+				friendsListAdapter = new FriendsListAdapter(fragmentActivity, friends);
 
 				final ListView friendsList = (ListView) viewGroup.findViewById(R.id.friends_list_fragment_listview);
 				friendsList.setAdapter(friendsListAdapter);
@@ -539,9 +539,9 @@ public final class FriendsListFragment extends SherlockFragment implements
 		private LayoutInflater inflater;
 
 
-		private FriendsListAdapter(final Context context, final int textViewResourceId, final ArrayList<Person> friends)
+		private FriendsListAdapter(final Context context, final ArrayList<Person> friends)
 		{
-			super(context, textViewResourceId, friends);
+			super(context, R.layout.friends_list_fragment_listview_item, friends);
 			this.friends = friends;
 			this.context = context;
 

@@ -583,7 +583,7 @@ public final class GamesListFragment extends SherlockFragment implements
 			if (runStatus == RUN_STATUS_NORMAL && games != null && !games.isEmpty())
 			{
 				inflater.inflate(R.layout.games_list_fragment, viewGroup);
-				final GamesListAdapter gamesListAdapter = new GamesListAdapter(fragmentActivity, R.layout.games_list_fragment_listview_item, games);
+				final GamesListAdapter gamesListAdapter = new GamesListAdapter(fragmentActivity, games);
 
 				final ListView listView = (ListView) viewGroup.findViewById(R.id.games_list_fragment_listview);
 				listView.setAdapter(gamesListAdapter);
@@ -799,9 +799,9 @@ public final class GamesListFragment extends SherlockFragment implements
 		private LayoutInflater inflater;
 
 
-		private GamesListAdapter(final Context context, final int textViewResourceId, final ArrayList<Game> games)
+		private GamesListAdapter(final Context context, final ArrayList<Game> games)
 		{
-			super(context, textViewResourceId, games);
+			super(context, R.layout.games_list_fragment_listview_item, games);
 			this.context = context;
 			this.games = games;
 
@@ -856,6 +856,7 @@ public final class GamesListFragment extends SherlockFragment implements
 					convertView = inflater.inflate(R.layout.games_list_fragment_listview_turn_theirs, null);
 				}
 
+				TypefaceUtilities.applyTypefaceBlueHighway(context.getAssets(), (TextView) convertView);
 				convertView.setOnClickListener(null);
 				convertView.setOnLongClickListener(null);
 			}
