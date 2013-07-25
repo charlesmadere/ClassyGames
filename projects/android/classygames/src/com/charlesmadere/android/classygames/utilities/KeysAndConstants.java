@@ -15,4 +15,7 @@ public final class KeysAndConstants
 	public final static String GOOGLE_PROJECT_ID = "246279743841";
 
 
+	public final static String GITHUB_URL = "https://github.com/ScootrNova/ClassyGames";
+
+
 }

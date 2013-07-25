@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 	<item
+		android:icon="@drawable/github"
 		android:id="@+id/about_activity_menu_github"
+		android:showAsAction="ifRoom|withText"
 		android:title="@string/open_source_on_github"
 		android:titleCondensed="@string/github" />
 </menu>

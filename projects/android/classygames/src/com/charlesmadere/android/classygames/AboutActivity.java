@@ -2,6 +2,7 @@ package com.charlesmadere.android.classygames;
 
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,6 +12,7 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.charlesmadere.android.classygames.utilities.KeysAndConstants;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
@@ -56,7 +58,8 @@ public final class AboutActivity extends SherlockActivity
 				break;
 
 			case R.id.about_activity_menu_github:
-				Toast.makeText(this, R.string.open_source_on_github, Toast.LENGTH_SHORT).show();
+				final Intent github = new Intent(Intent.ACTION_VIEW, Uri.parse(KeysAndConstants.GITHUB_URL));
+				startActivity(github);
 				break;
 
 			default:

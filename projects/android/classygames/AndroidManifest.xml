@@ -6,13 +6,13 @@
 
 	<!--
 		SDK version 8 is Android v2.2 (Froyo)
-		SDK version 17 is Android v4.2 (Jelly Bean)
+		SDK version 18 is Android v4.3 (Jelly Bean)
 		Check out the Android API Levels website for more information on this topic:
 		https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels
 	-->
 	<uses-sdk
 		android:minSdkVersion="8"
-		android:targetSdkVersion="17" />
+		android:targetSdkVersion="18" />
 
 	<!-- Internet connectivity is needed to communicate with the Classy Games server. -->
 	<uses-permission
