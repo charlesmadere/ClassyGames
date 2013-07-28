@@ -18,8 +18,8 @@ import android.view.ViewGroup;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -40,7 +40,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 
-public final class GamesListFragment extends SherlockFragment implements
+public final class GamesListFragment extends SherlockListFragment implements
 	OnItemClickListener,
 	OnItemLongClickListener
 {
@@ -50,6 +50,13 @@ public final class GamesListFragment extends SherlockFragment implements
 	private final static String KEY_GAMES_LIST_JSON = "KEY_GAMES_LIST_JSON";
 
 
+
+
+	private ListView list;
+	private TextView empty;
+	private LinearLayout loading;
+	private TextView cancelledLoading;
+	private TextView noInternetConnection;
 
 
 	/**
@@ -164,6 +171,16 @@ public final class GamesListFragment extends SherlockFragment implements
 	public void onActivityCreated(final Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
+
+		final View view = getView();
+		list = getListView();
+		empty = (TextView) view.findViewById(android.R.id.empty);
+		loading = (LinearLayout) view.findViewById(R.id.games_list_fragment_loading);
+		cancelledLoading = (TextView) view.findViewById(R.id.games_list_fragment_cancelled_loading);
+		noInternetConnection = (TextView) view.findViewById(R.id.fragment_no_internet_connection);
+
+		getListView().setOnItemClickListener(this);
+		getListView().setOnItemLongClickListener(this);
 
 		if (savedInstanceState != null && savedInstanceState.containsKey(KEY_GAMES_LIST_JSON))
 		{
@@ -436,8 +453,7 @@ public final class GamesListFragment extends SherlockFragment implements
 	{
 		if (!isAnAsyncTaskRunning())
 		{
-			asyncRefreshGamesList = new AsyncRefreshGamesList(getSherlockActivity(),
-				getLayoutInflater(getArguments()), (ViewGroup) getView(), restoreExistingList);
+			asyncRefreshGamesList = new AsyncRefreshGamesList(getSherlockActivity(), restoreExistingList);
 			asyncRefreshGamesList.execute();
 		}
 	}
@@ -466,17 +482,12 @@ public final class GamesListFragment extends SherlockFragment implements
 
 
 		private SherlockFragmentActivity fragmentActivity;
-		private LayoutInflater inflater;
-		private ViewGroup viewGroup;
 		private boolean restoreExistingList;
 
 
-		private AsyncRefreshGamesList(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater,
-			final ViewGroup viewGroup, final boolean restoreExistingList)
+		private AsyncRefreshGamesList(final SherlockFragmentActivity fragmentActivity, final boolean restoreExistingList)
 		{
 			this.fragmentActivity = fragmentActivity;
-			this.inflater = inflater;
-			this.viewGroup = viewGroup;
 			this.restoreExistingList = restoreExistingList;
 			runStatus = RUN_STATUS_NORMAL;
 		}
@@ -547,8 +558,11 @@ public final class GamesListFragment extends SherlockFragment implements
 
 		private void cancelled()
 		{
-			viewGroup.removeAllViews();
-			inflater.inflate(R.layout.games_list_fragment_cancelled, viewGroup);
+			list.setVisibility(View.GONE);
+			empty.setVisibility(View.GONE);
+			loading.setVisibility(View.GONE);
+			cancelledLoading.setVisibility(View.VISIBLE);
+			noInternetConnection.setVisibility(View.GONE);
 
 			setRunningState(false);
 		}
@@ -578,25 +592,31 @@ public final class GamesListFragment extends SherlockFragment implements
 		@Override
 		protected void onPostExecute(final ArrayList<Game> games)
 		{
-			viewGroup.removeAllViews();
-
 			if (runStatus == RUN_STATUS_NORMAL && games != null && !games.isEmpty())
 			{
-				inflater.inflate(R.layout.games_list_fragment, viewGroup);
 				final GamesListAdapter gamesListAdapter = new GamesListAdapter(fragmentActivity, games);
+				list.setAdapter(gamesListAdapter);
 
-				final ListView listView = (ListView) viewGroup.findViewById(R.id.games_list_fragment_listview);
-				listView.setAdapter(gamesListAdapter);
-				listView.setOnItemClickListener(GamesListFragment.this);
-				listView.setOnItemLongClickListener(GamesListFragment.this);
+				list.setVisibility(View.VISIBLE);
+				loading.setVisibility(View.GONE);
+				cancelledLoading.setVisibility(View.GONE);
+				noInternetConnection.setVisibility(View.GONE);
 			}
 			else if (runStatus == RUN_STATUS_IOEXCEPTION || runStatus == RUN_STATUS_NO_NETWORK_CONNECTION)
 			{
-				inflater.inflate(R.layout.fragment_no_internet_connection, viewGroup);
+				list.setVisibility(View.GONE);
+				empty.setVisibility(View.GONE);
+				loading.setVisibility(View.GONE);
+				cancelledLoading.setVisibility(View.GONE);
+				noInternetConnection.setVisibility(View.VISIBLE);
 			}
 			else
 			{
-				inflater.inflate(R.layout.games_list_fragment_no_games, viewGroup);
+				list.setVisibility(View.GONE);
+				empty.setVisibility(View.VISIBLE);
+				loading.setVisibility(View.GONE);
+				cancelledLoading.setVisibility(View.GONE);
+				noInternetConnection.setVisibility(View.GONE);
 			}
 
 			setRunningState(false);
@@ -608,8 +628,11 @@ public final class GamesListFragment extends SherlockFragment implements
 		{
 			setRunningState(true);
 
-			viewGroup.removeAllViews();
-			inflater.inflate(R.layout.games_list_fragment_loading, viewGroup);
+			list.setVisibility(View.GONE);
+			empty.setVisibility(View.GONE);
+			loading.setVisibility(View.VISIBLE);
+			cancelledLoading.setVisibility(View.GONE);
+			noInternetConnection.setVisibility(View.GONE);
 		}
 
 
