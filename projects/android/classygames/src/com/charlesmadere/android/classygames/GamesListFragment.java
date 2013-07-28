@@ -174,13 +174,12 @@ public final class GamesListFragment extends SherlockListFragment implements
 
 		final View view = getView();
 		list = getListView();
+		list.setOnItemClickListener(this);
+		list.setOnItemLongClickListener(this);
 		empty = (TextView) view.findViewById(android.R.id.empty);
 		loading = (LinearLayout) view.findViewById(R.id.games_list_fragment_loading);
 		cancelledLoading = (TextView) view.findViewById(R.id.games_list_fragment_cancelled_loading);
 		noInternetConnection = (TextView) view.findViewById(R.id.fragment_no_internet_connection);
-
-		getListView().setOnItemClickListener(this);
-		getListView().setOnItemLongClickListener(this);
 
 		if (savedInstanceState != null && savedInstanceState.containsKey(KEY_GAMES_LIST_JSON))
 		{
@@ -598,6 +597,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 				list.setAdapter(gamesListAdapter);
 
 				list.setVisibility(View.VISIBLE);
+				empty.setVisibility(View.GONE);
 				loading.setVisibility(View.GONE);
 				cancelledLoading.setVisibility(View.GONE);
 				noInternetConnection.setVisibility(View.GONE);
