@@ -339,6 +339,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	@Override
 	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
 	{
+		menu.removeItem(R.id.game_fragment_activity_menu_settings);
 		menu.removeItem(R.id.generic_refresh_menu_refresh);
 
 		if (listeners.isDeviceSmall())

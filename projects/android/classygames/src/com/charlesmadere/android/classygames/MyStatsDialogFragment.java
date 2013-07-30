@@ -85,15 +85,15 @@ public final class MyStatsDialogFragment extends SherlockDialogFragment
 		findViews();
 		getPreferences();
 
-		final int checkersLosses = sPreferences.getInt(KEY_CHECKERS_LOSES, -1);
+		final int checkersLoses = sPreferences.getInt(KEY_CHECKERS_LOSES, -1);
 		final int checkersWins = sPreferences.getInt(KEY_CHECKERS_WINS, -1);
-		final int chessLosses = sPreferences.getInt(KEY_CHESS_LOSES, -1);
+		final int chessLoses = sPreferences.getInt(KEY_CHESS_LOSES, -1);
 		final int chessWins = sPreferences.getInt(KEY_CHESS_WINS, -1);
 
-		if (checkersLosses >= 0 && checkersWins >= 0 && chessLosses >= 0 && chessWins >= 0)
+		if (checkersLoses >= 0 && checkersWins >= 0 && chessLoses >= 0 && chessWins >= 0)
 		{
 			flipViews();
-			flushViews(checkersLosses, checkersWins, chessLosses, chessWins);
+			flushViews(checkersLoses, checkersWins, chessLoses, chessWins);
 		}
 		else
 		{
