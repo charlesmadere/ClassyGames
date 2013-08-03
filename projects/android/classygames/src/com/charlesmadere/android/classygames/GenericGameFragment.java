@@ -942,7 +942,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 		viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
 		{
 			@Override
-			@SuppressWarnings("deprecation")
 			public void onGlobalLayout()
 			{
 				final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams

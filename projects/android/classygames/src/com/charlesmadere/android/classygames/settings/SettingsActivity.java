@@ -34,7 +34,6 @@ public final class SettingsActivity extends SherlockPreferenceActivity implement
 
 
 	@Override
-	@SuppressWarnings("deprecation")
 	protected void onCreate(final Bundle savedInstanceState)
 	// The addPreferencesFromResource methods below are causing some
 	// deprecation warnings. In this case, the fact that they're here is fine.

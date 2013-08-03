@@ -486,7 +486,7 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 	public void onGetStatsDataError(final Exception e)
 	{
 		Log.e(LOG_TAG, "Exception in onGetStatsDataError!", e);
-		Utilities.easyToastAndLogError(this, R.string.we_couldnt_get_your_stats_data_there_was_a_server_error);
+		Utilities.easyToastAndLogError(this, R.string.a_server_error_occurred_when_trying_to_get_your_stats_data);
 		onBackPressed();
 	}
 

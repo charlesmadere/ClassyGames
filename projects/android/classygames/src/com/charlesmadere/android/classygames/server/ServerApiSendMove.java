@@ -6,13 +6,10 @@ import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.games.GenericBoard;
 import com.charlesmadere.android.classygames.utilities.Utilities;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 
 /**

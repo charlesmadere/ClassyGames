@@ -12,7 +12,6 @@ import com.charlesmadere.android.classygames.models.games.Coordinate;
 import com.charlesmadere.android.classygames.models.games.Position;
 import com.charlesmadere.android.classygames.models.games.checkers.Board;
 import com.charlesmadere.android.classygames.models.games.checkers.Piece;
-import com.charlesmadere.android.classygames.utilities.Utilities;
 import org.json.JSONException;
 import org.json.JSONObject;
 

@@ -447,16 +447,8 @@ public final class Server
 	 * using the URLs found in this class.
 	 * 
 	 * @param data
-	 * Data to be sent to the server using HTTP POST. This ArrayList will need
-	 * to be constructed outside of this method.
-	 * 
-	 * <p><strong>Example of data creation</strong><br />
-	 * ArrayList&#60;NameValuePair&#62; postData = new ArrayList&#60;NameValuePair&#62;();<br />
-	 * postData.add(new BasicNameValuePair(Server.POST_DATA_ID, Long.valueOf(id).toString());<br />
-	 * postData.add(new BasicNameValuePair(Server.POST_DATA_REG_ID, reg_id);<br />
-	 * Note that both values in the BasicNameValuePair <strong>must</strong>
-	 * be a String.</p>
-	 * 
+	 * Data to be sent to the server using HTTP POST.
+	 *
 	 * @return
 	 * The server's response as a String. This will need to be parsed as it is
 	 * JSON data. <strong>There is a slight possibility that the data String

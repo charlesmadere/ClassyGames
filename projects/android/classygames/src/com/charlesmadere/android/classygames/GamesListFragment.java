@@ -35,9 +35,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedList;
 
 
 public final class GamesListFragment extends SherlockListFragment implements
@@ -236,9 +236,9 @@ public final class GamesListFragment extends SherlockListFragment implements
 
 
 	@Override
-	public void onItemClick(final AdapterView<?> l, final View v, final int position, final long id)
+	public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id)
 	{
-		final Game game = (Game) l.getItemAtPosition(position);
+		final Game game = (Game) parent.getItemAtPosition(position);
 
 		if (game.isTypeGame() && game.isTurnYours())
 		{
@@ -248,15 +248,15 @@ public final class GamesListFragment extends SherlockListFragment implements
 
 
 	@Override
-	public boolean onItemLongClick(final AdapterView<?> l, final View v, int position, final long id)
+	public boolean onItemLongClick(final AdapterView<?> parent, final View view, int position, final long id)
 	{
 		if (!isAnAsyncTaskRunning())
 		{
-			final Game game = (Game) l.getItemAtPosition(position);
+			final Game game = (Game) parent.getItemAtPosition(position);
 
 			if (game.isTypeGame())
 			{
-				v.setSelected(true);
+				view.setSelected(true);
 
 				final Context context = getSherlockActivity();
 				String[] items;
@@ -469,7 +469,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 
 
 
-	private final class AsyncRefreshGamesList extends AsyncTask<Void, Void, ArrayList<Game>>
+	private final class AsyncRefreshGamesList extends AsyncTask<Void, Void, LinkedList<Game>>
 		implements Comparator<Game>
 	{
 
@@ -493,9 +493,9 @@ public final class GamesListFragment extends SherlockListFragment implements
 
 
 		@Override
-		protected ArrayList<Game> doInBackground(final Void... params)
+		protected LinkedList<Game> doInBackground(final Void... params)
 		{
-			ArrayList<Game> games = null;
+			LinkedList<Game> games = null;
 
 			if (restoreExistingList && gamesListJSON != null)
 			{
@@ -582,14 +582,14 @@ public final class GamesListFragment extends SherlockListFragment implements
 
 
 		@Override
-		protected void onCancelled(final ArrayList<Game> games)
+		protected void onCancelled(final LinkedList<Game> games)
 		{
 			cancelled();
 		}
 
 
 		@Override
-		protected void onPostExecute(final ArrayList<Game> games)
+		protected void onPostExecute(final LinkedList<Game> games)
 		{
 			if (runStatus == RUN_STATUS_NORMAL && games != null && !games.isEmpty())
 			{
@@ -644,15 +644,15 @@ public final class GamesListFragment extends SherlockListFragment implements
 		 * The JSON response acquired from the Classy Games server. This method
 		 * <strong>does</strong> check to make sure that this String is both
 		 * not null and not empty. If that scenario happens then this method
-		 * will return an empty ArrayList of Game objects.
+		 * will return an empty LinkedList of Game objects.
 		 * 
 		 * @return
-		 * Returns an ArrayList of Game objects. This ArrayList has a
-		 * possilibity of being empty.
+		 * Returns an LinkedList of Game objects. This LinkedList has a
+		 * possibility of being empty.
 		 */
-		private ArrayList<Game> parseServerResponse(final String serverResponse)
+		private LinkedList<Game> parseServerResponse(final String serverResponse)
 		{
-			final ArrayList<Game> games = new ArrayList<Game>();
+			final LinkedList<Game> games = new LinkedList<Game>();
 
 			if (!isCancelled())
 			{
@@ -687,7 +687,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 						}
 						else
 						{
-							ArrayList<Game> turn = parseTurn(jsonGameData, Server.POST_DATA_TURN_YOURS, Game.TURN_YOURS);
+							LinkedList<Game> turn = parseTurn(jsonGameData, Server.POST_DATA_TURN_YOURS, Game.TURN_YOURS);
 							if (turn != null && !turn.isEmpty())
 							{
 								games.addAll(turn);
@@ -704,8 +704,6 @@ public final class GamesListFragment extends SherlockListFragment implements
 					{
 						Log.e(LOG_TAG, "JSON String is massively malformed.", e);
 					}
-
-					games.trimToSize();
 				}
 				else
 				{
@@ -718,7 +716,8 @@ public final class GamesListFragment extends SherlockListFragment implements
 
 
 		/**
-		 * Creates an ArrayList of Game objects that are of the specified turn.
+		 * Creates and returns a LinkedList of Game objects that are of the
+		 * turn as specified in the whichTurn parameter.
 		 * 
 		 * @param jsonGameData
 		 * The JSON game data as received from the server.
@@ -735,9 +734,9 @@ public final class GamesListFragment extends SherlockListFragment implements
 		 * Returns all of the games of the specified turn. Has the possibility
 		 * of being null. Check for that!
 		 */
-		private ArrayList<Game> parseTurn(final JSONObject jsonGameData, final String postDataTurn, final boolean whichTurn)
+		private LinkedList<Game> parseTurn(final JSONObject jsonGameData, final String postDataTurn, final boolean whichTurn)
 		{
-			ArrayList<Game> games = null;
+			LinkedList<Game> games = null;
 
 			try
 			{
@@ -747,7 +746,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 				if (turnLength >= 1)
 				// ensure that we have at least one element in the JSONArray
 				{
-					games = new ArrayList<Game>();
+					games = new LinkedList<Game>();
 					games.add(new Game(whichTurn));
 
 					for (int i = 0; i < turnLength && !isCancelled(); ++i)
@@ -809,11 +808,11 @@ public final class GamesListFragment extends SherlockListFragment implements
 
 
 
-	private final class GamesListAdapter extends ArrayAdapter<Game>
+	private final class GamesListAdapter extends BaseAdapter
 	{
 
 
-		private ArrayList<Game> games;
+		private LinkedList<Game> games;
 		private Context context;
 		private Drawable checkersIcon;
 		private Drawable chessIcon;
@@ -822,9 +821,8 @@ public final class GamesListFragment extends SherlockListFragment implements
 		private LayoutInflater inflater;
 
 
-		private GamesListAdapter(final Context context, final ArrayList<Game> games)
+		private GamesListAdapter(final Context context, final LinkedList<Game> games)
 		{
-			super(context, R.layout.games_list_fragment_listview_item, games);
 			this.context = context;
 			this.games = games;
 
@@ -834,6 +832,27 @@ public final class GamesListFragment extends SherlockListFragment implements
 			checkersIcon = resources.getDrawable(R.drawable.game_icon_checkers);
 			chessIcon = resources.getDrawable(R.drawable.game_icon_chess);
 			imageLoader = Utilities.getImageLoader(context);
+		}
+
+
+		@Override
+		public int getCount()
+		{
+			return games.size();
+		}
+
+
+		@Override
+		public Game getItem(final int position)
+		{
+			return games.get(position);
+		}
+
+
+		@Override
+		public long getItemId(final int position)
+		{
+			return position;
 		}
 
 

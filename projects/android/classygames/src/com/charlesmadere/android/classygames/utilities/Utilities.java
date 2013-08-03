@@ -341,7 +341,6 @@ public final class Utilities
 	 * @param view
 	 * The View that you want the background applied to.
 	 */
-	@SuppressWarnings("deprecation")
 	public static void setBackground(final Context context, final View view)
 	{
 		final Drawable background = context.getResources().getDrawable(R.drawable.bg_bright);

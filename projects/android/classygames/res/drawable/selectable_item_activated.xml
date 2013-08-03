@@ -4,8 +4,8 @@
 	<corners
 		android:radius="2dip" />
 	<solid
-		android:color="@color/overlay_pink_light" />
+		android:color="@color/overlay_pink_medium" />
 	<stroke
-		android:color="@color/overlay_pink_medium"
+		android:color="@color/overlay_pink_dark"
 		android:width="4dip" />
 </shape>

@@ -3,7 +3,6 @@ package com.charlesmadere.android.classygames.server;
 
 import android.content.Context;
 import android.util.Log;
-import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.models.Person;
 
 import java.io.IOException;

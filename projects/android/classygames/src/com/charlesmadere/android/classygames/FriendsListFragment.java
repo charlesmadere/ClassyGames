@@ -19,6 +19,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
+import com.charlesmadere.android.classygames.models.ListItem;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
@@ -68,9 +69,11 @@ public final class FriendsListFragment extends SherlockListFragment implements
 
 
 	/**
-	 * List Adapter for this Fragment's ListView layout item.
+	 * If the user has selected a friend in their friends list, then this will
+	 * be a handle to that Friend object. If no friend is currently selected,
+	 * then this will be null.
 	 */
-	private FriendsListAdapter friendsListAdapter;
+	private ListItem<Person> selectedFriend;
 
 
 	private SharedPreferences sPreferences;
@@ -183,9 +186,14 @@ public final class FriendsListFragment extends SherlockListFragment implements
 				@Override
 				public boolean onQueryTextChange(final String newText)
 				{
-					if (friendsListAdapter != null)
+					if (list != null)
 					{
-						friendsListAdapter.getFilter().filter(newText);
+						final FriendsListAdapter adapter = (FriendsListAdapter) list.getAdapter();
+
+						if (adapter != null)
+						{
+							adapter.getFilter().filter(newText);
+						}
 					}
 
 					return true;
@@ -222,10 +230,41 @@ public final class FriendsListFragment extends SherlockListFragment implements
 
 
 	@Override
-	public void onItemClick(final AdapterView<?> l, final View v, final int position, final long id)
+	public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id)
 	{
-		final Person friend = (Person) l.getItemAtPosition(position);
-		listeners.onFriendSelected(friend);
+		@SuppressWarnings("unchecked")
+		final ListItem<Person> friend = (ListItem<Person>) parent.getItemAtPosition(position);
+
+		if (friend.isSelected())
+		{
+			friend.unselect();
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+			{
+				view.setActivated(true);
+			}
+
+			selectedFriend = null;
+		}
+		else
+		{
+			if (selectedFriend != null)
+			{
+				selectedFriend.unselect();
+				selectedFriend = null;
+				refreshListDrawState();
+			}
+
+			friend.select();
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+			{
+				view.setActivated(true);
+			}
+
+			selectedFriend = friend;
+			listeners.onFriendSelected(friend.get());
+		}
 	}
 
 
@@ -319,10 +358,23 @@ public final class FriendsListFragment extends SherlockListFragment implements
 	}
 
 
+	public void refreshListDrawState()
+	{
+		if (selectedFriend != null)
+		{
+			selectedFriend.unselect();
+			selectedFriend = null;
+		}
+
+		final FriendsListAdapter friends = (FriendsListAdapter) list.getAdapter();
+		friends.notifyDataSetChanged();
+	}
 
 
-	private final class AsyncRefreshFriendsList extends AsyncTask<Void, Void, ArrayList<Person>>
-		implements Comparator<Person>
+
+
+	private final class AsyncRefreshFriendsList extends AsyncTask<Void, Void, LinkedList<ListItem<Person>>>
+		implements Comparator<ListItem<Person>>
 	{
 
 
@@ -346,9 +398,9 @@ public final class FriendsListFragment extends SherlockListFragment implements
 
 
 		@Override
-		protected ArrayList<Person> doInBackground(final Void... params)
+		protected LinkedList<ListItem<Person>> doInBackground(final Void... params)
 		{
-			final ArrayList<Person> friends = new ArrayList<Person>();
+			final LinkedList<ListItem<Person>> friends = new LinkedList<ListItem<Person>>();
 
 			if (!isCancelled())
 			{
@@ -376,11 +428,11 @@ public final class FriendsListFragment extends SherlockListFragment implements
 
 										if (friend != null)
 										{
-											friends.add(friend);
+											final ListItem<Person> listItem = new ListItem<Person>(friend);
+											friends.add(listItem);
+
 										}
 									}
-
-									friends.trimToSize();
 								}
 
 								final SharedPreferences.Editor editor = sPreferences.edit();
@@ -388,8 +440,8 @@ public final class FriendsListFragment extends SherlockListFragment implements
 
 								for (int i = 0; i < friends.size() && !isCancelled(); ++i)
 								{
-									final Person friend = friends.get(i);
-									editor.putString(friend.getIdAsString(), friend.getName());
+									final ListItem<Person> friend = friends.get(i);
+									editor.putString(friend.get().getIdAsString(), friend.get().getName());
 								}
 
 								editor.commit();
@@ -414,11 +466,10 @@ public final class FriendsListFragment extends SherlockListFragment implements
 
 						if (friend != null)
 						{
-							friends.add(friend);
+							final ListItem<Person> listItem = new ListItem<Person>(friend);
+							friends.add(listItem);
 						}
 					}
-
-					friends.trimToSize();
 				}
 			}
 
@@ -470,9 +521,9 @@ public final class FriendsListFragment extends SherlockListFragment implements
 
 
 		@Override
-		public int compare(final Person geo, final Person jarrad)
+		public int compare(final ListItem<Person> geo, final ListItem<Person> jarrad)
 		{
-			return geo.getName().compareToIgnoreCase(jarrad.getName());
+			return geo.get().getName().compareToIgnoreCase(jarrad.get().getName());
 		}
 
 
@@ -484,19 +535,19 @@ public final class FriendsListFragment extends SherlockListFragment implements
 
 
 		@Override
-		protected void onCancelled(final ArrayList<Person> friends)
+		protected void onCancelled(final LinkedList<ListItem<Person>> friends)
 		{
 			cancelled();
 		}
 
 
 		@Override
-		protected void onPostExecute(final ArrayList<Person> friends)
+		protected void onPostExecute(final LinkedList<ListItem<Person>> friends)
 		{
 			if (runStatus == RUN_STATUS_NORMAL && friends != null && !friends.isEmpty())
 			{
-				friendsListAdapter = new FriendsListAdapter(fragmentActivity, friends);
-				list.setAdapter(friendsListAdapter);
+				FriendsListAdapter adapter = new FriendsListAdapter(fragmentActivity, friends);
+				list.setAdapter(adapter);
 
 				list.setVisibility(View.VISIBLE);
 				empty.setVisibility(View.GONE);
@@ -562,11 +613,11 @@ public final class FriendsListFragment extends SherlockListFragment implements
 
 
 
-	private final class FriendsListAdapter extends ArrayAdapter<Person> implements Filterable
+	private final class FriendsListAdapter extends BaseAdapter implements Filterable
 	{
 
 
-		private ArrayList<Person> friends;
+		private LinkedList<ListItem<Person>> friends;
 		private Context context;
 		private Drawable emptyProfilePicture;
 		private Filter filter;
@@ -574,9 +625,8 @@ public final class FriendsListFragment extends SherlockListFragment implements
 		private LayoutInflater inflater;
 
 
-		private FriendsListAdapter(final Context context, final ArrayList<Person> friends)
+		private FriendsListAdapter(final Context context, final LinkedList<ListItem<Person>> friends)
 		{
-			super(context, R.layout.friends_list_fragment_listview_item, friends);
 			this.friends = friends;
 			this.context = context;
 
@@ -602,9 +652,16 @@ public final class FriendsListFragment extends SherlockListFragment implements
 
 
 		@Override
-		public Person getItem(int position)
+		public ListItem getItem(int position)
 		{
 			return friends.get(position);
+		}
+
+
+		@Override
+		public long getItemId(final int position)
+		{
+			return position;
 		}
 
 
@@ -623,11 +680,23 @@ public final class FriendsListFragment extends SherlockListFragment implements
 			}
 
 			final ViewHolder viewHolder = (ViewHolder) convertView.getTag();
-			final Person friend = friends.get(position);
-			viewHolder.name.setText(friend.getName());
+			final ListItem<Person> friend = friends.get(position);
 			TypefaceUtilities.applyTypefaceBlueHighway(context.getAssets(), viewHolder.name);
+			viewHolder.name.setText(friend.get().getName());
 			viewHolder.picture.setImageDrawable(emptyProfilePicture);
-			imageLoader.displayImage(FacebookUtilities.getFriendsPictureSquare(context, friend.getId()), viewHolder.picture);
+			imageLoader.displayImage(FacebookUtilities.getFriendsPictureSquare(context, friend.get().getId()), viewHolder.picture);
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+			{
+				if (friend.isSelected())
+				{
+					convertView.setActivated(true);
+				}
+				else
+				{
+					convertView.setActivated(false);
+				}
+			}
 
 			return convertView;
 		}
@@ -643,13 +712,13 @@ public final class FriendsListFragment extends SherlockListFragment implements
 		{
 
 
-			private ArrayList<Person> friendsCopy;
+			private LinkedList<ListItem<Person>> friendsCopy;
 			private String previousQuery;
 
 
-			private FriendsListFilter(final ArrayList<Person> friends)
+			private FriendsListFilter(final LinkedList<ListItem<Person>> friends)
 			{
-				friendsCopy = new ArrayList<Person>(friends);
+				friendsCopy = new LinkedList<ListItem<Person>>(friends);
 			}
 
 
@@ -676,7 +745,7 @@ public final class FriendsListFragment extends SherlockListFragment implements
 					{
 						// Creates a copy of the original, unaltered friends
 						// list.
-						friends = new ArrayList<Person>(friendsCopy);
+						friends = new LinkedList<ListItem<Person>>(friendsCopy);
 					}
 
 					filterResults.count = friendsCopy.size();
@@ -686,8 +755,8 @@ public final class FriendsListFragment extends SherlockListFragment implements
 				else
 				{
 					// The friends that are found to contain the text that the
-					// user has searched for will be placed in this ArrayList.
-					final ArrayList<Person> filteredFriends = new ArrayList<Person>();
+					// user has searched for will be placed in this LinkedList.
+					final LinkedList<ListItem<Person>> filteredFriends = new LinkedList<ListItem<Person>>();
 
 					// Grab a String version of the user's search text and
 					// convert it to lower case form.
@@ -700,16 +769,16 @@ public final class FriendsListFragment extends SherlockListFragment implements
 					// "K", the friends list would only continue to filter
 					// based on the results found from the "Ka" search.
 					{
-						friends = new ArrayList<Person>(friendsCopy);
+						friends = new LinkedList<ListItem<Person>>(friendsCopy);
 					}
 
 					// store the user's current search query
 					previousQuery = query;
 
-					for (final Person friend : friends)
+					for (final ListItem<Person> friend : friends)
 					// search through every friend in the list of friends
 					{
-						final String name = friend.getName().toLowerCase();
+						final String name = friend.get().getName().toLowerCase();
 
 						if (name.contains(query))
 						{
@@ -736,7 +805,7 @@ public final class FriendsListFragment extends SherlockListFragment implements
 				friends.clear();
 
 				@SuppressWarnings("unchecked")
-				final ArrayList<Person> values = (ArrayList<Person>) results.values;
+				final LinkedList<ListItem<Person>> values = (LinkedList<ListItem<Person>>) results.values;
 
 				// Add the list of filtered friends to the newly cleared list.
 				friends.addAll(values);

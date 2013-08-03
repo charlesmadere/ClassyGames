@@ -4,11 +4,9 @@ package com.charlesmadere.android.classygames.server;
 import android.content.Context;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.models.Game;
-import org.apache.http.NameValuePair;
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 
 /**
