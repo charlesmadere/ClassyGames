@@ -140,6 +140,27 @@ public final class GamesListFragment extends SherlockListFragment implements
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{
+		return inflater.inflate(R.layout.games_list_fragment, container, false);
+	}
+
+
+	@Override
+	@SuppressWarnings("deprecation")
+	public void onActivityCreated(final Bundle savedInstanceState)
+	{
+		super.onActivityCreated(savedInstanceState);
+		final View view = getView();
+
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
+		{
+			final BitmapDrawable background = (BitmapDrawable) getResources().getDrawable(R.drawable.bg_bright);
+			background.setAntiAlias(true);
+			background.setDither(true);
+			background.setFilterBitmap(true);
+			background.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+			view.setBackgroundDrawable(background);
+		}
+
 		serverApiListeners = new ServerApi.Listeners()
 		{
 			@Override
@@ -163,26 +184,6 @@ public final class GamesListFragment extends SherlockListFragment implements
 				serverApiTask = null;
 			}
 		};
-
-		return inflater.inflate(R.layout.games_list_fragment, container, false);
-	}
-
-
-	@Override
-	public void onActivityCreated(final Bundle savedInstanceState)
-	{
-		super.onActivityCreated(savedInstanceState);
-		final View view = getView();
-
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
-		{
-			final BitmapDrawable background = (BitmapDrawable) getResources().getDrawable(R.drawable.bg_bright);
-			background.setAntiAlias(true);
-			background.setDither(true);
-			background.setFilterBitmap(true);
-			background.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
-			view.setBackgroundDrawable(background);
-		}
 
 		list = getListView();
 		list.setOnItemClickListener(this);
