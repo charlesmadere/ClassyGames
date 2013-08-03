@@ -29,7 +29,6 @@ import com.facebook.Request.GraphUserListCallback;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.*;
 
@@ -621,7 +620,6 @@ public final class FriendsListFragment extends SherlockListFragment implements
 		private Context context;
 		private Drawable emptyProfilePicture;
 		private Filter filter;
-		private ImageLoader imageLoader;
 		private LayoutInflater inflater;
 
 
@@ -633,7 +631,6 @@ public final class FriendsListFragment extends SherlockListFragment implements
 			inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			emptyProfilePicture = context.getResources().getDrawable(R.drawable.empty_profile_picture_small);
 			filter = new FriendsListFilter(friends);
-			imageLoader = Utilities.getImageLoader(context);
 		}
 
 
@@ -681,10 +678,10 @@ public final class FriendsListFragment extends SherlockListFragment implements
 
 			final ViewHolder viewHolder = (ViewHolder) convertView.getTag();
 			final ListItem<Person> friend = friends.get(position);
-			TypefaceUtilities.applyTypefaceBlueHighway(context.getAssets(), viewHolder.name);
+			TypefaceUtilities.applyBlueHighway(viewHolder.name);
 			viewHolder.name.setText(friend.get().getName());
 			viewHolder.picture.setImageDrawable(emptyProfilePicture);
-			imageLoader.displayImage(FacebookUtilities.getFriendsPictureSquare(context, friend.get().getId()), viewHolder.picture);
+			Utilities.imageLoader.displayImage(FacebookUtilities.getFriendsPictureSquare(context, friend.get().getId()), viewHolder.picture);
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 			{

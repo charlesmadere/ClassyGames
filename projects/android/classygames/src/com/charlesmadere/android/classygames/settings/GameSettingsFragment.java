@@ -118,8 +118,7 @@ public final class GameSettingsFragment extends PreferenceFragment
 		super.onCreate(savedInstanceState);
 
 		final String actionBarTitle = getString(R.string.game_settings);
-		final SpannableString styledActionBarTitle = Utilities.makeStyledString(actionBarTitle,
-			TypefaceUtilities.getBlueHighwayTypeface(getResources().getAssets()));
+		final SpannableString styledActionBarTitle = Utilities.makeStyledString(actionBarTitle, TypefaceUtilities.getBlueHighway());
 		getActivity().getActionBar().setTitle(styledActionBarTitle);
 
 		addPreferencesFromResource(R.xml.settings_game);

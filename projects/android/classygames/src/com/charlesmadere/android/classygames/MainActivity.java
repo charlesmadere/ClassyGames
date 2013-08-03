@@ -12,6 +12,7 @@ import com.actionbarsherlock.view.Window;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.server.Server;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
+import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 import com.facebook.*;
 import com.facebook.Request.GraphUserCallback;
@@ -50,6 +51,10 @@ public final class MainActivity extends SherlockActivity
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main_activity);
+
+		final Context context = getApplicationContext();
+		Utilities.initImageLoader(context);
+		TypefaceUtilities.initTypefaces(context.getAssets());
 
 		final Session.StatusCallback sessionStatusCallback = new Session.StatusCallback()
 		{

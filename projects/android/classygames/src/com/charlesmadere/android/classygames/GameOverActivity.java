@@ -15,7 +15,6 @@ import com.charlesmadere.android.classygames.server.Server;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 
 public final class GameOverActivity extends SherlockActivity
@@ -36,7 +35,6 @@ public final class GameOverActivity extends SherlockActivity
 		setContentView(R.layout.game_over_activity);
 		Utilities.setActionBar(this, R.string.game_over, true);
 
-		final ImageLoader imageLoader = Utilities.getImageLoader(this);
 		final Intent intent = getIntent();
 
 		if (intent != null)
@@ -48,11 +46,11 @@ public final class GameOverActivity extends SherlockActivity
 			if (Server.validMessageTypeValue(messageType) && Person.isIdAndNameValid(personId, personName))
 			{
 				final ImageView friendsPicture = (ImageView) findViewById(R.id.game_over_activity_friend_picture);
-				imageLoader.displayImage(FacebookUtilities.getFriendsPictureLarge(this, personId), friendsPicture);
+				Utilities.imageLoader.displayImage(FacebookUtilities.getFriendsPictureLarge(this, personId), friendsPicture);
 
 				final TextView friendsName = (TextView) findViewById(R.id.game_over_activity_friend_name);
 				friendsName.setText(personName);
-				TypefaceUtilities.applyTypefaceSnellRoundhand(getAssets(), friendsName);
+				TypefaceUtilities.applySnellRoundhand(friendsName);
 
 				final TextView winOrLose = (TextView) findViewById(R.id.game_over_activity_win_or_lose);
 
@@ -68,7 +66,7 @@ public final class GameOverActivity extends SherlockActivity
 				}
 
 				final Button returnToGamesList = (Button) findViewById(R.id.game_over_activity_button_return);
-				TypefaceUtilities.applyTypefaceBlueHighway(getAssets(), returnToGamesList);
+				TypefaceUtilities.applyBlueHighway(returnToGamesList);
 
 				returnToGamesList.setOnClickListener(new OnClickListener()
 				{

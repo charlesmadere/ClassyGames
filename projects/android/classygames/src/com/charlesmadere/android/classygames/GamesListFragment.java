@@ -31,7 +31,6 @@ import com.charlesmadere.android.classygames.server.*;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -829,7 +828,6 @@ public final class GamesListFragment extends SherlockListFragment implements
 		private Drawable checkersIcon;
 		private Drawable chessIcon;
 		private Drawable emptyProfilePicture;
-		private ImageLoader imageLoader;
 		private LayoutInflater inflater;
 
 
@@ -843,7 +841,6 @@ public final class GamesListFragment extends SherlockListFragment implements
 			emptyProfilePicture = resources.getDrawable(R.drawable.empty_profile_picture_small);
 			checkersIcon = resources.getDrawable(R.drawable.game_icon_checkers);
 			chessIcon = resources.getDrawable(R.drawable.game_icon_chess);
-			imageLoader = Utilities.getImageLoader(context);
 		}
 
 
@@ -879,11 +876,11 @@ public final class GamesListFragment extends SherlockListFragment implements
 
 				final ImageView picture = (ImageView) convertView.findViewById(R.id.games_list_fragment_listview_item_picture);
 				picture.setImageDrawable(emptyProfilePicture);
-				imageLoader.displayImage(FacebookUtilities.getFriendsPictureSquare(context, game.getPerson().getId()), picture);
+				Utilities.imageLoader.displayImage(FacebookUtilities.getFriendsPictureSquare(context, game.getPerson().getId()), picture);
 
 				final TextView name = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_name);
 				name.setText(game.getPerson().getName());
-				TypefaceUtilities.applyTypefaceBlueHighway(context.getAssets(), name);
+				TypefaceUtilities.applyBlueHighway(name);
 
 				final TextView time = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_time);
 				time.setText(game.getTimestampFormatted(context));
@@ -910,7 +907,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 					convertView = inflater.inflate(R.layout.games_list_fragment_listview_turn_theirs, null);
 				}
 
-				TypefaceUtilities.applyTypefaceBlueHighway(context.getAssets(), (TextView) convertView);
+				TypefaceUtilities.applyBlueHighway((TextView) convertView);
 				convertView.setOnClickListener(null);
 				convertView.setOnLongClickListener(null);
 			}

@@ -22,7 +22,6 @@ import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 
 public final class ConfirmGameFragment extends SherlockFragment
@@ -165,13 +164,13 @@ public final class ConfirmGameFragment extends SherlockFragment
 
 		final TextView friendsName = (TextView) view.findViewById(R.id.confirm_game_fragment_friend_name);
 		friendsName.setText(friend.getName());
-		TypefaceUtilities.applyTypefaceSnellRoundhand(assetManager, friendsName);
+		TypefaceUtilities.applySnellRoundhand(friendsName);
 
 		final TextView description = (TextView) view.findViewById(R.id.confirm_game_fragment_description);
 		description.setText(getString(R.string.are_you_sure_that_you_want_to_start_a_game_with_x, friend.getName()));
 
 		final Button confirm = (Button) view.findViewById(R.id.confirm_game_fragment_button_confirm);
-		TypefaceUtilities.applyTypefaceBlueHighway(assetManager, confirm);
+		TypefaceUtilities.applyBlueHighway(confirm);
 
 		confirm.setOnClickListener(new OnClickListener()
 		{
@@ -183,7 +182,7 @@ public final class ConfirmGameFragment extends SherlockFragment
 		});
 
 		final Button deny = (Button) view.findViewById(R.id.confirm_game_fragment_button_deny);
-		TypefaceUtilities.applyTypefaceBlueHighway(assetManager, deny);
+		TypefaceUtilities.applyBlueHighway(deny);
 
 		deny.setOnClickListener(new OnClickListener()
 		{
@@ -195,9 +194,8 @@ public final class ConfirmGameFragment extends SherlockFragment
 		});
 
 		final Context context = getSherlockActivity();
-		final ImageLoader imageLoader = Utilities.getImageLoader(context);
 		final ImageView profilePicture = (ImageView) view.findViewById(R.id.confirm_game_fragment_friend_profile_picture);
-		imageLoader.displayImage(FacebookUtilities.getFriendsPictureLarge(context, friend.getId()), profilePicture);
+		Utilities.imageLoader.displayImage(FacebookUtilities.getFriendsPictureLarge(context, friend.getId()), profilePicture);
 	}
 
 
@@ -252,7 +250,7 @@ public final class ConfirmGameFragment extends SherlockFragment
 			final AssetManager assetManager = getAssetManager();
 
 			final Button checkers = (Button) dialogView.findViewById(R.id.choose_which_game_dialog_button_checkers);
-			TypefaceUtilities.applyTypefaceBlueHighway(assetManager, checkers);
+			TypefaceUtilities.applyBlueHighway(checkers);
 
 			checkers.setOnClickListener(new OnClickListener()
 			{
@@ -269,7 +267,7 @@ public final class ConfirmGameFragment extends SherlockFragment
 			});
 
 			final Button chess = (Button) dialogView.findViewById(R.id.choose_which_game_dialog_button_chess);
-			TypefaceUtilities.applyTypefaceBlueHighway(assetManager, chess);
+			TypefaceUtilities.applyBlueHighway(chess);
 
 			chess.setOnClickListener(new OnClickListener()
 			{

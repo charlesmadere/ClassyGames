@@ -25,79 +25,58 @@ public final class TypefaceUtilities
 
 
 	/**
-	 * Applies the BlueHighway typeface to the supplied TextView object.
+	 *
 	 *
 	 * @param assetManager
-	 * The AssetManager from the calling Activity or Fragment class. Usually
-	 * this can be obtained from an Activity by just directly using the
-	 * getAssets() method. From a Fragment you'll need to use the
-	 * getResources().getAssets() method chain.
+	 *
+	 */
+	public static void initTypefaces(final AssetManager assetManager)
+	{
+		blueHighway = Typeface.createFromAsset(assetManager, BLUE_HIGHWAY_PATH);
+		snellRoundhand = Typeface.createFromAsset(assetManager, SNELL_ROUNDHAND_PATH);
+	}
+
+
+	/**
+	 * Applies the BlueHighway typeface to the supplied TextView object.
 	 *
 	 * @param view
 	 * The TextView object to apply the typeface to.
 	 */
-	public static void applyTypefaceBlueHighway(final AssetManager assetManager, final TextView view)
+	public static void applyBlueHighway(final TextView view)
 	{
-		view.setTypeface(getBlueHighwayTypeface(assetManager));
+		view.setTypeface(getBlueHighway());
 	}
 
 
 	/**
 	 * Applies the Snell Roundhand typeface to the supplied TextView object.
 	 *
-	 * @param assetManager
-	 * The AssetManager from the calling Activity or Fragment class. Usually
-	 * this can be obtained from an Activity by just directly using the
-	 * getAssets() method. From a Fragment you'll need to use the
-	 * getResources().getAssets() method chain.
-	 *
 	 * @param view
 	 * The TextView object to apply the typeface to.
 	 */
-	public static void applyTypefaceSnellRoundhand(final AssetManager assetManager, final TextView view)
+	public static void applySnellRoundhand(final TextView view)
 	{
-		view.setTypeface(getSnellRoundhandTypeface(assetManager));
+		view.setTypeface(getSnellRoundhand());
 	}
 
 
 	/**
-	 * Retrieves a usable Blue Highway typeface object.
-	 *
-	 * @param assetManager
-	 * The AssetManager from the Activity or Fragment class that is calling
-	 * this method.
-	 *
 	 * @return
-	 * Returns a ready-to-use typeface object.
+	 * Returns the Blue Highway typeface.
 	 */
-	public static Typeface getBlueHighwayTypeface(final AssetManager assetManager)
+	public static Typeface getBlueHighway()
 	{
-		if (blueHighway == null)
-		{
-			blueHighway = Typeface.createFromAsset(assetManager, BLUE_HIGHWAY_PATH);
-		}
-
 		return blueHighway;
 	}
 
 
 	/**
-	 * Retrieves a usable Snell Roundhand typeface object.
-	 *
-	 * @param assetManager
-	 * The AssetManager from the Activity or Fragment class that is calling
-	 * this method.
-	 *
 	 * @return
-	 * Returns a ready-to-use typeface object.
+	 * Returns the Snell Roundhand typeface.
 	 */
-	public static Typeface getSnellRoundhandTypeface(final AssetManager assetManager)
+	public static Typeface getSnellRoundhand()
 	{
-		if (snellRoundhand == null)
-		{
-			snellRoundhand = Typeface.createFromAsset(assetManager, SNELL_ROUNDHAND_PATH);
-		}
-
 		return snellRoundhand;
 	}
 

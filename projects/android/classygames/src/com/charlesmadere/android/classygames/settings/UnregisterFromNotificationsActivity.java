@@ -35,7 +35,7 @@ public final class UnregisterFromNotificationsActivity extends SherlockActivity
 		Utilities.setActionBar(this, R.string.unregister_from_notifications, true);
 
 		final Button unregister = (Button) findViewById(R.id.unregister_from_notifications_activity_button_unregister);
-		TypefaceUtilities.applyTypefaceBlueHighway(getAssets(), unregister);
+		TypefaceUtilities.applyBlueHighway(unregister);
 
 		unregister.setOnClickListener(new OnClickListener()
 		{

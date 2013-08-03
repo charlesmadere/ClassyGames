@@ -3,7 +3,6 @@ package com.charlesmadere.android.classygames.utilities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Shader.TileMode;
 import android.graphics.Typeface;
@@ -37,6 +36,9 @@ public final class Utilities
 
 
 	public final static String LOG_TAG = "Classy Games";
+
+
+	public static ImageLoader imageLoader;
 
 
 	// Stores the reg id of the current Android device. More information can be
@@ -196,7 +198,6 @@ public final class Utilities
 	{
 		setAndStyleActionBar
 		(
-			activity.getAssets(),
 			activity.getSupportActionBar(),
 			activity.getString(actionBarTitle),
 			activity.getResources(),
@@ -223,7 +224,6 @@ public final class Utilities
 	{
 		setAndStyleActionBar
 		(
-			activity.getAssets(),
 			activity.getSupportActionBar(),
 			actionBarTitle,
 			activity.getResources(),
@@ -250,7 +250,6 @@ public final class Utilities
 	{
 		setAndStyleActionBar
 		(
-			activity.getAssets(),
 			activity.getSupportActionBar(),
 			activity.getString(actionBarTitle),
 			activity.getResources(),
@@ -277,7 +276,6 @@ public final class Utilities
 	{
 		setAndStyleActionBar
 		(
-			activity.getAssets(),
 			activity.getSupportActionBar(),
 			activity.getString(actionBarTitle),
 			activity.getResources(),
@@ -288,10 +286,6 @@ public final class Utilities
 
 	/**
 	 * Performs final setting and stylizing on the Android Action Bar.
-	 *
-	 * @param assetManager
-	 * A handle to the Activity's AssetManager. This can usually be obtained by
-	 * using getAssets().
 	 *
 	 * @param actionBar
 	 * A handle to the Activity's Sherlock Action Bar. This can usually be
@@ -307,13 +301,11 @@ public final class Utilities
 	 * @param showBackArrow
 	 * Want to show the back arrow on the Action Bar? Pass in true to show it.
 	 */
-	private static void setAndStyleActionBar(final AssetManager assetManager, final ActionBar actionBar,
-		final CharSequence actionBarTitle, final Resources resources, final boolean showBackArrow)
+	private static void setAndStyleActionBar(final ActionBar actionBar, final CharSequence actionBarTitle,
+		final Resources resources, final boolean showBackArrow)
 	{
-		final SpannableString styledActionBarTitle = makeStyledString(actionBarTitle, TypefaceUtilities.getBlueHighwayTypeface(assetManager));
-
 		actionBar.setDisplayHomeAsUpEnabled(showBackArrow);
-		actionBar.setTitle(styledActionBarTitle);
+		actionBar.setTitle(makeStyledString(actionBarTitle, TypefaceUtilities.getBlueHighway()));
 
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 		// if the running version of Android is lower than API Level 14 (below Ice Cream Sandwich 4.0)
@@ -358,18 +350,12 @@ public final class Utilities
 
 	/**
 	 * Initializes the ImageLoader library with some specific configuration
-	 * settings (if it has not already been initialized) and returns only what
-	 * you need - the portion that will actually load an image for ya!
-	 * https://github.com/nostra13/Android-Universal-Image-Loader
+	 * settings. https://github.com/nostra13/Android-Universal-Image-Loader
 	 *
 	 * @param context
 	 * The context of the Activity that is calling this method.
-	 *
-	 * @return
-	 * Returns an instance of the ImageLoader class that can load an image from
-	 * a URL for you.
 	 */
-	public static ImageLoader getImageLoader(final Context context)
+	public static void initImageLoader(final Context context)
 	{
 		final DisplayImageOptions displayOptions = new DisplayImageOptions.Builder()
 			.cacheInMemory(true)
@@ -380,10 +366,8 @@ public final class Utilities
 			.defaultDisplayImageOptions(displayOptions)
 			.build();
 
-		final ImageLoader imageLoader = ImageLoader.getInstance();
+		imageLoader = ImageLoader.getInstance();
 		imageLoader.init(loaderConfiguration);
-
-		return imageLoader;
 	}
 
 
