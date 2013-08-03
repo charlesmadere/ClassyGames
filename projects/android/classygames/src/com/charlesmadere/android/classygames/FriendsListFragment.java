@@ -553,7 +553,7 @@ public final class FriendsListFragment extends SherlockListFragment implements
 				asyncRefreshFriendsList = null;
 			}
 
-			Utilities.compatInvalidateOptionsMenu(fragmentActivity, true);
+			fragmentActivity.supportInvalidateOptionsMenu();
 		}
 
 

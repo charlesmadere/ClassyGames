@@ -800,7 +800,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 				asyncRefreshGamesList = null;
 			}
 
-			Utilities.compatInvalidateOptionsMenu(fragmentActivity, true);
+			fragmentActivity.supportInvalidateOptionsMenu();
 		}
 
 

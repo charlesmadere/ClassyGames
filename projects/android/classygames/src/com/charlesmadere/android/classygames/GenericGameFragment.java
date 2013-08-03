@@ -1023,7 +1023,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 			}
 
 			flush();
-			Utilities.compatInvalidateOptionsMenu(getSherlockActivity(), true);
+			getSherlockActivity().supportInvalidateOptionsMenu();
 		}
 	}
 
@@ -1156,7 +1156,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 				asyncGetGame = null;
 			}
 
-			Utilities.compatInvalidateOptionsMenu(fragmentActivity);
+			fragmentActivity.supportInvalidateOptionsMenu();
 		}
 
 

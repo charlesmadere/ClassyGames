@@ -507,7 +507,7 @@ public final class ChessGameFragment extends GenericGameFragment
 				if (board.move(previous, current))
 				{
 					flush();
-					Utilities.compatInvalidateOptionsMenu(getSherlockActivity(), true);
+					getSherlockActivity().supportInvalidateOptionsMenu();
 
 					if (board.isBoardLocked())
 					{
