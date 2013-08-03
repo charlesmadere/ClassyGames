@@ -90,6 +90,7 @@
 		<activity
 			android:label="@string/classy_games"
 			android:name="com.charlesmadere.android.classygames.MainActivity"
+			android:noHistory="true"
 			android:theme="@style/Theme.Styled">
 			<intent-filter>
 				<action

@@ -32,7 +32,6 @@ public final class MainActivity extends SherlockActivity
 	private UiLifecycleHelper uiHelper;
 
 	private boolean isResumed = false;
-	private boolean hasFinished = false;
 
 
 
@@ -75,12 +74,6 @@ public final class MainActivity extends SherlockActivity
 	{
 		super.onActivityResult(requestCode, resultCode, data);
 		uiHelper.onActivityResult(requestCode, resultCode, data);
-
-		if (resultCode == GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FINISH)
-		{
-			hasFinished = true;
-			finish();
-		}
 	}
 
 
@@ -125,14 +118,11 @@ public final class MainActivity extends SherlockActivity
 		uiHelper.onResume();
 		isResumed = true;
 
-		if (!hasFinished)
-		{
-			final Person whoAmI = Utilities.getWhoAmI(this);
+		final Person whoAmI = Utilities.getWhoAmI(this);
 
-			if (whoAmI != null && whoAmI.isValid())
-			{
-				startCentralFragmentActivity();
-			}
+		if (whoAmI != null && whoAmI.isValid())
+		{
+			startCentralFragmentActivity();
 		}
 	}
 
