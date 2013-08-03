@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -171,8 +173,18 @@ public final class GamesListFragment extends SherlockListFragment implements
 	public void onActivityCreated(final Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
-
 		final View view = getView();
+
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
+		{
+			final BitmapDrawable background = (BitmapDrawable) getResources().getDrawable(R.drawable.bg_bright);
+			background.setAntiAlias(true);
+			background.setDither(true);
+			background.setFilterBitmap(true);
+			background.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+			view.setBackgroundDrawable(background);
+		}
+
 		list = getListView();
 		list.setOnItemClickListener(this);
 		list.setOnItemLongClickListener(this);

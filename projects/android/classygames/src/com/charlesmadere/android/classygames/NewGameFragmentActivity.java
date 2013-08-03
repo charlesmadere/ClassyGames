@@ -198,7 +198,11 @@ public final class NewGameFragmentActivity extends SherlockFragmentActivity impl
 	@Override
 	public void onGameDeny()
 	{
-		friendsListFragment.refreshListDrawState();
+		if (friendsListFragment != null)
+		{
+			friendsListFragment.refreshListDrawState();
+		}
+
 		onBackPressed();
 	}
 
