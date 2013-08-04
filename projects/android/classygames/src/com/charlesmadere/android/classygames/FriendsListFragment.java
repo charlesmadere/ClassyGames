@@ -547,7 +547,6 @@ public final class FriendsListFragment extends SherlockListFragment implements
 			{
 				FriendsListAdapter adapter = new FriendsListAdapter(fragmentActivity, friends);
 				list.setAdapter(adapter);
-
 				list.setVisibility(View.VISIBLE);
 				empty.setVisibility(View.GONE);
 				loading.setVisibility(View.GONE);

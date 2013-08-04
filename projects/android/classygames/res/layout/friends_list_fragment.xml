@@ -9,7 +9,8 @@
 		android:fastScrollEnabled="true"
 		android:id="@android:id/list"
 		android:layout_height="match_parent"
-		android:layout_width="match_parent" />
+		android:layout_width="match_parent"
+		android:listSelector="@drawable/selectable_item" />
 	<TextView
 		android:gravity="center"
 		android:id="@android:id/empty"
@@ -18,6 +19,7 @@
 		android:layout_width="match_parent"
 		android:text="@string/friends_list_fragment_no_friends"
 		android:textIsSelectable="false"
+		android:visibility="gone"
 		style="@style/Paragraph.ExtraPadding" />
 	<LinearLayout
 		android:gravity="center"

@@ -198,8 +198,9 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 		else
 		{
 			Utilities.setActionBar(this, R.string.games_list, false);
-			super.onBackPressed();
 		}
+
+		super.onBackPressed();
 	}
 
 

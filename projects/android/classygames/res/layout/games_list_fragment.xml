@@ -8,7 +8,8 @@
 		android:cacheColorHint="@color/cache_color_hint"
 		android:id="@android:id/list"
 		android:layout_height="match_parent"
-		android:layout_width="match_parent" />
+		android:layout_width="match_parent"
+		android:listSelector="@drawable/selectable_item" />
 	<TextView
 		android:gravity="center"
 		android:id="@android:id/empty"
