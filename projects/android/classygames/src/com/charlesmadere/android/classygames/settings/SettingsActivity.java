@@ -34,8 +34,9 @@ public final class SettingsActivity extends SherlockPreferenceActivity implement
 
 
 	@Override
+	@SuppressWarnings("deprecation")
 	protected void onCreate(final Bundle savedInstanceState)
-	// The addPreferencesFromResource methods below are causing some
+	// The addPreferencesFromResource() methods below are causing some
 	// deprecation warnings. In this case, the fact that they're here is fine.
 	// They have to be used if the running version of Android is below
 	// Honeycomb (v3.0). Same situation with the findPreference methods. See
@@ -44,7 +45,8 @@ public final class SettingsActivity extends SherlockPreferenceActivity implement
 	{
 		super.onCreate(savedInstanceState);
 		Utilities.setActionBar(this, R.string.settings, true);
-		Utilities.setBackground(this, getListView());
+		getListView().setBackgroundResource(R.drawable.bg_bright);
+		getListView().setCacheColorHint(getResources().getColor(R.color.cache_color_hint));
 
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
 		// Check to see if the running version of Android is below Honeycomb.

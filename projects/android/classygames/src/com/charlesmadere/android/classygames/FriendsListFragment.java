@@ -681,7 +681,7 @@ public final class FriendsListFragment extends SherlockListFragment implements
 			TypefaceUtilities.applyBlueHighway(viewHolder.name);
 			viewHolder.name.setText(friend.get().getName());
 			viewHolder.picture.setImageDrawable(emptyProfilePicture);
-			Utilities.imageLoader.displayImage(FacebookUtilities.getFriendsPictureSquare(context, friend.get().getId()), viewHolder.picture);
+			Utilities.getImageLoader().displayImage(FacebookUtilities.getFriendsPictureSquare(context, friend.get().getId()), viewHolder.picture);
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 			{

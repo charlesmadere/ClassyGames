@@ -1,9 +1,9 @@
 package com.charlesmadere.android.classygames.utilities;
 
 
-import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.widget.TextView;
+import com.charlesmadere.android.classygames.App;
 
 
 /**
@@ -22,19 +22,6 @@ public final class TypefaceUtilities
 	private final static String SNELL_ROUNDHAND_PATH = TYPEFACES_PATH + "snell_roundhand.otf";
 
 
-
-
-	/**
-	 *
-	 *
-	 * @param assetManager
-	 *
-	 */
-	public static void initTypefaces(final AssetManager assetManager)
-	{
-		blueHighway = Typeface.createFromAsset(assetManager, BLUE_HIGHWAY_PATH);
-		snellRoundhand = Typeface.createFromAsset(assetManager, SNELL_ROUNDHAND_PATH);
-	}
 
 
 	/**
@@ -61,22 +48,24 @@ public final class TypefaceUtilities
 	}
 
 
-	/**
-	 * @return
-	 * Returns the Blue Highway typeface.
-	 */
 	public static Typeface getBlueHighway()
 	{
+		if (blueHighway == null)
+		{
+			blueHighway = Typeface.createFromAsset(App.context.getAssets(), BLUE_HIGHWAY_PATH);
+		}
+
 		return blueHighway;
 	}
 
 
-	/**
-	 * @return
-	 * Returns the Snell Roundhand typeface.
-	 */
 	public static Typeface getSnellRoundhand()
 	{
+		if (snellRoundhand == null)
+		{
+			snellRoundhand = Typeface.createFromAsset(App.context.getAssets(), SNELL_ROUNDHAND_PATH);
+		}
+
 		return snellRoundhand;
 	}
 

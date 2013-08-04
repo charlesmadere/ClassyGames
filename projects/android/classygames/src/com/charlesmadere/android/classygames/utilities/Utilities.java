@@ -7,7 +7,6 @@ import android.content.res.Resources;
 import android.graphics.Shader.TileMode;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -15,12 +14,12 @@ import android.preference.PreferenceManager;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
+import com.charlesmadere.android.classygames.App;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.models.Person;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -38,7 +37,7 @@ public final class Utilities
 	public final static String LOG_TAG = "Classy Games";
 
 
-	public static ImageLoader imageLoader;
+	private static ImageLoader imageLoader;
 
 
 	// Stores the reg id of the current Android device. More information can be
@@ -72,6 +71,36 @@ public final class Utilities
 		final NetworkInfo networkInfo = cm.getActiveNetworkInfo();
 
 		return networkInfo != null && networkInfo.isConnected();
+	}
+
+
+	/**
+	 * Checks to see if a given user preference is enabled or disabled. This
+	 * method should only be used to check on preferences that must be either
+	 * on or off (true or false).
+	 *
+	 * @param context
+	 * The context of the Activity or Fragment that you're calling this method
+	 * from.
+	 *
+	 * @param key
+	 * The R.string.* value for the settings key that you're trying to
+	 * retrieve.
+	 *
+	 * @param defaultValue
+	 * The default value that you want returned in case the setting that you
+	 * searched for does not exist.
+	 *
+	 * @return
+	 * Returns the value for the given user preference from the universal
+	 * Android default shared preferences cache if it can be found. If it can't
+	 * be found, then the value that will instead be returned is the value of
+	 * the defaultValue variable that you passed in.
+	 */
+	public static boolean checkIfSettingIsEnabled(final Context context, final int key, final boolean defaultValue)
+	{
+		final String string = context.getString(key);
+		return getPreferences(context).getBoolean(string, defaultValue);
 	}
 
 
@@ -154,6 +183,120 @@ public final class Utilities
 
 
 	/**
+	 * @return
+	 * Returns an ImageLoader object. This can be used to download images from
+	 * a web URL and then display them to a view.
+	 */
+	public static ImageLoader getImageLoader()
+	{
+		if (imageLoader == null)
+		{
+			final DisplayImageOptions displayOptions = new DisplayImageOptions.Builder()
+				.cacheInMemory(true)
+				.cacheOnDisc(true)
+				.build();
+
+			final ImageLoaderConfiguration loaderConfiguration = new ImageLoaderConfiguration.Builder(App.context)
+				.defaultDisplayImageOptions(displayOptions)
+				.build();
+
+			imageLoader = ImageLoader.getInstance();
+			imageLoader.init(loaderConfiguration);
+		}
+
+		return imageLoader;
+	}
+
+
+	/**
+	 * Gives you a handle to the Classy Games default SharedPreferences object.
+	 *
+	 * @param context
+	 * The Context of the class that you're calling this from. If you're
+	 * calling this method from an Activity then you can usually just use the
+	 * this keyword, otherwise you may need to use something like
+	 * getSherlockActivity().
+	 *
+	 * @return
+	 * Returns a handle to the Classy Games default SharedPreferences object.
+	 */
+	public static SharedPreferences getPreferences(final Context context)
+	{
+		return PreferenceManager.getDefaultSharedPreferences(context);
+	}
+
+
+	/**
+	 * Gives you this Android device's GCM registration ID.
+	 *
+	 * @param context
+	 * The context of the Activity that is calling this method.
+	 *
+	 * @return
+	 * Returns this Android device's GCM registration ID. This is typically a
+	 * somewhat long String filled with random characters. <strong>Note that
+	 * this method has a slim possibility of returning null.</strong>
+	 */
+	public static String getRegId(final Context context)
+	{
+		if (!verifyValidString(regId))
+		{
+			final SharedPreferences sPreferences = getPreferences(context);
+
+			// Grab the user's GCM registration ID from shared preferences if
+			// it already exists. Returns null if it doesn't already exist.
+			regId = sPreferences.getString(KEY_REG_ID, null);
+		}
+
+		return regId;
+	}
+
+
+	/**
+	 * If the user's Facebook identity is already stored in this class's static
+	 * whoAmI Person variable then that variable will be instantly returned. If
+	 * the whoAmI Person variable is currently null or is not valid, then we
+	 * will search the Android SharedPreferences data for the user's Facebook
+	 * identity.
+	 *
+	 * @param context
+	 * The context of the Activity that is calling this method.
+	 *
+	 * @return
+	 * A Person object that represents the user's Facebook identity.
+	 */
+	public static Person getWhoAmI(final Context context)
+	{
+		if (whoAmI == null || !whoAmI.isValid())
+		// check to see if the whoAmI variable is null or if it's not valid. If
+		// it is either of these two conditions then we will pull the user's
+		// Facebook identity from the Android SharedPreferences data.
+		{
+			final SharedPreferences sPreferences = getPreferences(context);
+
+			// find the user's Facebook ID. If the ID can't be found then the
+			// id variable will be set to 0.
+			final long id = sPreferences.getLong(KEY_WHO_AM_I_ID, 0);
+
+			// find the user's Facebook name. If the name can't be found then
+			// the name variable will be set to null.
+			final String name = sPreferences.getString(KEY_WHO_AM_I_NAME, null);
+
+			if (Person.isIdAndNameValid(id, name))
+			// check to see that we were actually able to find the user's
+			// Facebook ID and Facebook name. If we were able to find both
+			// then we will create a new Person object out of that data. That
+			// Person object will then be returned.
+			{
+				whoAmI = new Person(id, name);
+			}
+		}
+
+		return whoAmI;
+	}
+
+
+	/**
 	 * Makes and then returns a styled String. This is useful for obtaining a
 	 * String that makes use of a custom typeface. As of right now, this should
 	 * probably only be used to customize the Android Action Bar.
@@ -196,7 +339,7 @@ public final class Utilities
 	public static void setActionBar(final SherlockActivity activity, final int actionBarTitle,
 		final boolean showBackArrow)
 	{
-		setAndStyleActionBar
+		setActionBarStyle
 		(
 			activity.getSupportActionBar(),
 			activity.getString(actionBarTitle),
@@ -222,7 +365,7 @@ public final class Utilities
 	 */
 	public static void setActionBar(final SherlockFragmentActivity activity, final CharSequence actionBarTitle, final boolean showBackArrow)
 	{
-		setAndStyleActionBar
+		setActionBarStyle
 		(
 			activity.getSupportActionBar(),
 			actionBarTitle,
@@ -248,7 +391,7 @@ public final class Utilities
 	 */
 	public static void setActionBar(final SherlockFragmentActivity activity, final int actionBarTitle, final boolean showBackArrow)
 	{
-		setAndStyleActionBar
+		setActionBarStyle
 		(
 			activity.getSupportActionBar(),
 			activity.getString(actionBarTitle),
@@ -274,7 +417,7 @@ public final class Utilities
 	 */
 	public static void setActionBar(final SherlockPreferenceActivity activity, final int actionBarTitle, final boolean showBackArrow)
 	{
-		setAndStyleActionBar
+		setActionBarStyle
 		(
 			activity.getSupportActionBar(),
 			activity.getString(actionBarTitle),
@@ -301,7 +444,7 @@ public final class Utilities
 	 * @param showBackArrow
 	 * Want to show the back arrow on the Action Bar? Pass in true to show it.
 	 */
-	private static void setAndStyleActionBar(final ActionBar actionBar, final CharSequence actionBarTitle,
+	private static void setActionBarStyle(final ActionBar actionBar, final CharSequence actionBarTitle,
 		final Resources resources, final boolean showBackArrow)
 	{
 		actionBar.setDisplayHomeAsUpEnabled(showBackArrow);
@@ -323,129 +466,6 @@ public final class Utilities
 
 
 	/**
-	 * Styles the background of a preference activity so that it's not just the
-	 * plain ol' white. This method should only be called from a class that
-	 * extends from either SherlockPreferenceActivity or PreferenceFragment.
-	 *
-	 * @param context
-	 * The context of the Activity or Fragment that is calling this method.
-	 *
-	 * @param view
-	 * The View that you want the background applied to.
-	 */
-	public static void setBackground(final Context context, final View view)
-	{
-		final Drawable background = context.getResources().getDrawable(R.drawable.bg_bright);
-
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN)
-		{
-			view.setBackgroundDrawable(background);
-		}
-		else
-		{
-			view.setBackground(background);
-		}
-	}
-
-
-	/**
-	 * Initializes the ImageLoader library with some specific configuration
-	 * settings. https://github.com/nostra13/Android-Universal-Image-Loader
-	 *
-	 * @param context
-	 * The context of the Activity that is calling this method.
-	 */
-	public static void initImageLoader(final Context context)
-	{
-		final DisplayImageOptions displayOptions = new DisplayImageOptions.Builder()
-			.cacheInMemory(true)
-			.cacheOnDisc(true)
-			.build();
-
-		final ImageLoaderConfiguration loaderConfiguration = new ImageLoaderConfiguration.Builder(context)
-			.defaultDisplayImageOptions(displayOptions)
-			.build();
-
-		imageLoader = ImageLoader.getInstance();
-		imageLoader.init(loaderConfiguration);
-	}
-
-
-	/**
-	 * Gives you a handle to the Classy Games default SharedPreferences object.
-	 * 
-	 * @param context
-	 * The Context of the class that you're calling this from. If you're
-	 * calling this method from an Activity then you can usually just use the
-	 * this keyword, otherwise you may need to use something like
-	 * getSherlockActivity().
-	 * 
-	 * @return
-	 * Returns a handle to the Classy Games default SharedPreferences object.
-	 */
-	public static SharedPreferences getPreferences(final Context context)
-	{
-		return PreferenceManager.getDefaultSharedPreferences(context);
-	}
-
-
-	/**
-	 * Checks to see if a given user preference is enabled or disabled. This
-	 * method should only be used to check on preferences that must be either
-	 * on or off (true or false).
-	 *
-	 * @param context
-	 * The context of the Activity or Fragment that you're calling this method
-	 * from.
-	 *
-	 * @param key
-	 * The R.string.* value for the settings key that you're trying to
-	 * retrieve.
-	 *
-	 * @param defaultValue
-	 * The default value that you want returned in case the setting that you
-	 * searched for does not exist.
-	 *
-	 * @return
-	 * Returns the value for the given user preference from the universal
-	 * Android default shared preferences cache if it can be found. If it can't
-	 * be found, then the value that will instead be returned is the value of
-	 * the defaultValue variable that you passed in.
-	 */
-	public static boolean checkIfSettingIsEnabled(final Context context, final int key, final boolean defaultValue)
-	{
-		final String string = context.getString(key);
-		return getPreferences(context).getBoolean(string, defaultValue);
-	}
-
-
-	/**
-	 * Gives you this Android device's GCM registration ID.
-	 * 
-	 * @param context
-	 * The context of the Activity that is calling this method.
-	 * 
-	 * @return
-	 * Returns this Android device's GCM registration ID. This is typically a
-	 * somewhat long String filled with random characters. <strong>Note that
-	 * this method has a slim possibility of returning null.</strong>
-	 */
-	public static String getRegId(final Context context)
-	{
-		if (!verifyValidString(regId))
-		{
-			final SharedPreferences sPreferences = getPreferences(context);
-
-			// Grab the user's GCM registration ID from shared preferences if
-			// it already exists. Returns null if it doesn't already exist.
-			regId = sPreferences.getString(KEY_REG_ID, null);
-		}
-
-		return regId;
-	}
-
-
-	/**
 	 * Sets this Android device's GCM registration ID.
 	 * 
 	 * @param context
@@ -462,50 +482,6 @@ public final class Utilities
 		editor.commit();
 
 		Utilities.regId = regId;
-	}
-
-
-	/**
-	 * If the user's Facebook identity is already stored in this class's static
-	 * whoAmI Person variable then that variable will be instantly returned. If
-	 * the whoAmI Person variable is currently null or is not valid, then we
-	 * will search the Android SharedPreferences data for the user's Facebook
-	 * identity.
-	 * 
-	 * @param context
-	 * The context of the Activity that is calling this method.
-	 * 
-	 * @return
-	 * A Person object that represents the user's Facebook identity.
-	 */
-	public static Person getWhoAmI(final Context context)
-	{
-		if (whoAmI == null || !whoAmI.isValid())
-		// check to see if the whoAmI variable is null or if it's not valid. If
-		// it is either of these two conditions then we will pull the user's
-		// Facebook identity from the Android SharedPreferences data.
-		{
-			final SharedPreferences sPreferences = getPreferences(context);
-
-			// find the user's Facebook ID. If the ID can't be found then the
-			// id variable will be set to 0.
-			final long id = sPreferences.getLong(KEY_WHO_AM_I_ID, 0);
-
-			// find the user's Facebook name. If the name can't be found then
-			// the name variable will be set to null.
-			final String name = sPreferences.getString(KEY_WHO_AM_I_NAME, null);
-
-			if (Person.isIdAndNameValid(id, name))
-			// check to see that we were actually able to find the user's
-			// Facebook ID and Facebook name. If we were able to find both
-			// then we will create a new Person object out of that data. That
-			// Person object will then be returned.
-			{
-				whoAmI = new Person(id, name);
-			}
-		}
-
-		return whoAmI;
 	}
 
 

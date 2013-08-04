@@ -31,7 +31,7 @@ public final class NotificationSettingsFragment extends PreferenceFragment
 	public void onActivityCreated(final Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
-		Utilities.setBackground(getActivity(), getView());
+		getView().setBackgroundResource(R.drawable.bg_bright);
 	}
 
 

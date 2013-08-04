@@ -4,7 +4,6 @@ package com.charlesmadere.android.classygames;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -40,9 +39,6 @@ public final class ConfirmGameFragment extends SherlockFragment
 	 * which game they want to play.
 	 */
 	private AlertDialog alertDialog;
-
-
-	private AssetManager assetManager;
 
 
 	/**
@@ -158,9 +154,7 @@ public final class ConfirmGameFragment extends SherlockFragment
 	public void onActivityCreated(final Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
-
 		final View view = getView();
-		final AssetManager assetManager = getAssetManager();
 
 		final TextView friendsName = (TextView) view.findViewById(R.id.confirm_game_fragment_friend_name);
 		friendsName.setText(friend.getName());
@@ -195,7 +189,7 @@ public final class ConfirmGameFragment extends SherlockFragment
 
 		final Context context = getSherlockActivity();
 		final ImageView profilePicture = (ImageView) view.findViewById(R.id.confirm_game_fragment_friend_profile_picture);
-		Utilities.imageLoader.displayImage(FacebookUtilities.getFriendsPictureLarge(context, friend.getId()), profilePicture);
+		Utilities.getImageLoader().displayImage(FacebookUtilities.getFriendsPictureLarge(context, friend.getId()), profilePicture);
 	}
 
 
@@ -247,8 +241,6 @@ public final class ConfirmGameFragment extends SherlockFragment
 		if (alertDialog == null)
 		{
 			final View dialogView = inflater.inflate(R.layout.choose_which_game_dialog, null);
-			final AssetManager assetManager = getAssetManager();
-
 			final Button checkers = (Button) dialogView.findViewById(R.id.choose_which_game_dialog_button_checkers);
 			TypefaceUtilities.applyBlueHighway(checkers);
 
@@ -289,23 +281,6 @@ public final class ConfirmGameFragment extends SherlockFragment
 		}
 
 		return alertDialog;
-	}
-
-
-	/**
-	 * Retrieves a usable AssetManager object.
-	 *
-	 * @return
-	 * Returns a ready-to-use AssetManager object.
-	 */
-	private AssetManager getAssetManager()
-	{
-		if (assetManager == null)
-		{
-			assetManager = getResources().getAssets();
-		}
-
-		return assetManager;
 	}
 
 

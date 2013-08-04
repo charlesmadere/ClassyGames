@@ -129,7 +129,7 @@ public final class GameSettingsFragment extends PreferenceFragment
 	public void onActivityCreated(final Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
-		Utilities.setBackground(getActivity(), getView());
+		getView().setBackgroundResource(R.drawable.bg_bright);
 
 		final ListPreference playersCheckersPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_players_checkers_piece_color));
 		final ListPreference opponentsCheckersPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_opponents_checkers_piece_color));

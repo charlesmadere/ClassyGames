@@ -62,7 +62,8 @@
 	<application
 		android:allowBackup="false"
 		android:icon="@drawable/launcher"
-		android:label="@string/classy_games">
+		android:label="@string/classy_games"
+		android:name=".App">
 
     	<!-- some Facebook v3.0 stuff -->
 		<meta-data

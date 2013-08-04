@@ -46,7 +46,7 @@ public final class GameOverActivity extends SherlockActivity
 			if (Server.validMessageTypeValue(messageType) && Person.isIdAndNameValid(personId, personName))
 			{
 				final ImageView friendsPicture = (ImageView) findViewById(R.id.game_over_activity_friend_picture);
-				Utilities.imageLoader.displayImage(FacebookUtilities.getFriendsPictureLarge(this, personId), friendsPicture);
+				Utilities.getImageLoader().displayImage(FacebookUtilities.getFriendsPictureLarge(this, personId), friendsPicture);
 
 				final TextView friendsName = (TextView) findViewById(R.id.game_over_activity_friend_name);
 				friendsName.setText(personName);
