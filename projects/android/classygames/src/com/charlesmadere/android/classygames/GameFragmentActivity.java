@@ -25,9 +25,6 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 
 
 	private final static String LOG_TAG = Utilities.LOG_TAG + " - GameFragmentActivity";
-
-
-	public final static int RESULT_CODE_FINISH = MainActivity.GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FINISH;
 	public final static int NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FRIEND_SELECTED = 16;
 
 
@@ -56,7 +53,6 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.game_fragment_activity);
-		setResult(RESULT_CODE_FINISH);
 		Utilities.setActionBar(this, R.string.games_list, false);
 
 		final FragmentManager fManager = getSupportFragmentManager();
@@ -107,6 +103,8 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 			// Checks to see if this is a large device. If this is a large
 			// device then we will load in the multi pane layout.
 			{
+				gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_games_list_fragment);
+
 				try
 				{
 					emptyGameFragment = (EmptyGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_game);

@@ -25,9 +25,6 @@ public final class MainActivity extends SherlockActivity
 {
 
 
-	public final static int GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FINISH = 8;
-
-
 	private UiLifecycleHelper uiHelper;
 
 	private boolean isResumed = false;
@@ -176,8 +173,7 @@ public final class MainActivity extends SherlockActivity
 
 	private void startCentralFragmentActivity()
 	{
-		final Intent intent = new Intent(this, GameFragmentActivity.class);
-		startActivityForResult(intent, GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FINISH);
+		startActivity(new Intent(this, GameFragmentActivity.class));
 	}
 
 

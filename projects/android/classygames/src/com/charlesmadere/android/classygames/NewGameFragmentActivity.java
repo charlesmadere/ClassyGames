@@ -69,6 +69,8 @@ public final class NewGameFragmentActivity extends SherlockFragmentActivity impl
 		{
 			if (isDeviceLarge())
 			{
+				friendsListFragment = (FriendsListFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_fragment_friends_list_fragment);
+
 				try
 				{
 					emptyConfirmGameFragment = (EmptyConfirmGameFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_fragment_confirm_game);
