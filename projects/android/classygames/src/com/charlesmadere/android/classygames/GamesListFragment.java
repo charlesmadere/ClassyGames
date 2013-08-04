@@ -26,6 +26,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.models.Game;
+import com.charlesmadere.android.classygames.models.ListItem;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.server.*;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
@@ -77,6 +78,14 @@ public final class GamesListFragment extends SherlockListFragment implements
 	 * Used to perform a refresh of the Games List.
 	 */
 	private AsyncRefreshGamesList asyncRefreshGamesList;
+
+
+	/**
+	 * If the user has selected a game in their games list, then this will be a
+	 * handle to that Game object. If no game is currently selected, then this
+	 * will be null.
+	 */
+	private ListItem<Game> selectedGame;
 
 
 	/**
@@ -250,11 +259,30 @@ public final class GamesListFragment extends SherlockListFragment implements
 	@Override
 	public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id)
 	{
-		final Game game = (Game) parent.getItemAtPosition(position);
+		@SuppressWarnings("unchecked")
+		final ListItem<Game> game = (ListItem<Game>) parent.getItemAtPosition(position);
 
-		if (game.isTypeGame() && game.isTurnYours())
+		if (game.get().isTypeGame() && game.get().isTurnYours())
 		{
-			listeners.onGameSelected(game);
+			if (!game.isSelected())
+			{
+				if (selectedGame != null)
+				{
+					selectedGame.unselect();
+					selectedGame = null;
+					refreshListDrawState();
+				}
+
+				game.select();
+
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+				{
+					view.setActivated(true);
+				}
+
+				selectedGame = game;
+				listeners.onGameSelected(game.get());
+			}
 		}
 	}
 
@@ -479,10 +507,23 @@ public final class GamesListFragment extends SherlockListFragment implements
 	}
 
 
+	public void refreshListDrawState()
+	{
+		if (selectedGame != null)
+		{
+			selectedGame.unselect();
+			selectedGame = null;
+		}
+
+		final GamesListAdapter games = (GamesListAdapter) list.getAdapter();
+		games.notifyDataSetChanged();
+	}
 
 
-	private final class AsyncRefreshGamesList extends AsyncTask<Void, Void, LinkedList<Game>>
-		implements Comparator<Game>
+
+
+	private final class AsyncRefreshGamesList extends AsyncTask<Void, Void, LinkedList<ListItem<Game>>>
+		implements Comparator<ListItem<Game>>
 	{
 
 
@@ -505,9 +546,9 @@ public final class GamesListFragment extends SherlockListFragment implements
 
 
 		@Override
-		protected LinkedList<Game> doInBackground(final Void... params)
+		protected LinkedList<ListItem<Game>> doInBackground(final Void... params)
 		{
-			LinkedList<Game> games = null;
+			LinkedList<ListItem<Game>> games = null;
 
 			if (restoreExistingList && gamesListJSON != null)
 			{
@@ -580,9 +621,9 @@ public final class GamesListFragment extends SherlockListFragment implements
 
 
 		@Override
-		public int compare(final Game gameOne, final Game gameTwo)
+		public int compare(final ListItem<Game> gameOne, final ListItem<Game> gameTwo)
 		{
-			return (int) (gameTwo.getTimestamp() - gameOne.getTimestamp());
+			return (int) (gameTwo.get().getTimestamp() - gameOne.get().getTimestamp());
 		}
 
 
@@ -594,14 +635,14 @@ public final class GamesListFragment extends SherlockListFragment implements
 
 
 		@Override
-		protected void onCancelled(final LinkedList<Game> games)
+		protected void onCancelled(final LinkedList<ListItem<Game>> games)
 		{
 			cancelled();
 		}
 
 
 		@Override
-		protected void onPostExecute(final LinkedList<Game> games)
+		protected void onPostExecute(final LinkedList<ListItem<Game>> games)
 		{
 			if (runStatus == RUN_STATUS_NORMAL && games != null && !games.isEmpty())
 			{
@@ -662,9 +703,9 @@ public final class GamesListFragment extends SherlockListFragment implements
 		 * Returns an LinkedList of Game objects. This LinkedList has a
 		 * possibility of being empty.
 		 */
-		private LinkedList<Game> parseServerResponse(final String serverResponse)
+		private LinkedList<ListItem<Game>> parseServerResponse(final String serverResponse)
 		{
-			final LinkedList<Game> games = new LinkedList<Game>();
+			final LinkedList<ListItem<Game>> games = new LinkedList<ListItem<Game>>();
 
 			if (!isCancelled())
 			{
@@ -699,7 +740,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 						}
 						else
 						{
-							LinkedList<Game> turn = parseTurn(jsonGameData, Server.POST_DATA_TURN_YOURS, Game.TURN_YOURS);
+							LinkedList<ListItem<Game>> turn = parseTurn(jsonGameData, Server.POST_DATA_TURN_YOURS, Game.TURN_YOURS);
 							if (turn != null && !turn.isEmpty())
 							{
 								games.addAll(turn);
@@ -746,9 +787,9 @@ public final class GamesListFragment extends SherlockListFragment implements
 		 * Returns all of the games of the specified turn. Has the possibility
 		 * of being null. Check for that!
 		 */
-		private LinkedList<Game> parseTurn(final JSONObject jsonGameData, final String postDataTurn, final boolean whichTurn)
+		private LinkedList<ListItem<Game>> parseTurn(final JSONObject jsonGameData, final String postDataTurn, final boolean whichTurn)
 		{
-			LinkedList<Game> games = null;
+			LinkedList<ListItem<Game>> games = null;
 
 			try
 			{
@@ -758,8 +799,9 @@ public final class GamesListFragment extends SherlockListFragment implements
 				if (turnLength >= 1)
 				// ensure that we have at least one element in the JSONArray
 				{
-					games = new LinkedList<Game>();
-					games.add(new Game(whichTurn));
+					games = new LinkedList<ListItem<Game>>();
+					final Game separator = new Game(whichTurn);
+					games.add(new ListItem<Game>(separator));
 
 					for (int i = 0; i < turnLength && !isCancelled(); ++i)
 					// loop through all of the games in this turn
@@ -769,7 +811,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 							final JSONObject jsonGame = turn.getJSONObject(i);
 
 							final Game game = new Game(jsonGame, whichTurn);
-							games.add(game);
+							games.add(new ListItem<Game>(game));
 						}
 						catch (final JSONException e)
 						{
@@ -824,15 +866,15 @@ public final class GamesListFragment extends SherlockListFragment implements
 	{
 
 
-		private LinkedList<Game> games;
 		private Context context;
 		private Drawable checkersIcon;
 		private Drawable chessIcon;
 		private Drawable emptyProfilePicture;
 		private LayoutInflater inflater;
+		private LinkedList<ListItem<Game>> games;
 
 
-		private GamesListAdapter(final Context context, final LinkedList<Game> games)
+		private GamesListAdapter(final Context context, final LinkedList<ListItem<Game>> games)
 		{
 			this.context = context;
 			this.games = games;
@@ -853,7 +895,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 
 
 		@Override
-		public Game getItem(final int position)
+		public ListItem<Game> getItem(final int position)
 		{
 			return games.get(position);
 		}
@@ -869,37 +911,49 @@ public final class GamesListFragment extends SherlockListFragment implements
 		@Override
 		public View getView(final int position, View convertView, final ViewGroup parent)
 		{
-			final Game game = games.get(position);
+			final ListItem<Game> game = games.get(position);
 
-			if (game.isTypeGame())
+			if (game.get().isTypeGame())
 			{
 				convertView = inflater.inflate(R.layout.games_list_fragment_listview_item, null);
 
 				final ImageView picture = (ImageView) convertView.findViewById(R.id.games_list_fragment_listview_item_picture);
 				picture.setImageDrawable(emptyProfilePicture);
-				Utilities.getImageLoader().displayImage(FacebookUtilities.getFriendsPictureSquare(context, game.getPerson().getId()), picture);
+				Utilities.getImageLoader().displayImage(FacebookUtilities.getFriendsPictureSquare(context, game.get().getPerson().getId()), picture);
 
 				final TextView name = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_name);
-				name.setText(game.getPerson().getName());
+				name.setText(game.get().getPerson().getName());
 				TypefaceUtilities.applyBlueHighway(name);
 
 				final TextView time = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_time);
-				time.setText(game.getTimestampFormatted(context));
+				time.setText(game.get().getTimestampFormatted(context));
 
 				final ImageView gameIcon = (ImageView) convertView.findViewById(R.id.games_list_fragment_listview_item_game_icon);
 
-				if (game.isGameCheckers())
+				if (game.get().isGameCheckers())
 				{
 					gameIcon.setImageDrawable(checkersIcon);
 				}
-				else if (game.isGameChess())
+				else if (game.get().isGameChess())
 				{
 					gameIcon.setImageDrawable(chessIcon);
+				}
+
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+				{
+					if (game.isSelected())
+					{
+						convertView.setActivated(true);
+					}
+					else
+					{
+						convertView.setActivated(false);
+					}
 				}
 			}
 			else
 			{
-				if (game.isTurnYours())
+				if (game.get().isTurnYours())
 				{
 					convertView = inflater.inflate(R.layout.games_list_fragment_listview_turn_yours, null);
 				}

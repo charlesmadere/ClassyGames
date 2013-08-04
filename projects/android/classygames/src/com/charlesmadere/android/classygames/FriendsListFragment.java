@@ -240,9 +240,10 @@ public final class FriendsListFragment extends SherlockListFragment implements
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 			{
-				view.setActivated(true);
+				view.setActivated(false);
 			}
 
+			selectedFriend.unselect();
 			selectedFriend = null;
 		}
 		else
