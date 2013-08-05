@@ -101,6 +101,9 @@ public final class GamesListFragment extends SherlockListFragment implements
 	private ServerApi.Listeners serverApiListeners;
 
 
+	private boolean wasCancelled = false;
+
+
 
 
 	/**
@@ -520,6 +523,12 @@ public final class GamesListFragment extends SherlockListFragment implements
 	}
 
 
+	public boolean wasCancelled()
+	{
+		return wasCancelled;
+	}
+
+
 
 
 	private final class AsyncRefreshGamesList extends AsyncTask<Void, Void, LinkedList<ListItem<Game>>>
@@ -610,6 +619,8 @@ public final class GamesListFragment extends SherlockListFragment implements
 
 		private void cancelled()
 		{
+			wasCancelled = true;
+
 			list.setVisibility(View.GONE);
 			empty.setVisibility(View.GONE);
 			loading.setVisibility(View.GONE);
@@ -644,6 +655,8 @@ public final class GamesListFragment extends SherlockListFragment implements
 		@Override
 		protected void onPostExecute(final LinkedList<ListItem<Game>> games)
 		{
+			wasCancelled = false;
+
 			if (runStatus == RUN_STATUS_NORMAL && games != null && !games.isEmpty())
 			{
 				final GamesListAdapter gamesListAdapter = new GamesListAdapter(fragmentActivity, games);
@@ -679,13 +692,15 @@ public final class GamesListFragment extends SherlockListFragment implements
 		@Override
 		protected void onPreExecute()
 		{
-			setRunningState(true);
+			wasCancelled = false;
 
 			list.setVisibility(View.GONE);
 			empty.setVisibility(View.GONE);
 			loading.setVisibility(View.VISIBLE);
 			cancelledLoading.setVisibility(View.GONE);
 			noInternetConnection.setVisibility(View.GONE);
+
+			setRunningState(true);
 		}
 
 

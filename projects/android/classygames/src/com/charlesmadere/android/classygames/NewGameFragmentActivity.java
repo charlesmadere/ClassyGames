@@ -22,9 +22,9 @@ public final class NewGameFragmentActivity extends SherlockFragmentActivity impl
 	public final static int RESULT_CODE_FRIEND_SELECTED = GameFragmentActivity.NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FRIEND_SELECTED;
 
 
-	public final static String BUNDLE_FRIEND_ID = "KEY_FRIEND_ID";
-	public final static String BUNDLE_FRIEND_NAME = "KEY_FRIEND_NAME";
-	public final static String BUNDLE_WHICH_GAME = "KEY_WHICH_GAME";
+	public final static String BUNDLE_FRIEND_ID = "BUNDLE_FRIEND_ID";
+	public final static String BUNDLE_FRIEND_NAME = "BUNDLE_FRIEND_NAME";
+	public final static String BUNDLE_WHICH_GAME = "BUNDLE_WHICH_GAME";
 
 
 
@@ -100,13 +100,19 @@ public final class NewGameFragmentActivity extends SherlockFragmentActivity impl
 	@Override
 	public void onBackPressed()
 	{
-		if (friendsListFragment != null)
+		if (friendsListFragment != null && friendsListFragment.isAnAsyncTaskRunning())
 		{
 			friendsListFragment.cancelRunningAnyAsyncTask();
-			friendsListFragment.refreshListDrawState();
 		}
+		else
+		{
+			if (friendsListFragment != null && !friendsListFragment.wasCancelled())
+			{
+				friendsListFragment.refreshListDrawState();
+			}
 
-		super.onBackPressed();
+			super.onBackPressed();
+		}
 	}
 
 

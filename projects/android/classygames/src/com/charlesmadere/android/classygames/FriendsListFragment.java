@@ -75,6 +75,7 @@ public final class FriendsListFragment extends SherlockListFragment implements
 	private ListItem<Person> selectedFriend;
 
 
+	private boolean wasCancelled = false;
 	private SharedPreferences sPreferences;
 
 
@@ -371,6 +372,12 @@ public final class FriendsListFragment extends SherlockListFragment implements
 	}
 
 
+	public boolean wasCancelled()
+	{
+		return wasCancelled;
+	}
+
+
 
 
 	private final class AsyncRefreshFriendsList extends AsyncTask<Void, Void, LinkedList<ListItem<Person>>>
@@ -510,6 +517,8 @@ public final class FriendsListFragment extends SherlockListFragment implements
 
 		private void cancelled()
 		{
+			wasCancelled = true;
+
 			list.setVisibility(View.GONE);
 			empty.setVisibility(View.GONE);
 			loading.setVisibility(View.GONE);
@@ -544,6 +553,8 @@ public final class FriendsListFragment extends SherlockListFragment implements
 		@Override
 		protected void onPostExecute(final LinkedList<ListItem<Person>> friends)
 		{
+			wasCancelled = false;
+
 			if (runStatus == RUN_STATUS_NORMAL && friends != null && !friends.isEmpty())
 			{
 				FriendsListAdapter adapter = new FriendsListAdapter(fragmentActivity, friends);
@@ -578,13 +589,15 @@ public final class FriendsListFragment extends SherlockListFragment implements
 		@Override
 		protected void onPreExecute()
 		{
-			setRunningState(true);
+			wasCancelled = false;
 
 			list.setVisibility(View.GONE);
 			empty.setVisibility(View.GONE);
 			loading.setVisibility(View.VISIBLE);
 			cancelledLoading.setVisibility(View.GONE);
 			noInternetConnection.setVisibility(View.GONE);
+
+			setRunningState(true);
 		}
 
 

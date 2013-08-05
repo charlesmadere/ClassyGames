@@ -181,22 +181,28 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 	@Override
 	public void onBackPressed()
 	{
-		if (gamesListFragment != null)
+		if (gamesListFragment != null && gamesListFragment.isAnAsyncTaskRunning())
 		{
 			gamesListFragment.cancelRunningAnyAsyncTask();
-			gamesListFragment.refreshListDrawState();
 		}
-		else if (genericGameFragment != null)
+		else if (genericGameFragment != null && genericGameFragment.isAnAsyncTaskRunning())
 		{
 			genericGameFragment.cancelRunningAnyAsyncTask();
 		}
-		else if (myStatsDialogFragment != null)
+		else if (myStatsDialogFragment != null && myStatsDialogFragment.isServerTaskRunning())
 		{
 			myStatsDialogFragment.cancelRunningServerTask();
 		}
+		else
+		{
+			if (gamesListFragment != null && !gamesListFragment.wasCancelled())
+			{
+				gamesListFragment.refreshListDrawState();
+			}
 
-		Utilities.setActionBar(this, R.string.games_list, false);
-		super.onBackPressed();
+			Utilities.setActionBar(this, R.string.games_list, false);
+			super.onBackPressed();
+		}
 	}
 
 
