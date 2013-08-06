@@ -295,16 +295,17 @@ public final class GamesListFragment extends SherlockListFragment implements
 	{
 		if (!isAnAsyncTaskRunning())
 		{
-			final Game game = (Game) parent.getItemAtPosition(position);
+			@SuppressWarnings("unchecked")
+			final ListItem<Game> game = (ListItem<Game>) parent.getItemAtPosition(position);
 
-			if (game.isTypeGame())
+			if (game.get().isTypeGame())
 			{
 				view.setSelected(true);
 
 				final Context context = getSherlockActivity();
 				String[] items;
 
-				if (game.isTurnYours())
+				if (game.get().isTurnYours())
 				{
 					items = getResources().getStringArray(R.array.games_list_fragment_context_menu_entries_turn_yours);
 				}
@@ -324,11 +325,11 @@ public final class GamesListFragment extends SherlockListFragment implements
 								switch (which)
 								{
 									case 0:
-										serverApiTask = new ServerApiForfeitGame(context, serverApiListeners, game);
+										serverApiTask = new ServerApiForfeitGame(context, serverApiListeners, game.get());
 										break;
 
 									case 1:
-										serverApiTask = new ServerApiSkipMove(context, serverApiListeners, game);
+										serverApiTask = new ServerApiSkipMove(context, serverApiListeners, game.get());
 										break;
 								}
 
@@ -347,7 +348,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 							dialog.dismiss();
 						}
 					})
-					.setTitle(getString(R.string.select_an_action_for_this_game_against_x, game.getPerson().getName()));
+					.setTitle(getString(R.string.select_an_action_for_this_game_against_x, game.get().getPerson().getName()));
 
 				builder.show();
 
