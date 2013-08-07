@@ -203,8 +203,12 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 				gamesListFragment.refreshListDrawState();
 			}
 
-			Utilities.setActionBar(this, R.string.games_list, false);
 			super.onBackPressed();
+
+			if (genericGameFragment == null || !genericGameFragment.isVisible())
+			{
+				Utilities.setActionBar(this, R.string.games_list, false);
+			}
 		}
 	}
 
