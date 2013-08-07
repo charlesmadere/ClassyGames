@@ -893,8 +893,8 @@ public final class GamesListFragment extends SherlockListFragment implements
 			inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			final Resources resources = context.getResources();
 			emptyProfilePicture = resources.getDrawable(R.drawable.empty_profile_picture_small);
-			checkersIcon = resources.getDrawable(R.drawable.game_icon_checkers);
-			chessIcon = resources.getDrawable(R.drawable.game_icon_chess);
+			checkersIcon = resources.getDrawable(R.drawable.game_icon_checkers_small);
+			chessIcon = resources.getDrawable(R.drawable.game_icon_chess_small);
 		}
 
 

@@ -27,7 +27,7 @@
 		android:paddingTop="16dip">
 		<Button
 			android:background="@drawable/selectable_item"
-			android:drawableTop="@drawable/game_icon_checkers"
+			android:drawableTop="@drawable/game_icon_checkers_large"
 			android:id="@+id/choose_which_game_dialog_button_checkers"
 			android:layout_height="wrap_content"
 			android:layout_marginRight="8dip"
@@ -40,7 +40,7 @@
 			android:textSize="18sp" />
 		<Button
 			android:background="@drawable/selectable_item"
-			android:drawableTop="@drawable/game_icon_chess"
+			android:drawableTop="@drawable/game_icon_chess_large"
 			android:id="@+id/choose_which_game_dialog_button_chess"
 			android:layout_height="wrap_content"
 			android:layout_marginLeft="8dip"
