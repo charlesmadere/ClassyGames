@@ -25,7 +25,9 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 
 
 	private final static String LOG_TAG = Utilities.LOG_TAG + " - GameFragmentActivity";
-	public final static int NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FRIEND_SELECTED = 16;
+
+
+	public final static int RESULT_STARTED = 2;
 
 
 	public final static String BUNDLE_DATA_GAME_ID = "BUNDLE_DATA_GAME_ID";
@@ -53,6 +55,7 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.game_fragment_activity);
+		setResult(RESULT_STARTED);
 		Utilities.setActionBar(this, R.string.games_list, false);
 
 		final FragmentManager fManager = getSupportFragmentManager();
@@ -145,7 +148,7 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 	{
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (resultCode == NewGameFragmentActivity.RESULT_CODE_FRIEND_SELECTED)
+		if (resultCode == NewGameFragmentActivity.RESULT_FRIEND_SELECTED)
 		// Check the result code as returned from NewGameFragmentActivity. If a
 		// friend was selected, then this means that the current Android user
 		// wants to start a new game against that selected user.
@@ -264,7 +267,7 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 					onBackPressed();
 				}
 
-				startActivityForResult(new Intent(this, NewGameFragmentActivity.class), NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FRIEND_SELECTED);
+				startActivityForResult(new Intent(this, NewGameFragmentActivity.class), NewGameFragmentActivity.RESULT_FRIEND_SELECTED);
 				break;
 
 			case R.id.game_fragment_activity_menu_settings:

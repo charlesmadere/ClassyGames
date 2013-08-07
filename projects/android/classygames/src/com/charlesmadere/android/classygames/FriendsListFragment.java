@@ -75,7 +75,6 @@ public final class FriendsListFragment extends SherlockListFragment implements
 	private ListItem<Person> selectedFriend;
 
 
-	private boolean wasCancelled = false;
 	private SharedPreferences sPreferences;
 
 
@@ -368,13 +367,17 @@ public final class FriendsListFragment extends SherlockListFragment implements
 		}
 
 		final FriendsListAdapter friends = (FriendsListAdapter) list.getAdapter();
-		friends.notifyDataSetChanged();
+
+		if (friends != null)
+		{
+			friends.notifyDataSetChanged();
+		}
 	}
 
 
 	public boolean wasCancelled()
 	{
-		return wasCancelled;
+		return cancelledLoading.getVisibility() == View.VISIBLE;
 	}
 
 
@@ -517,8 +520,6 @@ public final class FriendsListFragment extends SherlockListFragment implements
 
 		private void cancelled()
 		{
-			wasCancelled = true;
-
 			list.setVisibility(View.GONE);
 			empty.setVisibility(View.GONE);
 			loading.setVisibility(View.GONE);
@@ -553,11 +554,9 @@ public final class FriendsListFragment extends SherlockListFragment implements
 		@Override
 		protected void onPostExecute(final LinkedList<ListItem<Person>> friends)
 		{
-			wasCancelled = false;
-
 			if (runStatus == RUN_STATUS_NORMAL && friends != null && !friends.isEmpty())
 			{
-				FriendsListAdapter adapter = new FriendsListAdapter(fragmentActivity, friends);
+				final FriendsListAdapter adapter = new FriendsListAdapter(fragmentActivity, friends);
 				list.setAdapter(adapter);
 				list.setVisibility(View.VISIBLE);
 				empty.setVisibility(View.GONE);
@@ -589,8 +588,6 @@ public final class FriendsListFragment extends SherlockListFragment implements
 		@Override
 		protected void onPreExecute()
 		{
-			wasCancelled = false;
-
 			list.setVisibility(View.GONE);
 			empty.setVisibility(View.GONE);
 			loading.setVisibility(View.VISIBLE);
@@ -685,7 +682,6 @@ public final class FriendsListFragment extends SherlockListFragment implements
 				final ViewHolder viewHolder = new ViewHolder();
 				viewHolder.name = (TextView) convertView.findViewById(R.id.friends_list_fragment_listview_item_name);
 				viewHolder.picture = (ImageView) convertView.findViewById(R.id.friends_list_fragment_listview_item_picture);
-
 				convertView.setTag(viewHolder);
 			}
 

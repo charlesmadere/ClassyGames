@@ -13,13 +13,35 @@
 		android:src="@drawable/logo" />
 	<LinearLayout
 		android:gravity="center"
-		android:id="@+id/main_activity_listview"
+		android:id="@+id/main_activity_facebook"
 		android:layout_height="match_parent"
 		android:layout_weight="5"
 		android:layout_width="match_parent">
 		<com.facebook.widget.LoginButton
-			android:id="@+id/main_activity_loginbutton_facebook_login"
 			android:layout_height="wrap_content"
 			android:layout_width="wrap_content" />
+	</LinearLayout>
+	<LinearLayout
+		android:gravity="center"
+		android:id="@+id/main_activity_loading"
+		android:layout_gravity="center"
+		android:layout_height="match_parent"
+		android:layout_weight="5"
+		android:layout_width="match_parent"
+		android:orientation="vertical"
+		android:visibility="gone">
+		<ProgressBar
+			android:indeterminate="true"
+			android:layout_gravity="center"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content" />
+		<TextView
+			android:gravity="center"
+			android:layout_gravity="center"
+			android:layout_height="wrap_content"
+			android:layout_width="match_parent"
+			android:text="@string/main_activity_loading_textview_text"
+			android:textIsSelectable="false"
+			style="@style/Paragraph.ExtraPadding" />
 	</LinearLayout>
 </LinearLayout>

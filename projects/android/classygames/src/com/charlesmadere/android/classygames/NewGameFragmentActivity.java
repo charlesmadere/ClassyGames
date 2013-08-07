@@ -18,8 +18,7 @@ public final class NewGameFragmentActivity extends SherlockFragmentActivity impl
 {
 
 
-	public final static int RESULT_CODE_DEFAULT = 0;
-	public final static int RESULT_CODE_FRIEND_SELECTED = GameFragmentActivity.NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FRIEND_SELECTED;
+	public final static int RESULT_FRIEND_SELECTED = 2;
 
 
 	public final static String BUNDLE_FRIEND_ID = "BUNDLE_FRIEND_ID";
@@ -41,8 +40,8 @@ public final class NewGameFragmentActivity extends SherlockFragmentActivity impl
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.new_game_fragment_activity);
+		setResult(RESULT_OK);
 		Utilities.setActionBar(this, R.string.friends_list, true);
-		setResult(RESULT_CODE_DEFAULT);
 
 		final FragmentManager fManager = getSupportFragmentManager();
 
@@ -191,7 +190,7 @@ public final class NewGameFragmentActivity extends SherlockFragmentActivity impl
 			final Intent intent = new Intent();
 			intent.putExtras(extras);
 
-			setResult(RESULT_CODE_FRIEND_SELECTED, intent);
+			setResult(RESULT_FRIEND_SELECTED, intent);
 		}
 		else
 		{
