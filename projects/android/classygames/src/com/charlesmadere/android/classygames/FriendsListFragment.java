@@ -281,6 +281,7 @@ public final class FriendsListFragment extends SherlockListFragment implements
 				break;
 
 			case R.id.friends_list_fragment_menu_refresh:
+				empty.setText(R.string.friends_list_fragment_no_friends);
 				final SharedPreferences.Editor editor = getPreferences().edit();
 				editor.clear();
 				editor.commit();
@@ -816,6 +817,15 @@ public final class FriendsListFragment extends SherlockListFragment implements
 				// Add the list of filtered friends to the newly cleared list.
 				friends.addAll(values);
 
+				if (friends.isEmpty())
+				{
+					empty.setText(R.string.no_friends_found);
+				}
+				else
+				{
+					empty.setText(R.string.friends_list_fragment_no_friends);
+				}
+
 				// This refreshes the friends list as shown on the device's
 				// screen.
 				notifyDataSetChanged();
@@ -838,7 +848,11 @@ public final class FriendsListFragment extends SherlockListFragment implements
 		}
 
 
+
+
 	}
+
+
 
 
 }
