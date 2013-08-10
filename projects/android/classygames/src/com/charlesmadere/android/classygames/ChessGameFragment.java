@@ -3,6 +3,9 @@ package com.charlesmadere.android.classygames;
 
 import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.ImageButton;
 import com.actionbarsherlock.view.Menu;
@@ -92,6 +95,12 @@ public final class ChessGameFragment extends GenericGameFragment
 	private BitmapDrawable playerKing;
 
 
+	/**
+	 * Stores the String R.string.* value for the player's chosen piece color.
+	 */
+	private int playerColor;
+
+
 
 
 	@Override
@@ -104,7 +113,30 @@ public final class ChessGameFragment extends GenericGameFragment
 	@Override
 	protected boolean optionsItemSelected(final MenuItem item)
 	{
-		return super.onOptionsItemSelected(item);
+		switch (item.getItemId())
+		{
+			case R.id.chess_game_fragment_menu_castle:
+
+				break;
+
+			case R.id.chess_game_fragment_menu_glossary:
+				final FragmentManager fManager = getChildFragmentManager();
+				final FragmentTransaction fTransaction = fManager.beginTransaction();
+				fTransaction.addToBackStack(null);
+
+				final Bundle arguments = new Bundle();
+				arguments.putInt(ChessGlossaryDialogFragment.KEY_PLAYER_COLOR, playerColor);
+
+				final ChessGlossaryDialogFragment dialog = new ChessGlossaryDialogFragment();
+				dialog.setArguments(arguments);
+				dialog.show(fManager, null);
+				break;
+
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+
+		return true;
 	}
 
 
@@ -378,6 +410,8 @@ public final class ChessGameFragment extends GenericGameFragment
 			playerRook = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_rook_blue);
 			playerQueen = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_queen_blue);
 			playerKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_king_blue);
+
+			playerColor = R.string.blue;
 		}
 		else
 		{
@@ -402,6 +436,8 @@ public final class ChessGameFragment extends GenericGameFragment
 			playerRook = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_rook_green);
 			playerQueen = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_queen_green);
 			playerKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_king_green);
+
+			playerColor = R.string.green;
 		}
 		else
 		{
@@ -426,6 +462,8 @@ public final class ChessGameFragment extends GenericGameFragment
 			playerRook = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_rook_orange);
 			playerQueen = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_queen_orange);
 			playerKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_king_orange);
+
+			playerColor = R.string.orange;
 		}
 		else
 		{
@@ -450,6 +488,8 @@ public final class ChessGameFragment extends GenericGameFragment
 			playerRook = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_rook_pink);
 			playerQueen = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_queen_pink);
 			playerKing = (BitmapDrawable) res.getDrawable(R.drawable.piece_chess_king_pink);
+
+			playerColor = R.string.pink;
 		}
 		else
 		{

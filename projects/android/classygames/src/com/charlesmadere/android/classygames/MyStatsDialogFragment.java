@@ -49,7 +49,6 @@ public final class MyStatsDialogFragment extends SherlockDialogFragment
 	private View view;
 
 
-
 	private Listeners listeners;
 
 
