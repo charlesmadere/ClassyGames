@@ -66,9 +66,15 @@ public final class Piece extends GenericPiece
 	}
 
 
-	public Piece(final Piece piece)
+	/**
+	 * Creates a Piece object that is a copy of the given Piece object.
+	 *
+	 * @param piece
+	 * The Piece object to make a copy of.
+	 */
+	protected Piece(final Piece piece)
 	{
-		super(piece.getTeam(), piece.getType());
+		super(piece);
 	}
 
 

@@ -548,20 +548,21 @@ public final class ChessGameFragment extends GenericGameFragment
 					flush();
 					getSherlockActivity().supportInvalidateOptionsMenu();
 
-					if (board.isBoardLocked())
+					switch (((Board) board).isBoardInCheckOrCheckmate())
 					{
-						clearSelectedPositions();
+						case Board.BOARD_NORMAL:
+							break;
+
+						case Board.BOARD_CHECK:
+							break;
+
+						case Board.BOARD_CHECKMATE:
+							break;
 					}
 				}
-				else
-				{
-					clearSelectedPositions();
-				}
 			}
-			else
-			{
-				clearSelectedPositions();
-			}
+
+			clearSelectedPositions();
 		}
 	}
 

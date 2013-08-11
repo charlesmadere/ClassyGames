@@ -22,7 +22,7 @@ public final class ChessGlossaryDialogFragment extends SherlockDialogFragment
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{
-		getDialog().requestWindowFeature(STYLE_NO_TITLE);
+		getDialog().setTitle(R.string.chess_glossary);
 		return inflater.inflate(R.layout.chess_glossary_dialog_fragment, container, false);
 	}
 

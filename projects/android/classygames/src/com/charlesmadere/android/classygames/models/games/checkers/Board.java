@@ -379,8 +379,8 @@ public final class Board extends GenericBoard
 			// hasMoveBeenMade variable. This is for double jumping purposes.
 			// Also note how a difference of 2 is being checked this time. This
 			// should be thought of as the jump condition. In order for a
-			// checkers piece to jump over another, their X coordinate must
-			// change by 2.
+			// checkers piece to jump over another, their X and Y coordinates
+			// must both change by 2.
 			{
 				boolean isJumpValid = false;
 
@@ -390,14 +390,19 @@ public final class Board extends GenericBoard
 				{
 					case Piece.TYPE_KING:
 						if (previous.getCoordinate().getY() == current.getCoordinate().getY() + 2)
-						//
+						// Check to see if this King piece has moved down 2
+						// positions. Note how we purposely left the break
+						// command out. That is because a King piece has its
+						// own set of jump rules in addition to having the
+						// exact jump rules that a Normal piece has.
 						{
 							isJumpValid = true;
 						}
 
 					case Piece.TYPE_NORMAL:
 						if (previous.getCoordinate().getY() == current.getCoordinate().getY() - 2)
-						//
+						// Check to see if this Normal (or King) piece has
+						// moved up 2 positions.
 						{
 							isJumpValid = true;
 						}
@@ -430,7 +435,7 @@ public final class Board extends GenericBoard
 						// made. This is for double jumping purposes.
 						{
 							lastMovedPiece = piece;
-							middlePosition.getPiece().kill();
+							middlePosition.removePiece();
 							isMoveValid = true;
 						}
 						else if (lastMovedPiece == piece)
@@ -438,7 +443,7 @@ public final class Board extends GenericBoard
 						// verify that the piece that is being moved right now
 						// is the same piece that moved last time.
 						{
-							middlePosition.getPiece().kill();
+							middlePosition.removePiece();
 							isMoveValid = true;
 						}
 					}

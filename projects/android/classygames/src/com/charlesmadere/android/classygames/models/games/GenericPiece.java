@@ -60,6 +60,20 @@ public abstract class GenericPiece
 
 
 	/**
+	 * Creates a GenericPiece object that is a copy of the given GenericPiece
+	 * object.
+	 *
+	 * @param piece
+	 * The GenericPiece object to make a copy of.
+	 */
+	protected GenericPiece(final GenericPiece piece)
+	{
+		team = piece.getTeam();
+		type = piece.getType();
+	}
+
+
+	/**
 	 * Returns this GenericPiece's team. You may want to make a comparison of
 	 * the returned byte with this class's public final static TEAM_* bytes.
 	 * 

@@ -71,6 +71,18 @@ public final class Piece extends GenericPiece
 
 
 	/**
+	 * Creates a Piece object that is a copy of the given Piece object.
+	 *
+	 * @param piece
+	 * The Piece object to make a copy of.
+	 */
+	public Piece(final Piece piece)
+	{
+		super(piece);
+	}
+
+
+	/**
 	 * Checks to see if this Piece is a pawn.
 	 * 
 	 * @return
