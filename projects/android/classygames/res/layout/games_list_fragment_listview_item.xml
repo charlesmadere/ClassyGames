@@ -16,9 +16,9 @@
 		android:layout_alignParentTop="true"
 		android:layout_centerVertical="true"
 		android:layout_height="46dip"
-		android:layout_marginRight="16dip"
+		android:layout_marginRight="12dip"
 		android:layout_width="46dip"
-		android:scaleType="centerCrop"
+		android:scaleType="fitCenter"
 		android:src="@drawable/empty_profile_picture_small" />
 	<TextView
 		android:ellipsize="end"
