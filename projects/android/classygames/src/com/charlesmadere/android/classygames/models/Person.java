@@ -41,10 +41,10 @@ public final class Person
 
 	/**
 	 * Creates a Person object.
-	 * 
+	 *
 	 * @param id
 	 * The Facebook ID of the user.
-	 * 
+	 *
 	 * @param name
 	 * The Facebook name of the user.
 	 */
@@ -57,10 +57,10 @@ public final class Person
 
 	/**
 	 * Creates a Person object.
-	 * 
+	 *
 	 * @param id
 	 * The Facebook ID of the user.
-	 * 
+	 *
 	 * @param name
 	 * The Facebook name of the user.
 	 */
@@ -84,7 +84,7 @@ public final class Person
 	/**
 	 * Converts this Person's Facebook ID (a long) into a String and then
 	 * returns that String.
-	 * 
+	 *
 	 * @return
 	 * Returns this Person's Facebook ID as a String.
 	 */
@@ -97,7 +97,7 @@ public final class Person
 	/**
 	 * Returns this Person's Facebook name (a String). This is that person's
 	 * <strong>whole name</strong>.
-	 * 
+	 *
 	 * @return
 	 * Returns this Person's Facebook name (a String).
 	 */
@@ -110,7 +110,7 @@ public final class Person
 	/**
 	 * Replaces this Person object's current Facebook ID with this newly given
 	 * id. An ID should be a number that is always greater than 0.
-	 * 
+	 *
 	 * @param id
 	 * New Facebook ID of the user.
 	 */
@@ -126,7 +126,7 @@ public final class Person
 	 * will convert the given String into a long. As this method doesn't check
 	 * for the possibility that a null String was given to it, this method will
 	 * cause a crash if that happens.
-	 * 
+	 *
 	 * @param id
 	 * New Facebook ID of the user.
 	 */
@@ -138,8 +138,8 @@ public final class Person
 
 	/**
 	 * Replaces this Person object's current Facebook name with this newly
-	 * given name. 
-	 * 
+	 * given name.
+	 *
 	 * @param name
 	 * New Facebook name of the user.
 	 */
@@ -157,7 +157,7 @@ public final class Person
 	 * <li>This Person's name is not null.</li>
 	 * <li>This Person's name is not empty.</li>
 	 * </ol>
-	 * 
+	 *
 	 * @return
 	 * Returns true if all of the above conditions are true. Returns false if
 	 * any single one of the above conditions are false.
@@ -184,19 +184,19 @@ public final class Person
 	 * be checked for validity. Use this method to check for that validity.
 	 * Valid means one thing:
 	 * <ol>
-	 * <li>This ID is greater than or equal to 1.</li>
+	 * <li>This ID is greater than or equal to 0.</li>
 	 * </ol>
-	 * 
+	 *
 	 * @param id
 	 * The Facebook ID to check for validity.
-	 * 
+	 *
 	 * @return
 	 * Returns true if the above condition is true. Returns false if the above
 	 * condition is false.
 	 */
 	public static boolean isIdValid(final long id)
 	{
-		return id >= 1;
+		return id >= 0;
 	}
 
 
@@ -210,11 +210,11 @@ public final class Person
 	 * <li>This String, when converted into a long, is greater than or equal to
 	 * 1.</li>
 	 * </ol>
-	 * 
+	 *
 	 * @param id
 	 * The Facebook ID to check for validity. This parameter is converted into
-	 * a long. This String is 
-	 * 
+	 * a long. This String is
+	 *
 	 * @return
 	 * Returns true if the above condition is true. Returns false if the above
 	 * condition is false.
@@ -241,10 +241,10 @@ public final class Person
 	 * This method allows you to check a whole bunch of IDs at once. If any
 	 * single ID that is passed in is invalid, then this method will cease to
 	 * check the rest and will immediately return false.
-	 * 
+	 *
 	 * @param ids
 	 * The Facebook IDs to check for validity.
-	 * 
+	 *
 	 * @return
 	 * Returns true if <strong>all</strong> of the passed in Facebook IDs are
 	 * valid. Returns false if <strong>any single</strong> ID is invalid.
@@ -269,10 +269,10 @@ public final class Person
 	 * This method allows you to check a whole bunch of IDs at once. If any
 	 * single ID that is passed in is invalid, then this method will cease to
 	 * check the rest and will immediately return false.
-	 * 
+	 *
 	 * @param ids
 	 * The Facebook IDs to check for validity.
-	 * 
+	 *
 	 * @return
 	 * Returns true if <strong>all</strong> of the passed in Facebook IDs are
 	 * valid. Returns false if <strong>any single</strong> ID is invalid.
@@ -300,7 +300,7 @@ public final class Person
 	 * <li>This String is not null.</li>
 	 * <li>This String has a length of greater than or equal to 1.</li>
 	 * </ol>
-	 * 
+	 *
 	 * @return
 	 * Returns true if the passed in Facebook name is valid.
 	 */
@@ -316,10 +316,10 @@ public final class Person
 	 * method allows you to check a whole bunch of names at once. If any single
 	 * name that is passed in is invalid, then this method will cease to check
 	 * the rest and will immediately return false.
-	 * 
+	 *
 	 * @param names
 	 * The Facebook names to check for validity.
-	 * 
+	 *
 	 * @return
 	 * Returns true if <strong>all</strong> of the passed in Facebook names are
 	 * valid. Returns false if <strong>any single</strong> name is invalid.

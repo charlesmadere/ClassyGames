@@ -59,11 +59,11 @@ public final class GCMIntentService extends IntentService
 
 			if (Utilities.verifyValidString(action))
 			{
-				if (action.equals("com.google.android.c2dm.intent.RECEIVE"))
+				if (action.equalsIgnoreCase("com.google.android.c2dm.intent.RECEIVE"))
 				{
 					handleMessage(intent);
 				}
-				else if (action.equals("com.google.android.c2dm.intent.REGISTRATION"))
+				else if (action.equalsIgnoreCase("com.google.android.c2dm.intent.REGISTRATION"))
 				{
 					handleRegistration(intent);
 				}
@@ -197,10 +197,9 @@ public final class GCMIntentService extends IntentService
 			final long personId = Long.parseLong(parameter_personId);
 
 			if (Person.isIdAndNameValid(personId, parameter_personName) &&
-					(Server.validGameTypeValue(whichGame) || Server.validMessageTypeValue(messageType)))
+				(Server.validGameTypeValue(whichGame) || Server.validMessageTypeValue(messageType)))
 			{
 				final Person person = new Person(personId, parameter_personName);
-
 				handleVerifiedMessage(parameter_gameId, whichGame, messageType, person);
 			}
 			else
@@ -243,7 +242,7 @@ public final class GCMIntentService extends IntentService
 		final Builder builder = new Builder(this)
 			.setAutoCancel(true)
 			.setContentTitle(getString(R.string.classy_games))
-			.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification_raw))
+			.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification))
 			.setOnlyAlertOnce(true)
 			.setSmallIcon(R.drawable.notification_small);
 
@@ -254,8 +253,7 @@ public final class GCMIntentService extends IntentService
 			builder.setLights(Color.MAGENTA, GCM_NOTIFICATION_LIGHTS_DURATION_ON, GCM_NOTIFICATION_LIGHTS_DURATION_OFF);
 		}
 
-		if (messageType == Server.POST_DATA_MESSAGE_TYPE_NEW_GAME
-				|| messageType == Server.POST_DATA_MESSAGE_TYPE_NEW_MOVE)
+		if (messageType == Server.POST_DATA_MESSAGE_TYPE_NEW_GAME || messageType == Server.POST_DATA_MESSAGE_TYPE_NEW_MOVE)
 		// Check to see if the type of the received push notification is either
 		// a new game or a new move.
 		{

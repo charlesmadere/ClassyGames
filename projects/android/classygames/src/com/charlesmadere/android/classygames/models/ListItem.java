@@ -1,6 +1,12 @@
 package com.charlesmadere.android.classygames.models;
 
 
+/**
+ * This class is meant to be used as the contents of an Android ListView.
+ *
+ * @param <T>
+ * The actual object type that you want to be stored in the Android list.
+ */
 public final class ListItem<T>
 {
 
@@ -21,6 +27,10 @@ public final class ListItem<T>
 	}
 
 
+	/**
+	 * @return
+	 * Returns the object that you gave this class in the constructor.
+	 */
 	public T get()
 	{
 		return object;

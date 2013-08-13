@@ -160,7 +160,11 @@ public final class Position
 	 */
 	public void removePiece()
 	{
-		piece.kill();
+		if (hasPiece())
+		{
+			piece.kill();
+		}
+
 		piece = null;
 	}
 
