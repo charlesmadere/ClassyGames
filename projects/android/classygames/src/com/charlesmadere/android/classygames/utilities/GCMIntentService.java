@@ -242,7 +242,7 @@ public final class GCMIntentService extends IntentService
 		final Builder builder = new Builder(this)
 			.setAutoCancel(true)
 			.setContentTitle(getString(R.string.classy_games))
-			.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification))
+			.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification_large))
 			.setOnlyAlertOnce(true)
 			.setSmallIcon(R.drawable.notification_small);
 
