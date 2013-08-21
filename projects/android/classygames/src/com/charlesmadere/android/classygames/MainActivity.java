@@ -238,7 +238,7 @@ public final class MainActivity extends SherlockActivity
 			asyncGetFacebookIdentity = null;
 
 			facebook.setVisibility(View.GONE);
-			loading.setVisibility(View.GONE);
+			loading.setVisibility(View.INVISIBLE);
 
 			finish();
 		}
@@ -267,7 +267,7 @@ public final class MainActivity extends SherlockActivity
 				asyncGetFacebookIdentity = null;
 
 				facebook.setVisibility(View.GONE);
-				loading.setVisibility(View.GONE);
+				loading.setVisibility(View.INVISIBLE);
 
 				startGameFragmentActivity();
 			}
