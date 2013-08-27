@@ -3,11 +3,13 @@ package com.charlesmadere.android.classygames.models;
 
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
+import java.io.Serializable;
+
 
 /**
  * Class representing a real person.
  */
-public final class Person
+public final class Person implements Serializable
 {
 
 

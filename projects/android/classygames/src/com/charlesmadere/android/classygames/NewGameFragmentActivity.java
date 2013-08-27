@@ -20,13 +20,8 @@ public final class NewGameFragmentActivity extends SherlockFragmentActivity impl
 
 	public final static int RESULT_FRIEND_SELECTED = 2;
 
-
-	public final static String BUNDLE_FRIEND_ID = "BUNDLE_FRIEND_ID";
-	public final static String BUNDLE_FRIEND_NAME = "BUNDLE_FRIEND_NAME";
-	public final static String BUNDLE_WHICH_GAME = "BUNDLE_WHICH_GAME";
-
-
-
+	public final static String KEY_FRIEND = "KEY_FRIEND";
+	public final static String KEY_WHICH_GAME = "KEY_WHICH_GAME";
 
 	private ConfirmGameFragment confirmGameFragment;
 	private EmptyConfirmGameFragment emptyConfirmGameFragment;
@@ -181,15 +176,13 @@ public final class NewGameFragmentActivity extends SherlockFragmentActivity impl
 	public void onGameConfirm(final Person friend, final byte whichGame)
 	{
 		final Bundle extras = new Bundle();
-		extras.putLong(BUNDLE_FRIEND_ID, friend.getId());
-		extras.putString(BUNDLE_FRIEND_NAME, friend.getName());
-		extras.putByte(BUNDLE_WHICH_GAME, whichGame);
+		extras.putSerializable(KEY_FRIEND, friend);
+		extras.putByte(KEY_WHICH_GAME, whichGame);
 
 		if (Game.isWhichGameValid(whichGame))
 		{
 			final Intent intent = new Intent();
 			intent.putExtras(extras);
-
 			setResult(RESULT_FRIEND_SELECTED, intent);
 		}
 		else
@@ -219,8 +212,7 @@ public final class NewGameFragmentActivity extends SherlockFragmentActivity impl
 			}
 
 			final Bundle arguments = new Bundle();
-			arguments.putLong(ConfirmGameFragment.KEY_FRIEND_ID, friend.getId());
-			arguments.putString(ConfirmGameFragment.KEY_FRIEND_NAME, friend.getName());
+			arguments.putSerializable(ConfirmGameFragment.KEY_FRIEND, friend);
 
 			confirmGameFragment = new ConfirmGameFragment();
 			confirmGameFragment.setArguments(arguments);

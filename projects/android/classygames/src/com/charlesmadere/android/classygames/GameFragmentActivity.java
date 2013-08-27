@@ -25,18 +25,11 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 
 
 	private final static String LOG_TAG = Utilities.LOG_TAG + " - GameFragmentActivity";
-
-
-	public final static int RESULT_STARTED = 2;
-
-
-	public final static String BUNDLE_DATA_GAME_ID = "BUNDLE_DATA_GAME_ID";
-	public final static String BUNDLE_DATA_WHICH_GAME = "BUNDLE_DATA_WHICH_GAME";
-	public final static String BUNDLE_DATA_PERSON_OPPONENT_ID = "BUNDLE_PERSON_OPPONENT_ID";
-	public final static String BUNDLE_DATA_PERSON_OPPONENT_NAME = "BUNDLE_PERSON_OPPONENT_NAME";
 	private final static String KEY_ACTION_BAR_TITLE = "KEY_ACTION_BAR_TITLE";
-
-
+	public final static String KEY_FRIEND = "KEY_FRIEND";
+	public final static String KEY_GAME_ID = "KEY_GAME_ID";
+	public final static String KEY_WHICH_GAME = "KEY_WHICH_GAME";
+	public final static int RESULT_STARTED = 2;
 
 
 	private EmptyGameFragment emptyGameFragment;
@@ -160,15 +153,13 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 			if (extras != null && !extras.isEmpty())
 			// Ensure that the returned data is not totally garbled.
 			{
-				final long personId = extras.getLong(NewGameFragmentActivity.BUNDLE_FRIEND_ID);
-				final String personName = extras.getString(NewGameFragmentActivity.BUNDLE_FRIEND_NAME);
-				final byte whichGame = extras.getByte(NewGameFragmentActivity.BUNDLE_WHICH_GAME);
+				final Person friend = (Person) extras.getSerializable(NewGameFragmentActivity.KEY_FRIEND);
+				final byte whichGame = extras.getByte(NewGameFragmentActivity.KEY_WHICH_GAME);
 
-				if (Game.isWhichGameValid(whichGame) && Person.isIdAndNameValid(personId, personName))
+				if (friend.isValid() && Game.isWhichGameValid(whichGame))
 				// Ensure that we received proper data from
 				// NewGameFragmentActivity.
 				{
-					final Person friend = new Person(personId, personName);
 					final Game game = new Game(friend, whichGame);
 					onGameSelected(game);
 				}
@@ -315,23 +306,25 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 		final Intent intent = getIntent();
 
 		if (intent != null)
-		// Check to make sure that this Intent object is not null. If it is not
-		// null then we know that the user clicked a Classy Games notification
-		// and was then sent here.
 		{
-			final String gameId = intent.getStringExtra(BUNDLE_DATA_GAME_ID);
-			final byte whichGame = intent.getByteExtra(BUNDLE_DATA_WHICH_GAME, (byte) 0);
-			final long personId = intent.getLongExtra(BUNDLE_DATA_PERSON_OPPONENT_ID, (long) 0);
-			final String personName = intent.getStringExtra(BUNDLE_DATA_PERSON_OPPONENT_NAME);
+			final Bundle arguments = intent.getExtras();
 
-			if (Game.isIdValid(gameId) && Game.isWhichGameValid(whichGame)
-					&& Person.isIdAndNameValid(personId, personName))
-			// Check the data gathered from the Intent. If a single piece of
-			// this data is found to be invalid, then we will not act upon the
-			// tapped notification.
+			if (arguments != null && !arguments.isEmpty())
+			// Check to see if the Intent contains any arguments.
 			{
-				final Game game = new Game(new Person(personId, personName), whichGame, gameId);
-				onGameSelected(game);
+				final Person friend = (Person) arguments.getSerializable(KEY_FRIEND);
+				final String gameId = arguments.getString(KEY_GAME_ID);
+				final byte whichGame = arguments.getByte(KEY_WHICH_GAME, Byte.MIN_VALUE);
+
+				if (friend != null && friend.isValid() && Game.isIdValid(gameId)
+					&& Game.isWhichGameValid(whichGame))
+				// Check the data gathered from the Intent. If a single piece
+				// of this data is found to be invalid, then we will not act
+				// upon the tapped notification.
+				{
+					final Game game = new Game(friend, whichGame, gameId);
+					onGameSelected(game);
+				}
 			}
 		}
 	}
@@ -449,7 +442,7 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 			}
 			else
 			{
-				Log.wtf(LOG_TAG, "Player tried creating a game which was not one we recognize...");
+				Log.e(LOG_TAG, "Player tried creating a game which was not one we recognize...");
 			}
 		}
 	}

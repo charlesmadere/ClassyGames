@@ -243,7 +243,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 	@Override
 	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
 	{
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && isAsyncRefreshGamesListRunning())
+		if (isAsyncRefreshGamesListRunning())
 		{
 			inflater.inflate(R.menu.generic_cancel, menu);
 		}

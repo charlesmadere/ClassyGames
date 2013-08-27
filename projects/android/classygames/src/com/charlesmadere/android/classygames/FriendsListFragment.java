@@ -168,7 +168,7 @@ public final class FriendsListFragment extends SherlockListFragment implements
 	@Override
 	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
 	{
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && isAnAsyncTaskRunning())
+		if (isAnAsyncTaskRunning())
 		{
 			inflater.inflate(R.menu.generic_cancel, menu);
 		}

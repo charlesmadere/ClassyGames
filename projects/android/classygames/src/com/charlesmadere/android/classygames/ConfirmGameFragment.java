@@ -27,8 +27,7 @@ public final class ConfirmGameFragment extends SherlockFragment
 {
 
 
-	public final static String KEY_FRIEND_ID = "KEY_FRIEND_ID";
-	public final static String KEY_FRIEND_NAME = "KEY_FRIEND_NAME";
+	public final static String KEY_FRIEND = "KEY_FRIEND";
 
 
 
@@ -133,14 +132,9 @@ public final class ConfirmGameFragment extends SherlockFragment
 
 		if (arguments != null && !arguments.isEmpty())
 		{
-			final long friendId = arguments.getLong(KEY_FRIEND_ID);
-			final String friendName = arguments.getString(KEY_FRIEND_NAME);
+			friend = (Person) arguments.getSerializable(KEY_FRIEND);
 
-			if (Person.isIdAndNameValid(friendId, friendName))
-			{
-				friend = new Person(friendId, friendName);
-			}
-			else
+			if (!friend.isValid())
 			{
 				listeners.onDataError();
 			}

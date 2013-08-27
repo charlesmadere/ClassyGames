@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat.Builder;
@@ -299,11 +300,13 @@ public final class GCMIntentService extends IntentService
 	private void handleNewGameOrNewMoveMessage(final Builder builder, final String gameId, final byte whichGame,
 		final byte messageType, final Person person)
 	{
+		final Bundle extras = new Bundle();
+		extras.putSerializable(GameFragmentActivity.KEY_FRIEND, person);
+		extras.putString(GameFragmentActivity.KEY_GAME_ID, gameId);
+		extras.putByte(GameFragmentActivity.KEY_WHICH_GAME, whichGame);
+
 		final Intent gameIntent = new Intent(this, GameFragmentActivity.class)
-			.putExtra(GameFragmentActivity.BUNDLE_DATA_GAME_ID, gameId)
-			.putExtra(GameFragmentActivity.BUNDLE_DATA_WHICH_GAME, whichGame)
-			.putExtra(GameFragmentActivity.BUNDLE_DATA_PERSON_OPPONENT_ID, person.getId())
-			.putExtra(GameFragmentActivity.BUNDLE_DATA_PERSON_OPPONENT_NAME, person.getName())
+			.putExtras(extras)
 			.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
 		final TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
