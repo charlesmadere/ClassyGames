@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
@@ -30,6 +29,7 @@ import com.charlesmadere.android.classygames.models.ListItem;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.server.*;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
+import com.charlesmadere.android.classygames.utilities.GCMIntentService;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 import org.json.JSONArray;
@@ -570,17 +570,9 @@ public final class GamesListFragment extends SherlockListFragment implements
 				restoreExistingList = false;
 				final Person whoAmI = Utilities.getWhoAmI(fragmentActivity);
 
-				// clear all cached game boards
-				SharedPreferences sPreferences = fragmentActivity.getSharedPreferences(GenericGameFragment.PREFERENCES_NAME, Context.MODE_PRIVATE);
-				SharedPreferences.Editor editor = sPreferences.edit();
-				editor.clear();
-				editor.commit();
-
-				// clear all cached profile loss and win data
-				sPreferences = fragmentActivity.getSharedPreferences(MyStatsDialogFragment.PREFERENCES_NAME, Context.MODE_PRIVATE);
-				editor = sPreferences.edit();
-				editor.clear();
-				editor.commit();
+				GCMIntentService.clearNotifications(fragmentActivity);
+				GenericGameFragment.clearCachedBoards(fragmentActivity);
+				MyStatsDialogFragment.clearCachedStats(fragmentActivity);
 
 				// create the data that will be posted to the server
 				final ApiData data = new ApiData();

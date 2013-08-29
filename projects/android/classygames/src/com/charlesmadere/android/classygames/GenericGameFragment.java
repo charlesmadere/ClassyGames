@@ -1162,6 +1162,25 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
+	 * Clears all saved Board data that was retrieved from the Classy Games
+	 * server.
+	 *
+	 * @param context
+	 * The Context of the Activity or Fragment that you're calling this method
+	 * from.
+	 */
+	public static void clearCachedBoards(final Context context)
+	{
+		final SharedPreferences sPreferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+		final SharedPreferences.Editor editor = sPreferences.edit();
+		editor.clear();
+		editor.commit();
+	}
+
+
+
+
+	/**
 	 * This method is run at the end of the Android onCreateOptionsMenu method.
 	 * Use this method to add menu items to this Fragment's menu.
 	 *

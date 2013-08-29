@@ -345,4 +345,23 @@ public final class MyStatsDialogFragment extends SherlockDialogFragment
 	}
 
 
+
+
+	/**
+	 * Clears all saved stats data that was retrieved from the Classy Games
+	 * server.
+	 *
+	 * @param context
+	 * The Context of the Activity or Fragment that you're calling this method
+	 * from.
+	 */
+	public static void clearCachedStats(final Context context)
+	{
+		final SharedPreferences sPreferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+		final SharedPreferences.Editor editor = sPreferences.edit();
+		editor.clear();
+		editor.commit();
+	}
+
+
 }

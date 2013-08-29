@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ public final class GCMIntentService extends IntentService
 
 
 	private final static String LOG_TAG = Utilities.LOG_TAG + " - GCMIntentService";
+	private final static String PREFERENCES_NAME = "GCMIntentService_Preferences";
 
 	private final static Object LOCK = GCMIntentService.class;
 	private static PowerManager.WakeLock wakeLock;
@@ -388,6 +390,26 @@ public final class GCMIntentService extends IntentService
 			final Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 			vibrator.vibrate(GCM_NOTIFICATION_VIBRATION_DURATION);
 		}
+	}
+
+
+
+
+	/**
+	 * Clears all cached notification data and rids the Android status bar of
+	 * any currently showing notifications.
+	 *
+	 * @param context
+	 * The Context of the Activity or Fragment that you're calling this method
+	 * from.
+	 */
+	public static void clearNotifications(final Context context)
+	{
+		((NotificationManager) context.getSystemService(NOTIFICATION_SERVICE)).cancelAll();
+		final SharedPreferences sPreferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+		final SharedPreferences.Editor editor = sPreferences.edit();
+		editor.clear();
+		editor.commit();
 	}
 
 

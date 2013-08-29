@@ -1,7 +1,6 @@
 package com.charlesmadere.android.classygames;
 
 
-import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -454,8 +453,6 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 		{
 			onBackPressed();
 		}
-
-		((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancelAll();
 
 		getGamesListFragment();
 		gamesListFragment.refreshGamesList();
