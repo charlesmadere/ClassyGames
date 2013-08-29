@@ -277,6 +277,11 @@ public final class FriendsListFragment extends SherlockListFragment implements
 				if (isAnAsyncTaskRunning())
 				{
 					asyncRefreshFriendsList.cancel(true);
+
+					if (list != null)
+					{
+						list.setAdapter(null);
+					}
 				}
 				break;
 

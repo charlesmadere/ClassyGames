@@ -45,8 +45,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	public final static String PREFERENCES_NAME = "GenericGameFragment_Preferences";
 	public final static String KEY_GAME_ID = "KEY_GAME_ID";
 	public final static String KEY_WHICH_GAME = "KEY_WHICH_GAME";
-	public final static String KEY_PERSON_ID = "KEY_PERSON_ID";
-	public final static String KEY_PERSON_NAME = "KEY_PERSON_NAME";
+	public final static String KEY_PERSON = "KEY_PERSON";
 	private final static String BUNDLE_BOARD_JSON = "BUNDLE_BOARD_JSON";
 
 
@@ -200,10 +199,9 @@ public abstract class GenericGameFragment extends SherlockFragment
 			// be checked for validity.
 			final String gameId = arguments.getString(KEY_GAME_ID);
 			final byte whichGame = arguments.getByte(KEY_WHICH_GAME);
-			final long personId = arguments.getLong(KEY_PERSON_ID);
-			final String personName = arguments.getString(KEY_PERSON_NAME);
+			final Person person = (Person) arguments.getSerializable(KEY_PERSON);
 
-			if (Game.isWhichGameValid(whichGame) && Person.isIdAndNameValid(personId, personName))
+			if (Game.isWhichGameValid(whichGame) && person.isValid())
 			// Check the data for validity. Note that we are not checking the
 			// gameId String for validity. This is because it is possible for a
 			// game to not have an ID. Brand new games do not have a game ID.
@@ -261,8 +259,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 						}
 					}
 				};
-
-				final Person person = new Person(personId, personName);
 
 				if (Game.isIdValid(gameId))
 				// Check to see if we were given a valid game ID. We will only

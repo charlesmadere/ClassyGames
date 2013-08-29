@@ -402,8 +402,7 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 			final Bundle arguments = new Bundle();
 			arguments.putString(GenericGameFragment.KEY_GAME_ID, game.getId());
 			arguments.putByte(GenericGameFragment.KEY_WHICH_GAME, game.getWhichGame());
-			arguments.putLong(GenericGameFragment.KEY_PERSON_ID, game.getPerson().getId());
-			arguments.putString(GenericGameFragment.KEY_PERSON_NAME, game.getPerson().getName());
+			arguments.putSerializable(GenericGameFragment.KEY_PERSON, game.getPerson());
 
 			if (game.isGameCheckers())
 			{
