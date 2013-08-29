@@ -446,7 +446,6 @@ public final class FriendsListFragment extends SherlockListFragment implements
 										{
 											final ListItem<Person> listItem = new ListItem<Person>(friend);
 											friends.add(listItem);
-
 										}
 									}
 								}

@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
-import com.charlesmadere.android.classygames.models.Person;
+import com.charlesmadere.android.classygames.models.Notification;
 import com.charlesmadere.android.classygames.server.Server;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
@@ -21,9 +21,7 @@ public final class GameOverActivity extends SherlockActivity
 {
 
 
-	public final static String BUNDLE_MESSAGE_TYPE = "BUNDLE_MESSAGE_TYPE";
-	public final static String BUNDLE_PERSON_OPPONENT_ID = "BUNDLE_PERSON_OPPONENT_ID";
-	public final static String BUNDLE_PERSON_OPPONENT_NAME = "BUNDLE_PERSON_OPPONENT_NAME";
+	public final static String KEY_NOTIFICATION = "KEY_NOTIFICATION";
 
 
 
@@ -39,47 +37,54 @@ public final class GameOverActivity extends SherlockActivity
 
 		if (intent != null)
 		{
-			final byte messageType = intent.getByteExtra(BUNDLE_MESSAGE_TYPE, (byte) -1);
-			final long personId = intent.getLongExtra(BUNDLE_PERSON_OPPONENT_ID, -1);
-			final String personName = intent.getStringExtra(BUNDLE_PERSON_OPPONENT_NAME);
+			final Bundle arguments = intent.getExtras();
 
-			if (Server.validMessageTypeValue(messageType) && Person.isIdAndNameValid(personId, personName))
+			if (arguments == null || arguments.isEmpty())
 			{
-				final ImageView friendsPicture = (ImageView) findViewById(R.id.game_over_activity_friend_picture);
-				Utilities.getImageLoader().displayImage(FacebookUtilities.getFriendsPictureLarge(this, personId), friendsPicture);
-
-				final TextView friendsName = (TextView) findViewById(R.id.game_over_activity_friend_name);
-				friendsName.setText(personName);
-				TypefaceUtilities.applySnellRoundhand(friendsName);
-
-				final TextView winOrLose = (TextView) findViewById(R.id.game_over_activity_win_or_lose);
-
-				switch (messageType)
-				{
-					case Server.POST_DATA_MESSAGE_TYPE_GAME_OVER_LOSE:
-						winOrLose.setText(R.string.you_lost_the_game_better_luck_next_time);
-						break;
-
-					case Server.POST_DATA_MESSAGE_TYPE_GAME_OVER_WIN:
-						winOrLose.setText(R.string.you_won_the_game_what_a_champ);
-						break;
-				}
-
-				final Button returnToGamesList = (Button) findViewById(R.id.game_over_activity_button_return);
-				TypefaceUtilities.applyBlueHighway(returnToGamesList);
-
-				returnToGamesList.setOnClickListener(new OnClickListener()
-				{
-					@Override
-					public void onClick(final View v)
-					{
-						finish();
-					}
-				});
+				finish();
 			}
 			else
 			{
-				finish();
+				final Notification notification = (Notification) arguments.getSerializable(KEY_NOTIFICATION);
+
+				if (notification == null)
+				{
+					finish();
+				}
+				else
+				{
+					final ImageView friendsPicture = (ImageView) findViewById(R.id.game_over_activity_friend_picture);
+					Utilities.getImageLoader().displayImage(FacebookUtilities.getFriendsPictureLarge(this, notification.getPerson().getId()), friendsPicture);
+
+					final TextView friendsName = (TextView) findViewById(R.id.game_over_activity_friend_name);
+					friendsName.setText(notification.getPerson().getName());
+					TypefaceUtilities.applySnellRoundhand(friendsName);
+
+					final TextView winOrLose = (TextView) findViewById(R.id.game_over_activity_win_or_lose);
+
+					switch (notification.getMessageType())
+					{
+						case Server.POST_DATA_MESSAGE_TYPE_GAME_OVER_LOSE:
+							winOrLose.setText(R.string.you_lost_the_game_better_luck_next_time);
+							break;
+
+						case Server.POST_DATA_MESSAGE_TYPE_GAME_OVER_WIN:
+							winOrLose.setText(R.string.you_won_the_game_what_a_champ);
+							break;
+					}
+
+					final Button returnToGamesList = (Button) findViewById(R.id.game_over_activity_button_return);
+					TypefaceUtilities.applyBlueHighway(returnToGamesList);
+
+					returnToGamesList.setOnClickListener(new OnClickListener()
+					{
+						@Override
+						public void onClick(final View v)
+						{
+							finish();
+						}
+					});
+				}
 			}
 		}
 		else

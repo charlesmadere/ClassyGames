@@ -12,16 +12,21 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.Vibrator;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import com.charlesmadere.android.classygames.GameFragmentActivity;
 import com.charlesmadere.android.classygames.GameOverActivity;
 import com.charlesmadere.android.classygames.R;
+import com.charlesmadere.android.classygames.models.Notification;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.server.Server;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.*;
 
 
 /**
@@ -29,7 +34,8 @@ import java.io.IOException;
  * documentation website.
  * https://developer.android.com/guide/google/gcm/gcm.html#receiving
  */
-public final class GCMIntentService extends IntentService
+public final class GCMIntentService extends IntentService implements
+	Comparator<Notification>
 {
 
 
@@ -39,6 +45,7 @@ public final class GCMIntentService extends IntentService
 	private final static Object LOCK = GCMIntentService.class;
 	private static PowerManager.WakeLock wakeLock;
 
+	private final static int GCM_MAX_SIMULTANEOUS_NOTIFICATIONS = 4;
 	private final static int GCM_NOTIFICATION_ID = 0;
 	private final static int GCM_NOTIFICATION_LIGHTS_DURATION_ON = 1024; // milliseconds
 	private final static int GCM_NOTIFICATION_LIGHTS_DURATION_OFF = 15360; // milliseconds
@@ -181,12 +188,25 @@ public final class GCMIntentService extends IntentService
 	 */
 	private void handleMessage(final Intent intent)
 	{
-		// Retrieve input parameters for easier access. These input parameters
-		// determine what type of push notification has been received.
+		// Retrieve input parameters. These input parameters determine what
+		// type of push notification has been received, as well as who sent us
+		// this notification.
+
+		// All push notifications must have a particular game that they refer to.
+		// This is that game's ID.
 		final String parameter_gameId = intent.getStringExtra(Server.POST_DATA_GAME_ID);
+
+		// This is which game the push notification is referring to. It can be
+		// checkers, chess...
 		final String parameter_gameType = intent.getStringExtra(Server.POST_DATA_GAME_TYPE);
-		final String parameter_personId = intent.getStringExtra(Server.POST_DATA_ID);
+
+		// The type of message that this is. Could be new game, new move, game over
+		// lose, or game over win.
 		final String parameter_messageType = intent.getStringExtra(Server.POST_DATA_MESSAGE_TYPE);
+
+		// The Facebook friend information of the guy that trigger this push
+		// notification.
+		final String parameter_personId = intent.getStringExtra(Server.POST_DATA_ID);
 		final String parameter_personName = intent.getStringExtra(Server.POST_DATA_NAME);
 
 		if (Utilities.verifyValidStrings(parameter_gameId, parameter_gameType, parameter_personId,
@@ -203,7 +223,8 @@ public final class GCMIntentService extends IntentService
 				(Server.validGameTypeValue(whichGame) || Server.validMessageTypeValue(messageType)))
 			{
 				final Person person = new Person(personId, parameter_personName);
-				handleVerifiedMessage(parameter_gameId, whichGame, messageType, person);
+				final Notification notification = new Notification(parameter_gameId, whichGame, messageType, person);
+				handleVerifiedMessage(notification);
 			}
 			else
 			{
@@ -224,29 +245,19 @@ public final class GCMIntentService extends IntentService
 	 * verified. For a String, this means that it is both not null and not
 	 * empty.
 	 *
-	 * @param gameId
-	 * All push notifications must have a particular game that they refer to.
-	 * This is that game's ID.
-	 *
-	 * @param whichGame
-	 * This is which game the push notification is referring to. It can be
-	 * checkers, chess...
-	 *
-	 * @param messageType
-	 * The type of message that this is. Could be new game, new move, game over
-	 * lose, or game over win.
-	 *
-	 * @param person
-	 * The Facebook friend that caused this push notification to be sent.
+	 * @param notification
+	 * The bundled up notification data as received from this class's incoming
+	 * Intent object.
 	 */
-	private void handleVerifiedMessage(final String gameId, final byte whichGame, final byte messageType, final Person person)
+	private void handleVerifiedMessage(final Notification notification)
 	{
-		// build a notification to show to the user
+		final LinkedList<Notification> existingNotifications = saveCurrentNotificationAndGrabExisting(notification);
+
+		// begin building a notification to show to the user
 		final Builder builder = new Builder(this)
 			.setAutoCancel(true)
 			.setContentTitle(getString(R.string.classy_games))
 			.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification_large))
-			.setOnlyAlertOnce(true)
 			.setSmallIcon(R.drawable.notification_small);
 
 		if (Utilities.checkIfSettingIsEnabled(this, R.string.settings_key_show_notification_light, true))
@@ -256,23 +267,64 @@ public final class GCMIntentService extends IntentService
 			builder.setLights(Color.MAGENTA, GCM_NOTIFICATION_LIGHTS_DURATION_ON, GCM_NOTIFICATION_LIGHTS_DURATION_OFF);
 		}
 
-		if (messageType == Server.POST_DATA_MESSAGE_TYPE_NEW_GAME || messageType == Server.POST_DATA_MESSAGE_TYPE_NEW_MOVE)
-		// Check to see if the type of the received push notification is either
-		// a new game or a new move.
+		if (existingNotifications == null || existingNotifications.isEmpty())
 		{
-			handleNewGameOrNewMoveMessage(builder, gameId, whichGame, messageType, person);
-		}
-		else if (Server.validWinOrLoseValue(messageType))
-		// Check to see if the type of the received push notification is either
-		// a game loss or a game won.
-		{
-			handleWinOrLoseMessage(builder, messageType, person);
+			if (notification.getMessageType() == Server.POST_DATA_MESSAGE_TYPE_NEW_GAME
+				|| notification.getMessageType() == Server.POST_DATA_MESSAGE_TYPE_NEW_MOVE)
+			// Check to see if the type of the received push notification is either
+			// a new game or a new move.
+			{
+				handleNewGameOrNewMoveMessage(builder, notification);
+			}
+			else if (Server.validWinOrLoseValue(notification.getMessageType()))
+			// Check to see if the type of the received push notification is either
+			// a game loss or a game won.
+			{
+				handleWinOrLoseMessage(builder, notification);
+			}
+			else
+			// The received message was of a type that doesn't make any sense. Log
+			// it as an error.
+			{
+				Log.e(LOG_TAG, "Received GCM message that contained an unknown message type of \"" + notification.getMessageType() + "\".");
+			}
 		}
 		else
-		// The received message was of a type that doesn't make any sense. Log
-		// it as an error.
 		{
-			Log.e(LOG_TAG, "Received GCM message that contained an unknown message type of \"" + messageType + "\".");
+			builder.setContentText(getString(R.string.class_received));
+
+			final NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle()
+				.setBigContentTitle(getString(R.string.top_hats_all_the_way_down));
+
+			for (final Notification existingNotification : existingNotifications)
+			{
+				inboxStyle.addLine(existingNotification.getPerson() + " " + existingNotification.getMessageType());
+			}
+
+			builder.setStyle(inboxStyle);
+
+			// COPYPASTA, 100% PLACEHOLDER
+			final Bundle extras = new Bundle();
+			extras.putSerializable(GameFragmentActivity.KEY_NOTIFICATION, notification);
+
+			final Intent gameIntent = new Intent(this, GameFragmentActivity.class)
+				.putExtras(extras)
+				.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+			final TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+			stackBuilder.addNextIntentWithParentStack(gameIntent);
+			builder.setTicker("blah " + getString(R.string.ol_x_sent_you_some_class, notification.getPerson().getName()));
+
+			if (notification.getMessageType() == Server.POST_DATA_MESSAGE_TYPE_NEW_GAME)
+			{
+				builder.setContentText("game blah " + getString(R.string.new_game_from_x, notification.getPerson().getName()));
+			}
+			else if (notification.getMessageType() == Server.POST_DATA_MESSAGE_TYPE_NEW_MOVE)
+			{
+				builder.setContentText("new blah " + getString(R.string.new_move_from_x, notification.getPerson().getName()));
+			}
+
+			buildAndShowNotification(builder, stackBuilder);
 		}
 	}
 
@@ -284,28 +336,14 @@ public final class GCMIntentService extends IntentService
 	 * @param builder
 	 * A partially built notification Builder object.
 	 *
-	 * @param gameId
-	 * All push notifications must have a particular game that they refer to.
-	 * This is that game's ID.
-	 *
-	 * @param whichGame
-	 * This is which game the push notification is referring to. It can be
-	 * checkers, chess...
-	 *
-	 * @param messageType
-	 * The type of message that this is. Could be new game, new move, game over
-	 * lose, or game over win.
-	 *
-	 * @param person
-	 * The Facebook friend that caused this push notification to be sent.
+	 * @param notification
+	 * The bundled up notification data as received from this class's incoming
+	 * Intent object.
 	 */
-	private void handleNewGameOrNewMoveMessage(final Builder builder, final String gameId, final byte whichGame,
-		final byte messageType, final Person person)
+	private void handleNewGameOrNewMoveMessage(final Builder builder, final Notification notification)
 	{
 		final Bundle extras = new Bundle();
-		extras.putSerializable(GameFragmentActivity.KEY_FRIEND, person);
-		extras.putString(GameFragmentActivity.KEY_GAME_ID, gameId);
-		extras.putByte(GameFragmentActivity.KEY_WHICH_GAME, whichGame);
+		extras.putSerializable(GameFragmentActivity.KEY_NOTIFICATION, notification);
 
 		final Intent gameIntent = new Intent(this, GameFragmentActivity.class)
 			.putExtras(extras)
@@ -313,15 +351,15 @@ public final class GCMIntentService extends IntentService
 
 		final TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 		stackBuilder.addNextIntentWithParentStack(gameIntent);
-		builder.setTicker(getString(R.string.ol_x_sent_you_some_class, person.getName()));
+		builder.setTicker(getString(R.string.ol_x_sent_you_some_class, notification.getPerson().getName()));
 
-		if (messageType == Server.POST_DATA_MESSAGE_TYPE_NEW_GAME)
+		if (notification.getMessageType() == Server.POST_DATA_MESSAGE_TYPE_NEW_GAME)
 		{
-			builder.setContentText(getString(R.string.new_game_from_x, person.getName()));
+			builder.setContentText(getString(R.string.new_game_from_x, notification.getPerson().getName()));
 		}
-		else if (messageType == Server.POST_DATA_MESSAGE_TYPE_NEW_MOVE)
+		else if (notification.getMessageType() == Server.POST_DATA_MESSAGE_TYPE_NEW_MOVE)
 		{
-			builder.setContentText(getString(R.string.new_move_from_x, person.getName()));
+			builder.setContentText(getString(R.string.new_move_from_x, notification.getPerson().getName()));
 		}
 
 		buildAndShowNotification(builder, stackBuilder);
@@ -335,31 +373,29 @@ public final class GCMIntentService extends IntentService
 	 * @param builder
 	 * A partially built notification Builder object.
 	 *
-	 * @param messageType
-	 * The type of message that this is. Could be new game, new move, game over
-	 * lose, or game over win.
-	 *
-	 * @param person
-	 * The Facebook friend that caused this push notification to be sent.
+	 * @param notification
+	 * The bundled up notification data as received from this class's incoming
+	 * Intent object.
 	 */
-	private void handleWinOrLoseMessage(final Builder builder, final byte messageType, final Person person)
+	private void handleWinOrLoseMessage(final Builder builder, final Notification notification)
 	{
+		final Bundle extras = new Bundle();
+		extras.putSerializable(GameOverActivity.KEY_NOTIFICATION, notification);
+
 		final Intent gameOverIntent = new Intent(this, GameOverActivity.class)
-			.putExtra(GameOverActivity.BUNDLE_MESSAGE_TYPE, messageType)
-			.putExtra(GameOverActivity.BUNDLE_PERSON_OPPONENT_ID, person.getId())
-			.putExtra(GameOverActivity.BUNDLE_PERSON_OPPONENT_NAME, person.getName());
+			.putExtras(extras);
 
 		final TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 		stackBuilder.addNextIntentWithParentStack(gameOverIntent);
-		builder.setTicker(getString(R.string.game_over, person.getName()));
+		builder.setTicker(getString(R.string.game_over, notification.getPerson().getName()));
 
-		if (messageType == Server.POST_DATA_MESSAGE_TYPE_GAME_OVER_LOSE)
+		if (notification.getMessageType() == Server.POST_DATA_MESSAGE_TYPE_GAME_OVER_LOSE)
 		{
-			builder.setContentText(getString(R.string.you_lost_the_game_with_x, person.getName()));
+			builder.setContentText(getString(R.string.you_lost_the_game_with_x, notification.getPerson().getName()));
 		}
-		else if (messageType == Server.POST_DATA_MESSAGE_TYPE_GAME_OVER_WIN)
+		else if (notification.getMessageType() == Server.POST_DATA_MESSAGE_TYPE_GAME_OVER_WIN)
 		{
-			builder.setContentText(getString(R.string.you_won_the_game_with_x, person.getName()));
+			builder.setContentText(getString(R.string.you_won_the_game_with_x, notification.getPerson().getName()));
 		}
 
 		buildAndShowNotification(builder, stackBuilder);
@@ -393,6 +429,62 @@ public final class GCMIntentService extends IntentService
 	}
 
 
+	private LinkedList<Notification> saveCurrentNotificationAndGrabExisting(final Notification notification)
+	{
+		final SharedPreferences sPreferences = getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+
+		try
+		{
+			final JSONObject notificationJSON = notification.makeJSON();
+			final String notificationString = notificationJSON.toString();
+			final String notificationKey = String.valueOf(System.nanoTime());
+
+			final SharedPreferences.Editor editor = sPreferences.edit();
+			editor.putString(notificationKey, notificationString);
+			editor.commit();
+		}
+		catch (final JSONException e)
+		{
+			Log.w(LOG_TAG, "JSONException when trying to cache this notification's data!", e);
+		}
+
+		final LinkedList<Notification> notifications = new LinkedList<Notification>();
+
+		try
+		{
+			@SuppressWarnings("unchecked")
+			final Map<String, String> map = (Map<String, String>) sPreferences.getAll();
+
+			if (map != null && !map.isEmpty())
+			{
+				final Set<String> set = map.keySet();
+
+				for (final String id : set)
+				{
+					final String notificationString = map.get(id);
+					final JSONObject notificationJSON = new JSONObject(notificationString);
+					final Notification newNotification = new Notification(id, notificationJSON);
+					notifications.add(newNotification);
+				}
+
+				Collections.sort(notifications, this);
+
+				while (notifications.size() > GCM_MAX_SIMULTANEOUS_NOTIFICATIONS)
+				{
+					notifications.removeLast();
+				}
+			}
+		}
+		catch (final JSONException e)
+		{
+			Log.w(LOG_TAG, "JSONException occurred when grabbing existing notifications!", e);
+			notifications.clear();
+		}
+
+		return notifications;
+	}
+
+
 
 
 	/**
@@ -411,6 +503,17 @@ public final class GCMIntentService extends IntentService
 		editor.clear();
 		editor.commit();
 	}
+
+
+
+
+	@Override
+	public int compare(final Notification curly, final Notification larry)
+	{
+		return (int) (curly.getTime() - larry.getTime());
+	}
+
+
 
 
 }

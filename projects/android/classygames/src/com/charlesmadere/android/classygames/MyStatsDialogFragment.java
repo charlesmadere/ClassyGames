@@ -52,7 +52,7 @@ public final class MyStatsDialogFragment extends SherlockDialogFragment
 	private Listeners listeners;
 
 
-	public interface  Listeners
+	public interface Listeners
 	{
 		/**
 		 * This method is fired whenever there was an error when trying to

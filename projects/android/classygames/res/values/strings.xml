@@ -27,6 +27,7 @@
 	<string name="chess_with_x">Chess with %1$s</string>
 	<string name="classy_games">Classy Games</string>
 	<string name="classy_hamsters_are_working_diligently">Classy Hamsters are working diligently!</string>
+	<string name="class_received">Class Received!</string>
 	<string name="couldnt_create_the_game_as_malformed_data_was_detected">Couldn\'t create the game as malformed data was detected!</string>
 	<string name="error_when_trying_to_store_the_data_for_the_friend_that_you_selected">Error when trying to store the data for the friend that you selected.</string>
 	<string name="facebook_app_id">324400870964487</string>
@@ -130,6 +131,7 @@
 	<string name="start_game">Start game!</string>
 	<string name="stats">Stats</string>
 	<string name="their_turn">Their Turn</string>
+	<string name="top_hats_all_the_way_down">Top hats all the way down&#8230;</string>
 	<string name="two_weeks_ago">2 weeks ago</string>
 	<string name="undo">Undo</string>
 	<string name="undo_move">Undo Move</string>

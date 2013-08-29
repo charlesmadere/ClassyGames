@@ -214,7 +214,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 				}
 				catch (final JSONException e)
 				{
-                    Log.e(LOG_TAG, "JSONException in onActivityCreated()!", e);
+					Log.e(LOG_TAG, "JSONException in onActivityCreated()!", e);
 				}
 			}
 		}

@@ -11,6 +11,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.models.Game;
+import com.charlesmadere.android.classygames.models.Notification;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.settings.SettingsActivity;
 import com.charlesmadere.android.classygames.utilities.Utilities;
@@ -25,9 +26,7 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 
 	private final static String LOG_TAG = Utilities.LOG_TAG + " - GameFragmentActivity";
 	private final static String KEY_ACTION_BAR_TITLE = "KEY_ACTION_BAR_TITLE";
-	public final static String KEY_FRIEND = "KEY_FRIEND";
-	public final static String KEY_GAME_ID = "KEY_GAME_ID";
-	public final static String KEY_WHICH_GAME = "KEY_WHICH_GAME";
+	public final static String KEY_NOTIFICATION = "KEY_NOTIFICATION";
 	public final static int RESULT_STARTED = 2;
 
 
@@ -311,17 +310,14 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 			if (arguments != null && !arguments.isEmpty())
 			// Check to see if the Intent contains any arguments.
 			{
-				final Person friend = (Person) arguments.getSerializable(KEY_FRIEND);
-				final String gameId = arguments.getString(KEY_GAME_ID);
-				final byte whichGame = arguments.getByte(KEY_WHICH_GAME, Byte.MIN_VALUE);
+				final Notification notification = (Notification) arguments.getSerializable(KEY_NOTIFICATION);
 
-				if (friend != null && friend.isValid() && Game.isIdValid(gameId)
-					&& Game.isWhichGameValid(whichGame))
+				if (notification != null)
 				// Check the data gathered from the Intent. If a single piece
 				// of this data is found to be invalid, then we will not act
 				// upon the tapped notification.
 				{
-					final Game game = new Game(friend, whichGame, gameId);
+					final Game game = new Game(notification.getPerson(), notification.getWhichGame(), notification.getGameId());
 					onGameSelected(game);
 				}
 			}
@@ -350,7 +346,7 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 				}
 				catch (final ClassCastException e)
 				{
-                    Log.e(LOG_TAG, "ClassCastException in getGamesListFragment()!", e);
+					Log.e(LOG_TAG, "ClassCastException in getGamesListFragment()!", e);
 				}
 			}
 		}
