@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="about">About</string>
-	<string name="about_activity_about">Classy Games was developed by a team of five students attending Southeastern Louisiana University.</string>
+	<string name="about_activity_summary">Classy Games was developed by a team of five students attending Southeastern Louisiana University. Lead by Charles Madere, the rest of the group was Geonathan Sena, Jarrad Pinestraw, Suvan Dixit, and Tristan Kidder. The entire codebase is freely available on GitHub.</string>
 	<string name="about_half_a_day_ago">about half a day ago</string>
 	<string name="admob_publisher_id">a150aef7572192d</string>
 	<string name="admob_test_devices">TEST_EMULATOR, a30ce768, 015d4a82455c0801, HT05ZHJ03545, HT045HJ02140</string>
@@ -10,6 +10,7 @@
 	<string name="almost_an_hour_ago">almost an hour ago</string>
 	<string name="are_you_sure_that_you_want_to_start_a_game_with_x">Are you sure that you want to start a game with %1$s?</string>
 	<string name="are_you_sure_that_you_want_to_send_this_data_to_the_classy_games_servers">Are you sure that you want to send this data to the Classy Games servers?</string>
+	<string name="a_server_error_occurred_when_trying_to_get_your_stats_data">A server error occurred when trying to get your stats data!</string>
 	<string name="ask_before_sending_move">Ask Before Sending Move</string>
 	<string name="bishop">Bishop</string>
 	<string name="blue">Blue</string>
@@ -142,8 +143,8 @@
 	<string name="unregistration_cancelled">Unregistration cancelled.</string>
 	<string name="unregistration_complete">Unregistration complete!</string>
 	<string name="version">Version</string>
+	<string name="version_number">2.0.0</string>
 	<string name="vibrate">Vibrate</string>
-	<string name="a_server_error_occurred_when_trying_to_get_your_stats_data">A server error occurred when trying to get your stats data!</string>
 	<string name="which_game_would_you_like_to_play">Which game would you like to play?</string>
 	<string name="won">won</string>
 	<string name="x_loses">%1$d loses</string>

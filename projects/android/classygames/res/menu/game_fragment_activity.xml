@@ -15,9 +15,4 @@
 		android:id="@+id/game_fragment_activity_menu_settings"
 		android:showAsAction="never|withText"
 		android:title="@string/settings" />
-	<item
-		android:icon="@drawable/ab_about"
-		android:id="@+id/game_fragment_activity_menu_about"
-		android:showAsAction="never|withText"
-		android:title="@string/about" />
 </menu>

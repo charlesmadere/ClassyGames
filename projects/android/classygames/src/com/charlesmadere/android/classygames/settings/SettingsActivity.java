@@ -75,8 +75,7 @@ public final class SettingsActivity extends SherlockPreferenceActivity implement
 						{
 							if (checkersPieceColorPlayers == null)
 							{
-								checkersPieceColorPlayers =
-									(ListPreference) findPreference(getString(R.string.settings_key_players_checkers_piece_color));
+								checkersPieceColorPlayers = (ListPreference) findPreference(getString(R.string.settings_key_players_checkers_piece_color));
 							}
 
 							return onOpponentCheckersPieceColorPreferenceChange(checkersPieceColorPlayers, newValue);
@@ -90,8 +89,7 @@ public final class SettingsActivity extends SherlockPreferenceActivity implement
 						{
 							if (checkersPieceColorOpponents == null)
 							{
-								checkersPieceColorOpponents =
-									(ListPreference) findPreference(getString(R.string.settings_key_opponents_checkers_piece_color));
+								checkersPieceColorOpponents = (ListPreference) findPreference(getString(R.string.settings_key_opponents_checkers_piece_color));
 							}
 
 							return onPlayerCheckersPieceColorPreferenceChange(checkersPieceColorOpponents, newValue);
@@ -105,8 +103,7 @@ public final class SettingsActivity extends SherlockPreferenceActivity implement
 						{
 							if (chessPieceColorPlayers == null)
 							{
-								chessPieceColorPlayers =
-									(ListPreference) findPreference(getString(R.string.settings_key_opponents_chess_piece_color));
+								chessPieceColorPlayers = (ListPreference) findPreference(getString(R.string.settings_key_opponents_chess_piece_color));
 							}
 
 							return onPlayerChessPieceColorPreferenceChange(chessPieceColorPlayers, newValue);
@@ -120,8 +117,7 @@ public final class SettingsActivity extends SherlockPreferenceActivity implement
 						{
 							if (chessPieceColorOpponents == null)
 							{
-								chessPieceColorOpponents =
-									(ListPreference) findPreference(getString(R.string.settings_key_players_chess_piece_color));
+								chessPieceColorOpponents = (ListPreference) findPreference(getString(R.string.settings_key_players_chess_piece_color));
 							}
 
 							return onPlayerChessPieceColorPreferenceChange(chessPieceColorOpponents, newValue);
@@ -146,6 +142,13 @@ public final class SettingsActivity extends SherlockPreferenceActivity implement
 				// UnregisterFromNotificationsActivity
 				{
 					startActivity(new Intent(this, UnregisterFromNotificationsActivity.class));
+				}
+				else if (action.equals(getString(R.string.com_charlesmadere_android_classygames_settings_about)))
+				// the intent's action is saying that we need to show the
+				// AboutActivity
+				{
+					addPreferencesFromResource(R.xml.settings_about);
+					Utilities.setActionBar(this, R.string.about, true);
 				}
 				else
 				// The intent's action was something strange. We'll show the

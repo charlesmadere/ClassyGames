@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.charlesmadere.android.classygames"
 	android:versionCode="30"
-	android:versionName="2.0.0">
+	android:versionName="@string/version_number">
 
 	<!--
 		SDK version 8 is Android v2.2 (Froyo)
@@ -102,7 +102,7 @@
 
 		<activity
 			android:label="@string/about"
-			android:name="com.charlesmadere.android.classygames.AboutActivity"
+			android:name=".settings.AboutActivity"
 			android:parentActivityName="com.charlesmadere.android.classygames.GameFragmentActivity"
 			android:theme="@style/Theme.Styled">
 			<meta-data

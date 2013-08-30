@@ -1,4 +1,4 @@
-package com.charlesmadere.android.classygames;
+package com.charlesmadere.android.classygames.settings;
 
 
 import android.content.Intent;
@@ -11,6 +11,8 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.charlesmadere.android.classygames.R;
+import com.charlesmadere.android.classygames.SharkActivity;
 import com.charlesmadere.android.classygames.utilities.KeysAndConstants;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 

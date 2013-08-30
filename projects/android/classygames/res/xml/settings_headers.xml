@@ -9,4 +9,8 @@
 		android:fragment="com.charlesmadere.android.classygames.settings.NotificationSettingsFragment"
 		android:summary="@string/settings_notifications_summary"
 		android:title="@string/notification_settings" />
+	<header
+		android:fragment="com.charlesmadere.android.classygames.settings.AboutSettingsFragment"
+		android:summary="@string/classy_games_information_and_details"
+		android:title="@string/about" />
 </preference-headers>

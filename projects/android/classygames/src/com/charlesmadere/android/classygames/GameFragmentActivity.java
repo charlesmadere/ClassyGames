@@ -13,6 +13,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.Notification;
 import com.charlesmadere.android.classygames.models.Person;
+import com.charlesmadere.android.classygames.settings.AboutActivity;
 import com.charlesmadere.android.classygames.settings.SettingsActivity;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
@@ -240,10 +241,6 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 		{
 			case android.R.id.home:
 				onBackPressed();
-				break;
-
-			case R.id.game_fragment_activity_menu_about:
-				startActivity(new Intent(this, AboutActivity.class));
 				break;
 
 			case R.id.game_fragment_activity_menu_my_stats:

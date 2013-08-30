@@ -6,12 +6,15 @@
 	<string name="changes_the_colors_of_your_opponents_chess_pieces">Changes the colors of your opponent\'s chess pieces.</string>
 	<string name="changes_the_colors_of_your_own_checkers_pieces">Changes the colors of your own checkers pieces.</string>
 	<string name="changes_the_colors_of_your_own_chess_pieces">Changes the colors of your own chess pieces.</string>
+	<string name="classy_games_information_and_details">Classy Games information and details.</string>
+	<string name="com_charlesmadere_android_classygames_settings_about">com.charlesmadere.android.classygames.settings.ABOUT</string>
 	<string name="com_charlesmadere_android_classygames_settings_game">com.charlesmadere.android.classygames.settings.GAME</string>
 	<string name="com_charlesmadere_android_classygames_settings_notifications">com.charlesmadere.android.classygames.settings.NOTIFICATIONS</string>
 	<string name="com_charlesmadere_android_classygames_settings_register">com.charlesmadere.android.classygames.settings.REGISTER</string>
 	<string name="com_charlesmadere_android_classygames_settings_unregister">com.charlesmadere.android.classygames.settings.UNREGISTER</string>
     <string name="notification_settings">Notification Settings</string>
     <string name="settings">Settings</string>
+	<string name="settings_about_summary">Meet the team, project details, and open source links!</string>
 	<string name="settings_ask_before_sending_move_summary_off">A confirmation dialog box will not be shown before a move is sent.</string>
     <string name="settings_ask_before_sending_move_summary_on">A confirmation dialog box will be shown before a move is sent.</string>
 	<string name="settings_game_summary">Settings that relate with the actual game.</string>
