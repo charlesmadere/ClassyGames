@@ -5,7 +5,7 @@ import android.app.Application;
 import android.content.Context;
 
 
-public class App extends Application
+public final class App extends Application
 {
 
 

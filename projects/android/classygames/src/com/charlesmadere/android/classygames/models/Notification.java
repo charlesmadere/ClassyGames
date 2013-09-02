@@ -1,6 +1,9 @@
 package com.charlesmadere.android.classygames.models;
 
 
+import android.content.Context;
+import com.charlesmadere.android.classygames.R;
+import com.charlesmadere.android.classygames.server.Server;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -58,21 +61,76 @@ public final class Notification implements Serializable
 	}
 
 
-	public byte getWhichGame()
-	{
-		return whichGame;
-	}
-
-
 	public byte getMessageType()
 	{
 		return messageType;
 	}
 
 
+	public String getReadableMessageType(final Context context)
+	{
+		final String readableMessageType;
+
+		switch (messageType)
+		{
+			case Server.POST_DATA_MESSAGE_TYPE_GAME_OVER_LOSE:
+				readableMessageType = context.getString(R.string.you_lost);
+				break;
+
+			case Server.POST_DATA_MESSAGE_TYPE_GAME_OVER_WIN:
+				readableMessageType = context.getString(R.string.you_won);
+				break;
+
+			case Server.POST_DATA_MESSAGE_TYPE_NEW_GAME:
+				readableMessageType = context.getString(R.string.new_game);
+				break;
+
+			case Server.POST_DATA_MESSAGE_TYPE_NEW_MOVE:
+				readableMessageType = context.getString(R.string.new_move);
+				break;
+
+			default:
+				readableMessageType = context.getString(R.string.ol_x_sent_you_some_class, person.getName());
+				break;
+		}
+
+		return readableMessageType;
+	}
+
+
+	public byte getWhichGame()
+	{
+		return whichGame;
+	}
+
+
 	public Person getPerson()
 	{
 		return person;
+	}
+
+
+	public boolean isMessageTypeGameOverLose()
+	{
+		return messageType == Server.POST_DATA_MESSAGE_TYPE_GAME_OVER_LOSE;
+	}
+
+
+	public boolean isMessageTypeGameOverWin()
+	{
+		return messageType == Server.POST_DATA_MESSAGE_TYPE_GAME_OVER_WIN;
+	}
+
+
+	public boolean isMessageTypeNewGame()
+	{
+		return messageType == Server.POST_DATA_MESSAGE_TYPE_NEW_GAME;
+	}
+
+
+	public boolean isMessageTypeNewMove()
+	{
+		return messageType == Server.POST_DATA_MESSAGE_TYPE_NEW_MOVE;
 	}
 
 
