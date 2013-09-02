@@ -300,16 +300,15 @@ public final class GCMIntentService extends IntentService
 				inboxStyle.addLine(Html.fromHtml(inboxLine));
 			}
 
-			builder.setTicker(getString(R.string.ol_x_sent_you_some_class, notification.getPerson().getName()));
 			builder.setStyle(inboxStyle);
 
-			if (notification.isMessageTypeNewGame())
+			if (notification.isMessageTypeGameOverLose() || notification.isMessageTypeGameOverWin())
 			{
-				builder.setContentText(getString(R.string.new_game_from_x, notification.getPerson().getName()));
+				builder.setTicker(getString(R.string.game_with_x_is_now_over, notification.getPerson().getName()));
 			}
-			else if (notification.isMessageTypeNewMove())
+			else if (notification.isMessageTypeNewGame() || notification.isMessageTypeNewMove())
 			{
-				builder.setContentText(getString(R.string.new_move_from_x, notification.getPerson().getName()));
+				builder.setTicker(getString(R.string.ol_x_sent_you_some_class, notification.getPerson().getName()));
 			}
 
 			final Intent gameIntent = new Intent(this, GameFragmentActivity.class)
@@ -372,7 +371,7 @@ public final class GCMIntentService extends IntentService
 	 */
 	private void handleWinOrLoseMessage(final Builder builder, final Notification notification)
 	{
-		builder.setTicker(getString(R.string.game_over, notification.getPerson().getName()));
+		builder.setTicker(getString(R.string.game_with_x_is_now_over, notification.getPerson().getName()));
 
 		if (notification.isMessageTypeGameOverLose())
 		{
