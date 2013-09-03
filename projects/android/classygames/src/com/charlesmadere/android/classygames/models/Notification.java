@@ -15,17 +15,17 @@ public final class Notification implements Serializable
 
 
 	private final static String KEY_GAME_ID = "gameId";
-	private final static String KEY_WHICH_GAME = "whichGame";
 	private final static String KEY_MESSAGE_TYPE = "messageType";
+	private final static String KEY_WHICH_GAME = "whichGame";
 	private final static String KEY_PERSON_ID = "personId";
 	private final static String KEY_PERSON_NAME = "personName";
 
 
-	private long time;
-	private String gameId;
-	private byte whichGame;
 	private byte messageType;
+	private byte whichGame;
+	private long time;
 	private Person person;
+	private String gameId;
 
 
 	public Notification(final String gameId, final byte whichGame, final byte messageType, final Person person)
@@ -39,10 +39,10 @@ public final class Notification implements Serializable
 
 	public Notification(final String id, final JSONObject notificationJSON) throws JSONException
 	{
-		time = Long.valueOf(id);
+		time = Long.parseLong(id);
 		gameId = notificationJSON.getString(KEY_GAME_ID);
-		whichGame = Integer.valueOf(notificationJSON.getInt(KEY_WHICH_GAME)).byteValue();
-		messageType = Integer.valueOf(notificationJSON.getInt(KEY_MESSAGE_TYPE)).byteValue();
+		messageType = (byte) notificationJSON.getInt(KEY_MESSAGE_TYPE);
+		whichGame = (byte) notificationJSON.getInt(KEY_WHICH_GAME);
 		final long personId = notificationJSON.getLong(KEY_PERSON_ID);
 		final String personName = notificationJSON.getString(KEY_PERSON_NAME);
 		person = new Person(personId, personName);

@@ -1,4 +1,4 @@
-package com.charlesmadere.android.classygames.utilities;
+package com.charlesmadere.android.classygames.services;
 
 
 import android.app.IntentService;
@@ -23,6 +23,8 @@ import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.models.Notification;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.server.Server;
+import com.charlesmadere.android.classygames.utilities.KeysAndConstants;
+import com.charlesmadere.android.classygames.utilities.Utilities;
 import org.json.JSONException;
 import org.json.JSONObject;
 

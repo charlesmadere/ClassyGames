@@ -202,60 +202,52 @@ public final class Board extends GenericBoard
 
 
 	@Override
-	public byte checkValidity(final JSONObject boardJSON)
+	public byte checkValidity(final GenericBoard board)
 	{
-		try
+		byte piecesCountOpponent = 0;
+		byte piecesCountPlayer = 0;
+
+		for (byte x = 0; x < lengthHorizontal; ++x)
 		{
-			final Board board = new Board(boardJSON);
-			byte piecesCountOpponent = 0;
-			byte piecesCountPlayer = 0;
-
-			for (byte x = 0; x < lengthHorizontal; ++x)
+			for (byte y = 0; y < lengthVertical; ++y)
 			{
-				for (byte y = 0; y < lengthVertical; ++y)
+				final Coordinate coordinate = new Coordinate(x, y);
+				final Position positionNew = board.getPosition(coordinate);
+				final Piece pieceNew = (Piece) positionNew.getPiece();
+
+				if (coordinate.areBothEitherEvenOrOdd())
+				// check to see if this piece is in an invalid position on
+				// the board
 				{
-					final Coordinate coordinate = new Coordinate(x, y);
-					final Position positionNew = board.getPosition(coordinate);
-					final Piece pieceNew = (Piece) positionNew.getPiece();
-
-					if (coordinate.areBothEitherEvenOrOdd())
-					// check to see if this piece is in an invalid position on
-					// the board
-					{
-						if (pieceNew != null)
-						{
-							return BOARD_INVALID;
-						}
-					}
-
 					if (pieceNew != null)
-					// count the size of the teams
-					{
-						if (pieceNew.isTeamOpponent())
-						{
-							++piecesCountOpponent;
-						}
-						else if (pieceNew.isTeamPlayer())
-						{
-							++piecesCountPlayer;
-						}
-					}
-
-					if (piecesCountOpponent > MAX_TEAM_SIZE || piecesCountPlayer > MAX_TEAM_SIZE)
 					{
 						return BOARD_INVALID;
 					}
 				}
-			}
 
-			if (piecesCountOpponent == 0)
-			{
-				return BOARD_WIN;
+				if (pieceNew != null)
+				// count the size of the teams
+				{
+					if (pieceNew.isTeamOpponent())
+					{
+						++piecesCountOpponent;
+					}
+					else if (pieceNew.isTeamPlayer())
+					{
+						++piecesCountPlayer;
+					}
+				}
+
+				if (piecesCountOpponent > MAX_TEAM_SIZE || piecesCountPlayer > MAX_TEAM_SIZE)
+				{
+					return BOARD_INVALID;
+				}
 			}
 		}
-		catch (final JSONException e)
+
+		if (piecesCountOpponent == 0)
 		{
-			return BOARD_INVALID;
+			return BOARD_WIN;
 		}
 
 		return BOARD_NEW_MOVE;

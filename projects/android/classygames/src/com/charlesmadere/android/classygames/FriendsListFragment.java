@@ -455,8 +455,8 @@ public final class FriendsListFragment extends SherlockListFragment implements
 
 								for (int i = 0; i < friends.size() && !isCancelled(); ++i)
 								{
-									final ListItem<Person> friend = friends.get(i);
-									editor.putString(friend.get().getIdAsString(), friend.get().getName());
+									final Person friend = friends.get(i).get();
+									editor.putString(String.valueOf(friend.getId()), friend.getName());
 								}
 
 								editor.commit();

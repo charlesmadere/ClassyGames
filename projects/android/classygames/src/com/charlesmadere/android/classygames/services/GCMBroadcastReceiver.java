@@ -1,4 +1,4 @@
-package com.charlesmadere.android.classygames.utilities;
+package com.charlesmadere.android.classygames.services;
 
 
 import android.app.Activity;

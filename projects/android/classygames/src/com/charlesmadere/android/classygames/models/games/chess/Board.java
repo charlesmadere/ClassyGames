@@ -83,7 +83,7 @@ public final class Board extends GenericBoard
 
 
 	@Override
-	public byte checkValidity(final JSONObject boardJSON)
+	public byte checkValidity(final GenericBoard board)
 	{
 		return (byte) 0;
 	}
@@ -128,7 +128,6 @@ public final class Board extends GenericBoard
 		getPosition(6, 6).setPiece(new Piece(Piece.TEAM_OPPONENT));
 		getPosition(7, 6).setPiece(new Piece(Piece.TEAM_OPPONENT));
 	}
-
 
 
 	@Override

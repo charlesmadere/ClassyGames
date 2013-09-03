@@ -84,19 +84,6 @@ public final class Person implements Serializable
 
 
 	/**
-	 * Converts this Person's Facebook ID (a long) into a String and then
-	 * returns that String.
-	 *
-	 * @return
-	 * Returns this Person's Facebook ID as a String.
-	 */
-	public String getIdAsString()
-	{
-		return String.valueOf(id);
-	}
-
-
-	/**
 	 * Returns this Person's Facebook name (a String). This is that person's
 	 * <strong>whole name</strong>.
 	 *

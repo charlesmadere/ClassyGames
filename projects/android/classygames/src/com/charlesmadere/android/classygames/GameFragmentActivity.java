@@ -13,7 +13,6 @@ import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.Notification;
 import com.charlesmadere.android.classygames.models.Person;
-import com.charlesmadere.android.classygames.settings.AboutActivity;
 import com.charlesmadere.android.classygames.settings.SettingsActivity;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
