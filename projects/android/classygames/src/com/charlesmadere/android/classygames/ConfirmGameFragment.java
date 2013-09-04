@@ -4,6 +4,8 @@ package com.charlesmadere.android.classygames;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -230,11 +232,23 @@ public final class ConfirmGameFragment extends SherlockFragment
 	 * Returns the AlertDialog completely built and ready to go. Simply use its
 	 * show() method to draw it onto the screen.
 	 */
+	@SuppressWarnings("deprecation")
 	private AlertDialog getAlertDialog()
 	{
 		if (alertDialog == null)
 		{
 			final View dialogView = inflater.inflate(R.layout.choose_which_game_dialog, null);
+
+			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
+			{
+				final BitmapDrawable background = (BitmapDrawable) getResources().getDrawable(R.drawable.bg_subtle_gray);
+				background.setAntiAlias(true);
+				background.setDither(true);
+				background.setFilterBitmap(true);
+				background.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+				dialogView.setBackgroundDrawable(background);
+			}
+
 			final Button checkers = (Button) dialogView.findViewById(R.id.choose_which_game_dialog_button_checkers);
 			TypefaceUtilities.applyBlueHighway(checkers);
 
