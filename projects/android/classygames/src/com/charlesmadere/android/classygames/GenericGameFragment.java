@@ -352,6 +352,37 @@ public abstract class GenericGameFragment extends SherlockFragment
 			menu.removeItem(R.id.generic_game_fragment_menu_forfeit_game);
 		}
 
+		// Code below enables / disables the send move and undo move Action Bar
+		// buttons as necessary.
+		if (asyncGetGame == null)
+		{
+			MenuItem menuItem = menu.findItem(R.id.generic_game_fragment_menu_send_move);
+			if (menuItem != null)
+			{
+				if (board == null)
+				{
+					menuItem.setEnabled(false);
+				}
+				else
+				{
+					menuItem.setEnabled(board.hasMoveBeenMade());
+				}
+			}
+
+			menuItem = menu.findItem(R.id.generic_game_fragment_menu_undo_move);
+			if (menuItem != null)
+			{
+				if (board == null)
+				{
+					menuItem.setEnabled(false);
+				}
+				else
+				{
+					menuItem.setEnabled(board.hasMoveBeenMade());
+				}
+			}
+		}
+
 		// load any menu items as added by the classes that extend this one
 		createOptionsMenu(menu, inflater);
 
@@ -396,44 +427,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 		}
 
 		return true;
-	}
-
-
-	@Override
-	public void onPrepareOptionsMenu(final Menu menu)
-	{
-		if (asyncGetGame == null)
-		{
-			MenuItem menuItem = menu.findItem(R.id.generic_game_fragment_menu_send_move);
-			if (menuItem != null)
-			{
-				if (board == null)
-				{
-					menuItem.setEnabled(false);
-				}
-				else
-				{
-					menuItem.setEnabled(board.hasMoveBeenMade());
-				}
-			}
-
-			menuItem = menu.findItem(R.id.generic_game_fragment_menu_undo_move);
-			if (menuItem != null)
-			{
-				if (board == null)
-				{
-					menuItem.setEnabled(false);
-				}
-				else
-				{
-					menuItem.setEnabled(board.hasMoveBeenMade());
-				}
-			}
-		}
-
-		// Allow the classes that extend this one to run menu preparation
-		// operations.
-		prepareOptionsMenu(menu);
 	}
 
 
@@ -1199,17 +1192,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * super.onOptionsItemSelected(item) if the MenuItem was not found.
 	 */
 	protected abstract boolean optionsItemSelected(final MenuItem item);
-
-
-	/**
-	 * This method is run at the end of the Android onPrepareOptionsMenu
-	 * method. Use this to make alterations to the currently alive menu.
-	 *
-	 * @param menu
-	 * The Menu object as given by Android. This is the object you'll want to
-	 * edit if you want to make changes to the currently alive menu.
-	 */
-	protected abstract void prepareOptionsMenu(final Menu menu);
 
 
 	/**

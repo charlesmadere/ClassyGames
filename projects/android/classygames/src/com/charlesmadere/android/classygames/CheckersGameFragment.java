@@ -61,13 +61,6 @@ public final class CheckersGameFragment extends GenericGameFragment
 
 
 	@Override
-	protected void prepareOptionsMenu(final Menu menu)
-	{
-
-	}
-
-
-	@Override
 	protected void flush(final Position position)
 	{
 		final String tag = createTag(position.getCoordinate());

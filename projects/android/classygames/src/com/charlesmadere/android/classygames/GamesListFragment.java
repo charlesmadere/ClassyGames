@@ -242,6 +242,16 @@ public final class GamesListFragment extends SherlockListFragment implements
 		else
 		{
 			inflater.inflate(R.menu.generic_refresh, menu);
+			final MenuItem refresh = menu.findItem(R.id.generic_refresh_menu_refresh);
+
+			if (isAsyncRefreshGamesListRunning())
+			{
+				refresh.setEnabled(false);
+			}
+			else
+			{
+				refresh.setEnabled(true);
+			}
 		}
 
 		super.onCreateOptionsMenu(menu, inflater);
@@ -374,30 +384,6 @@ public final class GamesListFragment extends SherlockListFragment implements
 		}
 
 		return true;
-	}
-
-
-	@Override
-	public void onPrepareOptionsMenu(final Menu menu)
-	{
-		final MenuItem menuItem = menu.findItem(R.id.generic_refresh_menu_refresh);
-
-		if (isAsyncRefreshGamesListRunning())
-		{
-			if (menuItem != null)
-			{
-				menuItem.setEnabled(false);
-			}
-		}
-		else
-		{
-			if (menuItem != null)
-			{
-				menuItem.setEnabled(true);
-			}
-		}
-
-		super.onPrepareOptionsMenu(menu);
 	}
 
 

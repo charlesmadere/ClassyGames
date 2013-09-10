@@ -107,6 +107,23 @@ public final class ChessGameFragment extends GenericGameFragment
 	protected void createOptionsMenu(final Menu menu, final MenuInflater inflater)
 	{
 		inflater.inflate(R.menu.chess_game_fragment, menu);
+		final MenuItem castle = menu.findItem(R.id.chess_game_fragment_menu_castle);
+
+		if (board == null)
+		{
+			castle.setEnabled(false);
+		}
+		else
+		{
+			if (((Board) board).canCastle())
+			{
+				castle.setEnabled(true);
+			}
+			else
+			{
+				castle.setEnabled(false);
+			}
+		}
 	}
 
 
@@ -137,29 +154,6 @@ public final class ChessGameFragment extends GenericGameFragment
 		}
 
 		return true;
-	}
-
-
-	@Override
-	protected void prepareOptionsMenu(final Menu menu)
-	{
-		final MenuItem castle = menu.findItem(R.id.chess_game_fragment_menu_castle);
-
-		if (board == null)
-		{
-			castle.setEnabled(false);
-		}
-		else
-		{
-			if (((Board) board).canCastle())
-			{
-				castle.setEnabled(true);
-			}
-			else
-			{
-				castle.setEnabled(false);
-			}
-		}
 	}
 
 
