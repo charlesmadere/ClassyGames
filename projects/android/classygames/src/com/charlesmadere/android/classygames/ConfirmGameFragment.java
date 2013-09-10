@@ -196,15 +196,7 @@ public final class ConfirmGameFragment extends SherlockFragment
 	// been implemented, an exception is thrown.
 	{
 		super.onAttach(activity);
-
-		try
-		{
-			listeners = (Listeners) activity;
-		}
-		catch (final ClassCastException e)
-		{
-			throw new ClassCastException(activity.toString() + " must implement listeners!");
-		}
+		listeners = (Listeners) activity;
 	}
 
 

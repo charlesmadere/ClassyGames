@@ -147,15 +147,7 @@ public final class MyStatsDialogFragment extends SherlockDialogFragment
 	public void onAttach(final Activity activity)
 	{
 		super.onAttach(activity);
-
-		try
-		{
-			listeners = (Listeners) activity;
-		}
-		catch (final ClassCastException e)
-		{
-			throw new ClassCastException(activity.toString() + " must implement listeners!");
-		}
+		listeners = (Listeners) activity;
 	}
 
 
