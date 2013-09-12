@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
@@ -18,6 +19,13 @@ public final class ChessGlossaryDialogFragment extends SherlockDialogFragment
 
 
 	public final static String KEY_PLAYER_COLOR = "KEY_PLAYER_COLOR";
+
+	private ImageView bishopImage;
+	private ImageView kingImage;
+	private ImageView knightImage;
+	private ImageView pawnImage;
+	private ImageView queenImage;
+	private ImageView rookImage;
 
 
 
@@ -37,18 +45,25 @@ public final class ChessGlossaryDialogFragment extends SherlockDialogFragment
 		super.onActivityCreated(savedInstanceState);
 
 		final View view = getView();
-		final TextView bishopView = (TextView) view.findViewById(R.id.chess_glossary_dialog_fragment_bishop);
-		final TextView kingView = (TextView) view.findViewById(R.id.chess_glossary_dialog_fragment_king);
-		final TextView knightView = (TextView) view.findViewById(R.id.chess_glossary_dialog_fragment_knight);
-		final TextView pawnView = (TextView) view.findViewById(R.id.chess_glossary_dialog_fragment_pawn);
-		final TextView queenView = (TextView) view.findViewById(R.id.chess_glossary_dialog_fragment_queen);
-		final TextView rookView = (TextView) view.findViewById(R.id.chess_glossary_dialog_fragment_rook);
-		TypefaceUtilities.applyBlueHighway(bishopView);
-		TypefaceUtilities.applyBlueHighway(kingView);
-		TypefaceUtilities.applyBlueHighway(knightView);
-		TypefaceUtilities.applyBlueHighway(pawnView);
-		TypefaceUtilities.applyBlueHighway(queenView);
-		TypefaceUtilities.applyBlueHighway(rookView);
+		bishopImage = (ImageView) view.findViewById(R.id.chess_glossary_dialog_fragment_bishop_imageview);
+		kingImage = (ImageView) view.findViewById(R.id.chess_glossary_dialog_fragment_king_imageview);
+		knightImage = (ImageView) view.findViewById(R.id.chess_glossary_dialog_fragment_knight_imageview);
+		pawnImage = (ImageView) view.findViewById(R.id.chess_glossary_dialog_fragment_pawn_imageview);
+		queenImage = (ImageView) view.findViewById(R.id.chess_glossary_dialog_fragment_queen_imageview);
+		rookImage = (ImageView) view.findViewById(R.id.chess_glossary_dialog_fragment_rook_imageview);
+
+		final TextView bishopText = (TextView) view.findViewById(R.id.chess_glossary_dialog_fragment_bishop_textview);
+		final TextView kingText = (TextView) view.findViewById(R.id.chess_glossary_dialog_fragment_king_textview);
+		final TextView knightText = (TextView) view.findViewById(R.id.chess_glossary_dialog_fragment_knight_textview);
+		final TextView pawnText = (TextView) view.findViewById(R.id.chess_glossary_dialog_fragment_pawn_textview);
+		final TextView queenText = (TextView) view.findViewById(R.id.chess_glossary_dialog_fragment_queen_textview);
+		final TextView rookText = (TextView) view.findViewById(R.id.chess_glossary_dialog_fragment_rook_textview);
+		TypefaceUtilities.applyBlueHighway(bishopText);
+		TypefaceUtilities.applyBlueHighway(kingText);
+		TypefaceUtilities.applyBlueHighway(knightText);
+		TypefaceUtilities.applyBlueHighway(pawnText);
+		TypefaceUtilities.applyBlueHighway(queenText);
+		TypefaceUtilities.applyBlueHighway(rookText);
 
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
 		{
@@ -69,48 +84,49 @@ public final class ChessGlossaryDialogFragment extends SherlockDialogFragment
 			switch (playerColor)
 			{
 				case R.string.blue:
-					setViewDrawable(bishopView, R.drawable.piece_chess_bishop_blue);
-					setViewDrawable(kingView, R.drawable.piece_chess_king_blue);
-					setViewDrawable(knightView, R.drawable.piece_chess_knight_blue);
-					setViewDrawable(queenView, R.drawable.piece_chess_queen_blue);
-					setViewDrawable(pawnView, R.drawable.piece_chess_pawn_blue);
-					setViewDrawable(rookView, R.drawable.piece_chess_rook_blue);
+					setViewDrawables(R.drawable.piece_chess_bishop_blue, R.drawable.piece_chess_king_blue,
+						R.drawable.piece_chess_knight_blue, R.drawable.piece_chess_queen_blue,
+						R.drawable.piece_chess_pawn_blue, R.drawable.piece_chess_rook_blue);
 					break;
 
 				case R.string.green:
-					setViewDrawable(bishopView, R.drawable.piece_chess_bishop_green);
-					setViewDrawable(kingView, R.drawable.piece_chess_king_green);
-					setViewDrawable(knightView, R.drawable.piece_chess_knight_green);
-					setViewDrawable(queenView, R.drawable.piece_chess_queen_green);
-					setViewDrawable(pawnView, R.drawable.piece_chess_pawn_green);
-					setViewDrawable(rookView, R.drawable.piece_chess_rook_green);
+					setViewDrawables(R.drawable.piece_chess_bishop_green, R.drawable.piece_chess_king_green,
+						R.drawable.piece_chess_knight_green, R.drawable.piece_chess_queen_green,
+						R.drawable.piece_chess_pawn_green, R.drawable.piece_chess_rook_green);
 					break;
 
 				case R.string.orange:
-					setViewDrawable(bishopView, R.drawable.piece_chess_bishop_orange);
-					setViewDrawable(kingView, R.drawable.piece_chess_king_orange);
-					setViewDrawable(knightView, R.drawable.piece_chess_knight_orange);
-					setViewDrawable(queenView, R.drawable.piece_chess_queen_orange);
-					setViewDrawable(pawnView, R.drawable.piece_chess_pawn_orange);
-					setViewDrawable(rookView, R.drawable.piece_chess_rook_orange);
+					setViewDrawables(R.drawable.piece_chess_bishop_orange, R.drawable.piece_chess_king_orange,
+						R.drawable.piece_chess_knight_orange, R.drawable.piece_chess_queen_orange,
+						R.drawable.piece_chess_pawn_orange, R.drawable.piece_chess_rook_orange);
 					break;
 
+				case R.string.pink:
 				default:
-					setViewDrawable(bishopView, R.drawable.piece_chess_bishop_pink);
-					setViewDrawable(kingView, R.drawable.piece_chess_king_pink);
-					setViewDrawable(knightView, R.drawable.piece_chess_knight_pink);
-					setViewDrawable(queenView, R.drawable.piece_chess_queen_pink);
-					setViewDrawable(pawnView, R.drawable.piece_chess_pawn_pink);
-					setViewDrawable(rookView, R.drawable.piece_chess_rook_pink);
+					setViewDrawables(R.drawable.piece_chess_bishop_pink, R.drawable.piece_chess_king_pink,
+						R.drawable.piece_chess_knight_pink, R.drawable.piece_chess_queen_pink,
+						R.drawable.piece_chess_pawn_pink, R.drawable.piece_chess_rook_pink);
 					break;
 			}
 		}
 	}
 
 
-	private void setViewDrawable(final TextView view, final int drawable)
+	private void setViewDrawables(final int bishopDrawable, final int kingDrawable,
+		final int knightDrawable, final int queenDrawable, final int pawnDrawable, final int rookDrawable)
 	{
-		view.setCompoundDrawablesWithIntrinsicBounds(0, drawable, 0, 0);
+		setViewDrawable(bishopImage, bishopDrawable);
+		setViewDrawable(kingImage, kingDrawable);
+		setViewDrawable(knightImage, knightDrawable);
+		setViewDrawable(queenImage, queenDrawable);
+		setViewDrawable(pawnImage, pawnDrawable);
+		setViewDrawable(rookImage, rookDrawable);
+	}
+
+
+	private void setViewDrawable(final ImageView view, final int drawable)
+	{
+		view.setImageResource(drawable);
 	}
 
 

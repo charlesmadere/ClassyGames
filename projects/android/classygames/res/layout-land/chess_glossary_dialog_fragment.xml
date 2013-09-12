@@ -1,104 +1,187 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:background="@drawable/bg_subtle_gray"
-	android:baselineAligned="false"
 	android:gravity="center"
 	android:layout_gravity="center"
 	android:layout_height="match_parent"
 	android:layout_width="wrap_content"
 	android:orientation="vertical"
-	android:paddingBottom="2dip"
+	android:paddingBottom="8dip"
 	android:paddingLeft="4dip"
 	android:paddingRight="4dip"
 	android:paddingTop="8dip">
 	<LinearLayout
 		android:gravity="center"
 		android:layout_gravity="center"
-		android:layout_height="0dip"
+		android:layout_height="96dip"
 		android:layout_marginBottom="8dip"
-		android:layout_weight="1"
 		android:layout_width="match_parent"
 		android:orientation="horizontal">
-		<TextView
-			android:drawableTop="@drawable/piece_chess_bishop_pink"
+		<LinearLayout
 			android:gravity="center"
-			android:id="@+id/chess_glossary_dialog_fragment_bishop"
 			android:layout_gravity="center"
-			android:layout_height="match_parent"
-			android:layout_marginLeft="8dip"
-			android:layout_marginRight="8dip"
-			android:layout_width="wrap_content"
-			android:text="@string/bishop"
-			android:textColor="@color/gray_darker"
-			android:textSize="18sp" />
-		<TextView
-			android:drawableTop="@drawable/piece_chess_knight_pink"
+			android:layout_height="96dip"
+			android:layout_marginRight="4dip"
+			android:layout_width="96dip"
+			android:orientation="vertical">
+			<ImageView
+				android:adjustViewBounds="true"
+				android:contentDescription="@string/bishop"
+				android:id="@+id/chess_glossary_dialog_fragment_bishop_imageview"
+				android:layout_gravity="center"
+				android:layout_height="64dip"
+				android:layout_width="match_parent"
+				android:scaleType="centerInside"
+				android:src="@drawable/piece_chess_bishop_pink" />
+			<TextView
+				android:gravity="center"
+				android:id="@+id/chess_glossary_dialog_fragment_bishop_textview"
+				android:layout_gravity="center"
+				android:layout_height="32dip"
+				android:layout_width="match_parent"
+				android:text="@string/bishop"
+				android:textColor="@color/gray_darker"
+				android:textSize="18sp" />
+		</LinearLayout>
+		<LinearLayout
 			android:gravity="center"
-			android:id="@+id/chess_glossary_dialog_fragment_knight"
 			android:layout_gravity="center"
-			android:layout_height="match_parent"
-			android:layout_marginLeft="8dip"
-			android:layout_marginRight="8dip"
-			android:layout_width="wrap_content"
-			android:text="@string/knight"
-			android:textColor="@color/gray_darker"
-			android:textSize="18sp" />
-		<TextView
-			android:drawableTop="@drawable/piece_chess_queen_pink"
+			android:layout_height="96dip"
+			android:layout_marginLeft="4dip"
+			android:layout_marginRight="4dip"
+			android:layout_width="96dip"
+			android:orientation="vertical">
+			<ImageView
+				android:adjustViewBounds="true"
+				android:contentDescription="@string/knight"
+				android:id="@+id/chess_glossary_dialog_fragment_knight_imageview"
+				android:layout_gravity="center"
+				android:layout_height="64dip"
+				android:layout_width="match_parent"
+				android:scaleType="centerInside"
+				android:src="@drawable/piece_chess_knight_pink" />
+			<TextView
+				android:gravity="center"
+				android:id="@+id/chess_glossary_dialog_fragment_knight_textview"
+				android:layout_gravity="center"
+				android:layout_height="32dip"
+				android:layout_width="match_parent"
+				android:text="@string/knight"
+				android:textColor="@color/gray_darker"
+				android:textSize="18sp" />
+		</LinearLayout>
+		<LinearLayout
 			android:gravity="center"
-			android:id="@+id/chess_glossary_dialog_fragment_queen"
 			android:layout_gravity="center"
-			android:layout_height="match_parent"
-			android:layout_marginLeft="8dip"
-			android:layout_marginRight="8dip"
-			android:layout_width="wrap_content"
-			android:text="@string/queen"
-			android:textColor="@color/gray_darker"
-			android:textSize="18sp" />
+			android:layout_height="96dip"
+			android:layout_marginLeft="4dip"
+			android:layout_width="96dip"
+			android:orientation="vertical">
+			<ImageView
+				android:adjustViewBounds="true"
+				android:contentDescription="@string/queen"
+				android:id="@+id/chess_glossary_dialog_fragment_queen_imageview"
+				android:layout_gravity="center"
+				android:layout_height="64dip"
+				android:layout_width="match_parent"
+				android:scaleType="centerInside"
+				android:src="@drawable/piece_chess_queen_pink" />
+			<TextView
+				android:gravity="center"
+				android:id="@+id/chess_glossary_dialog_fragment_queen_textview"
+				android:layout_gravity="center"
+				android:layout_height="32dip"
+				android:layout_width="match_parent"
+				android:text="@string/queen"
+				android:textColor="@color/gray_darker"
+				android:textSize="18sp" />
+		</LinearLayout>
 	</LinearLayout>
 	<LinearLayout
 		android:gravity="center"
 		android:layout_gravity="center"
-		android:layout_height="0dip"
+		android:layout_height="96dip"
 		android:layout_marginTop="8dip"
-		android:layout_weight="1"
 		android:layout_width="match_parent"
 		android:orientation="horizontal">
-		<TextView
-			android:drawableTop="@drawable/piece_chess_king_pink"
+		<LinearLayout
 			android:gravity="center"
-			android:id="@+id/chess_glossary_dialog_fragment_king"
 			android:layout_gravity="center"
-			android:layout_height="match_parent"
-			android:layout_marginLeft="8dip"
-			android:layout_marginRight="8dip"
-			android:layout_width="wrap_content"
-			android:text="@string/king"
-			android:textColor="@color/gray_darker"
-			android:textSize="18sp" />
-		<TextView
-			android:drawableTop="@drawable/piece_chess_pawn_pink"
+			android:layout_height="96dip"
+			android:layout_marginRight="4dip"
+			android:layout_width="96dip"
+			android:orientation="vertical">
+			<ImageView
+				android:adjustViewBounds="true"
+				android:contentDescription="@string/king"
+				android:id="@+id/chess_glossary_dialog_fragment_king_imageview"
+				android:layout_gravity="center"
+				android:layout_height="64dip"
+				android:layout_width="match_parent"
+				android:scaleType="centerInside"
+				android:src="@drawable/piece_chess_king_pink" />
+			<TextView
+				android:gravity="center"
+				android:id="@+id/chess_glossary_dialog_fragment_king_textview"
+				android:layout_gravity="center"
+				android:layout_height="32dip"
+				android:layout_width="match_parent"
+				android:text="@string/king"
+				android:textColor="@color/gray_darker"
+				android:textSize="18sp" />
+		</LinearLayout>
+		<LinearLayout
 			android:gravity="center"
-			android:id="@+id/chess_glossary_dialog_fragment_pawn"
 			android:layout_gravity="center"
-			android:layout_height="match_parent"
-			android:layout_marginLeft="8dip"
-			android:layout_marginRight="8dip"
-			android:layout_width="wrap_content"
-			android:text="@string/pawn"
-			android:textColor="@color/gray_darker"
-			android:textSize="18sp" />
-		<TextView
-			android:drawableTop="@drawable/piece_chess_rook_pink"
+			android:layout_height="96dip"
+			android:layout_marginLeft="4dip"
+			android:layout_marginRight="4dip"
+			android:layout_width="96dip"
+			android:orientation="vertical">
+			<ImageView
+				android:adjustViewBounds="true"
+				android:contentDescription="@string/pawn"
+				android:id="@+id/chess_glossary_dialog_fragment_pawn_imageview"
+				android:layout_gravity="center"
+				android:layout_height="64dip"
+				android:layout_width="match_parent"
+				android:scaleType="centerInside"
+				android:src="@drawable/piece_chess_pawn_pink" />
+			<TextView
+				android:gravity="center"
+				android:id="@+id/chess_glossary_dialog_fragment_pawn_textview"
+				android:layout_gravity="center"
+				android:layout_height="32dip"
+				android:layout_width="match_parent"
+				android:text="@string/pawn"
+				android:textColor="@color/gray_darker"
+				android:textSize="18sp" />
+		</LinearLayout>
+		<LinearLayout
 			android:gravity="center"
-			android:id="@+id/chess_glossary_dialog_fragment_rook"
 			android:layout_gravity="center"
-			android:layout_height="match_parent"
-			android:layout_marginLeft="8dip"
-			android:layout_marginRight="8dip"
-			android:layout_width="wrap_content"
-			android:text="@string/rook"
-			android:textColor="@color/gray_darker"
-			android:textSize="18sp" />
+			android:layout_height="96dip"
+			android:layout_marginLeft="4dip"
+			android:layout_width="96dip"
+			android:orientation="vertical">
+			<ImageView
+				android:adjustViewBounds="true"
+				android:contentDescription="@string/rook"
+				android:id="@+id/chess_glossary_dialog_fragment_rook_imageview"
+				android:layout_gravity="center"
+				android:layout_height="64dip"
+				android:layout_width="match_parent"
+				android:scaleType="centerInside"
+				android:src="@drawable/piece_chess_rook_pink" />
+			<TextView
+				android:gravity="center"
+				android:id="@+id/chess_glossary_dialog_fragment_rook_textview"
+				android:layout_gravity="center"
+				android:layout_height="32dip"
+				android:layout_width="match_parent"
+				android:text="@string/rook"
+				android:textColor="@color/gray_darker"
+				android:textSize="18sp" />
+		</LinearLayout>
 	</LinearLayout>
 </LinearLayout>
