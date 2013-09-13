@@ -219,6 +219,7 @@ public final class NewGameFragmentActivity extends SherlockFragmentActivity impl
 
 			final FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
 			fTransaction.addToBackStack(null);
+			fTransaction.setCustomAnimations(R.anim.slide_in, R.anim.slide_out, R.anim.slide_in_popped, R.anim.slide_out_popped);
 
 			if (isDeviceLarge())
 			{
