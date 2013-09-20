@@ -853,15 +853,16 @@ public final class GamesListFragment extends SherlockListFragment implements
 		private Drawable emptyProfilePicture;
 		private LayoutInflater inflater;
 		private LinkedList<ListItem<Game>> games;
+		private Resources resources;
 
 
 		private GamesListAdapter(final Context context, final LinkedList<ListItem<Game>> games)
 		{
 			this.context = context;
 			this.games = games;
+			resources = context.getResources();
 
 			inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			final Resources resources = context.getResources();
 			emptyProfilePicture = resources.getDrawable(R.drawable.empty_profile_picture_small);
 			checkersIcon = resources.getDrawable(R.drawable.game_icon_checkers_small);
 			chessIcon = resources.getDrawable(R.drawable.game_icon_chess_small);
@@ -907,7 +908,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 				TypefaceUtilities.applyBlueHighway(name);
 
 				final TextView time = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_time);
-				time.setText(game.get().getTimestampFormatted(context));
+				time.setText(game.get().getTimestampFormatted(resources));
 
 				final ImageView gameIcon = (ImageView) convertView.findViewById(R.id.games_list_fragment_listview_item_game_icon);
 

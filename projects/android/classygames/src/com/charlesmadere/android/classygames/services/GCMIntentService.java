@@ -283,16 +283,21 @@ public final class GCMIntentService extends IntentService
 			// The received message was of a type that doesn't make any sense. Log
 			// it as an error.
 			{
-				Log.e(LOG_TAG, "Received GCM message that contained an unknown message type of \"" + notification.getMessageType() + "\".");
+				Log.e(LOG_TAG, "Received GCM message that contained an unknown message type of \""
+					+ notification.getMessageType() + "\".");
 			}
 		}
 		else
 		// The notification cache has more than 1 notifications in it. So we're
 		// going to show the nifty, multi-line Android notification.
 		{
+			final int notificationSize = existingNotifications.size();
+			final String summaryText = getResources().getQuantityString(R.plurals.x_game_notifications,
+				notificationSize, notificationSize);
+
 			final NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle()
 				.setBigContentTitle(getString(R.string.classy_games))
-				.setSummaryText(getString(R.string.x_game_notifications, existingNotifications.size()));
+				.setSummaryText(summaryText);
 
 			for (final Notification existingNotification : existingNotifications)
 			{
@@ -302,7 +307,8 @@ public final class GCMIntentService extends IntentService
 				inboxStyle.addLine(Html.fromHtml(inboxLine));
 			}
 
-			builder.setStyle(inboxStyle);
+			builder.setContentText(summaryText)
+				.setStyle(inboxStyle);
 
 			if (notification.isMessageTypeGameOverLose() || notification.isMessageTypeGameOverWin())
 			{

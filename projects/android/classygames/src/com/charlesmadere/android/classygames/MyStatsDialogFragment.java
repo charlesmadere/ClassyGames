@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.res.Resources;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
@@ -209,52 +210,14 @@ public final class MyStatsDialogFragment extends SherlockDialogFragment
 	private void flushViews(final int checkersLoses, final int checkersWins, final int chessLoses,
 		final int chessWins)
 	{
-		if (checkersLoses == 1)
-		{
-			this.checkersLoses.setText(getString(R.string.one_loss));
-		}
-		else
-		{
-			this.checkersLoses.setText(getString(R.string.x_loses, checkersLoses));
-		}
-
-		if (checkersWins == 1)
-		{
-			this.checkersWins.setText(getString(R.string.one_win));
-		}
-		else
-		{
-			this.checkersWins.setText(getString(R.string.x_wins, checkersWins));
-		}
-
-		if (chessLoses == 1)
-		{
-			this.chessLoses.setText(getString(R.string.one_loss));
-		}
-		else
-		{
-			this.chessLoses.setText(getString(R.string.x_loses, chessLoses));
-		}
-
-		if (chessWins == 1)
-		{
-			this.chessWins.setText(getString(R.string.one_win));
-		}
-		else
-		{
-			this.chessWins.setText(getString(R.string.x_wins, chessWins));
-		}
+		final Resources resources = getResources();
+		this.checkersLoses.setText(resources.getQuantityString(R.plurals.x_loses, checkersLoses, checkersLoses));
+		this.checkersWins.setText(resources.getQuantityString(R.plurals.x_wins, checkersWins, checkersWins));
+		this.chessLoses.setText(resources.getQuantityString(R.plurals.x_loses, chessLoses, chessLoses));
+		this.chessWins.setText(resources.getQuantityString(R.plurals.x_wins, chessWins, chessWins));
 
 		final int gamesPlayed = checkersLoses + checkersWins + chessLoses + chessWins;
-
-		if (gamesPlayed == 1)
-		{
-			this.gamesPlayed.setText(getString(R.string.one_game_played));
-		}
-		else
-		{
-			this.gamesPlayed.setText(getString(R.string.x_games_played, gamesPlayed));
-		}
+		this.gamesPlayed.setText(resources.getQuantityString(R.plurals.x_games_played, gamesPlayed, gamesPlayed));
 	}
 
 
