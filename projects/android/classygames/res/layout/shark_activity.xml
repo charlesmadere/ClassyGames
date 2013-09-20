@@ -1,29 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:background="@color/black"
+	android:gravity="center"
 	android:layout_height="match_parent"
 	android:layout_width="match_parent"
-	android:orientation="vertical"
-	android:paddingLeft="4dip"
-	android:paddingRight="4dip"
-	style="@style/ClassyGamesDark">
-	<ImageView
+	android:orientation="vertical">
+	<com.charlesmadere.android.classygames.views.LayoutFittingImageView
 		android:adjustViewBounds="true"
 		android:contentDescription="@string/sharkwork"
+		android:id="@+id/shark_activity_sharkwork"
 		android:layout_height="match_parent"
-		android:layout_weight="2"
 		android:layout_width="match_parent"
+		android:scaleType="centerInside"
 		android:src="@drawable/sharks" />
-	<LinearLayout
-		android:gravity="center"
-		android:layout_height="match_parent"
-		android:layout_weight="5"
-		android:layout_width="match_parent">
-		<TextView
-			android:gravity="center"
-			android:layout_height="wrap_content"
-			android:layout_width="match_parent"
-			android:text="@string/sharkwork_by_tristan_kidder"
-			android:textColor="@color/gray_light"
-			style="@style/Paragraph.ExtraPadding" />
-	</LinearLayout>
 </LinearLayout>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<declare-styleable name="LayoutFittingImageView">
+		<attr
+			format="enum"
+			name="fitDimension">
+			<enum
+				name="auto"
+				value="0" />
+			<enum
+				name="landscape"
+				value="1" />
+			<enum
+				name="portrait"
+				value="2" />
+		</attr>
+	</declare-styleable>
+</resources>
