@@ -29,7 +29,7 @@ public final class ConfirmGameFragment extends SherlockFragment
 {
 
 
-	public final static String KEY_FRIEND = "KEY_FRIEND";
+	private final static String KEY_FRIEND = "KEY_FRIEND";
 
 
 
@@ -113,6 +113,20 @@ public final class ConfirmGameFragment extends SherlockFragment
 		public void onGameDeny();
 
 
+	}
+
+
+
+
+	public static ConfirmGameFragment newInstance(final Person friend)
+	{
+		final Bundle arguments = new Bundle();
+		arguments.putSerializable(KEY_FRIEND, friend);
+
+		final ConfirmGameFragment fragment = new ConfirmGameFragment();
+		fragment.setArguments(arguments);
+
+		return fragment;
 	}
 
 

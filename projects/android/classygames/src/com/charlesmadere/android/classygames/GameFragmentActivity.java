@@ -385,28 +385,14 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 				onBackPressed();
 			}
 
-			// Create a new Bundle object and place a bunch of data into it.
-			// This Bundle will be passed into the GenericGameFragment that
-			// is about to be created. This Bundle tells the new
-			// GenericGameFragment details about the game that it needs to
-			// display.
-			final Bundle arguments = new Bundle();
-			arguments.putString(GenericGameFragment.KEY_GAME_ID, game.getId());
-			arguments.putByte(GenericGameFragment.KEY_WHICH_GAME, game.getWhichGame());
-			arguments.putSerializable(GenericGameFragment.KEY_PERSON, game.getPerson());
-
 			if (game.isGameCheckers())
 			{
-				genericGameFragment = new CheckersGameFragment();
+				genericGameFragment = CheckersGameFragment.newInstance(game.getId(), game.getWhichGame(), game.getPerson());
 			}
 			else if (game.isGameChess())
 			{
-				genericGameFragment = new ChessGameFragment();
+				genericGameFragment = ChessGameFragment.newInstance(game.getId(), game.getWhichGame(), game.getPerson());
 			}
-
-			// give the newly created GenericGameFragments the Bundle that we
-			// created just a few lines above this one
-			genericGameFragment.setArguments(arguments);
 
 			final FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
 			fTransaction.addToBackStack(null);

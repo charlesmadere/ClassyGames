@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.models.games.Coordinate;
 import com.charlesmadere.android.classygames.models.games.Position;
 import com.charlesmadere.android.classygames.models.games.chess.Board;
@@ -99,6 +100,18 @@ public final class ChessGameFragment extends GenericGameFragment
 	 * Stores the String R.string.* value for the player's chosen piece color.
 	 */
 	private int playerColor;
+
+
+
+
+	public static ChessGameFragment newInstance(final String gameId, final byte whichGame, final Person person)
+	{
+		final Bundle arguments = GenericGameFragment.prepareArguments(gameId, whichGame, person);
+		final ChessGameFragment fragment = new ChessGameFragment();
+		fragment.setArguments(arguments);
+
+		return fragment;
+	}
 
 
 

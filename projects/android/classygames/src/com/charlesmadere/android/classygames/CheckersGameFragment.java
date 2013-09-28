@@ -3,11 +3,13 @@ package com.charlesmadere.android.classygames;
 
 import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.models.games.Coordinate;
 import com.charlesmadere.android.classygames.models.games.Position;
 import com.charlesmadere.android.classygames.models.games.checkers.Board;
@@ -42,6 +44,18 @@ public final class CheckersGameFragment extends GenericGameFragment
 	 * Bitmap representing the player's king piece.
 	 */
 	private BitmapDrawable playerKing;
+
+
+
+
+	public static CheckersGameFragment newInstance(final String gameId, final byte whichGame, final Person person)
+	{
+		final Bundle arguments = prepareArguments(gameId, whichGame, person);
+		final CheckersGameFragment fragment = new CheckersGameFragment();
+		fragment.setArguments(arguments);
+
+		return fragment;
+	}
 
 
 

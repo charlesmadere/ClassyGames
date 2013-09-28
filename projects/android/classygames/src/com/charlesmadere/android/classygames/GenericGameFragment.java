@@ -42,10 +42,10 @@ public abstract class GenericGameFragment extends SherlockFragment
 	private final static String LOG_TAG = Utilities.LOG_TAG + " - GenericGameFragment";
 
 
-	public final static String PREFERENCES_NAME = "GenericGameFragment_Preferences";
-	public final static String KEY_GAME_ID = "KEY_GAME_ID";
-	public final static String KEY_WHICH_GAME = "KEY_WHICH_GAME";
-	public final static String KEY_PERSON = "KEY_PERSON";
+	private final static String PREFERENCES_NAME = "GenericGameFragment_Preferences";
+	private final static String KEY_GAME_ID = "KEY_GAME_ID";
+	private final static String KEY_WHICH_GAME = "KEY_WHICH_GAME";
+	private final static String KEY_PERSON = "KEY_PERSON";
 	private final static String BUNDLE_BOARD_JSON = "BUNDLE_BOARD_JSON";
 
 
@@ -158,6 +158,19 @@ public abstract class GenericGameFragment extends SherlockFragment
 		public void onServerApiTaskFinished();
 
 
+	}
+
+
+
+
+	protected static Bundle prepareArguments(final String gameId, final byte whichGame, final Person person)
+	{
+		final Bundle arguments = new Bundle();
+		arguments.putString(KEY_GAME_ID, gameId);
+		arguments.putByte(KEY_WHICH_GAME, whichGame);
+		arguments.putSerializable(KEY_PERSON, person);
+
+		return arguments;
 	}
 
 

@@ -211,12 +211,7 @@ public final class NewGameFragmentActivity extends SherlockFragmentActivity impl
 				onBackPressed();
 			}
 
-			final Bundle arguments = new Bundle();
-			arguments.putSerializable(ConfirmGameFragment.KEY_FRIEND, friend);
-
-			confirmGameFragment = new ConfirmGameFragment();
-			confirmGameFragment.setArguments(arguments);
-
+			confirmGameFragment = ConfirmGameFragment.newInstance(friend);
 			final FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
 			fTransaction.addToBackStack(null);
 

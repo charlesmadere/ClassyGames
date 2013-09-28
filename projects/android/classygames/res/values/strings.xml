@@ -61,7 +61,7 @@
 	<string name="loading_your_scores">Loading your scores&#8230;</string>
 	<string name="lost">lost</string>
 	<string name="main_activity_loading_textview_text">Initializing settings and registering you with our servers&#8230;</string>
-	<string name="make_sure_that_you_dont_set_both_teams_color_to_the_same_thing_your_changes_to_this_setting_have_not_been_saved">Make sure that you don\'t set both teams color to the same thing! Your changes to this setting have not been saved.</string>
+	<string name="make_sure_that_you_dont_set_both_teams_color_to_the_same_thing_your_changes_to_this_setting_have_not_been_saved">Make sure that you don\'t set both team colors to the same thing! Your changes to this setting have not been saved.</string>
 	<string name="my_profile">My Profile</string>
 	<string name="my_stats">My Stats</string>
 	<string name="nevermind">Nevermind&#8230;</string>
