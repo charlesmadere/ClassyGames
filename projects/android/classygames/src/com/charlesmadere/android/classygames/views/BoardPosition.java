@@ -3,17 +3,38 @@ package com.charlesmadere.android.classygames.views;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.widget.ImageButton;
+import com.charlesmadere.android.classygames.R;
+import com.charlesmadere.android.classygames.models.games.Coordinate;
 
 
 public class BoardPosition extends ImageButton
 {
 
 
+	private Coordinate coordinate;
+
+
 	public BoardPosition(final Context context, final AttributeSet attrs)
 	{
 		super(context, attrs);
+
+		final Resources.Theme theme = context.getTheme();
+		final TypedArray attributes = theme.obtainStyledAttributes(attrs, R.styleable.BoardPosition, 0, 0);
+
+		try
+		{
+			final int x = attributes.getInt(R.styleable.BoardPosition_coordinate_x, 0);
+			final int y = attributes.getInt(R.styleable.BoardPosition_coordinate_y, 0);
+			coordinate = new Coordinate(x, y);
+		}
+		finally
+		{
+			attributes.recycle();
+		}
 	}
 
 
@@ -41,6 +62,12 @@ public class BoardPosition extends ImageButton
 		}
 
 		setMeasuredDimension(width, height);
+	}
+
+
+	public Coordinate getCoordinate()
+	{
+		return coordinate;
 	}
 
 
