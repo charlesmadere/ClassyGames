@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.charlesmadere.android.classygames.views.BoardView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:custom="http://schemas.android.com/apk/res/com.charlesmadere.android.classygames"
+	android:background="@color/pink_light"
+	android:id="@+id/test_board"
+	android:layout_gravity="center"
+	android:layout_height="match_parent"
+	android:layout_width="match_parent"
+	custom:bright_background="@drawable/bg_board_bright"
+	custom:columns="8"
+	custom:dark_background="@drawable/bg_board_dark"
+	custom:rows="8" />

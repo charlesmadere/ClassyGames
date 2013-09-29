@@ -6,7 +6,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import com.charlesmadere.android.classygames.R;
@@ -33,7 +32,7 @@ public final class LayoutFittingImageView extends ImageView
 
 		try
 		{
-			fitDimension = attributes.getInteger(R.styleable.LayoutFittingImageView_fitDimension, FIT_DIMENSION_AUTO);
+			fitDimension = attributes.getInteger(R.styleable.LayoutFittingImageView_fit_dimension, FIT_DIMENSION_AUTO);
 		}
 		finally
 		{
@@ -59,16 +58,13 @@ public final class LayoutFittingImageView extends ImageView
 			{
 				fitDimension = this.fitDimension;
 			}
+			else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+			{
+				fitDimension = FIT_DIMENSION_LANDSCAPE;
+			}
 			else
 			{
-				if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
-				{
-					fitDimension = FIT_DIMENSION_LANDSCAPE;
-				}
-				else
-				{
-					fitDimension = FIT_DIMENSION_PORTRAIT;
-				}
+				fitDimension = FIT_DIMENSION_PORTRAIT;
 			}
 
 			final float dWidth = (float) drawable.getIntrinsicWidth();

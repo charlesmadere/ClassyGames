@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<declare-styleable name="Board">
+	<declare-styleable name="BoardView">
 		<attr
 			format="integer"
 			name="columns" />
 		<attr
 			format="integer"
 			name="rows" />
-	</declare-styleable>
-	<declare-styleable name="BoardPosition">
 		<attr
-			format="integer"
-			name="coordinate_x" />
+			format="reference"
+			name="dark_background" />
 		<attr
-			format="integer"
-			name="coordinate_y" />
+			format="reference"
+			name="bright_background" />
 	</declare-styleable>
 	<declare-styleable name="LayoutFittingImageView">
 		<attr
 			format="enum"
-			name="fitDimension">
+			name="fit_dimension">
 			<enum
 				name="auto"
 				value="0" />

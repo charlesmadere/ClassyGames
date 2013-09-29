@@ -256,11 +256,13 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 					onBackPressed();
 				}
 
-				startActivityForResult(new Intent(this, NewGameFragmentActivity.class), NewGameFragmentActivity.RESULT_FRIEND_SELECTED);
+				final Intent newGame = new Intent(this, NewGameFragmentActivity.class);
+				startActivityForResult(newGame, NewGameFragmentActivity.RESULT_FRIEND_SELECTED);
 				break;
 
 			case R.id.game_fragment_activity_menu_settings:
-				startActivity(new Intent(this, SettingsActivity.class));
+				final Intent settings = new Intent(this, SettingsActivity.class);
+				startActivity(settings);
 				break;
 
 			default:

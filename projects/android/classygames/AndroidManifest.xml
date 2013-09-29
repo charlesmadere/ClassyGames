@@ -167,6 +167,12 @@
 		</activity>
 
 		<activity
+			android:label="Test"
+			android:name="com.charlesmadere.android.classygames.Test"
+			android:parentActivityName="com.charlesmadere.android.classygames.GameFragmentActivity"
+			android:theme="@style/Theme.Styled" />
+
+		<activity
 			android:label="@string/unregister_from_notifications"
 			android:name="com.charlesmadere.android.classygames.settings.UnregisterFromNotificationsActivity"
 			android:parentActivityName="com.charlesmadere.android.classygames.settings.SettingsActivity"
