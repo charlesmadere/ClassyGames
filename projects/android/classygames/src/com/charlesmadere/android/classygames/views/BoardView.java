@@ -7,14 +7,17 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.ViewGroup;
 import com.charlesmadere.android.classygames.R;
+import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
 public class BoardView extends ViewGroup
 {
 
 
+	private final static String LOG_TAG = Utilities.LOG_TAG + " - BoardView";
 	private final static int COLUMNS_DEFAULT = 2;
 	private final static int ROWS_DEFAULT = 2;
 
@@ -22,9 +25,7 @@ public class BoardView extends ViewGroup
 	private Drawable brightBackground;
 	private int columns;
 	private int rows;
-	private int totalPositions;
 	private PositionView positionViews[][];
-
 
 
 	public BoardView(final Context context, final AttributeSet attrs)
@@ -86,8 +87,8 @@ public class BoardView extends ViewGroup
 
 		setMeasuredDimension(width, height);
 
-		final int widthSpec = MeasureSpec.makeMeasureSpec(width / totalPositions, MeasureSpec.EXACTLY);
-		final int heightSpec = MeasureSpec.makeMeasureSpec(height / totalPositions, MeasureSpec.EXACTLY);
+		final int widthSpec = MeasureSpec.makeMeasureSpec(width / rows, MeasureSpec.EXACTLY);
+		final int heightSpec = MeasureSpec.makeMeasureSpec(height / columns, MeasureSpec.EXACTLY);
 
 		for (int x = 0; x < rows; ++x)
 		{
@@ -107,6 +108,10 @@ public class BoardView extends ViewGroup
 	}
 
 
+	/**
+	 * Applies the given OnClickListener to every one of the PositionViews that
+	 * belong to this BoardView.
+	 */
 	public void setPositionsOnClickListener(final OnClickListener onClickListener)
 	{
 		for (int x = 0; x < rows; ++x)
@@ -149,15 +154,16 @@ public class BoardView extends ViewGroup
 
 		try
 		{
-			darkBackground = attributes.getDrawable(R.styleable.BoardView_dark_background);
 			brightBackground = attributes.getDrawable(R.styleable.BoardView_bright_background);
+			darkBackground = attributes.getDrawable(R.styleable.BoardView_dark_background);
 			columns = attributes.getInt(R.styleable.BoardView_columns, COLUMNS_DEFAULT);
 			rows = attributes.getInt(R.styleable.BoardView_rows, ROWS_DEFAULT);
 		}
 		catch (final Exception e)
 		{
-			darkBackground = null;
+			Log.e(LOG_TAG, "Exception when reading attributes!", e);
 			brightBackground = null;
+			darkBackground = null;
 			columns = COLUMNS_DEFAULT;
 			rows = ROWS_DEFAULT;
 		}
@@ -165,8 +171,6 @@ public class BoardView extends ViewGroup
 		{
 			attributes.recycle();
 		}
-
-		totalPositions = columns * rows;
 	}
 
 

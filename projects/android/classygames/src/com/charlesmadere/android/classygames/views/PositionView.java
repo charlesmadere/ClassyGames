@@ -70,7 +70,7 @@ public class PositionView extends ImageButton
 		{
 			color = random.nextInt() % 10;
 		}
-		while (color < 0 || color > 10);
+		while (color < 0 || color > 11);
 
 		switch (color)
 		{
