@@ -47,7 +47,7 @@ public final class GCMIntentService extends IntentService
 	private final static Object LOCK = GCMIntentService.class;
 	private static PowerManager.WakeLock wakeLock;
 
-	private final static int GCM_MAX_SIMULTANEOUS_NOTIFICATIONS = 5;
+	private final static int GCM_MAX_SIMULTANEOUS_NOTIFICATIONS = 6;
 	private final static int GCM_NOTIFICATION_ID = 0;
 	private final static int GCM_NOTIFICATION_LIGHTS_DURATION_ON = 1024; // milliseconds
 	private final static int GCM_NOTIFICATION_LIGHTS_DURATION_OFF = 15360; // milliseconds
@@ -221,7 +221,7 @@ public final class GCMIntentService extends IntentService
 			final byte messageType = Byte.parseByte(parameter_messageType);
 			final long personId = Long.parseLong(parameter_personId);
 
-			if (Person.isIdAndNameValid(personId, parameter_personName) &&
+			if (Person.isIdValid(personId) && Person.isNameValid(parameter_personName) &&
 				(Server.validGameTypeValue(whichGame) || Server.validMessageTypeValue(messageType)))
 			{
 				final Person person = new Person(personId, parameter_personName);
@@ -353,15 +353,13 @@ public final class GCMIntentService extends IntentService
 			builder.setContentText(getString(R.string.new_move_from_x, notification.getPerson().getName()));
 		}
 
-		final Bundle extras = new Bundle();
-		extras.putSerializable(GameFragmentActivity.KEY_NOTIFICATION, notification);
-
 		final Intent gameIntent = new Intent(this, GameFragmentActivity.class)
-			.putExtras(extras)
+			.putExtra(GameFragmentActivity.KEY_NOTIFICATION, notification)
 			.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-		final TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-		stackBuilder.addNextIntentWithParentStack(gameIntent);
+		final TaskStackBuilder stackBuilder = TaskStackBuilder.create(this)
+			.addNextIntentWithParentStack(gameIntent);
+
 		buildAndShowNotification(builder, stackBuilder);
 	}
 
@@ -524,10 +522,7 @@ public final class GCMIntentService extends IntentService
 	public static void clearNotifications(final Context context)
 	{
 		((NotificationManager) context.getSystemService(NOTIFICATION_SERVICE)).cancelAll();
-		final SharedPreferences sPreferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-		final SharedPreferences.Editor editor = sPreferences.edit();
-		editor.clear();
-		editor.commit();
+		context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE).edit().clear().commit();
 	}
 
 

@@ -76,6 +76,7 @@ public final class FriendsListFragment extends SherlockListFragment implements
 
 
 	private SharedPreferences sPreferences;
+	private SharedPreferences.Editor sPreferencesEditor;
 
 
 
@@ -160,18 +161,18 @@ public final class FriendsListFragment extends SherlockListFragment implements
 	@Override
 	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
 	{
-		if (isAnAsyncTaskRunning())
+		inflater.inflate(R.menu.friends_list_fragment, menu);
+
+		if (!isAnAsyncTaskRunning())
 		{
-			inflater.inflate(R.menu.generic_cancel, menu);
-		}
-		else
-		{
-			inflater.inflate(R.menu.friends_list_fragment, menu);
+			final MenuItem refreshMenuItem = menu.findItem(R.id.friends_list_fragment_menu_refresh);
+			refreshMenuItem.setVisible(true);
 
 			final MenuItem searchMenuItem = menu.findItem(R.id.friends_list_fragment_menu_search);
+			searchMenuItem.setVisible(true);
+
 			final SearchView searchView = (SearchView) searchMenuItem.getActionView();
 			searchView.setQueryHint(getString(R.string.search_friends));
-
 			searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
 			{
 				@Override
@@ -279,11 +280,9 @@ public final class FriendsListFragment extends SherlockListFragment implements
 
 			case R.id.friends_list_fragment_menu_refresh:
 				empty.setText(R.string.friends_list_fragment_no_friends);
-				final SharedPreferences.Editor editor = getPreferences().edit();
-				editor.clear();
-				editor.commit();
-
+				getPreferencesEditor().clear().commit();
 				listeners.onRefreshSelected();
+				refreshFriendsList();
 				break;
 
 			default:
@@ -332,6 +331,17 @@ public final class FriendsListFragment extends SherlockListFragment implements
 	}
 
 
+	private SharedPreferences.Editor getPreferencesEditor()
+	{
+		if (sPreferencesEditor == null)
+		{
+			sPreferencesEditor = getPreferences().edit();
+		}
+
+		return sPreferencesEditor;
+	}
+
+
 	/**
 	 * @return
 	 * Returns true if the asyncRefreshFriendsList AsyncTask is currently
@@ -350,7 +360,7 @@ public final class FriendsListFragment extends SherlockListFragment implements
 	{
 		if (!isAnAsyncTaskRunning())
 		{
-			asyncRefreshFriendsList = new AsyncRefreshFriendsList(getSherlockActivity());
+			asyncRefreshFriendsList = new AsyncRefreshFriendsList();
 			asyncRefreshFriendsList.execute();
 		}
 	}
@@ -387,20 +397,16 @@ public final class FriendsListFragment extends SherlockListFragment implements
 
 
 		private final static byte RUN_STATUS_NORMAL = 1;
-		private final static byte RUN_STATUS_NO_NETWORK_CONNECTION = 3;
+		private final static byte RUN_STATUS_NO_NETWORK_CONNECTION = 2;
 		private byte runStatus;
 
 
-		private SharedPreferences sPreferences;
 		private SherlockFragmentActivity fragmentActivity;
-		private Session session;
 
 
-		private AsyncRefreshFriendsList(final SherlockFragmentActivity fragmentActivity)
+		private AsyncRefreshFriendsList()
 		{
-			this.fragmentActivity = fragmentActivity;
-			sPreferences = getPreferences();
-			session = Session.getActiveSession();
+			fragmentActivity = FriendsListFragment.this.getSherlockActivity();
 			runStatus = RUN_STATUS_NORMAL;
 		}
 
@@ -413,12 +419,14 @@ public final class FriendsListFragment extends SherlockListFragment implements
 			if (!isCancelled())
 			{
 				@SuppressWarnings("unchecked")
-				final Map<String, String> map = (Map<String, String>) sPreferences.getAll();
+				final Map<String, String> map = (Map<String, String>) getPreferences().getAll();
 
 				if (map == null || map.isEmpty())
 				{
 					if (Utilities.checkForNetworkConnectivity(fragmentActivity))
 					{
+						final Session session = Session.getActiveSession();
+
 						Request.newMyFriendsRequest(session, new GraphUserListCallback()
 						{
 							@Override
@@ -442,7 +450,7 @@ public final class FriendsListFragment extends SherlockListFragment implements
 									}
 								}
 
-								final SharedPreferences.Editor editor = sPreferences.edit();
+								final SharedPreferences.Editor editor = getPreferencesEditor();
 								editor.clear();
 
 								for (int i = 0; i < friends.size() && !isCancelled(); ++i)
@@ -488,41 +496,16 @@ public final class FriendsListFragment extends SherlockListFragment implements
 		}
 
 
-		/**
-		 * Creates a Person object out of the given data (if the given data is
-		 * valid).
-		 * 
-		 * @param id
-		 * The friend's Facebook ID.
-		 * 
-		 * @param name
-		 * The friend's Facebook name.
-		 * 
-		 * @return
-		 * Returns a Person object representing the given Facebook friend. Has
-		 * the possibility of returning null if the given data is invalid.
-		 */
-		private Person addFriend(final String id, final String name)
+		@Override
+		protected void onCancelled()
 		{
-			Person friend = null;
-
-			if (Person.isIdValid(id) && Person.isNameValid(name))
-			{
-				friend = new Person(id, name);
-			}
-
-			return friend;
+			setRunningState(false);
 		}
 
 
-		private void cancelled()
+		@Override
+		protected void onCancelled(final LinkedList<ListItem<Person>> friends)
 		{
-			list.setVisibility(View.GONE);
-			empty.setVisibility(View.GONE);
-			loading.setVisibility(View.GONE);
-			cancelledLoading.setVisibility(View.VISIBLE);
-			noInternetConnection.setVisibility(View.GONE);
-
 			setRunningState(false);
 		}
 
@@ -535,25 +518,11 @@ public final class FriendsListFragment extends SherlockListFragment implements
 
 
 		@Override
-		protected void onCancelled()
-		{
-			cancelled();
-		}
-
-
-		@Override
-		protected void onCancelled(final LinkedList<ListItem<Person>> friends)
-		{
-			cancelled();
-		}
-
-
-		@Override
 		protected void onPostExecute(final LinkedList<ListItem<Person>> friends)
 		{
 			if (runStatus == RUN_STATUS_NORMAL && friends != null && !friends.isEmpty())
 			{
-				final FriendsListAdapter adapter = new FriendsListAdapter(fragmentActivity, friends);
+				final FriendsListAdapter adapter = new FriendsListAdapter(friends);
 				list.setAdapter(adapter);
 				list.setVisibility(View.VISIBLE);
 				empty.setVisibility(View.GONE);
@@ -596,6 +565,33 @@ public final class FriendsListFragment extends SherlockListFragment implements
 
 
 		/**
+		 * Creates a Person object out of the given data (if the given data is
+		 * valid).
+		 *
+		 * @param id
+		 * The friend's Facebook ID.
+		 *
+		 * @param name
+		 * The friend's Facebook name.
+		 *
+		 * @return
+		 * Returns a Person object representing the given Facebook friend. Has
+		 * the possibility of returning null if the given data is invalid.
+		 */
+		private Person addFriend(final String id, final String name)
+		{
+			Person friend = null;
+
+			if (Person.isIdValid(id) && Person.isNameValid(name))
+			{
+				friend = new Person(id, name);
+			}
+
+			return friend;
+		}
+
+
+		/**
 		 * Use this method to reset the options menu. This should only be used when
 		 * an AsyncTask has either just begun or has just ended.
 		 * 
@@ -630,11 +626,11 @@ public final class FriendsListFragment extends SherlockListFragment implements
 		private LayoutInflater inflater;
 
 
-		private FriendsListAdapter(final Context context, final LinkedList<ListItem<Person>> friends)
+		private FriendsListAdapter(final LinkedList<ListItem<Person>> friends)
 		{
 			this.friends = friends;
-			this.context = context;
 
+			context = FriendsListFragment.this.getSherlockActivity();
 			inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			emptyProfilePicture = context.getResources().getDrawable(R.drawable.empty_profile_picture_small);
 			filter = new FriendsListFilter(friends);
@@ -676,15 +672,13 @@ public final class FriendsListFragment extends SherlockListFragment implements
 			{
 				convertView = inflater.inflate(R.layout.friends_list_fragment_listview_item, null);
 
-				final ViewHolder viewHolder = new ViewHolder();
-				viewHolder.name = (TextView) convertView.findViewById(R.id.friends_list_fragment_listview_item_name);
-				viewHolder.picture = (ImageView) convertView.findViewById(R.id.friends_list_fragment_listview_item_picture);
+				final ViewHolder viewHolder = new ViewHolder(convertView);
 				convertView.setTag(viewHolder);
 			}
 
 			final ViewHolder viewHolder = (ViewHolder) convertView.getTag();
-			final ListItem<Person> friend = friends.get(position);
 			TypefaceUtilities.applyBlueHighway(viewHolder.name);
+			final ListItem<Person> friend = friends.get(position);
 			viewHolder.name.setText(friend.get().getName());
 			viewHolder.picture.setImageDrawable(emptyProfilePicture);
 			Utilities.getImageLoader().displayImage(FacebookUtilities.getFriendsPictureSquare(context, friend.get().getId()), viewHolder.picture);
@@ -839,6 +833,13 @@ public final class FriendsListFragment extends SherlockListFragment implements
 
 			private ImageView picture;
 			private TextView name;
+
+
+			private ViewHolder(final View view)
+			{
+				picture = (ImageView) view.findViewById(R.id.friends_list_fragment_listview_item_picture);
+				name = (TextView) view.findViewById(R.id.friends_list_fragment_listview_item_name);
+			}
 
 
 		}

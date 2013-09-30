@@ -18,8 +18,6 @@ public final class NewGameFragmentActivity extends SherlockFragmentActivity impl
 {
 
 
-	public final static int RESULT_FRIEND_SELECTED = 2;
-
 	public final static String KEY_FRIEND = "KEY_FRIEND";
 	public final static String KEY_WHICH_GAME = "KEY_WHICH_GAME";
 
@@ -35,7 +33,6 @@ public final class NewGameFragmentActivity extends SherlockFragmentActivity impl
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.new_game_fragment_activity);
-		setResult(RESULT_OK);
 		Utilities.setActionBar(this, R.string.friends_list, true);
 
 		final FragmentManager fManager = getSupportFragmentManager();
@@ -94,19 +91,19 @@ public final class NewGameFragmentActivity extends SherlockFragmentActivity impl
 	@Override
 	public void onBackPressed()
 	{
-		if (friendsListFragment != null && friendsListFragment.isAnAsyncTaskRunning())
+		if (friendsListFragment != null)
 		{
-			friendsListFragment.cancelRunningAnyAsyncTask();
-		}
-		else
-		{
-			if (friendsListFragment != null && !friendsListFragment.wasCancelled())
+			if (friendsListFragment.isAnAsyncTaskRunning())
+			{
+				friendsListFragment.cancelRunningAnyAsyncTask();
+			}
+			else if (friendsListFragment.wasCancelled())
 			{
 				friendsListFragment.refreshListDrawState();
 			}
-
-			super.onBackPressed();
 		}
+
+		super.onBackPressed();
 	}
 
 
@@ -175,15 +172,13 @@ public final class NewGameFragmentActivity extends SherlockFragmentActivity impl
 	@Override
 	public void onGameConfirm(final Person friend, final byte whichGame)
 	{
-		final Bundle extras = new Bundle();
-		extras.putSerializable(KEY_FRIEND, friend);
-		extras.putByte(KEY_WHICH_GAME, whichGame);
-
-		if (Game.isWhichGameValid(whichGame))
+		if (friend.isValid() && Game.isWhichGameValid(whichGame))
 		{
-			final Intent intent = new Intent();
-			intent.putExtras(extras);
-			setResult(RESULT_FRIEND_SELECTED, intent);
+			final Intent intent = new Intent()
+				.putExtra(KEY_FRIEND, friend)
+				.putExtra(KEY_WHICH_GAME, whichGame);
+
+			setResult(RESULT_OK, intent);
 		}
 		else
 		{
@@ -237,8 +232,6 @@ public final class NewGameFragmentActivity extends SherlockFragmentActivity impl
 		{
 			onBackPressed();
 		}
-
-		friendsListFragment.refreshFriendsList();
 	}
 
 

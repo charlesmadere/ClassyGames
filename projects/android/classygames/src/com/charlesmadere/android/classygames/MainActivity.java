@@ -72,7 +72,7 @@ public final class MainActivity extends SherlockActivity
 		super.onActivityResult(requestCode, resultCode, data);
 		uiHelper.onActivityResult(requestCode, resultCode, data);
 
-		if (resultCode == GameFragmentActivity.RESULT_STARTED)
+		if (resultCode == RESULT_OK)
 		{
 			hasFinished = true;
 			finish();
@@ -177,7 +177,7 @@ public final class MainActivity extends SherlockActivity
 				// store the user's Facebook Access Token for retrieval later
 				FacebookUtilities.setAccessToken(this, session.getAccessToken());
 
-				asyncGetFacebookIdentity = new AsyncGetFacebookIdentity(this, session);
+				asyncGetFacebookIdentity = new AsyncGetFacebookIdentity(session);
 				asyncGetFacebookIdentity.execute();
 			}
 		}
@@ -187,7 +187,7 @@ public final class MainActivity extends SherlockActivity
 	private void startGameFragmentActivity()
 	{
 		final Intent intent = new Intent(this, GameFragmentActivity.class);
-		startActivityForResult(intent, GameFragmentActivity.RESULT_STARTED);
+		startActivityForResult(intent, RESULT_FIRST_USER);
 	}
 
 
@@ -201,10 +201,10 @@ public final class MainActivity extends SherlockActivity
 		private Session session;
 
 
-		private AsyncGetFacebookIdentity(final Context context, final Session session)
+		private AsyncGetFacebookIdentity(final Session session)
 		{
-			this.context = context;
 			this.session = session;
+			context = MainActivity.this;
 		}
 
 

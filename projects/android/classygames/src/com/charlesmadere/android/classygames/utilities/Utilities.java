@@ -282,7 +282,7 @@ public final class Utilities
 			// the name variable will be set to null.
 			final String name = sPreferences.getString(KEY_WHO_AM_I_NAME, null);
 
-			if (Person.isIdAndNameValid(id, name))
+			if (Person.isIdValid(id) && Person.isNameValid(name))
 			// check to see that we were actually able to find the user's
 			// Facebook ID and Facebook name. If we were able to find both
 			// then we will create a new Person object out of that data. That

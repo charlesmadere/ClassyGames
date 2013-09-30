@@ -6,7 +6,8 @@
 		android:id="@+id/friends_list_fragment_menu_search"
 		android:showAsAction="ifRoom|withText|collapseActionView"
 		android:title="@string/search_friends"
-		android:titleCondensed="@string/search" />
+		android:titleCondensed="@string/search"
+		android:visible="false" />
 	<item
 		android:icon="@drawable/ab_refresh"
 		android:id="@+id/friends_list_fragment_menu_refresh"
