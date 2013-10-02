@@ -17,8 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
@@ -43,8 +41,8 @@ import java.util.LinkedList;
 
 
 public final class GamesListFragment extends SherlockListFragment implements
-	OnItemClickListener,
-	OnItemLongClickListener
+	AdapterView.OnItemClickListener,
+	AdapterView.OnItemLongClickListener
 {
 
 
@@ -235,23 +233,12 @@ public final class GamesListFragment extends SherlockListFragment implements
 	@Override
 	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
 	{
-		if (isAsyncRefreshGamesListRunning())
-		{
-			inflater.inflate(R.menu.generic_cancel, menu);
-		}
-		else
-		{
-			inflater.inflate(R.menu.generic_refresh, menu);
-			final MenuItem refresh = menu.findItem(R.id.generic_refresh_menu_refresh);
+		inflater.inflate(R.menu.games_list_fragment, menu);
 
-			if (isAsyncRefreshGamesListRunning())
-			{
-				refresh.setEnabled(false);
-			}
-			else
-			{
-				refresh.setEnabled(true);
-			}
+		if (!isAnAsyncTaskRunning())
+		{
+			final MenuItem refreshMenuItem = menu.findItem(R.id.games_list_fragment_menu_refresh);
+			refreshMenuItem.setVisible(true);
 		}
 
 		super.onCreateOptionsMenu(menu, inflater);
@@ -302,7 +289,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 				view.setSelected(true);
 
 				final Context context = getSherlockActivity();
-				String[] items;
+				String [] items;
 
 				if (game.get().isTurnYours())
 				{
@@ -368,14 +355,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 	{
 		switch (item.getItemId())
 		{
-			case R.id.generic_cancel_menu_cancel:
-				if (isAsyncRefreshGamesListRunning())
-				{
-					asyncRefreshGamesList.cancel(true);
-				}
-				break;
-
-			case R.id.generic_refresh_menu_refresh:
+			case R.id.games_list_fragment_menu_refresh:
 				listeners.onRefreshSelected();
 				break;
 
@@ -627,7 +607,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 		{
 			if (runStatus == RUN_STATUS_NORMAL && games != null && !games.isEmpty())
 			{
-				final GamesListAdapter gamesListAdapter = new GamesListAdapter(fragmentActivity, games);
+				final GamesListAdapter gamesListAdapter = new GamesListAdapter(games);
 				list.setAdapter(gamesListAdapter);
 
 				list.setVisibility(View.VISIBLE);
@@ -802,6 +782,10 @@ public final class GamesListFragment extends SherlockListFragment implements
 
 					Collections.sort(games, this);
 				}
+				else
+				{
+					throw new JSONException("Player has no games for this turn.");
+				}
 			}
 			catch (final JSONException e)
 			{
@@ -856,13 +840,12 @@ public final class GamesListFragment extends SherlockListFragment implements
 		private Resources resources;
 
 
-		private GamesListAdapter(final Context context, final LinkedList<ListItem<Game>> games)
+		private GamesListAdapter(final LinkedList<ListItem<Game>> games)
 		{
-			this.context = context;
 			this.games = games;
-			resources = context.getResources();
-
-			inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			context = getSherlockActivity();
+			inflater = getSherlockActivity().getLayoutInflater();
+			resources = getResources();
 			emptyProfilePicture = resources.getDrawable(R.drawable.empty_profile_picture_small);
 			checkersIcon = resources.getDrawable(R.drawable.game_icon_checkers_small);
 			chessIcon = resources.getDrawable(R.drawable.game_icon_chess_small);
@@ -893,37 +876,39 @@ public final class GamesListFragment extends SherlockListFragment implements
 		@Override
 		public View getView(final int position, View convertView, final ViewGroup parent)
 		{
-			final ListItem<Game> game = games.get(position);
+			final ListItem<Game> listItem = games.get(position);
+			final Game game = listItem.get();
 
-			if (game.get().isTypeGame())
+			if (game.isTypeGame())
 			{
-				convertView = inflater.inflate(R.layout.games_list_fragment_listview_item, null);
-
-				final ImageView picture = (ImageView) convertView.findViewById(R.id.games_list_fragment_listview_item_picture);
-				picture.setImageDrawable(emptyProfilePicture);
-				Utilities.getImageLoader().displayImage(FacebookUtilities.getFriendsPictureSquare(context, game.get().getPerson().getId()), picture);
-
-				final TextView name = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_name);
-				name.setText(game.get().getPerson().getName());
-				TypefaceUtilities.applyBlueHighway(name);
-
-				final TextView time = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_time);
-				time.setText(game.get().getTimestampFormatted(resources));
-
-				final ImageView gameIcon = (ImageView) convertView.findViewById(R.id.games_list_fragment_listview_item_game_icon);
-
-				if (game.get().isGameCheckers())
+				if (convertView == null)
 				{
-					gameIcon.setImageDrawable(checkersIcon);
+					convertView = inflater.inflate(R.layout.games_list_fragment_listview_item, null);
+					final ViewHolder viewHolder = new ViewHolder(convertView);
+					convertView.setTag(viewHolder);
 				}
-				else if (game.get().isGameChess())
+
+				final ViewHolder viewHolder = (ViewHolder) convertView.getTag();
+				viewHolder.picture.setImageDrawable(emptyProfilePicture);
+				final String friendsPictureURL = FacebookUtilities.getFriendsPictureSquare(context, game.getPerson().getId());
+				Utilities.getImageLoader().displayImage(friendsPictureURL, viewHolder.picture);
+
+				TypefaceUtilities.applyBlueHighway(viewHolder.name);
+				viewHolder.name.setText(game.getPerson().getName());
+				viewHolder.time.setText(game.getTimestampFormatted(resources));
+
+				if (game.isGameCheckers())
 				{
-					gameIcon.setImageDrawable(chessIcon);
+					viewHolder.gameIcon.setImageDrawable(checkersIcon);
+				}
+				else if (game.isGameChess())
+				{
+					viewHolder.gameIcon.setImageDrawable(chessIcon);
 				}
 
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 				{
-					if (game.isSelected())
+					if (listItem.isSelected())
 					{
 						convertView.setActivated(true);
 					}
@@ -935,7 +920,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 			}
 			else
 			{
-				if (game.get().isTurnYours())
+				if (game.isTurnYours())
 				{
 					convertView = inflater.inflate(R.layout.games_list_fragment_listview_turn_yours, null);
 				}
@@ -950,6 +935,30 @@ public final class GamesListFragment extends SherlockListFragment implements
 			}
 
 			return convertView;
+		}
+
+
+	}
+
+
+
+
+	private final class ViewHolder
+	{
+
+
+		private ImageView gameIcon;
+		private ImageView picture;
+		private TextView name;
+		private TextView time;
+
+
+		private ViewHolder(final View view)
+		{
+			gameIcon = (ImageView) view.findViewById(R.id.games_list_fragment_listview_item_game_icon);
+			picture = (ImageView) view.findViewById(R.id.games_list_fragment_listview_item_picture);
+			name = (TextView) view.findViewById(R.id.games_list_fragment_listview_item_name);
+			time = (TextView) view.findViewById(R.id.games_list_fragment_listview_item_time);
 		}
 
 

@@ -2,7 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 	<item
 		android:icon="@drawable/ab_refresh"
-		android:id="@+id/generic_refresh_menu_refresh"
+		android:id="@+id/games_list_fragment_menu_refresh"
 		android:showAsAction="ifRoom|withText"
-		android:title="@string/refresh" />
+		android:title="@string/refresh"
+		android:visible="false" />
 </menu>

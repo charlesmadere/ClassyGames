@@ -111,9 +111,7 @@ public final class MyStatsDialogFragment extends SherlockDialogFragment
 		}
 		else
 		{
-			getPreferencesEditor();
-			sPreferencesEditor.clear();
-			sPreferencesEditor.commit();
+			getPreferencesEditor().clear().commit();
 
 			serverTask = new ServerApiGetStats(getSherlockActivity(), new ServerApi.Listeners()
 			{
@@ -285,8 +283,8 @@ public final class MyStatsDialogFragment extends SherlockDialogFragment
 				}
 				else
 				{
-					final int[] checkers = parseLosesAndWins(jsonStatsData, Server.POST_DATA_CHECKERS);
-					final int[] chess = parseLosesAndWins(jsonStatsData, Server.POST_DATA_CHESS);
+					final int [] checkers = parseLosesAndWins(jsonStatsData, Server.POST_DATA_CHECKERS);
+					final int [] chess = parseLosesAndWins(jsonStatsData, Server.POST_DATA_CHESS);
 					flushViews(checkers, chess);
 				}
 			}
@@ -310,7 +308,7 @@ public final class MyStatsDialogFragment extends SherlockDialogFragment
 		final JSONObject gameStats = statsData.getJSONObject(game);
 		final int loses = gameStats.getInt(Server.POST_DATA_LOSES);
 		final int wins = gameStats.getInt(Server.POST_DATA_WINS);
-		return new int[] { loses, wins };
+		return new int [] { loses, wins };
 	}
 
 
@@ -326,10 +324,7 @@ public final class MyStatsDialogFragment extends SherlockDialogFragment
 	 */
 	public static void clearCachedStats(final Context context)
 	{
-		final SharedPreferences sPreferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-		final SharedPreferences.Editor editor = sPreferences.edit();
-		editor.clear();
-		editor.commit();
+		context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE).edit().clear().commit();
 	}
 
 

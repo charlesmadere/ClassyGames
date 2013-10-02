@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -84,13 +83,6 @@ public final class ConfirmGameFragment extends SherlockFragment
 
 
 		/**
-		 * This is fired in the event that an error was detected with some of
-		 * the data needed to instantiate a game.
-		 */
-		public void onDataError();
-
-
-		/**
 		 * This is fired in the event that the current device's user clicks the
 		 * "Start Game!" button. This means that they've decided to play a game
 		 * against the chosen friend.
@@ -144,18 +136,6 @@ public final class ConfirmGameFragment extends SherlockFragment
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{
 		this.inflater = inflater;
-		final Bundle arguments = getArguments();
-
-		if (arguments != null && !arguments.isEmpty())
-		{
-			friend = (Person) arguments.getSerializable(KEY_FRIEND);
-
-			if (!friend.isValid())
-			{
-				listeners.onDataError();
-			}
-		}
-
 		return inflater.inflate(R.layout.confirm_game_fragment, null);
 	}
 
@@ -164,8 +144,11 @@ public final class ConfirmGameFragment extends SherlockFragment
 	public void onActivityCreated(final Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
-		final View view = getView();
 
+		final Bundle arguments = getArguments();
+		friend = (Person) arguments.getSerializable(KEY_FRIEND);
+
+		final View view = getView();
 		final TextView friendsName = (TextView) view.findViewById(R.id.confirm_game_fragment_friend_name);
 		friendsName.setText(friend.getName());
 		TypefaceUtilities.applySnellRoundhand(friendsName);
@@ -176,7 +159,7 @@ public final class ConfirmGameFragment extends SherlockFragment
 		final Button confirm = (Button) view.findViewById(R.id.confirm_game_fragment_button_confirm);
 		TypefaceUtilities.applyBlueHighway(confirm);
 
-		confirm.setOnClickListener(new OnClickListener()
+		confirm.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(final View v)
@@ -188,7 +171,7 @@ public final class ConfirmGameFragment extends SherlockFragment
 		final Button deny = (Button) view.findViewById(R.id.confirm_game_fragment_button_deny);
 		TypefaceUtilities.applyBlueHighway(deny);
 
-		deny.setOnClickListener(new OnClickListener()
+		deny.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(final View v)
@@ -258,7 +241,7 @@ public final class ConfirmGameFragment extends SherlockFragment
 			final Button checkers = (Button) dialogView.findViewById(R.id.choose_which_game_dialog_button_checkers);
 			TypefaceUtilities.applyBlueHighway(checkers);
 
-			checkers.setOnClickListener(new OnClickListener()
+			checkers.setOnClickListener(new View.OnClickListener()
 			{
 				@Override
 				public void onClick(final View v)
@@ -275,7 +258,7 @@ public final class ConfirmGameFragment extends SherlockFragment
 			final Button chess = (Button) dialogView.findViewById(R.id.choose_which_game_dialog_button_chess);
 			TypefaceUtilities.applyBlueHighway(chess);
 
-			chess.setOnClickListener(new OnClickListener()
+			chess.setOnClickListener(new View.OnClickListener()
 			{
 				@Override
 				public void onClick(final View v)

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:adjustViewBounds="true"
 	android:contentDescription="@string/no_game_is_currently_loaded"
 	android:layout_height="match_parent"
 	android:layout_width="match_parent"

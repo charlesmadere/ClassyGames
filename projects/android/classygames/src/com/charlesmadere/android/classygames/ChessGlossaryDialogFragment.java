@@ -20,12 +20,12 @@ public final class ChessGlossaryDialogFragment extends SherlockDialogFragment
 
 	private final static String KEY_PLAYER_COLOR = "KEY_PLAYER_COLOR";
 
-	private ImageView bishopView;
-	private ImageView kingView;
-	private ImageView knightView;
-	private ImageView pawnView;
-	private ImageView queenView;
-	private ImageView rookView;
+	private ImageView bishopImage;
+	private ImageView kingImage;
+	private ImageView knightImage;
+	private ImageView pawnImage;
+	private ImageView queenImage;
+	private ImageView rookImage;
 
 
 
@@ -59,12 +59,12 @@ public final class ChessGlossaryDialogFragment extends SherlockDialogFragment
 		super.onActivityCreated(savedInstanceState);
 
 		final View view = getView();
-		bishopView = (ImageView) view.findViewById(R.id.chess_glossary_dialog_fragment_bishop_imageview);
-		kingView = (ImageView) view.findViewById(R.id.chess_glossary_dialog_fragment_king_imageview);
-		knightView = (ImageView) view.findViewById(R.id.chess_glossary_dialog_fragment_knight_imageview);
-		pawnView = (ImageView) view.findViewById(R.id.chess_glossary_dialog_fragment_pawn_imageview);
-		queenView = (ImageView) view.findViewById(R.id.chess_glossary_dialog_fragment_queen_imageview);
-		rookView = (ImageView) view.findViewById(R.id.chess_glossary_dialog_fragment_rook_imageview);
+		bishopImage = (ImageView) view.findViewById(R.id.chess_glossary_dialog_fragment_bishop_imageview);
+		kingImage = (ImageView) view.findViewById(R.id.chess_glossary_dialog_fragment_king_imageview);
+		knightImage = (ImageView) view.findViewById(R.id.chess_glossary_dialog_fragment_knight_imageview);
+		pawnImage = (ImageView) view.findViewById(R.id.chess_glossary_dialog_fragment_pawn_imageview);
+		queenImage = (ImageView) view.findViewById(R.id.chess_glossary_dialog_fragment_queen_imageview);
+		rookImage = (ImageView) view.findViewById(R.id.chess_glossary_dialog_fragment_rook_imageview);
 
 		final TextView bishopText = (TextView) view.findViewById(R.id.chess_glossary_dialog_fragment_bishop_textview);
 		final TextView kingText = (TextView) view.findViewById(R.id.chess_glossary_dialog_fragment_king_textview);
@@ -129,12 +129,12 @@ public final class ChessGlossaryDialogFragment extends SherlockDialogFragment
 	private void setViewDrawables(final int bishop, final int king,
 		final int knight, final int queen, final int pawn, final int rook)
 	{
-		bishopView.setImageResource(bishop);
-		kingView.setImageResource(king);
-		knightView.setImageResource(knight);
-		queenView.setImageResource(queen);
-		pawnView.setImageResource(pawn);
-		rookView.setImageResource(rook);
+		bishopImage.setImageResource(bishop);
+		kingImage.setImageResource(king);
+		knightImage.setImageResource(knight);
+		queenImage.setImageResource(queen);
+		pawnImage.setImageResource(pawn);
+		rookImage.setImageResource(rook);
 	}
 
 

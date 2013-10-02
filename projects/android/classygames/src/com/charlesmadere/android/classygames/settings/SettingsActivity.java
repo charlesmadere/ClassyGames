@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
+import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.R;
@@ -218,7 +219,7 @@ public final class SettingsActivity extends SherlockPreferenceActivity implement
 
 		if (newlySetColor.equalsIgnoreCase(otherTeamColor))
 		{
-			Utilities.easyToast(this, R.string.make_sure_that_you_dont_set_both_teams_color_to_the_same_thing_your_changes_to_this_setting_have_not_been_saved);
+			Toast.makeText(this, R.string.make_sure_that_you_dont_set_both_teams_color_to_the_same_thing_your_changes_to_this_setting_have_not_been_saved, Toast.LENGTH_LONG).show();
 			return false;
 		}
 		else

@@ -3,8 +3,11 @@ package com.charlesmadere.android.classygames;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
+import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.models.Game;
@@ -18,6 +21,7 @@ public final class NewGameFragmentActivity extends SherlockFragmentActivity impl
 {
 
 
+	private final static String LOG_TAG = Utilities.LOG_TAG + " - NewGameFragmentActivity";
 	public final static String KEY_FRIEND = "KEY_FRIEND";
 	public final static String KEY_WHICH_GAME = "KEY_WHICH_GAME";
 
@@ -30,6 +34,9 @@ public final class NewGameFragmentActivity extends SherlockFragmentActivity impl
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState)
+	// To follow along with what's going on in this crazy method, please check
+	// the onCreate() that's in the GameFragmentActivity class. It's better
+	// documented in there!
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.new_game_fragment_activity);
@@ -45,7 +52,6 @@ public final class NewGameFragmentActivity extends SherlockFragmentActivity impl
 			{
 				emptyConfirmGameFragment = new EmptyConfirmGameFragment();
 				fTransaction.add(R.id.new_game_fragment_activity_fragment_confirm_game, emptyConfirmGameFragment);
-
 				friendsListFragment = (FriendsListFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_fragment_friends_list_fragment);
 			}
 			else
@@ -61,27 +67,28 @@ public final class NewGameFragmentActivity extends SherlockFragmentActivity impl
 			if (isDeviceLarge())
 			{
 				friendsListFragment = (FriendsListFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_fragment_friends_list_fragment);
+				final Fragment fragment = fManager.findFragmentById(R.id.new_game_fragment_activity_fragment_confirm_game);
 
-				try
+				if (fragment instanceof EmptyConfirmGameFragment)
 				{
-					emptyConfirmGameFragment = (EmptyConfirmGameFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_fragment_confirm_game);
+					emptyConfirmGameFragment = (EmptyConfirmGameFragment) fragment;
 				}
-				catch (final ClassCastException e)
+				else
 				{
-					confirmGameFragment = (ConfirmGameFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_fragment_confirm_game);
+					confirmGameFragment = (ConfirmGameFragment) fragment;
 				}
-
-				friendsListFragment = (FriendsListFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_fragment_friends_list_fragment);
 			}
 			else
 			{
-				try
+				final Fragment fragment = fManager.findFragmentById(R.id.new_game_fragment_activity_container);
+
+				if (fragment instanceof FriendsListFragment)
 				{
-					friendsListFragment = (FriendsListFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_container);
+					friendsListFragment = (FriendsListFragment) fragment;
 				}
-				catch (final ClassCastException e)
+				else
 				{
-					confirmGameFragment = (ConfirmGameFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_container);
+					confirmGameFragment = (ConfirmGameFragment) fragment;
 				}
 			}
 		}
@@ -97,9 +104,9 @@ public final class NewGameFragmentActivity extends SherlockFragmentActivity impl
 			{
 				friendsListFragment.cancelRunningAnyAsyncTask();
 			}
-			else if (friendsListFragment.wasCancelled())
+			else
 			{
-				friendsListFragment.refreshListDrawState();
+				friendsListFragment.deselectFriend();
 			}
 		}
 
@@ -162,14 +169,6 @@ public final class NewGameFragmentActivity extends SherlockFragmentActivity impl
 
 
 	@Override
-	public void onDataError()
-	{
-		Utilities.easyToastAndLogError(this, getString(R.string.error_when_trying_to_store_the_data_for_the_friend_that_you_selected));
-		onBackPressed();
-	}
-
-
-	@Override
 	public void onGameConfirm(final Person friend, final byte whichGame)
 	{
 		if (friend.isValid() && Game.isWhichGameValid(whichGame))
@@ -182,7 +181,10 @@ public final class NewGameFragmentActivity extends SherlockFragmentActivity impl
 		}
 		else
 		{
-			Utilities.easyToastAndLogError(this, R.string.couldnt_create_the_game_as_malformed_data_was_detected);
+			Log.e(LOG_TAG, "Received malformed onGameConfirm data: Person name: \"" + friend.getName() +
+				"\" Person id: " + friend.getId() + " whichGame: " + whichGame);
+
+			Toast.makeText(this, R.string.couldnt_create_the_game_as_malformed_data_was_detected, Toast.LENGTH_LONG).show();
 		}
 
 		finish();

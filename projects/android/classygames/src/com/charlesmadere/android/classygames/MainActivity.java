@@ -72,7 +72,7 @@ public final class MainActivity extends SherlockActivity
 		super.onActivityResult(requestCode, resultCode, data);
 		uiHelper.onActivityResult(requestCode, resultCode, data);
 
-		if (resultCode == RESULT_OK)
+		if (resultCode == RESULT_FIRST_USER)
 		{
 			hasFinished = true;
 			finish();
@@ -87,10 +87,8 @@ public final class MainActivity extends SherlockActivity
 		{
 			cancelRunningAnyAsyncTask();
 		}
-		else
-		{
-			super.onBackPressed();
-		}
+
+		super.onBackPressed();
 	}
 
 
@@ -232,32 +230,6 @@ public final class MainActivity extends SherlockActivity
 		}
 
 
-		private void cancelled()
-		{
-			session.closeAndClearTokenInformation();
-			asyncGetFacebookIdentity = null;
-
-			facebook.setVisibility(View.GONE);
-			loading.setVisibility(View.INVISIBLE);
-
-			finish();
-		}
-
-
-		@Override
-		protected void onCancelled()
-		{
-			cancelled();
-		}
-
-
-		@Override
-		protected void onCancelled(final Person facebookIdentity)
-		{
-			cancelled();
-		}
-
-
 		@Override
 		protected void onPostExecute(final Person facebookIdentity)
 		{
@@ -273,7 +245,7 @@ public final class MainActivity extends SherlockActivity
 			}
 			else
 			{
-				cancelled();
+				finish();
 			}
 		}
 

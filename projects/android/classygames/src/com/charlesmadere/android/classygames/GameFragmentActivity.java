@@ -3,9 +3,11 @@ package com.charlesmadere.android.classygames;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -64,7 +66,6 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 			{
 				emptyGameFragment = new EmptyGameFragment();
 				fTransaction.add(R.id.game_fragment_activity_fragment_game, emptyGameFragment);
-
 				gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_games_list_fragment);
 			}
 			else
@@ -97,27 +98,30 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 			// device then we will load in the multi pane layout.
 			{
 				gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_games_list_fragment);
+				final Fragment fragment = fManager.findFragmentById(R.id.game_fragment_activity_fragment_game);
 
-				try
+				if (fragment instanceof EmptyGameFragment)
 				{
-					emptyGameFragment = (EmptyGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_game);
+					emptyGameFragment = (EmptyGameFragment) fragment;
 				}
-				catch (final ClassCastException e)
+				else
 				{
-					genericGameFragment = (GenericGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_game);
+					genericGameFragment = (GenericGameFragment) fragment;
 					Utilities.setActionBar(this, actionBarTitle, true);
 				}
 			}
 			else
 			// This is a small device. We will load in the single pane layout.
 			{
-				try
+				final Fragment fragment = fManager.findFragmentById(R.id.game_fragment_activity_container);
+
+				if (fragment instanceof GamesListFragment)
 				{
-					gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.game_fragment_activity_container);
+					gamesListFragment = (GamesListFragment) fragment;
 				}
-				catch (final ClassCastException e)
+				else
 				{
-					genericGameFragment = (GenericGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_container);
+					genericGameFragment = (GenericGameFragment) fragment;
 					Utilities.setActionBar(this, actionBarTitle, true);
 				}
 			}
@@ -456,7 +460,7 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 	@Override
 	public void onGetGameDataError()
 	{
-		Utilities.easyToastAndLogError(this, R.string.couldnt_create_the_game_as_malformed_data_was_detected);
+		Toast.makeText(this, R.string.couldnt_create_the_game_as_malformed_data_was_detected, Toast.LENGTH_LONG).show();
 		onBackPressed();
 	}
 
@@ -465,7 +469,7 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 	public void onGetStatsDataError(final Exception e)
 	{
 		Log.e(LOG_TAG, "Exception in onGetStatsDataError!", e);
-		Utilities.easyToastAndLogError(this, R.string.a_server_error_occurred_when_trying_to_get_your_stats_data);
+		Toast.makeText(this, R.string.a_server_error_occurred_when_trying_to_get_your_stats_data, Toast.LENGTH_LONG).show();
 		onBackPressed();
 	}
 

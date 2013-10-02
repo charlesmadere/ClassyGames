@@ -13,8 +13,6 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.util.Log;
-import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -101,84 +99,6 @@ public final class Utilities
 	{
 		final String string = context.getString(key);
 		return getPreferences(context).getBoolean(string, defaultValue);
-	}
-
-
-	/**
-	 * Prints a Toast message to the screen.
-	 * 
-	 * <p><strong>Examples</strong><br />
-	 * Utilities.easyToast(MainActivity.this, "Hello!");<br />
-	 * Utilities.easyToast(getApplicationContext(), "Another message huh?");</p>
-	 * 
-	 * @param context
-	 * Just put the name of your class.this, or you can use getApplicationContext().
-	 * 
-	 * @param message
-	 * The String that you want to be shown as a toast message.
-	 */
-	public static void easyToast(final Context context, final String message)
-	{
-		Toast.makeText(context, message, Toast.LENGTH_LONG).show();
-	}
-
-
-	/**
-	 * Prints a Toast message to the screen with a String taken from the
-	 * strings.xml file.
-	 * 
-	 * @param context
-	 * Just put the name of your class.this, or you can use getApplicationContext().
-	 * 
-	 * @param stringId
-	 * The int ID of the resource that you want to print.
-	 */
-	public static void easyToast(final Context context, final int stringId)
-	{
-		easyToast(context, context.getString(stringId));
-	}
-
-
-	/**
-	 * Prints a Toast message to the screen and prints that same message to the
-	 * Log.e console.
-	 * 
-	 * <p><strong>Examples</strong><br />
-	 * Utilities.easyToastAndLogError(MainActivity.this, "Hello!");<br />
-	 * Utilities.easyToastAndLogError(getApplicationContext(), "Another message huh?");</p>
-	 * 
-	 * @param context
-	 * Just put the name of your class.this, or you can use getApplicationContext().
-	 * 
-	 * @param message
-	 * The String that you want to be shown as a toast message. This exact String will also
-	 * be printed to the Log.e console.
-	 */
-	public static void easyToastAndLogError(final Context context, final String message)
-	{
-		easyToast(context, message);
-		Log.e(LOG_TAG, message);
-	}
-
-
-	/**
-	 * Prints a Toast message to the screen and prints that same message to the
-	 * Log.e console.
-	 *
-	 * <p><strong>Examples</strong><br />
-	 * Utilities.easyToastAndLogError(MainActivity.this, "Hello!");<br />
-	 * Utilities.easyToastAndLogError(getApplicationContext(), "Another message huh?");</p>
-	 *
-	 * @param context
-	 * Just put the name of your class.this, or you can use getApplicationContext().
-	 *
-	 * @param stringId
-	 * The int ID of the resource that you want to print.
-	 */
-	public static void easyToastAndLogError(final Context context, final int stringId)
-	{
-		easyToast(context, stringId);
-		Log.e(LOG_TAG, context.getString(stringId));
 	}
 
 
