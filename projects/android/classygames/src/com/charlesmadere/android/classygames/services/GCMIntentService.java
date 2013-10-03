@@ -139,7 +139,7 @@ public final class GCMIntentService extends IntentService
 				}
 				catch (final IOException e)
 				{
-					Log.e(LOG_TAG, "IOException during GCMUnregister!", e);
+					Log.e(LOG_TAG, "IOException during GCMRegister!", e);
 				}
 			}
 		}

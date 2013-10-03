@@ -5,9 +5,6 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
-import android.content.DialogInterface.OnClickListener;
-import android.content.DialogInterface.OnDismissListener;
 import android.os.AsyncTask;
 import android.os.Build;
 import com.charlesmadere.android.classygames.R;
@@ -163,7 +160,7 @@ public abstract class ServerApi
 		{
 			final AlertDialog.Builder builder = new AlertDialog.Builder(context)
 				.setMessage(getDialogMessage())
-				.setNegativeButton(R.string.no, new OnClickListener()
+				.setNegativeButton(R.string.no, new DialogInterface.OnClickListener()
 				{
 					@Override
 					public void onClick(final DialogInterface dialog, final int which)
@@ -172,7 +169,7 @@ public abstract class ServerApi
 						listeners.onCancel();
 					}
 				})
-				.setOnCancelListener(new OnCancelListener()
+				.setOnCancelListener(new DialogInterface.OnCancelListener()
 				{
 					@Override
 					public void onCancel(final DialogInterface dialog)
@@ -181,7 +178,7 @@ public abstract class ServerApi
 						listeners.onDismiss();
 					}
 				})
-				.setPositiveButton(R.string.yes, new OnClickListener()
+				.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
 				{
 					@Override
 					public void onClick(final DialogInterface dialog, final int which)
@@ -194,7 +191,7 @@ public abstract class ServerApi
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
 			{
-				builder.setOnDismissListener(new OnDismissListener()
+				builder.setOnDismissListener(new DialogInterface.OnDismissListener()
 				{
 					@Override
 					public void onDismiss(final DialogInterface dialog)
@@ -334,7 +331,7 @@ public abstract class ServerApi
 				progressDialog.setCanceledOnTouchOutside(true);
 				progressDialog.setMessage(context.getString(getProgressDialogMessage()));
 
-				progressDialog.setOnCancelListener(new OnCancelListener()
+				progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
 				{
 					@Override
 					public void onCancel(final DialogInterface dialog)

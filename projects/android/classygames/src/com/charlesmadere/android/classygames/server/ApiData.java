@@ -31,16 +31,18 @@ public final class ApiData
 	}
 
 
-	public void addKeyValuePair(final String key, final long value)
+	public ApiData addKeyValuePair(final String key, final long value)
 	{
 		addKeyValuePair(key, Long.toString(value));
+		return this;
 	}
 
 
-	public void addKeyValuePair(final String key, final String value)
+	public ApiData addKeyValuePair(final String key, final String value)
 	{
 		final BasicNameValuePair nameValuePair = new BasicNameValuePair(key, value);
 		keyValuePairs.add(nameValuePair);
+		return this;
 	}
 
 

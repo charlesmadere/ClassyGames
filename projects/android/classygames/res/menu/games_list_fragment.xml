@@ -4,6 +4,5 @@
 		android:icon="@drawable/ab_refresh"
 		android:id="@+id/games_list_fragment_menu_refresh"
 		android:showAsAction="ifRoom|withText"
-		android:title="@string/refresh"
-		android:visible="false" />
+		android:title="@string/refresh" />
 </menu>

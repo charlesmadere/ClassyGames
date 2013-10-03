@@ -50,8 +50,6 @@ public final class GamesListFragment extends SherlockListFragment implements
 	private final static String KEY_GAMES_LIST_JSON = "KEY_GAMES_LIST_JSON";
 
 
-
-
 	private ListView list;
 	private TextView empty;
 	private LinearLayout loading;
@@ -234,14 +232,15 @@ public final class GamesListFragment extends SherlockListFragment implements
 	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
 	{
 		inflater.inflate(R.menu.games_list_fragment, menu);
-
-		if (!isAnAsyncTaskRunning())
-		{
-			final MenuItem refreshMenuItem = menu.findItem(R.id.games_list_fragment_menu_refresh);
-			refreshMenuItem.setVisible(true);
-		}
-
 		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+
+	@Override
+	public void onDestroyView()
+	{
+		cancelRunningAnyAsyncTask();
+		super.onDestroyView();
 	}
 
 
@@ -251,26 +250,15 @@ public final class GamesListFragment extends SherlockListFragment implements
 		@SuppressWarnings("unchecked")
 		final ListItem<Game> game = (ListItem<Game>) parent.getItemAtPosition(position);
 
-		if (game.get().isTypeGame() && game.get().isTurnYours())
+		if (!game.isSelected() && game.get().isTypeGame() && game.get().isTurnYours())
 		{
-			if (!game.isSelected())
+			listeners.onGameSelected(game.get());
+			selectedGame = game;
+			selectedGame.select();
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 			{
-				if (selectedGame != null)
-				{
-					selectedGame.unselect();
-					selectedGame = null;
-					refreshListDrawState();
-				}
-
-				game.select();
-
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-				{
-					view.setActivated(true);
-				}
-
-				selectedGame = game;
-				listeners.onGameSelected(game.get());
+				view.setActivated(true);
 			}
 		}
 	}
@@ -308,23 +296,20 @@ public final class GamesListFragment extends SherlockListFragment implements
 						{
 							dialog.dismiss();
 
-							if (!isAnAsyncTaskRunning())
+							switch (which)
 							{
-								switch (which)
-								{
-									case 0:
-										serverApiTask = new ServerApiForfeitGame(context, serverApiListeners, game.get());
-										break;
+								case 0:
+									serverApiTask = new ServerApiForfeitGame(context, serverApiListeners, game.get());
+									break;
 
-									case 1:
-										serverApiTask = new ServerApiSkipMove(context, serverApiListeners, game.get());
-										break;
-								}
+								case 1:
+									serverApiTask = new ServerApiSkipMove(context, serverApiListeners, game.get());
+									break;
+							}
 
-								if (serverApiTask != null)
-								{
-									serverApiTask.execute();
-								}
+							if (serverApiTask != null)
+							{
+								serverApiTask.execute();
 							}
 						}
 					})
@@ -357,7 +342,10 @@ public final class GamesListFragment extends SherlockListFragment implements
 		switch (item.getItemId())
 		{
 			case R.id.games_list_fragment_menu_refresh:
-				listeners.onRefreshSelected();
+				if (!isAnAsyncTaskRunning())
+				{
+					listeners.onRefreshSelected();
+				}
 				break;
 
 			default:
@@ -406,7 +394,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 	 * Cancels the AsyncRefreshGamesList AsyncTask if it is currently
 	 * running.
 	 */
-	public void cancelRunningAnyAsyncTask()
+	private void cancelRunningAnyAsyncTask()
 	{
 		if (isAsyncRefreshGamesListRunning())
 		{
@@ -415,6 +403,24 @@ public final class GamesListFragment extends SherlockListFragment implements
 		else if (serverApiTask != null)
 		{
 			serverApiTask.cancel();
+		}
+	}
+
+
+	private void deselectGame()
+	{
+		if (selectedGame != null)
+		{
+			selectedGame.unselect();
+		}
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+		{
+			for (int i = 0; i < list.getChildCount(); ++i)
+			{
+				final View view = list.getChildAt(i);
+				view.setActivated(false);
+			}
 		}
 	}
 
@@ -434,9 +440,30 @@ public final class GamesListFragment extends SherlockListFragment implements
 	 * @return
 	 * Returns true if an AsyncTask is running.
 	 */
-	public boolean isAnAsyncTaskRunning()
+	private boolean isAnAsyncTaskRunning()
 	{
 		return isAsyncRefreshGamesListRunning() || serverApiTask != null;
+	}
+
+
+	public boolean onBackPressed()
+	{
+		if (isAnAsyncTaskRunning())
+		{
+			cancelRunningAnyAsyncTask();
+		}
+		else
+		{
+			deselectGame();
+		}
+
+		return false;
+	}
+
+
+	public void refreshGamesList()
+	{
+		refreshGamesList(false);
 	}
 
 
@@ -458,16 +485,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 	}
 
 
-	/**
-	 * Refreshes the Games List if a refresh is not already running.
-	 */
-	public void refreshGamesList()
-	{
-		refreshGamesList(false);
-	}
-
-
-	public void refreshListDrawState()
+	private void refreshListDrawState()
 	{
 		if (selectedGame != null)
 		{
@@ -481,12 +499,6 @@ public final class GamesListFragment extends SherlockListFragment implements
 		{
 			games.notifyDataSetChanged();
 		}
-	}
-
-
-	public boolean wasCancelled()
-	{
-		return cancelledLoading.getVisibility() == View.VISIBLE;
 	}
 
 
@@ -534,8 +546,8 @@ public final class GamesListFragment extends SherlockListFragment implements
 				MyStatsDialogFragment.clearCachedStats(fragmentActivity);
 
 				// create the data that will be posted to the server
-				final ApiData data = new ApiData();
-				data.addKeyValuePair(Server.POST_DATA_ID, whoAmI.getId());
+				final ApiData data = new ApiData()
+					.addKeyValuePair(Server.POST_DATA_ID, whoAmI.getId());
 
 				if (!isCancelled() && Utilities.checkForNetworkConnectivity(fragmentActivity))
 				{
@@ -572,12 +584,6 @@ public final class GamesListFragment extends SherlockListFragment implements
 
 		private void cancelled()
 		{
-			list.setVisibility(View.GONE);
-			empty.setVisibility(View.GONE);
-			loading.setVisibility(View.GONE);
-			cancelledLoading.setVisibility(View.VISIBLE);
-			noInternetConnection.setVisibility(View.GONE);
-
 			setRunningState(false);
 		}
 
@@ -818,8 +824,6 @@ public final class GamesListFragment extends SherlockListFragment implements
 			{
 				asyncRefreshGamesList = null;
 			}
-
-			fragmentActivity.supportInvalidateOptionsMenu();
 		}
 
 

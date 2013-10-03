@@ -176,25 +176,20 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 	@Override
 	public void onBackPressed()
 	{
-		if (gamesListFragment != null && gamesListFragment.isAnAsyncTaskRunning())
+		if (myStatsDialogFragment != null && myStatsDialogFragment.onBackPressed())
 		{
-			gamesListFragment.cancelRunningAnyAsyncTask();
+
 		}
-		else if (genericGameFragment != null && genericGameFragment.isAnAsyncTaskRunning())
+		else if (genericGameFragment != null && genericGameFragment.onBackPressed())
 		{
-			genericGameFragment.cancelRunningAnyAsyncTask();
+
 		}
-		else if (myStatsDialogFragment != null && myStatsDialogFragment.isServerTaskRunning())
+		else if (gamesListFragment != null && gamesListFragment.onBackPressed())
 		{
-			myStatsDialogFragment.cancelRunningServerTask();
+
 		}
 		else
 		{
-			if (gamesListFragment != null && !gamesListFragment.wasCancelled())
-			{
-				gamesListFragment.refreshListDrawState();
-			}
-
 			super.onBackPressed();
 
 			if (genericGameFragment == null || !genericGameFragment.isVisible())
@@ -211,28 +206,6 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 		final MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.game_fragment_activity, menu);
 		return super.onCreateOptionsMenu(menu);
-	}
-
-
-	@Override
-	protected void onDestroy()
-	{
-		if (gamesListFragment != null)
-		{
-			gamesListFragment.cancelRunningAnyAsyncTask();
-		}
-
-		if (genericGameFragment != null)
-		{
-			genericGameFragment.cancelRunningAnyAsyncTask();
-		}
-
-		if (myStatsDialogFragment != null)
-		{
-			myStatsDialogFragment.cancelRunningServerTask();
-		}
-
-		super.onDestroy();
 	}
 
 
@@ -327,7 +300,7 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 
 
 	/**
-	 * Ensures that the gamesListFragment Fragment is not null.
+	 * Ensures that the gamesListFragment Fragment object is not null.
 	 */
 	private void getGamesListFragment()
 	{

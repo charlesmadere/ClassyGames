@@ -49,8 +49,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 	private final static String BUNDLE_BOARD_JSON = "BUNDLE_BOARD_JSON";
 
 
-
-
 	/**
 	 * This game's Game object. This contains a whole bunch of necessary data
 	 * such as the ID of the game as well as the Person object that the current
@@ -183,7 +181,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	@Override
-	public void onCreate(Bundle savedInstanceState)
+	public void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
@@ -398,6 +396,14 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	@Override
+	public void onDestroyView()
+	{
+		cancelRunningAnyAsyncTask();
+		super.onDestroyView();
+	}
+
+
+	@Override
 	public boolean onOptionsItemSelected(final MenuItem item)
 	{
 		switch (item.getItemId())
@@ -492,7 +498,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	/**
 	 * Cancels the currently running AsyncTask (if any).
 	 */
-	public void cancelRunningAnyAsyncTask()
+	private void cancelRunningAnyAsyncTask()
 	{
 		if (!cancelRunningAsyncGetGame())
 		{
@@ -645,7 +651,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * Returns true if either the AsyncGetGame AsyncTask is running or if a
 	 * ServerApi is running.
 	 */
-	public boolean isAnAsyncTaskRunning()
+	private boolean isAnAsyncTaskRunning()
 	{
 		return asyncGetGame != null || serverApiTask != null;
 	}
@@ -765,6 +771,20 @@ public abstract class GenericGameFragment extends SherlockFragment
 			}
 		}
 		while (recheckColorSettings);
+	}
+
+
+	public boolean onBackPressed()
+	{
+		if (isAnAsyncTaskRunning())
+		{
+			cancelRunningAnyAsyncTask();
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 
@@ -1049,8 +1069,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 				}
 				else if (Utilities.checkForNetworkConnectivity(fragmentActivity) && !isCancelled())
 				{
-					final ApiData data = new ApiData();
-					data.addKeyValuePair(Server.POST_DATA_ID, game.getId());
+					final ApiData data = new ApiData()
+						.addKeyValuePair(Server.POST_DATA_ID, game.getId());
 
 					try
 					{
