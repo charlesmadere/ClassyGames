@@ -366,19 +366,16 @@ public abstract class GenericGameFragment extends SherlockFragment
 			final MenuItem sendMoveMenuItem = menu.findItem(R.id.generic_game_fragment_menu_send_move);
 			final MenuItem undoMoveMenuItem = menu.findItem(R.id.generic_game_fragment_menu_undo_move);
 
-			if (sendMoveMenuItem != null)
+			if (board == null)
 			{
-				if (board == null)
-				{
-					sendMoveMenuItem.setEnabled(false);
-					undoMoveMenuItem.setEnabled(false);
-				}
-				else
-				{
-					final boolean hasMoveBeenMade = board.hasMoveBeenMade();
-					sendMoveMenuItem.setEnabled(hasMoveBeenMade);
-					undoMoveMenuItem.setEnabled(hasMoveBeenMade);
-				}
+				sendMoveMenuItem.setEnabled(false);
+				undoMoveMenuItem.setEnabled(false);
+			}
+			else
+			{
+				final boolean hasMoveBeenMade = board.hasMoveBeenMade();
+				sendMoveMenuItem.setEnabled(hasMoveBeenMade);
+				undoMoveMenuItem.setEnabled(hasMoveBeenMade);
 			}
 		}
 
