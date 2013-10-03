@@ -300,12 +300,14 @@ public final class GamesListFragment extends SherlockListFragment implements
 					items = getResources().getStringArray(R.array.games_list_fragment_context_menu_entries_turn_theirs);
 				}
 
-				final AlertDialog.Builder builder = new AlertDialog.Builder(context)
+				new AlertDialog.Builder(context)
 					.setItems(items, new DialogInterface.OnClickListener()
 					{
 						@Override
 						public void onClick(final DialogInterface dialog, final int which)
 						{
+							dialog.dismiss();
+
 							if (!isAnAsyncTaskRunning())
 							{
 								switch (which)
@@ -334,9 +336,8 @@ public final class GamesListFragment extends SherlockListFragment implements
 							dialog.dismiss();
 						}
 					})
-					.setTitle(getString(R.string.select_an_action_for_this_game_against_x, game.get().getPerson().getName()));
-
-				builder.show();
+					.setTitle(getString(R.string.select_an_action_for_this_game_against_x, game.get().getPerson().getName()))
+					.show();
 
 				return true;
 			}

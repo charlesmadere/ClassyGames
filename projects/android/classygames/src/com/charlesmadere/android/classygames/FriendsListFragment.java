@@ -221,6 +221,14 @@ public final class FriendsListFragment extends SherlockListFragment implements
 
 
 	@Override
+	public void onDestroyView()
+	{
+		cancelRunningAnyAsyncTask();
+		super.onDestroyView();
+	}
+
+
+	@Override
 	public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id)
 	{
 		@SuppressWarnings("unchecked")
@@ -281,7 +289,7 @@ public final class FriendsListFragment extends SherlockListFragment implements
 	/**
 	 * Cancels the currently running AsyncTask (if any).
 	 */
-	public void cancelRunningAnyAsyncTask()
+	private void cancelRunningAnyAsyncTask()
 	{
 		if (isAnAsyncTaskRunning())
 		{
@@ -290,7 +298,7 @@ public final class FriendsListFragment extends SherlockListFragment implements
 	}
 
 
-	public void deselectFriend()
+	private void deselectFriend()
 	{
 		if (selectedFriend != null)
 		{
@@ -335,9 +343,24 @@ public final class FriendsListFragment extends SherlockListFragment implements
 	 * Returns true if the asyncRefreshFriendsList AsyncTask is currently
 	 * running.
 	 */
-	public boolean isAnAsyncTaskRunning()
+	private boolean isAnAsyncTaskRunning()
 	{
 		return asyncRefreshFriendsList != null;
+	}
+
+
+	public boolean onBackPressed()
+	{
+		if (isAnAsyncTaskRunning())
+		{
+			cancelRunningAnyAsyncTask();
+		}
+		else
+		{
+			deselectFriend();
+		}
+
+		return false;
 	}
 
 
@@ -461,17 +484,24 @@ public final class FriendsListFragment extends SherlockListFragment implements
 		}
 
 
+		private void cancelled()
+		{
+			setRunningState(false);
+			getPreferencesEditor().clear().commit();
+		}
+
+
 		@Override
 		protected void onCancelled()
 		{
-			setRunningState(false);
+			cancelled();
 		}
 
 
 		@Override
 		protected void onCancelled(final LinkedList<ListItem<Person>> friends)
 		{
-			setRunningState(false);
+			cancelled();
 		}
 
 

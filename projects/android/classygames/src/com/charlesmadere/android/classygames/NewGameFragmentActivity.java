@@ -98,31 +98,10 @@ public final class NewGameFragmentActivity extends SherlockFragmentActivity impl
 	@Override
 	public void onBackPressed()
 	{
-		if (friendsListFragment != null)
+		if (friendsListFragment != null && !friendsListFragment.onBackPressed())
 		{
-			if (friendsListFragment.isAnAsyncTaskRunning())
-			{
-				friendsListFragment.cancelRunningAnyAsyncTask();
-			}
-			else
-			{
-				friendsListFragment.deselectFriend();
-			}
+			super.onBackPressed();
 		}
-
-		super.onBackPressed();
-	}
-
-
-	@Override
-	protected void onDestroy()
-	{
-		if (friendsListFragment != null)
-		{
-			friendsListFragment.cancelRunningAnyAsyncTask();
-		}
-
-		super.onDestroy();
 	}
 
 
