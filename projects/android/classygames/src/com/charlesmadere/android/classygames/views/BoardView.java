@@ -39,26 +39,18 @@ public class BoardView extends ViewGroup
 	@Override
 	protected void onLayout(final boolean changed, final int l, final int t, final int r, final int b)
 	{
-		final int dimension;
-
-		if (isOrientationLandscape())
-		{
-			dimension = (b - t) / rows;
-		}
-		else
-		{
-			dimension = (r - l) / columns;
-		}
+		final int width = positionViews[0][0].getMeasuredWidth();
+		final int height = positionViews[0][0].getMeasuredHeight();
 
 		for (int x = 0; x < rows; ++x)
 		{
-			final int left = l + (l * x);
-			final int right = left + dimension;
+			final int left = width * x;
+			final int right = left + width;
 
 			for (int y = 0; y < columns; ++y)
 			{
-				final int top = t + (t * y);
-				final int bottom = top + dimension;
+				final int top = height * y;
+				final int bottom = top + height;
 
 				final PositionView positionView = positionViews[x][y];
 				positionView.layout(left, top, right, bottom);
@@ -136,6 +128,7 @@ public class BoardView extends ViewGroup
 			{
 				final PositionView positionView = new PositionView(context, x, y, brightBackground, darkBackground);
 				positionViews[x][y] = positionView;
+				addView(positionView);
 			}
 		}
 	}

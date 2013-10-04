@@ -28,7 +28,7 @@ public class Test extends Activity
 			{
 				final PositionView positionView = (PositionView) v;
 				final Coordinate coordinate = positionView.getCoordinate();
-				Toast.makeText(Test.this, coordinate.toString(), Toast.LENGTH_SHORT);
+				Toast.makeText(Test.this, coordinate.toString(), Toast.LENGTH_SHORT).show();
 			}
 		});
 	}
