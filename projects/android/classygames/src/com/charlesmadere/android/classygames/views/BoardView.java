@@ -79,8 +79,10 @@ public class BoardView extends ViewGroup
 
 		setMeasuredDimension(width, height);
 
-		final int widthSpec = MeasureSpec.makeMeasureSpec(width / columns, MeasureSpec.EXACTLY);
-		final int heightSpec = MeasureSpec.makeMeasureSpec(height / rows, MeasureSpec.EXACTLY);
+		final int widthSize = (int) Math.ceil((double) width / (double) columns);
+		final int heightSize = (int) Math.ceil((double) height / (double) rows);
+		final int widthSpec = MeasureSpec.makeMeasureSpec(widthSize, MeasureSpec.EXACTLY);
+		final int heightSpec = MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.EXACTLY);
 
 		for (int x = 0; x < columns; ++x)
 		{
