@@ -17,8 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
@@ -43,15 +41,13 @@ import java.util.LinkedList;
 
 
 public final class GamesListFragment extends SherlockListFragment implements
-	OnItemClickListener,
-	OnItemLongClickListener
+	AdapterView.OnItemClickListener,
+	AdapterView.OnItemLongClickListener
 {
 
 
 	private final static String LOG_TAG = Utilities.LOG_TAG + " - GamesListFragment";
 	private final static String KEY_GAMES_LIST_JSON = "KEY_GAMES_LIST_JSON";
-
-
 
 
 	private ListView list;
@@ -235,26 +231,16 @@ public final class GamesListFragment extends SherlockListFragment implements
 	@Override
 	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
 	{
-		if (isAsyncRefreshGamesListRunning())
-		{
-			inflater.inflate(R.menu.generic_cancel, menu);
-		}
-		else
-		{
-			inflater.inflate(R.menu.generic_refresh, menu);
-			final MenuItem refresh = menu.findItem(R.id.generic_refresh_menu_refresh);
-
-			if (isAsyncRefreshGamesListRunning())
-			{
-				refresh.setEnabled(false);
-			}
-			else
-			{
-				refresh.setEnabled(true);
-			}
-		}
-
+		inflater.inflate(R.menu.games_list_fragment, menu);
 		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+
+	@Override
+	public void onDestroyView()
+	{
+		cancelRunningAnyAsyncTask();
+		super.onDestroyView();
 	}
 
 
@@ -264,26 +250,15 @@ public final class GamesListFragment extends SherlockListFragment implements
 		@SuppressWarnings("unchecked")
 		final ListItem<Game> game = (ListItem<Game>) parent.getItemAtPosition(position);
 
-		if (game.get().isTypeGame() && game.get().isTurnYours())
+		if (!game.isSelected() && game.get().isTypeGame() && game.get().isTurnYours())
 		{
-			if (!game.isSelected())
+			listeners.onGameSelected(game.get());
+			selectedGame = game;
+			selectedGame.select();
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 			{
-				if (selectedGame != null)
-				{
-					selectedGame.unselect();
-					selectedGame = null;
-					refreshListDrawState();
-				}
-
-				game.select();
-
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-				{
-					view.setActivated(true);
-				}
-
-				selectedGame = game;
-				listeners.onGameSelected(game.get());
+				view.setActivated(true);
 			}
 		}
 	}
@@ -302,7 +277,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 				view.setSelected(true);
 
 				final Context context = getSherlockActivity();
-				String[] items;
+				String [] items;
 
 				if (game.get().isTurnYours())
 				{
@@ -313,29 +288,28 @@ public final class GamesListFragment extends SherlockListFragment implements
 					items = getResources().getStringArray(R.array.games_list_fragment_context_menu_entries_turn_theirs);
 				}
 
-				final AlertDialog.Builder builder = new AlertDialog.Builder(context)
+				new AlertDialog.Builder(context)
 					.setItems(items, new DialogInterface.OnClickListener()
 					{
 						@Override
 						public void onClick(final DialogInterface dialog, final int which)
 						{
-							if (!isAnAsyncTaskRunning())
+							dialog.dismiss();
+
+							switch (which)
 							{
-								switch (which)
-								{
-									case 0:
-										serverApiTask = new ServerApiForfeitGame(context, serverApiListeners, game.get());
-										break;
+								case 0:
+									serverApiTask = new ServerApiForfeitGame(context, serverApiListeners, game.get());
+									break;
 
-									case 1:
-										serverApiTask = new ServerApiSkipMove(context, serverApiListeners, game.get());
-										break;
-								}
+								case 1:
+									serverApiTask = new ServerApiSkipMove(context, serverApiListeners, game.get());
+									break;
+							}
 
-								if (serverApiTask != null)
-								{
-									serverApiTask.execute();
-								}
+							if (serverApiTask != null)
+							{
+								serverApiTask.execute();
 							}
 						}
 					})
@@ -347,9 +321,8 @@ public final class GamesListFragment extends SherlockListFragment implements
 							dialog.dismiss();
 						}
 					})
-					.setTitle(getString(R.string.select_an_action_for_this_game_against_x, game.get().getPerson().getName()));
-
-				builder.show();
+					.setTitle(getString(R.string.select_an_action_for_this_game_against_x, game.get().getPerson().getName()))
+					.show();
 
 				return true;
 			}
@@ -368,15 +341,11 @@ public final class GamesListFragment extends SherlockListFragment implements
 	{
 		switch (item.getItemId())
 		{
-			case R.id.generic_cancel_menu_cancel:
-				if (isAsyncRefreshGamesListRunning())
+			case R.id.games_list_fragment_menu_refresh:
+				if (!isAnAsyncTaskRunning())
 				{
-					asyncRefreshGamesList.cancel(true);
+					listeners.onRefreshSelected();
 				}
-				break;
-
-			case R.id.generic_refresh_menu_refresh:
-				listeners.onRefreshSelected();
 				break;
 
 			default:
@@ -425,7 +394,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 	 * Cancels the AsyncRefreshGamesList AsyncTask if it is currently
 	 * running.
 	 */
-	public void cancelRunningAnyAsyncTask()
+	private void cancelRunningAnyAsyncTask()
 	{
 		if (isAsyncRefreshGamesListRunning())
 		{
@@ -434,6 +403,24 @@ public final class GamesListFragment extends SherlockListFragment implements
 		else if (serverApiTask != null)
 		{
 			serverApiTask.cancel();
+		}
+	}
+
+
+	private void deselectGame()
+	{
+		if (selectedGame != null)
+		{
+			selectedGame.unselect();
+		}
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+		{
+			for (int i = 0; i < list.getChildCount(); ++i)
+			{
+				final View view = list.getChildAt(i);
+				view.setActivated(false);
+			}
 		}
 	}
 
@@ -453,9 +440,30 @@ public final class GamesListFragment extends SherlockListFragment implements
 	 * @return
 	 * Returns true if an AsyncTask is running.
 	 */
-	public boolean isAnAsyncTaskRunning()
+	private boolean isAnAsyncTaskRunning()
 	{
 		return isAsyncRefreshGamesListRunning() || serverApiTask != null;
+	}
+
+
+	public boolean onBackPressed()
+	{
+		if (isAnAsyncTaskRunning())
+		{
+			cancelRunningAnyAsyncTask();
+		}
+		else
+		{
+			deselectGame();
+		}
+
+		return false;
+	}
+
+
+	public void refreshGamesList()
+	{
+		refreshGamesList(false);
 	}
 
 
@@ -477,16 +485,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 	}
 
 
-	/**
-	 * Refreshes the Games List if a refresh is not already running.
-	 */
-	public void refreshGamesList()
-	{
-		refreshGamesList(false);
-	}
-
-
-	public void refreshListDrawState()
+	private void refreshListDrawState()
 	{
 		if (selectedGame != null)
 		{
@@ -500,12 +499,6 @@ public final class GamesListFragment extends SherlockListFragment implements
 		{
 			games.notifyDataSetChanged();
 		}
-	}
-
-
-	public boolean wasCancelled()
-	{
-		return cancelledLoading.getVisibility() == View.VISIBLE;
 	}
 
 
@@ -553,8 +546,8 @@ public final class GamesListFragment extends SherlockListFragment implements
 				MyStatsDialogFragment.clearCachedStats(fragmentActivity);
 
 				// create the data that will be posted to the server
-				final ApiData data = new ApiData();
-				data.addKeyValuePair(Server.POST_DATA_ID, whoAmI.getId());
+				final ApiData data = new ApiData()
+					.addKeyValuePair(Server.POST_DATA_ID, whoAmI.getId());
 
 				if (!isCancelled() && Utilities.checkForNetworkConnectivity(fragmentActivity))
 				{
@@ -591,12 +584,6 @@ public final class GamesListFragment extends SherlockListFragment implements
 
 		private void cancelled()
 		{
-			list.setVisibility(View.GONE);
-			empty.setVisibility(View.GONE);
-			loading.setVisibility(View.GONE);
-			cancelledLoading.setVisibility(View.VISIBLE);
-			noInternetConnection.setVisibility(View.GONE);
-
 			setRunningState(false);
 		}
 
@@ -627,7 +614,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 		{
 			if (runStatus == RUN_STATUS_NORMAL && games != null && !games.isEmpty())
 			{
-				final GamesListAdapter gamesListAdapter = new GamesListAdapter(fragmentActivity, games);
+				final GamesListAdapter gamesListAdapter = new GamesListAdapter(games);
 				list.setAdapter(gamesListAdapter);
 
 				list.setVisibility(View.VISIBLE);
@@ -802,6 +789,10 @@ public final class GamesListFragment extends SherlockListFragment implements
 
 					Collections.sort(games, this);
 				}
+				else
+				{
+					throw new JSONException("Player has no games for this turn.");
+				}
 			}
 			catch (final JSONException e)
 			{
@@ -833,8 +824,6 @@ public final class GamesListFragment extends SherlockListFragment implements
 			{
 				asyncRefreshGamesList = null;
 			}
-
-			fragmentActivity.supportInvalidateOptionsMenu();
 		}
 
 
@@ -856,13 +845,12 @@ public final class GamesListFragment extends SherlockListFragment implements
 		private Resources resources;
 
 
-		private GamesListAdapter(final Context context, final LinkedList<ListItem<Game>> games)
+		private GamesListAdapter(final LinkedList<ListItem<Game>> games)
 		{
-			this.context = context;
 			this.games = games;
-			resources = context.getResources();
-
-			inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			context = getSherlockActivity();
+			inflater = getSherlockActivity().getLayoutInflater();
+			resources = getResources();
 			emptyProfilePicture = resources.getDrawable(R.drawable.empty_profile_picture_small);
 			checkersIcon = resources.getDrawable(R.drawable.game_icon_checkers_small);
 			chessIcon = resources.getDrawable(R.drawable.game_icon_chess_small);
@@ -893,37 +881,39 @@ public final class GamesListFragment extends SherlockListFragment implements
 		@Override
 		public View getView(final int position, View convertView, final ViewGroup parent)
 		{
-			final ListItem<Game> game = games.get(position);
+			final ListItem<Game> listItem = games.get(position);
+			final Game game = listItem.get();
 
-			if (game.get().isTypeGame())
+			if (game.isTypeGame())
 			{
-				convertView = inflater.inflate(R.layout.games_list_fragment_listview_item, null);
-
-				final ImageView picture = (ImageView) convertView.findViewById(R.id.games_list_fragment_listview_item_picture);
-				picture.setImageDrawable(emptyProfilePicture);
-				Utilities.getImageLoader().displayImage(FacebookUtilities.getFriendsPictureSquare(context, game.get().getPerson().getId()), picture);
-
-				final TextView name = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_name);
-				name.setText(game.get().getPerson().getName());
-				TypefaceUtilities.applyBlueHighway(name);
-
-				final TextView time = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_time);
-				time.setText(game.get().getTimestampFormatted(resources));
-
-				final ImageView gameIcon = (ImageView) convertView.findViewById(R.id.games_list_fragment_listview_item_game_icon);
-
-				if (game.get().isGameCheckers())
+				if (convertView == null)
 				{
-					gameIcon.setImageDrawable(checkersIcon);
+					convertView = inflater.inflate(R.layout.games_list_fragment_listview_item, null);
+					final ViewHolder viewHolder = new ViewHolder(convertView);
+					convertView.setTag(viewHolder);
 				}
-				else if (game.get().isGameChess())
+
+				final ViewHolder viewHolder = (ViewHolder) convertView.getTag();
+				viewHolder.picture.setImageDrawable(emptyProfilePicture);
+				final String friendsPictureURL = FacebookUtilities.getFriendsPictureSquare(context, game.getPerson().getId());
+				Utilities.getImageLoader().displayImage(friendsPictureURL, viewHolder.picture);
+
+				TypefaceUtilities.applyBlueHighway(viewHolder.name);
+				viewHolder.name.setText(game.getPerson().getName());
+				viewHolder.time.setText(game.getTimestampFormatted(resources));
+
+				if (game.isGameCheckers())
 				{
-					gameIcon.setImageDrawable(chessIcon);
+					viewHolder.gameIcon.setImageDrawable(checkersIcon);
+				}
+				else if (game.isGameChess())
+				{
+					viewHolder.gameIcon.setImageDrawable(chessIcon);
 				}
 
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 				{
-					if (game.isSelected())
+					if (listItem.isSelected())
 					{
 						convertView.setActivated(true);
 					}
@@ -935,7 +925,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 			}
 			else
 			{
-				if (game.get().isTurnYours())
+				if (game.isTurnYours())
 				{
 					convertView = inflater.inflate(R.layout.games_list_fragment_listview_turn_yours, null);
 				}
@@ -950,6 +940,30 @@ public final class GamesListFragment extends SherlockListFragment implements
 			}
 
 			return convertView;
+		}
+
+
+	}
+
+
+
+
+	private final class ViewHolder
+	{
+
+
+		private ImageView gameIcon;
+		private ImageView picture;
+		private TextView name;
+		private TextView time;
+
+
+		private ViewHolder(final View view)
+		{
+			gameIcon = (ImageView) view.findViewById(R.id.games_list_fragment_listview_item_game_icon);
+			picture = (ImageView) view.findViewById(R.id.games_list_fragment_listview_item_picture);
+			name = (TextView) view.findViewById(R.id.games_list_fragment_listview_item_name);
+			time = (TextView) view.findViewById(R.id.games_list_fragment_listview_item_time);
 		}
 
 

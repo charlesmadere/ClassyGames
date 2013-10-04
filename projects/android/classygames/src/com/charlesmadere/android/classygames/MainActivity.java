@@ -72,7 +72,7 @@ public final class MainActivity extends SherlockActivity
 		super.onActivityResult(requestCode, resultCode, data);
 		uiHelper.onActivityResult(requestCode, resultCode, data);
 
-		if (resultCode == GameFragmentActivity.RESULT_STARTED)
+		if (resultCode == RESULT_FIRST_USER)
 		{
 			hasFinished = true;
 			finish();
@@ -87,10 +87,8 @@ public final class MainActivity extends SherlockActivity
 		{
 			cancelRunningAnyAsyncTask();
 		}
-		else
-		{
-			super.onBackPressed();
-		}
+
+		super.onBackPressed();
 	}
 
 
@@ -177,7 +175,7 @@ public final class MainActivity extends SherlockActivity
 				// store the user's Facebook Access Token for retrieval later
 				FacebookUtilities.setAccessToken(this, session.getAccessToken());
 
-				asyncGetFacebookIdentity = new AsyncGetFacebookIdentity(this, session);
+				asyncGetFacebookIdentity = new AsyncGetFacebookIdentity(session);
 				asyncGetFacebookIdentity.execute();
 			}
 		}
@@ -186,8 +184,12 @@ public final class MainActivity extends SherlockActivity
 
 	private void startGameFragmentActivity()
 	{
-//		final Intent intent = new Intent(this, GameFragmentActivity.class);
-//		startActivityForResult(intent, GameFragmentActivity.RESULT_STARTED);
+		// final Intent intent = new Intent(this, GameFragmentActivity.class);
+		// startActivityForResult(intent, RESULT_FIRST_USER);
+
+		// TODO
+		// Remove the line below and uncomment the above! This is only here for
+		// layout testing purposes.
 		startActivity(new Intent(this, Test.class));
 	}
 
@@ -202,10 +204,10 @@ public final class MainActivity extends SherlockActivity
 		private Session session;
 
 
-		private AsyncGetFacebookIdentity(final Context context, final Session session)
+		private AsyncGetFacebookIdentity(final Session session)
 		{
-			this.context = context;
 			this.session = session;
+			context = MainActivity.this;
 		}
 
 
@@ -233,32 +235,6 @@ public final class MainActivity extends SherlockActivity
 		}
 
 
-		private void cancelled()
-		{
-			session.closeAndClearTokenInformation();
-			asyncGetFacebookIdentity = null;
-
-			facebook.setVisibility(View.GONE);
-			loading.setVisibility(View.INVISIBLE);
-
-			finish();
-		}
-
-
-		@Override
-		protected void onCancelled()
-		{
-			cancelled();
-		}
-
-
-		@Override
-		protected void onCancelled(final Person facebookIdentity)
-		{
-			cancelled();
-		}
-
-
 		@Override
 		protected void onPostExecute(final Person facebookIdentity)
 		{
@@ -274,7 +250,7 @@ public final class MainActivity extends SherlockActivity
 			}
 			else
 			{
-				cancelled();
+				finish();
 			}
 		}
 

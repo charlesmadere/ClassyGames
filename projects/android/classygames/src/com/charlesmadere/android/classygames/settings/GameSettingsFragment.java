@@ -178,15 +178,7 @@ public final class GameSettingsFragment extends PreferenceFragment
 	public void onAttach(final Activity activity)
 	{
 		super.onAttach(activity);
-
-		try
-		{
-			listeners = (GameSettingsFragmentListeners) activity;
-		}
-		catch (final ClassCastException e)
-		{
-			throw new ClassCastException(activity.toString() + " must implement listeners!");
-		}
+		listeners = (GameSettingsFragmentListeners) activity;
 	}
 
 

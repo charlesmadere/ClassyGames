@@ -3,8 +3,8 @@ package com.charlesmadere.android.classygames.settings;
 
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.R;
@@ -37,7 +37,7 @@ public final class UnregisterFromNotificationsActivity extends SherlockActivity
 		final Button unregister = (Button) findViewById(R.id.unregister_from_notifications_activity_button_unregister);
 		TypefaceUtilities.applyBlueHighway(unregister);
 
-		unregister.setOnClickListener(new OnClickListener()
+		unregister.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(final View v)
@@ -51,7 +51,7 @@ public final class UnregisterFromNotificationsActivity extends SherlockActivity
 							public void onCancel()
 							{
 								serverApiTask = null;
-								Utilities.easyToast(UnregisterFromNotificationsActivity.this, R.string.unregistration_cancelled);
+								Toast.makeText(UnregisterFromNotificationsActivity.this, R.string.unregistration_cancelled, Toast.LENGTH_SHORT).show();
 								finish();
 							}
 
@@ -60,7 +60,7 @@ public final class UnregisterFromNotificationsActivity extends SherlockActivity
 							public void onComplete(final String serverResponse)
 							{
 								serverApiTask = null;
-								Utilities.easyToast(UnregisterFromNotificationsActivity.this, R.string.unregistration_complete);
+								Toast.makeText(UnregisterFromNotificationsActivity.this, R.string.unregistration_complete, Toast.LENGTH_SHORT).show();
 								finish();
 							}
 

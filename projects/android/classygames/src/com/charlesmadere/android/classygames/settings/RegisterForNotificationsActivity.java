@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.R;
@@ -49,7 +50,7 @@ public final class RegisterForNotificationsActivity extends SherlockActivity
 			{
 				if (!isAnAsyncTaskRunning())
 				{
-					asyncRegisterForNotifications = new AsyncRegisterForNotifications(RegisterForNotificationsActivity.this);
+					asyncRegisterForNotifications = new AsyncRegisterForNotifications();
 					asyncRegisterForNotifications.execute();
 				}
 			}
@@ -125,9 +126,9 @@ public final class RegisterForNotificationsActivity extends SherlockActivity
 		private ProgressDialog progressDialog;
 
 
-		private AsyncRegisterForNotifications(final Context context)
+		private AsyncRegisterForNotifications()
 		{
-			this.context = context;
+			context = RegisterForNotificationsActivity.this;
 		}
 
 
@@ -160,7 +161,7 @@ public final class RegisterForNotificationsActivity extends SherlockActivity
 			}
 
 			asyncRegisterForNotifications = null;
-			Utilities.easyToast(context, R.string.registration_cancelled);
+			Toast.makeText(context, R.string.registration_cancelled, Toast.LENGTH_SHORT).show();
 		}
 
 
@@ -188,7 +189,7 @@ public final class RegisterForNotificationsActivity extends SherlockActivity
 
 			if (registrationSuccess)
 			{
-				Utilities.easyToast(context, R.string.registration_complete);
+				Toast.makeText(context, R.string.registration_complete, Toast.LENGTH_SHORT).show();
 				finish();
 			}
 			else

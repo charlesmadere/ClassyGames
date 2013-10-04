@@ -154,11 +154,7 @@ public final class ChessGameFragment extends GenericGameFragment
 				final FragmentTransaction fTransaction = fManager.beginTransaction();
 				fTransaction.addToBackStack(null);
 
-				final Bundle arguments = new Bundle();
-				arguments.putInt(ChessGlossaryDialogFragment.KEY_PLAYER_COLOR, playerColor);
-
-				final ChessGlossaryDialogFragment dialog = new ChessGlossaryDialogFragment();
-				dialog.setArguments(arguments);
+				final ChessGlossaryDialogFragment dialog = ChessGlossaryDialogFragment.newInstance(playerColor);
 				dialog.show(fManager, null);
 				break;
 

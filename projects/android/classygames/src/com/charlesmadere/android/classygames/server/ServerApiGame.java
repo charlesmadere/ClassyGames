@@ -55,11 +55,11 @@ public abstract class ServerApiGame extends ServerApi
 
 		try
 		{
-			final ApiData data = new ApiData();
-			data.addKeyValuePair(Server.POST_DATA_USER_CREATOR, whoAmI.getId());
-			data.addKeyValuePair(Server.POST_DATA_USER_CHALLENGED, game.getPerson().getId());
-			data.addKeyValuePair(Server.POST_DATA_NAME, game.getPerson().getName());
-			data.addKeyValuePair(Server.POST_DATA_GAME_ID, game.getId());
+			final ApiData data = new ApiData()
+				.addKeyValuePair(Server.POST_DATA_USER_CREATOR, whoAmI.getId())
+				.addKeyValuePair(Server.POST_DATA_USER_CHALLENGED, game.getPerson().getId())
+				.addKeyValuePair(Server.POST_DATA_NAME, game.getPerson().getName())
+				.addKeyValuePair(Server.POST_DATA_GAME_ID, game.getId());
 
 			serverResponse = postToServer(data, game);
 		}

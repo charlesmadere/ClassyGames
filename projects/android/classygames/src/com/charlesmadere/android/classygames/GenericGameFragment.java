@@ -49,8 +49,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 	private final static String BUNDLE_BOARD_JSON = "BUNDLE_BOARD_JSON";
 
 
-
-
 	/**
 	 * This game's Game object. This contains a whole bunch of necessary data
 	 * such as the ID of the game as well as the Person object that the current
@@ -58,6 +56,12 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * IT HAS BEEN SET.</strong>
 	 */
 	protected Game game;
+
+
+	/**
+	 * The arguments passed in to this Fragment during it's creation.
+	 */
+	private Bundle arguments;
 
 
 	/**
@@ -177,7 +181,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	@Override
-	public void onCreate(Bundle savedInstanceState)
+	public void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
@@ -195,8 +199,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 	public void onActivityCreated(final Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
-
-		final Bundle arguments = getArguments();
 
 		if (arguments == null || arguments.isEmpty())
 		// Check the arguments given to this Fragment. This Fragment requires
@@ -334,66 +336,56 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		super.onAttach(activity);
 		listeners = (Listeners) activity;
+		arguments = getArguments();
 	}
 
 
 	@Override
 	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
 	{
+		// Attempt to remove menu items from other fragments that may be
+		// visible, as when a game is showing on screen they either make no
+		// sense or could lead to unpredictable results.
 		menu.removeItem(R.id.game_fragment_activity_menu_settings);
-		menu.removeItem(R.id.generic_refresh_menu_refresh);
+		menu.removeItem(R.id.games_list_fragment_menu_refresh);
 
 		if (listeners.isDeviceSmall())
 		{
+			menu.removeItem(R.id.game_fragment_activity_menu_my_stats);
 			menu.removeItem(R.id.game_fragment_activity_menu_new_game);
 		}
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && asyncGetGame != null)
-		{
-			inflater.inflate(R.menu.generic_cancel, menu);
-		}
-		else
-		{
-			inflater.inflate(R.menu.generic_game_fragment, menu);
-		}
-
-		final Bundle arguments = getArguments();
-
-		if (arguments != null && !Utilities.verifyValidString(arguments.getString(KEY_GAME_ID)))
-		{
-			menu.removeItem(R.id.generic_game_fragment_menu_skip_move);
-			menu.removeItem(R.id.generic_game_fragment_menu_forfeit_game);
-		}
+		inflater.inflate(R.menu.generic_game_fragment, menu);
 
 		// Code below enables / disables the send move and undo move Action Bar
 		// buttons as necessary.
 		if (asyncGetGame == null)
 		{
-			MenuItem menuItem = menu.findItem(R.id.generic_game_fragment_menu_send_move);
-			if (menuItem != null)
-			{
-				if (board == null)
-				{
-					menuItem.setEnabled(false);
-				}
-				else
-				{
-					menuItem.setEnabled(board.hasMoveBeenMade());
-				}
-			}
+			final MenuItem sendMoveMenuItem = menu.findItem(R.id.generic_game_fragment_menu_send_move);
+			final MenuItem undoMoveMenuItem = menu.findItem(R.id.generic_game_fragment_menu_undo_move);
 
-			menuItem = menu.findItem(R.id.generic_game_fragment_menu_undo_move);
-			if (menuItem != null)
+			if (board == null)
 			{
-				if (board == null)
-				{
-					menuItem.setEnabled(false);
-				}
-				else
-				{
-					menuItem.setEnabled(board.hasMoveBeenMade());
-				}
+				sendMoveMenuItem.setEnabled(false);
+				undoMoveMenuItem.setEnabled(false);
 			}
+			else
+			{
+				final boolean hasMoveBeenMade = board.hasMoveBeenMade();
+				sendMoveMenuItem.setEnabled(hasMoveBeenMade);
+				undoMoveMenuItem.setEnabled(hasMoveBeenMade);
+			}
+		}
+
+		// Here we only allow the Skip Move or Forfeit Game Action Bar buttons
+		// to be shown if the game we're displaying in this Fragment has a game
+		// ID.
+		final String gameId = arguments.getString(KEY_GAME_ID);
+
+		if (!Utilities.verifyValidString(gameId) || !Game.isIdValid(gameId))
+		{
+			menu.removeItem(R.id.generic_game_fragment_menu_skip_move);
+			menu.removeItem(R.id.generic_game_fragment_menu_forfeit_game);
 		}
 
 		// load any menu items as added by the classes that extend this one
@@ -404,17 +396,18 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	@Override
+	public void onDestroyView()
+	{
+		cancelRunningAnyAsyncTask();
+		super.onDestroyView();
+	}
+
+
+	@Override
 	public boolean onOptionsItemSelected(final MenuItem item)
 	{
 		switch (item.getItemId())
 		{
-			case R.id.generic_cancel_menu_cancel:
-				if (asyncGetGame != null)
-				{
-					asyncGetGame.cancel(true);
-				}
-				break;
-
 			case R.id.generic_game_fragment_menu_forfeit_game:
 				forfeitGame();
 				break;
@@ -505,7 +498,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	/**
 	 * Cancels the currently running AsyncTask (if any).
 	 */
-	public void cancelRunningAnyAsyncTask()
+	private void cancelRunningAnyAsyncTask()
 	{
 		if (!cancelRunningAsyncGetGame())
 		{
@@ -636,7 +629,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		if (asyncGetGame == null)
 		{
-			asyncGetGame = new AsyncGetGame(getSherlockActivity(), getLayoutInflater(getArguments()), (ViewGroup) getView());
+			asyncGetGame = new AsyncGetGame(getSherlockActivity(), getLayoutInflater(arguments), (ViewGroup) getView());
 			asyncGetGame.execute();
 		}
 	}
@@ -658,7 +651,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 * Returns true if either the AsyncGetGame AsyncTask is running or if a
 	 * ServerApi is running.
 	 */
-	public boolean isAnAsyncTaskRunning()
+	private boolean isAnAsyncTaskRunning()
 	{
 		return asyncGetGame != null || serverApiTask != null;
 	}
@@ -778,6 +771,20 @@ public abstract class GenericGameFragment extends SherlockFragment
 			}
 		}
 		while (recheckColorSettings);
+	}
+
+
+	public boolean onBackPressed()
+	{
+		if (isAnAsyncTaskRunning())
+		{
+			cancelRunningAnyAsyncTask();
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 
@@ -1062,8 +1069,8 @@ public abstract class GenericGameFragment extends SherlockFragment
 				}
 				else if (Utilities.checkForNetworkConnectivity(fragmentActivity) && !isCancelled())
 				{
-					final ApiData data = new ApiData();
-					data.addKeyValuePair(Server.POST_DATA_ID, game.getId());
+					final ApiData data = new ApiData()
+						.addKeyValuePair(Server.POST_DATA_ID, game.getId());
 
 					try
 					{
@@ -1169,10 +1176,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 */
 	public static void clearCachedBoards(final Context context)
 	{
-		final SharedPreferences sPreferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-		final SharedPreferences.Editor editor = sPreferences.edit();
-		editor.clear();
-		editor.commit();
+		context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE).edit().clear().commit();
 	}
 
 

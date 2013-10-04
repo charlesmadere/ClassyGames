@@ -38,8 +38,9 @@ public final class ServerApiGetStats extends ServerApi
 
 		try
 		{
-			final ApiData data = new ApiData();
-			data.addKeyValuePair(Server.POST_DATA_ID, whoAmI.getId());
+			final ApiData data = new ApiData()
+				.addKeyValuePair(Server.POST_DATA_ID, whoAmI.getId());
+
 			serverResponse = Server.postToServerGetStats(data);
 		}
 		catch (final IOException e)

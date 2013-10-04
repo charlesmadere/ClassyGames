@@ -144,21 +144,22 @@ public final class Server
 		Log.d(LOG_TAG, "Registering device with regId of \"" + regId + "\" with the Classy Games server.");
 		final Person whoAmI = Utilities.getWhoAmI(context);
 
-		// build the data to be sent to the server
-		final ApiData data = new ApiData();
-		data.addKeyValuePair(POST_DATA_ID, whoAmI.getId());
-		data.addKeyValuePair(POST_DATA_NAME, whoAmI.getName());
-		data.addKeyValuePair(POST_DATA_REG_ID, regId);
+		if (whoAmI != null && whoAmI.isValid())
+		{
+			// build the data to be sent to the server
+			final ApiData data = new ApiData()
+				.addKeyValuePair(POST_DATA_ID, whoAmI.getId())
+				.addKeyValuePair(POST_DATA_NAME, whoAmI.getName())
+				.addKeyValuePair(POST_DATA_REG_ID, regId);
 
-		if (gcmParseServerResults(postToServerNewRegId(data)))
-		{
-			Log.d(LOG_TAG, "Server successfully completed all the regId stuff.");
-			return true;
+			if (gcmParseServerResults(postToServerNewRegId(data)))
+			{
+				Log.d(LOG_TAG, "Server successfully completed all the regId stuff.");
+				return true;
+			}
 		}
-		else
-		{
-			return false;
-		}
+
+		return false;
 	}
 
 
@@ -222,10 +223,11 @@ public final class Server
 	public static void gcmUnregister(final Context context) throws IOException
 	{
 		Log.d(LOG_TAG, "Unregistering device with from GCM server.");
+		final Person whoAmI = Utilities.getWhoAmI(context);
 
 		// build the data to be sent to the server
-		final ApiData data = new ApiData();
-		data.addKeyValuePair(POST_DATA_ID, Utilities.getWhoAmI(context).getId());
+		final ApiData data = new ApiData()
+			.addKeyValuePair(POST_DATA_ID, whoAmI.getId());
 
 		postToServer(ADDRESS_REMOVE_REG_ID, data);
 	}

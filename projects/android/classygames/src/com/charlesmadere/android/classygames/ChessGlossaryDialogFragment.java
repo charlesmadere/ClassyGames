@@ -18,7 +18,7 @@ public final class ChessGlossaryDialogFragment extends SherlockDialogFragment
 {
 
 
-	public final static String KEY_PLAYER_COLOR = "KEY_PLAYER_COLOR";
+	private final static String KEY_PLAYER_COLOR = "KEY_PLAYER_COLOR";
 
 	private ImageView bishopImage;
 	private ImageView kingImage;
@@ -26,6 +26,20 @@ public final class ChessGlossaryDialogFragment extends SherlockDialogFragment
 	private ImageView pawnImage;
 	private ImageView queenImage;
 	private ImageView rookImage;
+
+
+
+
+	public static ChessGlossaryDialogFragment newInstance(final int playerColor)
+	{
+		final Bundle arguments = new Bundle();
+		arguments.putInt(KEY_PLAYER_COLOR, playerColor);
+
+		final ChessGlossaryDialogFragment fragment = new ChessGlossaryDialogFragment();
+		fragment.setArguments(arguments);
+
+		return fragment;
+	}
 
 
 
@@ -112,21 +126,15 @@ public final class ChessGlossaryDialogFragment extends SherlockDialogFragment
 	}
 
 
-	private void setViewDrawables(final int bishopDrawable, final int kingDrawable,
-		final int knightDrawable, final int queenDrawable, final int pawnDrawable, final int rookDrawable)
+	private void setViewDrawables(final int bishop, final int king,
+		final int knight, final int queen, final int pawn, final int rook)
 	{
-		setViewDrawable(bishopImage, bishopDrawable);
-		setViewDrawable(kingImage, kingDrawable);
-		setViewDrawable(knightImage, knightDrawable);
-		setViewDrawable(queenImage, queenDrawable);
-		setViewDrawable(pawnImage, pawnDrawable);
-		setViewDrawable(rookImage, rookDrawable);
-	}
-
-
-	private void setViewDrawable(final ImageView view, final int drawable)
-	{
-		view.setImageResource(drawable);
+		bishopImage.setImageResource(bishop);
+		kingImage.setImageResource(king);
+		knightImage.setImageResource(knight);
+		queenImage.setImageResource(queen);
+		pawnImage.setImageResource(pawn);
+		rookImage.setImageResource(rook);
 	}
 
 

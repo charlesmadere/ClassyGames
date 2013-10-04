@@ -33,7 +33,7 @@ public final class MyStatsDialogFragment extends SherlockDialogFragment
 
 
 	private final static String LOG_TAG = Utilities.LOG_TAG + " - MyStatsDialogFragment";
-	public final static String PREFERENCES_NAME = "MyProfileFragment_Preferences";
+	private final static String PREFERENCES_NAME = "MyProfileFragment_Preferences";
 	private final static String KEY_CHECKERS_LOSES = "KEY_CHECKERS_LOSES";
 	private final static String KEY_CHECKERS_WINS = "KEY_CHECKERS_WINS";
 	private final static String KEY_CHESS_LOSES = "KEY_CHESS_LOSES";
@@ -111,9 +111,7 @@ public final class MyStatsDialogFragment extends SherlockDialogFragment
 		}
 		else
 		{
-			getPreferencesEditor();
-			sPreferencesEditor.clear();
-			sPreferencesEditor.commit();
+			getPreferencesEditor().clear().commit();
 
 			serverTask = new ServerApiGetStats(getSherlockActivity(), new ServerApi.Listeners()
 			{
@@ -152,10 +150,18 @@ public final class MyStatsDialogFragment extends SherlockDialogFragment
 	}
 
 
+	@Override
+	public void onDestroyView()
+	{
+		cancelRunningServerTask();
+		super.onDestroyView();
+	}
+
+
 	/**
-	 * Cancels the currently running AsyncTask (if any).
+	 * Cancels the currently running AsyncTask (if it's currently running).
 	 */
-	public void cancelRunningServerTask()
+	private void cancelRunningServerTask()
 	{
 		if (isServerTaskRunning())
 		{
@@ -243,13 +249,23 @@ public final class MyStatsDialogFragment extends SherlockDialogFragment
 	}
 
 
-	/**
-	 * @return
-	 * Returns true if a ServerApi Task is running.
-	 */
-	public boolean isServerTaskRunning()
+	private boolean isServerTaskRunning()
 	{
 		return serverTask != null;
+	}
+
+
+	public boolean onBackPressed()
+	{
+		if (isServerTaskRunning())
+		{
+			cancelRunningServerTask();
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 
@@ -285,8 +301,8 @@ public final class MyStatsDialogFragment extends SherlockDialogFragment
 				}
 				else
 				{
-					final int[] checkers = parseLosesAndWins(jsonStatsData, Server.POST_DATA_CHECKERS);
-					final int[] chess = parseLosesAndWins(jsonStatsData, Server.POST_DATA_CHESS);
+					final int [] checkers = parseLosesAndWins(jsonStatsData, Server.POST_DATA_CHECKERS);
+					final int [] chess = parseLosesAndWins(jsonStatsData, Server.POST_DATA_CHESS);
 					flushViews(checkers, chess);
 				}
 			}
@@ -310,7 +326,7 @@ public final class MyStatsDialogFragment extends SherlockDialogFragment
 		final JSONObject gameStats = statsData.getJSONObject(game);
 		final int loses = gameStats.getInt(Server.POST_DATA_LOSES);
 		final int wins = gameStats.getInt(Server.POST_DATA_WINS);
-		return new int[] { loses, wins };
+		return new int [] { loses, wins };
 	}
 
 
@@ -326,10 +342,7 @@ public final class MyStatsDialogFragment extends SherlockDialogFragment
 	 */
 	public static void clearCachedStats(final Context context)
 	{
-		final SharedPreferences sPreferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-		final SharedPreferences.Editor editor = sPreferences.edit();
-		editor.clear();
-		editor.commit();
+		context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE).edit().clear().commit();
 	}
 
 
