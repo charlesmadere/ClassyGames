@@ -2,6 +2,19 @@
 <resources>
 	<declare-styleable name="BoardView">
 		<attr
+			format="dimension"
+			name="position_padding" />
+		<attr
+			format="enum"
+			name="position_scaleType">
+			<enum
+				name="centerCrop"
+				value="0" />
+			<enum
+				name="centerInside"
+				value="1" />
+		</attr>
+		<attr
 			format="integer"
 			name="columns" />
 		<attr
