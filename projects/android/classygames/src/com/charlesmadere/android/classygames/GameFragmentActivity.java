@@ -314,13 +314,15 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 			}
 			else
 			{
-				try
+				final Fragment fragment = fManager.findFragmentById(R.id.game_fragment_activity_container);
+
+				if (fragment instanceof GamesListFragment)
 				{
-					gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.game_fragment_activity_container);
+					gamesListFragment = (GamesListFragment) fragment;
 				}
-				catch (final ClassCastException e)
+				else
 				{
-					Log.e(LOG_TAG, "ClassCastException in getGamesListFragment()!", e);
+					Log.w(LOG_TAG, "getGamesListFragment() tried to grab the GamesListFragment but encountered weirdness!");
 				}
 			}
 		}
