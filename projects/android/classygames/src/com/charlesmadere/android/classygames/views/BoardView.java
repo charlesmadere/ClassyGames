@@ -42,14 +42,14 @@ public class BoardView extends ViewGroup
 		final int width = positionViews[0][0].getMeasuredWidth();
 		final int height = positionViews[0][0].getMeasuredHeight();
 
-		for (int x = 0; x < rows; ++x)
+		for (int x = 0; x < columns; ++x)
 		{
 			final int left = width * x;
 			final int right = left + width;
 
-			for (int y = 0; y < columns; ++y)
+			for (int y = 0; y < rows; ++y)
 			{
-				final int top = height * y;
+				final int top = height * (rows - (y + 1));
 				final int bottom = top + height;
 
 				final PositionView positionView = positionViews[x][y];
@@ -79,12 +79,12 @@ public class BoardView extends ViewGroup
 
 		setMeasuredDimension(width, height);
 
-		final int widthSpec = MeasureSpec.makeMeasureSpec(width / rows, MeasureSpec.EXACTLY);
-		final int heightSpec = MeasureSpec.makeMeasureSpec(height / columns, MeasureSpec.EXACTLY);
+		final int widthSpec = MeasureSpec.makeMeasureSpec(width / columns, MeasureSpec.EXACTLY);
+		final int heightSpec = MeasureSpec.makeMeasureSpec(height / rows, MeasureSpec.EXACTLY);
 
-		for (int x = 0; x < rows; ++x)
+		for (int x = 0; x < columns; ++x)
 		{
-			for (int y = 0; y < columns; ++y)
+			for (int y = 0; y < rows; ++y)
 			{
 				final PositionView positionView = positionViews[x][y];
 				positionView.measure(widthSpec, heightSpec);
@@ -106,9 +106,9 @@ public class BoardView extends ViewGroup
 	 */
 	public void setPositionsOnClickListener(final OnClickListener onClickListener)
 	{
-		for (int x = 0; x < rows; ++x)
+		for (int x = 0; x < columns; ++x)
 		{
-			for (int y = 0; y < columns; ++y)
+			for (int y = 0; y < rows; ++y)
 			{
 				final PositionView positionView = positionViews[x][y];
 				positionView.setOnClickListener(onClickListener);
@@ -119,12 +119,12 @@ public class BoardView extends ViewGroup
 
 	private void createPositions()
 	{
-		positionViews = new PositionView[rows][columns];
+		positionViews = new PositionView[columns][rows];
 		final Context context = getContext();
 
-		for (int x = 0; x < rows; ++x)
+		for (int x = 0; x < columns; ++x)
 		{
-			for (int y = 0; y < columns; ++y)
+			for (int y = 0; y < rows; ++y)
 			{
 				final PositionView positionView = new PositionView(context, x, y, brightBackground, darkBackground);
 				positionViews[x][y] = positionView;
