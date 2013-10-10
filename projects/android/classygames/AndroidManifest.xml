@@ -65,7 +65,7 @@
 		android:label="@string/classy_games"
 		android:name=".App">
 
-    	<!-- some Facebook v3.0 stuff -->
+		<!-- some Facebook v3.0 stuff -->
 		<meta-data
 			android:name="com.facebook.sdk.ApplicationId"
 			android:value="@string/facebook_app_id" />
@@ -102,7 +102,7 @@
 
 		<activity
 			android:label="@string/about"
-			android:name=".settings.AboutActivity"
+			android:name="com.charlesmadere.android.classygames.settings.AboutActivity"
 			android:parentActivityName="com.charlesmadere.android.classygames.GameFragmentActivity"
 			android:theme="@style/Theme.Styled">
 			<meta-data
@@ -165,12 +165,6 @@
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value="com.charlesmadere.android.classygames.AboutActivity" />
 		</activity>
-
-		<activity
-			android:label="Test"
-			android:name="com.charlesmadere.android.classygames.Test"
-			android:parentActivityName="com.charlesmadere.android.classygames.GameFragmentActivity"
-			android:theme="@style/Theme.Styled" />
 
 		<activity
 			android:label="@string/unregister_from_notifications"

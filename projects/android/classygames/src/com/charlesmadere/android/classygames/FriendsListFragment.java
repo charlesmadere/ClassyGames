@@ -45,7 +45,6 @@ public final class FriendsListFragment extends SherlockListFragment implements
 	private ListView list;
 	private TextView empty;
 	private LinearLayout loading;
-	private TextView cancelledLoading;
 	private TextView noInternetConnection;
 
 
@@ -141,7 +140,6 @@ public final class FriendsListFragment extends SherlockListFragment implements
 		list.setOnItemClickListener(this);
 		empty = (TextView) view.findViewById(android.R.id.empty);
 		loading = (LinearLayout) view.findViewById(R.id.friends_list_fragment_loading);
-		cancelledLoading = (TextView) view.findViewById(R.id.friends_list_fragment_cancelled_loading);
 		noInternetConnection = (TextView) view.findViewById(R.id.fragment_no_internet_connection);
 	}
 
@@ -394,7 +392,7 @@ public final class FriendsListFragment extends SherlockListFragment implements
 
 		private AsyncRefreshFriendsList()
 		{
-			fragmentActivity = FriendsListFragment.this.getSherlockActivity();
+			fragmentActivity = getSherlockActivity();
 			runStatus = RUN_STATUS_NORMAL;
 		}
 
@@ -447,7 +445,14 @@ public final class FriendsListFragment extends SherlockListFragment implements
 									editor.putString(String.valueOf(friend.getId()), friend.getName());
 								}
 
-								editor.commit();
+								if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)
+								{
+									editor.apply();
+								}
+								else
+								{
+									editor.commit();
+								}
 							}
 						}).executeAndWait();
 					}
@@ -522,7 +527,6 @@ public final class FriendsListFragment extends SherlockListFragment implements
 				list.setVisibility(View.VISIBLE);
 				empty.setVisibility(View.GONE);
 				loading.setVisibility(View.GONE);
-				cancelledLoading.setVisibility(View.GONE);
 				noInternetConnection.setVisibility(View.GONE);
 			}
 			else if (runStatus == RUN_STATUS_NO_NETWORK_CONNECTION)
@@ -530,7 +534,6 @@ public final class FriendsListFragment extends SherlockListFragment implements
 				list.setVisibility(View.GONE);
 				empty.setVisibility(View.GONE);
 				loading.setVisibility(View.GONE);
-				cancelledLoading.setVisibility(View.GONE);
 				noInternetConnection.setVisibility(View.VISIBLE);
 			}
 			else
@@ -538,7 +541,6 @@ public final class FriendsListFragment extends SherlockListFragment implements
 				list.setVisibility(View.GONE);
 				empty.setVisibility(View.VISIBLE);
 				loading.setVisibility(View.GONE);
-				cancelledLoading.setVisibility(View.GONE);
 				noInternetConnection.setVisibility(View.GONE);
 			}
 
@@ -549,13 +551,12 @@ public final class FriendsListFragment extends SherlockListFragment implements
 		@Override
 		protected void onPreExecute()
 		{
+			setRunningState(true);
+
 			list.setVisibility(View.GONE);
 			empty.setVisibility(View.GONE);
 			loading.setVisibility(View.VISIBLE);
-			cancelledLoading.setVisibility(View.GONE);
 			noInternetConnection.setVisibility(View.GONE);
-
-			setRunningState(true);
 		}
 
 

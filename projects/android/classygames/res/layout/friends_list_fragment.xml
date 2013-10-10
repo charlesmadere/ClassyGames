@@ -43,14 +43,6 @@
 			android:textIsSelectable="false"
 			style="@style/Paragraph.ExtraPadding" />
 	</LinearLayout>
-	<TextView
-		android:gravity="center"
-		android:id="@+id/friends_list_fragment_cancelled_loading"
-		android:layout_gravity="center"
-		android:layout_height="match_parent"
-		android:layout_width="match_parent"
-		android:text="@string/cancelled_loading_your_friends_list"
-		style="@style/Paragraph.ExtraPadding" />
 	<include
 		layout="@layout/fragment_no_internet_connection" />
 </LinearLayout>

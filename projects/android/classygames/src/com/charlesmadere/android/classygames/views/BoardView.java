@@ -19,13 +19,22 @@ import com.charlesmadere.android.classygames.utilities.Utilities;
  * in shape. Handles rotation changes and will dynamically resize itself to
  * continue to maintain good dimensions despite the orientation flip.
  */
-public class BoardView extends ViewGroup
+public final class BoardView extends ViewGroup
 {
 
 
 	private final static String LOG_TAG = Utilities.LOG_TAG + " - BoardView";
 	private final static int COLUMNS_DEFAULT = 2;
 	private final static int ROWS_DEFAULT = 2;
+
+
+	/**
+	 * The background that will be given to views whose X and Y coordinates add
+	 * up to give an odd number sum. So that means coordinates like (1, 0),
+	 * (5, 2), and (3, 2) will be bright. This is because 1 + 0 = 1 (an odd
+	 * number), 5 + 2 = 7 (an odd number), and 3 + 2 = 5 (an odd number).
+	 */
+	private Drawable brightBackground;
 
 
 	/**
@@ -39,24 +48,15 @@ public class BoardView extends ViewGroup
 
 
 	/**
-	 * The background that will be given to views whose X and Y coordinates add
-	 * up to give an odd number sum. So that means coordinates like (1, 0),
-	 * (5, 2), and (3, 2) will be bright. This is because 1 + 0 = 1 (an odd
-	 * number), 5 + 2 = 7 (an odd number), and 3 + 2 = 5 (an odd number).
-	 */
-	private Drawable brightBackground;
-
-
-	/**
 	 * The total number of columns that this board has.
 	 */
-	private int columns;
+	private byte columns;
 
 
 	/**
 	 * The total number of rows that this board has.
 	 */
-	private int rows;
+	private byte rows;
 
 
 	/**
@@ -96,14 +96,15 @@ public class BoardView extends ViewGroup
 	 *
 	 * https://developer.android.com/reference/android/view/ViewGroup.html#onLayout(boolean, int, int, int, int)
 	 *
-	 * But quick-and-rough, this method does the actual placing of its view
-	 * children onto the screen.
+	 * But quick-and-rough, this method does the actual placement of this
+	 * ViewGroup's many view children onto the screen.
 	 */
 	@Override
 	protected void onLayout(final boolean changed, final int l, final int t, final int r, final int b)
 	{
-		final int width = positionViews[0][0].getMeasuredWidth();
-		final int height = positionViews[0][0].getMeasuredHeight();
+		final PositionView position = getPosition(0, 0);
+		final int width = position.getMeasuredWidth();
+		final int height = position.getMeasuredHeight();
 
 		for (int x = 0; x < columns; ++x)
 		{
@@ -115,7 +116,7 @@ public class BoardView extends ViewGroup
 				final int top = height * (rows - (y + 1));
 				final int bottom = top + height;
 
-				final PositionView positionView = positionViews[x][y];
+				final PositionView positionView = getPosition(x, y);
 				positionView.layout(left, top, right, bottom);
 			}
 		}
@@ -160,11 +161,11 @@ public class BoardView extends ViewGroup
 		final int widthSpec = MeasureSpec.makeMeasureSpec(widthSize, MeasureSpec.EXACTLY);
 		final int heightSpec = MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.EXACTLY);
 
-		for (int x = 0; x < columns; ++x)
+		for (byte x = 0; x < columns; ++x)
 		{
-			for (int y = 0; y < rows; ++y)
+			for (byte y = 0; y < rows; ++y)
 			{
-				final PositionView positionView = positionViews[x][y];
+				final PositionView positionView = getPosition(x, y);
 				positionView.measure(widthSpec, heightSpec);
 			}
 		}
@@ -178,20 +179,27 @@ public class BoardView extends ViewGroup
 	}
 
 
-	/**
-	 * Applies the given OnClickListener to every one of the PositionViews that
-	 * belong to this BoardView.
-	 */
-	public void setPositionsOnClickListener(final OnClickListener onClickListener)
+	public byte getLengthHorizontal()
 	{
-		for (int x = 0; x < columns; ++x)
-		{
-			for (int y = 0; y < rows; ++y)
-			{
-				final PositionView positionView = positionViews[x][y];
-				positionView.setOnClickListener(onClickListener);
-			}
-		}
+		return columns;
+	}
+
+
+	public byte getLengthVertical()
+	{
+		return rows;
+	}
+
+
+	public PositionView getPosition(final byte x, final byte y)
+	{
+		return positionViews[x][y];
+	}
+
+
+	public PositionView getPosition(final int x, final int y)
+	{
+		return getPosition((byte) x, (byte) y);
 	}
 
 
@@ -203,9 +211,9 @@ public class BoardView extends ViewGroup
 		positionViews = new PositionView[columns][rows];
 		final Context context = getContext();
 
-		for (int x = 0; x < columns; ++x)
+		for (byte x = 0; x < columns; ++x)
 		{
-			for (int y = 0; y < rows; ++y)
+			for (byte y = 0; y < rows; ++y)
 			{
 				final PositionView positionView = new PositionView(context, x, y, padding, scaleType, brightBackground, darkBackground);
 				positionViews[x][y] = positionView;
@@ -238,8 +246,8 @@ public class BoardView extends ViewGroup
 		{
 			brightBackground = attributes.getDrawable(R.styleable.BoardView_bright_background);
 			darkBackground = attributes.getDrawable(R.styleable.BoardView_dark_background);
-			columns = attributes.getInt(R.styleable.BoardView_columns, COLUMNS_DEFAULT);
-			rows = attributes.getInt(R.styleable.BoardView_rows, ROWS_DEFAULT);
+			columns = (byte) attributes.getInt(R.styleable.BoardView_columns, COLUMNS_DEFAULT);
+			rows = (byte) attributes.getInt(R.styleable.BoardView_rows, ROWS_DEFAULT);
 			padding = attributes.getDimension(R.styleable.BoardView_position_padding, PositionView.PADDING_DEFAULT);
 			scaleType = attributes.getInt(R.styleable.BoardView_position_scaleType, PositionView.SCALE_TYPE_DEFAULT);
 		}

@@ -184,13 +184,8 @@ public final class MainActivity extends SherlockActivity
 
 	private void startGameFragmentActivity()
 	{
-		// final Intent intent = new Intent(this, GameFragmentActivity.class);
-		// startActivityForResult(intent, RESULT_FIRST_USER);
-
-		// TODO
-		// Remove the line below and uncomment the above! This is only here for
-		// layout testing purposes.
-		startActivity(new Intent(this, Test.class));
+		final Intent intent = new Intent(this, GameFragmentActivity.class);
+		startActivityForResult(intent, RESULT_FIRST_USER);
 	}
 
 

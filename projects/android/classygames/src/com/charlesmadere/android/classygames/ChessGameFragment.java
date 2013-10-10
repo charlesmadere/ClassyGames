@@ -6,16 +6,16 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
-import android.widget.ImageButton;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.models.games.Coordinate;
+import com.charlesmadere.android.classygames.models.games.GenericPiece;
 import com.charlesmadere.android.classygames.models.games.Position;
 import com.charlesmadere.android.classygames.models.games.chess.Board;
 import com.charlesmadere.android.classygames.models.games.chess.Piece;
+import com.charlesmadere.android.classygames.views.PositionView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -120,21 +120,21 @@ public final class ChessGameFragment extends GenericGameFragment
 	protected void createOptionsMenu(final Menu menu, final MenuInflater inflater)
 	{
 		inflater.inflate(R.menu.chess_game_fragment, menu);
-		final MenuItem castle = menu.findItem(R.id.chess_game_fragment_menu_castle);
+		final MenuItem castleMenuItem = menu.findItem(R.id.chess_game_fragment_menu_castle);
 
 		if (board == null)
 		{
-			castle.setEnabled(false);
+			castleMenuItem.setEnabled(false);
 		}
 		else
 		{
 			if (((Board) board).canCastle())
 			{
-				castle.setEnabled(true);
+				castleMenuItem.setEnabled(true);
 			}
 			else
 			{
-				castle.setEnabled(false);
+				castleMenuItem.setEnabled(false);
 			}
 		}
 	}
@@ -167,77 +167,73 @@ public final class ChessGameFragment extends GenericGameFragment
 
 
 	@Override
-	protected void flush(final Position position)
+	protected void flush(final GenericPiece piece, final PositionView positionView)
 	{
-		final String tag = createTag(position.getCoordinate());
-		final Piece piece = (Piece) position.getPiece();
-		final ImageButton imageButton = (ImageButton) getView().findViewWithTag(tag);
-
 		switch (piece.getType())
 		{
 			case Piece.TYPE_PAWN:
 				if (piece.isTeamPlayer())
 				{
-					imageButton.setImageDrawable(playerPawn);
+					positionView.setImageDrawable(playerPawn);
 				}
 				else
 				{
-					imageButton.setImageDrawable(opponentPawn);
+					positionView.setImageDrawable(opponentPawn);
 				}
 				break;
 
 			case Piece.TYPE_BISHOP:
 				if (piece.isTeamPlayer())
 				{
-					imageButton.setImageDrawable(playerBishop);
+					positionView.setImageDrawable(playerBishop);
 				}
 				else
 				{
-					imageButton.setImageDrawable(opponentBishop);
+					positionView.setImageDrawable(opponentBishop);
 				}
 				break;
 
 			case Piece.TYPE_KNIGHT:
 				if (piece.isTeamPlayer())
 				{
-					imageButton.setImageDrawable(playerKnight);
+					positionView.setImageDrawable(playerKnight);
 				}
 				else
 				{
-					imageButton.setImageDrawable(opponentKnight);
+					positionView.setImageDrawable(opponentKnight);
 				}
 				break;
 
 			case Piece.TYPE_ROOK:
 				if (piece.isTeamPlayer())
 				{
-					imageButton.setImageDrawable(playerRook);
+					positionView.setImageDrawable(playerRook);
 				}
 				else
 				{
-					imageButton.setImageDrawable(opponentRook);
+					positionView.setImageDrawable(opponentRook);
 				}
 				break;
 
 			case Piece.TYPE_QUEEN:
 				if (piece.isTeamPlayer())
 				{
-					imageButton.setImageDrawable(playerQueen);
+					positionView.setImageDrawable(playerQueen);
 				}
 				else
 				{
-					imageButton.setImageDrawable(opponentQueen);
+					positionView.setImageDrawable(opponentQueen);
 				}
 				break;
 
 			case Piece.TYPE_KING:
 				if (piece.isTeamPlayer())
 				{
-					imageButton.setImageDrawable(playerKing);
+					positionView.setImageDrawable(playerKing);
 				}
 				else
 				{
-					imageButton.setImageDrawable(opponentKing);
+					positionView.setImageDrawable(opponentKing);
 				}
 				break;
 		}
@@ -290,115 +286,6 @@ public final class ChessGameFragment extends GenericGameFragment
 	protected void initNewBoard() throws JSONException
 	{
 		board = new Board();
-	}
-
-
-	@Override
-	protected void initViews()
-	{
-		final View view = getView();
-
-		setBoardOnClickListeners
-		(
-			R.id.checkers_and_chess_game_fragment_x0y0,
-			R.id.checkers_and_chess_game_fragment_x1y0,
-			R.id.checkers_and_chess_game_fragment_x2y0,
-			R.id.checkers_and_chess_game_fragment_x3y0,
-			R.id.checkers_and_chess_game_fragment_x4y0,
-			R.id.checkers_and_chess_game_fragment_x5y0,
-			R.id.checkers_and_chess_game_fragment_x6y0,
-			R.id.checkers_and_chess_game_fragment_x7y0,
-			R.id.checkers_and_chess_game_fragment_x0y1,
-			R.id.checkers_and_chess_game_fragment_x1y1,
-			R.id.checkers_and_chess_game_fragment_x2y1,
-			R.id.checkers_and_chess_game_fragment_x3y1,
-			R.id.checkers_and_chess_game_fragment_x4y1,
-			R.id.checkers_and_chess_game_fragment_x5y1,
-			R.id.checkers_and_chess_game_fragment_x6y1,
-			R.id.checkers_and_chess_game_fragment_x7y1,
-			R.id.checkers_and_chess_game_fragment_x0y2,
-			R.id.checkers_and_chess_game_fragment_x1y2,
-			R.id.checkers_and_chess_game_fragment_x2y2,
-			R.id.checkers_and_chess_game_fragment_x3y2,
-			R.id.checkers_and_chess_game_fragment_x4y2,
-			R.id.checkers_and_chess_game_fragment_x5y2,
-			R.id.checkers_and_chess_game_fragment_x6y2,
-			R.id.checkers_and_chess_game_fragment_x7y2,
-			R.id.checkers_and_chess_game_fragment_x0y3,
-			R.id.checkers_and_chess_game_fragment_x1y3,
-			R.id.checkers_and_chess_game_fragment_x2y3,
-			R.id.checkers_and_chess_game_fragment_x3y3,
-			R.id.checkers_and_chess_game_fragment_x4y3,
-			R.id.checkers_and_chess_game_fragment_x5y3,
-			R.id.checkers_and_chess_game_fragment_x6y3,
-			R.id.checkers_and_chess_game_fragment_x7y3,
-			R.id.checkers_and_chess_game_fragment_x0y4,
-			R.id.checkers_and_chess_game_fragment_x1y4,
-			R.id.checkers_and_chess_game_fragment_x2y4,
-			R.id.checkers_and_chess_game_fragment_x3y4,
-			R.id.checkers_and_chess_game_fragment_x4y4,
-			R.id.checkers_and_chess_game_fragment_x5y4,
-			R.id.checkers_and_chess_game_fragment_x6y4,
-			R.id.checkers_and_chess_game_fragment_x7y4,
-			R.id.checkers_and_chess_game_fragment_x0y5,
-			R.id.checkers_and_chess_game_fragment_x1y5,
-			R.id.checkers_and_chess_game_fragment_x2y5,
-			R.id.checkers_and_chess_game_fragment_x3y5,
-			R.id.checkers_and_chess_game_fragment_x4y5,
-			R.id.checkers_and_chess_game_fragment_x5y5,
-			R.id.checkers_and_chess_game_fragment_x6y5,
-			R.id.checkers_and_chess_game_fragment_x7y5,
-			R.id.checkers_and_chess_game_fragment_x0y6,
-			R.id.checkers_and_chess_game_fragment_x1y6,
-			R.id.checkers_and_chess_game_fragment_x2y6,
-			R.id.checkers_and_chess_game_fragment_x3y6,
-			R.id.checkers_and_chess_game_fragment_x4y6,
-			R.id.checkers_and_chess_game_fragment_x5y6,
-			R.id.checkers_and_chess_game_fragment_x6y6,
-			R.id.checkers_and_chess_game_fragment_x7y6,
-			R.id.checkers_and_chess_game_fragment_x0y7,
-			R.id.checkers_and_chess_game_fragment_x1y7,
-			R.id.checkers_and_chess_game_fragment_x2y7,
-			R.id.checkers_and_chess_game_fragment_x3y7,
-			R.id.checkers_and_chess_game_fragment_x4y7,
-			R.id.checkers_and_chess_game_fragment_x5y7,
-			R.id.checkers_and_chess_game_fragment_x6y7,
-			R.id.checkers_and_chess_game_fragment_x7y7
-		);
-
-		// Below we're going to create two different int arrays. One will
-		// contain all of the board's ROWS and the other will contain all of
-		// the board's COLUMNS. This is needed because the board as taken
-		// directly from the raw XML file do not have each individual
-		// position's height and width dimensions equal. This means that each
-		// position is not a square. This issue can only be fixed in code, and
-		// that code requires having a handle to all of board's rows and
-		// columns.
-
-		// create an array of handles to the board's rows
-		final int [] xPositions = new int[8];
-		xPositions[0] = R.id.checkers_and_chess_game_fragment_x0;
-		xPositions[1] = R.id.checkers_and_chess_game_fragment_x1;
-		xPositions[2] = R.id.checkers_and_chess_game_fragment_x2;
-		xPositions[3] = R.id.checkers_and_chess_game_fragment_x3;
-		xPositions[4] = R.id.checkers_and_chess_game_fragment_x4;
-		xPositions[5] = R.id.checkers_and_chess_game_fragment_x5;
-		xPositions[6] = R.id.checkers_and_chess_game_fragment_x6;
-		xPositions[7] = R.id.checkers_and_chess_game_fragment_x7;
-
-		// create an array of handles to the board's columns
-		final int [] yPositions = new int[8];
-		yPositions[0] = R.id.checkers_and_chess_game_fragment_y0;
-		yPositions[1] = R.id.checkers_and_chess_game_fragment_y1;
-		yPositions[2] = R.id.checkers_and_chess_game_fragment_y2;
-		yPositions[3] = R.id.checkers_and_chess_game_fragment_y3;
-		yPositions[4] = R.id.checkers_and_chess_game_fragment_y4;
-		yPositions[5] = R.id.checkers_and_chess_game_fragment_y5;
-		yPositions[6] = R.id.checkers_and_chess_game_fragment_y6;
-		yPositions[7] = R.id.checkers_and_chess_game_fragment_y7;
-
-		// run the method that will perform the actual board resizing code
-		setAllBoardPositionsToEqualHeightAndWidth(view, R.id.checkers_and_chess_game_fragment_x0y7, xPositions, yPositions);
 	}
 
 
@@ -507,7 +394,7 @@ public final class ChessGameFragment extends GenericGameFragment
 
 
 	@Override
-	protected void onBoardClick(final ImageButton positionCurrent)
+	protected void onBoardClick(final PositionView positionCurrent)
 	{
 		if (board.isBoardLocked())
 		{
@@ -515,7 +402,7 @@ public final class ChessGameFragment extends GenericGameFragment
 		}
 		else
 		{
-			final Coordinate coordinateCurrent = new Coordinate((String) positionCurrent.getTag());
+			final Coordinate coordinateCurrent = positionCurrent.getCoordinate();
 			final Position current = board.getPosition(coordinateCurrent);
 
 			if (current.hasPiece() && current.getPiece().isTeamPlayer())
@@ -531,15 +418,15 @@ public final class ChessGameFragment extends GenericGameFragment
 
 
 	@Override
-	protected void onBoardClick(final ImageButton positionPrevious, final ImageButton positionCurrent)
+	protected void onBoardClick(final PositionView positionPrevious, final PositionView positionCurrent)
 	{
 		if (!board.isBoardLocked())
 		{
-			final Coordinate coordinatePrevious = new Coordinate((String) positionPrevious.getTag());
+			final Coordinate coordinatePrevious = positionPrevious.getCoordinate();
 			final Position previous = board.getPosition(coordinatePrevious);
 			positionPrevious.setSelected(false);
 
-			final Coordinate coordinateCurrent = new Coordinate((String) positionCurrent.getTag());
+			final Coordinate coordinateCurrent = positionCurrent.getCoordinate();
 			final Position current = board.getPosition(coordinateCurrent);
 
 			if (!current.hasPiece())
@@ -554,12 +441,15 @@ public final class ChessGameFragment extends GenericGameFragment
 					switch (((Board) board).isBoardInCheckOrCheckmate())
 					{
 						case Board.BOARD_NORMAL:
+							// TODO
 							break;
 
 						case Board.BOARD_CHECK:
+							// TODO
 							break;
 
 						case Board.BOARD_CHECKMATE:
+							// TODO
 							break;
 					}
 				}

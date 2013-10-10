@@ -53,7 +53,6 @@ public final class GamesListFragment extends SherlockListFragment implements
 	private ListView list;
 	private TextView empty;
 	private LinearLayout loading;
-	private TextView cancelledLoading;
 	private TextView noInternetConnection;
 
 
@@ -195,7 +194,6 @@ public final class GamesListFragment extends SherlockListFragment implements
 		list.setOnItemLongClickListener(this);
 		empty = (TextView) view.findViewById(android.R.id.empty);
 		loading = (LinearLayout) view.findViewById(R.id.games_list_fragment_loading);
-		cancelledLoading = (TextView) view.findViewById(R.id.games_list_fragment_cancelled_loading);
 		noInternetConnection = (TextView) view.findViewById(R.id.fragment_no_internet_connection);
 
 		if (savedInstanceState != null && savedInstanceState.containsKey(KEY_GAMES_LIST_JSON))
@@ -479,25 +477,8 @@ public final class GamesListFragment extends SherlockListFragment implements
 	{
 		if (!isAnAsyncTaskRunning())
 		{
-			asyncRefreshGamesList = new AsyncRefreshGamesList(getSherlockActivity(), restoreExistingList);
+			asyncRefreshGamesList = new AsyncRefreshGamesList(restoreExistingList);
 			asyncRefreshGamesList.execute();
-		}
-	}
-
-
-	private void refreshListDrawState()
-	{
-		if (selectedGame != null)
-		{
-			selectedGame.unselect();
-			selectedGame = null;
-		}
-
-		final GamesListAdapter games = (GamesListAdapter) list.getAdapter();
-
-		if (games != null)
-		{
-			games.notifyDataSetChanged();
 		}
 	}
 
@@ -515,14 +496,14 @@ public final class GamesListFragment extends SherlockListFragment implements
 		private final static byte RUN_STATUS_NO_NETWORK_CONNECTION = 3;
 
 
-		private SherlockFragmentActivity fragmentActivity;
 		private boolean restoreExistingList;
+		private SherlockFragmentActivity fragmentActivity;
 
 
-		private AsyncRefreshGamesList(final SherlockFragmentActivity fragmentActivity, final boolean restoreExistingList)
+		private AsyncRefreshGamesList(final boolean restoreExistingList)
 		{
-			this.fragmentActivity = fragmentActivity;
 			this.restoreExistingList = restoreExistingList;
+			fragmentActivity = getSherlockActivity();
 			runStatus = RUN_STATUS_NORMAL;
 		}
 
@@ -620,7 +601,6 @@ public final class GamesListFragment extends SherlockListFragment implements
 				list.setVisibility(View.VISIBLE);
 				empty.setVisibility(View.GONE);
 				loading.setVisibility(View.GONE);
-				cancelledLoading.setVisibility(View.GONE);
 				noInternetConnection.setVisibility(View.GONE);
 			}
 			else if (runStatus == RUN_STATUS_IOEXCEPTION || runStatus == RUN_STATUS_NO_NETWORK_CONNECTION)
@@ -628,7 +608,6 @@ public final class GamesListFragment extends SherlockListFragment implements
 				list.setVisibility(View.GONE);
 				empty.setVisibility(View.GONE);
 				loading.setVisibility(View.GONE);
-				cancelledLoading.setVisibility(View.GONE);
 				noInternetConnection.setVisibility(View.VISIBLE);
 			}
 			else
@@ -636,7 +615,6 @@ public final class GamesListFragment extends SherlockListFragment implements
 				list.setVisibility(View.GONE);
 				empty.setVisibility(View.VISIBLE);
 				loading.setVisibility(View.GONE);
-				cancelledLoading.setVisibility(View.GONE);
 				noInternetConnection.setVisibility(View.GONE);
 			}
 
@@ -647,13 +625,12 @@ public final class GamesListFragment extends SherlockListFragment implements
 		@Override
 		protected void onPreExecute()
 		{
+			setRunningState(true);
+
 			list.setVisibility(View.GONE);
 			empty.setVisibility(View.GONE);
 			loading.setVisibility(View.VISIBLE);
-			cancelledLoading.setVisibility(View.GONE);
 			noInternetConnection.setVisibility(View.GONE);
-
-			setRunningState(true);
 		}
 
 

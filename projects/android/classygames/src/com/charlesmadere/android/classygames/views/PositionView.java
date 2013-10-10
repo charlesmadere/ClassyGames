@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.widget.ImageButton;
-import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.models.games.Coordinate;
 
 
@@ -13,7 +12,7 @@ import com.charlesmadere.android.classygames.models.games.Coordinate;
  * A View that occupies a single position on the BoardView. In Checkers or
  * Chess, 64 of things make up the entire BoardView.
  */
-public class PositionView extends ImageButton
+public final class PositionView extends ImageButton
 {
 
 
@@ -26,7 +25,7 @@ public class PositionView extends ImageButton
 	private Coordinate coordinate;
 
 
-	public PositionView(final Context context, final int x, final int y, final float padding, final int scaleType,
+	public PositionView(final Context context, final byte x, final byte y, final float padding, final int scaleType,
 		final Drawable brightBackground, final Drawable darkBackground)
 	{
 		super(context);
