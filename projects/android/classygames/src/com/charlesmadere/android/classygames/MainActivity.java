@@ -1,16 +1,16 @@
 package com.charlesmadere.android.classygames;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Window;
+import com.charlesmadere.android.classygames.gcm.GCMManager;
 import com.charlesmadere.android.classygames.models.Person;
-import com.charlesmadere.android.classygames.server.Server;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 import com.facebook.*;
@@ -195,14 +195,14 @@ public final class MainActivity extends SherlockActivity
 	{
 
 
-		private Context context;
+		private SherlockActivity activity;
 		private Session session;
 
 
 		private AsyncGetFacebookIdentity(final Session session)
 		{
 			this.session = session;
-			context = MainActivity.this;
+			activity = MainActivity.this;
 		}
 
 
@@ -222,8 +222,6 @@ public final class MainActivity extends SherlockActivity
 						facebookIdentity.setName(user.getName());
 					}
 				}).executeAndWait();
-
-				Server.gcmPerformRegister(context);
 			}
 
 			return facebookIdentity;
@@ -235,16 +233,21 @@ public final class MainActivity extends SherlockActivity
 		{
 			if (facebookIdentity.isValid())
 			{
-				Utilities.setWhoAmI(context, facebookIdentity);
-				asyncGetFacebookIdentity = null;
+				Utilities.setWhoAmI(activity, facebookIdentity);
 
+				if (GCMManager.checkGooglePlayServices(activity, false))
+				{
+					GCMManager.start(activity);
+				}
+
+				asyncGetFacebookIdentity = null;
 				facebook.setVisibility(View.GONE);
 				loading.setVisibility(View.INVISIBLE);
-
 				startGameFragmentActivity();
 			}
 			else
 			{
+				Toast.makeText(activity, R.string.we_had_a_problem_gathering_your_facebook_information, Toast.LENGTH_LONG).show();
 				finish();
 			}
 		}

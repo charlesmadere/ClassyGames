@@ -72,7 +72,7 @@
 
 		<!-- more GCM stuff -->
 		<receiver
-			android:name="com.charlesmadere.android.classygames.services.GCMBroadcastReceiver"
+			android:name="com.charlesmadere.android.classygames.gcm.GCMBroadcastReceiver"
 			android:permission="com.google.android.c2dm.permission.SEND">
 			<intent-filter>
 				<action
@@ -85,7 +85,7 @@
 		</receiver>
 
 		<service
-			android:name="com.charlesmadere.android.classygames.services.GCMIntentService" />
+			android:name="com.charlesmadere.android.classygames.gcm.GCMIntentService" />
 		<!--  end more GCM stuff -->
 
 		<activity

@@ -3,6 +3,8 @@ package com.charlesmadere.android.classygames.utilities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Shader.TileMode;
 import android.graphics.Typeface;
@@ -34,18 +36,9 @@ public final class Utilities
 
 	public final static String LOG_TAG = "Classy Games";
 
-
 	private static ImageLoader imageLoader;
 
-
-	// Stores the reg id of the current Android device. More information can be
-	// found here: https://developer.android.com/google/gcm/index.html
-	private static String regId;
-	private final static String KEY_REG_ID = "KEY_REG_ID";
-
-
-	// stores the Facebook user id and name of the current user of the Classy
-	// Games application
+	// stores the Facebook user id and name of the app's current user
 	private static Person whoAmI;
 	private final static String KEY_WHO_AM_I_ID = "KEY_WHO_AM_I_ID";
 	private final static String KEY_WHO_AM_I_NAME = "KEY_WHO_AM_I_NAME";
@@ -78,8 +71,7 @@ public final class Utilities
 	 * on or off (true or false).
 	 *
 	 * @param context
-	 * The context of the Activity or Fragment that you're calling this method
-	 * from.
+	 * The context of the Activity that you're calling this method from.
 	 *
 	 * @param key
 	 * The R.string.* value for the settings key that you're trying to
@@ -99,6 +91,37 @@ public final class Utilities
 	{
 		final String string = context.getString(key);
 		return getPreferences(context).getBoolean(string, defaultValue);
+	}
+
+
+	/**
+	 * Retrieves and then returns the app's version code. The returned value
+	 * corresponds directly to the "versionCode" value that is found at the
+	 * beginning of the AndroidManifest.xml file.
+	 *
+	 * @param context
+	 * The Context of the Activity that you're calling this method from.
+	 *
+	 * @return
+	 * Returns the app's version code (as seen in AndroidManifest.xml).
+	 */
+	public static int getAppVersionCode(final Context context)
+	{
+		int versionCode;
+
+		try
+		{
+			final PackageManager packageManager = context.getPackageManager();
+			final String packageName = context.getPackageName();
+			final PackageInfo packageInfo = packageManager.getPackageInfo(packageName, 0);
+			versionCode = packageInfo.versionCode;
+		}
+		catch (final PackageManager.NameNotFoundException e)
+		{
+			versionCode = 0;
+		}
+
+		return versionCode;
 	}
 
 
@@ -143,32 +166,6 @@ public final class Utilities
 	public static SharedPreferences getPreferences(final Context context)
 	{
 		return PreferenceManager.getDefaultSharedPreferences(context);
-	}
-
-
-	/**
-	 * Gives you this Android device's GCM registration ID.
-	 *
-	 * @param context
-	 * The context of the Activity that is calling this method.
-	 *
-	 * @return
-	 * Returns this Android device's GCM registration ID. This is typically a
-	 * somewhat long String filled with random characters. <strong>Note that
-	 * this method has a slim possibility of returning null.</strong>
-	 */
-	public static String getRegId(final Context context)
-	{
-		if (!verifyValidString(regId))
-		{
-			final SharedPreferences sPreferences = getPreferences(context);
-
-			// Grab the user's GCM registration ID from shared preferences if
-			// it already exists. Returns null if it doesn't already exist.
-			regId = sPreferences.getString(KEY_REG_ID, null);
-		}
-
-		return regId;
 	}
 
 
@@ -232,8 +229,7 @@ public final class Utilities
 	 * @return
 	 * Returns the styled String as created with your specifications.
 	 */
-	public static SpannableString makeStyledString(final CharSequence string,
-		final Typeface typeface)
+	public static SpannableString makeStyledString(final CharSequence string, final Typeface typeface)
 	{
 		final SpannableString styledString = new SpannableString(string);
 		styledString.setSpan(new StyledString(typeface), 0, styledString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -256,8 +252,7 @@ public final class Utilities
 	 * @param showBackArrow
 	 * Want to show the back arrow on the Action Bar? Pass in true to show it.
 	 */
-	public static void setActionBar(final SherlockActivity activity, final int actionBarTitle,
-		final boolean showBackArrow)
+	public static void setActionBar(final SherlockActivity activity, final int actionBarTitle, final boolean showBackArrow)
 	{
 		setActionBarStyle
 		(
@@ -382,26 +377,6 @@ public final class Utilities
 
 			actionBar.setBackgroundDrawable(background);
 		}
-	}
-
-
-	/**
-	 * Sets this Android device's GCM registration ID.
-	 * 
-	 * @param context
-	 * The context of the Activity that is calling this method.
-	 * 
-	 * @param regId
-	 * The new GCM registration ID.
-	 */
-	public static void setRegId(final Context context, final String regId)
-	{
-		final SharedPreferences sPreferences = getPreferences(context);
-		final SharedPreferences.Editor editor = sPreferences.edit();
-		editor.putString(KEY_REG_ID, regId);
-		editor.commit();
-
-		Utilities.regId = regId;
 	}
 
 

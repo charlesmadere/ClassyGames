@@ -26,7 +26,7 @@ import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.ListItem;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.server.*;
-import com.charlesmadere.android.classygames.services.GCMIntentService;
+import com.charlesmadere.android.classygames.gcm.GCMIntentService;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;

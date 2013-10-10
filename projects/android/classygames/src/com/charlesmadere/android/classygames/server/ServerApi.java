@@ -98,13 +98,11 @@ public abstract class ServerApi
 	 * The Context of the class that you're creating this object from.
 	 * 
 	 * @param listeners
-	 * A set of listener to call once we're done running code here.
+	 * A set of listeners to call once we're done running code here.
 	 */
 	protected ServerApi(final Context context, final Listeners listeners)
 	{
-		this.context = context;
-		this.listeners = listeners;
-		showProgressDialog = true;
+		this(context, listeners, true);
 	}
 
 
@@ -129,6 +127,16 @@ public abstract class ServerApi
 		this.context = context;
 		this.listeners = listeners;
 		this.showProgressDialog = showProgressDialog;
+	}
+
+
+	/**
+	 * @return
+	 * Returns the Context object handed in through this class's constructor.
+	 */
+	protected Context getContext()
+	{
+		return context;
 	}
 
 
@@ -231,18 +239,6 @@ public abstract class ServerApi
 	}
 
 
-	/**
-	 * This method is run at the very beginning of the onPostExecute() method.
-	 *
-	 * @param serverResponse
-	 * The raw data as received from the Classy Games server.
-	 */
-	protected void finishUp(final String serverResponse)
-	{
-
-	}
-
-
 
 
 	/**
@@ -309,8 +305,6 @@ public abstract class ServerApi
 		@Override
 		protected void onPostExecute(final String serverResponse)
 		{
-			finishUp(serverResponse);
-
 			if (progressDialog != null)
 			{
 				progressDialog.dismiss();

@@ -109,6 +109,8 @@
 	<string name="server_api_send_move_progressdialog_message">Sending your class to our server, the hamsters will process it shortly!</string>
 	<string name="server_api_skip_move_dialog_message">Are you sure that you want to skip your turn? For real?</string>
 	<string name="server_api_skip_move_progressdialog_message">Sending your decision to skip your turn to our server, the hamsters are processing it&#8230;</string>
+	<string name="server_api_register_for_notifications_dialog_message">Are you sure that you want to register for notifications?</string>
+	<string name="server_api_register_for_notifications_progressdialog_message">Registering your device with our server\'s notification system&#8230;</string>
 	<string name="server_api_unregister_from_server_dialog_message">Are you sure that you want to unregister from notifications?</string>
 	<string name="server_api_unregister_from_server_progressdialog_message">Unregistering your devices from our server\'s notification system&#8230;</string>
 	<string name="server_exchange">Server Exchange</string>
@@ -124,6 +126,7 @@
 	<string name="skip_move">Skip Move</string>
 	<string name="start_game">Start game!</string>
 	<string name="stats">Stats</string>
+	<string name="thanks_youre_device_is_now_being_registered_for_notifications">Thanks! You\'re device is now being registered for notifications&#8230;</string>
 	<string name="their_turn">Their Turn</string>
 	<string name="top_hats_all_the_way_down">Top hats all the way down&#8230;</string>
 	<string name="two_weeks_ago">2 weeks ago</string>
@@ -138,6 +141,7 @@
 	<string name="version">Version</string>
 	<string name="version_number">2.0.0</string>
 	<string name="vibrate">Vibrate</string>
+	<string name="we_had_a_problem_gathering_your_facebook_information">We had a problem gathering your Facebook information! Try clearing the app\'s data and re-signing into Facebook and try again.</string>
 	<string name="which_game_would_you_like_to_play">Which game would you like to play?</string>
 	<string name="won">won</string>
 	<string name="yes">Yes</string>

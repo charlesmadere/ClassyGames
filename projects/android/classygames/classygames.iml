@@ -25,11 +25,11 @@
     <orderEntry type="jdk" jdkName="Android 4.3 Google APIs" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="actionbarsherlock" />
-    <orderEntry type="module" module-name="FacebookSDK" />
+    <orderEntry type="module" module-name="facebook" />
     <orderEntry type="library" name="android-support-v4" level="project" />
-    <orderEntry type="library" name="gcm" level="project" />
-    <orderEntry type="library" name="GoogleAdMobAdsSdk-6.4.1" level="project" />
-    <orderEntry type="library" name="universal-image-loader-1.8.6" level="project" />
+    <orderEntry type="library" name="google-admob-ads-sdk" level="project" />
+    <orderEntry type="library" name="google-play-services" level="project" />
+    <orderEntry type="library" name="universal-image-loader" level="project" />
   </component>
 </module>
 

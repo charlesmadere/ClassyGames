@@ -9,7 +9,7 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.server.ServerApi;
-import com.charlesmadere.android.classygames.server.ServerApiUnregisterFromNotifications;
+import com.charlesmadere.android.classygames.server.ServerApiGCMUnregister;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
@@ -22,7 +22,7 @@ public final class UnregisterFromNotificationsActivity extends SherlockActivity
 	 * Holds a handle to a currently running (if it's currently running)
 	 * ServerApi object.
 	 */
-	private ServerApiUnregisterFromNotifications serverApiTask;
+	private ServerApiGCMUnregister serverApiTask;
 
 
 
@@ -44,7 +44,7 @@ public final class UnregisterFromNotificationsActivity extends SherlockActivity
 			{
 				if (serverApiTask == null)
 				{
-					serverApiTask = new ServerApiUnregisterFromNotifications(UnregisterFromNotificationsActivity.this,
+					serverApiTask = new ServerApiGCMUnregister(UnregisterFromNotificationsActivity.this,
 						new ServerApi.Listeners()
 						{
 							@Override
