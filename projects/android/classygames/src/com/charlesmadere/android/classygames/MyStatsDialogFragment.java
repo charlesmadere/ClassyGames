@@ -278,7 +278,7 @@ public final class MyStatsDialogFragment extends SherlockDialogFragment
 	 */
 	private void parseServerResponse(final String serverResponse)
 	{
-		if (Utilities.verifyValidString(serverResponse))
+		if (Utilities.validString(serverResponse))
 		{
 			try
 			{
@@ -289,7 +289,7 @@ public final class MyStatsDialogFragment extends SherlockDialogFragment
 				{
 					final String successMessage = jsonResult.optString(Server.POST_DATA_SUCCESS);
 
-					if (Utilities.verifyValidString(successMessage))
+					if (Utilities.validString(successMessage))
 					{
 						Log.d(LOG_TAG, "Server returned success message: " + successMessage);
 					}

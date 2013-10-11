@@ -88,7 +88,7 @@ public final class GameFragmentActivity extends SherlockFragmentActivity impleme
 			// loaded in and used instead.
 			CharSequence actionBarTitle = savedInstanceState.getCharSequence(KEY_ACTION_BAR_TITLE);
 
-			if (actionBarTitle == null || !Utilities.verifyValidString(actionBarTitle.toString()))
+			if (actionBarTitle == null || !Utilities.validString(actionBarTitle.toString()))
 			{
 				actionBarTitle = getString(R.string.games_list);
 			}

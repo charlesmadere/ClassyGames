@@ -227,7 +227,7 @@ public final class Game
 	 */
 	public String getTimestampFormatted(final Resources resources)
 	{
-		if (!Utilities.verifyValidString(timestampFormatted))
+		if (!Utilities.validString(timestampFormatted))
 		// Check to see if we've already created a formatted timestamp String
 		// for this game object. If we've already created a formatted timestamp
 		// String, then we can just skip the whole algorithm below and return

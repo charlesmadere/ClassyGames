@@ -60,7 +60,6 @@ public final class Utilities
 	{
 		final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		final NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-
 		return networkInfo != null && networkInfo.isConnected();
 	}
 
@@ -394,28 +393,12 @@ public final class Utilities
 	 */
 	public static void setWhoAmI(final Context context, final Person facebookIdentity)
 	{
-		final SharedPreferences sPreferences = getPreferences(context);
-		final SharedPreferences.Editor editor = sPreferences.edit();
-		editor.putLong(KEY_WHO_AM_I_ID, facebookIdentity.getId());
-		editor.putString(KEY_WHO_AM_I_NAME, facebookIdentity.getName());
-		editor.commit();
+		getPreferences(context).edit()
+			.putLong(KEY_WHO_AM_I_ID, facebookIdentity.getId())
+			.putString(KEY_WHO_AM_I_NAME, facebookIdentity.getName())
+			.commit();
 
 		whoAmI = facebookIdentity;
-	}
-
-
-	/**
-	 * Verifies a String object for validity.
-	 * 
-	 * @param string
-	 * The String to check.
-	 * 
-	 * @return
-	 * Returns true if the given String is valid.
-	 */
-	public static boolean verifyValidString(final String string)
-	{
-		return string != null && string.length() >= 1;
 	}
 
 
@@ -423,18 +406,25 @@ public final class Utilities
 	 * Verifies a set of String objects for validity.
 	 * 
 	 * @param strings
-	 * The Strings to check.
+	 * The set of String objects to check.
 	 * 
 	 * @return
-	 * Returns true if all of the given Strings are valid.
+	 * Returns true if <strong>all</strong> of the given Strings are valid.
 	 */
-	public static boolean verifyValidStrings(final String... strings)
+	public static boolean validString(final String... strings)
 	{
-		for (final String string : strings)
+		if (strings == null || strings.length == 0)
 		{
-			if (!verifyValidString(string))
+			return false;
+		}
+		else
+		{
+			for (final String string : strings)
 			{
-				return false;
+				if (string == null || string.length() == 0)
+				{
+					return false;
+				}
 			}
 		}
 

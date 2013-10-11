@@ -210,7 +210,7 @@ public final class Person implements Serializable
 	 */
 	public static boolean isIdValid(final String id)
 	{
-		if (Utilities.verifyValidString(id))
+		if (Utilities.validString(id))
 		// First, ensure that we were given a valid String. If this proves true
 		// then we will check to see that the long value of this String is a
 		// valid ID value.
@@ -295,7 +295,7 @@ public final class Person implements Serializable
 	 */
 	public static boolean isNameValid(final String name)
 	{
-		return Utilities.verifyValidString(name);
+		return Utilities.validString(name);
 	}
 
 

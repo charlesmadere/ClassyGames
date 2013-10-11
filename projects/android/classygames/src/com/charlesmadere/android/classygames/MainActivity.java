@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Window;
@@ -27,6 +28,7 @@ public final class MainActivity extends SherlockActivity
 
 	private LinearLayout facebook;
 	private LinearLayout loading;
+	private TextView loadingText;
 
 
 	private boolean hasFinished = false;
@@ -51,6 +53,7 @@ public final class MainActivity extends SherlockActivity
 
 		facebook = (LinearLayout) findViewById(R.id.main_activity_facebook);
 		loading = (LinearLayout) findViewById(R.id.main_activity_loading);
+		loadingText = (TextView) findViewById(R.id.main_activity_loading_text);
 
 		final Session.StatusCallback sessionStatusCallback = new Session.StatusCallback()
 		{
@@ -96,7 +99,6 @@ public final class MainActivity extends SherlockActivity
 	protected void onDestroy()
 	{
 		cancelRunningAnyAsyncTask();
-
 		isResumed = false;
 		uiHelper.onDestroy();
 		super.onDestroy();
@@ -195,14 +197,14 @@ public final class MainActivity extends SherlockActivity
 	{
 
 
-		private SherlockActivity activity;
 		private Session session;
+		private SherlockActivity activity;
 
 
 		private AsyncGetFacebookIdentity(final Session session)
 		{
-			this.session = session;
 			activity = MainActivity.this;
+			this.session = session;
 		}
 
 
@@ -235,15 +237,40 @@ public final class MainActivity extends SherlockActivity
 			{
 				Utilities.setWhoAmI(activity, facebookIdentity);
 
-				if (GCMManager.checkGooglePlayServices(activity, false))
+				if (GCMManager.checkGooglePlayServices(activity))
 				{
-					GCMManager.start(activity);
-				}
+					GCMManager.start(activity, new GCMManager.Listener()
+					{
+						@Override
+						public void onRegistrationBegin()
+						{
+							loadingText.setText(R.string.registering_you_with_our_servers);
+						}
 
-				asyncGetFacebookIdentity = null;
-				facebook.setVisibility(View.GONE);
-				loading.setVisibility(View.INVISIBLE);
-				startGameFragmentActivity();
+
+						@Override
+						public void onRegistrationFailure()
+						{
+							if (!isDestroyed())
+							{
+								loadingText.setText(R.string.registration_failed_please_try_signing_in_again_later);
+								asyncGetFacebookIdentity = null;
+							}
+						}
+
+
+						@Override
+						public void onRegistrationSuccess()
+						{
+							if (!isDestroyed())
+							{
+								asyncGetFacebookIdentity = null;
+								loading.setVisibility(View.INVISIBLE);
+								startGameFragmentActivity();
+							}
+						}
+					});
+				}
 			}
 			else
 			{

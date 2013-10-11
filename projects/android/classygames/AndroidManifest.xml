@@ -63,7 +63,7 @@
 		android:allowBackup="false"
 		android:icon="@drawable/launcher"
 		android:label="@string/classy_games"
-		android:name=".App">
+		android:name="com.charlesmadere.android.classygames.App">
 
 		<!-- some Facebook v3.0 stuff -->
 		<meta-data
@@ -72,6 +72,7 @@
 
 		<!-- more GCM stuff -->
 		<receiver
+			android:exported="true"
 			android:name="com.charlesmadere.android.classygames.gcm.GCMBroadcastReceiver"
 			android:permission="com.google.android.c2dm.permission.SEND">
 			<intent-filter>

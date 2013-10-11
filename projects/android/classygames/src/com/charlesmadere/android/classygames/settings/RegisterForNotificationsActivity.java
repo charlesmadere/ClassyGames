@@ -1,6 +1,9 @@
 package com.charlesmadere.android.classygames.settings;
 
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -34,11 +37,48 @@ public final class RegisterForNotificationsActivity extends SherlockActivity
 			{
 				final SherlockActivity activity = RegisterForNotificationsActivity.this;
 
-				if (GCMManager.checkGooglePlayServices(activity, true))
+				if (GCMManager.checkGooglePlayServices(activity))
 				{
-					GCMManager.start(getApplicationContext());
-					Toast.makeText(activity, R.string.thanks_youre_device_is_now_being_registered_for_notifications, Toast.LENGTH_LONG).show();
-					finish();
+					final ProgressDialog progressDialog = new ProgressDialog(activity);
+					progressDialog.setCancelable(true);
+					progressDialog.setCanceledOnTouchOutside(false);
+					progressDialog.setMessage(getString(R.string.thanks_youre_device_is_now_being_registered_for_notifications));
+					progressDialog.setTitle(R.string.register_for_notifications);
+					progressDialog.show();
+
+					GCMManager.start(getApplicationContext(), new GCMManager.Listener()
+					{
+						@Override
+						public void onRegistrationBegin()
+						{}
+
+
+						@Override
+						public void onRegistrationFailure()
+						{
+							new AlertDialog.Builder(activity)
+								.setMessage(R.string.an_error_occurred_when_trying_to_register_for_notifications)
+								.setNeutralButton(R.string.okay, new DialogInterface.OnClickListener()
+								{
+									@Override
+									public void onClick(final DialogInterface dialog, final int which)
+									{
+										dialog.dismiss();
+									}
+								})
+								.setTitle(R.string.register_for_notifications)
+								.show();
+						}
+
+
+						@Override
+						public void onRegistrationSuccess()
+						{
+							progressDialog.dismiss();
+							Toast.makeText(activity, R.string.your_device_is_now_registered, Toast.LENGTH_LONG).show();
+							finish();
+						}
+					});
 				}
 			}
 		});

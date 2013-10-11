@@ -200,7 +200,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 		{
 			final String gamesListJSONString = savedInstanceState.getString(KEY_GAMES_LIST_JSON);
 
-			if (Utilities.verifyValidString(gamesListJSONString))
+			if (Utilities.validString(gamesListJSONString))
 			{
 				try
 				{
@@ -376,7 +376,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 		{
 			final String gamesListJSONString = gamesListJSON.toString();
 
-			if (Utilities.verifyValidString(gamesListJSONString))
+			if (Utilities.validString(gamesListJSONString))
 			{
 				outState.putString(KEY_GAMES_LIST_JSON, gamesListJSONString);
 			}
@@ -654,7 +654,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 
 			if (!isCancelled())
 			{
-				if (restoreExistingList || Utilities.verifyValidString(serverResponse))
+				if (restoreExistingList || Utilities.validString(serverResponse))
 				{
 					try
 					{
@@ -673,7 +673,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 						{
 							final String successMessage = jsonResult.optString(Server.POST_DATA_SUCCESS);
 
-							if (Utilities.verifyValidString(successMessage))
+							if (Utilities.validString(successMessage))
 							{
 								Log.d(LOG_TAG, "Server returned success message: " + successMessage);
 							}

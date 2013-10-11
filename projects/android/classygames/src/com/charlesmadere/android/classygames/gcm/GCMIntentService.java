@@ -126,7 +126,7 @@ public final class GCMIntentService extends IntentService
 		final String parameter_personId = data.getString(Server.POST_DATA_ID);
 		final String parameter_personName = data.getString(Server.POST_DATA_NAME);
 
-		if (Utilities.verifyValidStrings(parameter_gameId, parameter_gameType, parameter_personId,
+		if (Utilities.validString(parameter_gameId, parameter_gameType, parameter_personId,
 			parameter_messageType, parameter_personName))
 		// Verify that all of these Strings are both not null and that their
 		// length is greater than or equal to 1. This way we ensure that all of
@@ -309,8 +309,9 @@ public final class GCMIntentService extends IntentService
 		final Intent gameOverIntent = new Intent(this, GameOverActivity.class)
 			.putExtras(extras);
 
-		final TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-		stackBuilder.addNextIntentWithParentStack(gameOverIntent);
+		final TaskStackBuilder stackBuilder = TaskStackBuilder.create(this)
+			.addNextIntentWithParentStack(gameOverIntent);
+
 		buildAndShowNotification(builder, stackBuilder);
 	}
 
