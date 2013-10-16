@@ -6,13 +6,10 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
-import com.actionbarsherlock.app.SherlockActivity;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.server.ApiData;
 import com.charlesmadere.android.classygames.server.Server;
 import com.charlesmadere.android.classygames.utilities.Utilities;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
@@ -53,23 +50,6 @@ public final class GCMManager
 		 * Called at the end of the registration process if there was no error.
 		 */
 		public void onRegistrationSuccess();
-	}
-
-
-	/**
-	 * Checks the device to make sure that it has a compatible and up-to-date
-	 * Google Play services installation.
-	 *
-	 * @param activity
-	 * The Activity that you're calling this method from.
-	 *
-	 * @return
-	 * Returns true if this device is ready to go with Google Play services.
-	 */
-	public static boolean checkGooglePlayServices(final SherlockActivity activity)
-	{
-		final int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity.getApplicationContext());
-		return resultCode == ConnectionResult.SUCCESS;
 	}
 
 

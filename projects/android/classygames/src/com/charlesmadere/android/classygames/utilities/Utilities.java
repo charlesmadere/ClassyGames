@@ -22,6 +22,8 @@ import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.charlesmadere.android.classygames.App;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.models.Person;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -61,6 +63,22 @@ public final class Utilities
 		final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		final NetworkInfo networkInfo = cm.getActiveNetworkInfo();
 		return networkInfo != null && networkInfo.isConnected();
+	}
+
+
+	/**
+	 * Checks the device to make sure that it has a compatible and up-to-date
+	 * Google Play services installation. Read more about what it means to have
+	 * a compatible and up-to-date Google Play services installation here:
+	 * https://developer.android.com/google/play-services/setup.html#ensure
+	 *
+	 * @return
+	 * Returns true if this device is ready to go with Google Play services.
+	 */
+	public static boolean checkGooglePlayServices()
+	{
+		final int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(App.getContext());
+		return resultCode == ConnectionResult.SUCCESS;
 	}
 
 
@@ -138,7 +156,7 @@ public final class Utilities
 				.cacheOnDisc(true)
 				.build();
 
-			final ImageLoaderConfiguration loaderConfiguration = new ImageLoaderConfiguration.Builder(App.context)
+			final ImageLoaderConfiguration loaderConfiguration = new ImageLoaderConfiguration.Builder(App.getContext())
 				.defaultDisplayImageOptions(displayOptions)
 				.build();
 

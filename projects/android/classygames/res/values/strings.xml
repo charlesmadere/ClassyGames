@@ -114,7 +114,7 @@
 	<string name="server_api_register_for_notifications_dialog_message">Are you sure that you want to register for notifications?</string>
 	<string name="server_api_register_for_notifications_progressdialog_message">Registering your device with our server\'s notification system&#8230;</string>
 	<string name="server_api_unregister_from_server_dialog_message">Are you sure that you want to unregister from notifications?</string>
-	<string name="server_api_unregister_from_server_progressdialog_message">Unregistering your devices from our server\'s notification system&#8230;</string>
+	<string name="server_api_unregister_from_server_progressdialog_message">Unregistering you from our server\'s notification system&#8230;</string>
 	<string name="server_exchange">Server Exchange</string>
 	<string name="server_registration_attempt">Trying (attempt %d) to register device on server.</string>
 	<string name="server_registration_fail">Could not register device on server after %d attempts.</string>

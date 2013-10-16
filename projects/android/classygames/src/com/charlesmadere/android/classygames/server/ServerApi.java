@@ -52,7 +52,7 @@ public abstract class ServerApi
 
 
 	/**
-	 * An interface that will be used once we're done running code here.
+	 * An interface that will be used throughout the lifecycle of this class.
 	 */
 	public interface Listeners
 	{
@@ -102,7 +102,7 @@ public abstract class ServerApi
 	 */
 	protected ServerApi(final Context context, final Listeners listeners)
 	{
-		this(context, listeners, true);
+		this(context, true, listeners);
 	}
 
 
@@ -115,18 +115,18 @@ public abstract class ServerApi
 	 * @param context
 	 * The Context of the class that you're creating this object from.
 	 *
-	 * @param listeners
-	 * A set of listeners to call once we're done running code here.
-	 *
 	 * @param showProgressDialog
 	 * Set this to true if you want the user to see a ProgressDialog while this
 	 * ServerApi object is running.
+	 *
+	 * @param listeners
+	 * A set of listeners to call once we're done running code here.
 	 */
-	protected ServerApi(final Context context, final Listeners listeners, final boolean showProgressDialog)
+	protected ServerApi(final Context context, final boolean showProgressDialog, final Listeners listeners)
 	{
 		this.context = context;
-		this.listeners = listeners;
 		this.showProgressDialog = showProgressDialog;
+		this.listeners = listeners;
 	}
 
 
@@ -137,6 +137,19 @@ public abstract class ServerApi
 	protected Context getContext()
 	{
 		return context;
+	}
+
+
+	/**
+	 * Classes that extend from this one can override this method so that they
+	 * can create and use their own ServerApiTask child class.
+	 *
+	 * @return
+	 * Returns a brand new instance of a ServerApiTask class.
+	 */
+	protected ServerApiTask getServerApiTask()
+	{
+		return new ServerApiTask();
 	}
 
 
@@ -232,9 +245,9 @@ public abstract class ServerApi
 	/**
 	 * Starts the execution of the ServerApiTask AsyncTask.
 	 */
-	private void executeTask()
+	protected void executeTask()
 	{
-		serverApiTask = new ServerApiTask(context, showProgressDialog);
+		serverApiTask = getServerApiTask();
 		serverApiTask.execute();
 	}
 
@@ -244,20 +257,11 @@ public abstract class ServerApi
 	/**
 	 * An AsyncTask that will query the Classy Games server.
 	 */
-	private final class ServerApiTask extends AsyncTask<Void, Void, String>
+	protected class ServerApiTask extends AsyncTask<Void, Void, String>
 	{
 
 
-		private boolean showProgressDialog;
-		private Context context;
 		private ProgressDialog progressDialog;
-
-
-		private ServerApiTask(final Context context, final boolean showProgressDialog)
-		{
-			this.context = context;
-			this.showProgressDialog = showProgressDialog;
-		}
 
 
 		@Override
