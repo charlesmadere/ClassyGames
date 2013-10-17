@@ -1,9 +1,7 @@
 package com.charlesmadere.android.classygames.settings;
 
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,7 +9,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.R;
-import com.charlesmadere.android.classygames.gcm.GCMManager;
+import com.charlesmadere.android.classygames.server.ServerApiRegister;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
@@ -35,51 +33,7 @@ public final class RegisterForNotificationsActivity extends SherlockActivity
 			@Override
 			public void onClick(final View v)
 			{
-				final SherlockActivity activity = RegisterForNotificationsActivity.this;
-
-				if (GCMManager.checkGooglePlayServices(activity))
-				{
-					final ProgressDialog progressDialog = new ProgressDialog(activity);
-					progressDialog.setCancelable(true);
-					progressDialog.setCanceledOnTouchOutside(false);
-					progressDialog.setMessage(getString(R.string.thanks_youre_device_is_now_being_registered_for_notifications));
-					progressDialog.setTitle(R.string.register_for_notifications);
-					progressDialog.show();
-
-					GCMManager.start(getApplicationContext(), new GCMManager.Listener()
-					{
-						@Override
-						public void onRegistrationBegin()
-						{}
-
-
-						@Override
-						public void onRegistrationFailure()
-						{
-							new AlertDialog.Builder(activity)
-								.setMessage(R.string.an_error_occurred_when_trying_to_register_for_notifications)
-								.setNeutralButton(R.string.okay, new DialogInterface.OnClickListener()
-								{
-									@Override
-									public void onClick(final DialogInterface dialog, final int which)
-									{
-										dialog.dismiss();
-									}
-								})
-								.setTitle(R.string.register_for_notifications)
-								.show();
-						}
-
-
-						@Override
-						public void onRegistrationSuccess()
-						{
-							progressDialog.dismiss();
-							Toast.makeText(activity, R.string.your_device_is_now_registered, Toast.LENGTH_LONG).show();
-							finish();
-						}
-					});
-				}
+				register();
 			}
 		});
 	}
@@ -99,6 +53,48 @@ public final class RegisterForNotificationsActivity extends SherlockActivity
 		}
 
 		return true;
+	}
+
+
+	private void register()
+	{
+		final Context context = this;
+
+		final ServerApiRegister serverApiTask = new ServerApiRegister(this, new ServerApiRegister.RegisterListeners()
+		{
+			@Override
+			public void onRegistrationFail()
+			{
+				Toast.makeText(context, R.string.sorry_but_your_device_is_not_compatible_with_push_notifications, Toast.LENGTH_LONG).show();
+			}
+
+
+			@Override
+			public void onRegistrationSuccess()
+			{
+				Toast.makeText(context, R.string.registration_complete, Toast.LENGTH_SHORT).show();
+				finish();
+			}
+
+
+			@Override
+			public void onCancel()
+			{
+				finish();
+			}
+
+
+			@Override
+			public void onComplete(final String serverResponse)
+			{}
+
+
+			@Override
+			public void onDismiss()
+			{}
+		});
+
+		serverApiTask.execute(false);
 	}
 
 

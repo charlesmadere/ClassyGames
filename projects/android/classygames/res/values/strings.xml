@@ -50,6 +50,7 @@
 	<string name="glossary">Glossary</string>
 	<string name="green">Green</string>
 	<string name="generic_game_fragment_data_error">Error while trying to instantiate the game.</string>
+	<string name="hello_x">Hello %s!</string>
 	<string name="king">King</string>
 	<string name="knight">Knight</string>
 	<string name="just_now">just now</string>
@@ -126,9 +127,10 @@
 	<string name="show_notification_light">Show Notification Light</string>
 	<string name="skip">Skip</string>
 	<string name="skip_move">Skip Move</string>
+	<string name="sorry_but_your_device_is_not_compatible_with_push_notifications">Sorry, your device is not compatible with push notifications. If you have other devices that you would like to receive notifications on, be sure to register them.</string>
 	<string name="start_game">Start game!</string>
 	<string name="stats">Stats</string>
-	<string name="thanks_youre_device_is_now_being_registered_for_notifications">Thanks! You\'re device is now being registered for notifications&#8230;</string>
+	<string name="thanks_your_device_is_now_being_registered_for_notifications">Thanks! Your device is now being registered for notifications&#8230;</string>
 	<string name="their_turn">Their Turn</string>
 	<string name="top_hats_all_the_way_down">Top hats all the way down&#8230;</string>
 	<string name="two_weeks_ago">2 weeks ago</string>

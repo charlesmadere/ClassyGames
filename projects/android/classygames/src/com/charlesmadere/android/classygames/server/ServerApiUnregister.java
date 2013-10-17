@@ -55,6 +55,8 @@ public final class ServerApiUnregister extends ServerApi
 	}
 
 
+
+
 	@Override
 	protected int getDialogMessage()
 	{
@@ -77,9 +79,12 @@ public final class ServerApiUnregister extends ServerApi
 
 
 	@Override
-	protected String postToServer(final Person whoAmI)
+	protected String postToServer(final Person whoAmI) throws IOException
 	{
 		String serverResponse = null;
+
+		// This Server API request isn't particularly necessary, so if an
+		// Exception is thrown, we can safely ignore it and continue.
 
 		try
 		{

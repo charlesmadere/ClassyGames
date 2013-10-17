@@ -39,6 +39,10 @@ public final class ServerApiRegister extends ServerApi
 
 	/**
 	 * An interface that will be used throughout the lifecycle of this class.
+	 * Note that all of this interface's methods will run after the parent
+	 * interface's onComplete() method (if we get to that point in the
+	 * lifecycle). If this ServerApi is cancelled, then that method will never
+	 * be run, which then therefore means that these won't either.
 	 */
 	public interface RegisterListeners extends Listeners
 	{
@@ -79,6 +83,7 @@ public final class ServerApiRegister extends ServerApi
 	public ServerApiRegister(final Context context, final RegisterListeners listeners)
 	{
 		super(context, listeners);
+		this.listeners = listeners;
 	}
 
 
@@ -101,7 +106,10 @@ public final class ServerApiRegister extends ServerApi
 	public ServerApiRegister(final Context context, final boolean showProgressDialog, final RegisterListeners listeners)
 	{
 		super(context, showProgressDialog, listeners);
+		this.listeners = listeners;
 	}
+
+
 
 
 	private String getRegistrationId()
@@ -134,67 +142,86 @@ public final class ServerApiRegister extends ServerApi
 	}
 
 
-	@Override
-	protected String postToServer(final Person whoAmI)
+	private void performGCMRegistrationIfNecessary()
 	{
-		String registrationId;
-		int registrationVersionCode;
+		String registrationId = getRegistrationId();
+		int registrationVersionCode = getRegistrationVersionCode();
+		final int appVersionCode = Utilities.getAppVersionCode(getContext());
 
-		try
+		if (!Utilities.validString(registrationId) || registrationVersionCode == 0
+			|| appVersionCode != registrationVersionCode)
+		// If any single one of these if statements validate as true, then we
+		// absolutely must register this device with Google's GCM servers.
 		{
-			final GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(getContext());
-			registrationId = gcm.register(GOOGLE_PROJECT_ID);
-			registrationVersionCode = Utilities.getAppVersionCode(getContext());
-		}
-		catch (final IOException e)
-		{
-			Log.e(LOG_TAG, "IOException during ServerApiRegister's postToServer()!", e);
-			registrationId = null;
-			registrationVersionCode = 0;
-		}
+			Log.i(LOG_TAG, "About to attempt GCM registration.\nUser is running Android" +
+				"version \"" + Build.VERSION.SDK_INT + "\".");
 
-		final SharedPreferences.Editor editor = getSharedPreferences().edit();
-
-		if (Utilities.validString(registrationId) && registrationVersionCode >= 1)
-		{
-			editor.putString(KEY_REGISTRATION_ID, registrationId)
-				.putInt(KEY_REGISTRATION_VERSION_CODE, registrationVersionCode);
-		}
-		else
-		{
-			editor.clear();
-		}
-
-		// In FriendsListFragment I have a big comment that simply discusses
-		// the difference in apply() and commit() methods below. Go check that
-		// out for more info!
-
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)
-		{
-			editor.apply();
-		}
-		else
-		{
-			editor.commit();
-		}
-
-		try
-		{
-			final ApiData data = new ApiData()
-				.addKeyValuePair(Server.POST_DATA_ID, whoAmI.getId())
-				.addKeyValuePair(Server.POST_DATA_NAME, whoAmI.getName());
-
-			if (Utilities.validString(registrationId))
+			try
 			{
-				data.addKeyValuePair(Server.POST_DATA_REG_ID, registrationId);
+				final GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(getContext());
+				registrationId = gcm.register(GOOGLE_PROJECT_ID);
+				registrationVersionCode = Utilities.getAppVersionCode(getContext());
+			}
+			catch (final IOException e)
+			{
+				// In the event of an IOException, let's just discard all of
+				// the user's GCM data that we've grabbed.
+				Log.e(LOG_TAG, "IOException during ServerApiRegister's postToServer()!", e);
+				registrationId = null;
+				registrationVersionCode = 0;
 			}
 
-			Server.postToServerNewRegId(data);
+			final SharedPreferences.Editor editor = getSharedPreferences().edit();
+
+			if (Utilities.validString(registrationId) && registrationVersionCode >= 1)
+			{
+				editor.putString(KEY_REGISTRATION_ID, registrationId)
+					.putInt(KEY_REGISTRATION_VERSION_CODE, registrationVersionCode);
+
+				Log.i(LOG_TAG, "GCM registration completed successfully.\n" +
+					"registrationId: \"" + registrationId + "\"\n" +
+					"registrationVersionCode: \"" + registrationVersionCode + "\"");
+			}
+			else
+			{
+				editor.clear();
+				Log.i(LOG_TAG, "GCM registration failed!");
+			}
+
+			// In FriendsListFragment I have a big comment that very simply
+			// discusses the differences in the apply() and commit() methods
+			// below. Go check that comment out if you want more info!
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)
+			{
+				editor.apply();
+			}
+			else
+			{
+				editor.commit();
+			}
 		}
-		catch (final IOException e)
+	}
+
+
+	@Override
+	protected String postToServer(final Person whoAmI) throws IOException
+	{
+		performGCMRegistrationIfNecessary();
+		final String registrationId = getRegistrationId();
+
+		final ApiData data = new ApiData()
+			.addKeyValuePair(Server.POST_DATA_ID, whoAmI.getId())
+			.addKeyValuePair(Server.POST_DATA_NAME, whoAmI.getName());
+
+		if (Utilities.validString(registrationId))
+		// This if statement will validate as true if there was no issue when
+		// attempting to grab this user's GCM registration ID.
 		{
-			Log.e(LOG_TAG, "IOException during GCMManager's postToServer()!", e);
+			data.addKeyValuePair(Server.POST_DATA_REG_ID, registrationId);
 		}
+
+		Server.postToServerNewRegId(data);
 
 		return registrationId;
 	}
@@ -210,16 +237,18 @@ public final class ServerApiRegister extends ServerApi
 
 
 		@Override
-		protected void onPreExecute()
-		{
-			super.onPreExecute();
-		}
-
-
-		@Override
 		protected void onPostExecute(final String serverResponse)
 		{
 			super.onPostExecute(serverResponse);
+
+			if (Utilities.validString(serverResponse))
+			{
+				listeners.onRegistrationSuccess();
+			}
+			else
+			{
+				listeners.onRegistrationFail();
+			}
 		}
 
 

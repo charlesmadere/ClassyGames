@@ -76,9 +76,10 @@ public final class GCMIntentService extends IntentService
 			// you don't recognize.
 			final String messageType = gcm.getMessageType(intent);
 
-			if (messageType != null && messageType.equalsIgnoreCase(GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE))
+			if (Utilities.validString(messageType) && (!messageType.equalsIgnoreCase(GoogleCloudMessaging.MESSAGE_TYPE_DELETED)
+				&& !messageType.equalsIgnoreCase(GoogleCloudMessaging.MESSAGE_TYPE_SEND_ERROR)))
 			{
-				Log.i(LOG_TAG, "Received GCM that is a message.");
+				Log.i(LOG_TAG, "Received GCM that is of type: \"" + messageType + "\".");
 				handleMessage(data);
 			}
 			else

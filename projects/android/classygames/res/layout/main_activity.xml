@@ -31,6 +31,7 @@
 		android:orientation="vertical"
 		android:visibility="gone">
 		<ProgressBar
+			android:id="@+id/main_activity_loading_spinner"
 			android:indeterminate="true"
 			android:layout_gravity="center"
 			android:layout_height="wrap_content"

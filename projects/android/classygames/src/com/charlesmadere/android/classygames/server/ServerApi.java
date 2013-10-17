@@ -7,9 +7,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.util.Log;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.utilities.Utilities;
+
+import java.io.IOException;
 
 
 /**
@@ -128,6 +131,8 @@ public abstract class ServerApi
 		this.showProgressDialog = showProgressDialog;
 		this.listeners = listeners;
 	}
+
+
 
 
 	/**
@@ -272,7 +277,15 @@ public abstract class ServerApi
 			if (!isCancelled() && Utilities.checkForNetworkConnectivity(context))
 			{
 				final Person whoAmI = Utilities.getWhoAmI(context);
-				serverResponse = postToServer(whoAmI);
+
+				try
+				{
+					serverResponse = postToServer(whoAmI);
+				}
+				catch (final IOException e)
+				{
+					Log.e(LOG_TAG, "IOException during ServerApi's doInBackground()!", e);
+				}
 			}
 
 			return serverResponse;
@@ -390,7 +403,7 @@ public abstract class ServerApi
 	 * A String that contains the responding result from the server or null if
 	 * a problem happened.
 	 */
-	protected abstract String postToServer(final Person whoAmI);
+	protected abstract String postToServer(final Person whoAmI) throws IOException;
 
 
 }
