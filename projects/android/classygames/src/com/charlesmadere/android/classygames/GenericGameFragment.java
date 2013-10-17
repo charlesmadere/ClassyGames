@@ -254,43 +254,35 @@ public abstract class GenericGameFragment extends SherlockFragment
 				boardView = (BoardView) view.findViewById(R.id.generic_game_fragment_board);
 				loading = (LinearLayout) view.findViewById(R.id.generic_game_fragment_loading);
 				loadingText = (TextView) view.findViewById(R.id.generic_game_fragment_loading_textview);
-
-				for (byte x = 0; x < boardView.getLengthHorizontal(); ++x)
+				boardView.setAllPositionViewOnClickListeners(new View.OnClickListener()
 				{
-					for (byte y = 0; y < boardView.getLengthVertical(); ++y)
+					@Override
+					public void onClick(final View v)
 					{
-						final PositionView positionView = boardView.getPosition(x, y);
-						positionView.setOnClickListener(new View.OnClickListener()
+						if (positionSelectedCurrent == null)
 						{
-							@Override
-							public void onClick(final View v)
-							{
-								if (positionSelectedCurrent == null)
-								{
-									positionSelectedCurrent = (PositionView) v;
-									onBoardClick(positionSelectedCurrent);
-								}
-								else
-								{
-									positionSelectedPrevious = positionSelectedCurrent;
-									positionSelectedCurrent = (PositionView) v;
+							positionSelectedCurrent = (PositionView) v;
+							onBoardClick(positionSelectedCurrent);
+						}
+						else
+						{
+							positionSelectedPrevious = positionSelectedCurrent;
+							positionSelectedCurrent = (PositionView) v;
 
-									if (positionSelectedPrevious == positionSelectedCurrent)
-									// The player has clicked the same position on
-									// the board twice in a row. This is the
-									// deselect action.
-									{
-										clearSelectedPositions();
-									}
-									else
-									{
-										onBoardClick(positionSelectedPrevious, positionSelectedCurrent);
-									}
-								}
+							if (positionSelectedPrevious == positionSelectedCurrent)
+							// The player has clicked the same position on
+							// the board twice in a row. This is the
+							// deselect action.
+							{
+								clearSelectedPositions();
 							}
-						});
+							else
+							{
+								onBoardClick(positionSelectedPrevious, positionSelectedCurrent);
+							}
+						}
 					}
-				}
+				});
 
 				if (Game.isIdValid(gameId))
 				// Check to see if we were given a valid game ID. We will only
@@ -541,6 +533,18 @@ public abstract class GenericGameFragment extends SherlockFragment
 		{
 			positionSelectedCurrent.setSelected(false);
 			positionSelectedCurrent = null;
+		}
+
+		// TODO
+		// check to see if the below loop is worthless
+
+		for (byte x = 0; x < board.getLengthHorizontal(); ++x)
+		{
+			for (byte y = 0; y < board.getLengthVertical(); ++y)
+			{
+				final PositionView positionView = boardView.getPosition(x, y);
+				positionView.setSelected(false);
+			}
 		}
 	}
 

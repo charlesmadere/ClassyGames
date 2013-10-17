@@ -106,14 +106,14 @@ public final class BoardView extends ViewGroup
 		final int width = position.getMeasuredWidth();
 		final int height = position.getMeasuredHeight();
 
-		for (int x = 0; x < columns; ++x)
+		for (int x = 0; x < getLengthHorizontal(); ++x)
 		{
 			final int left = width * x;
 			final int right = left + width;
 
-			for (int y = 0; y < rows; ++y)
+			for (int y = 0; y < getLengthVertical(); ++y)
 			{
-				final int top = height * (rows - (y + 1));
+				final int top = height * (getLengthVertical() - (y + 1));
 				final int bottom = top + height;
 
 				final PositionView positionView = getPosition(x, y);
@@ -203,17 +203,30 @@ public final class BoardView extends ViewGroup
 	}
 
 
+	public void setAllPositionViewOnClickListeners(final OnClickListener onClickListener)
+	{
+		for (byte x = 0; x < getLengthHorizontal(); ++x)
+		{
+			for (byte y = 0; y < getLengthVertical(); ++y)
+			{
+				final PositionView positionView = getPosition(x, y);
+				positionView.setOnClickListener(onClickListener);
+			}
+		}
+	}
+
+
 	/**
 	 * Initializes the View objects for all of this board's children.
 	 */
 	private void createPositions()
 	{
-		positionViews = new PositionView[columns][rows];
+		positionViews = new PositionView[getLengthHorizontal()][getLengthVertical()];
 		final Context context = getContext();
 
-		for (byte x = 0; x < columns; ++x)
+		for (byte x = 0; x < getLengthHorizontal(); ++x)
 		{
-			for (byte y = 0; y < rows; ++y)
+			for (byte y = 0; y < getLengthVertical(); ++y)
 			{
 				final PositionView positionView = new PositionView(context, x, y, padding, scaleType, brightBackground, darkBackground);
 				positionViews[x][y] = positionView;
