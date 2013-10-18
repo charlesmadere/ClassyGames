@@ -526,13 +526,13 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		if (positionSelectedPrevious != null)
 		{
-			positionSelectedPrevious.setSelected(false);
+			positionSelectedPrevious.unselect();
 			positionSelectedPrevious = null;
 		}
 
 		if (positionSelectedCurrent != null)
 		{
-			positionSelectedCurrent.setSelected(false);
+			positionSelectedCurrent.unselect();
 			positionSelectedCurrent = null;
 		}
 	}

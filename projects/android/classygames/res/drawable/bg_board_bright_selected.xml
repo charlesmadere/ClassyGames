@@ -3,6 +3,7 @@
 	android:dither="true"
 	android:shape="rectangle">
 	<solid
+		android:background="@drawable/bg_subtle_gray"
 		android:color="@color/overlay_pink_dark" />
 	<stroke
 		android:color="@color/overlay_red_medium"

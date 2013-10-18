@@ -35,6 +35,7 @@ public final class BoardView extends ViewGroup
 	 * number), 5 + 2 = 7 (an odd number), and 3 + 2 = 5 (an odd number).
 	 */
 	private Drawable brightBackground;
+	private Drawable brightBackgroundSelected;
 
 
 	/**
@@ -45,6 +46,7 @@ public final class BoardView extends ViewGroup
 	 * number).
 	 */
 	private Drawable darkBackground;
+	private Drawable darkBackgroundSelected;
 
 
 	/**
@@ -63,12 +65,6 @@ public final class BoardView extends ViewGroup
 	 * The inner-layout padding to be applied to the board's PositionViews.
 	 */
 	private float padding;
-
-
-	/**
-	 * The image scaling setting to be applied to the board's PositionViews.
-	 */
-	private int scaleType;
 
 
 	/**
@@ -228,7 +224,9 @@ public final class BoardView extends ViewGroup
 		{
 			for (byte y = 0; y < getLengthVertical(); ++y)
 			{
-				final PositionView positionView = new PositionView(context, x, y, padding, scaleType, brightBackground, darkBackground);
+				final PositionView positionView = new PositionView(context, x, y, padding, brightBackground,
+					darkBackground, brightBackgroundSelected, darkBackgroundSelected);
+
 				positionViews[x][y] = positionView;
 				addView(positionView);
 			}
@@ -259,10 +257,11 @@ public final class BoardView extends ViewGroup
 		{
 			brightBackground = attributes.getDrawable(R.styleable.BoardView_bright_background);
 			darkBackground = attributes.getDrawable(R.styleable.BoardView_dark_background);
+			brightBackgroundSelected = attributes.getDrawable(R.styleable.BoardView_bright_background_selected);
+			darkBackgroundSelected = attributes.getDrawable(R.styleable.BoardView_dark_background_selected);
 			columns = (byte) attributes.getInt(R.styleable.BoardView_columns, COLUMNS_DEFAULT);
 			rows = (byte) attributes.getInt(R.styleable.BoardView_rows, ROWS_DEFAULT);
 			padding = attributes.getDimension(R.styleable.BoardView_position_padding, PositionView.PADDING_DEFAULT);
-			scaleType = attributes.getInt(R.styleable.BoardView_position_scaleType, PositionView.SCALE_TYPE_DEFAULT);
 		}
 		catch (final Exception e)
 		{
@@ -272,7 +271,6 @@ public final class BoardView extends ViewGroup
 			columns = COLUMNS_DEFAULT;
 			rows = ROWS_DEFAULT;
 			padding = PositionView.PADDING_DEFAULT;
-			scaleType = PositionView.SCALE_TYPE_DEFAULT;
 		}
 		finally
 		{
