@@ -48,22 +48,32 @@ public final class TypefaceUtilities
 	}
 
 
+	/**
+	 * @return
+	 * Returns to you a definitely-not-null and ready-to-use Typeface for Blue
+	 * Highway.
+	 */
 	public static Typeface getBlueHighway()
 	{
 		if (blueHighway == null)
 		{
-			blueHighway = Typeface.createFromAsset(App.context.getAssets(), BLUE_HIGHWAY_PATH);
+			blueHighway = Typeface.createFromAsset(App.getContext().getAssets(), BLUE_HIGHWAY_PATH);
 		}
 
 		return blueHighway;
 	}
 
 
+	/**
+	 * @return
+	 * Returns to you a definitely-not-null and ready-to-use Typeface for Snell
+	 * Roundhand.
+	 */
 	public static Typeface getSnellRoundhand()
 	{
 		if (snellRoundhand == null)
 		{
-			snellRoundhand = Typeface.createFromAsset(App.context.getAssets(), SNELL_ROUNDHAND_PATH);
+			snellRoundhand = Typeface.createFromAsset(App.getContext().getAssets(), SNELL_ROUNDHAND_PATH);
 		}
 
 		return snellRoundhand;

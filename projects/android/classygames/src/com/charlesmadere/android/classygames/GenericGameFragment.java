@@ -255,42 +255,35 @@ public abstract class GenericGameFragment extends SherlockFragment
 				loading = (LinearLayout) view.findViewById(R.id.generic_game_fragment_loading);
 				loadingText = (TextView) view.findViewById(R.id.generic_game_fragment_loading_textview);
 
-				for (byte x = 0; x < boardView.getLengthHorizontal(); ++x)
+				boardView.setAllPositionViewOnClickListeners(new View.OnClickListener()
 				{
-					for (byte y = 0; y < boardView.getLengthVertical(); ++y)
+					@Override
+					public void onClick(final View v)
 					{
-						final PositionView positionView = boardView.getPosition(x, y);
-						positionView.setOnClickListener(new View.OnClickListener()
+						if (positionSelectedCurrent == null)
 						{
-							@Override
-							public void onClick(final View v)
-							{
-								if (positionSelectedCurrent == null)
-								{
-									positionSelectedCurrent = (PositionView) v;
-									onBoardClick(positionSelectedCurrent);
-								}
-								else
-								{
-									positionSelectedPrevious = positionSelectedCurrent;
-									positionSelectedCurrent = (PositionView) v;
+							positionSelectedCurrent = (PositionView) v;
+							onBoardClick(positionSelectedCurrent);
+						}
+						else
+						{
+							positionSelectedPrevious = positionSelectedCurrent;
+							positionSelectedCurrent = (PositionView) v;
 
-									if (positionSelectedPrevious == positionSelectedCurrent)
-									// The player has clicked the same position on
-									// the board twice in a row. This is the
-									// deselect action.
-									{
-										clearSelectedPositions();
-									}
-									else
-									{
-										onBoardClick(positionSelectedPrevious, positionSelectedCurrent);
-									}
-								}
+							if (positionSelectedPrevious == positionSelectedCurrent)
+							// The player has clicked the same position on
+							// the board twice in a row. This is the
+							// deselect action.
+							{
+								clearSelectedPositions();
 							}
-						});
+							else
+							{
+								onBoardClick(positionSelectedPrevious, positionSelectedCurrent);
+							}
+						}
 					}
-				}
+				});
 
 				if (Game.isIdValid(gameId))
 				// Check to see if we were given a valid game ID. We will only
@@ -400,7 +393,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		// ID.
 		final String gameId = arguments.getString(KEY_GAME_ID);
 
-		if (!Utilities.verifyValidString(gameId) || !Game.isIdValid(gameId))
+		if (!Utilities.validString(gameId) || !Game.isIdValid(gameId))
 		{
 			menu.removeItem(R.id.generic_game_fragment_menu_skip_move);
 			menu.removeItem(R.id.generic_game_fragment_menu_forfeit_game);
@@ -461,7 +454,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		{
 			final String boardJSONString = boardJSON.toString();
 
-			if (Utilities.verifyValidString(boardJSONString))
+			if (Utilities.validString(boardJSONString))
 			{
 				outState.putString(BUNDLE_BOARD_JSON, boardJSONString);
 			}
@@ -533,13 +526,13 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		if (positionSelectedPrevious != null)
 		{
-			positionSelectedPrevious.setSelected(false);
+			positionSelectedPrevious.unselect();
 			positionSelectedPrevious = null;
 		}
 
 		if (positionSelectedCurrent != null)
 		{
-			positionSelectedCurrent.setSelected(false);
+			positionSelectedCurrent.unselect();
 			positionSelectedCurrent = null;
 		}
 	}
@@ -588,7 +581,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 */
 	private void forfeitGame()
 	{
-		if (Utilities.verifyValidString(game.getId()) && !isAnAsyncTaskRunning())
+		if (Utilities.validString(game.getId()) && !isAnAsyncTaskRunning())
 		{
 			serverApiTask = new ServerApiForfeitGame(getSherlockActivity(), serverApiListeners, game);
 			serverApiTask.execute();
@@ -771,7 +764,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		JSONObject parsedServerResponse = null;
 
-		if (Utilities.verifyValidString(serverResponse))
+		if (Utilities.validString(serverResponse))
 		{
 			try
 			{
@@ -862,7 +855,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 */
 	private void skipMove()
 	{
-		if (Utilities.verifyValidString(game.getId()) && !isAnAsyncTaskRunning())
+		if (Utilities.validString(game.getId()) && !isAnAsyncTaskRunning())
 		{
 			serverApiTask = new ServerApiSkipMove(getSherlockActivity(), serverApiListeners, game);
 			serverApiTask.execute();
@@ -924,7 +917,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 				final SharedPreferences sPreferences = fragmentActivity.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
 				final String boardJSON = sPreferences.getString(game.getId(), null);
 
-				if (Utilities.verifyValidString(boardJSON))
+				if (Utilities.validString(boardJSON))
 				{
 					serverResponse = boardJSON;
 				}

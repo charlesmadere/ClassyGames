@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android"
-	android:dither="true">
-	<item
-		android:state_selected="true"
-		android:drawable="@drawable/bg_board_dark_selected" />
-	<item
-		android:drawable="@drawable/bg_wild_oliva" />
-</selector>
+<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
+	android:dither="true"
+	android:filter="true"
+	android:src="@drawable/bg_wild_oliva_raw"
+	android:tileMode="repeat" />

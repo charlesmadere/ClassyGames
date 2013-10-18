@@ -13,12 +13,14 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.SharkActivity;
-import com.charlesmadere.android.classygames.utilities.KeysAndConstants;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
 public final class AboutActivity extends SherlockActivity
 {
+
+
+	public final static String GITHUB_URL = "https://github.com/ScootrNova/ClassyGames";
 
 
 	@Override
@@ -59,8 +61,7 @@ public final class AboutActivity extends SherlockActivity
 				break;
 
 			case R.id.about_activity_menu_github:
-				final Intent github = new Intent(Intent.ACTION_VIEW, Uri.parse(KeysAndConstants.GITHUB_URL));
-				startActivity(github);
+				gitHub();
 				break;
 
 			default:
@@ -68,6 +69,14 @@ public final class AboutActivity extends SherlockActivity
 		}
 
 		return true;
+	}
+
+
+	private void gitHub()
+	{
+		final Uri uri = Uri.parse(GITHUB_URL);
+		final Intent github = new Intent(Intent.ACTION_VIEW, uri);
+		startActivity(github);
 	}
 
 

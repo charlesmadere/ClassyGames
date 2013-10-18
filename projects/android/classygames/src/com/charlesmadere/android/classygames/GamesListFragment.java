@@ -22,11 +22,11 @@ import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.charlesmadere.android.classygames.gcm.GCMIntentService;
 import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.ListItem;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.server.*;
-import com.charlesmadere.android.classygames.services.GCMIntentService;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
@@ -200,7 +200,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 		{
 			final String gamesListJSONString = savedInstanceState.getString(KEY_GAMES_LIST_JSON);
 
-			if (Utilities.verifyValidString(gamesListJSONString))
+			if (Utilities.validString(gamesListJSONString))
 			{
 				try
 				{
@@ -272,8 +272,6 @@ public final class GamesListFragment extends SherlockListFragment implements
 
 			if (game.get().isTypeGame())
 			{
-				view.setSelected(true);
-
 				final Context context = getSherlockActivity();
 				String [] items;
 
@@ -376,7 +374,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 		{
 			final String gamesListJSONString = gamesListJSON.toString();
 
-			if (Utilities.verifyValidString(gamesListJSONString))
+			if (Utilities.validString(gamesListJSONString))
 			{
 				outState.putString(KEY_GAMES_LIST_JSON, gamesListJSONString);
 			}
@@ -654,7 +652,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 
 			if (!isCancelled())
 			{
-				if (restoreExistingList || Utilities.verifyValidString(serverResponse))
+				if (restoreExistingList || Utilities.validString(serverResponse))
 				{
 					try
 					{
@@ -673,7 +671,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 						{
 							final String successMessage = jsonResult.optString(Server.POST_DATA_SUCCESS);
 
-							if (Utilities.verifyValidString(successMessage))
+							if (Utilities.validString(successMessage))
 							{
 								Log.d(LOG_TAG, "Server returned success message: " + successMessage);
 							}

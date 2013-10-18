@@ -11,10 +11,11 @@
 		android:layout_height="match_parent"
 		android:layout_width="match_parent"
 		custom:bright_background="@drawable/bg_board_bright"
+		custom:bright_background_selected="@drawable/bg_board_bright_selected"
 		custom:columns="8"
 		custom:dark_background="@drawable/bg_board_dark"
+		custom:dark_background_selected="@drawable/bg_board_dark_selected"
 		custom:position_padding="1dip"
-		custom:position_scaleType="centerInside"
 		custom:rows="8" />
 	<LinearLayout
 		android:gravity="center"

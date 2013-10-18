@@ -5,16 +5,6 @@
 			format="dimension"
 			name="position_padding" />
 		<attr
-			format="enum"
-			name="position_scaleType">
-			<enum
-				name="centerCrop"
-				value="0" />
-			<enum
-				name="centerInside"
-				value="1" />
-		</attr>
-		<attr
 			format="integer"
 			name="columns" />
 		<attr
@@ -22,10 +12,16 @@
 			name="rows" />
 		<attr
 			format="reference"
+			name="bright_background" />
+		<attr
+			format="reference"
+			name="bright_background_selected" />
+		<attr
+			format="reference"
 			name="dark_background" />
 		<attr
 			format="reference"
-			name="bright_background" />
+			name="dark_background_selected" />
 	</declare-styleable>
 	<declare-styleable name="LayoutFittingImageView">
 		<attr

@@ -1,36 +1,21 @@
 package com.charlesmadere.android.classygames.settings;
 
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.R;
-import com.charlesmadere.android.classygames.server.Server;
+import com.charlesmadere.android.classygames.server.ServerApiRegister;
 import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
-
-import java.io.IOException;
 
 
 public final class RegisterForNotificationsActivity extends SherlockActivity
 {
-
-
-	/**
-	 * Used to send notification registration server API request.
-	 */
-	private AsyncRegisterForNotifications asyncRegisterForNotifications;
-
-
 
 
 	@Override
@@ -48,29 +33,9 @@ public final class RegisterForNotificationsActivity extends SherlockActivity
 			@Override
 			public void onClick(final View v)
 			{
-				if (!isAnAsyncTaskRunning())
-				{
-					asyncRegisterForNotifications = new AsyncRegisterForNotifications();
-					asyncRegisterForNotifications.execute();
-				}
+				register();
 			}
 		});
-	}
-
-
-	@Override
-	public void onBackPressed()
-	{
-		cancelRunningAnyAsyncTask();
-		super.onBackPressed();
-	}
-
-
-	@Override
-	protected void onDestroy()
-	{
-		cancelRunningAnyAsyncTask();
-		super.onDestroy();
 	}
 
 
@@ -91,154 +56,46 @@ public final class RegisterForNotificationsActivity extends SherlockActivity
 	}
 
 
-
-
-	/**
-	 * Cancels the currently running AsyncTask (if any).
-	 */
-	private void cancelRunningAnyAsyncTask()
+	private void register()
 	{
-		if (isAnAsyncTaskRunning())
+		final Context context = this;
+
+		final ServerApiRegister serverApiTask = new ServerApiRegister(this, new ServerApiRegister.RegisterListeners()
 		{
-			asyncRegisterForNotifications.cancel(true);
-		}
-	}
-
-
-	/**
-	 * @return
-	 * Returns true if the asyncRegisterForNotifications AsyncTask is currently
-	 * running.
-	 */
-	private boolean isAnAsyncTaskRunning()
-	{
-		return asyncRegisterForNotifications != null;
-	}
-
-
-
-
-	private final class AsyncRegisterForNotifications extends AsyncTask<Void, Void, Boolean>
-	{
-
-
-		private Context context;
-		private ProgressDialog progressDialog;
-
-
-		private AsyncRegisterForNotifications()
-		{
-			context = RegisterForNotificationsActivity.this;
-		}
-
-
-		@Override
-		protected Boolean doInBackground(final Void... params)
-		{
-			Boolean registrationSuccess = false;
-
-			if (!isCancelled())
+			@Override
+			public void onRegistrationFail()
 			{
-				try
-				{
-					registrationSuccess = Server.gcmRegister(context);
-				}
-				catch (final IOException e)
-				{
-					Log.e(Utilities.LOG_TAG, "IOException in doInBackground() of AsyncRegisterForNotifications class!", e);
-				}
+				Toast.makeText(context, R.string.sorry_but_your_device_is_not_compatible_with_push_notifications, Toast.LENGTH_LONG).show();
 			}
 
-			return registrationSuccess;
-		}
 
-
-		private void cancelled()
-		{
-			if (progressDialog.isShowing())
-			{
-				progressDialog.dismiss();
-			}
-
-			asyncRegisterForNotifications = null;
-			Toast.makeText(context, R.string.registration_cancelled, Toast.LENGTH_SHORT).show();
-		}
-
-
-		@Override
-		protected void onCancelled()
-		{
-			cancelled();
-		}
-
-
-		@Override
-		protected void onCancelled(final Boolean registrationSuccess)
-		{
-			cancelled();
-		}
-
-
-		@Override
-		protected void onPostExecute(final Boolean registrationSuccess)
-		{
-			if (progressDialog.isShowing())
-			{
-				progressDialog.dismiss();
-			}
-
-			if (registrationSuccess)
+			@Override
+			public void onRegistrationSuccess()
 			{
 				Toast.makeText(context, R.string.registration_complete, Toast.LENGTH_SHORT).show();
 				finish();
 			}
-			else
-			{
-				final AlertDialog.Builder builder = new AlertDialog.Builder(context)
-					.setMessage(R.string.register_for_notifications_activity_registration_failed_message)
-					.setNeutralButton(R.string.okay, new DialogInterface.OnClickListener()
-					{
-						@Override
-						public void onClick(final DialogInterface dialog, final int which)
-						{
-							dialog.dismiss();
-							finish();
-						}
-					})
-					.setTitle(R.string.registration_failed);
 
-				builder.show();
+
+			@Override
+			public void onCancel()
+			{
+				finish();
 			}
 
-			asyncRegisterForNotifications = null;
-		}
+
+			@Override
+			public void onComplete(final String serverResponse)
+			{}
 
 
-		@Override
-		protected void onPreExecute()
-		{
-			progressDialog = new ProgressDialog(context);
-			progressDialog.setCancelable(true);
-			progressDialog.setCanceledOnTouchOutside(true);
-			progressDialog.setMessage(getString(R.string.registering_your_device_for_notifications_with_our_server));
+			@Override
+			public void onDismiss()
+			{}
+		});
 
-			progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
-			{
-				@Override
-				public void onCancel(final DialogInterface dialog)
-				{
-					AsyncRegisterForNotifications.this.cancel(true);
-				}
-			});
-
-			progressDialog.setTitle(R.string.register_for_notifications);
-			progressDialog.show();
-		}
-
-
+		serverApiTask.execute(false);
 	}
-
-
 
 
 }

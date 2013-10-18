@@ -50,7 +50,7 @@ public final class FacebookUtilities
 	 */
 	private static String getAccessToken(final Context context)
 	{
-		if (Utilities.verifyValidString(accessToken))
+		if (Utilities.validString(accessToken))
 		{
 			return ACCESS_TOKEN + accessToken;
 		}
@@ -59,7 +59,7 @@ public final class FacebookUtilities
 			final SharedPreferences sPreferences = Utilities.getPreferences(context);
 			accessToken = sPreferences.getString(KEY_ACCESS_TOKEN, null);
 
-			if (Utilities.verifyValidString(accessToken))
+			if (Utilities.validString(accessToken))
 			{
 				return ACCESS_TOKEN + accessToken;
 			}
@@ -109,7 +109,7 @@ public final class FacebookUtilities
 	 */
 	public static String getFriendsPictureLarge(final Context context, final long id)
 	{
-		if (Utilities.verifyValidString(getAccessToken(context)))
+		if (Utilities.validString(getAccessToken(context)))
 		{
 			return GRAPH_API_URL + id + PICTURE_LARGE + ACCESS_TOKEN + accessToken;
 		}
@@ -135,7 +135,7 @@ public final class FacebookUtilities
 	 */
 	public static String getFriendsPictureNormal(final Context context, final long id)
 	{
-		if (Utilities.verifyValidString(getAccessToken(context)))
+		if (Utilities.validString(getAccessToken(context)))
 		{
 			return GRAPH_API_URL + id + PICTURE_NORMAL + ACCESS_TOKEN + accessToken;
 		}
@@ -161,7 +161,7 @@ public final class FacebookUtilities
 	 */
 	public static String getFriendsPictureSmall(final Context context, final long id)
 	{
-		if (Utilities.verifyValidString(getAccessToken(context)))
+		if (Utilities.validString(getAccessToken(context)))
 		{
 			return GRAPH_API_URL + id + PICTURE_SMALL + ACCESS_TOKEN + accessToken;
 		}
@@ -187,7 +187,7 @@ public final class FacebookUtilities
 	 */
 	public static String getFriendsPictureSquare(final Context context, final long id)
 	{
-		if (Utilities.verifyValidString(getAccessToken(context)))
+		if (Utilities.validString(getAccessToken(context)))
 		{
 			return GRAPH_API_URL + id + PICTURE_SQUARE + ACCESS_TOKEN + accessToken;
 		}

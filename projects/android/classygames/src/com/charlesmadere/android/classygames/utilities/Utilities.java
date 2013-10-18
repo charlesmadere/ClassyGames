@@ -3,6 +3,8 @@ package com.charlesmadere.android.classygames.utilities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Shader.TileMode;
 import android.graphics.Typeface;
@@ -20,6 +22,8 @@ import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.charlesmadere.android.classygames.App;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.models.Person;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -34,18 +38,9 @@ public final class Utilities
 
 	public final static String LOG_TAG = "Classy Games";
 
-
 	private static ImageLoader imageLoader;
 
-
-	// Stores the reg id of the current Android device. More information can be
-	// found here: https://developer.android.com/google/gcm/index.html
-	private static String regId;
-	private final static String KEY_REG_ID = "KEY_REG_ID";
-
-
-	// stores the Facebook user id and name of the current user of the Classy
-	// Games application
+	// stores the Facebook user id and name of the app's current user
 	private static Person whoAmI;
 	private final static String KEY_WHO_AM_I_ID = "KEY_WHO_AM_I_ID";
 	private final static String KEY_WHO_AM_I_NAME = "KEY_WHO_AM_I_NAME";
@@ -67,8 +62,23 @@ public final class Utilities
 	{
 		final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		final NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-
 		return networkInfo != null && networkInfo.isConnected();
+	}
+
+
+	/**
+	 * Checks the device to make sure that it has a compatible and up-to-date
+	 * Google Play services installation. Read more about what it means to have
+	 * a compatible and up-to-date Google Play services installation here:
+	 * https://developer.android.com/google/play-services/setup.html#ensure
+	 *
+	 * @return
+	 * Returns true if this device is ready to go with Google Play services.
+	 */
+	public static boolean checkGooglePlayServices()
+	{
+		final int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(App.getContext());
+		return resultCode == ConnectionResult.SUCCESS;
 	}
 
 
@@ -78,8 +88,7 @@ public final class Utilities
 	 * on or off (true or false).
 	 *
 	 * @param context
-	 * The context of the Activity or Fragment that you're calling this method
-	 * from.
+	 * The context of the Activity that you're calling this method from.
 	 *
 	 * @param key
 	 * The R.string.* value for the settings key that you're trying to
@@ -103,6 +112,37 @@ public final class Utilities
 
 
 	/**
+	 * Retrieves and then returns the app's version code. The returned value
+	 * corresponds directly to the "versionCode" value that is found at the
+	 * beginning of the AndroidManifest.xml file.
+	 *
+	 * @param context
+	 * The Context of the Activity that you're calling this method from.
+	 *
+	 * @return
+	 * Returns the app's version code (as seen in AndroidManifest.xml).
+	 */
+	public static int getAppVersionCode(final Context context)
+	{
+		int versionCode;
+
+		try
+		{
+			final PackageManager packageManager = context.getPackageManager();
+			final String packageName = context.getPackageName();
+			final PackageInfo packageInfo = packageManager.getPackageInfo(packageName, 0);
+			versionCode = packageInfo.versionCode;
+		}
+		catch (final PackageManager.NameNotFoundException e)
+		{
+			versionCode = 0;
+		}
+
+		return versionCode;
+	}
+
+
+	/**
 	 * @return
 	 * Returns an ImageLoader object. This can be used to download images from
 	 * a web URL and then display them to a view.
@@ -116,7 +156,7 @@ public final class Utilities
 				.cacheOnDisc(true)
 				.build();
 
-			final ImageLoaderConfiguration loaderConfiguration = new ImageLoaderConfiguration.Builder(App.context)
+			final ImageLoaderConfiguration loaderConfiguration = new ImageLoaderConfiguration.Builder(App.getContext())
 				.defaultDisplayImageOptions(displayOptions)
 				.build();
 
@@ -143,32 +183,6 @@ public final class Utilities
 	public static SharedPreferences getPreferences(final Context context)
 	{
 		return PreferenceManager.getDefaultSharedPreferences(context);
-	}
-
-
-	/**
-	 * Gives you this Android device's GCM registration ID.
-	 *
-	 * @param context
-	 * The context of the Activity that is calling this method.
-	 *
-	 * @return
-	 * Returns this Android device's GCM registration ID. This is typically a
-	 * somewhat long String filled with random characters. <strong>Note that
-	 * this method has a slim possibility of returning null.</strong>
-	 */
-	public static String getRegId(final Context context)
-	{
-		if (!verifyValidString(regId))
-		{
-			final SharedPreferences sPreferences = getPreferences(context);
-
-			// Grab the user's GCM registration ID from shared preferences if
-			// it already exists. Returns null if it doesn't already exist.
-			regId = sPreferences.getString(KEY_REG_ID, null);
-		}
-
-		return regId;
 	}
 
 
@@ -232,8 +246,7 @@ public final class Utilities
 	 * @return
 	 * Returns the styled String as created with your specifications.
 	 */
-	public static SpannableString makeStyledString(final CharSequence string,
-		final Typeface typeface)
+	public static SpannableString makeStyledString(final CharSequence string, final Typeface typeface)
 	{
 		final SpannableString styledString = new SpannableString(string);
 		styledString.setSpan(new StyledString(typeface), 0, styledString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -256,8 +269,7 @@ public final class Utilities
 	 * @param showBackArrow
 	 * Want to show the back arrow on the Action Bar? Pass in true to show it.
 	 */
-	public static void setActionBar(final SherlockActivity activity, final int actionBarTitle,
-		final boolean showBackArrow)
+	public static void setActionBar(final SherlockActivity activity, final int actionBarTitle, final boolean showBackArrow)
 	{
 		setActionBarStyle
 		(
@@ -386,26 +398,6 @@ public final class Utilities
 
 
 	/**
-	 * Sets this Android device's GCM registration ID.
-	 * 
-	 * @param context
-	 * The context of the Activity that is calling this method.
-	 * 
-	 * @param regId
-	 * The new GCM registration ID.
-	 */
-	public static void setRegId(final Context context, final String regId)
-	{
-		final SharedPreferences sPreferences = getPreferences(context);
-		final SharedPreferences.Editor editor = sPreferences.edit();
-		editor.putString(KEY_REG_ID, regId);
-		editor.commit();
-
-		Utilities.regId = regId;
-	}
-
-
-	/**
 	 * Stores the current user's Facebook identity into the Android
 	 * SharedPreferences storage system. The current user's Facebook identity
 	 * is frequently used throughout the app, and so doing this allows future
@@ -419,28 +411,12 @@ public final class Utilities
 	 */
 	public static void setWhoAmI(final Context context, final Person facebookIdentity)
 	{
-		final SharedPreferences sPreferences = getPreferences(context);
-		final SharedPreferences.Editor editor = sPreferences.edit();
-		editor.putLong(KEY_WHO_AM_I_ID, facebookIdentity.getId());
-		editor.putString(KEY_WHO_AM_I_NAME, facebookIdentity.getName());
-		editor.commit();
+		getPreferences(context).edit()
+			.putLong(KEY_WHO_AM_I_ID, facebookIdentity.getId())
+			.putString(KEY_WHO_AM_I_NAME, facebookIdentity.getName())
+			.commit();
 
 		whoAmI = facebookIdentity;
-	}
-
-
-	/**
-	 * Verifies a String object for validity.
-	 * 
-	 * @param string
-	 * The String to check.
-	 * 
-	 * @return
-	 * Returns true if the given String is valid.
-	 */
-	public static boolean verifyValidString(final String string)
-	{
-		return string != null && string.length() >= 1;
 	}
 
 
@@ -448,18 +424,25 @@ public final class Utilities
 	 * Verifies a set of String objects for validity.
 	 * 
 	 * @param strings
-	 * The Strings to check.
+	 * The set of String objects to check.
 	 * 
 	 * @return
-	 * Returns true if all of the given Strings are valid.
+	 * Returns true if <strong>all</strong> of the given Strings are valid.
 	 */
-	public static boolean verifyValidStrings(final String... strings)
+	public static boolean validString(final String... strings)
 	{
-		for (final String string : strings)
+		if (strings == null || strings.length == 0)
 		{
-			if (!verifyValidString(string))
+			return false;
+		}
+		else
+		{
+			for (final String string : strings)
 			{
-				return false;
+				if (string == null || string.length() == 0)
+				{
+					return false;
+				}
 			}
 		}
 

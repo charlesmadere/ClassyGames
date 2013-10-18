@@ -18,24 +18,25 @@ public final class PositionView extends ImageButton
 
 	public final static float PADDING_DEFAULT = 0;
 
-	private final static int SCALE_TYPE_CENTER_CROP = 0;
-	private final static int SCALE_TYPE_CENTER_INSIDE = 1;
-	public final static int SCALE_TYPE_DEFAULT = SCALE_TYPE_CENTER_INSIDE;
-
 	private Coordinate coordinate;
+	private Drawable background;
+	private Drawable backgroundSelected;
 
 
-	public PositionView(final Context context, final byte x, final byte y, final float padding, final int scaleType,
-		final Drawable brightBackground, final Drawable darkBackground)
+	public PositionView(final Context context, final byte x, final byte y, final float padding,
+		final Drawable brightBackground, final Drawable darkBackground, final Drawable brightBackgroundSelected,
+		final Drawable darkBackgroundSelected)
 	{
 		super(context);
 		coordinate = new Coordinate(x, y);
-		setBackground(brightBackground, darkBackground);
-		setScaleType(scaleType);
+		setBackground(brightBackground, darkBackground, brightBackgroundSelected, darkBackgroundSelected);
 
 		final int paddingInt = (int) padding;
 		setPadding(paddingInt, paddingInt, paddingInt, paddingInt);
+		setScaleType(ScaleType.CENTER_INSIDE);
 	}
+
+
 
 
 	public Coordinate getCoordinate()
@@ -45,17 +46,18 @@ public final class PositionView extends ImageButton
 
 
 	@SuppressWarnings("deprecation")
-	private void setBackground(final Drawable brightBackground, final Drawable darkBackground)
+	private void setBackground(final Drawable brightBackground, final Drawable darkBackground,
+		final Drawable brightBackgroundSelected, final Drawable darkBackgroundSelected)
 	{
-		final Drawable background;
-
 		if (coordinate.areBothEitherEvenOrOdd())
 		{
 			background = darkBackground;
+			backgroundSelected = darkBackgroundSelected;
 		}
 		else
 		{
 			background = brightBackground;
+			backgroundSelected = brightBackgroundSelected;
 		}
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
@@ -69,15 +71,30 @@ public final class PositionView extends ImageButton
 	}
 
 
-	private void setScaleType(final int scaleType)
+	@SuppressWarnings("deprecation")
+	public void select()
 	{
-		if (scaleType == SCALE_TYPE_CENTER_CROP)
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
 		{
-			setScaleType(ScaleType.CENTER_CROP);
+			setBackground(backgroundSelected);
 		}
-		else if (scaleType == SCALE_TYPE_CENTER_INSIDE)
+		else
 		{
-			setScaleType(ScaleType.CENTER_INSIDE);
+			setBackgroundDrawable(backgroundSelected);
+		}
+	}
+
+
+	@SuppressWarnings("deprecation")
+	public void unselect()
+	{
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+		{
+			setBackground(background);
+		}
+		else
+		{
+			setBackgroundDrawable(background);
 		}
 	}
 
