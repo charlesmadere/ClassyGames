@@ -1,16 +1,18 @@
 package com.charlesmadere.android.classygames;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Window;
 import com.charlesmadere.android.classygames.models.Person;
-import com.charlesmadere.android.classygames.server.Server;
+import com.charlesmadere.android.classygames.server.ServerApiRegister;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 import com.facebook.*;
@@ -25,12 +27,18 @@ public final class MainActivity extends SherlockActivity
 {
 
 
+	private final static long POST_REGISTRATION_DELAY = 2l * 1000l;
+
+
 	private LinearLayout facebook;
 	private LinearLayout loading;
+	private ProgressBar loadingSpinner;
+	private TextView loadingText;
 
 
 	private boolean hasFinished = false;
 	private boolean isResumed = false;
+	private ServerApiRegister serverApiTask;
 	private UiLifecycleHelper uiHelper;
 
 
@@ -51,6 +59,8 @@ public final class MainActivity extends SherlockActivity
 
 		facebook = (LinearLayout) findViewById(R.id.main_activity_facebook);
 		loading = (LinearLayout) findViewById(R.id.main_activity_loading);
+		loadingSpinner = (ProgressBar) findViewById(R.id.main_activity_loading_spinner);
+		loadingText = (TextView) findViewById(R.id.main_activity_loading_text);
 
 		final Session.StatusCallback sessionStatusCallback = new Session.StatusCallback()
 		{
@@ -96,7 +106,6 @@ public final class MainActivity extends SherlockActivity
 	protected void onDestroy()
 	{
 		cancelRunningAnyAsyncTask();
-
 		isResumed = false;
 		uiHelper.onDestroy();
 		super.onDestroy();
@@ -149,6 +158,11 @@ public final class MainActivity extends SherlockActivity
 	{
 		if (isAnAsyncTaskRunning())
 		{
+			if (serverApiTask != null)
+			{
+				serverApiTask.cancel();
+			}
+
 			asyncGetFacebookIdentity.cancel(true);
 		}
 	}
@@ -195,14 +209,14 @@ public final class MainActivity extends SherlockActivity
 	{
 
 
-		private Context context;
 		private Session session;
+		private SherlockActivity activity;
 
 
 		private AsyncGetFacebookIdentity(final Session session)
 		{
+			activity = MainActivity.this;
 			this.session = session;
-			context = MainActivity.this;
 		}
 
 
@@ -222,8 +236,6 @@ public final class MainActivity extends SherlockActivity
 						facebookIdentity.setName(user.getName());
 					}
 				}).executeAndWait();
-
-				Server.gcmPerformRegister(context);
 			}
 
 			return facebookIdentity;
@@ -235,17 +247,56 @@ public final class MainActivity extends SherlockActivity
 		{
 			if (facebookIdentity.isValid())
 			{
-				Utilities.setWhoAmI(context, facebookIdentity);
-				asyncGetFacebookIdentity = null;
+				Utilities.setWhoAmI(activity, facebookIdentity);
 
-				facebook.setVisibility(View.GONE);
-				loading.setVisibility(View.INVISIBLE);
+				serverApiTask = new ServerApiRegister(activity, false, new ServerApiRegister.RegisterListeners()
+				{
+					@Override
+					public void onCancel()
+					{}
 
-				startGameFragmentActivity();
+
+					@Override
+					public void onComplete(final String serverResponse)
+					{
+						loadingSpinner.setVisibility(View.INVISIBLE);
+						final String name = facebookIdentity.getFirstName();
+						loadingText.setText(getString(R.string.hello_x, name));
+
+						final Handler handler = new Handler();
+						handler.postDelayed(new Runnable()
+						{
+							@Override
+							public void run()
+							{
+								asyncGetFacebookIdentity = null;
+								startGameFragmentActivity();
+							}
+						}, POST_REGISTRATION_DELAY);
+					}
+
+
+					@Override
+					public void onDismiss()
+					{}
+
+
+					@Override
+					public void onRegistrationFail()
+					{}
+
+
+					@Override
+					public void onRegistrationSuccess()
+					{}
+				});
+
+				loadingText.setText(R.string.registering_you_with_our_servers);
+				serverApiTask.execute(false);
 			}
 			else
 			{
-				finish();
+				loadingText.setText(R.string.we_had_a_problem_gathering_your_facebook_information);
 			}
 		}
 

@@ -27,7 +27,7 @@ public final class ServerApiGetStats extends ServerApi
 	 */
 	public ServerApiGetStats(final Context context, final ServerApi.Listeners listeners)
 	{
-		super(context, listeners, false);
+		super(context, false, listeners);
 	}
 
 

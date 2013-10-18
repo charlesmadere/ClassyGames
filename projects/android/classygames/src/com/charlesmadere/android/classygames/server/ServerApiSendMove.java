@@ -80,7 +80,7 @@ public final class ServerApiSendMove extends ServerApiGame
 		final String boardJSONString = boardJSON.toString();
 		data.addKeyValuePair(Server.POST_DATA_BOARD, boardJSONString);
 
-		if (Utilities.verifyValidString(game.getId()))
+		if (Utilities.validString(game.getId()))
 		{
 			serverResponse = Server.postToServerNewMove(data);
 		}

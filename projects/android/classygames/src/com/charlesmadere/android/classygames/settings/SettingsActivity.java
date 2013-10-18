@@ -55,7 +55,7 @@ public final class SettingsActivity extends SherlockPreferenceActivity implement
 			// get the intent's action
 			final String action = getIntent().getAction();
 
-			if (Utilities.verifyValidString(action))
+			if (Utilities.validString(action))
 			{
 				if (action.equals(getString(R.string.com_charlesmadere_android_classygames_settings_game)))
 				// the intent's action is saying that we need to show the game

@@ -7,9 +7,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.util.Log;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.utilities.Utilities;
+
+import java.io.IOException;
 
 
 /**
@@ -52,7 +55,7 @@ public abstract class ServerApi
 
 
 	/**
-	 * An interface that will be used once we're done running code here.
+	 * An interface that will be used throughout the lifecycle of this class.
 	 */
 	public interface Listeners
 	{
@@ -98,13 +101,11 @@ public abstract class ServerApi
 	 * The Context of the class that you're creating this object from.
 	 * 
 	 * @param listeners
-	 * A set of listener to call once we're done running code here.
+	 * A set of listeners to call once we're done running code here.
 	 */
 	protected ServerApi(final Context context, final Listeners listeners)
 	{
-		this.context = context;
-		this.listeners = listeners;
-		showProgressDialog = true;
+		this(context, true, listeners);
 	}
 
 
@@ -117,18 +118,43 @@ public abstract class ServerApi
 	 * @param context
 	 * The Context of the class that you're creating this object from.
 	 *
-	 * @param listeners
-	 * A set of listeners to call once we're done running code here.
-	 *
 	 * @param showProgressDialog
 	 * Set this to true if you want the user to see a ProgressDialog while this
 	 * ServerApi object is running.
+	 *
+	 * @param listeners
+	 * A set of listeners to call once we're done running code here.
 	 */
-	protected ServerApi(final Context context, final Listeners listeners, final boolean showProgressDialog)
+	protected ServerApi(final Context context, final boolean showProgressDialog, final Listeners listeners)
 	{
 		this.context = context;
-		this.listeners = listeners;
 		this.showProgressDialog = showProgressDialog;
+		this.listeners = listeners;
+	}
+
+
+
+
+	/**
+	 * @return
+	 * Returns the Context object handed in through this class's constructor.
+	 */
+	protected Context getContext()
+	{
+		return context;
+	}
+
+
+	/**
+	 * Classes that extend from this one can override this method so that they
+	 * can create and use their own ServerApiTask child class.
+	 *
+	 * @return
+	 * Returns a brand new instance of a ServerApiTask class.
+	 */
+	protected ServerApiTask getServerApiTask()
+	{
+		return new ServerApiTask();
 	}
 
 
@@ -224,22 +250,10 @@ public abstract class ServerApi
 	/**
 	 * Starts the execution of the ServerApiTask AsyncTask.
 	 */
-	private void executeTask()
+	protected void executeTask()
 	{
-		serverApiTask = new ServerApiTask(context, showProgressDialog);
+		serverApiTask = getServerApiTask();
 		serverApiTask.execute();
-	}
-
-
-	/**
-	 * This method is run at the very beginning of the onPostExecute() method.
-	 *
-	 * @param serverResponse
-	 * The raw data as received from the Classy Games server.
-	 */
-	protected void finishUp(final String serverResponse)
-	{
-
 	}
 
 
@@ -248,20 +262,11 @@ public abstract class ServerApi
 	/**
 	 * An AsyncTask that will query the Classy Games server.
 	 */
-	private final class ServerApiTask extends AsyncTask<Void, Void, String>
+	protected class ServerApiTask extends AsyncTask<Void, Void, String>
 	{
 
 
-		private boolean showProgressDialog;
-		private Context context;
 		private ProgressDialog progressDialog;
-
-
-		private ServerApiTask(final Context context, final boolean showProgressDialog)
-		{
-			this.context = context;
-			this.showProgressDialog = showProgressDialog;
-		}
 
 
 		@Override
@@ -272,7 +277,15 @@ public abstract class ServerApi
 			if (!isCancelled() && Utilities.checkForNetworkConnectivity(context))
 			{
 				final Person whoAmI = Utilities.getWhoAmI(context);
-				serverResponse = postToServer(whoAmI);
+
+				try
+				{
+					serverResponse = postToServer(whoAmI);
+				}
+				catch (final IOException e)
+				{
+					Log.e(LOG_TAG, "IOException during ServerApi's doInBackground()!", e);
+				}
 			}
 
 			return serverResponse;
@@ -309,8 +322,6 @@ public abstract class ServerApi
 		@Override
 		protected void onPostExecute(final String serverResponse)
 		{
-			finishUp(serverResponse);
-
 			if (progressDialog != null)
 			{
 				progressDialog.dismiss();
@@ -392,7 +403,7 @@ public abstract class ServerApi
 	 * A String that contains the responding result from the server or null if
 	 * a problem happened.
 	 */
-	protected abstract String postToServer(final Person whoAmI);
+	protected abstract String postToServer(final Person whoAmI) throws IOException;
 
 
 }

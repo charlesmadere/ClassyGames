@@ -73,6 +73,33 @@ public final class Person implements Serializable
 	}
 
 
+
+
+	/**
+	 * If this Person's name is "Charles Madere", then this method will return
+	 * "Charles". If this Person's name is "Brian Joseph McGarry", then this
+	 * method will return "Brian". If this Person's name is "Mew2King", then
+	 * this method will return "Mew2King". Basically, it tries to return
+	 * everything before the first space in the Person's name.
+	 *
+	 * @return
+	 * Attempts to return this Person's first name. If a first name is unable
+	 * to be found, then it will just return this Person's full name.
+	 */
+	public String getFirstName()
+	{
+		String name = this.name;
+		final int index = name.indexOf(" ");
+
+		if (index >= 1)
+		{
+			name = name.substring(0, index);
+		}
+
+		return name;
+	}
+
+
 	/**
 	 * @return
 	 * Returns this Person's Facebook ID (a long).
@@ -210,7 +237,7 @@ public final class Person implements Serializable
 	 */
 	public static boolean isIdValid(final String id)
 	{
-		if (Utilities.verifyValidString(id))
+		if (Utilities.validString(id))
 		// First, ensure that we were given a valid String. If this proves true
 		// then we will check to see that the long value of this String is a
 		// valid ID value.
@@ -295,7 +322,7 @@ public final class Person implements Serializable
 	 */
 	public static boolean isNameValid(final String name)
 	{
-		return Utilities.verifyValidString(name);
+		return Utilities.validString(name);
 	}
 
 

@@ -2,9 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/facebook/FacebookSDK.iml" filepath="$PROJECT_DIR$/facebook/FacebookSDK.iml" />
       <module fileurl="file://$PROJECT_DIR$/actionbarsherlock/actionbarsherlock.iml" filepath="$PROJECT_DIR$/actionbarsherlock/actionbarsherlock.iml" />
       <module fileurl="file://$PROJECT_DIR$/classygames/classygames.iml" filepath="$PROJECT_DIR$/classygames/classygames.iml" />
+      <module fileurl="file://$PROJECT_DIR$/facebook/facebook.iml" filepath="$PROJECT_DIR$/facebook/facebook.iml" />
+      <module fileurl="file://$PROJECT_DIR$/googleplayservices/googleplayservices.iml" filepath="$PROJECT_DIR$/googleplayservices/googleplayservices.iml" />
     </modules>
   </component>
 </project>

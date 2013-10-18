@@ -445,6 +445,12 @@ public final class FriendsListFragment extends SherlockListFragment implements
 									editor.putString(String.valueOf(friend.getId()), friend.getName());
 								}
 
+								// http://stackoverflow.com/questions/5960678/whats-the-difference-between-commit-and-apply
+								// Basically, commit() is slower than apply() because it synchronously writes these
+								// SharedPreferences changes to storage. Because we're potentially writing a bunch of data
+								// to SharedPreferences right now (the user's whole list of Facebook friends!) we can get a
+								// potentially pretty decent speed boost out of this.
+
 								if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)
 								{
 									editor.apply();

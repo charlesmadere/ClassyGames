@@ -393,7 +393,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		// ID.
 		final String gameId = arguments.getString(KEY_GAME_ID);
 
-		if (!Utilities.verifyValidString(gameId) || !Game.isIdValid(gameId))
+		if (!Utilities.validString(gameId) || !Game.isIdValid(gameId))
 		{
 			menu.removeItem(R.id.generic_game_fragment_menu_skip_move);
 			menu.removeItem(R.id.generic_game_fragment_menu_forfeit_game);
@@ -454,7 +454,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		{
 			final String boardJSONString = boardJSON.toString();
 
-			if (Utilities.verifyValidString(boardJSONString))
+			if (Utilities.validString(boardJSONString))
 			{
 				outState.putString(BUNDLE_BOARD_JSON, boardJSONString);
 			}
@@ -581,7 +581,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 */
 	private void forfeitGame()
 	{
-		if (Utilities.verifyValidString(game.getId()) && !isAnAsyncTaskRunning())
+		if (Utilities.validString(game.getId()) && !isAnAsyncTaskRunning())
 		{
 			serverApiTask = new ServerApiForfeitGame(getSherlockActivity(), serverApiListeners, game);
 			serverApiTask.execute();
@@ -764,7 +764,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		JSONObject parsedServerResponse = null;
 
-		if (Utilities.verifyValidString(serverResponse))
+		if (Utilities.validString(serverResponse))
 		{
 			try
 			{
@@ -855,7 +855,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	 */
 	private void skipMove()
 	{
-		if (Utilities.verifyValidString(game.getId()) && !isAnAsyncTaskRunning())
+		if (Utilities.validString(game.getId()) && !isAnAsyncTaskRunning())
 		{
 			serverApiTask = new ServerApiSkipMove(getSherlockActivity(), serverApiListeners, game);
 			serverApiTask.execute();
@@ -917,7 +917,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 				final SharedPreferences sPreferences = fragmentActivity.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
 				final String boardJSON = sPreferences.getString(game.getId(), null);
 
-				if (Utilities.verifyValidString(boardJSON))
+				if (Utilities.validString(boardJSON))
 				{
 					serverResponse = boardJSON;
 				}
