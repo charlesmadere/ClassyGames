@@ -254,6 +254,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 				boardView = (BoardView) view.findViewById(R.id.generic_game_fragment_board);
 				loading = (LinearLayout) view.findViewById(R.id.generic_game_fragment_loading);
 				loadingText = (TextView) view.findViewById(R.id.generic_game_fragment_loading_textview);
+
 				boardView.setAllPositionViewOnClickListeners(new View.OnClickListener()
 				{
 					@Override
@@ -533,18 +534,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 		{
 			positionSelectedCurrent.setSelected(false);
 			positionSelectedCurrent = null;
-		}
-
-		// TODO
-		// check to see if the below loop is worthless
-
-		for (byte x = 0; x < board.getLengthHorizontal(); ++x)
-		{
-			for (byte y = 0; y < board.getLengthVertical(); ++y)
-			{
-				final PositionView positionView = boardView.getPosition(x, y);
-				positionView.setSelected(false);
-			}
 		}
 	}
 

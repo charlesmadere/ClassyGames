@@ -272,8 +272,6 @@ public final class GamesListFragment extends SherlockListFragment implements
 
 			if (game.get().isTypeGame())
 			{
-				view.setSelected(true);
-
 				final Context context = getSherlockActivity();
 				String [] items;
 
