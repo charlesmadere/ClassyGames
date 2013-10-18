@@ -240,6 +240,45 @@ public final class Board extends GenericBoard
 					break;
 
 				case Piece.TYPE_QUEEN:
+					// Sorry for this kinda nasty if statement, but the Queen
+					// can move in a bunch of different ways... Don't try to
+					// decipher this unless you're already familiar with Chess.
+					if ((Math.abs(startX - endX) == Math.abs(startY - endY))
+						// bishop logic
+						|| ((Math.abs(startX - endX) == 1 && Math.abs(startY - endY) == 1)
+						|| (Math.abs(startX - endX) == 1 && Math.abs(startY - endY) == 0)
+						|| (Math.abs(startX - endX) == 0 && Math.abs(startY - endY) == 1))
+						// king logic
+						|| ((startX == endX && startY != endY) || (startX != endX && startY == endY)))
+						// rook logic
+					{
+						if (current.hasPiece())
+						{
+							final Piece p = (Piece) current.getPiece();
+
+							if (p.isTeamOpponent() && !p.isTypeKing())
+							{
+								current.removePiece();
+								current.setPiece(new Piece(piece));
+								previous.removePiece();
+								isMoveValid = true;
+							}
+							else
+							{
+								return false;
+							}
+						}
+						else
+						{
+							current.setPiece(new Piece(piece));
+							previous.removePiece();
+							isMoveValid = true;
+						}
+					}
+					else
+					{
+						return false;
+					}
 					break;
 
 				case Piece.TYPE_PAWN:
@@ -360,6 +399,31 @@ public final class Board extends GenericBoard
 	{
 		// TODO
 		return BOARD_NORMAL;
+	}
+
+
+	/**
+	 * Checks to see if the given Piece object has to move through any other
+	 * pieces on the Chess board in order to arrive at the destination board
+	 * Position.
+	 *
+	 * @param piece
+	 * The Piece that is attempting to move across the board. This absolutely
+	 * can not be null!
+	 *
+	 * @param destination
+	 * The Position on the game board that the given Piece is attempting to
+	 * travel to. This absolutely can not be null!
+	 *
+	 * @return
+	 * Returns true if the given Piece has to move through other pieces on the
+	 * game board to arrive at its destination Position.
+	 */
+	private boolean isMovingThroughPieces(final Piece piece, final Position destination)
+	{
+		// TODO
+
+		return false;
 	}
 
 
