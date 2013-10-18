@@ -152,18 +152,58 @@ public final class Board extends GenericBoard
 		{
 			final Piece piece = (Piece) previous.getPiece();
 			final Coordinate start = previous.getCoordinate();
-			final int startX = start.getX();
-			final int startY = start.getY();
+			final int startX = (int) start.getX();
+			final int startY = (int) start.getY();
 			final Coordinate end = current.getCoordinate();
-			final int endX = end.getX();
-			final int endY = end.getY();
+			final int endX = (int) end.getX();
+			final int endY = (int) end.getY();
 
 			switch (piece.getType())
 			{
 				case Piece.TYPE_BISHOP:
+					if (Math.abs(startX - endX) == Math.abs(startY - endY))
+					{
+						if (current.hasPiece())
+						{
+							final Piece p = (Piece) current.getPiece();
+
+							if (p.isTeamOpponent() && !p.isTypeKing())
+							{
+								current.removePiece();
+								current.setPiece(new Piece(piece));
+								previous.removePiece();
+								isMoveValid = true;
+							}
+							else
+							{
+								return false;
+							}
+						}
+					}
 					break;
 
 				case Piece.TYPE_KING:
+					if ((Math.abs(startX - endX) == 1 && Math.abs(startY - endY) == 1)
+						|| (Math.abs(startX - endX) == 1 && Math.abs(startY - endY) == 0)
+						|| (Math.abs(startX - endX) == 0 && Math.abs(startY - endY) == 1))
+					{
+						if (current.hasPiece())
+						{
+							final Piece p = (Piece) current.getPiece();
+
+							if (p.isTeamOpponent() && !p.isTypeKing())
+							{
+								current.removePiece();
+								current.setPiece(new Piece(piece));
+								previous.removePiece();
+								isMoveValid = true;
+							}
+							else
+							{
+								return false;
+							}
+						}
+					}
 					break;
 
 				case Piece.TYPE_KNIGHT:
@@ -203,6 +243,25 @@ public final class Board extends GenericBoard
 					break;
 
 				case Piece.TYPE_PAWN:
+					if ((startY == 1 && Math.abs(startY - endY) == 2) || Math.abs(startY - endY) == 1)
+					{
+						if (startX == endX)
+						{
+							if (current.hasPiece())
+							{
+								final Piece p = (Piece) current.getPiece();
+
+								if (p.isTeamOpponent() && !p.isTypeKing() && Math.abs(startX - endX) == 1)
+								{
+									current.removePiece();
+								}
+							}
+
+							current.setPiece(new Piece(piece));
+							previous.removePiece();
+							isMoveValid = true;
+						}
+					}
 					break;
 
 				case Piece.TYPE_ROOK:
