@@ -231,7 +231,7 @@ public final class CheckersGameFragment extends GenericGameFragment
 
 			if (current.hasPiece() && current.getPiece().isTeamPlayer())
 			{
-				positionCurrent.setSelected(true);
+				positionCurrent.select();
 			}
 			else
 			{
@@ -248,7 +248,7 @@ public final class CheckersGameFragment extends GenericGameFragment
 		{
 			final Coordinate coordinatePrevious = positionPrevious.getCoordinate();
 			final Position previous = board.getPosition(coordinatePrevious);
-			positionPrevious.setSelected(false);
+			positionPrevious.unselect();
 
 			final Coordinate coordinateCurrent = positionCurrent.getCoordinate();
 			final Position current = board.getPosition(coordinateCurrent);
@@ -259,7 +259,7 @@ public final class CheckersGameFragment extends GenericGameFragment
 			}
 			else
 			{
-				positionCurrent.setSelected(true);
+				positionCurrent.select();
 
 				if (board.move(previous, current))
 				{
