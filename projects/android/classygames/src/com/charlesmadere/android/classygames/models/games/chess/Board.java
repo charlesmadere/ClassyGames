@@ -429,11 +429,15 @@ public final class Board extends GenericBoard
 	private boolean isMovingThroughPieces(final Position previous, final Position current)
 	{
 		// TODO
-		// this method is still under major construction!s
+		// this method is still under major construction!
 
 		final Piece piece = (Piece) previous.getPiece();
-		final Coordinate previousCoordinate = previous.getCoordinate();
-		final Coordinate currentCoordinate = current.getCoordinate();
+		final Coordinate start = previous.getCoordinate();
+		final int startX = (int) start.getX();
+		final int startY = (int) start.getY();
+		final Coordinate end = current.getCoordinate();
+		final int endX = (int) end.getX();
+		final int endY = (int) end.getY();
 
 		switch (piece.getType())
 		{
@@ -449,7 +453,75 @@ public final class Board extends GenericBoard
 			case Piece.TYPE_QUEEN:
 				break;
 
-			case Piece.TYPE_KNIGHT:
+			case Piece.TYPE_ROOK:
+				if (startX == endX)
+				// rook is moving vertically
+				{
+					if (startY < endY)
+					// rook is moving up
+					{
+						int currentY = startY;
+
+						while (++currentY < endY)
+						{
+							final Position p = getPosition(startX, currentY);
+
+							if (p.hasPiece())
+							{
+								return true;
+							}
+						}
+					}
+					else if (startY > endY)
+					// rook is moving down
+					{
+						int currentY = startY;
+
+						while (--currentY > endY)
+						{
+							final Position p = getPosition(startX, currentY);
+
+							if (p.hasPiece())
+							{
+								return true;
+							}
+						}
+					}
+				}
+				else if (startY == endY)
+				// rook is moving horizontally
+				{
+					if (startX < endX)
+					// rook is moving right
+					{
+						int currentX = startX;
+
+						while (++currentX < endY)
+						{
+							final Position p = getPosition(currentX, startY);
+
+							if (p.hasPiece())
+							{
+								return true;
+							}
+						}
+					}
+					else if (startX > endX)
+					// rook is moving left
+					{
+						int currentX = startX;
+
+						while (--currentX > endY)
+						{
+							final Position p = getPosition(currentX, startY);
+
+							if (p.hasPiece())
+							{
+								return true;
+							}
+						}
+					}
+				}
 				break;
 		}
 
