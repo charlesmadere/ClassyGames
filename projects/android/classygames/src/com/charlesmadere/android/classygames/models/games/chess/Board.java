@@ -31,7 +31,7 @@ public final class Board extends GenericBoard
 	 * variable will be true if it has already been used. Otherwise, this will
 	 * only be set when the user actually does the castle technique.
 	 */
-	private boolean hasCastled = false;
+	private boolean hasCastled;
 
 
 
@@ -161,7 +161,8 @@ public final class Board extends GenericBoard
 			switch (piece.getType())
 			{
 				case Piece.TYPE_BISHOP:
-					if (Math.abs(startX - endX) == Math.abs(startY - endY))
+					if (!isMovingThroughPieces(previous, current) &&
+						(Math.abs(startX - endX) == Math.abs(startY - endY)))
 					{
 						if (current.hasPiece())
 						{
@@ -183,9 +184,10 @@ public final class Board extends GenericBoard
 					break;
 
 				case Piece.TYPE_KING:
-					if ((Math.abs(startX - endX) == 1 && Math.abs(startY - endY) == 1)
+					if (!isMovingThroughPieces(previous, current) &&
+						((Math.abs(startX - endX) == 1 && Math.abs(startY - endY) == 1)
 						|| (Math.abs(startX - endX) == 1 && Math.abs(startY - endY) == 0)
-						|| (Math.abs(startX - endX) == 0 && Math.abs(startY - endY) == 1))
+						|| (Math.abs(startX - endX) == 0 && Math.abs(startY - endY) == 1)))
 					{
 						if (current.hasPiece())
 						{
@@ -243,13 +245,14 @@ public final class Board extends GenericBoard
 					// Sorry for this kinda nasty if statement, but the Queen
 					// can move in a bunch of different ways... Don't try to
 					// decipher this unless you're already familiar with Chess.
-					if ((Math.abs(startX - endX) == Math.abs(startY - endY))
+					if (!isMovingThroughPieces(previous, current) &&
+						((Math.abs(startX - endX) == Math.abs(startY - endY))
 						// bishop logic
 						|| ((Math.abs(startX - endX) == 1 && Math.abs(startY - endY) == 1)
 						|| (Math.abs(startX - endX) == 1 && Math.abs(startY - endY) == 0)
 						|| (Math.abs(startX - endX) == 0 && Math.abs(startY - endY) == 1))
 						// king logic
-						|| ((startX == endX && startY != endY) || (startX != endX && startY == endY)))
+						|| ((startX == endX && startY != endY) || (startX != endX && startY == endY))))
 						// rook logic
 					{
 						if (current.hasPiece())
@@ -282,7 +285,8 @@ public final class Board extends GenericBoard
 					break;
 
 				case Piece.TYPE_PAWN:
-					if ((startY == 1 && Math.abs(startY - endY) == 2) || Math.abs(startY - endY) == 1)
+					if (!isMovingThroughPieces(previous, current) &&
+						((startY == 1 && Math.abs(startY - endY) == 2) || Math.abs(startY - endY) == 1))
 					{
 						if (startX == endX)
 						{
@@ -304,7 +308,8 @@ public final class Board extends GenericBoard
 					break;
 
 				case Piece.TYPE_ROOK:
-					if ((startX == endX && startY != endY) || (startX != endX && startY == endY))
+					if (!isMovingThroughPieces(previous, current) &&
+						(startX == endX && startY != endY) || (startX != endX && startY == endY))
 					{
 						if (current.hasPiece())
 						{
@@ -403,25 +408,50 @@ public final class Board extends GenericBoard
 
 
 	/**
-	 * Checks to see if the given Piece object has to move through any other
-	 * pieces on the Chess board in order to arrive at the destination board
-	 * Position.
+	 * Checks to see if the Piece at Position previous has to move through any
+	 * other pieces on the Chess board in order to arrive at Position current.
+	 * This algorithm does not check for the existence of a Piece at Position
+	 * current.
 	 *
-	 * @param piece
-	 * The Piece that is attempting to move across the board. This absolutely
-	 * can not be null!
+	 * @param previous
+	 * The Position that the Piece is trying to move from. This absolutely can
+	 * not be null and must also have a Piece object associated with it.
 	 *
-	 * @param destination
+	 * @param current
 	 * The Position on the game board that the given Piece is attempting to
-	 * travel to. This absolutely can not be null!
+	 * travel to. This absolutely can not be null! It's fine if this Position
+	 * does or does not have a Piece object associated with it.
 	 *
 	 * @return
-	 * Returns true if the given Piece has to move through other pieces on the
-	 * game board to arrive at its destination Position.
+	 * Returns true if the Piece at Position previous has to move through other
+	 * pieces on the game board to arrive at Position current.
 	 */
-	private boolean isMovingThroughPieces(final Piece piece, final Position destination)
+	private boolean isMovingThroughPieces(final Position previous, final Position current)
 	{
 		// TODO
+		// this method is still under major construction!s
+
+		final Piece piece = (Piece) previous.getPiece();
+		final Coordinate previousCoordinate = previous.getCoordinate();
+		final Coordinate currentCoordinate = current.getCoordinate();
+
+		switch (piece.getType())
+		{
+			case Piece.TYPE_BISHOP:
+				break;
+
+			case Piece.TYPE_KING:
+				break;
+
+			case Piece.TYPE_PAWN:
+				break;
+
+			case Piece.TYPE_QUEEN:
+				break;
+
+			case Piece.TYPE_KNIGHT:
+				break;
+		}
 
 		return false;
 	}
