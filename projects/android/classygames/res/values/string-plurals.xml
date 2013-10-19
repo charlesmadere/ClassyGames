@@ -13,7 +13,7 @@
 		<item quantity="other">%d games played</item>
 	</plurals>
 	<plurals name="x_hours_ago">
-		<item quantity="one">1 hours ago</item>
+		<item quantity="one">1 hour ago</item>
 		<item quantity="other">%d hours ago</item>
 	</plurals>
 	<plurals name="x_loses">
