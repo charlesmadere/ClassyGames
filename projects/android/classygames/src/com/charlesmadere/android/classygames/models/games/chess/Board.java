@@ -161,7 +161,7 @@ public final class Board extends GenericBoard
 			switch (piece.getType())
 			{
 				case Piece.TYPE_BISHOP:
-					if (!isMovingThroughPieces(previous, current) &&
+					if (!isMovingThroughPiecesBishop(previous, current) &&
 						(Math.abs(startX - endX) == Math.abs(startY - endY)))
 					{
 						if (current.hasPiece())
@@ -184,7 +184,7 @@ public final class Board extends GenericBoard
 					break;
 
 				case Piece.TYPE_KING:
-					if (!isMovingThroughPieces(previous, current) &&
+					if (!isMovingThroughPiecesKing(previous, current) &&
 						((Math.abs(startX - endX) == 1 && Math.abs(startY - endY) == 1)
 						|| (Math.abs(startX - endX) == 1 && Math.abs(startY - endY) == 0)
 						|| (Math.abs(startX - endX) == 0 && Math.abs(startY - endY) == 1)))
@@ -245,7 +245,7 @@ public final class Board extends GenericBoard
 					// Sorry for this kinda nasty if statement, but the Queen
 					// can move in a bunch of different ways... Don't try to
 					// decipher this unless you're already familiar with Chess.
-					if (!isMovingThroughPieces(previous, current) &&
+					if (!isMovingThroughPiecesQueen(previous, current) &&
 						((Math.abs(startX - endX) == Math.abs(startY - endY))
 						// bishop logic
 						|| ((Math.abs(startX - endX) == 1 && Math.abs(startY - endY) == 1)
@@ -285,7 +285,7 @@ public final class Board extends GenericBoard
 					break;
 
 				case Piece.TYPE_PAWN:
-					if (!isMovingThroughPieces(previous, current) &&
+					if (!isMovingThroughPiecesPawn(previous, current) &&
 						((startY == 1 && Math.abs(startY - endY) == 2) || Math.abs(startY - endY) == 1))
 					{
 						if (startX == endX)
@@ -308,7 +308,7 @@ public final class Board extends GenericBoard
 					break;
 
 				case Piece.TYPE_ROOK:
-					if (!isMovingThroughPieces(previous, current) &&
+					if (!isMovingThroughPiecesRook(previous, current) &&
 						(startX == endX && startY != endY) || (startX != endX && startY == endY))
 					{
 						if (current.hasPiece())
@@ -353,10 +353,9 @@ public final class Board extends GenericBoard
 
 
 	@Override
-	public void performGameSpecificJSONChecks() throws JSONException
+	protected void performGameSpecificJSONChecks(final JSONObject boardJSON) throws JSONException
 	{
-		// TODO
-		// find the has_castled key-value pair in the boardJSON object
+		hasCastled = boardJSON.getBoolean("has_castled");
 	}
 
 
@@ -426,103 +425,205 @@ public final class Board extends GenericBoard
 	 * Returns true if the Piece at Position previous has to move through other
 	 * pieces on the game board to arrive at Position current.
 	 */
-	private boolean isMovingThroughPieces(final Position previous, final Position current)
+	private boolean isMovingThroughPiecesBishop(final Position previous, final Position current)
 	{
-		// TODO
-		// this method is still under major construction!
-
-		final Piece piece = (Piece) previous.getPiece();
 		final Coordinate start = previous.getCoordinate();
-		final int startX = (int) start.getX();
-		final int startY = (int) start.getY();
+		final byte startX = start.getX();
+		final byte startY = start.getY();
 		final Coordinate end = current.getCoordinate();
-		final int endX = (int) end.getX();
-		final int endY = (int) end.getY();
+		final byte endX = end.getX();
+		final byte endY = end.getY();
 
-		switch (piece.getType())
+		return false;
+	}
+
+
+	/**
+	 * Checks to see if the Piece at Position previous has to move through any
+	 * other pieces on the Chess board in order to arrive at Position current.
+	 * This algorithm does not check for the existence of a Piece at Position
+	 * current.
+	 *
+	 * @param previous
+	 * The Position that the Piece is trying to move from. This absolutely can
+	 * not be null and must also have a Piece object associated with it.
+	 *
+	 * @param current
+	 * The Position on the game board that the given Piece is attempting to
+	 * travel to. This absolutely can not be null! It's fine if this Position
+	 * does or does not have a Piece object associated with it.
+	 *
+	 * @return
+	 * Returns true if the Piece at Position previous has to move through other
+	 * pieces on the game board to arrive at Position current.
+	 */
+	private boolean isMovingThroughPiecesKing(final Position previous, final Position current)
+	{
+		final Coordinate start = previous.getCoordinate();
+		final byte startX = start.getX();
+		final byte startY = start.getY();
+		final Coordinate end = current.getCoordinate();
+		final byte endX = end.getX();
+		final byte endY = end.getY();
+
+		return false;
+	}
+
+
+	/**
+	 * Checks to see if the Piece at Position previous has to move through any
+	 * other pieces on the Chess board in order to arrive at Position current.
+	 * This algorithm does not check for the existence of a Piece at Position
+	 * current.
+	 *
+	 * @param previous
+	 * The Position that the Piece is trying to move from. This absolutely can
+	 * not be null and must also have a Piece object associated with it.
+	 *
+	 * @param current
+	 * The Position on the game board that the given Piece is attempting to
+	 * travel to. This absolutely can not be null! It's fine if this Position
+	 * does or does not have a Piece object associated with it.
+	 *
+	 * @return
+	 * Returns true if the Piece at Position previous has to move through other
+	 * pieces on the game board to arrive at Position current.
+	 */
+	private boolean isMovingThroughPiecesPawn(final Position previous, final Position current)
+	{
+		final Coordinate start = previous.getCoordinate();
+		final byte startX = start.getX();
+		final byte startY = start.getY();
+		final Coordinate end = current.getCoordinate();
+		final byte endX = end.getX();
+		final byte endY = end.getY();
+
+		return false;
+	}
+
+
+	/**
+	 * Checks to see if the Piece at Position previous has to move through any
+	 * other pieces on the Chess board in order to arrive at Position current.
+	 * This algorithm does not check for the existence of a Piece at Position
+	 * current.
+	 *
+	 * @param previous
+	 * The Position that the Piece is trying to move from. This absolutely can
+	 * not be null and must also have a Piece object associated with it.
+	 *
+	 * @param current
+	 * The Position on the game board that the given Piece is attempting to
+	 * travel to. This absolutely can not be null! It's fine if this Position
+	 * does or does not have a Piece object associated with it.
+	 *
+	 * @return
+	 * Returns true if the Piece at Position previous has to move through other
+	 * pieces on the game board to arrive at Position current.
+	 */
+	private boolean isMovingThroughPiecesQueen(final Position previous, final Position current)
+	{
+		return isMovingThroughPiecesBishop(previous, current)
+			|| isMovingThroughPiecesKing(previous, current)
+			|| isMovingThroughPiecesRook(previous, current);
+	}
+
+
+	/**
+	 * Checks to see if the Piece at Position previous has to move through any
+	 * other pieces on the Chess board in order to arrive at Position current.
+	 * This algorithm does not check for the existence of a Piece at Position
+	 * current.
+	 *
+	 * @param previous
+	 * The Position that the Piece is trying to move from. This absolutely can
+	 * not be null and must also have a Piece object associated with it.
+	 *
+	 * @param current
+	 * The Position on the game board that the given Piece is attempting to
+	 * travel to. This absolutely can not be null! It's fine if this Position
+	 * does or does not have a Piece object associated with it.
+	 *
+	 * @return
+	 * Returns true if the Piece at Position previous has to move through other
+	 * pieces on the game board to arrive at Position current.
+	 */
+	private boolean isMovingThroughPiecesRook(final Position previous, final Position current)
+	{
+		final Coordinate start = previous.getCoordinate();
+		final byte startX = start.getX();
+		final byte startY = start.getY();
+		final Coordinate end = current.getCoordinate();
+		final byte endX = end.getX();
+		final byte endY = end.getY();
+
+		if (startX == endX)
+		// rook is moving vertically
 		{
-			case Piece.TYPE_BISHOP:
-				break;
+			if (startY < endY)
+			// rook is moving up
+			{
+				int currentY = startY;
 
-			case Piece.TYPE_KING:
-				break;
-
-			case Piece.TYPE_PAWN:
-				break;
-
-			case Piece.TYPE_QUEEN:
-				break;
-
-			case Piece.TYPE_ROOK:
-				if (startX == endX)
-				// rook is moving vertically
+				while (++currentY < endY)
 				{
-					if (startY < endY)
-					// rook is moving up
+					final Position p = getPosition(startX, currentY);
+
+					if (p.hasPiece())
 					{
-						int currentY = startY;
-
-						while (++currentY < endY)
-						{
-							final Position p = getPosition(startX, currentY);
-
-							if (p.hasPiece())
-							{
-								return true;
-							}
-						}
-					}
-					else if (startY > endY)
-					// rook is moving down
-					{
-						int currentY = startY;
-
-						while (--currentY > endY)
-						{
-							final Position p = getPosition(startX, currentY);
-
-							if (p.hasPiece())
-							{
-								return true;
-							}
-						}
+						return true;
 					}
 				}
-				else if (startY == endY)
-				// rook is moving horizontally
+			}
+			else if (startY > endY)
+			// rook is moving down
+			{
+				int currentY = startY;
+
+				while (--currentY > endY)
 				{
-					if (startX < endX)
-					// rook is moving right
+					final Position p = getPosition(startX, currentY);
+
+					if (p.hasPiece())
 					{
-						int currentX = startX;
-
-						while (++currentX < endY)
-						{
-							final Position p = getPosition(currentX, startY);
-
-							if (p.hasPiece())
-							{
-								return true;
-							}
-						}
-					}
-					else if (startX > endX)
-					// rook is moving left
-					{
-						int currentX = startX;
-
-						while (--currentX > endY)
-						{
-							final Position p = getPosition(currentX, startY);
-
-							if (p.hasPiece())
-							{
-								return true;
-							}
-						}
+						return true;
 					}
 				}
-				break;
+			}
+		}
+		else if (startY == endY)
+		// rook is moving horizontally
+		{
+			if (startX < endX)
+			// rook is moving right
+			{
+				int currentX = startX;
+
+				while (++currentX < endX)
+				{
+					final Position p = getPosition(currentX, startY);
+
+					if (p.hasPiece())
+					{
+						return true;
+					}
+				}
+			}
+			else if (startX > endX)
+			// rook is moving left
+			{
+				int currentX = startX;
+
+				while (--currentX > endX)
+				{
+					final Position p = getPosition(currentX, startY);
+
+					if (p.hasPiece())
+					{
+						return true;
+					}
+				}
+			}
 		}
 
 		return false;

@@ -262,11 +262,14 @@ public abstract class GenericBoard
 	 */
 	private void initializeBoardFromJSON() throws JSONException
 	{
-		final JSONArray teams = boardJSON.getJSONObject("board").getJSONArray("teams");
-		initializeTeamFromJSON(teams.getJSONArray(0), GenericPiece.TEAM_PLAYER);
-		initializeTeamFromJSON(teams.getJSONArray(1), GenericPiece.TEAM_OPPONENT);
+		final JSONObject board = boardJSON.getJSONObject("board");
+		final JSONArray teams = board.getJSONArray("teams");
+		final JSONArray teamPlayer = teams.getJSONArray(0);
+		final JSONArray teamOpponent = teams.getJSONArray(1);
+		initializeTeamFromJSON(teamPlayer, GenericPiece.TEAM_PLAYER);
+		initializeTeamFromJSON(teamOpponent, GenericPiece.TEAM_OPPONENT);
 
-		performGameSpecificJSONChecks();
+		performGameSpecificJSONChecks(boardJSON);
 	}
 
 
@@ -467,7 +470,7 @@ public abstract class GenericBoard
 	 * If there was an error when trying to parse the JSON, then this Exception
 	 * will be thrown.
 	 */
-	public void performGameSpecificJSONChecks() throws JSONException
+	protected void performGameSpecificJSONChecks(final JSONObject boardJSON) throws JSONException
 	{
 
 	}
