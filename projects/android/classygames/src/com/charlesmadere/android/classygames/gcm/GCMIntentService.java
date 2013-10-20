@@ -158,10 +158,7 @@ public final class GCMIntentService extends IntentService
 
 	/**
 	 * Further acts upon a push notification message as received from the
-	 * Classy Games server. This method should only be used once all of the
-	 * data extracted from the push notification message has been validated and
-	 * verified. For a String, this means that it is both not null and not
-	 * empty.
+	 * Classy Games server.
 	 *
 	 * @param notification
 	 * The bundled up notification data as received from this class's incoming

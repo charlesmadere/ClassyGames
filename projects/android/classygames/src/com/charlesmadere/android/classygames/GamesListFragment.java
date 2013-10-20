@@ -524,14 +524,23 @@ public final class GamesListFragment extends SherlockListFragment implements
 				GenericGameFragment.clearCachedBoards(fragmentActivity);
 				MyStatsDialogFragment.clearCachedStats(fragmentActivity);
 
-				// create the data that will be posted to the server
-				final ApiData data = new ApiData()
-					.addKeyValuePair(Server.POST_DATA_ID, whoAmI.getId());
-
 				if (!isCancelled() && Utilities.checkForNetworkConnectivity(fragmentActivity))
 				{
 					try
 					{
+						Thread.sleep(Utilities.WAIT_FOR_SERVER_DELAY);
+					}
+					catch (final InterruptedException e)
+					{
+						Log.w(LOG_TAG, "AsyncRefreshGamesList thread sleep interrupted!", e);
+					}
+
+					try
+					{
+						// create the data that will be posted to the server
+						final ApiData data = new ApiData()
+							.addKeyValuePair(Server.POST_DATA_ID, whoAmI.getId());
+
 						// Make a call to the Classy Games server API and store
 						// the JSON response. Note that we're also sending it
 						// the nameValuePairs variable that we just created.

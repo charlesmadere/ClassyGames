@@ -36,14 +36,13 @@
 			android:layout_gravity="center"
 			android:layout_height="wrap_content"
 			android:layout_width="wrap_content" />
-		<TextView
+		<TextSwitcher
 			android:gravity="center"
 			android:id="@+id/main_activity_loading_text"
+			android:inAnimation="@anim/fade_in"
 			android:layout_gravity="center"
 			android:layout_height="wrap_content"
 			android:layout_width="match_parent"
-			android:text="@string/authenticating_you_with_facebook"
-			android:textIsSelectable="false"
-			style="@style/Paragraph.ExtraPadding" />
+			android:outAnimation="@anim/fade_out" />
 	</LinearLayout>
 </LinearLayout>

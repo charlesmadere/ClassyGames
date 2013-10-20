@@ -74,7 +74,6 @@ public final class FriendsListFragment extends SherlockListFragment implements
 
 
 	private SharedPreferences sPreferences;
-	private SharedPreferences.Editor sPreferencesEditor;
 
 
 
@@ -255,7 +254,7 @@ public final class FriendsListFragment extends SherlockListFragment implements
 				if (!isAnAsyncTaskRunning())
 				{
 					empty.setText(R.string.friends_list_fragment_no_friends);
-					getPreferencesEditor().clear().commit();
+					getPreferences().edit().clear().commit();
 					listeners.onRefreshSelected();
 					refreshFriendsList();
 				}
@@ -322,17 +321,6 @@ public final class FriendsListFragment extends SherlockListFragment implements
 		}
 
 		return sPreferences;
-	}
-
-
-	private SharedPreferences.Editor getPreferencesEditor()
-	{
-		if (sPreferencesEditor == null)
-		{
-			sPreferencesEditor = getPreferences().edit();
-		}
-
-		return sPreferencesEditor;
 	}
 
 
@@ -436,7 +424,7 @@ public final class FriendsListFragment extends SherlockListFragment implements
 									}
 								}
 
-								final SharedPreferences.Editor editor = getPreferencesEditor();
+								final SharedPreferences.Editor editor = getPreferences().edit();
 								editor.clear();
 
 								for (int i = 0; i < friends.size() && !isCancelled(); ++i)
@@ -498,7 +486,18 @@ public final class FriendsListFragment extends SherlockListFragment implements
 		private void cancelled()
 		{
 			setRunningState(false);
-			getPreferencesEditor().clear().commit();
+
+			final SharedPreferences.Editor editor = getPreferences().edit();
+			editor.clear();
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)
+			{
+				editor.apply();
+			}
+			else
+			{
+				editor.commit();
+			}
 		}
 
 
@@ -632,9 +631,9 @@ public final class FriendsListFragment extends SherlockListFragment implements
 		{
 			this.friends = friends;
 
-			context = FriendsListFragment.this.getSherlockActivity();
-			inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			emptyProfilePicture = context.getResources().getDrawable(R.drawable.empty_profile_picture_small);
+			context = getSherlockActivity();
+			inflater = getSherlockActivity().getLayoutInflater();
+			emptyProfilePicture = getResources().getDrawable(R.drawable.empty_profile_picture_small);
 			filter = new FriendsListFilter(friends);
 		}
 
