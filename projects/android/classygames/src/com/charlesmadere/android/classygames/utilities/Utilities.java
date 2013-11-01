@@ -37,7 +37,6 @@ public final class Utilities
 
 
 	public final static String LOG_TAG = "Classy Games";
-	public final static long WAIT_FOR_SERVER_DELAY = 1500l;
 
 	private static ImageLoader imageLoader;
 

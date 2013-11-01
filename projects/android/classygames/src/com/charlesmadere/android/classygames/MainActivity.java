@@ -14,6 +14,7 @@ import android.widget.ViewSwitcher;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Window;
 import com.charlesmadere.android.classygames.models.Person;
+import com.charlesmadere.android.classygames.server.Server;
 import com.charlesmadere.android.classygames.server.ServerApiRegister;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
@@ -237,7 +238,7 @@ public final class MainActivity extends SherlockActivity implements
 			{
 				try
 				{
-					Thread.sleep(Utilities.WAIT_FOR_SERVER_DELAY);
+					Thread.sleep(Server.WAIT_FOR_SERVER_DELAY);
 				}
 				catch (final InterruptedException e)
 				{
@@ -289,7 +290,7 @@ public final class MainActivity extends SherlockActivity implements
 								asyncGetFacebookIdentity = null;
 								startGameFragmentActivity();
 							}
-						}, Utilities.WAIT_FOR_SERVER_DELAY);
+						}, Server.WAIT_FOR_SERVER_DELAY);
 					}
 
 
@@ -318,7 +319,7 @@ public final class MainActivity extends SherlockActivity implements
 					{
 						serverApiTask.execute(false);
 					}
-				}, Utilities.WAIT_FOR_SERVER_DELAY);
+				}, Server.WAIT_FOR_SERVER_DELAY);
 			}
 			else
 			{

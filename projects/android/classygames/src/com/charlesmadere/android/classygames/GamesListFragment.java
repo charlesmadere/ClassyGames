@@ -528,7 +528,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 				{
 					try
 					{
-						Thread.sleep(Utilities.WAIT_FOR_SERVER_DELAY);
+						Thread.sleep(Server.WAIT_FOR_SERVER_DELAY);
 					}
 					catch (final InterruptedException e)
 					{

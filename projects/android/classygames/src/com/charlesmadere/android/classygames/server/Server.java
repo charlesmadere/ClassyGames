@@ -25,6 +25,7 @@ public final class Server
 
 
 	public final static String LOG_TAG = Utilities.LOG_TAG + " - Server";
+	public final static long WAIT_FOR_SERVER_DELAY = 1000l;
 
 
 	private final static String ADDRESS_MAIN = "http://classygames.elasticbeanstalk.com/";
