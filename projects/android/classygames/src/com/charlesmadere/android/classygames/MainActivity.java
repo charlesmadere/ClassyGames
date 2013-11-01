@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.TextSwitcher;
+import android.widget.ViewSwitcher;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Window;
 import com.charlesmadere.android.classygames.models.Person;
@@ -23,17 +25,18 @@ import com.facebook.model.GraphUser;
 /**
  * This class is the app's entry point.
  */
-public final class MainActivity extends SherlockActivity
+public final class MainActivity extends SherlockActivity implements
+	Session.StatusCallback
 {
 
 
-	private final static long POST_REGISTRATION_DELAY = 2l * 1000l;
+	private final static String LOG_TAG = Utilities.LOG_TAG + " - MainActivity";
 
 
 	private LinearLayout facebook;
 	private LinearLayout loading;
 	private ProgressBar loadingSpinner;
-	private TextView loadingText;
+	private TextSwitcher loadingText;
 
 
 	private boolean hasFinished = false;
@@ -60,18 +63,18 @@ public final class MainActivity extends SherlockActivity
 		facebook = (LinearLayout) findViewById(R.id.main_activity_facebook);
 		loading = (LinearLayout) findViewById(R.id.main_activity_loading);
 		loadingSpinner = (ProgressBar) findViewById(R.id.main_activity_loading_spinner);
-		loadingText = (TextView) findViewById(R.id.main_activity_loading_text);
+		loadingText = (TextSwitcher) findViewById(R.id.main_activity_loading_text);
 
-		final Session.StatusCallback sessionStatusCallback = new Session.StatusCallback()
+		loadingText.setFactory(new ViewSwitcher.ViewFactory()
 		{
 			@Override
-			public void call(final Session session, final SessionState state, final Exception exception)
+			public View makeView()
 			{
-				onSessionStateChange(session, state);
+				return getLayoutInflater().inflate(R.layout.main_activity_loading_text, null);
 			}
-		};
+		});
 
-		uiHelper = new UiLifecycleHelper(this, sessionStatusCallback);
+		uiHelper = new UiLifecycleHelper(this, this);
 		uiHelper.onCreate(savedInstanceState);
 	}
 
@@ -148,6 +151,11 @@ public final class MainActivity extends SherlockActivity
 	}
 
 
+	@Override
+	public void call(final Session session, final SessionState state, final Exception exception)
+	{
+		onSessionStateChange(session, state);
+	}
 
 
 	/**
@@ -227,6 +235,15 @@ public final class MainActivity extends SherlockActivity
 
 			if (!isCancelled())
 			{
+				try
+				{
+					Thread.sleep(Utilities.WAIT_FOR_SERVER_DELAY);
+				}
+				catch (final InterruptedException e)
+				{
+					Log.w(LOG_TAG, "AsyncGetFacebookIdentity thread sleep interrupted!", e);
+				}
+
 				Request.newMeRequest(session, new GraphUserCallback()
 				{
 					@Override
@@ -272,7 +289,7 @@ public final class MainActivity extends SherlockActivity
 								asyncGetFacebookIdentity = null;
 								startGameFragmentActivity();
 							}
-						}, POST_REGISTRATION_DELAY);
+						}, Utilities.WAIT_FOR_SERVER_DELAY);
 					}
 
 
@@ -291,12 +308,21 @@ public final class MainActivity extends SherlockActivity
 					{}
 				});
 
-				loadingText.setText(R.string.registering_you_with_our_servers);
-				serverApiTask.execute(false);
+				loadingText.setText(getString(R.string.registering_you_with_our_servers));
+
+				final Handler handler = new Handler();
+				handler.postDelayed(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						serverApiTask.execute(false);
+					}
+				}, Utilities.WAIT_FOR_SERVER_DELAY);
 			}
 			else
 			{
-				loadingText.setText(R.string.we_had_a_problem_gathering_your_facebook_information);
+				loadingText.setText(getString(R.string.we_had_a_problem_gathering_your_facebook_information));
 			}
 		}
 
@@ -306,6 +332,7 @@ public final class MainActivity extends SherlockActivity
 		{
 			facebook.setVisibility(View.GONE);
 			loading.setVisibility(View.VISIBLE);
+			loadingText.setText(getString(R.string.authenticating_you_with_facebook));
 		}
 
 
