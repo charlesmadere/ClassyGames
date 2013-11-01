@@ -157,9 +157,9 @@ public final class BoardView extends ViewGroup
 		final int widthSpec = MeasureSpec.makeMeasureSpec(widthSize, MeasureSpec.EXACTLY);
 		final int heightSpec = MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.EXACTLY);
 
-		for (byte x = 0; x < columns; ++x)
+		for (byte x = 0; x < getLengthHorizontal(); ++x)
 		{
-			for (byte y = 0; y < rows; ++y)
+			for (byte y = 0; y < getLengthVertical(); ++y)
 			{
 				final PositionView positionView = getPosition(x, y);
 				positionView.measure(widthSpec, heightSpec);
