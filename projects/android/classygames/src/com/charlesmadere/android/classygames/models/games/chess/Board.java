@@ -8,7 +8,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-
 /**
  * Class representing a Chess board. This board is made up of a bunch of
  * positions. Chess is 8 by 8, so that's 64 positions.
@@ -151,193 +150,31 @@ public final class Board extends GenericBoard
 		// This is the one way that a chess move can actually be valid.
 		{
 			final Piece piece = (Piece) previous.getPiece();
-			final Coordinate start = previous.getCoordinate();
-			final int startX = (int) start.getX();
-			final int startY = (int) start.getY();
-			final Coordinate end = current.getCoordinate();
-			final int endX = (int) end.getX();
-			final int endY = (int) end.getY();
 
 			switch (piece.getType())
 			{
 				case Piece.TYPE_BISHOP:
-					if (!isMovingThroughPiecesBishop(previous, current) &&
-						(Math.abs(startX - endX) == Math.abs(startY - endY)))
-					{
-						if (current.hasPiece())
-						{
-							final Piece p = (Piece) current.getPiece();
-
-							if (p.isTeamOpponent() && !p.isTypeKing())
-							{
-								current.removePiece();
-								current.setPiece(new Piece(piece));
-								previous.removePiece();
-								isMoveValid = true;
-							}
-							else
-							{
-								return false;
-							}
-						}
-					}
+					isMoveValid = isMoveValidBishop(previous, current);
 					break;
 
 				case Piece.TYPE_KING:
-					if (!isMovingThroughPiecesKing(previous, current) &&
-						((Math.abs(startX - endX) == 1 && Math.abs(startY - endY) == 1)
-						|| (Math.abs(startX - endX) == 1 && Math.abs(startY - endY) == 0)
-						|| (Math.abs(startX - endX) == 0 && Math.abs(startY - endY) == 1)))
-					{
-						if (current.hasPiece())
-						{
-							final Piece p = (Piece) current.getPiece();
-
-							if (p.isTeamOpponent() && !p.isTypeKing())
-							{
-								current.removePiece();
-								current.setPiece(new Piece(piece));
-								previous.removePiece();
-								isMoveValid = true;
-							}
-							else
-							{
-								return false;
-							}
-						}
-					}
+					isMoveValid = isMoveValidKing(previous, current);
 					break;
 
 				case Piece.TYPE_KNIGHT:
-					if ((Math.abs(startX - endX) == 1 && Math.abs(startY - endY) == 2)
-						|| (Math.abs(startX - endX) == 2 && Math.abs(startY - endY) == 1))
-					{
-						if (current.hasPiece())
-						{
-							final Piece p = (Piece) current.getPiece();
-
-							if (p.isTeamOpponent() && !p.isTypeKing())
-							{
-								current.removePiece();
-								current.setPiece(new Piece(piece));
-								previous.removePiece();
-								isMoveValid = true;
-							}
-							else
-							{
-								return false;
-							}
-						}
-						else
-						{
-							current.setPiece(new Piece(piece));
-							previous.removePiece();
-							isMoveValid = true;
-						}
-					}
-					else
-					{
-						return false;
-					}
-					break;
-
-				case Piece.TYPE_QUEEN:
-					// Sorry for this kinda nasty if statement, but the Queen
-					// can move in a bunch of different ways... Don't try to
-					// decipher this unless you're already familiar with Chess.
-					if (!isMovingThroughPiecesQueen(previous, current) &&
-						((Math.abs(startX - endX) == Math.abs(startY - endY))
-						// bishop logic
-						|| ((Math.abs(startX - endX) == 1 && Math.abs(startY - endY) == 1)
-						|| (Math.abs(startX - endX) == 1 && Math.abs(startY - endY) == 0)
-						|| (Math.abs(startX - endX) == 0 && Math.abs(startY - endY) == 1))
-						// king logic
-						|| ((startX == endX && startY != endY) || (startX != endX && startY == endY))))
-						// rook logic
-					{
-						if (current.hasPiece())
-						{
-							final Piece p = (Piece) current.getPiece();
-
-							if (p.isTeamOpponent() && !p.isTypeKing())
-							{
-								current.removePiece();
-								current.setPiece(new Piece(piece));
-								previous.removePiece();
-								isMoveValid = true;
-							}
-							else
-							{
-								return false;
-							}
-						}
-						else
-						{
-							current.setPiece(new Piece(piece));
-							previous.removePiece();
-							isMoveValid = true;
-						}
-					}
-					else
-					{
-						return false;
-					}
+					isMoveValid = isMoveValidKnight(previous, current);
 					break;
 
 				case Piece.TYPE_PAWN:
-					if (!isMovingThroughPiecesPawn(previous, current) &&
-						((startY == 1 && Math.abs(startY - endY) == 2) || Math.abs(startY - endY) == 1))
-					{
-						if (startX == endX)
-						{
-							if (current.hasPiece())
-							{
-								final Piece p = (Piece) current.getPiece();
+					isMoveValid = isMoveValidPawn(previous, current);
+					break;
 
-								if (p.isTeamOpponent() && !p.isTypeKing() && Math.abs(startX - endX) == 1)
-								{
-									current.removePiece();
-								}
-							}
-
-							current.setPiece(new Piece(piece));
-							previous.removePiece();
-							isMoveValid = true;
-						}
-					}
+				case Piece.TYPE_QUEEN:
+					isMoveValid = isMoveValidQueen(previous, current);
 					break;
 
 				case Piece.TYPE_ROOK:
-					if (!isMovingThroughPiecesRook(previous, current) &&
-						(startX == endX && startY != endY) || (startX != endX && startY == endY))
-					{
-						if (current.hasPiece())
-						{
-							final Piece p = (Piece) current.getPiece();
-
-							if (p.isTeamOpponent() && !p.isTypeKing())
-							{
-								current.removePiece();
-								current.setPiece(new Piece(piece));
-								previous.removePiece();
-								isMoveValid = true;
-							}
-							else
-							{
-								return false;
-							}
-						}
-						else
-						{
-							current.setPiece(new Piece(piece));
-							previous.removePiece();
-							isMoveValid = true;
-						}
-					}
-					else
-					{
-						return false;
-					}
+					isMoveValid = isMoveValidRook(previous, current);
 					break;
 			}
 
@@ -406,6 +243,245 @@ public final class Board extends GenericBoard
 	}
 
 
+	private boolean isMoveValidBishop(final Position previous, final Position current)
+	{
+		final Coordinate start = previous.getCoordinate();
+		final byte startX = start.getX();
+		final byte startY = start.getY();
+		final Coordinate end = current.getCoordinate();
+		final byte endX = end.getX();
+		final byte endY = end.getY();
+
+		boolean isMoveValid = false;
+
+		if (!isMovingThroughPiecesBishop(previous, current) &&
+			(Math.abs(startX - endX) == Math.abs(startY - endY)))
+		{
+			if (current.hasPiece())
+			{
+				final Piece p = (Piece) current.getPiece();
+
+				if (p.isTeamOpponent() && !p.isTypeKing())
+				{
+					current.removePiece();
+					final Piece piece = (Piece) previous.getPiece();
+					current.setPiece(new Piece(piece));
+					previous.removePiece();
+					isMoveValid = true;
+				}
+			}
+		}
+
+		return isMoveValid;
+	}
+
+
+	private boolean isMoveValidKing(final Position previous, final Position current)
+	{
+		final Coordinate start = previous.getCoordinate();
+		final byte startX = start.getX();
+		final byte startY = start.getY();
+		final Coordinate end = current.getCoordinate();
+		final byte endX = end.getX();
+		final byte endY = end.getY();
+
+		boolean isMoveValid = false;
+
+		if (!isMovingThroughPiecesKing(previous, current) &&
+			((Math.abs(startX - endX) == 1 && Math.abs(startY - endY) == 1)
+				|| (Math.abs(startX - endX) == 1 && Math.abs(startY - endY) == 0)
+				|| (Math.abs(startX - endX) == 0 && Math.abs(startY - endY) == 1)))
+		{
+			if (current.hasPiece())
+			{
+				final Piece p = (Piece) current.getPiece();
+
+				if (p.isTeamOpponent() && !p.isTypeKing())
+				{
+					current.removePiece();
+					final Piece piece = (Piece) previous.getPiece();
+					current.setPiece(new Piece(piece));
+					previous.removePiece();
+					isMoveValid = true;
+				}
+			}
+		}
+
+		return isMoveValid;
+	}
+
+
+	private boolean isMoveValidKnight(final Position previous, final Position current)
+	{
+		final Coordinate start = previous.getCoordinate();
+		final byte startX = start.getX();
+		final byte startY = start.getY();
+		final Coordinate end = current.getCoordinate();
+		final byte endX = end.getX();
+		final byte endY = end.getY();
+
+		boolean isMoveValid = false;
+
+		if ((Math.abs(startX - endX) == 1 && Math.abs(startY - endY) == 2)
+			|| (Math.abs(startX - endX) == 2 && Math.abs(startY - endY) == 1))
+		{
+			final Piece piece = (Piece) previous.getPiece();
+
+			if (current.hasPiece())
+			{
+				final Piece p = (Piece) current.getPiece();
+
+				if (p.isTeamOpponent() && !p.isTypeKing())
+				{
+					current.removePiece();
+					current.setPiece(new Piece(piece));
+					previous.removePiece();
+					isMoveValid = true;
+				}
+			}
+			else
+			{
+				current.setPiece(new Piece(piece));
+				previous.removePiece();
+				isMoveValid = true;
+			}
+		}
+
+		return isMoveValid;
+	}
+
+
+	private boolean isMoveValidPawn(final Position previous, final Position current)
+	{
+		final Coordinate start = previous.getCoordinate();
+		final byte startX = start.getX();
+		final byte startY = start.getY();
+		final Coordinate end = current.getCoordinate();
+		final byte endX = end.getX();
+		final byte endY = end.getY();
+
+		boolean isMoveValid = false;
+
+		if (!isMovingThroughPiecesPawn(previous, current) &&
+			((startY == 1 && Math.abs(startY - endY) == 2) || Math.abs(startY - endY) == 1))
+		{
+			if (startX == endX)
+			{
+				if (current.hasPiece())
+				{
+					final Piece p = (Piece) current.getPiece();
+
+					if (p.isTeamOpponent() && !p.isTypeKing() && Math.abs(startX - endX) == 1)
+					{
+						current.removePiece();
+					}
+				}
+
+				final Piece piece = (Piece) previous.getPiece();
+				current.setPiece(new Piece(piece));
+				previous.removePiece();
+				isMoveValid = true;
+			}
+		}
+
+		return isMoveValid;
+	}
+
+
+	private boolean isMoveValidQueen(final Position previous, final Position current)
+	{
+		final Coordinate start = previous.getCoordinate();
+		final byte startX = start.getX();
+		final byte startY = start.getY();
+		final Coordinate end = current.getCoordinate();
+		final byte endX = end.getX();
+		final byte endY = end.getY();
+
+		boolean isMoveValid = false;
+
+		// Sorry for this kinda nasty if statement, but the Queen
+		// can move in a bunch of different ways... Don't try to
+		// decipher this unless you're already familiar with Chess.
+		if (!isMovingThroughPiecesQueen(previous, current) &&
+			((Math.abs(startX - endX) == Math.abs(startY - endY))
+			// bishop logic
+			|| ((Math.abs(startX - endX) == 1 && Math.abs(startY - endY) == 1)
+			|| (Math.abs(startX - endX) == 1 && Math.abs(startY - endY) == 0)
+			|| (Math.abs(startX - endX) == 0 && Math.abs(startY - endY) == 1))
+			// king logic
+			|| ((startX == endX && startY != endY) || (startX != endX && startY == endY))))
+			// rook logic
+		{
+			final Piece piece = (Piece) previous.getPiece();
+
+			if (current.hasPiece())
+			{
+				final Piece p = (Piece) current.getPiece();
+
+				if (p.isTeamOpponent() && !p.isTypeKing())
+				{
+					current.removePiece();
+					current.setPiece(new Piece(piece));
+					previous.removePiece();
+					isMoveValid = true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else
+			{
+				current.setPiece(new Piece(piece));
+				previous.removePiece();
+				isMoveValid = true;
+			}
+		}
+
+		return isMoveValid;
+	}
+
+
+	private boolean isMoveValidRook(final Position previous, final Position current)
+	{
+		final Coordinate start = previous.getCoordinate();
+		final byte startX = start.getX();
+		final byte startY = start.getY();
+		final Coordinate end = current.getCoordinate();
+		final byte endX = end.getX();
+		final byte endY = end.getY();
+
+		boolean isMoveValid = false;
+
+		if (!isMovingThroughPiecesRook(previous, current) &&
+			(startX == endX && startY != endY) || (startX != endX && startY == endY))
+		{
+			final Piece piece = (Piece) previous.getPiece();
+
+			if (current.hasPiece())
+			{
+				final Piece p = (Piece) current.getPiece();
+
+				if (p.isTeamOpponent() && !p.isTypeKing())
+				{
+					current.removePiece();
+					current.setPiece(new Piece(piece));
+					previous.removePiece();
+					isMoveValid = true;
+				}
+			}
+			else
+			{
+				current.setPiece(new Piece(piece));
+				previous.removePiece();
+				isMoveValid = true;
+			}
+		}
+
+		return isMoveValid;
+	}
+
+
 	/**
 	 * Checks to see if the Piece at Position previous has to move through any
 	 * other pieces on the Chess board in order to arrive at Position current.
@@ -433,6 +509,8 @@ public final class Board extends GenericBoard
 		final Coordinate end = current.getCoordinate();
 		final byte endX = end.getX();
 		final byte endY = end.getY();
+
+
 
 		return false;
 	}
@@ -524,7 +602,6 @@ public final class Board extends GenericBoard
 	private boolean isMovingThroughPiecesQueen(final Position previous, final Position current)
 	{
 		return isMovingThroughPiecesBishop(previous, current)
-			|| isMovingThroughPiecesKing(previous, current)
 			|| isMovingThroughPiecesRook(previous, current);
 	}
 
