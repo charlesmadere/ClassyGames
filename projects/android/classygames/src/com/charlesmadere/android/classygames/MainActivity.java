@@ -26,7 +26,7 @@ import com.facebook.model.GraphUser;
 /**
  * This class is the app's entry point.
  */
-public final class MainActivity extends SherlockActivity implements
+public final class MainActivity extends BaseActivity implements
 	Session.StatusCallback
 {
 

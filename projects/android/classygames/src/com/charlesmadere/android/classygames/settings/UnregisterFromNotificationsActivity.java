@@ -6,15 +6,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.charlesmadere.android.classygames.BaseActivity;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.server.ServerApi;
 import com.charlesmadere.android.classygames.server.ServerApiUnregister;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
-public final class UnregisterFromNotificationsActivity extends SherlockActivity
+public final class UnregisterFromNotificationsActivity extends BaseActivity
 {
 
 

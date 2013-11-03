@@ -8,7 +8,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.models.Notification;
 import com.charlesmadere.android.classygames.server.Server;
@@ -16,7 +15,7 @@ import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
-public final class GameOverActivity extends SherlockActivity
+public final class GameOverActivity extends BaseActivity
 {
 
 

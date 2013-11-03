@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.widget.Toast;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -19,7 +18,7 @@ import com.charlesmadere.android.classygames.settings.SettingsActivity;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
-public final class GameFragmentActivity extends SherlockFragmentActivity implements
+public final class GameFragmentActivity extends BaseFragmentActivity implements
 	GamesListFragment.Listeners,
 	GenericGameFragment.Listeners,
 	MyStatsDialogFragment.Listeners

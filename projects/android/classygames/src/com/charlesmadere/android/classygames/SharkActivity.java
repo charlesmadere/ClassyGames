@@ -5,12 +5,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
-public final class SharkActivity extends SherlockActivity
+public final class SharkActivity extends BaseActivity
 {
 
 

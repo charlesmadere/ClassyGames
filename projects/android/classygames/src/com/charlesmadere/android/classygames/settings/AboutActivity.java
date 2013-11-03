@@ -7,16 +7,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.charlesmadere.android.classygames.BaseActivity;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.SharkActivity;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
-public final class AboutActivity extends SherlockActivity
+public final class AboutActivity extends BaseActivity
 {
 
 
