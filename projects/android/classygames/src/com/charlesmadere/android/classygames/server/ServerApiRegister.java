@@ -7,6 +7,8 @@ import android.os.Build;
 import android.util.Log;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.utilities.Utilities;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
@@ -112,26 +114,23 @@ public final class ServerApiRegister extends ServerApi
 
 
 
-	private String getRegistrationId()
+	/**
+	 * Checks the device to make sure that it has a compatible and up-to-date
+	 * Google Play services installation. Read more about what it means to have
+	 * a compatible and up-to-date Google Play services installation here:
+	 * https://developer.android.com/google/play-services/setup.html#ensure
+	 *
+	 * @return
+	 * Returns true if this device is ready to go with Google Play services.
+	 */
+	private boolean checkGooglePlayServices()
 	{
-		return getSharedPreferences().getString(KEY_REGISTRATION_ID, null);
+		final int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getContext());
+		return resultCode == ConnectionResult.SUCCESS;
 	}
 
 
-	public int getRegistrationVersionCode()
-	{
-		return getSharedPreferences().getInt(KEY_REGISTRATION_VERSION_CODE, 0);
-	}
-
-
-	@Override
-	protected ServerApiTask getServerApiTask()
-	{
-		return new ServerApiRegisterTask();
-	}
-
-
-	private SharedPreferences getSharedPreferences()
+	private SharedPreferences getPreferences()
 	{
 		if (sPreferences == null)
 		{
@@ -142,64 +141,92 @@ public final class ServerApiRegister extends ServerApi
 	}
 
 
+	private String getRegistrationId()
+	{
+		return getPreferences().getString(KEY_REGISTRATION_ID, null);
+	}
+
+
+	public int getRegistrationVersionCode()
+	{
+		return getPreferences().getInt(KEY_REGISTRATION_VERSION_CODE, 0);
+	}
+
+
+	@Override
+	protected ServerApiTask getServerApiTask()
+	{
+		return new ServerApiRegisterTask();
+	}
+
+
 	private void performGCMRegistrationIfNecessary()
 	{
+		if (!checkGooglePlayServices())
+		// If this device does not have a valid Google Play Services
+		// installation, then we won't bother going any further here.
+		{
+			return;
+		}
+
 		String registrationId = getRegistrationId();
 		int registrationVersionCode = getRegistrationVersionCode();
 		final int appVersionCode = Utilities.getAppVersionCode(getContext());
 
-		if (!Utilities.validString(registrationId) || registrationVersionCode == 0
-			|| appVersionCode != registrationVersionCode)
-		// If any single one of these if statements validate as true, then we
+		if (Utilities.validString(registrationId) && registrationVersionCode != 0 &&
+			appVersionCode == registrationVersionCode)
+		// If any single one of these if statements validate as false, then we
 		// absolutely must register this device with Google's GCM servers.
 		{
-			Log.i(LOG_TAG, "About to attempt GCM registration.\nUser is running Android" +
-				"version \"" + Build.VERSION.SDK_INT + "\".");
+			return;
+		}
 
-			try
-			{
-				final GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(getContext());
-				registrationId = gcm.register(GOOGLE_PROJECT_ID);
-				registrationVersionCode = Utilities.getAppVersionCode(getContext());
-			}
-			catch (final IOException e)
-			{
-				// In the event of an IOException, let's just discard all of
-				// the user's GCM data that we've grabbed.
-				Log.e(LOG_TAG, "IOException during ServerApiRegister's postToServer()!", e);
-				registrationId = null;
-				registrationVersionCode = 0;
-			}
+		Log.i(LOG_TAG, "About to attempt GCM registration.\nUser is running Android" +
+			" version \"" + Build.VERSION.SDK_INT + "\".");
 
-			final SharedPreferences.Editor editor = getSharedPreferences().edit();
+		try
+		{
+			final GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(getContext());
+			registrationId = gcm.register(GOOGLE_PROJECT_ID);
+			registrationVersionCode = Utilities.getAppVersionCode(getContext());
+		}
+		catch (final IOException e)
+		{
+			// In the event of an IOException, let's just discard all of
+			// the user's GCM data that we've grabbed.
+			Log.e(LOG_TAG, "IOException during ServerApiRegister's postToServer()!", e);
+			registrationId = null;
+			registrationVersionCode = 0;
+		}
 
-			if (Utilities.validString(registrationId) && registrationVersionCode >= 1)
-			{
-				editor.putString(KEY_REGISTRATION_ID, registrationId)
-					.putInt(KEY_REGISTRATION_VERSION_CODE, registrationVersionCode);
+		final SharedPreferences.Editor editor = getPreferences().edit();
 
-				Log.i(LOG_TAG, "GCM registration completed successfully.\n" +
-					"registrationId: \"" + registrationId + "\"\n" +
-					"registrationVersionCode: \"" + registrationVersionCode + "\"");
-			}
-			else
-			{
-				editor.clear();
-				Log.i(LOG_TAG, "GCM registration failed!");
-			}
+		if (Utilities.validString(registrationId) && registrationVersionCode >= 1)
+		{
+			editor.putString(KEY_REGISTRATION_ID, registrationId)
+				.putInt(KEY_REGISTRATION_VERSION_CODE, registrationVersionCode);
 
-			// In FriendsListFragment I have a big comment that very simply
-			// discusses the differences in the apply() and commit() methods
-			// below. Go check that comment out if you want more info!
+			Log.i(LOG_TAG, "GCM registration completed successfully.\n" +
+				"registrationId: \"" + registrationId + "\"\n" +
+				"registrationVersionCode: \"" + registrationVersionCode + "\"");
+		}
+		else
+		{
+			editor.clear();
+			Log.i(LOG_TAG, "GCM registration failed!");
+		}
 
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)
-			{
-				editor.apply();
-			}
-			else
-			{
-				editor.commit();
-			}
+		// In FriendsListFragment I have a big comment that very simply
+		// discusses the differences in the apply() and commit() methods
+		// below. Go check that comment out if you want more info!
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)
+		{
+			editor.apply();
+		}
+		else
+		{
+			editor.commit();
 		}
 	}
 
@@ -232,7 +259,7 @@ public final class ServerApiRegister extends ServerApi
 	/**
 	 * An AsyncTask that will query the Classy Games server.
 	 */
-	protected class ServerApiRegisterTask extends ServerApiTask
+	private final class ServerApiRegisterTask extends ServerApiTask
 	{
 
 

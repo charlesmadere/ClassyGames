@@ -67,22 +67,6 @@ public final class Utilities
 
 
 	/**
-	 * Checks the device to make sure that it has a compatible and up-to-date
-	 * Google Play services installation. Read more about what it means to have
-	 * a compatible and up-to-date Google Play services installation here:
-	 * https://developer.android.com/google/play-services/setup.html#ensure
-	 *
-	 * @return
-	 * Returns true if this device is ready to go with Google Play services.
-	 */
-	public static boolean checkGooglePlayServices()
-	{
-		final int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(App.getContext());
-		return resultCode == ConnectionResult.SUCCESS;
-	}
-
-
-	/**
 	 * Checks to see if a given user preference is enabled or disabled. This
 	 * method should only be used to check on preferences that must be either
 	 * on or off (true or false).

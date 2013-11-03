@@ -265,6 +265,7 @@ public final class MainActivity extends SherlockActivity implements
 		{
 			if (facebookIdentity.isValid())
 			{
+				Log.i(LOG_TAG, "received valid Facebook identity: \"" + facebookIdentity.toString() + "\"");
 				Utilities.setWhoAmI(activity, facebookIdentity);
 
 				serverApiTask = new ServerApiRegister(activity, false, new ServerApiRegister.RegisterListeners()

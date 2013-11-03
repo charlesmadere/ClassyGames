@@ -252,62 +252,6 @@ public final class Person implements Serializable
 
 
 	/**
-	 * When Facebook IDs are acquired throughout the app's runtime they should
-	 * be checked for validity. Use this method to check for that validity.
-	 * This method allows you to check a whole bunch of IDs at once. If any
-	 * single ID that is passed in is invalid, then this method will cease to
-	 * check the rest and will immediately return false.
-	 *
-	 * @param ids
-	 * The Facebook IDs to check for validity.
-	 *
-	 * @return
-	 * Returns true if <strong>all</strong> of the passed in Facebook IDs are
-	 * valid. Returns false if <strong>any single</strong> ID is invalid.
-	 */
-	public static boolean areIdsValid(final long... ids)
-	{
-		for (final long id : ids)
-		{
-			if (!isIdValid(id))
-			{
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-
-	/**
-	 * When Facebook IDs are acquired throughout the app's runtime they should
-	 * be checked for validity. Use this method to check for that validity.
-	 * This method allows you to check a whole bunch of IDs at once. If any
-	 * single ID that is passed in is invalid, then this method will cease to
-	 * check the rest and will immediately return false.
-	 *
-	 * @param ids
-	 * The Facebook IDs to check for validity.
-	 *
-	 * @return
-	 * Returns true if <strong>all</strong> of the passed in Facebook IDs are
-	 * valid. Returns false if <strong>any single</strong> ID is invalid.
-	 */
-	public static boolean areIdsValid(final String... ids)
-	{
-		for (final String id : ids)
-		{
-			if (!isIdValid(id))
-			{
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-
-	/**
 	 * When Facebook names are acquired throughout the app's runtime they
 	 * should be checked to make sure they're not messed up in any way. Use
 	 * this method to check to make sure that they're not messed up. Valid
@@ -323,34 +267,6 @@ public final class Person implements Serializable
 	public static boolean isNameValid(final String name)
 	{
 		return Utilities.validString(name);
-	}
-
-
-	/**
-	 * When Facebook names are acquired throughout the app's runtime they
-	 * should be checked to make sure they're not messed up in any way. This
-	 * method allows you to check a whole bunch of names at once. If any single
-	 * name that is passed in is invalid, then this method will cease to check
-	 * the rest and will immediately return false.
-	 *
-	 * @param names
-	 * The Facebook names to check for validity.
-	 *
-	 * @return
-	 * Returns true if <strong>all</strong> of the passed in Facebook names are
-	 * valid. Returns false if <strong>any single</strong> name is invalid.
-	 */
-	public static boolean areNamesValid(final String... names)
-	{
-		for (final String name : names)
-		{
-			if (!isNameValid(name))
-			{
-				return false;
-			}
-		}
-
-		return true;
 	}
 
 

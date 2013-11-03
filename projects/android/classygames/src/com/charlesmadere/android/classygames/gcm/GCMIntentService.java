@@ -66,7 +66,7 @@ public final class GCMIntentService extends IntentService
 
 		if (data == null || data.isEmpty())
 		{
-			Log.i(LOG_TAG, "Received GCM that is devoid of data.");
+			Log.i(LOG_TAG, "received GCM that is devoid of data");
 		}
 		else
 		{
@@ -79,12 +79,11 @@ public final class GCMIntentService extends IntentService
 			if (Utilities.validString(messageType) && (!messageType.equalsIgnoreCase(GoogleCloudMessaging.MESSAGE_TYPE_DELETED)
 				&& !messageType.equalsIgnoreCase(GoogleCloudMessaging.MESSAGE_TYPE_SEND_ERROR)))
 			{
-				Log.i(LOG_TAG, "Received GCM that is of type: \"" + messageType + "\".");
 				handleMessage(data);
 			}
 			else
 			{
-				Log.i(LOG_TAG, "Received GCM that is of a type we don't care about.");
+				Log.i(LOG_TAG, "received GCM with a messageType we don't care about: \"" + messageType + "\"");
 			}
 		}
 
