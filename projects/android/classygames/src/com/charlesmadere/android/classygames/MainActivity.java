@@ -155,7 +155,19 @@ public final class MainActivity extends SherlockActivity implements
 	@Override
 	public void call(final Session session, final SessionState state, final Exception exception)
 	{
-		onSessionStateChange(session, state);
+		if (isResumed)
+		// only make changes if this activity is visible
+		{
+			if (state.equals(SessionState.OPENED))
+			// if the session state is open, show the authenticated activity
+			{
+				// store the user's Facebook Access Token for retrieval later
+				FacebookUtilities.setAccessToken(this, session.getAccessToken());
+
+				asyncGetFacebookIdentity = new AsyncGetFacebookIdentity(session);
+				asyncGetFacebookIdentity.execute();
+			}
+		}
 	}
 
 
@@ -184,24 +196,6 @@ public final class MainActivity extends SherlockActivity implements
 	private boolean isAnAsyncTaskRunning()
 	{
 		return asyncGetFacebookIdentity != null;
-	}
-
-
-	private void onSessionStateChange(final Session session, final SessionState state)
-	{
-		if (isResumed)
-		// only make changes if this activity is visible
-		{
-			if (state.equals(SessionState.OPENED))
-			// if the session state is open, show the authenticated activity
-			{
-				// store the user's Facebook Access Token for retrieval later
-				FacebookUtilities.setAccessToken(this, session.getAccessToken());
-
-				asyncGetFacebookIdentity = new AsyncGetFacebookIdentity(session);
-				asyncGetFacebookIdentity.execute();
-			}
-		}
 	}
 
 
