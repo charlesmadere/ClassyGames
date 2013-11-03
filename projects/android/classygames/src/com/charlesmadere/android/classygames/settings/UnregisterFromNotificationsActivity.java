@@ -18,10 +18,6 @@ public final class UnregisterFromNotificationsActivity extends BaseActivity
 {
 
 
-	/**
-	 * Holds a handle to a currently running (if it's currently running)
-	 * ServerApi object.
-	 */
 	private ServerApiUnregister serverApiTask;
 
 

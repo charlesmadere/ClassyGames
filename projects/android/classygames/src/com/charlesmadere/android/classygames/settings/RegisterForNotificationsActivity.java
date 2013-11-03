@@ -17,6 +17,11 @@ public final class RegisterForNotificationsActivity extends BaseActivity
 {
 
 
+	private ServerApiRegister serverApiTask;
+
+
+
+
 	@Override
 	protected void onCreate(final Bundle savedInstanceState)
 	{
@@ -37,6 +42,22 @@ public final class RegisterForNotificationsActivity extends BaseActivity
 
 
 	@Override
+	public void onBackPressed()
+	{
+		cancelRunningAnyAsyncTask();
+		super.onBackPressed();
+	}
+
+
+	@Override
+	protected void onDestroy()
+	{
+		cancelRunningAnyAsyncTask();
+		super.onDestroy();
+	}
+
+
+	@Override
 	public boolean onOptionsItemSelected(final MenuItem item)
 	{
 		switch (item.getItemId())
@@ -53,45 +74,58 @@ public final class RegisterForNotificationsActivity extends BaseActivity
 	}
 
 
+	private void cancelRunningAnyAsyncTask()
+	{
+		if (serverApiTask != null)
+		{
+			serverApiTask.cancel();
+		}
+	}
+
+
 	private void register()
 	{
-		final Context context = this;
-
-		final ServerApiRegister serverApiTask = new ServerApiRegister(this, new ServerApiRegister.RegisterListeners()
+		if (serverApiTask == null)
 		{
-			@Override
-			public void onRegistrationFail()
+			final Context context = this;
+
+			serverApiTask = new ServerApiRegister(this, new ServerApiRegister.RegisterListeners()
 			{
-				Toast.makeText(context, R.string.sorry_but_your_device_is_not_compatible_with_push_notifications, Toast.LENGTH_LONG).show();
-			}
+				@Override
+				public void onRegistrationFail()
+				{
+					Toast.makeText(context, R.string.sorry_but_your_device_is_not_compatible_with_push_notifications, Toast.LENGTH_LONG).show();
+					finish();
+				}
 
 
-			@Override
-			public void onRegistrationSuccess()
-			{
-				Toast.makeText(context, R.string.registration_complete, Toast.LENGTH_SHORT).show();
-				finish();
-			}
+				@Override
+				public void onRegistrationSuccess()
+				{
+					Toast.makeText(context, R.string.registration_complete, Toast.LENGTH_SHORT).show();
+					finish();
+				}
 
 
-			@Override
-			public void onCancel()
-			{
-				finish();
-			}
+				@Override
+				public void onCancel()
+				{
+					finish();
+				}
 
 
-			@Override
-			public void onComplete(final String serverResponse)
-			{}
+				@Override
+				public void onComplete(final String serverResponse)
+				{}
 
 
-			@Override
-			public void onDismiss()
-			{}
-		});
+				@Override
+				public void onDismiss()
+				{}
+			});
 
-		serverApiTask.execute(false);
+			serverApiTask.execute(false);
+		}
 	}
 
 
