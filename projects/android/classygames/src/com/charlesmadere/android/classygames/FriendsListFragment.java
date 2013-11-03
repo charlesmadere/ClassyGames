@@ -620,19 +620,19 @@ public final class FriendsListFragment extends SherlockListFragment implements
 	{
 
 
-		private LinkedList<ListItem<Person>> friends;
-		private Context context;
+		private Activity activity;
 		private Drawable emptyProfilePicture;
 		private Filter filter;
 		private LayoutInflater inflater;
+		private LinkedList<ListItem<Person>> friends;
 
 
 		private FriendsListAdapter(final LinkedList<ListItem<Person>> friends)
 		{
 			this.friends = friends;
 
-			context = getSherlockActivity();
-			inflater = getSherlockActivity().getLayoutInflater();
+			activity = getSherlockActivity();
+			inflater = activity.getLayoutInflater();
 			emptyProfilePicture = getResources().getDrawable(R.drawable.empty_profile_picture_small);
 			filter = new FriendsListFilter(friends);
 		}
@@ -683,7 +683,7 @@ public final class FriendsListFragment extends SherlockListFragment implements
 			Typefaces.applyBlueHighway(viewHolder.name);
 			viewHolder.name.setText(friend.getName());
 			viewHolder.picture.setImageDrawable(emptyProfilePicture);
-			final String friendsPictureURL = FacebookUtilities.getFriendsPictureSquare(context, friend.getId());
+			final String friendsPictureURL = FacebookUtilities.getFriendsPictureSquare(activity, friend.getId());
 			Utilities.getImageLoader().displayImage(friendsPictureURL, viewHolder.picture);
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)

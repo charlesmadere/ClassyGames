@@ -820,7 +820,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 	{
 
 
-		private Context context;
+		private Activity activity;
 		private Drawable checkersIcon;
 		private Drawable chessIcon;
 		private Drawable emptyProfilePicture;
@@ -832,8 +832,8 @@ public final class GamesListFragment extends SherlockListFragment implements
 		private GamesListAdapter(final LinkedList<ListItem<Game>> games)
 		{
 			this.games = games;
-			context = getSherlockActivity();
-			inflater = getSherlockActivity().getLayoutInflater();
+			activity = getSherlockActivity();
+			inflater = activity.getLayoutInflater();
 			resources = getResources();
 			emptyProfilePicture = resources.getDrawable(R.drawable.empty_profile_picture_small);
 			checkersIcon = resources.getDrawable(R.drawable.game_icon_checkers_small);
@@ -879,7 +879,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 
 				final ViewHolder viewHolder = (ViewHolder) convertView.getTag();
 				viewHolder.picture.setImageDrawable(emptyProfilePicture);
-				final String friendsPictureURL = FacebookUtilities.getFriendsPictureSquare(context, game.getPerson().getId());
+				final String friendsPictureURL = FacebookUtilities.getFriendsPictureSquare(activity, game.getPerson().getId());
 				Utilities.getImageLoader().displayImage(friendsPictureURL, viewHolder.picture);
 
 				Typefaces.applyBlueHighway(viewHolder.name);
