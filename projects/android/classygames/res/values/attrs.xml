@@ -38,4 +38,28 @@
 				value="2" />
 		</attr>
 	</declare-styleable>
+	<declare-styleable name="TypefaceButton">
+		<attr
+			format="enum"
+			name="typeface">
+			<enum
+				name="BlueHighway"
+				value="1" />
+			<enum
+				name="SnellRoundhand"
+				value="2" />
+		</attr>
+	</declare-styleable>
+	<declare-styleable name="TypefaceTextView">
+		<attr
+			format="enum"
+			name="typeface">
+			<enum
+				name="BlueHighway"
+				value="1" />
+			<enum
+				name="SnellRoundhand"
+				value="2" />
+		</attr>
+	</declare-styleable>
 </resources>
