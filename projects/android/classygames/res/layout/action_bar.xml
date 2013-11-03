@@ -2,10 +2,11 @@
 <com.charlesmadere.android.classygames.views.TypefaceTextView
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:custom="http://schemas.android.com/apk/res/com.charlesmadere.android.classygames"
-	android:gravity="center"
-	android:layout_height="wrap_content"
+	android:ellipsize="end"
+	android:gravity="left|center_vertical"
+	android:layout_gravity="left|center_vertical"
+	android:layout_height="match_parent"
 	android:layout_width="match_parent"
-	android:text="@string/your_turn"
-	android:textColor="@color/gray_verydark"
-	android:textSize="40sp"
+	android:maxLines="1"
+	android:textColor="@color/white"
 	custom:typefaceTextView="BlueHighway" />

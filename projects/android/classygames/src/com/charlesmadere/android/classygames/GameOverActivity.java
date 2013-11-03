@@ -13,7 +13,6 @@ import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.models.Notification;
 import com.charlesmadere.android.classygames.server.Server;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
-import com.charlesmadere.android.classygames.utilities.Typefaces;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
@@ -58,7 +57,6 @@ public final class GameOverActivity extends SherlockActivity
 
 					final TextView friendsName = (TextView) findViewById(R.id.game_over_activity_friend_name);
 					friendsName.setText(notification.getPerson().getName());
-					Typefaces.applySnellRoundhand(friendsName);
 
 					final TextView winOrLose = (TextView) findViewById(R.id.game_over_activity_win_or_lose);
 
@@ -74,8 +72,6 @@ public final class GameOverActivity extends SherlockActivity
 					}
 
 					final Button returnToGamesList = (Button) findViewById(R.id.game_over_activity_button_return);
-					Typefaces.applyBlueHighway(returnToGamesList);
-
 					returnToGamesList.setOnClickListener(new OnClickListener()
 					{
 						@Override

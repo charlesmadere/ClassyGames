@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.charlesmadere.android.classygames.views.TypefaceTextView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:custom="http://schemas.android.com/apk/res/com.charlesmadere.android.classygames"
 	android:gravity="center"
 	android:layout_height="wrap_content"
 	android:layout_width="match_parent"
 	android:text="@string/their_turn"
 	android:textColor="@color/gray_verydark"
-	android:textSize="40sp" />
+	android:textSize="40sp"
+	custom:typefaceTextView="BlueHighway" />

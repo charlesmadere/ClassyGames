@@ -9,9 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockDialogFragment;
-import com.charlesmadere.android.classygames.utilities.Typefaces;
 
 
 public final class ChessGlossaryDialogFragment extends SherlockDialogFragment
@@ -65,19 +63,6 @@ public final class ChessGlossaryDialogFragment extends SherlockDialogFragment
 		pawnImage = (ImageView) view.findViewById(R.id.chess_glossary_dialog_fragment_pawn_imageview);
 		queenImage = (ImageView) view.findViewById(R.id.chess_glossary_dialog_fragment_queen_imageview);
 		rookImage = (ImageView) view.findViewById(R.id.chess_glossary_dialog_fragment_rook_imageview);
-
-		final TextView bishopText = (TextView) view.findViewById(R.id.chess_glossary_dialog_fragment_bishop_textview);
-		final TextView kingText = (TextView) view.findViewById(R.id.chess_glossary_dialog_fragment_king_textview);
-		final TextView knightText = (TextView) view.findViewById(R.id.chess_glossary_dialog_fragment_knight_textview);
-		final TextView pawnText = (TextView) view.findViewById(R.id.chess_glossary_dialog_fragment_pawn_textview);
-		final TextView queenText = (TextView) view.findViewById(R.id.chess_glossary_dialog_fragment_queen_textview);
-		final TextView rookText = (TextView) view.findViewById(R.id.chess_glossary_dialog_fragment_rook_textview);
-		Typefaces.applyBlueHighway(bishopText);
-		Typefaces.applyBlueHighway(kingText);
-		Typefaces.applyBlueHighway(knightText);
-		Typefaces.applyBlueHighway(pawnText);
-		Typefaces.applyBlueHighway(queenText);
-		Typefaces.applyBlueHighway(rookText);
 
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
 		{

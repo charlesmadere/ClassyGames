@@ -19,7 +19,6 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
-import com.charlesmadere.android.classygames.utilities.Typefaces;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
@@ -150,14 +149,11 @@ public final class ConfirmGameFragment extends SherlockFragment
 		final View view = getView();
 		final TextView friendsName = (TextView) view.findViewById(R.id.confirm_game_fragment_friend_name);
 		friendsName.setText(friend.getName());
-		Typefaces.applySnellRoundhand(friendsName);
 
 		final TextView description = (TextView) view.findViewById(R.id.confirm_game_fragment_description);
 		description.setText(getString(R.string.are_you_sure_that_you_want_to_start_a_game_with_x, friend.getName()));
 
 		final Button confirm = (Button) view.findViewById(R.id.confirm_game_fragment_button_confirm);
-		Typefaces.applyBlueHighway(confirm);
-
 		confirm.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
@@ -168,8 +164,6 @@ public final class ConfirmGameFragment extends SherlockFragment
 		});
 
 		final Button deny = (Button) view.findViewById(R.id.confirm_game_fragment_button_deny);
-		Typefaces.applyBlueHighway(deny);
-
 		deny.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
@@ -239,8 +233,6 @@ public final class ConfirmGameFragment extends SherlockFragment
 			}
 
 			final Button checkers = (Button) dialogView.findViewById(R.id.choose_which_game_dialog_button_checkers);
-			Typefaces.applyBlueHighway(checkers);
-
 			checkers.setOnClickListener(new View.OnClickListener()
 			{
 				@Override
@@ -256,8 +248,6 @@ public final class ConfirmGameFragment extends SherlockFragment
 			});
 
 			final Button chess = (Button) dialogView.findViewById(R.id.choose_which_game_dialog_button_chess);
-			Typefaces.applyBlueHighway(chess);
-
 			chess.setOnClickListener(new View.OnClickListener()
 			{
 				@Override

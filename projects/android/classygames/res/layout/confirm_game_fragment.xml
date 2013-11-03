@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:custom="http://schemas.android.com/apk/res/com.charlesmadere.android.classygames"
 	android:layout_height="match_parent"
 	android:layout_width="match_parent"
 	android:orientation="vertical"
@@ -16,14 +17,15 @@
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
 		android:orientation="vertical">
-		<TextView
+		<com.charlesmadere.android.classygames.views.TypefaceTextView
 			android:gravity="center"
 			android:id="@+id/confirm_game_fragment_friend_name"
 			android:layout_height="wrap_content"
 			android:layout_width="match_parent"
 			android:textColor="@color/gray_darker"
 			android:textIsSelectable="true"
-			android:textSize="26sp" />
+			android:textSize="26sp"
+			custom:typefaceTextView="SnellRoundhand" />
 		<TextView
 			android:gravity="center"
 			android:id="@+id/confirm_game_fragment_description"
@@ -37,22 +39,24 @@
 			android:layout_marginTop="16dip"
 			android:layout_width="match_parent"
 			android:orientation="horizontal">
-			<Button
+			<com.charlesmadere.android.classygames.views.TypefaceButton
 				android:id="@+id/confirm_game_fragment_button_confirm"
 				android:layout_height="wrap_content"
 				android:layout_marginRight="2dip"
 				android:layout_weight="1"
 				android:layout_width="match_parent"
 				android:text="@string/lets_play"
-				style="@style/Button.Blue" />
-			<Button
+				style="@style/Button.Blue"
+				custom:typefaceButton="BlueHighway" />
+			<com.charlesmadere.android.classygames.views.TypefaceButton
 				android:id="@+id/confirm_game_fragment_button_deny"
 				android:layout_height="wrap_content"
 				android:layout_marginLeft="2dip"
 				android:layout_weight="1"
 				android:layout_width="match_parent"
 				android:text="@string/nevermind"
-				style="@style/Button.Gray" />
+				style="@style/Button.Gray"
+				custom:typefaceButton="BlueHighway" />
 		</LinearLayout>
 	</LinearLayout>
 </LinearLayout>

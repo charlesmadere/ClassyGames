@@ -11,7 +11,6 @@ import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.server.ServerApi;
 import com.charlesmadere.android.classygames.server.ServerApiUnregister;
-import com.charlesmadere.android.classygames.utilities.Typefaces;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
@@ -36,8 +35,6 @@ public final class UnregisterFromNotificationsActivity extends SherlockActivity
 		Utilities.setActionBar(this, R.string.unregister_from_notifications, true);
 
 		final Button unregister = (Button) findViewById(R.id.unregister_from_notifications_activity_button_unregister);
-		Typefaces.applyBlueHighway(unregister);
-
 		unregister.setOnClickListener(new View.OnClickListener()
 		{
 			@Override

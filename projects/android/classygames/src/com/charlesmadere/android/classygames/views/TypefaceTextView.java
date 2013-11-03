@@ -67,7 +67,7 @@ public final class TypefaceTextView extends TextView
 
 		try
 		{
-			typeface = attributes.getInt(R.styleable.TypefaceTextView_typeface, 0);
+			typeface = attributes.getInt(R.styleable.TypefaceTextView_typefaceTextView, 0);
 		}
 		finally
 		{

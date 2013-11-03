@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:custom="http://schemas.android.com/apk/res/com.charlesmadere.android.classygames"
 	android:layout_height="match_parent"
 	android:layout_width="match_parent"
 	android:orientation="vertical"
@@ -17,11 +18,12 @@
 		android:layout_weight="25"
 		android:layout_width="match_parent"
 		android:orientation="vertical">
-		<Button
+		<com.charlesmadere.android.classygames.views.TypefaceButton
 			android:id="@+id/unregister_from_notifications_activity_button_unregister"
 			android:layout_height="wrap_content"
 			android:layout_width="match_parent"
 			android:text="@string/unregister_from_notifications"
-			style="@style/Button.Gray" />
+			style="@style/Button.Gray"
+			custom:typefaceButton="BlueHighway" />
 	</LinearLayout>
 </LinearLayout>

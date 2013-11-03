@@ -67,7 +67,7 @@ public final class TypefaceButton extends Button
 
 		try
 		{
-			typeface = attributes.getInt(R.styleable.TypefaceButton_typeface, 0);
+			typeface = attributes.getInt(R.styleable.TypefaceButton_typefaceButton, 0);
 		}
 		finally
 		{

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:custom="http://schemas.android.com/apk/res/com.charlesmadere.android.classygames"
 	android:background="@drawable/bg_subtle_gray"
 	android:gravity="center"
 	android:layout_gravity="center"
@@ -33,7 +34,7 @@
 				android:layout_width="match_parent"
 				android:scaleType="centerInside"
 				android:src="@drawable/piece_chess_bishop_pink" />
-			<TextView
+			<com.charlesmadere.android.classygames.views.TypefaceTextView
 				android:gravity="center"
 				android:id="@+id/chess_glossary_dialog_fragment_bishop_textview"
 				android:layout_gravity="center"
@@ -41,7 +42,8 @@
 				android:layout_width="match_parent"
 				android:text="@string/bishop"
 				android:textColor="@color/gray_darker"
-				android:textSize="18sp" />
+				android:textSize="18sp"
+				custom:typefaceTextView="BlueHighway" />
 		</LinearLayout>
 		<LinearLayout
 			android:gravity="center"
@@ -60,7 +62,7 @@
 				android:layout_width="match_parent"
 				android:scaleType="centerInside"
 				android:src="@drawable/piece_chess_knight_pink" />
-			<TextView
+			<com.charlesmadere.android.classygames.views.TypefaceTextView
 				android:gravity="center"
 				android:id="@+id/chess_glossary_dialog_fragment_knight_textview"
 				android:layout_gravity="center"
@@ -68,7 +70,8 @@
 				android:layout_width="match_parent"
 				android:text="@string/knight"
 				android:textColor="@color/gray_darker"
-				android:textSize="18sp" />
+				android:textSize="18sp"
+				custom:typefaceTextView="BlueHighway" />
 		</LinearLayout>
 		<LinearLayout
 			android:gravity="center"
@@ -86,7 +89,7 @@
 				android:layout_width="match_parent"
 				android:scaleType="centerInside"
 				android:src="@drawable/piece_chess_queen_pink" />
-			<TextView
+			<com.charlesmadere.android.classygames.views.TypefaceTextView
 				android:gravity="center"
 				android:id="@+id/chess_glossary_dialog_fragment_queen_textview"
 				android:layout_gravity="center"
@@ -94,7 +97,8 @@
 				android:layout_width="match_parent"
 				android:text="@string/queen"
 				android:textColor="@color/gray_darker"
-				android:textSize="18sp" />
+				android:textSize="18sp"
+				custom:typefaceTextView="BlueHighway" />
 		</LinearLayout>
 	</LinearLayout>
 	<LinearLayout
@@ -120,7 +124,7 @@
 				android:layout_width="match_parent"
 				android:scaleType="centerInside"
 				android:src="@drawable/piece_chess_king_pink" />
-			<TextView
+			<com.charlesmadere.android.classygames.views.TypefaceTextView
 				android:gravity="center"
 				android:id="@+id/chess_glossary_dialog_fragment_king_textview"
 				android:layout_gravity="center"
@@ -128,7 +132,8 @@
 				android:layout_width="match_parent"
 				android:text="@string/king"
 				android:textColor="@color/gray_darker"
-				android:textSize="18sp" />
+				android:textSize="18sp"
+				custom:typefaceTextView="BlueHighway" />
 		</LinearLayout>
 		<LinearLayout
 			android:gravity="center"
@@ -147,7 +152,7 @@
 				android:layout_width="match_parent"
 				android:scaleType="centerInside"
 				android:src="@drawable/piece_chess_pawn_pink" />
-			<TextView
+			<com.charlesmadere.android.classygames.views.TypefaceTextView
 				android:gravity="center"
 				android:id="@+id/chess_glossary_dialog_fragment_pawn_textview"
 				android:layout_gravity="center"
@@ -155,7 +160,8 @@
 				android:layout_width="match_parent"
 				android:text="@string/pawn"
 				android:textColor="@color/gray_darker"
-				android:textSize="18sp" />
+				android:textSize="18sp"
+				custom:typefaceTextView="BlueHighway" />
 		</LinearLayout>
 		<LinearLayout
 			android:gravity="center"
@@ -173,7 +179,7 @@
 				android:layout_width="match_parent"
 				android:scaleType="centerInside"
 				android:src="@drawable/piece_chess_rook_pink" />
-			<TextView
+			<com.charlesmadere.android.classygames.views.TypefaceTextView
 				android:gravity="center"
 				android:id="@+id/chess_glossary_dialog_fragment_rook_textview"
 				android:layout_gravity="center"
@@ -181,7 +187,8 @@
 				android:layout_width="match_parent"
 				android:text="@string/rook"
 				android:textColor="@color/gray_darker"
-				android:textSize="18sp" />
+				android:textSize="18sp"
+				custom:typefaceTextView="BlueHighway" />
 		</LinearLayout>
 	</LinearLayout>
 </LinearLayout>
