@@ -21,7 +21,7 @@ import com.actionbarsherlock.widget.SearchView;
 import com.charlesmadere.android.classygames.models.ListItem;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
-import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
+import com.charlesmadere.android.classygames.utilities.Typefaces;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 import com.facebook.Request;
 import com.facebook.Request.GraphUserListCallback;
@@ -680,7 +680,7 @@ public final class FriendsListFragment extends SherlockListFragment implements
 			}
 
 			final ViewHolder viewHolder = (ViewHolder) convertView.getTag();
-			TypefaceUtilities.applyBlueHighway(viewHolder.name);
+			Typefaces.applyBlueHighway(viewHolder.name);
 			viewHolder.name.setText(friend.getName());
 			viewHolder.picture.setImageDrawable(emptyProfilePicture);
 			final String friendsPictureURL = FacebookUtilities.getFriendsPictureSquare(context, friend.getId());

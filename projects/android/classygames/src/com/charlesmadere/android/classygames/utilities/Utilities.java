@@ -240,8 +240,8 @@ public final class Utilities
 	 *
 	 * @param typeface
 	 * The custom typeface that you want to use. This needs to be one of the
-	 * public bytes as found in the TypefaceUtilities class. If an invalid
-	 * value is passed in here then there will definitely be a problem.
+	 * public bytes as found in the Typefaces class. If an invalid value is
+	 * passed in here then there will definitely be a problem.
 	 *
 	 * @return
 	 * Returns the styled String as created with your specifications.
@@ -380,7 +380,7 @@ public final class Utilities
 		final Resources resources, final boolean showBackArrow)
 	{
 		actionBar.setDisplayHomeAsUpEnabled(showBackArrow);
-		actionBar.setTitle(makeStyledString(actionBarTitle, TypefaceUtilities.getBlueHighway()));
+		actionBar.setTitle(makeStyledString(actionBarTitle, Typefaces.getBlueHighway()));
 
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 		// if the running version of Android is lower than API Level 14 (below Ice Cream Sandwich 4.0)

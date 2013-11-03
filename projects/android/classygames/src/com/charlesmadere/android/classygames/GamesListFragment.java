@@ -28,7 +28,7 @@ import com.charlesmadere.android.classygames.models.ListItem;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.server.*;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
-import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
+import com.charlesmadere.android.classygames.utilities.Typefaces;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -882,7 +882,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 				final String friendsPictureURL = FacebookUtilities.getFriendsPictureSquare(context, game.getPerson().getId());
 				Utilities.getImageLoader().displayImage(friendsPictureURL, viewHolder.picture);
 
-				TypefaceUtilities.applyBlueHighway(viewHolder.name);
+				Typefaces.applyBlueHighway(viewHolder.name);
 				viewHolder.name.setText(game.getPerson().getName());
 				viewHolder.time.setText(game.getTimestampFormatted(resources));
 
@@ -918,7 +918,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 					convertView = inflater.inflate(R.layout.games_list_fragment_listview_turn_theirs, null);
 				}
 
-				TypefaceUtilities.applyBlueHighway((TextView) convertView);
+				Typefaces.applyBlueHighway((TextView) convertView);
 				convertView.setOnClickListener(null);
 				convertView.setOnLongClickListener(null);
 			}

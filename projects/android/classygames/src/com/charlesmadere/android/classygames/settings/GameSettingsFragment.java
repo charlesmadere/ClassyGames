@@ -9,7 +9,7 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceFragment;
 import android.text.SpannableString;
 import com.charlesmadere.android.classygames.R;
-import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
+import com.charlesmadere.android.classygames.utilities.Typefaces;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
@@ -118,7 +118,7 @@ public final class GameSettingsFragment extends PreferenceFragment
 		super.onCreate(savedInstanceState);
 
 		final String actionBarTitle = getString(R.string.game_settings);
-		final SpannableString styledActionBarTitle = Utilities.makeStyledString(actionBarTitle, TypefaceUtilities.getBlueHighway());
+		final SpannableString styledActionBarTitle = Utilities.makeStyledString(actionBarTitle, Typefaces.getBlueHighway());
 		getActivity().getActionBar().setTitle(styledActionBarTitle);
 
 		addPreferencesFromResource(R.xml.settings_game);

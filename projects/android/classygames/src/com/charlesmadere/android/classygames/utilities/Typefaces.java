@@ -9,7 +9,7 @@ import com.charlesmadere.android.classygames.App;
 /**
  * Class for constants and methods relating to Typefaces.
  */
-public final class TypefaceUtilities
+public final class Typefaces
 {
 
 

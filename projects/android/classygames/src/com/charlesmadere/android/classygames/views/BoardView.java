@@ -85,6 +85,14 @@ public final class BoardView extends ViewGroup
 	}
 
 
+	public BoardView(final Context context, final AttributeSet attrs, final int defStyle)
+	{
+		super(context, attrs, defStyle);
+		parseAttributes(attrs);
+		createPositions();
+	}
+
+
 	/**
 	 * Interested in learning what this method is about? For starters, you
 	 * should read the documentation on this method. I promise it's not too
