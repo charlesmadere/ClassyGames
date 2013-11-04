@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 import com.actionbarsherlock.view.MenuItem;
-import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
 public final class SharkActivity extends BaseActivity

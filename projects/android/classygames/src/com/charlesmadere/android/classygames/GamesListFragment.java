@@ -869,7 +869,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 
 			if (game.isTypeGame())
 			{
-				if (convertView == null)
+				if (convertView == null || convertView.getTag() == null)
 				{
 					convertView = inflater.inflate(R.layout.games_list_fragment_listview_item, null);
 					final ViewHolder viewHolder = new ViewHolder(convertView);
@@ -922,6 +922,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 
 				convertView.setOnClickListener(null);
 				convertView.setOnLongClickListener(null);
+				convertView.setTag(null);
 			}
 
 			return convertView;
