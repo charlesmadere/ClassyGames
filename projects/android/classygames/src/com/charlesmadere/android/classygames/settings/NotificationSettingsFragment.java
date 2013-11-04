@@ -1,28 +1,24 @@
 package com.charlesmadere.android.classygames.settings;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
-import android.text.SpannableString;
 import com.charlesmadere.android.classygames.R;
-import com.charlesmadere.android.classygames.utilities.Typefaces;
-import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
 public final class NotificationSettingsFragment extends PreferenceFragment
 {
 
 
+	private SettingsFragmentListeners settingsListeners;
+
+
 	@Override
 	public void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-
-		final String actionBarTitle = getString(R.string.notification_settings);
-		final SpannableString styledActionBarTitle = Utilities.makeStyledString(actionBarTitle,
-			Typefaces.getBlueHighway());
-		getActivity().getActionBar().setTitle(styledActionBarTitle);
-
+		settingsListeners.updateActionBarTitle(R.string.notification_settings);
 		addPreferencesFromResource(R.xml.settings_notification);
 	}
 
@@ -32,6 +28,14 @@ public final class NotificationSettingsFragment extends PreferenceFragment
 	{
 		super.onActivityCreated(savedInstanceState);
 		getView().setBackgroundResource(R.drawable.bg_bright);
+	}
+
+
+	@Override
+	public void onAttach(final Activity activity)
+	{
+		super.onAttach(activity);
+		settingsListeners = (SettingsFragmentListeners) activity;
 	}
 
 

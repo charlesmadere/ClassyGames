@@ -1,28 +1,24 @@
 package com.charlesmadere.android.classygames.settings;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
-import android.text.SpannableString;
 import com.charlesmadere.android.classygames.R;
-import com.charlesmadere.android.classygames.utilities.Typefaces;
-import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
-public class AboutSettingsFragment extends PreferenceFragment
+public final class AboutSettingsFragment extends PreferenceFragment
 {
+
+
+	private SettingsFragmentListeners settingsListeners;
 
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-
-		final String actionBarTitle = getString(R.string.about);
-		final SpannableString styledActionBarTitle = Utilities.makeStyledString(actionBarTitle,
-			Typefaces.getBlueHighway());
-		getActivity().getActionBar().setTitle(styledActionBarTitle);
-
+		settingsListeners.updateActionBarTitle(R.string.about);
 		addPreferencesFromResource(R.xml.settings_about);
 	}
 
@@ -33,4 +29,14 @@ public class AboutSettingsFragment extends PreferenceFragment
 		super.onActivityCreated(savedInstanceState);
 		getView().setBackgroundResource(R.drawable.bg_bright);
 	}
+
+
+	@Override
+	public void onAttach(final Activity activity)
+	{
+		super.onAttach(activity);
+		settingsListeners = (SettingsFragmentListeners) activity;
+	}
+
+
 }

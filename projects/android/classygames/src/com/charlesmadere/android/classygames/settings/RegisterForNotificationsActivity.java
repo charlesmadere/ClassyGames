@@ -10,7 +10,6 @@ import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.BaseActivity;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.server.ServerApiRegister;
-import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
 public final class RegisterForNotificationsActivity extends BaseActivity
@@ -25,9 +24,8 @@ public final class RegisterForNotificationsActivity extends BaseActivity
 	@Override
 	protected void onCreate(final Bundle savedInstanceState)
 	{
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState, R.string.register_for_notifications, true);
 		setContentView(R.layout.register_for_notifications_activity);
-		Utilities.setActionBar(this, R.string.register_for_notifications, true);
 
 		final Button register = (Button) findViewById(R.id.register_for_notifications_activity_register);
 		register.setOnClickListener(new View.OnClickListener()

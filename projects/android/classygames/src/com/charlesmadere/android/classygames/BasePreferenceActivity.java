@@ -7,10 +7,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.widget.TextView;
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockPreferenceActivity;
 
 
-public abstract class BaseActivity extends SherlockActivity
+public abstract class BasePreferenceActivity extends SherlockPreferenceActivity
 {
 
 

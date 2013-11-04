@@ -14,7 +14,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.Notification;
 import com.charlesmadere.android.classygames.models.Person;
-import com.charlesmadere.android.classygames.settings.SettingsActivity;
+import com.charlesmadere.android.classygames.settings.SettingsPreferenceActivity;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
@@ -44,10 +44,9 @@ public final class GameFragmentActivity extends BaseFragmentActivity implements
 	// of different things that it does, so it's necessary. Check the comments
 	// throughout the method to follow along.
 	{
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState, R.string.games_list, false);
 		setContentView(R.layout.game_fragment_activity);
 		setResult(RESULT_FIRST_USER);
-		Utilities.setActionBar(this, R.string.games_list, false);
 
 		final FragmentManager fManager = getSupportFragmentManager();
 
@@ -106,7 +105,7 @@ public final class GameFragmentActivity extends BaseFragmentActivity implements
 				else
 				{
 					genericGameFragment = (GenericGameFragment) fragment;
-					Utilities.setActionBar(this, actionBarTitle, true);
+					updateActionBar(actionBarTitle, true);
 				}
 			}
 			else
@@ -121,7 +120,7 @@ public final class GameFragmentActivity extends BaseFragmentActivity implements
 				else
 				{
 					genericGameFragment = (GenericGameFragment) fragment;
-					Utilities.setActionBar(this, actionBarTitle, true);
+					updateActionBar(actionBarTitle, true);
 				}
 			}
 		}
@@ -193,7 +192,7 @@ public final class GameFragmentActivity extends BaseFragmentActivity implements
 
 			if (genericGameFragment == null || !genericGameFragment.isVisible())
 			{
-				Utilities.setActionBar(this, R.string.games_list, false);
+				updateActionBar(R.string.games_list, false);
 			}
 		}
 	}
@@ -236,7 +235,7 @@ public final class GameFragmentActivity extends BaseFragmentActivity implements
 				break;
 
 			case R.id.game_fragment_activity_menu_settings:
-				final Intent settingsIntent = new Intent(this, SettingsActivity.class);
+				final Intent settingsIntent = new Intent(this, SettingsPreferenceActivity.class);
 				startActivity(settingsIntent);
 				break;
 
@@ -251,7 +250,7 @@ public final class GameFragmentActivity extends BaseFragmentActivity implements
 	@Override
 	protected void onSaveInstanceState(final Bundle outState)
 	{
-		final CharSequence actionBarTitle = getSupportActionBar().getTitle();
+		final CharSequence actionBarTitle = getActionBarTitle();
 		outState.putCharSequence(KEY_ACTION_BAR_TITLE, actionBarTitle);
 
 		super.onSaveInstanceState(outState);
@@ -390,11 +389,11 @@ public final class GameFragmentActivity extends BaseFragmentActivity implements
 
 			if (game.isGameCheckers())
 			{
-				Utilities.setActionBar(this, getString(R.string.checkers_with_x, game.getPerson().getName()), true);
+				updateActionBar(getString(R.string.checkers_with_x, game.getPerson().getName()), true);
 			}
 			else if (game.isGameChess())
 			{
-				Utilities.setActionBar(this, getString(R.string.chess_with_x, game.getPerson().getName()), true);
+				updateActionBar(getString(R.string.chess_with_x, game.getPerson().getName()), true);
 			}
 			else
 			{
@@ -471,7 +470,7 @@ public final class GameFragmentActivity extends BaseFragmentActivity implements
 
 		fTransaction.commit();
 		fManager.executePendingTransactions();
-		Utilities.setActionBar(this, R.string.games_list, false);
+		updateActionBar(R.string.games_list, false);
 
 		onRefreshSelected();
 	}

@@ -7,10 +7,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceFragment;
-import android.text.SpannableString;
 import com.charlesmadere.android.classygames.R;
-import com.charlesmadere.android.classygames.utilities.Typefaces;
-import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
 public final class GameSettingsFragment extends PreferenceFragment
@@ -110,17 +107,16 @@ public final class GameSettingsFragment extends PreferenceFragment
 	}
 
 
+	private SettingsFragmentListeners settingsListeners;
+
+
 
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-
-		final String actionBarTitle = getString(R.string.game_settings);
-		final SpannableString styledActionBarTitle = Utilities.makeStyledString(actionBarTitle, Typefaces.getBlueHighway());
-		getActivity().getActionBar().setTitle(styledActionBarTitle);
-
+		settingsListeners.updateActionBarTitle(R.string.game_settings);
 		addPreferencesFromResource(R.xml.settings_game);
 	}
 
@@ -179,6 +175,7 @@ public final class GameSettingsFragment extends PreferenceFragment
 	{
 		super.onAttach(activity);
 		listeners = (GameSettingsFragmentListeners) activity;
+		settingsListeners = (SettingsFragmentListeners) activity;
 	}
 
 

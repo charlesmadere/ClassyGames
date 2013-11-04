@@ -13,7 +13,6 @@ import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.BaseActivity;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.SharkActivity;
-import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
 public final class AboutActivity extends BaseActivity
@@ -26,9 +25,8 @@ public final class AboutActivity extends BaseActivity
 	@Override
 	public void onCreate(final Bundle savedInstanceState)
 	{
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState, R.string.about, true);
 		setContentView(R.layout.about_activity);
-		Utilities.setActionBar(this, R.string.about, true);
 
 		final ImageView logo = (ImageView) findViewById(R.id.about_activity_imageview_logo);
 		logo.setOnClickListener(new OnClickListener()

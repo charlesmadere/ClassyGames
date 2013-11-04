@@ -7,9 +7,10 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
+import android.widget.ListView;
 import android.widget.Toast;
-import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.charlesmadere.android.classygames.BasePreferenceActivity;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
@@ -21,8 +22,9 @@ import java.util.List;
  * was taken from the official Android Documentation.
  * https://developer.android.com/guide/topics/ui/settings.html
  */
-public final class SettingsActivity extends SherlockPreferenceActivity implements
-	GameSettingsFragment.GameSettingsFragmentListeners
+public final class SettingsPreferenceActivity extends BasePreferenceActivity implements
+	GameSettingsFragment.GameSettingsFragmentListeners,
+	SettingsFragmentListeners
 {
 
 
@@ -44,10 +46,11 @@ public final class SettingsActivity extends SherlockPreferenceActivity implement
 	// more information about API levels here:
 	// https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels
 	{
-		super.onCreate(savedInstanceState);
-		Utilities.setActionBar(this, R.string.settings, true);
-		getListView().setBackgroundResource(R.drawable.bg_bright);
-		getListView().setCacheColorHint(getResources().getColor(R.color.cache_color_hint));
+		super.onCreate(savedInstanceState, R.string.settings, true);
+
+		final ListView listView = getListView();
+		listView.setBackgroundResource(R.drawable.bg_bright);
+		listView.setCacheColorHint(getResources().getColor(R.color.cache_color_hint));
 
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
 		// Check to see if the running version of Android is below Honeycomb.
@@ -62,7 +65,7 @@ public final class SettingsActivity extends SherlockPreferenceActivity implement
 				// settings preference file
 				{
 					addPreferencesFromResource(R.xml.settings_game);
-					Utilities.setActionBar(this, R.string.game_settings, true);
+					updateActionBar(R.string.game_settings, true);
 
 					checkersPieceColorOpponents = (ListPreference) findPreference(getString(R.string.settings_key_opponents_checkers_piece_color));
 					checkersPieceColorPlayers = (ListPreference) findPreference(getString(R.string.settings_key_players_checkers_piece_color));
@@ -130,7 +133,7 @@ public final class SettingsActivity extends SherlockPreferenceActivity implement
 				// miscellaneous settings preference file
 				{
 					addPreferencesFromResource(R.xml.settings_notification);
-					Utilities.setActionBar(this, R.string.notification_settings, true);
+					updateActionBar(R.string.notification_settings, true);
 				}
 				else if (action.equals(getString(R.string.com_charlesmadere_android_classygames_settings_register)))
 				// the intent's action is saying that we need to show the
@@ -149,7 +152,7 @@ public final class SettingsActivity extends SherlockPreferenceActivity implement
 				// AboutActivity
 				{
 					addPreferencesFromResource(R.xml.settings_about);
-					Utilities.setActionBar(this, R.string.about, true);
+					updateActionBar(R.string.about, true);
 				}
 				else
 				// The intent's action was something strange. We'll show the
@@ -256,6 +259,20 @@ public final class SettingsActivity extends SherlockPreferenceActivity implement
 	public boolean onPlayerChessPieceColorPreferenceChange(final ListPreference opponentChessPieceColor, final Object newValue)
 	{
 		return makeSureBothTeamsArentTheSameColor(opponentChessPieceColor, newValue);
+	}
+
+
+	@Override
+	public void updateActionBarTitle(final int title)
+	{
+		updateActionBarTitle(getString(title));
+	}
+
+
+	@Override
+	public void updateActionBarTitle(final CharSequence title)
+	{
+		updateActionBar(title, true);
 	}
 
 

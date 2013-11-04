@@ -4,6 +4,7 @@
 	xmlns:custom="http://schemas.android.com/apk/res/com.charlesmadere.android.classygames"
 	android:ellipsize="end"
 	android:gravity="left|center_vertical"
+	android:id="@+id/action_bar_title"
 	android:layout_gravity="left|center_vertical"
 	android:layout_height="match_parent"
 	android:layout_width="match_parent"

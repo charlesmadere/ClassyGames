@@ -57,8 +57,8 @@ public final class MainActivity extends BaseActivity implements
 	@Override
 	protected void onCreate(final Bundle savedInstanceState)
 	{
-		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		super.onCreate(savedInstanceState, R.string.classy_games, false);
 		setContentView(R.layout.main_activity);
 
 		facebook = (LinearLayout) findViewById(R.id.main_activity_facebook);
@@ -97,11 +97,7 @@ public final class MainActivity extends BaseActivity implements
 	@Override
 	public void onBackPressed()
 	{
-		if (isAnAsyncTaskRunning())
-		{
-			cancelRunningAnyAsyncTask();
-		}
-
+		cancelRunningAnyAsyncTask();
 		super.onBackPressed();
 	}
 

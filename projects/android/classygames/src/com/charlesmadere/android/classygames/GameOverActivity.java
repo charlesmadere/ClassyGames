@@ -1,7 +1,6 @@
 package com.charlesmadere.android.classygames;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,64 +26,53 @@ public final class GameOverActivity extends BaseActivity
 	@Override
 	protected void onCreate(final Bundle savedInstanceState)
 	{
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState, R.string.game_over, true);
 		setContentView(R.layout.game_over_activity);
-		Utilities.setActionBar(this, R.string.game_over, true);
+		final Bundle arguments = getIntent().getExtras();
 
-		final Intent intent = getIntent();
-
-		if (intent != null)
+		if (arguments == null || arguments.isEmpty())
 		{
-			final Bundle arguments = intent.getExtras();
+			finish();
+		}
+		else
+		{
+			final Notification notification = (Notification) arguments.getSerializable(KEY_NOTIFICATION);
 
-			if (arguments == null || arguments.isEmpty())
+			if (notification == null)
 			{
 				finish();
 			}
 			else
 			{
-				final Notification notification = (Notification) arguments.getSerializable(KEY_NOTIFICATION);
+				final ImageView friendsPicture = (ImageView) findViewById(R.id.game_over_activity_friend_picture);
+				Utilities.getImageLoader().displayImage(FacebookUtilities.getFriendsPictureLarge(this, notification.getPerson().getId()), friendsPicture);
 
-				if (notification == null)
+				final TextView friendsName = (TextView) findViewById(R.id.game_over_activity_friend_name);
+				friendsName.setText(notification.getPerson().getName());
+
+				final TextView winOrLose = (TextView) findViewById(R.id.game_over_activity_win_or_lose);
+
+				switch (notification.getMessageType())
 				{
-					finish();
+					case Server.POST_DATA_MESSAGE_TYPE_GAME_OVER_LOSE:
+						winOrLose.setText(R.string.you_lost_the_game_better_luck_next_time);
+						break;
+
+					case Server.POST_DATA_MESSAGE_TYPE_GAME_OVER_WIN:
+						winOrLose.setText(R.string.you_won_the_game_what_a_champ);
+						break;
 				}
-				else
+
+				final Button returnToGamesList = (Button) findViewById(R.id.game_over_activity_button_return);
+				returnToGamesList.setOnClickListener(new OnClickListener()
 				{
-					final ImageView friendsPicture = (ImageView) findViewById(R.id.game_over_activity_friend_picture);
-					Utilities.getImageLoader().displayImage(FacebookUtilities.getFriendsPictureLarge(this, notification.getPerson().getId()), friendsPicture);
-
-					final TextView friendsName = (TextView) findViewById(R.id.game_over_activity_friend_name);
-					friendsName.setText(notification.getPerson().getName());
-
-					final TextView winOrLose = (TextView) findViewById(R.id.game_over_activity_win_or_lose);
-
-					switch (notification.getMessageType())
+					@Override
+					public void onClick(final View v)
 					{
-						case Server.POST_DATA_MESSAGE_TYPE_GAME_OVER_LOSE:
-							winOrLose.setText(R.string.you_lost_the_game_better_luck_next_time);
-							break;
-
-						case Server.POST_DATA_MESSAGE_TYPE_GAME_OVER_WIN:
-							winOrLose.setText(R.string.you_won_the_game_what_a_champ);
-							break;
+						finish();
 					}
-
-					final Button returnToGamesList = (Button) findViewById(R.id.game_over_activity_button_return);
-					returnToGamesList.setOnClickListener(new OnClickListener()
-					{
-						@Override
-						public void onClick(final View v)
-						{
-							finish();
-						}
-					});
-				}
+				});
 			}
-		}
-		else
-		{
-			finish();
 		}
 	}
 

@@ -37,9 +37,8 @@ public final class NewGameFragmentActivity extends BaseFragmentActivity implemen
 	// the onCreate() that's in the GameFragmentActivity class. It's better
 	// documented in there!
 	{
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState, R.string.friends_list, true);
 		setContentView(R.layout.new_game_fragment_activity);
-		Utilities.setActionBar(this, R.string.friends_list, true);
 
 		final FragmentManager fManager = getSupportFragmentManager();
 

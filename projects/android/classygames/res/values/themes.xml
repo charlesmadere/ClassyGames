@@ -3,10 +3,14 @@
 	<style
 		name="Widget.Styled.ActionBar"
 		parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
-		<item name="background">@drawable/bg_actionbar</item>
-		<item name="android:background">@drawable/bg_actionbar</item>
-		<item name="backgroundSplit">@drawable/bg_actionbar</item>
-		<item name="android:backgroundSplit">@drawable/bg_actionbar</item>
+		<item name="background">@drawable/bg_action_bar</item>
+		<item name="android:background">@drawable/bg_action_bar</item>
+		<item name="backgroundSplit">@drawable/bg_action_bar</item>
+		<item name="android:backgroundSplit">@drawable/bg_action_bar</item>
+		<item name="customNavigationLayout">@layout/action_bar</item>
+		<item name="android:customNavigationLayout">@layout/action_bar</item>
+		<item name="displayOptions">showCustom</item>
+		<item name="android:displayOptions">showCustom</item>
 	</style>
 	<style
 		name="Theme.Styled"
