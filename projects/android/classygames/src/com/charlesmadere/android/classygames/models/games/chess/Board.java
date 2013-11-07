@@ -246,11 +246,11 @@ public final class Board extends GenericBoard
 	private boolean isMoveValidBishop(final Position previous, final Position current)
 	{
 		final Coordinate start = previous.getCoordinate();
-		final byte startX = start.getX();
-		final byte startY = start.getY();
+		final int startX = (int) start.getX();
+		final int startY = (int) start.getY();
 		final Coordinate end = current.getCoordinate();
-		final byte endX = end.getX();
-		final byte endY = end.getY();
+		final int endX = (int) end.getX();
+		final int endY = (int) end.getY();
 
 		boolean isMoveValid = false;
 
@@ -259,16 +259,16 @@ public final class Board extends GenericBoard
 		{
 			if (current.hasPiece())
 			{
-				final Piece p = (Piece) current.getPiece();
+				final Piece piece = (Piece) current.getPiece();
 
-				if (p.isTeamOpponent() && !p.isTypeKing())
+				if (piece.isTeamOpponent() && !piece.isTypeKing())
 				{
-					current.removePiece();
-					final Piece piece = (Piece) previous.getPiece();
-					current.setPiece(new Piece(piece));
-					previous.removePiece();
 					isMoveValid = true;
 				}
+			}
+			else
+			{
+				isMoveValid = true;
 			}
 		}
 
@@ -279,31 +279,30 @@ public final class Board extends GenericBoard
 	private boolean isMoveValidKing(final Position previous, final Position current)
 	{
 		final Coordinate start = previous.getCoordinate();
-		final byte startX = start.getX();
-		final byte startY = start.getY();
+		final int startX = (int) start.getX();
+		final int startY = (int) start.getY();
 		final Coordinate end = current.getCoordinate();
-		final byte endX = end.getX();
-		final byte endY = end.getY();
+		final int endX = (int) end.getX();
+		final int endY = (int) end.getY();
 
 		boolean isMoveValid = false;
 
-		if (!isMovingThroughPiecesKing(previous, current) &&
-			((Math.abs(startX - endX) == 1 && Math.abs(startY - endY) == 1)
-				|| (Math.abs(startX - endX) == 1 && Math.abs(startY - endY) == 0)
-				|| (Math.abs(startX - endX) == 0 && Math.abs(startY - endY) == 1)))
+		if ((Math.abs(startX - endX) == 1 && Math.abs(startY - endY) == 1) ||
+			(Math.abs(startX - endX) == 1 && Math.abs(startY - endY) == 0) ||
+			(Math.abs(startX - endX) == 0 && Math.abs(startY - endY) == 1))
 		{
 			if (current.hasPiece())
 			{
-				final Piece p = (Piece) current.getPiece();
+				final Piece piece = (Piece) current.getPiece();
 
-				if (p.isTeamOpponent() && !p.isTypeKing())
+				if (piece.isTeamOpponent() && !piece.isTypeKing())
 				{
-					current.removePiece();
-					final Piece piece = (Piece) previous.getPiece();
-					current.setPiece(new Piece(piece));
-					previous.removePiece();
 					isMoveValid = true;
 				}
+			}
+			else
+			{
+				isMoveValid = true;
 			}
 		}
 
@@ -314,35 +313,28 @@ public final class Board extends GenericBoard
 	private boolean isMoveValidKnight(final Position previous, final Position current)
 	{
 		final Coordinate start = previous.getCoordinate();
-		final byte startX = start.getX();
-		final byte startY = start.getY();
+		final int startX = (int) start.getX();
+		final int startY = (int) start.getY();
 		final Coordinate end = current.getCoordinate();
-		final byte endX = end.getX();
-		final byte endY = end.getY();
+		final int endX = (int) end.getX();
+		final int endY = (int) end.getY();
 
 		boolean isMoveValid = false;
 
 		if ((Math.abs(startX - endX) == 1 && Math.abs(startY - endY) == 2)
 			|| (Math.abs(startX - endX) == 2 && Math.abs(startY - endY) == 1))
 		{
-			final Piece piece = (Piece) previous.getPiece();
-
 			if (current.hasPiece())
 			{
-				final Piece p = (Piece) current.getPiece();
+				final Piece piece = (Piece) current.getPiece();
 
-				if (p.isTeamOpponent() && !p.isTypeKing())
+				if (piece.isTeamOpponent() && !piece.isTypeKing())
 				{
-					current.removePiece();
-					current.setPiece(new Piece(piece));
-					previous.removePiece();
 					isMoveValid = true;
 				}
 			}
 			else
 			{
-				current.setPiece(new Piece(piece));
-				previous.removePiece();
 				isMoveValid = true;
 			}
 		}
@@ -354,33 +346,34 @@ public final class Board extends GenericBoard
 	private boolean isMoveValidPawn(final Position previous, final Position current)
 	{
 		final Coordinate start = previous.getCoordinate();
-		final byte startX = start.getX();
-		final byte startY = start.getY();
+		final int startX = (int) start.getX();
+		final int startY = (int) start.getY();
 		final Coordinate end = current.getCoordinate();
-		final byte endX = end.getX();
-		final byte endY = end.getY();
+		final int endX = (int) end.getX();
+		final int endY = (int) end.getY();
 
 		boolean isMoveValid = false;
 
-		if (!isMovingThroughPiecesPawn(previous, current) &&
-			((startY == 1 && Math.abs(startY - endY) == 2) || Math.abs(startY - endY) == 1))
+		if (endY > startY)
 		{
 			if (startX == endX)
+			{
+				if (endY - startY == 1 || (endY - startY == 2 && !isMovingThroughPiecesPawn(previous, current)))
+				{
+					isMoveValid = true;
+				}
+			}
+			else if (Math.abs(endX - startX) == 1 && endY - startY == 1)
 			{
 				if (current.hasPiece())
 				{
 					final Piece p = (Piece) current.getPiece();
 
-					if (p.isTeamOpponent() && !p.isTypeKing() && Math.abs(startX - endX) == 1)
+					if (p.isTeamOpponent() && !p.isTypeKing())
 					{
-						current.removePiece();
+						isMoveValid = true;
 					}
 				}
-
-				final Piece piece = (Piece) previous.getPiece();
-				current.setPiece(new Piece(piece));
-				previous.removePiece();
-				isMoveValid = true;
 			}
 		}
 
@@ -390,90 +383,35 @@ public final class Board extends GenericBoard
 
 	private boolean isMoveValidQueen(final Position previous, final Position current)
 	{
-		final Coordinate start = previous.getCoordinate();
-		final byte startX = start.getX();
-		final byte startY = start.getY();
-		final Coordinate end = current.getCoordinate();
-		final byte endX = end.getX();
-		final byte endY = end.getY();
-
-		boolean isMoveValid = false;
-
-		// Sorry for this kinda nasty if statement, but the Queen
-		// can move in a bunch of different ways... Don't try to
-		// decipher this unless you're already familiar with Chess.
-		if (!isMovingThroughPiecesQueen(previous, current) &&
-			((Math.abs(startX - endX) == Math.abs(startY - endY))
-			// bishop logic
-			|| ((Math.abs(startX - endX) == 1 && Math.abs(startY - endY) == 1)
-			|| (Math.abs(startX - endX) == 1 && Math.abs(startY - endY) == 0)
-			|| (Math.abs(startX - endX) == 0 && Math.abs(startY - endY) == 1))
-			// king logic
-			|| ((startX == endX && startY != endY) || (startX != endX && startY == endY))))
-			// rook logic
-		{
-			final Piece piece = (Piece) previous.getPiece();
-
-			if (current.hasPiece())
-			{
-				final Piece p = (Piece) current.getPiece();
-
-				if (p.isTeamOpponent() && !p.isTypeKing())
-				{
-					current.removePiece();
-					current.setPiece(new Piece(piece));
-					previous.removePiece();
-					isMoveValid = true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			else
-			{
-				current.setPiece(new Piece(piece));
-				previous.removePiece();
-				isMoveValid = true;
-			}
-		}
-
-		return isMoveValid;
+		return isMoveValidBishop(previous, current) || isMoveValidRook(previous, current);
 	}
 
 
 	private boolean isMoveValidRook(final Position previous, final Position current)
 	{
 		final Coordinate start = previous.getCoordinate();
-		final byte startX = start.getX();
-		final byte startY = start.getY();
+		final int startX = (int) start.getX();
+		final int startY = (int) start.getY();
 		final Coordinate end = current.getCoordinate();
-		final byte endX = end.getX();
-		final byte endY = end.getY();
+		final int endX = (int) end.getX();
+		final int endY = (int) end.getY();
 
 		boolean isMoveValid = false;
 
 		if (!isMovingThroughPiecesRook(previous, current) &&
 			(startX == endX && startY != endY) || (startX != endX && startY == endY))
 		{
-			final Piece piece = (Piece) previous.getPiece();
-
 			if (current.hasPiece())
 			{
-				final Piece p = (Piece) current.getPiece();
+				final Piece piece = (Piece) current.getPiece();
 
-				if (p.isTeamOpponent() && !p.isTypeKing())
+				if (piece.isTeamOpponent() && !piece.isTypeKing())
 				{
-					current.removePiece();
-					current.setPiece(new Piece(piece));
-					previous.removePiece();
 					isMoveValid = true;
 				}
 			}
 			else
 			{
-				current.setPiece(new Piece(piece));
-				previous.removePiece();
 				isMoveValid = true;
 			}
 		}
@@ -510,39 +448,74 @@ public final class Board extends GenericBoard
 		final byte endX = end.getX();
 		final byte endY = end.getY();
 
+		if (endX > startX)
+		// bishop is moving right
+		{
+			byte currentX = startX;
+			byte currentY = startY;
+			Position p;
 
+			if (endY > startY)
+			// bishop is moving right-up
+			{
+				while (++currentX < endX && ++currentY < endY)
+				{
+					p = getPosition(currentX, currentY);
 
-		return false;
-	}
+					if (p.hasPiece())
+					{
+						return true;
+					}
+				}
+			}
+			else if (startY > endY)
+			// bishop is moving right-down
+			{
+				while (++currentX < endX && --currentY > endY)
+				{
+					p = getPosition(currentX, currentY);
 
+					if (p.hasPiece())
+					{
+						return true;
+					}
+				}
+			}
+		}
+		else if (startX > endX)
+		// bishop is moving left
+		{
+			byte currentX = startX;
+			byte currentY = startY;
+			Position p;
 
-	/**
-	 * Checks to see if the Piece at Position previous has to move through any
-	 * other pieces on the Chess board in order to arrive at Position current.
-	 * This algorithm does not check for the existence of a Piece at Position
-	 * current.
-	 *
-	 * @param previous
-	 * The Position that the Piece is trying to move from. This absolutely can
-	 * not be null and must also have a Piece object associated with it.
-	 *
-	 * @param current
-	 * The Position on the game board that the given Piece is attempting to
-	 * travel to. This absolutely can not be null! It's fine if this Position
-	 * does or does not have a Piece object associated with it.
-	 *
-	 * @return
-	 * Returns true if the Piece at Position previous has to move through other
-	 * pieces on the game board to arrive at Position current.
-	 */
-	private boolean isMovingThroughPiecesKing(final Position previous, final Position current)
-	{
-		final Coordinate start = previous.getCoordinate();
-		final byte startX = start.getX();
-		final byte startY = start.getY();
-		final Coordinate end = current.getCoordinate();
-		final byte endX = end.getX();
-		final byte endY = end.getY();
+			if (endY > startY)
+			// bishop is moving left-up
+			{
+				while (--currentX > endX && ++currentY < endY)
+				{
+					p = getPosition(currentX, currentY);
+
+					if (p.hasPiece())
+					{
+						return true;
+					}
+				}
+			}
+			else if (startY > endY)
+			// bishop is moving left-down
+			{
+				while (--currentX > endX && --currentY > endY)
+				{
+					p = getPosition(currentX, currentY);
+
+					if (p.hasPiece())
+					{
+						return true;
+					}
+				}
+			}
+		}
 
 		return false;
 	}
@@ -570,39 +543,25 @@ public final class Board extends GenericBoard
 	private boolean isMovingThroughPiecesPawn(final Position previous, final Position current)
 	{
 		final Coordinate start = previous.getCoordinate();
-		final byte startX = start.getX();
-		final byte startY = start.getY();
+		final int startX = (int) start.getX();
+		final int startY = (int) start.getY();
 		final Coordinate end = current.getCoordinate();
-		final byte endX = end.getX();
-		final byte endY = end.getY();
+		final int endX = (int) end.getX();
+		final int endY = (int) end.getY();
 
-		return false;
-	}
+		boolean isMovingThroughPieces = false;
 
+		if (startX == endX && endY - startY == 2)
+		{
+			final Position position = getPosition(startX, endY - 1);
 
-	/**
-	 * Checks to see if the Piece at Position previous has to move through any
-	 * other pieces on the Chess board in order to arrive at Position current.
-	 * This algorithm does not check for the existence of a Piece at Position
-	 * current.
-	 *
-	 * @param previous
-	 * The Position that the Piece is trying to move from. This absolutely can
-	 * not be null and must also have a Piece object associated with it.
-	 *
-	 * @param current
-	 * The Position on the game board that the given Piece is attempting to
-	 * travel to. This absolutely can not be null! It's fine if this Position
-	 * does or does not have a Piece object associated with it.
-	 *
-	 * @return
-	 * Returns true if the Piece at Position previous has to move through other
-	 * pieces on the game board to arrive at Position current.
-	 */
-	private boolean isMovingThroughPiecesQueen(final Position previous, final Position current)
-	{
-		return isMovingThroughPiecesBishop(previous, current)
-			|| isMovingThroughPiecesRook(previous, current);
+			if (position.hasPiece())
+			{
+				isMovingThroughPieces = true;
+			}
+		}
+
+		return isMovingThroughPieces;
 	}
 
 
@@ -637,14 +596,15 @@ public final class Board extends GenericBoard
 		if (startX == endX)
 		// rook is moving vertically
 		{
+			byte currentY = startY;
+			Position p;
+
 			if (startY < endY)
 			// rook is moving up
 			{
-				int currentY = startY;
-
 				while (++currentY < endY)
 				{
-					final Position p = getPosition(startX, currentY);
+					p = getPosition(startX, currentY);
 
 					if (p.hasPiece())
 					{
@@ -655,11 +615,9 @@ public final class Board extends GenericBoard
 			else if (startY > endY)
 			// rook is moving down
 			{
-				int currentY = startY;
-
 				while (--currentY > endY)
 				{
-					final Position p = getPosition(startX, currentY);
+					p = getPosition(startX, currentY);
 
 					if (p.hasPiece())
 					{
@@ -671,14 +629,15 @@ public final class Board extends GenericBoard
 		else if (startY == endY)
 		// rook is moving horizontally
 		{
+			byte currentX = startX;
+			Position p;
+
 			if (startX < endX)
 			// rook is moving right
 			{
-				int currentX = startX;
-
 				while (++currentX < endX)
 				{
-					final Position p = getPosition(currentX, startY);
+					p = getPosition(currentX, startY);
 
 					if (p.hasPiece())
 					{
@@ -689,11 +648,9 @@ public final class Board extends GenericBoard
 			else if (startX > endX)
 			// rook is moving left
 			{
-				int currentX = startX;
-
 				while (--currentX > endX)
 				{
-					final Position p = getPosition(currentX, startY);
+					p = getPosition(currentX, startY);
 
 					if (p.hasPiece())
 					{
