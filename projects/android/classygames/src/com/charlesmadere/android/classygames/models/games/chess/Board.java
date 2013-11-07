@@ -360,9 +360,13 @@ public final class Board extends GenericBoard
 
 		if (endY > startY)
 		{
-			if (startX == endX)
+			if (startX == endX && !current.hasPiece())
 			{
-				if (endY - startY == 1 || (endY - startY == 2 && !isMovingThroughPiecesPawn(previous, current)))
+				if (endY - startY == 1)
+				{
+					isMoveValid = true;
+				}
+				else if (startY == 1 && endY - startY == 2 && !isMovingThroughPiecesPawn(previous, current))
 				{
 					isMoveValid = true;
 				}

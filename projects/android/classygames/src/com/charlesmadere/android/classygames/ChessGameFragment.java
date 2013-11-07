@@ -429,29 +429,24 @@ public final class ChessGameFragment extends GenericGameFragment
 			final Coordinate coordinateCurrent = positionCurrent.getCoordinate();
 			final Position current = board.getPosition(coordinateCurrent);
 
-			if (!current.hasPiece())
+			if (board.move(previous, current))
 			{
-				positionCurrent.select();
+				flush();
+				getSherlockActivity().supportInvalidateOptionsMenu();
 
-				if (board.move(previous, current))
+				switch (((Board) board).isBoardInCheckOrCheckmate())
 				{
-					flush();
-					getSherlockActivity().supportInvalidateOptionsMenu();
+					case Board.BOARD_NORMAL:
+						// TODO
+						break;
 
-					switch (((Board) board).isBoardInCheckOrCheckmate())
-					{
-						case Board.BOARD_NORMAL:
-							// TODO
-							break;
+					case Board.BOARD_CHECK:
+						// TODO
+						break;
 
-						case Board.BOARD_CHECK:
-							// TODO
-							break;
-
-						case Board.BOARD_CHECKMATE:
-							// TODO
-							break;
-					}
+					case Board.BOARD_CHECKMATE:
+						// TODO
+						break;
 				}
 			}
 

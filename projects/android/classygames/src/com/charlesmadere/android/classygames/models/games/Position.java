@@ -46,53 +46,6 @@ public final class Position
 
 
 	/**
-	 * Creates a Position object.
-	 * 
-	 * @param coordinate
-	 * This Position object's coordinate.
-	 */
-	public Position(final Coordinate coordinate)
-	{
-		this.coordinate = coordinate;
-	}
-
-
-	/**
-	 * Creates a Position object.
-	 * 
-	 * @param x
-	 * This Position object's <strong>X</strong> coordinate.
-	 * 
-	 * @param y
-	 * This Position object's <strong>Y</strong> coordinate.
-	 * 
-	 * @param piece
-	 * This Position object's GenericPiece object.
-	 */
-	public Position(final byte x, final byte y, final GenericPiece piece)
-	{
-		coordinate = new Coordinate(x, y);
-		this.piece = piece;
-	}
-
-
-	/**
-	 * Creates a Position object.
-	 * 
-	 * @param coordinate
-	 * This Position object's coordinate.
-	 * 
-	 * @param piece
-	 * This Position object's GenericPiece object.
-	 */
-	public Position(final Coordinate coordinate, final GenericPiece piece)
-	{
-		this.coordinate = coordinate;
-		this.piece = piece;
-	}
-
-
-	/**
 	 * This Position object's Coordinate is it's location on the game board.
 	 * 
 	 * @return
@@ -178,6 +131,20 @@ public final class Position
 	public void setPiece(final GenericPiece piece)
 	{
 		this.piece = piece;
+	}
+
+
+	@Override
+	public String toString()
+	{
+		if (hasPiece())
+		{
+			return coordinate.toString() + " with " + piece.toString();
+		}
+		else
+		{
+			return coordinate.toString() + " with no piece";
+		}
 	}
 
 
