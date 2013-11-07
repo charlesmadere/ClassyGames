@@ -180,6 +180,10 @@ public final class Board extends GenericBoard
 
 			if (isMoveValid)
 			{
+				current.removePiece();
+				current.setPiece(new Piece(piece));
+				previous.removePiece();
+
 				hasMoveBeenMade = true;
 				isBoardLocked = true;
 			}
