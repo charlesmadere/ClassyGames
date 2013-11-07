@@ -3,7 +3,6 @@ package com.charlesmadere.android.classygames;
 
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -64,7 +63,7 @@ public final class GameOverActivity extends BaseActivity
 				}
 
 				final Button returnToGamesList = (Button) findViewById(R.id.game_over_activity_button_return);
-				returnToGamesList.setOnClickListener(new OnClickListener()
+				returnToGamesList.setOnClickListener(new View.OnClickListener()
 				{
 					@Override
 					public void onClick(final View v)

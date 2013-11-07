@@ -40,13 +40,6 @@ public final class ConfirmGameFragment extends SherlockFragment
 
 
 	/**
-	 * The LayoutInflater object that was passed in to this Fragment in the
-	 * onCreateView() method.
-	 */
-	private LayoutInflater inflater;
-
-
-	/**
 	 * The Person object that will be shown on this Fragment's layout. The user
 	 * must confirm whether or not they want to play against this friend.
 	 */
@@ -133,7 +126,6 @@ public final class ConfirmGameFragment extends SherlockFragment
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{
-		this.inflater = inflater;
 		return inflater.inflate(R.layout.confirm_game_fragment, null);
 	}
 
@@ -220,6 +212,7 @@ public final class ConfirmGameFragment extends SherlockFragment
 	{
 		if (alertDialog == null)
 		{
+			final LayoutInflater inflater = getSherlockActivity().getLayoutInflater();
 			final View dialogView = inflater.inflate(R.layout.choose_which_game_dialog, null);
 
 			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)

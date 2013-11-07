@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -29,7 +28,7 @@ public final class AboutActivity extends BaseActivity
 		setContentView(R.layout.about_activity);
 
 		final ImageView logo = (ImageView) findViewById(R.id.about_activity_imageview_logo);
-		logo.setOnClickListener(new OnClickListener()
+		logo.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(final View v)
