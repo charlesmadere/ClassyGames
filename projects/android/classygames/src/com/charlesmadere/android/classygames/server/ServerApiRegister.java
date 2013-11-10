@@ -2,73 +2,15 @@ package com.charlesmadere.android.classygames.server;
 
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.Build;
-import android.util.Log;
+import com.charlesmadere.android.classygames.gcm.GCMManager;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.utilities.Utilities;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
 
 
 public final class ServerApiRegister extends ServerApi
 {
-
-
-	private final static String LOG_TAG = ServerApi.LOG_TAG + " - ServerApiRegister";
-
-	// The Google API Console can be found at this website:
-	// https://code.google.com/apis/console/b/0/
-	public final static String GOOGLE_PROJECT_ID = "246279743841";
-
-	private final static String KEY_REGISTRATION_ID = "KEY_REGISTRATION_ID";
-	private final static String KEY_REGISTRATION_VERSION_CODE = "KEY_REGISTRATION_VERSION_CODE";
-	private final static String PREFERENCES_NAME = "ServerApiRegister_Preferences";
-
-
-	private SharedPreferences sPreferences;
-
-
-	/**
-	 * Object that allows us to run any of the methods that are defined in the
-	 * RegisterListeners interface.
-	 */
-	private RegisterListeners listeners;
-
-
-	/**
-	 * An interface that will be used throughout the lifecycle of this class.
-	 * Note that all of this interface's methods will run after the parent
-	 * interface's onComplete() method (if we get to that point in the
-	 * lifecycle). If this ServerApi is cancelled, then that method will never
-	 * be run, which then therefore means that these won't either.
-	 */
-	public interface RegisterListeners extends Listeners
-	{
-
-
-		/**
-		 * If our attempt to register with the server fails then this method
-		 * will be run. Note that this method <strong>will not run</strong> if
-		 * the user's device just turns out to be incompatible with Google
-		 * Cloud Messaging.
-		 */
-		public void onRegistrationFail();
-
-
-		/**
-		 * This method will be run once we have checked and verified that the
-		 * user has successfully registered with the server.
-		 */
-		public void onRegistrationSuccess();
-
-
-	}
-
-
 
 
 	/**
@@ -82,10 +24,9 @@ public final class ServerApiRegister extends ServerApi
 	 * @param listeners
 	 * A set of listeners to call once we're done running code here.
 	 */
-	public ServerApiRegister(final Context context, final RegisterListeners listeners)
+	public ServerApiRegister(final Context context, final Listeners listeners)
 	{
 		super(context, listeners);
-		this.listeners = listeners;
 	}
 
 
@@ -105,137 +46,16 @@ public final class ServerApiRegister extends ServerApi
 	 * @param listeners
 	 * A set of listeners to call once we're done running code here.
 	 */
-	public ServerApiRegister(final Context context, final boolean showProgressDialog, final RegisterListeners listeners)
+	public ServerApiRegister(final Context context, final boolean showProgressDialog, final Listeners listeners)
 	{
 		super(context, showProgressDialog, listeners);
-		this.listeners = listeners;
-	}
-
-
-
-
-	/**
-	 * Checks the device to make sure that it has a compatible and up-to-date
-	 * Google Play services installation. Read more about what it means to have
-	 * a compatible and up-to-date Google Play services installation here:
-	 * https://developer.android.com/google/play-services/setup.html#ensure
-	 *
-	 * @return
-	 * Returns true if this device is ready to go with Google Play services.
-	 */
-	private boolean checkGooglePlayServices()
-	{
-		final int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getContext());
-		return resultCode == ConnectionResult.SUCCESS;
-	}
-
-
-	private SharedPreferences getPreferences()
-	{
-		if (sPreferences == null)
-		{
-			sPreferences = getContext().getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-		}
-
-		return sPreferences;
-	}
-
-
-	private String getRegistrationId()
-	{
-		return getPreferences().getString(KEY_REGISTRATION_ID, null);
-	}
-
-
-	public int getRegistrationVersionCode()
-	{
-		return getPreferences().getInt(KEY_REGISTRATION_VERSION_CODE, 0);
-	}
-
-
-	@Override
-	protected ServerApiTask getServerApiTask()
-	{
-		return new ServerApiRegisterTask();
-	}
-
-
-	private void performGCMRegistrationIfNecessary()
-	{
-		if (!checkGooglePlayServices())
-		// If this device does not have a valid Google Play Services
-		// installation, then we won't bother going any further here.
-		{
-			return;
-		}
-
-		String registrationId = getRegistrationId();
-		int registrationVersionCode = getRegistrationVersionCode();
-		final int appVersionCode = Utilities.getAppVersionCode(getContext());
-
-		if (Utilities.validString(registrationId) && registrationVersionCode != 0 &&
-			appVersionCode == registrationVersionCode)
-		// If any single one of these if statements validate as false, then we
-		// absolutely must register this device with Google's GCM servers.
-		{
-			return;
-		}
-
-		Log.i(LOG_TAG, "About to attempt GCM registration.\nUser is running Android" +
-			" version \"" + Build.VERSION.SDK_INT + "\".");
-
-		try
-		{
-			final GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(getContext());
-			registrationId = gcm.register(GOOGLE_PROJECT_ID);
-			registrationVersionCode = Utilities.getAppVersionCode(getContext());
-		}
-		catch (final IOException e)
-		{
-			// In the event of an IOException, let's just discard all of
-			// the user's GCM data that we've grabbed.
-			Log.e(LOG_TAG, "IOException during ServerApiRegister's postToServer()!", e);
-			registrationId = null;
-			registrationVersionCode = 0;
-		}
-
-		final SharedPreferences.Editor editor = getPreferences().edit();
-
-		if (Utilities.validString(registrationId) && registrationVersionCode >= 1)
-		{
-			editor.putString(KEY_REGISTRATION_ID, registrationId)
-				.putInt(KEY_REGISTRATION_VERSION_CODE, registrationVersionCode);
-
-			Log.i(LOG_TAG, "GCM registration completed successfully.\n" +
-				"registrationId: \"" + registrationId + "\"\n" +
-				"registrationVersionCode: \"" + registrationVersionCode + "\"");
-		}
-		else
-		{
-			editor.clear();
-			Log.i(LOG_TAG, "GCM registration failed!");
-		}
-
-		// In FriendsListFragment I have a big comment that very simply
-		// discusses the differences in the apply() and commit() methods
-		// below. Go check that comment out if you want more info!
-
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)
-		{
-			editor.apply();
-		}
-		else
-		{
-			editor.commit();
-		}
 	}
 
 
 	@Override
 	protected String postToServer(final Person whoAmI) throws IOException
 	{
-		performGCMRegistrationIfNecessary();
-		final String registrationId = getRegistrationId();
+		final String registrationId = GCMManager.getRegistrationId(getContext());
 
 		final ApiData data = new ApiData()
 			.addKeyValuePair(Server.POST_DATA_ID, whoAmI.getId())
@@ -252,36 +72,6 @@ public final class ServerApiRegister extends ServerApi
 
 		return registrationId;
 	}
-
-
-
-
-	/**
-	 * An AsyncTask that will query the Classy Games server.
-	 */
-	private final class ServerApiRegisterTask extends ServerApiTask
-	{
-
-
-		@Override
-		protected void onPostExecute(final String serverResponse)
-		{
-			super.onPostExecute(serverResponse);
-
-			if (Utilities.validString(serverResponse))
-			{
-				listeners.onRegistrationSuccess();
-			}
-			else
-			{
-				listeners.onRegistrationFail();
-			}
-		}
-
-
-	}
-
-
 
 
 }

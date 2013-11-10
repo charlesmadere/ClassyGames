@@ -15,6 +15,7 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Window;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.server.Server;
+import com.charlesmadere.android.classygames.server.ServerApi;
 import com.charlesmadere.android.classygames.server.ServerApiRegister;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
@@ -257,8 +258,9 @@ public final class MainActivity extends BaseActivity implements
 			{
 				Log.i(LOG_TAG, "received valid Facebook identity: \"" + facebookIdentity.toString() + "\"");
 				Utilities.setWhoAmI(activity, facebookIdentity);
+				final Handler handler = new Handler();
 
-				serverApiTask = new ServerApiRegister(activity, false, new ServerApiRegister.RegisterListeners()
+				serverApiTask = new ServerApiRegister(activity, false, new ServerApi.Listeners()
 				{
 					@Override
 					public void onCancel()
@@ -272,7 +274,6 @@ public final class MainActivity extends BaseActivity implements
 						final String name = facebookIdentity.getFirstName();
 						loadingText.setText(getString(R.string.hello_x, name));
 
-						final Handler handler = new Handler();
 						handler.postDelayed(new Runnable()
 						{
 							@Override
@@ -288,21 +289,10 @@ public final class MainActivity extends BaseActivity implements
 					@Override
 					public void onDismiss()
 					{}
-
-
-					@Override
-					public void onRegistrationFail()
-					{}
-
-
-					@Override
-					public void onRegistrationSuccess()
-					{}
 				});
 
 				loadingText.setText(getString(R.string.registering_you_with_our_servers));
 
-				final Handler handler = new Handler();
 				handler.postDelayed(new Runnable()
 				{
 					@Override

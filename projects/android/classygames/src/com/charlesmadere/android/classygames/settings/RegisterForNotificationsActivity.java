@@ -1,14 +1,16 @@
 package com.charlesmadere.android.classygames.settings;
 
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.BaseActivity;
 import com.charlesmadere.android.classygames.R;
+import com.charlesmadere.android.classygames.gcm.GCMManager;
+import com.charlesmadere.android.classygames.server.ServerApi;
 import com.charlesmadere.android.classygames.server.ServerApiRegister;
 
 
@@ -83,28 +85,12 @@ public final class RegisterForNotificationsActivity extends BaseActivity
 
 	private void register()
 	{
-		if (serverApiTask == null)
+		final SherlockActivity activity = this;
+
+		if (GCMManager.checkGooglePlayServices(activity, true) && serverApiTask == null)
 		{
-			final Context context = this;
-
-			serverApiTask = new ServerApiRegister(this, new ServerApiRegister.RegisterListeners()
+			serverApiTask = new ServerApiRegister(this, new ServerApi.Listeners()
 			{
-				@Override
-				public void onRegistrationFail()
-				{
-					Toast.makeText(context, R.string.sorry_but_your_device_is_not_compatible_with_push_notifications, Toast.LENGTH_LONG).show();
-					finish();
-				}
-
-
-				@Override
-				public void onRegistrationSuccess()
-				{
-					Toast.makeText(context, R.string.registration_complete, Toast.LENGTH_SHORT).show();
-					finish();
-				}
-
-
 				@Override
 				public void onCancel()
 				{
@@ -114,7 +100,10 @@ public final class RegisterForNotificationsActivity extends BaseActivity
 
 				@Override
 				public void onComplete(final String serverResponse)
-				{}
+				{
+					Toast.makeText(activity, R.string.registration_complete, Toast.LENGTH_SHORT).show();
+					finish();
+				}
 
 
 				@Override

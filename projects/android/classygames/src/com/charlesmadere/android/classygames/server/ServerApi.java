@@ -146,19 +146,6 @@ public abstract class ServerApi
 
 
 	/**
-	 * Classes that extend from this one can override this method so that they
-	 * can create and use their own ServerApiTask child class.
-	 *
-	 * @return
-	 * Returns a brand new instance of a ServerApiTask class.
-	 */
-	protected ServerApiTask getServerApiTask()
-	{
-		return new ServerApiTask();
-	}
-
-
-	/**
 	 * Cancels the currently running AsyncTask (if it is currently running).
 	 */
 	public void cancel()
@@ -252,7 +239,7 @@ public abstract class ServerApi
 	 */
 	protected void executeTask()
 	{
-		serverApiTask = getServerApiTask();
+		serverApiTask = new ServerApiTask();
 		serverApiTask.execute();
 	}
 
