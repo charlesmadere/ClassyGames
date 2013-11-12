@@ -22,9 +22,9 @@ import java.util.List;
  * was taken from the official Android Documentation.
  * https://developer.android.com/guide/topics/ui/settings.html
  */
-public final class SettingsPreferenceActivity extends BasePreferenceActivity implements
+public final class PreferenceActivity extends BasePreferenceActivity implements
 	GameSettingsFragment.GameSettingsFragmentListeners,
-	SettingsFragmentListeners
+	PreferenceFragmentListeners
 {
 
 
@@ -51,6 +51,7 @@ public final class SettingsPreferenceActivity extends BasePreferenceActivity imp
 		final ListView listView = getListView();
 		listView.setBackgroundResource(R.drawable.bg_bright);
 		listView.setCacheColorHint(getResources().getColor(R.color.cache_color_hint));
+		listView.setSelector(R.drawable.selectable_item);
 
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
 		// Check to see if the running version of Android is below Honeycomb.

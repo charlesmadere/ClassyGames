@@ -14,7 +14,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.Notification;
 import com.charlesmadere.android.classygames.models.Person;
-import com.charlesmadere.android.classygames.settings.SettingsPreferenceActivity;
+import com.charlesmadere.android.classygames.settings.PreferenceActivity;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
@@ -235,7 +235,7 @@ public final class GameFragmentActivity extends BaseFragmentActivity implements
 				break;
 
 			case R.id.game_fragment_activity_menu_settings:
-				final Intent settingsIntent = new Intent(this, SettingsPreferenceActivity.class);
+				final Intent settingsIntent = new Intent(this, PreferenceActivity.class);
 				startActivity(settingsIntent);
 				break;
 

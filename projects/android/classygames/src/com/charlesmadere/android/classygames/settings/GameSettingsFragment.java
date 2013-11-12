@@ -6,11 +6,10 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
-import android.preference.PreferenceFragment;
 import com.charlesmadere.android.classygames.R;
 
 
-public final class GameSettingsFragment extends PreferenceFragment
+public final class GameSettingsFragment extends BasePreferenceFragment
 {
 
 
@@ -107,17 +106,17 @@ public final class GameSettingsFragment extends PreferenceFragment
 	}
 
 
-	private SettingsFragmentListeners settingsListeners;
-
-
+	@Override
+	protected CharSequence getActionBarTitle()
+	{
+		return getString(R.string.game_settings);
+	}
 
 
 	@Override
-	public void onCreate(final Bundle savedInstanceState)
+	protected int getPreferencesResources()
 	{
-		super.onCreate(savedInstanceState);
-		settingsListeners.updateActionBarTitle(R.string.game_settings);
-		addPreferencesFromResource(R.xml.settings_game);
+		return R.xml.settings_game;
 	}
 
 
@@ -125,7 +124,6 @@ public final class GameSettingsFragment extends PreferenceFragment
 	public void onActivityCreated(final Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
-		getView().setBackgroundResource(R.drawable.bg_bright);
 
 		final ListPreference playersCheckersPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_players_checkers_piece_color));
 		final ListPreference opponentsCheckersPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_opponents_checkers_piece_color));
@@ -175,7 +173,6 @@ public final class GameSettingsFragment extends PreferenceFragment
 	{
 		super.onAttach(activity);
 		listeners = (GameSettingsFragmentListeners) activity;
-		settingsListeners = (SettingsFragmentListeners) activity;
 	}
 
 

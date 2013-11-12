@@ -149,7 +149,7 @@
 
 		<activity
 			android:label="@string/settings"
-			android:name=".settings.SettingsPreferenceActivity"
+			android:name=".settings.PreferenceActivity"
 			android:parentActivityName="com.charlesmadere.android.classygames.GameFragmentActivity"
 			android:theme="@style/Theme.Styled">
 			<meta-data

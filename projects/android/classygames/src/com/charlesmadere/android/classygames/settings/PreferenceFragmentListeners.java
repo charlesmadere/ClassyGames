@@ -1,7 +1,7 @@
 package com.charlesmadere.android.classygames.settings;
 
 
-public interface SettingsFragmentListeners
+public interface PreferenceFragmentListeners
 {
 
 
