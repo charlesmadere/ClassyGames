@@ -23,7 +23,7 @@ import java.util.List;
  * https://developer.android.com/guide/topics/ui/settings.html
  */
 public final class PreferenceActivity extends BasePreferenceActivity implements
-	GameSettingsFragment.GameSettingsFragmentListeners,
+	GamePreferenceFragment.GameSettingsFragmentListeners,
 	PreferenceFragmentListeners
 {
 

@@ -9,7 +9,7 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import com.charlesmadere.android.classygames.R;
 
 
-public final class GameSettingsFragment extends BasePreferenceFragment
+public final class GamePreferenceFragment extends BasePreferenceFragment
 {
 
 
