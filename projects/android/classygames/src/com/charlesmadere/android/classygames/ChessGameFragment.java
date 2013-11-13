@@ -6,6 +6,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.widget.Toast;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -432,20 +434,23 @@ public final class ChessGameFragment extends GenericGameFragment
 			if (board.move(previous, current))
 			{
 				flush();
-				getSherlockActivity().supportInvalidateOptionsMenu();
+				final SherlockFragmentActivity activity = getSherlockActivity();
+				activity.supportInvalidateOptionsMenu();
 
-				switch (((Board) board).isBoardInCheckOrCheckmate())
+				final int boardStatus = ((Board) board).isBoardInCheckOrCheckmate();
+
+				switch (boardStatus)
 				{
 					case Board.BOARD_NORMAL:
-						// TODO
+						// doing nothing in this case is fine for now
 						break;
 
 					case Board.BOARD_CHECK:
-						// TODO
+						boardIsInCheck();
 						break;
 
 					case Board.BOARD_CHECKMATE:
-						// TODO
+						boardIsInCheckmate();
 						break;
 				}
 			}
@@ -459,6 +464,22 @@ public final class ChessGameFragment extends GenericGameFragment
 	protected void resumeOldBoard(final JSONObject boardJSON) throws JSONException
 	{
 		board = new Board(boardJSON);
+	}
+
+
+	private void boardIsInCheck()
+	{
+		Toast.makeText(getSherlockActivity(), R.string.check, Toast.LENGTH_LONG).show();
+
+		// TODO
+	}
+
+
+	private void boardIsInCheckmate()
+	{
+		Toast.makeText(getSherlockActivity(), R.string.checkmate, Toast.LENGTH_LONG).show();
+
+		// TODO
 	}
 
 

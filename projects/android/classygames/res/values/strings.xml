@@ -21,10 +21,10 @@
 	<string name="cancelled_loading_your_games_list">Cancelled loading your Games List!</string>
 	<string name="castle">Castle</string>
 	<string name="change_color">Change Color</string>
-	<string name="check">Check</string>
+	<string name="check">Check!</string>
 	<string name="checkers">Checkers</string>
 	<string name="checkers_with_x">Checkers with %s</string>
-	<string name="checkmate">Checkmate</string>
+	<string name="checkmate">Checkmate!</string>
 	<string name="chess">Chess</string>
 	<string name="chess_glossary">Chess Glossary</string>
 	<string name="chess_with_x">Chess with %s</string>
