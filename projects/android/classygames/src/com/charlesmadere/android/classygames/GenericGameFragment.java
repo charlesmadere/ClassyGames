@@ -57,12 +57,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 
 	/**
-	 * The arguments passed in to this Fragment during it's creation.
-	 */
-	private Bundle arguments;
-
-
-	/**
 	 * JSONObject downloaded from the server that represents the board.
 	 */
 	private JSONObject boardJSON;
@@ -204,6 +198,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 	public void onActivityCreated(final Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
+		final Bundle arguments = getArguments();
 
 		if (arguments == null || arguments.isEmpty())
 		// Check the arguments given to this Fragment. This Fragment requires
@@ -347,7 +342,6 @@ public abstract class GenericGameFragment extends SherlockFragment
 	{
 		super.onAttach(activity);
 		listeners = (Listeners) activity;
-		arguments = getArguments();
 	}
 
 
@@ -391,6 +385,7 @@ public abstract class GenericGameFragment extends SherlockFragment
 		// Here we only allow the Skip Move or Forfeit Game Action Bar buttons
 		// to be shown if the game we're displaying in this Fragment has a game
 		// ID.
+		final Bundle arguments = getArguments();
 		final String gameId = arguments.getString(KEY_GAME_ID);
 
 		if (!Utilities.validString(gameId) || !Game.isIdValid(gameId))

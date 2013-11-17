@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.Toast;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -434,8 +433,7 @@ public final class ChessGameFragment extends GenericGameFragment
 			if (board.move(previous, current))
 			{
 				flush();
-				final SherlockFragmentActivity activity = getSherlockActivity();
-				activity.supportInvalidateOptionsMenu();
+				getSherlockActivity().supportInvalidateOptionsMenu();
 
 				final int boardStatus = ((Board) board).isBoardInCheckOrCheckmate();
 
