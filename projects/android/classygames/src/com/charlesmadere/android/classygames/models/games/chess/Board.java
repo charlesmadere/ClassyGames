@@ -7,6 +7,8 @@ import com.charlesmadere.android.classygames.models.games.Position;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.LinkedList;
+
 
 /**
  * Class representing a Chess board. This board is made up of a bunch of
@@ -232,6 +234,65 @@ public final class Board extends GenericBoard
 
 
 	/**
+	 * Searches the game board for the opponent's King piece and then returns
+	 * the Position that he's on. Returns null if the King piece cannot be
+	 * found... but this should never happen.
+	 */
+	private Position findOpponentKing()
+	{
+		for (byte x = 0; x < getLengthHorizontal(); ++x)
+		{
+			for (byte y = 0; y < getLengthVertical(); ++y)
+			{
+				final Position position = getPosition(x, y);
+
+				if (position.hasPiece())
+				{
+					final Piece piece = (Piece) position.getPiece();
+
+					if (piece.isTeamOpponent() && piece.isTypeKing())
+					{
+						return position;
+					}
+				}
+			}
+		}
+
+		return null;
+	}
+
+
+	/**
+	 * Creates a LinkedList of all Board positions that contain a player's
+	 * piece on them.
+	 */
+	private LinkedList<Position> findPlayersPieces()
+	{
+		final LinkedList<Position> playersPieces = new LinkedList<Position>();
+
+		for (byte x = 0; x < getLengthHorizontal(); ++x)
+		{
+			for (byte y = 0; y < getLengthVertical(); ++y)
+			{
+				final Position position = getPosition(x, y);
+
+				if (position.hasPiece())
+				{
+					final Piece piece = (Piece) position.getPiece();
+
+					if (piece.isTeamPlayer())
+					{
+						playersPieces.add(position);
+					}
+				}
+			}
+		}
+
+		return playersPieces;
+	}
+
+
+	/**
 	 * Performs a series of checks on the game board to see if the opponent is
 	 * in check or checkmate. https://en.wikipedia.org/wiki/Check_(chess)
 	 * https://en.wikipedia.org/wiki/Checkmate
@@ -240,10 +301,39 @@ public final class Board extends GenericBoard
 	 * Returns one of this class's BOARD_* bytes depending on the determined
 	 * board condition.
 	 */
-	public int isBoardInCheckOrCheckmate()
+	public byte isBoardInCheckOrCheckmate()
 	{
-		// TODO
-		return BOARD_NORMAL;
+		byte boardStatus = BOARD_NORMAL;
+
+		final Position opponentKingPosition = findOpponentKing();
+		final LinkedList<Position> playersPositions = findPlayersPieces();
+
+		for (final Position position : playersPositions)
+		{
+			switch (position.getPiece().getType())
+			{
+				case Piece.TYPE_BISHOP:
+
+					break;
+
+				case Piece.TYPE_KING:
+					break;
+
+				case Piece.TYPE_KNIGHT:
+					break;
+
+				case Piece.TYPE_PAWN:
+					break;
+
+				case Piece.TYPE_QUEEN:
+					break;
+
+				case Piece.TYPE_ROOK:
+					break;
+			}
+		}
+
+		return boardStatus;
 	}
 
 

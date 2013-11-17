@@ -435,7 +435,7 @@ public final class ChessGameFragment extends GenericGameFragment
 				flush();
 				getSherlockActivity().supportInvalidateOptionsMenu();
 
-				final int boardStatus = ((Board) board).isBoardInCheckOrCheckmate();
+				final byte boardStatus = ((Board) board).isBoardInCheckOrCheckmate();
 
 				switch (boardStatus)
 				{
