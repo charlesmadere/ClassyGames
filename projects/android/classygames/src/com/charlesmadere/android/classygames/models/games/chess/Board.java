@@ -292,6 +292,56 @@ public final class Board extends GenericBoard
 	}
 
 
+	private LinkedList<Position> findSurroundingPositions(final Position positionToCheck)
+	{
+		final LinkedList<Position> surroundingPositions = new LinkedList<Position>();
+		final Coordinate coordinate = positionToCheck.getCoordinate();
+		final int originX = (int) coordinate.getX();
+		final int originY = (int) coordinate.getY();
+
+		// top right
+		addPositionToSurroundingPositionsIfEmpty(surroundingPositions, originX + 1, originY + 1);
+
+		// bottom right
+		addPositionToSurroundingPositionsIfEmpty(surroundingPositions, originX + 1, originY - 1);
+
+		// top left
+		addPositionToSurroundingPositionsIfEmpty(surroundingPositions, originX - 1, originY + 1);
+
+		// bottom left
+		addPositionToSurroundingPositionsIfEmpty(surroundingPositions, originX - 1, originY - 1);
+
+		// right
+		addPositionToSurroundingPositionsIfEmpty(surroundingPositions, originX + 1, originY);
+
+		// left
+		addPositionToSurroundingPositionsIfEmpty(surroundingPositions, originX - 1, originY);
+
+		// top
+		addPositionToSurroundingPositionsIfEmpty(surroundingPositions, originX, originY + 1);
+
+		// bottom
+		addPositionToSurroundingPositionsIfEmpty(surroundingPositions, originX, originY - 1);
+
+		return surroundingPositions;
+	}
+
+
+	private void addPositionToSurroundingPositionsIfEmpty(final LinkedList<Position> surroundingPositions,
+		final int x, final int y)
+	{
+		if (isPositionValid(x, y))
+		{
+			final Position position = getPosition(x, y);
+
+			if (!position.hasPiece())
+			{
+				surroundingPositions.add(position);
+			}
+		}
+	}
+
+
 	/**
 	 * Performs a series of checks on the game board to see if the opponent is
 	 * in check or checkmate. https://en.wikipedia.org/wiki/Check_(chess)
@@ -299,7 +349,8 @@ public final class Board extends GenericBoard
 	 *
 	 * @return
 	 * Returns one of this class's BOARD_* bytes depending on the determined
-	 * board condition.
+	 * board condition. So there are three different values that could be
+	 * returned: BOARD_NORMAL, BOARD_CHECK, or BOARD_CHECKMATE.
 	 */
 	public byte isBoardInCheckOrCheckmate()
 	{
@@ -307,29 +358,135 @@ public final class Board extends GenericBoard
 
 		final Position opponentKingPosition = findOpponentKing();
 		final LinkedList<Position> playersPositions = findPlayersPieces();
+		final int playersPositionsSize = playersPositions.size();
 
-		for (final Position position : playersPositions)
+		for (int i = 0; i < playersPositionsSize; ++i)
 		{
+			final Position position = playersPositions.get(i);
+
 			switch (position.getPiece().getType())
 			{
 				case Piece.TYPE_BISHOP:
-
+					if (isMoveValidBishop(position, opponentKingPosition))
+					{
+						boardStatus = BOARD_CHECK;
+					}
 					break;
 
 				case Piece.TYPE_KING:
+					if (isMoveValidKing(position, opponentKingPosition))
+					{
+						boardStatus = BOARD_CHECK;
+					}
 					break;
 
 				case Piece.TYPE_KNIGHT:
+					if (isMoveValidKnight(position, opponentKingPosition))
+					{
+						boardStatus = BOARD_CHECK;
+					}
 					break;
 
 				case Piece.TYPE_PAWN:
+					if (isMoveValidPawn(position, opponentKingPosition))
+					{
+						boardStatus = BOARD_CHECK;
+					}
 					break;
 
 				case Piece.TYPE_QUEEN:
+					if (isMoveValidQueen(position, opponentKingPosition))
+					{
+						boardStatus = BOARD_CHECK;
+					}
 					break;
 
 				case Piece.TYPE_ROOK:
+					if (isMoveValidRook(position, opponentKingPosition))
+					{
+						boardStatus = BOARD_CHECK;
+					}
 					break;
+			}
+
+			if (boardStatus == BOARD_CHECK)
+			{
+				i = playersPositionsSize;
+			}
+		}
+
+		if (boardStatus == BOARD_CHECK)
+		{
+			final LinkedList<Position> surroundingPositions = findSurroundingPositions(opponentKingPosition);
+
+			if (surroundingPositions == null || surroundingPositions.isEmpty())
+			{
+				boardStatus = BOARD_CHECKMATE;
+			}
+			else
+			{
+				final int surroundingPositionsSize = surroundingPositions.size();
+
+				for (int i = 0; i < surroundingPositionsSize; ++i)
+				{
+					final Position position = surroundingPositions.get(i);
+
+					for (int j = 0; j < playersPositionsSize; ++j)
+					{
+						final Position playerPosition = playersPositions.get(j);
+
+						switch (position.getPiece().getType())
+						{
+							case Piece.TYPE_BISHOP:
+								if (isMoveValidBishop(playerPosition, opponentKingPosition))
+								{
+									boardStatus = BOARD_CHECKMATE;
+								}
+								break;
+
+							case Piece.TYPE_KING:
+								if (isMoveValidKing(playerPosition, opponentKingPosition))
+								{
+									boardStatus = BOARD_CHECKMATE;
+								}
+								break;
+
+							case Piece.TYPE_KNIGHT:
+								if (isMoveValidKnight(playerPosition, opponentKingPosition))
+								{
+									boardStatus = BOARD_CHECKMATE;
+								}
+								break;
+
+							case Piece.TYPE_PAWN:
+								if (isMoveValidPawn(playerPosition, opponentKingPosition))
+								{
+									boardStatus = BOARD_CHECKMATE;
+								}
+								break;
+
+							case Piece.TYPE_QUEEN:
+								if (isMoveValidQueen(playerPosition, opponentKingPosition))
+								{
+									boardStatus = BOARD_CHECKMATE;
+								}
+								break;
+
+							case Piece.TYPE_ROOK:
+								if (isMoveValidRook(playerPosition, opponentKingPosition))
+								{
+									boardStatus = BOARD_CHECKMATE;
+								}
+								break;
+						}
+
+						if (boardStatus == BOARD_CHECKMATE)
+						{
+							j = playersPositionsSize;
+							i = surroundingPositionsSize;
+						}
+					}
+				}
 			}
 		}
 
