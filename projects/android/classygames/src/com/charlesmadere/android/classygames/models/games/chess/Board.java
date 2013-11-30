@@ -3,6 +3,7 @@ package com.charlesmadere.android.classygames.models.games.chess;
 
 import com.charlesmadere.android.classygames.models.games.Coordinate;
 import com.charlesmadere.android.classygames.models.games.GenericBoard;
+import com.charlesmadere.android.classygames.models.games.GenericPiece;
 import com.charlesmadere.android.classygames.models.games.Position;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -209,6 +210,21 @@ public final class Board extends GenericBoard
 	}
 
 
+	private void addPositionToSurroundingPositionsIfEmpty(final LinkedList<Position> surroundingPositions,
+		final int x, final int y)
+	{
+		if (isPositionValid(x, y))
+		{
+			final Position position = getPosition(x, y);
+
+			if (!position.hasPiece() || position.getPiece().isTeamOpponent())
+			{
+				surroundingPositions.add(position);
+			}
+		}
+	}
+
+
 	/**
 	 * Performs a check to see if the user can perform a castle. Note this move
 	 * can only be performed once per game. More on the castle technique can be
@@ -263,12 +279,40 @@ public final class Board extends GenericBoard
 
 
 	/**
+	 * Creates a LinkedList of all Board positions that contain an opponent's
+	 * piece on them. This method will never return null! (But it may return an
+	 * empty LinkedList.)
+	 */
+	private LinkedList<Position> findOpponentsPieces()
+	{
+		return findTeamsPieces(GenericPiece.TEAM_OPPONENT);
+	}
+
+
+	/**
 	 * Creates a LinkedList of all Board positions that contain a player's
-	 * piece on them.
+	 * piece on them. This method will never return null! (But it may return an
+	 * empty LinkedList.)
 	 */
 	private LinkedList<Position> findPlayersPieces()
 	{
-		final LinkedList<Position> playersPieces = new LinkedList<Position>();
+		return findTeamsPieces(GenericPiece.TEAM_PLAYER);
+	}
+
+
+	/**
+	 * Creates a LinkedList of all Board positions
+	 *
+	 * @param whichTeam
+	 * The team to build the LinkedList of pieces for.
+	 *
+	 * @return
+	 * Returns a LinkedList of all of the Pieces belonging to the given team.
+	 * This variable is never null! (But it may be empty.)
+	 */
+	private LinkedList<Position> findTeamsPieces(final byte whichTeam)
+	{
+		final LinkedList<Position> teamsPieces = new LinkedList<Position>();
 
 		for (byte x = 0; x < getLengthHorizontal(); ++x)
 		{
@@ -280,18 +324,26 @@ public final class Board extends GenericBoard
 				{
 					final Piece piece = (Piece) position.getPiece();
 
-					if (piece.isTeamPlayer())
+					if (piece.isTeam(whichTeam))
 					{
-						playersPieces.add(position);
+						teamsPieces.add(position);
 					}
 				}
 			}
 		}
 
-		return playersPieces;
+		return teamsPieces;
 	}
 
 
+	/**
+	 * Builds a LinkedList of Positions surrounding the given Position that are
+	 * either empty or have an enemy Piece on them.
+	 *
+	 * @return
+	 * Returns a LinkedList of Positions that fulfill the above requirement,
+	 * will never return null (but could return an empty LinkedList).
+	 */
 	private LinkedList<Position> findSurroundingPositions(final Position positionToCheck)
 	{
 		final LinkedList<Position> surroundingPositions = new LinkedList<Position>();
@@ -327,21 +379,6 @@ public final class Board extends GenericBoard
 	}
 
 
-	private void addPositionToSurroundingPositionsIfEmpty(final LinkedList<Position> surroundingPositions,
-		final int x, final int y)
-	{
-		if (isPositionValid(x, y))
-		{
-			final Position position = getPosition(x, y);
-
-			if (!position.hasPiece())
-			{
-				surroundingPositions.add(position);
-			}
-		}
-	}
-
-
 	/**
 	 * Performs a series of checks on the game board to see if the opponent is
 	 * in check or checkmate. https://en.wikipedia.org/wiki/Check_(chess)
@@ -358,133 +395,90 @@ public final class Board extends GenericBoard
 
 		final Position opponentKingPosition = findOpponentKing();
 		final LinkedList<Position> playersPositions = findPlayersPieces();
-		final int playersPositionsSize = playersPositions.size();
+		final LinkedList<Position> playerPositionsThatCanHit = new LinkedList<Position>();
 
-		for (int i = 0; i < playersPositionsSize; ++i)
+		for (final Position position : playersPositions)
 		{
-			final Position position = playersPositions.get(i);
+			boolean canHit = false;
 
 			switch (position.getPiece().getType())
 			{
 				case Piece.TYPE_BISHOP:
-					if (isMoveValidBishop(position, opponentKingPosition))
-					{
-						boardStatus = BOARD_CHECK;
-					}
+					canHit = isMoveValidBishop(position, opponentKingPosition);
 					break;
 
 				case Piece.TYPE_KING:
-					if (isMoveValidKing(position, opponentKingPosition))
-					{
-						boardStatus = BOARD_CHECK;
-					}
+					canHit = isMoveValidKing(position, opponentKingPosition);
 					break;
 
 				case Piece.TYPE_KNIGHT:
-					if (isMoveValidKnight(position, opponentKingPosition))
-					{
-						boardStatus = BOARD_CHECK;
-					}
+					canHit = isMoveValidKnight(position, opponentKingPosition);
 					break;
 
 				case Piece.TYPE_PAWN:
-					if (isMoveValidPawn(position, opponentKingPosition))
-					{
-						boardStatus = BOARD_CHECK;
-					}
+					canHit = isMoveValidPawn(position, opponentKingPosition);
 					break;
 
 				case Piece.TYPE_QUEEN:
-					if (isMoveValidQueen(position, opponentKingPosition))
-					{
-						boardStatus = BOARD_CHECK;
-					}
+					canHit = isMoveValidQueen(position, opponentKingPosition);
 					break;
 
 				case Piece.TYPE_ROOK:
-					if (isMoveValidRook(position, opponentKingPosition))
-					{
-						boardStatus = BOARD_CHECK;
-					}
+					canHit = isMoveValidRook(position, opponentKingPosition);
 					break;
 			}
 
-			if (boardStatus == BOARD_CHECK)
+			if (canHit)
 			{
-				i = playersPositionsSize;
+				playerPositionsThatCanHit.add(position);
 			}
 		}
 
-		if (boardStatus == BOARD_CHECK)
+		if (playerPositionsThatCanHit.isEmpty())
 		{
-			final LinkedList<Position> surroundingPositions = findSurroundingPositions(opponentKingPosition);
+			boardStatus = BOARD_NORMAL;
+		}
+		else
+		{
+			final LinkedList<Position> opponentsPositions = findOpponentsPieces();
 
-			if (surroundingPositions == null || surroundingPositions.isEmpty())
+			for (final Position position : opponentsPositions)
 			{
-				boardStatus = BOARD_CHECKMATE;
-			}
-			else
-			{
-				final int surroundingPositionsSize = surroundingPositions.size();
-
-				for (int i = 0; i < surroundingPositionsSize; ++i)
+				for (int i = 0; i < playersPositions.size(); ++i)
 				{
-					final Position position = surroundingPositions.get(i);
+					final Position playersPosition = playersPositions.get(i);
+					boolean canHit = false;
 
-					for (int j = 0; j < playersPositionsSize; ++j)
+					switch (position.getPiece().getType())
 					{
-						final Position playerPosition = playersPositions.get(j);
+						case Piece.TYPE_BISHOP:
+							canHit = isMoveValidBishop(position, playersPosition);
+							break;
 
-						switch (position.getPiece().getType())
-						{
-							case Piece.TYPE_BISHOP:
-								if (isMoveValidBishop(playerPosition, opponentKingPosition))
-								{
-									boardStatus = BOARD_CHECKMATE;
-								}
-								break;
+						case Piece.TYPE_KING:
+							canHit = isMoveValidKing(position, playersPosition);
+							break;
 
-							case Piece.TYPE_KING:
-								if (isMoveValidKing(playerPosition, opponentKingPosition))
-								{
-									boardStatus = BOARD_CHECKMATE;
-								}
-								break;
+						case Piece.TYPE_KNIGHT:
+							canHit = isMoveValidKnight(position, playersPosition);
+							break;
 
-							case Piece.TYPE_KNIGHT:
-								if (isMoveValidKnight(playerPosition, opponentKingPosition))
-								{
-									boardStatus = BOARD_CHECKMATE;
-								}
-								break;
+						case Piece.TYPE_PAWN:
+							canHit = isMoveValidPawn(position, playersPosition);
+							break;
 
-							case Piece.TYPE_PAWN:
-								if (isMoveValidPawn(playerPosition, opponentKingPosition))
-								{
-									boardStatus = BOARD_CHECKMATE;
-								}
-								break;
+						case Piece.TYPE_QUEEN:
+							canHit = isMoveValidQueen(position, playersPosition);
+							break;
 
-							case Piece.TYPE_QUEEN:
-								if (isMoveValidQueen(playerPosition, opponentKingPosition))
-								{
-									boardStatus = BOARD_CHECKMATE;
-								}
-								break;
+						case Piece.TYPE_ROOK:
+							canHit = isMoveValidRook(position, playersPosition);
+							break;
+					}
 
-							case Piece.TYPE_ROOK:
-								if (isMoveValidRook(playerPosition, opponentKingPosition))
-								{
-									boardStatus = BOARD_CHECKMATE;
-								}
-								break;
-						}
-
-						if (boardStatus == BOARD_CHECKMATE)
-						{
-							j = playersPositionsSize;
-							i = surroundingPositionsSize;
-						}
+					if (canHit)
+					{
+						playersPositions.remove(i);
 					}
 				}
 			}
