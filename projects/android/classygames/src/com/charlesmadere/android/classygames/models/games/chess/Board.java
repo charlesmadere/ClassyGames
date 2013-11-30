@@ -452,27 +452,27 @@ public final class Board extends GenericBoard
 					switch (position.getPiece().getType())
 					{
 						case Piece.TYPE_BISHOP:
-							canHit = isMoveValidBishop(position, playersPosition);
+							canHit = isMoveValidBishop(position, playersPosition, GenericPiece.TEAM_PLAYER);
 							break;
 
 						case Piece.TYPE_KING:
-							canHit = isMoveValidKing(position, playersPosition);
+							canHit = isMoveValidKing(position, playersPosition, GenericPiece.TEAM_PLAYER);
 							break;
 
 						case Piece.TYPE_KNIGHT:
-							canHit = isMoveValidKnight(position, playersPosition);
+							canHit = isMoveValidKnight(position, playersPosition, GenericPiece.TEAM_PLAYER);
 							break;
 
 						case Piece.TYPE_PAWN:
-							canHit = isMoveValidPawn(position, playersPosition);
+							canHit = isMoveValidPawn(position, playersPosition, GenericPiece.TEAM_PLAYER);
 							break;
 
 						case Piece.TYPE_QUEEN:
-							canHit = isMoveValidQueen(position, playersPosition);
+							canHit = isMoveValidQueen(position, playersPosition, GenericPiece.TEAM_PLAYER);
 							break;
 
 						case Piece.TYPE_ROOK:
-							canHit = isMoveValidRook(position, playersPosition);
+							canHit = isMoveValidRook(position, playersPosition, GenericPiece.TEAM_PLAYER);
 							break;
 					}
 
@@ -490,6 +490,12 @@ public final class Board extends GenericBoard
 
 	private boolean isMoveValidBishop(final Position previous, final Position current)
 	{
+		return isMoveValidBishop(previous, current, GenericPiece.TEAM_OPPONENT);
+	}
+
+
+	private boolean isMoveValidBishop(final Position previous, final Position current, final byte whichTeam)
+	{
 		final Coordinate start = previous.getCoordinate();
 		final int startX = (int) start.getX();
 		final int startY = (int) start.getY();
@@ -506,7 +512,7 @@ public final class Board extends GenericBoard
 			{
 				final Piece piece = (Piece) current.getPiece();
 
-				if (piece.isTeamOpponent() && !piece.isTypeKing())
+				if (piece.isTeam(whichTeam) && !piece.isTypeKing())
 				{
 					isMoveValid = true;
 				}
@@ -522,6 +528,12 @@ public final class Board extends GenericBoard
 
 
 	private boolean isMoveValidKing(final Position previous, final Position current)
+	{
+		return isMoveValidKing(previous, current, GenericPiece.TEAM_OPPONENT);
+	}
+
+
+	private boolean isMoveValidKing(final Position previous, final Position current, final byte whichTeam)
 	{
 		final Coordinate start = previous.getCoordinate();
 		final int startX = (int) start.getX();
@@ -540,7 +552,7 @@ public final class Board extends GenericBoard
 			{
 				final Piece piece = (Piece) current.getPiece();
 
-				if (piece.isTeamOpponent() && !piece.isTypeKing())
+				if (piece.isTeam(whichTeam) && !piece.isTypeKing())
 				{
 					isMoveValid = true;
 				}
@@ -556,6 +568,12 @@ public final class Board extends GenericBoard
 
 
 	private boolean isMoveValidKnight(final Position previous, final Position current)
+	{
+		return isMoveValidKnight(previous, current, GenericPiece.TEAM_OPPONENT);
+	}
+
+
+	private boolean isMoveValidKnight(final Position previous, final Position current, final byte whichTeam)
 	{
 		final Coordinate start = previous.getCoordinate();
 		final int startX = (int) start.getX();
@@ -573,7 +591,7 @@ public final class Board extends GenericBoard
 			{
 				final Piece piece = (Piece) current.getPiece();
 
-				if (piece.isTeamOpponent() && !piece.isTypeKing())
+				if (piece.isTeam(whichTeam) && !piece.isTypeKing())
 				{
 					isMoveValid = true;
 				}
@@ -589,6 +607,12 @@ public final class Board extends GenericBoard
 
 
 	private boolean isMoveValidPawn(final Position previous, final Position current)
+	{
+		return isMoveValidPawn(previous, current, GenericPiece.TEAM_OPPONENT);
+	}
+
+
+	private boolean isMoveValidPawn(final Position previous, final Position current, final byte whichTeam)
 	{
 		final Coordinate start = previous.getCoordinate();
 		final int startX = (int) start.getX();
@@ -618,7 +642,7 @@ public final class Board extends GenericBoard
 				{
 					final Piece p = (Piece) current.getPiece();
 
-					if (p.isTeamOpponent() && !p.isTypeKing())
+					if (p.isTeam(whichTeam) && !p.isTypeKing())
 					{
 						isMoveValid = true;
 					}
@@ -632,11 +656,23 @@ public final class Board extends GenericBoard
 
 	private boolean isMoveValidQueen(final Position previous, final Position current)
 	{
-		return isMoveValidBishop(previous, current) || isMoveValidRook(previous, current);
+		return isMoveValidQueen(previous, current, GenericPiece.TEAM_OPPONENT);
+	}
+
+
+	private boolean isMoveValidQueen(final Position previous, final Position current, final byte whichTeam)
+	{
+		return isMoveValidBishop(previous, current, whichTeam) || isMoveValidRook(previous, current, whichTeam);
 	}
 
 
 	private boolean isMoveValidRook(final Position previous, final Position current)
+	{
+		return isMoveValidRook(previous, current, GenericPiece.TEAM_OPPONENT);
+	}
+
+
+	private boolean isMoveValidRook(final Position previous, final Position current, final byte whichTeam)
 	{
 		final Coordinate start = previous.getCoordinate();
 		final int startX = (int) start.getX();
@@ -654,7 +690,7 @@ public final class Board extends GenericBoard
 			{
 				final Piece piece = (Piece) current.getPiece();
 
-				if (piece.isTeamOpponent() && !piece.isTypeKing())
+				if (piece.isTeam(whichTeam) && !piece.isTypeKing())
 				{
 					isMoveValid = true;
 				}
