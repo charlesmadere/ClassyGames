@@ -398,6 +398,7 @@ public final class Board extends GenericBoard
 		final LinkedList<Position> playerPositionsThatCanHit = new LinkedList<Position>();
 
 		for (final Position position : playersPositions)
+		// Finds all of the player's pieces that can hit the opponent's King.
 		{
 			boolean canHit = false;
 
@@ -434,20 +435,24 @@ public final class Board extends GenericBoard
 			}
 		}
 
-		if (playerPositionsThatCanHit.isEmpty())
+		if (!playerPositionsThatCanHit.isEmpty())
+		// There are player pieces that can hit the opponent's King, so we're
+		// gonna do some further checking to see whether or not the opponent's
+		// King is in check or checkmate.
 		{
-			boardStatus = BOARD_NORMAL;
-		}
-		else
-		{
+			// build a LinkedList of all of the Positions that have opponent
+			// Pieces on them
 			final LinkedList<Position> opponentsPositions = findOpponentsPieces();
 
 			for (final Position position : opponentsPositions)
 			{
-				for (int i = 0; i < playersPositions.size(); ++i)
+				for (int i = 0; i < playersPositions.size(); )
 				{
 					final Position playersPosition = playersPositions.get(i);
 					boolean canHit = false;
+
+					// Loop through all of the players pieces that can hit the
+					// opponent King and see if the enemy team's pieces
 
 					switch (position.getPiece().getType())
 					{
@@ -480,7 +485,19 @@ public final class Board extends GenericBoard
 					{
 						playersPositions.remove(i);
 					}
+					else
+					{
+						++i;
+					}
 				}
+			}
+
+			if (!playersPositions.isEmpty())
+			{
+				// TODO
+				// there are player pieces that can hit the king, check if
+				// there are any enemy pieces that can hit these players
+
 			}
 		}
 
