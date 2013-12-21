@@ -6,7 +6,7 @@
 
 	<!--
 		SDK version 8 is Android v2.2 (Froyo)
-		SDK version 18 is Android v4.4 (KitKat)
+		SDK version 19 is Android v4.4 (KitKat)
 		Check out the Android API Levels website for more information on this topic:
 		https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels
 	-->
