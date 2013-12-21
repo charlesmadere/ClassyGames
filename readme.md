@@ -53,13 +53,24 @@ This new IDE is probably gonna be really cool (at the very least way better than
 ## Changelog ##
 ### Versioning Explained ###
 + vX.0.0.0 This would be massive release that includes many big new features.
-+ v0.X.0.0 This would be a pretty decent update. Maybe nothing huge in terms of new features, but definitely some nice updates.
++ v0.X.0.0 This would be a pretty decent update. Maybe nothing huge in terms of new features, but definitely some nice changes.
 + v0.0.X.0 This would be a relatively small update. Maybe one or two new features or tweaks; some may be completely unnoticeable by the user.
 + v0.0.0.X This would be a bug fix release.
 
 
 ## Classy Games v2.0 ##
 Classy Games v2.0 was released on **BLAH BLAH**. It features chess! You can now, with just one app, play both checkers and chess against your friends!
+
+
+## Classy Games v.1.7 ##
+Classy Games v1.7 was released on December 21st, 2013.
+
+1. New notification system for compatible devices (Android v4.1 - Jelly Bean - and up).
+2. New launcher icon!
+3. New checkers pieces!
+4. Game board no longer squeezes / enlarges itself when loading a game.
+5. Major library updates
+6. KitKat `PreferenceActivity` fixes
 
 
 ## Classy Games v1.6 ##
