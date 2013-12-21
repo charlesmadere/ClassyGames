@@ -356,7 +356,9 @@ public abstract class GenericGameFragment extends SherlockFragment
 
 		if (listeners.isDeviceSmall())
 		{
-			menu.removeItem(R.id.game_fragment_activity_menu_my_stats);
+			// TODO
+			// uncomment this for 2.0!
+			// menu.removeItem(R.id.game_fragment_activity_menu_my_stats);
 			menu.removeItem(R.id.game_fragment_activity_menu_new_game);
 		}
 

@@ -216,13 +216,13 @@ public final class GameFragmentActivity extends BaseFragmentActivity implements
 				onBackPressed();
 				break;
 
-			case R.id.game_fragment_activity_menu_my_stats:
-				final FragmentManager fManager = getSupportFragmentManager();
-				final FragmentTransaction fTransaction = fManager.beginTransaction();
-				fTransaction.addToBackStack(null);
-				myStatsDialogFragment = new MyStatsDialogFragment();
-				myStatsDialogFragment.show(fTransaction, null);
-				break;
+//			case R.id.game_fragment_activity_menu_my_stats:
+//				final FragmentManager fManager = getSupportFragmentManager();
+//				final FragmentTransaction fTransaction = fManager.beginTransaction();
+//				fTransaction.addToBackStack(null);
+//				myStatsDialogFragment = new MyStatsDialogFragment();
+//				myStatsDialogFragment.show(fTransaction, null);
+//				break;
 
 			case R.id.game_fragment_activity_menu_new_game:
 				if (isDeviceLarge() && genericGameFragment != null && genericGameFragment.isVisible())
