@@ -3,31 +3,26 @@ package com.charlesmadere.android.classygames;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+import android.util.Log;
+import android.widget.Toast;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
-public class NewGameFragmentActivity extends SherlockFragmentActivity implements
-	ConfirmGameFragment.ConfirmGameFragmentListeners,
-	FriendsListFragment.FriendsListFragmentListeners
+public final class NewGameFragmentActivity extends BaseFragmentActivity implements
+	ConfirmGameFragment.Listeners,
+	FriendsListFragment.Listeners
 {
 
 
-	public final static int RESULT_CODE_DEFAULT = 0;
-	public final static int RESULT_CODE_FRIEND_SELECTED = GameFragmentActivity.NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FRIEND_SELECTED;
-
-
-	public final static String BUNDLE_FRIEND_ID = "BUNDLE_FRIEND_ID";
-	public final static String BUNDLE_FRIEND_NAME = "BUNDLE_FRIEND_NAME";
-	public final static String BUNDLE_WHICH_GAME = "BUNDLE_WHICH_GAME";
-
-
-
+	private final static String LOG_TAG = Utilities.LOG_TAG + " - NewGameFragmentActivity";
+	public final static String KEY_FRIEND = "KEY_FRIEND";
+	public final static String KEY_WHICH_GAME = "KEY_WHICH_GAME";
 
 	private ConfirmGameFragment confirmGameFragment;
 	private EmptyConfirmGameFragment emptyConfirmGameFragment;
@@ -38,11 +33,12 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState)
+	// To follow along with what's going on in this crazy method, please check
+	// the onCreate() that's in the GameFragmentActivity class. It's better
+	// documented in there!
 	{
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState, R.string.friends_list, true);
 		setContentView(R.layout.new_game_fragment_activity);
-		Utilities.setActionBar(this, R.string.friends_list, true);
-		setResult(RESULT_CODE_DEFAULT);
 
 		final FragmentManager fManager = getSupportFragmentManager();
 
@@ -54,7 +50,6 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 			{
 				emptyConfirmGameFragment = new EmptyConfirmGameFragment();
 				fTransaction.add(R.id.new_game_fragment_activity_fragment_confirm_game, emptyConfirmGameFragment);
-
 				friendsListFragment = (FriendsListFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_fragment_friends_list_fragment);
 			}
 			else
@@ -69,26 +64,29 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 		{
 			if (isDeviceLarge())
 			{
-				try
-				{
-					emptyConfirmGameFragment = (EmptyConfirmGameFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_fragment_confirm_game);
-				}
-				catch (final ClassCastException e)
-				{
-					confirmGameFragment = (ConfirmGameFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_fragment_confirm_game);
-				}
-
 				friendsListFragment = (FriendsListFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_fragment_friends_list_fragment);
+				final Fragment fragment = fManager.findFragmentById(R.id.new_game_fragment_activity_fragment_confirm_game);
+
+				if (fragment instanceof EmptyConfirmGameFragment)
+				{
+					emptyConfirmGameFragment = (EmptyConfirmGameFragment) fragment;
+				}
+				else
+				{
+					confirmGameFragment = (ConfirmGameFragment) fragment;
+				}
 			}
 			else
 			{
-				try
+				final Fragment fragment = fManager.findFragmentById(R.id.new_game_fragment_activity_container);
+
+				if (fragment instanceof FriendsListFragment)
 				{
-					friendsListFragment = (FriendsListFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_container);
+					friendsListFragment = (FriendsListFragment) fragment;
 				}
-				catch (final ClassCastException e)
+				else
 				{
-					confirmGameFragment = (ConfirmGameFragment) fManager.findFragmentById(R.id.new_game_fragment_activity_container);
+					confirmGameFragment = (ConfirmGameFragment) fragment;
 				}
 			}
 		}
@@ -98,26 +96,10 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	public void onBackPressed()
 	{
-		if (friendsListFragment != null && friendsListFragment.isAnAsyncTaskRunning())
-		{
-			friendsListFragment.cancelRunningAnyAsyncTask();
-		}
-		else
+		if (friendsListFragment != null && !friendsListFragment.onBackPressed())
 		{
 			super.onBackPressed();
 		}
-	}
-
-
-	@Override
-	protected void onDestroy()
-	{
-		if (friendsListFragment != null)
-		{
-			friendsListFragment.cancelRunningAnyAsyncTask();
-		}
-
-		super.onDestroy();
 	}
 
 
@@ -164,25 +146,24 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 
 
 	@Override
-	public void onDataError()
+	public void onGameConfirm(final Person friend, final byte whichGame)
 	{
-		Utilities.easyToastAndLogError(this, getString(R.string.error_when_trying_to_store_the_data_for_the_friend_that_you_selected));
-		onBackPressed();
-	}
+		if (friend.isValid() && Game.isWhichGameValid(whichGame))
+		{
+			final Intent intent = new Intent()
+				.putExtra(KEY_FRIEND, friend)
+				.putExtra(KEY_WHICH_GAME, whichGame);
 
+			setResult(RESULT_OK, intent);
+		}
+		else
+		{
+			Log.e(LOG_TAG, "Received malformed onGameConfirm data: Person name: \"" + friend.getName() +
+				"\" Person id: " + friend.getId() + " whichGame: " + whichGame);
 
-	@Override
-	public void onGameConfirm(final Person friend)
-	{
-		final Bundle extras = new Bundle();
-		extras.putLong(BUNDLE_FRIEND_ID, friend.getId());
-		extras.putString(BUNDLE_FRIEND_NAME, friend.getName());
-		extras.putByte(BUNDLE_WHICH_GAME, Game.WHICH_GAME_CHECKERS);
+			Toast.makeText(this, R.string.couldnt_create_the_game_as_malformed_data_was_detected, Toast.LENGTH_LONG).show();
+		}
 
-		final Intent intent = new Intent();
-		intent.putExtras(extras);
-
-		setResult(RESULT_CODE_FRIEND_SELECTED, intent);
 		finish();
 	}
 
@@ -204,13 +185,7 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 				onBackPressed();
 			}
 
-			final Bundle arguments = new Bundle();
-			arguments.putLong(ConfirmGameFragment.BUNDLE_FRIEND_ID, friend.getId());
-			arguments.putString(ConfirmGameFragment.BUNDLE_FRIEND_NAME, friend.getName());
-
-			confirmGameFragment = new ConfirmGameFragment();
-			confirmGameFragment.setArguments(arguments);
-
+			confirmGameFragment = ConfirmGameFragment.newInstance(friend);
 			final FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
 			fTransaction.addToBackStack(null);
 
@@ -220,6 +195,7 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 			}
 			else
 			{
+				fTransaction.setCustomAnimations(R.anim.slide_in, R.anim.slide_out, R.anim.slide_in_popped, R.anim.slide_out_popped);
 				fTransaction.add(R.id.new_game_fragment_activity_container, confirmGameFragment);
 			}
 
@@ -235,8 +211,6 @@ public class NewGameFragmentActivity extends SherlockFragmentActivity implements
 		{
 			onBackPressed();
 		}
-
-		friendsListFragment.refreshFriendsList();
 	}
 
 

@@ -2,11 +2,13 @@ package com.charlesmadere.android.classygames;
 
 
 import android.app.Activity;
-import android.content.Context;
+import android.app.AlertDialog;
+import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,21 +16,27 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
-import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 
-public class ConfirmGameFragment extends SherlockFragment
+public final class ConfirmGameFragment extends SherlockFragment
 {
 
 
-	public final static String BUNDLE_FRIEND_ID = "BUNDLE_FRIEND_ID";
-	public final static String BUNDLE_FRIEND_NAME = "BUNDLE_FRIEND_NAME";
+	private final static String KEY_FRIEND = "KEY_FRIEND";
 
 
+
+
+	/**
+	 * The AlertDialog that is shown whenever the user decides to play a game
+	 * against the chosen friend. This AlertDialog asks the user to choose
+	 * which game they want to play.
+	 */
+	private AlertDialog alertDialog;
 
 
 	/**
@@ -42,15 +50,15 @@ public class ConfirmGameFragment extends SherlockFragment
 
 	/**
 	 * Object that allows us to run any of the methods that are defined in the
-	 * ConfirmGameFragmentListeners interface.
+	 * Listeners interface.
 	 */
-	private ConfirmGameFragmentListeners listeners;
+	private Listeners listeners;
 
 
 	/**
 	 * A bunch of listener methods for this Fragment.
 	 */
-	public interface ConfirmGameFragmentListeners
+	public interface Listeners
 	{
 
 
@@ -66,21 +74,18 @@ public class ConfirmGameFragment extends SherlockFragment
 
 
 		/**
-		 * This is fired in the event that an error was detected with some of
-		 * the data needed to instantiate a game.
-		 */
-		public void onDataError();
-
-
-		/**
 		 * This is fired in the event that the current device's user clicks the
 		 * "Start Game!" button. This means that they've decided to play a game
 		 * against the chosen friend.
 		 * 
 		 * @param friend
 		 * The Facebook friend that the user has decided to play against.
+		 *
+		 * @param whichGame
+		 * Which game that the user decided to play. This could be checkers,
+		 * chess...
 		 */
-		public void onGameConfirm(final Person friend);
+		public void onGameConfirm(final Person friend, final byte whichGame);
 
 
 		/**
@@ -91,6 +96,20 @@ public class ConfirmGameFragment extends SherlockFragment
 		public void onGameDeny();
 
 
+	}
+
+
+
+
+	public static ConfirmGameFragment newInstance(final Person friend)
+	{
+		final Bundle arguments = new Bundle();
+		arguments.putSerializable(KEY_FRIEND, friend);
+
+		final ConfirmGameFragment fragment = new ConfirmGameFragment();
+		fragment.setArguments(arguments);
+
+		return fragment;
 	}
 
 
@@ -107,26 +126,7 @@ public class ConfirmGameFragment extends SherlockFragment
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{
-		View view = inflater.inflate(R.layout.confirm_game_fragment, null);
-
-		final Bundle arguments = getArguments();
-
-		if (arguments != null && !arguments.isEmpty())
-		{
-			final long friendId = arguments.getLong(BUNDLE_FRIEND_ID);
-			final String friendName = arguments.getString(BUNDLE_FRIEND_NAME);
-
-			if (Person.isIdAndNameValid(friendId, friendName))
-			{
-				friend = new Person(friendId, friendName);
-			}
-			else
-			{
-				listeners.onDataError();
-			}
-		}
-
-		return view;
+		return inflater.inflate(R.layout.confirm_game_fragment, null);
 	}
 
 
@@ -135,29 +135,32 @@ public class ConfirmGameFragment extends SherlockFragment
 	{
 		super.onActivityCreated(savedInstanceState);
 
-		final View view = getView();
+		final Bundle arguments = getArguments();
+		friend = (Person) arguments.getSerializable(KEY_FRIEND);
 
-		final TextView friendName = (TextView) view.findViewById(R.id.confirm_game_fragment_friend_name);
-		friendName.setText(friend.getName());
-		friendName.setTypeface(TypefaceUtilities.getTypeface(getSherlockActivity().getAssets(), TypefaceUtilities.SNELL_ROUNDHAND_BDSCR));
+		final View view = getView();
+		final TextView friendsName = (TextView) view.findViewById(R.id.confirm_game_fragment_friend_name);
+		friendsName.setText(friend.getName());
 
 		final TextView description = (TextView) view.findViewById(R.id.confirm_game_fragment_description);
 		description.setText(getString(R.string.are_you_sure_that_you_want_to_start_a_game_with_x, friend.getName()));
 
-		final Button buttonConfirm = (Button) view.findViewById(R.id.confirm_game_fragment_button_confirm);
-		buttonConfirm.setTypeface(TypefaceUtilities.getTypeface(getSherlockActivity().getAssets(), TypefaceUtilities.BLUE_HIGHWAY_D));
-		buttonConfirm.setOnClickListener(new OnClickListener()
+		final Button confirm = (Button) view.findViewById(R.id.confirm_game_fragment_button_confirm);
+		confirm.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(final View v)
 			{
-				listeners.onGameConfirm(friend);
+				// TODO
+				// uncomment this and then delete the line below when chess is complete
+				// getAlertDialog().show();
+
+				listeners.onGameConfirm(friend, Game.WHICH_GAME_CHECKERS);
 			}
 		});
 
-		final Button buttonDeny = (Button) view.findViewById(R.id.confirm_game_fragment_button_deny);
-		buttonDeny.setTypeface(TypefaceUtilities.getTypeface(getSherlockActivity().getAssets(), TypefaceUtilities.BLUE_HIGHWAY_D));
-		buttonDeny.setOnClickListener(new OnClickListener()
+		final Button deny = (Button) view.findViewById(R.id.confirm_game_fragment_button_deny);
+		deny.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(final View v)
@@ -166,10 +169,10 @@ public class ConfirmGameFragment extends SherlockFragment
 			}
 		});
 
-		final Context context = getSherlockActivity();
-		final ImageLoader imageLoader = Utilities.getImageLoader(context);
+		final Activity activity = getSherlockActivity();
+		final String friendsPictureURL = FacebookUtilities.getFriendsPictureLarge(activity, friend.getId());
 		final ImageView profilePicture = (ImageView) view.findViewById(R.id.confirm_game_fragment_friend_profile_picture);
-		imageLoader.displayImage(FacebookUtilities.getFriendsPictureLarge(context, friend.getId()), profilePicture);
+		Utilities.getImageLoader().displayImage(friendsPictureURL, profilePicture);
 	}
 
 
@@ -180,15 +183,7 @@ public class ConfirmGameFragment extends SherlockFragment
 	// been implemented, an exception is thrown.
 	{
 		super.onAttach(activity);
-
-		try
-		{
-			listeners = (ConfirmGameFragmentListeners) activity;
-		}
-		catch (final ClassCastException e)
-		{
-			throw new ClassCastException(activity.toString() + " must implement listeners!");
-		}
+		listeners = (Listeners) activity;
 	}
 
 
@@ -203,6 +198,73 @@ public class ConfirmGameFragment extends SherlockFragment
 		menu.removeItem(R.id.friends_list_fragment_menu_search);
 
 		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+
+
+
+	/**
+	 * Builds the AlertDialog that asks the user which game they'd like to play
+	 * against their friend.
+	 *
+	 * @return
+	 * Returns the AlertDialog completely built and ready to go. Simply use its
+	 * show() method to draw it onto the screen.
+	 */
+	@SuppressWarnings("deprecation")
+	private AlertDialog getAlertDialog()
+	{
+		if (alertDialog == null)
+		{
+			final LayoutInflater inflater = getSherlockActivity().getLayoutInflater();
+			final View dialogView = inflater.inflate(R.layout.choose_which_game_dialog, null);
+
+			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
+			{
+				final BitmapDrawable background = (BitmapDrawable) getResources().getDrawable(R.drawable.bg_subtle_gray);
+				background.setAntiAlias(true);
+				background.setDither(true);
+				background.setFilterBitmap(true);
+				background.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+				dialogView.setBackgroundDrawable(background);
+			}
+
+			final Button checkers = (Button) dialogView.findViewById(R.id.choose_which_game_dialog_button_checkers);
+			checkers.setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(final View v)
+				{
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+					{
+						v.setActivated(true);
+					}
+
+					listeners.onGameConfirm(friend, Game.WHICH_GAME_CHECKERS);
+				}
+			});
+
+			final Button chess = (Button) dialogView.findViewById(R.id.choose_which_game_dialog_button_chess);
+			chess.setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(final View v)
+				{
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+					{
+						v.setActivated(true);
+					}
+
+					listeners.onGameConfirm(friend, Game.WHICH_GAME_CHESS);
+				}
+			});
+
+			alertDialog = new AlertDialog.Builder(getSherlockActivity())
+				.setView(dialogView)
+				.create();
+		}
+
+		return alertDialog;
 	}
 
 

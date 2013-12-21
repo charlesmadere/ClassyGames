@@ -1,30 +1,23 @@
 package com.charlesmadere.android.classygames;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
-import com.charlesmadere.android.classygames.models.Person;
+import com.charlesmadere.android.classygames.models.Notification;
+import com.charlesmadere.android.classygames.server.Server;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
-import com.charlesmadere.android.classygames.utilities.ServerUtilities;
-import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 
-public class GameOverActivity extends SherlockActivity
+public final class GameOverActivity extends BaseActivity
 {
 
 
-	public final static String BUNDLE_MESSAGE_TYPE = "BUNDLE_MESSAGE_TYPE";
-	public final static String BUNDLE_PERSON_OPPONENT_ID = "BUNDLE_PERSON_OPPONENT_ID";
-	public final static String BUNDLE_PERSON_OPPONENT_NAME = "BUNDLE_PERSON_OPPONENT_NAME";
+	public final static String KEY_NOTIFICATION = "KEY_NOTIFICATION";
 
 
 
@@ -32,44 +25,45 @@ public class GameOverActivity extends SherlockActivity
 	@Override
 	protected void onCreate(final Bundle savedInstanceState)
 	{
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState, R.string.game_over, true);
 		setContentView(R.layout.game_over_activity);
-		Utilities.setActionBar(this, R.string.game_over, true);
+		final Bundle arguments = getIntent().getExtras();
 
-		final ImageLoader imageLoader = Utilities.getImageLoader(this);
-		final Intent intent = getIntent();
-
-		if (intent != null)
+		if (arguments == null || arguments.isEmpty())
 		{
-			final byte messageType = intent.getByteExtra(BUNDLE_MESSAGE_TYPE, (byte) -1);
-			final long personId = intent.getLongExtra(BUNDLE_PERSON_OPPONENT_ID, -1);
-			final String personName = intent.getStringExtra(BUNDLE_PERSON_OPPONENT_NAME);
+			finish();
+		}
+		else
+		{
+			final Notification notification = (Notification) arguments.getSerializable(KEY_NOTIFICATION);
 
-			if (ServerUtilities.validMessageTypeValue(messageType) && Person.isIdAndNameValid(personId, personName))
+			if (notification == null)
 			{
-				final ImageView friendPicture = (ImageView) findViewById(R.id.game_over_activity_friend_picture);
-				imageLoader.displayImage(FacebookUtilities.getFriendsPictureLarge(this, personId), friendPicture);
+				finish();
+			}
+			else
+			{
+				final ImageView friendsPicture = (ImageView) findViewById(R.id.game_over_activity_friend_picture);
+				Utilities.getImageLoader().displayImage(FacebookUtilities.getFriendsPictureLarge(this, notification.getPerson().getId()), friendsPicture);
 
-				final TextView friendName = (TextView) findViewById(R.id.game_over_activity_friend_name);
-				friendName.setText(personName);
-				friendName.setTypeface(TypefaceUtilities.getTypeface(getAssets(), TypefaceUtilities.SNELL_ROUNDHAND_BDSCR));
+				final TextView friendsName = (TextView) findViewById(R.id.game_over_activity_friend_name);
+				friendsName.setText(notification.getPerson().getName());
 
 				final TextView winOrLose = (TextView) findViewById(R.id.game_over_activity_win_or_lose);
 
-				switch (messageType)
+				switch (notification.getMessageType())
 				{
-					case ServerUtilities.POST_DATA_MESSAGE_TYPE_GAME_OVER_LOSE:
+					case Server.POST_DATA_MESSAGE_TYPE_GAME_OVER_LOSE:
 						winOrLose.setText(R.string.you_lost_the_game_better_luck_next_time);
 						break;
 
-					case ServerUtilities.POST_DATA_MESSAGE_TYPE_GAME_OVER_WIN:
+					case Server.POST_DATA_MESSAGE_TYPE_GAME_OVER_WIN:
 						winOrLose.setText(R.string.you_won_the_game_what_a_champ);
 						break;
 				}
 
 				final Button returnToGamesList = (Button) findViewById(R.id.game_over_activity_button_return);
-				returnToGamesList.setTypeface(TypefaceUtilities.getTypeface(getAssets(), TypefaceUtilities.BLUE_HIGHWAY_D));
-				returnToGamesList.setOnClickListener(new OnClickListener()
+				returnToGamesList.setOnClickListener(new View.OnClickListener()
 				{
 					@Override
 					public void onClick(final View v)
@@ -78,14 +72,6 @@ public class GameOverActivity extends SherlockActivity
 					}
 				});
 			}
-			else
-			{
-				finish();
-			}
-		}
-		else
-		{
-			finish();
 		}
 	}
 

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<declare-styleable name="BoardView">
+		<attr
+			format="dimension"
+			name="position_padding" />
+		<attr
+			format="integer"
+			name="columns" />
+		<attr
+			format="integer"
+			name="rows" />
+		<attr
+			format="reference"
+			name="bright_background" />
+		<attr
+			format="reference"
+			name="bright_background_selected" />
+		<attr
+			format="reference"
+			name="dark_background" />
+		<attr
+			format="reference"
+			name="dark_background_selected" />
+	</declare-styleable>
+	<declare-styleable name="LayoutFittingImageView">
+		<attr
+			format="enum"
+			name="fit_dimension">
+			<enum
+				name="auto"
+				value="0" />
+			<enum
+				name="landscape"
+				value="1" />
+			<enum
+				name="portrait"
+				value="2" />
+		</attr>
+	</declare-styleable>
+	<declare-styleable name="TypefaceButton">
+		<attr
+			format="enum"
+			name="typefaceButton">
+			<enum
+				name="BlueHighway"
+				value="1" />
+			<enum
+				name="SnellRoundhand"
+				value="2" />
+		</attr>
+	</declare-styleable>
+	<declare-styleable name="TypefaceTextView">
+		<attr
+			format="enum"
+			name="typefaceTextView">
+			<enum
+				name="BlueHighway"
+				value="1" />
+			<enum
+				name="SnellRoundhand"
+				value="2" />
+		</attr>
+	</declare-styleable>
+</resources>

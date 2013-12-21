@@ -1,9 +1,9 @@
 package com.charlesmadere.android.classygames.models;
 
 
-import android.content.Context;
+import android.content.res.Resources;
 import com.charlesmadere.android.classygames.R;
-import com.charlesmadere.android.classygames.utilities.ServerUtilities;
+import com.charlesmadere.android.classygames.server.Server;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,7 +13,7 @@ import org.json.JSONObject;
  * Class representing a single Game. This is most obviously represented when
  * seen in the app's Games List.
  */
-public class Game
+public final class Game
 {
 
 
@@ -139,43 +139,6 @@ public class Game
 
 
 	/**
-	 * Creates a Game object.
-	 * 
-	 * @param timestamp
-	 * The timestamp as received from the Classy Games server. This should be
-	 * the system epoch. What is the system epoch?
-	 * https://en.wikipedia.org/wiki/Unix_epoch
-	 * 
-	 * @param person
-	 * The opposing player. If I am Charles Madere and my opponent is Geonathan
-	 * Sena, then this Person object will be for Geonathan Sena.
-	 * 
-	 * @param whichGame
-	 * The type of game that this will be. Use one of this class's WHICH_GAME_*
-	 * variables for this input.
-	 * 
-	 * @param id
-	 * This game's ID as received from the Classy Games server. This should be
-	 * a rather long String that resembles a hash.
-	 * 
-	 * @param turn
-	 * Who's turn is it? Use one of the TURN_* variables as defined in this class
-	 * for this parameter. There are only two choices, <strong>TURN_THEIRS</strong>
-	 * or <strong>TURN_YOURS</strong>.
-	 */
-	public Game(final Person person, final byte whichGame, final String id, final long timestamp, final boolean turn)
-	{
-		this.person = person;
-		this.whichGame = whichGame;
-		this.id = id;
-		this.timestamp = timestamp;
-		this.turn = turn;
-
-		type = TYPE_GAME;
-	}
-
-
-	/**
 	 * Use this constructor for creating a separator in the games list.
 	 * 
 	 * @param turn
@@ -208,15 +171,15 @@ public class Game
 	 */
 	public Game(final JSONObject gameData, final boolean whichTurn) throws JSONException
 	{
-		id = gameData.getString(ServerUtilities.POST_DATA_GAME_ID);
-		timestamp = gameData.getLong(ServerUtilities.POST_DATA_LAST_MOVE);
+		id = gameData.getString(Server.POST_DATA_GAME_ID);
+		timestamp = gameData.getLong(Server.POST_DATA_LAST_MOVE);
 		turn = whichTurn;
 
-		final long personId = gameData.getLong(ServerUtilities.POST_DATA_ID);
-		final String personName = gameData.getString(ServerUtilities.POST_DATA_NAME);
+		final long personId = gameData.getLong(Server.POST_DATA_ID);
+		final String personName = gameData.getString(Server.POST_DATA_NAME);
 		person = new Person(personId, personName);
 
-		whichGame = (byte) gameData.optInt(ServerUtilities.POST_DATA_GAME_TYPE);
+		whichGame = (byte) gameData.optInt(Server.POST_DATA_GAME_TYPE);
 	}
 
 
@@ -262,9 +225,9 @@ public class Game
 	 * @return
 	 * A human readable version of the Unix Epoch.
 	 */
-	public String getTimestampFormatted(final Context context)
+	public String getTimestampFormatted(final Resources resources)
 	{
-		if (!Utilities.verifyValidString(timestampFormatted))
+		if (!Utilities.validString(timestampFormatted))
 		// Check to see if we've already created a formatted timestamp String
 		// for this game object. If we've already created a formatted timestamp
 		// String, then we can just skip the whole algorithm below and return
@@ -272,97 +235,74 @@ public class Game
 		{
 			// find out the between the time NOW versus the time of this game's
 			// last move
-			final long timeDifference = (System.currentTimeMillis() / 1000) - timestamp;
+			final long timeDifference = (System.currentTimeMillis() / 1000l) - timestamp;
 
 			// calculate the number of WEEKS in the difference between the two
 			// times
-			long timeAgo = timeDifference / 604800;
+			long timeAgo = timeDifference / 604800l;
 
 			if (timeAgo >= 1)
 			{
-				if (timeAgo == 1)
-				{
-					timestampFormatted = context.getString(R.string.one_week_ago);
-				}
-				else if (timeAgo == 2)
-				{
-					timestampFormatted = context.getString(R.string.two_weeks_ago);
-				}
-				else
-				{
-					timestampFormatted = context.getString(R.string.more_than_two_weeks_ago);
-				}
+				timestampFormatted = resources.getQuantityString(R.plurals.x_weeks_ago, (int) timeAgo, timeAgo);
 			}
 			else
 			{
 				// calculate the number of DAYS in the difference between the
 				// two times
-				timeAgo = timeDifference / 86400;
+				timeAgo = timeDifference / 86400l;
 
 				if (timeAgo >= 1)
 				{
-					if (timeAgo == 1)
+					if (timeAgo >= 1 && timeAgo <= 5)
 					{
-						timestampFormatted = context.getString(R.string.one_day_ago);
-					}
-					else if (timeAgo >= 2 && timeAgo <= 5)
-					{
-						timestampFormatted = context.getString(R.string.x_days_ago, timeAgo);
+						timestampFormatted = resources.getQuantityString(R.plurals.x_days_ago, (int) timeAgo, timeAgo);
 					}
 					else
 					{
-						timestampFormatted = context.getString(R.string.almost_a_week_ago);
+						timestampFormatted = resources.getString(R.string.almost_a_week_ago);
 					}
 				}
 				else
 				{
 					// calculate the number of HOURS in the difference between
 					// the two times
-					timeAgo = timeDifference / 3600;
+					timeAgo = timeDifference / 3600l;
 
 					if (timeAgo >= 1)
 					{
-						if (timeAgo == 1)
+						if (timeAgo >= 1 && timeAgo <= 12)
 						{
-							timestampFormatted = context.getString(R.string.one_hour_ago);
-						}
-						else if (timeAgo >= 2 && timeAgo <= 12)
-						{
-							timestampFormatted = context.getString(R.string.x_hours_ago, timeAgo);
+							timestampFormatted = resources.getQuantityString(R.plurals.x_hours_ago, (int) timeAgo, timeAgo);
 						}
 						else if (timeAgo > 12 && timeAgo <= 18)
 						{
-							timestampFormatted = context.getString(R.string.about_half_a_day_ago);
+							timestampFormatted = resources.getString(R.string.about_half_a_day_ago);
 						}
 						else
 						{
-							timestampFormatted = context.getString(R.string.almost_a_day_ago);
+							timestampFormatted = resources.getString(R.string.almost_a_day_ago);
 						}
 					}
 					else
 					{
 						// calculate the number of MINUTES in the difference
 						// between the two times
-						timeAgo = timeDifference / 60;
+						timeAgo = timeDifference / 60l;
 
 						if (timeAgo >= 1)
 						{
-							if (timeAgo == 1)
+							if (timeAgo >= 1 && timeAgo <= 45)
 							{
-								timestampFormatted = context.getString(R.string.one_minute_ago);
-							}
-							else if (timeAgo >= 2 && timeAgo <= 45)
-							{
-								timestampFormatted = context.getString(R.string.x_minutes_ago, timeAgo);
+								timestampFormatted = resources.getQuantityString(R.plurals.x_minutes_ago, (int) timeAgo, timeAgo);
 							}
 							else
 							{
-								timestampFormatted = context.getString(R.string.almost_an_hour_ago);
+								timestampFormatted = resources.getString(R.string.almost_an_hour_ago);
 							}
 						}
 						else
 						{
-							timestampFormatted = context.getString(R.string.just_now);
+							timestampFormatted = resources.getString(R.string.just_now);
 						}
 					}
 				}

@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:custom="http://schemas.android.com/apk/res/com.charlesmadere.android.classygames"
 	android:layout_height="match_parent"
 	android:layout_width="match_parent"
 	android:orientation="vertical"
 	style="@style/ClassyGames.ExtraPadding">
 	<TextView
 		android:gravity="center_vertical"
-		android:layout_height="match_parent"
-		android:layout_weight="2"
+		android:layout_height="0dip"
+		android:layout_weight="75"
 		android:layout_width="match_parent"
 		android:text="@string/register_for_notifications_description"
 		style="@style/Paragraph.ExtraPadding" />
 	<LinearLayout
 		android:gravity="center"
-		android:layout_height="match_parent"
-		android:layout_weight="5"
+		android:layout_height="0dip"
+		android:layout_weight="25"
 		android:layout_width="match_parent"
 		android:orientation="vertical">
-		<Button
+		<com.charlesmadere.android.classygames.views.TypefaceButton
 			android:id="@+id/register_for_notifications_activity_register"
 			android:layout_height="wrap_content"
 			android:layout_width="match_parent"
 			android:text="@string/register_for_notifications"
-			style="@style/Button.Gray" />
+			style="@style/Button.Gray"
+			custom:typefaceButton="BlueHighway" />
 	</LinearLayout>
 </LinearLayout>

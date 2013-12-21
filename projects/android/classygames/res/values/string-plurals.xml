@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<plurals name="x_days_ago">
+		<item quantity="one">1 day ago</item>
+		<item quantity="other">%d days ago</item>
+	</plurals>
+	<plurals name="x_game_notifications">
+		<item quantity="one">1 game notification</item>
+		<item quantity="other">%d game notifications</item>
+	</plurals>
+	<plurals name="x_games_played">
+		<item quantity="one">1 game played</item>
+		<item quantity="other">%d games played</item>
+	</plurals>
+	<plurals name="x_hours_ago">
+		<item quantity="one">1 hour ago</item>
+		<item quantity="other">%d hours ago</item>
+	</plurals>
+	<plurals name="x_loses">
+		<item quantity="one">1 lose</item>
+		<item quantity="other">%d loses</item>
+	</plurals>
+	<plurals name="x_minutes_ago">
+		<item quantity="one">1 minute ago</item>
+		<item quantity="other">%d minutes ago</item>
+	</plurals>
+	<plurals name="x_weeks_ago">
+		<item quantity="one">1 week ago</item>
+		<item quantity="two">2 weeks ago</item>
+		<item quantity="other">more than 2 weeks ago</item>
+	</plurals>
+	<plurals name="x_wins">
+		<item quantity="one">1 win</item>
+		<item quantity="other">%d wins</item>
+	</plurals>
+</resources>

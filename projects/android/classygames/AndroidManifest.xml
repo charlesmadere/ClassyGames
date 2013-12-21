@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.charlesmadere.android.classygames"
-	android:versionCode="20"
-	android:versionName="1.6">
+	android:versionCode="32"
+	android:versionName="@string/version_number">
 
 	<!--
 		SDK version 8 is Android v2.2 (Froyo)
-		SDK version 17 is Android v4.2 (Jelly Bean)
+		SDK version 19 is Android v4.4 (KitKat)
 		Check out the Android API Levels website for more information on this topic:
 		https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels
 	-->
 	<uses-sdk
 		android:minSdkVersion="8"
-		android:targetSdkVersion="17" />
+		android:targetSdkVersion="19" />
 
 	<!-- Internet connectivity is needed to communicate with the Classy Games server. -->
 	<uses-permission
@@ -62,16 +62,18 @@
 	<application
 		android:allowBackup="false"
 		android:icon="@drawable/launcher"
-		android:label="@string/classy_games">
+		android:label="@string/classy_games"
+		android:name="com.charlesmadere.android.classygames.App">
 
-    	<!-- some Facebook v3.0 stuff -->
+		<!-- some Facebook v3.0 stuff -->
 		<meta-data
 			android:name="com.facebook.sdk.ApplicationId"
 			android:value="@string/facebook_app_id" />
 
 		<!-- more GCM stuff -->
 		<receiver
-			android:name="com.charlesmadere.android.classygames.utilities.GCMBroadcastReceiver"
+			android:exported="true"
+			android:name="com.charlesmadere.android.classygames.gcm.GCMBroadcastReceiver"
 			android:permission="com.google.android.c2dm.permission.SEND">
 			<intent-filter>
 				<action
@@ -84,7 +86,7 @@
 		</receiver>
 
 		<service
-			android:name="com.charlesmadere.android.classygames.utilities.GCMIntentService" />
+			android:name="com.charlesmadere.android.classygames.gcm.GCMIntentService" />
 		<!--  end more GCM stuff -->
 
 		<activity
@@ -101,7 +103,7 @@
 
 		<activity
 			android:label="@string/about"
-			android:name="com.charlesmadere.android.classygames.AboutActivity"
+			android:name="com.charlesmadere.android.classygames.settings.AboutActivity"
 			android:parentActivityName="com.charlesmadere.android.classygames.GameFragmentActivity"
 			android:theme="@style/Theme.Styled">
 			<meta-data
@@ -138,16 +140,16 @@
 		<activity
 			android:label="@string/register_for_notifications"
 			android:name="com.charlesmadere.android.classygames.settings.RegisterForNotificationsActivity"
-			android:parentActivityName="com.charlesmadere.android.classygames.settings.SettingsActivity"
+			android:parentActivityName="com.charlesmadere.android.classygames.settings.SettingsPreferenceActivity"
 			android:theme="@style/Theme.Styled">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value="com.charlesmadere.android.classygames.settings.SettingsActivity" />
+				android:value="com.charlesmadere.android.classygames.settings.SettingsPreferenceActivity" />
 		</activity>
 
 		<activity
 			android:label="@string/settings"
-			android:name="com.charlesmadere.android.classygames.settings.SettingsActivity"
+			android:name=".settings.PreferenceActivity"
 			android:parentActivityName="com.charlesmadere.android.classygames.GameFragmentActivity"
 			android:theme="@style/Theme.Styled">
 			<meta-data
@@ -168,11 +170,11 @@
 		<activity
 			android:label="@string/unregister_from_notifications"
 			android:name="com.charlesmadere.android.classygames.settings.UnregisterFromNotificationsActivity"
-			android:parentActivityName="com.charlesmadere.android.classygames.settings.SettingsActivity"
+			android:parentActivityName="com.charlesmadere.android.classygames.settings.SettingsPreferenceActivity"
 			android:theme="@style/Theme.Styled">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value="com.charlesmadere.android.classygames.settings.SettingsActivity" />
+				android:value="com.charlesmadere.android.classygames.settings.SettingsPreferenceActivity" />
 		</activity>
 
 		<activity

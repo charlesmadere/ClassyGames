@@ -1,7 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ListView xmlns:android="http://schemas.android.com/apk/res/android"
-	android:cacheColorHint="#00000000"
-	android:id="@+id/games_list_fragment_listview"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_height="match_parent"
 	android:layout_width="match_parent"
-	style="@style/ClassyGames" />
+	android:orientation="vertical"
+	style="@style/ClassyGames">
+	<ListView
+		android:cacheColorHint="@color/cache_color_hint"
+		android:id="@android:id/list"
+		android:layout_height="match_parent"
+		android:layout_width="match_parent"
+		android:listSelector="@drawable/selectable_item" />
+	<TextView
+		android:gravity="center"
+		android:id="@android:id/empty"
+		android:layout_gravity="center"
+		android:layout_height="match_parent"
+		android:layout_width="match_parent"
+		android:text="@string/you_have_no_games_perhaps_you_should_start_a_new_game"
+		android:textIsSelectable="false"
+		android:visibility="gone"
+		style="@style/Paragraph.ExtraPadding" />
+	<LinearLayout
+		android:gravity="center"
+		android:id="@+id/games_list_fragment_loading"
+		android:layout_gravity="center"
+		android:layout_height="match_parent"
+		android:layout_width="match_parent"
+		android:orientation="vertical"
+		android:visibility="gone">
+		<ProgressBar
+			android:indeterminate="true"
+			android:layout_gravity="center"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content" />
+		<TextView
+			android:gravity="center"
+			android:layout_gravity="center"
+			android:layout_height="wrap_content"
+			android:layout_width="match_parent"
+			android:text="@string/loading_your_games_list"
+			android:textIsSelectable="false"
+			style="@style/Paragraph.ExtraPadding" />
+	</LinearLayout>
+	<include
+		layout="@layout/fragment_no_internet_connection" />
+</LinearLayout>

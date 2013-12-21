@@ -3,25 +3,12 @@ package com.charlesmadere.android.classygames.utilities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.AssetManager;
-import android.content.res.Resources;
-import android.graphics.Shader.TileMode;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 import android.preference.PreferenceManager;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.app.SherlockPreferenceActivity;
-import com.charlesmadere.android.classygames.R;
+import com.charlesmadere.android.classygames.App;
 import com.charlesmadere.android.classygames.models.Person;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -37,18 +24,14 @@ public final class Utilities
 
 	public final static String LOG_TAG = "Classy Games";
 
+	private static ImageLoader imageLoader;
 
-	// Stores the reg id of the current Android device. More information can be
-	// found here: https://developer.android.com/google/gcm/index.html
-	private static String regId;
-	private final static String KEY_REG_ID = "KEY_REG_ID";
-
-
-	// stores the Facebook user id and name of the current user of the Classy
-	// Games application
+	// stores the Facebook user id and name of the app's current user
 	private static Person whoAmI;
 	private final static String KEY_WHO_AM_I_ID = "KEY_WHO_AM_I_ID";
 	private final static String KEY_WHO_AM_I_NAME = "KEY_WHO_AM_I_NAME";
+
+
 
 
 	/**
@@ -65,430 +48,7 @@ public final class Utilities
 	{
 		final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		final NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-
 		return networkInfo != null && networkInfo.isConnected();
-	}
-
-
-	/**
-	 * Invalidates the options menu using the Android compatibility library. If
-	 * the force parameter is set to true then this method will even attempt to
-	 * invalidate a pre honeycomb device's menu.
-	 * 
-	 * @param fragmentActivity
-	 * getSherlockActivity()
-	 * 
-	 * @param force
-	 * True if you want to refresh the device's menu no matter what version of
-	 * Android it's running.
-	 */
-	public static void compatInvalidateOptionsMenu(final SherlockFragmentActivity fragmentActivity, final boolean force)
-	{
-		if (fragmentActivity != null)
-		{
-			if (force)
-			{
-				fragmentActivity.invalidateOptionsMenu();
-			}
-			else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-			{
-				fragmentActivity.invalidateOptionsMenu();
-			}
-		}
-	}
-
-
-	/**
-	 * Invalidates the options menu using the Android compatibility library.
-	 * 
-	 * @param fragmentActivity
-	 * getSherlockActivity()
-	 */
-	public static void compatInvalidateOptionsMenu(final SherlockFragmentActivity fragmentActivity)
-	{
-		compatInvalidateOptionsMenu(fragmentActivity, false);
-	}
-
-
-	/**
-	 * Prints a Toast message to the screen.
-	 * 
-	 * <p><strong>Examples</strong><br />
-	 * Utilities.easyToast(MainActivity.this, "Hello!");<br />
-	 * Utilities.easyToast(getApplicationContext(), "Another message huh?");</p>
-	 * 
-	 * @param context
-	 * Just put the name of your class.this, or you can use getApplicationContext().
-	 * 
-	 * @param message
-	 * The String that you want to be shown as a toast message.
-	 */
-	public static void easyToast(final Context context, final String message)
-	{
-		Toast.makeText(context, message, Toast.LENGTH_LONG).show();
-	}
-
-
-	/**
-	 * Prints a Toast message to the screen with a String taken from the
-	 * strings.xml file.
-	 * 
-	 * @param context
-	 * Just put the name of your class.this, or you can use getApplicationContext().
-	 * 
-	 * @param stringId
-	 * The int ID of the resource that you want to print.
-	 */
-	public static void easyToast(final Context context, final int stringId)
-	{
-		easyToast(context, context.getString(stringId));
-	}
-
-
-	/**
-	 * Prints a Toast message to the screen and prints that same message to the Log.d
-	 * console.
-	 * 
-	 * <p><strong>Examples</strong><br />
-	 * Utilities.easyToastAndLog(MainActivity.this, "Hello!");<br />
-	 * Utilities.easyToastAndLog(getApplicationContext(), "Another message huh?");</p>
-	 * 
-	 * @param context
-	 * Just put the name of your class.this, or you can use getApplicationContext().
-	 * 
-	 * @param message
-	 * The String that you want to be shown as a toast message. This exact String will also
-	 * be printed to the Log.d console.
-	 */
-	public static void easyToastAndLog(final Context context, final String message)
-	{
-		easyToast(context, message);
-		Log.d(LOG_TAG, message);
-	}
-
-
-	/**
-	 * Prints a Toast message to the screen and prints that same message to each and
-	 * every log console.
-	 * 
-	 * <p><strong>Examples</strong><br />
-	 * Utilities.easyToastAndLogAll(MainActivity.this, "Hello!");<br />
-	 * Utilities.easyToastAndLogAll(getApplicationContext(), "Another message huh?");</p>
-	 * 
-	 * @param context
-	 * Just put the name of your class.this, or you can use getApplicationContext().
-	 * 
-	 * @param message
-	 * The String that you want to be shown as a toast message. This exact String will also
-	 * be printed to the Log.d console.
-	 */
-	public static void easyToastAndLogAll(final Context context, final String message)
-	{
-		easyToast(context, message);
-		Log.d(LOG_TAG, message);
-		Log.e(LOG_TAG, message);
-		Log.i(LOG_TAG, message);
-		Log.v(LOG_TAG, message);
-		Log.wtf(LOG_TAG, message);
-	}
-
-
-	/**
-	 * Prints a Toast message to the screen and prints that same message to the
-	 * Log.e console.
-	 * 
-	 * <p><strong>Examples</strong><br />
-	 * Utilities.easyToastAndLogError(MainActivity.this, "Hello!");<br />
-	 * Utilities.easyToastAndLogError(getApplicationContext(), "Another message huh?");</p>
-	 * 
-	 * @param context
-	 * Just put the name of your class.this, or you can use getApplicationContext().
-	 * 
-	 * @param message
-	 * The String that you want to be shown as a toast message. This exact String will also
-	 * be printed to the Log.e console.
-	 */
-	public static void easyToastAndLogError(final Context context, final String message)
-	{
-		easyToast(context, message);
-		Log.e(LOG_TAG, message);
-	}
-
-
-	/**
-	 * Prints a Toast message to the screen and prints that same message to the
-	 * Log.e console.
-	 *
-	 * <p><strong>Examples</strong><br />
-	 * Utilities.easyToastAndLogError(MainActivity.this, "Hello!");<br />
-	 * Utilities.easyToastAndLogError(getApplicationContext(), "Another message huh?");</p>
-	 *
-	 * @param context
-	 * Just put the name of your class.this, or you can use getApplicationContext().
-	 *
-	 * @param stringId
-	 * The int ID of the resource that you want to print.
-	 */
-	public static void easyToastAndLogError(final Context context, final int stringId)
-	{
-		easyToast(context, stringId);
-		Log.e(LOG_TAG, context.getString(stringId));
-	}
-
-
-	/**
-	 * Makes and then returns a styled String. This is useful for obtaining a
-	 * String that makes use of a custom typeface. As of right now, this should
-	 * probably only be used to customize the Android Action Bar.
-	 *
-	 * @param assetManager
-	 * A handle to the Activity's AssetManager. This can usually be obtained by
-	 * just doing getAssets(), getSherlockActivity().getAssets(), or
-	 * getActivity().getAssets().
-	 *
-	 * @param string
-	 * The String to apply the custom typeface to.
-	 *
-	 * @param typeface
-	 * The custom typeface that you want to use. This needs to be one of the
-	 * public bytes as found in the TypefaceUtilities class. If an invalid
-	 * value is passed in here then there will definitely be a problem.
-	 *
-	 * @return
-	 * Returns the styled String as created with your specifications.
-	 */
-	public static SpannableString makeStyledString(final AssetManager assetManager, final CharSequence string, final byte typeface)
-	{
-		final SpannableString styledString = new SpannableString(string);
-		styledString.setSpan(new StyledString(assetManager, typeface), 0, styledString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-		return styledString;
-	}
-
-
-	/**
-	 * Stylizes the Android Action Bar, sets its title, and enables or disables
-	 * its back arrow.
-	 *
-	 * @param activity
-	 * The activity that you're currently working in. This can usually be
-	 * obtained by just using the this keyword or getSherlockActivity().
-	 *
-	 * @param actionBarTitle
-	 * The R.string.* title to be shown on the Android Action Bar.
-	 *
-	 * @param showBackArrow
-	 * Want to show the back arrow on the Action Bar? Pass in true to show it.
-	 */
-	public static void setActionBar(final SherlockActivity activity, final int actionBarTitle, final boolean showBackArrow)
-	{
-		setAndStyleActionBar
-		(
-			activity.getAssets(),
-			activity.getSupportActionBar(),
-			activity.getString(actionBarTitle),
-			activity.getResources(),
-			showBackArrow
-		);
-	}
-
-
-	/**
-	 * Stylizes the Android Action Bar, sets its title, and enables or disables
-	 * its back arrow.
-	 *
-	 * @param activity
-	 * The activity that you're currently working in. This can usually be
-	 * obtained by just using the this keyword or getSherlockActivity().
-	 *
-	 * @param actionBarTitle
-	 * The title to be shown on the Android Action Bar.
-	 *
-	 * @param showBackArrow
-	 * Want to show the back arrow on the Action Bar? Pass in true to show it.
-	 */
-	public static void setActionBar(final SherlockFragmentActivity activity, final CharSequence actionBarTitle, final boolean showBackArrow)
-	{
-		setAndStyleActionBar
-		(
-			activity.getAssets(),
-			activity.getSupportActionBar(),
-			actionBarTitle,
-			activity.getResources(),
-			showBackArrow
-		);
-	}
-
-
-	/**
-	 * Stylizes the Android Action Bar, sets its title, and enables or disables
-	 * its back arrow.
-	 *
-	 * @param activity
-	 * The activity that you're currently working in. This can usually be
-	 * obtained by just using the this keyword or getSherlockActivity().
-	 *
-	 * @param actionBarTitle
-	 * The R.string.* title to be shown on the Android Action Bar.
-	 *
-	 * @param showBackArrow
-	 * Want to show the back arrow on the Action Bar? Pass in true to show it.
-	 */
-	public static void setActionBar(final SherlockFragmentActivity activity, final int actionBarTitle, final boolean showBackArrow)
-	{
-		setAndStyleActionBar
-		(
-			activity.getAssets(),
-			activity.getSupportActionBar(),
-			activity.getString(actionBarTitle),
-			activity.getResources(),
-			showBackArrow
-		);
-	}
-
-
-	/**
-	 * Stylizes the Android Action Bar, sets its title, and enables or disables
-	 * its back arrow.
-	 *
-	 * @param activity
-	 * The activity that you're currently working in. This can usually be
-	 * obtained by just using the this keyword or getSherlockActivity().
-	 *
-	 * @param actionBarTitle
-	 * The R.string.* title to be shown on the Android Action Bar.
-	 *
-	 * @param showBackArrow
-	 * Want to show the back arrow on the Action Bar? Pass in true to show it.
-	 */
-	public static void setActionBar(final SherlockPreferenceActivity activity, final int actionBarTitle, final boolean showBackArrow)
-	{
-		setAndStyleActionBar
-		(
-			activity.getAssets(),
-			activity.getSupportActionBar(),
-			activity.getString(actionBarTitle),
-			activity.getResources(),
-			showBackArrow
-		);
-	}
-
-
-	/**
-	 * Performs final setting and stylizing on the Android Action Bar.
-	 *
-	 * @param assetManager
-	 * A handle to the Activity's AssetManager. This can usually be obtained by
-	 * using getAssets().
-	 *
-	 * @param actionBar
-	 * A handle to the Activity's Sherlock Action Bar. This can usually be
-	 * obtained by using getSupportActionBar().
-	 *
-	 * @param actionBarTitle
-	 * The actual string to be shown as the title of the Action Bar.
-	 *
-	 * @param resources
-	 * A handle to the Activity's resources. This can usually be obtained by
-	 * using getResources().
-	 *
-	 * @param showBackArrow
-	 * Want to show the back arrow on the Action Bar? Pass in true to show it.
-	 */
-	private static void setAndStyleActionBar(final AssetManager assetManager, final ActionBar actionBar, final CharSequence actionBarTitle, final Resources resources, final boolean showBackArrow)
-	{
-		final SpannableString styledActionBarTitle = makeStyledString(assetManager, actionBarTitle, TypefaceUtilities.BLUE_HIGHWAY_D);
-
-		actionBar.setDisplayHomeAsUpEnabled(showBackArrow);
-		actionBar.setTitle(styledActionBarTitle);
-
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-		// if the running version of Android is lower than API Level 14 (below Ice Cream Sandwich 4.0)
-		// https://developer.android.com/guide/topics/manifest/uses-sdk-element.html#ApiLevels
-		{
-			final BitmapDrawable background = (BitmapDrawable) resources.getDrawable(R.drawable.bg_actionbar);
-			background.setAntiAlias(true);
-			background.setDither(true);
-			background.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
-
-			actionBar.setBackgroundDrawable(background);
-		}
-	}
-
-
-	/**
-	 * Styles the background of a preference activity so that it's not just the
-	 * plain ol' white. This method should only be called from a class that
-	 * extends from either SherlockPreferenceActivity or PreferenceFragment.
-	 *
-	 * @param context
-	 * The context of the Activity or Fragment that is calling this method.
-	 *
-	 * @param view
-	 * The View that you want the background applied to.
-	 */
-	@SuppressWarnings("deprecation")
-	public static void setBackground(final Context context, final View view)
-	{
-		final Drawable background = context.getResources().getDrawable(R.drawable.bg_bright);
-
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN)
-		{
-			view.setBackgroundDrawable(background);
-		}
-		else
-		{
-			view.setBackground(background);
-		}
-	}
-
-
-	/**
-	 * Initializes the ImageLoader library with some specific configuration
-	 * settings (if it has not already been initialized) and returns only what
-	 * you need - the portion that will actually load an image for ya!
-	 * https://github.com/nostra13/Android-Universal-Image-Loader
-	 *
-	 * @param context
-	 * The context of the Activity that is calling this method.
-	 *
-	 * @return
-	 * Returns an instance of the ImageLoader class that can load an image from
-	 * a URL for you.
-	 */
-	public static ImageLoader getImageLoader(final Context context)
-	{
-		final DisplayImageOptions displayOptions = new DisplayImageOptions.Builder()
-			.cacheInMemory()
-			.cacheOnDisc()
-			.build();
-
-		final ImageLoaderConfiguration loaderConfiguration = new ImageLoaderConfiguration.Builder(context)
-			.defaultDisplayImageOptions(displayOptions)
-			.build();
-
-		final ImageLoader imageLoader = ImageLoader.getInstance();
-		imageLoader.init(loaderConfiguration);
-
-		return imageLoader;
-	}
-
-
-	/**
-	 * Gives you a handle to the Classy Games default SharedPreferences object.
-	 * 
-	 * @param context
-	 * The Context of the class that you're calling this from. If you're
-	 * calling this method from an Activity then you can usually just use the
-	 * this keyword, otherwise you may need to use something like
-	 * getSherlockActivity().
-	 * 
-	 * @return
-	 * Returns a handle to the Classy Games default SharedPreferences object.
-	 */
-	public static SharedPreferences getPreferences(final Context context)
-	{
-		return PreferenceManager.getDefaultSharedPreferences(context);
 	}
 
 
@@ -498,8 +58,7 @@ public final class Utilities
 	 * on or off (true or false).
 	 *
 	 * @param context
-	 * The context of the Activity or Fragment that you're calling this method
-	 * from.
+	 * The context of the Activity that you're calling this method from.
 	 *
 	 * @param key
 	 * The R.string.* value for the settings key that you're trying to
@@ -523,48 +82,77 @@ public final class Utilities
 
 
 	/**
-	 * Gives you this Android device's GCM registration ID.
-	 * 
+	 * Retrieves and then returns the app's version code. The returned value
+	 * corresponds directly to the "versionCode" value that is found at the
+	 * beginning of the AndroidManifest.xml file.
+	 *
 	 * @param context
-	 * The context of the Activity that is calling this method.
-	 * 
+	 * The Context of the Activity that you're calling this method from.
+	 *
 	 * @return
-	 * Returns this Android device's GCM registration ID. This is typically a
-	 * somewhat long String filled with random characters. <strong>Note that
-	 * this method has a slim possibility of returning null.</strong>
+	 * Returns the app's version code (as seen in AndroidManifest.xml).
 	 */
-	public static String getRegId(final Context context)
+	public static int getAppVersionCode(final Context context)
 	{
-		if (!verifyValidString(regId))
-		{
-			final SharedPreferences sPreferences = getPreferences(context);
+		int versionCode;
 
-			// Grab the user's GCM registration ID from shared preferences if
-			// it already exists. Returns null if it doesn't already exist.
-			regId = sPreferences.getString(KEY_REG_ID, null);
+		try
+		{
+			final PackageManager packageManager = context.getPackageManager();
+			final String packageName = context.getPackageName();
+			final PackageInfo packageInfo = packageManager.getPackageInfo(packageName, 0);
+			versionCode = packageInfo.versionCode;
+		}
+		catch (final PackageManager.NameNotFoundException e)
+		{
+			versionCode = 0;
 		}
 
-		return regId;
+		return versionCode;
 	}
 
 
 	/**
-	 * Sets this Android device's GCM registration ID.
-	 * 
-	 * @param context
-	 * The context of the Activity that is calling this method.
-	 * 
-	 * @param regId
-	 * The new GCM registration ID.
+	 * @return
+	 * Returns an ImageLoader object. This can be used to download images from
+	 * a web URL and then display them to a view.
 	 */
-	public static void setRegId(final Context context, final String regId)
+	public static ImageLoader getImageLoader()
 	{
-		final SharedPreferences sPreferences = getPreferences(context);
-		final SharedPreferences.Editor editor = sPreferences.edit();
-		editor.putString(KEY_REG_ID, regId);
-		editor.commit();
+		if (imageLoader == null)
+		{
+			final DisplayImageOptions displayOptions = new DisplayImageOptions.Builder()
+				.cacheInMemory(true)
+				.cacheOnDisc(true)
+				.build();
 
-		Utilities.regId = regId;
+			final ImageLoaderConfiguration loaderConfiguration = new ImageLoaderConfiguration.Builder(App.getContext())
+				.defaultDisplayImageOptions(displayOptions)
+				.build();
+
+			imageLoader = ImageLoader.getInstance();
+			imageLoader.init(loaderConfiguration);
+		}
+
+		return imageLoader;
+	}
+
+
+	/**
+	 * Gives you a handle to the Classy Games default SharedPreferences object.
+	 *
+	 * @param context
+	 * The Context of the class that you're calling this from. If you're
+	 * calling this method from an Activity then you can usually just use the
+	 * this keyword, otherwise you may need to use something like
+	 * getSherlockActivity().
+	 *
+	 * @return
+	 * Returns a handle to the Classy Games default SharedPreferences object.
+	 */
+	public static SharedPreferences getPreferences(final Context context)
+	{
+		return PreferenceManager.getDefaultSharedPreferences(context);
 	}
 
 
@@ -574,10 +162,10 @@ public final class Utilities
 	 * the whoAmI Person variable is currently null or is not valid, then we
 	 * will search the Android SharedPreferences data for the user's Facebook
 	 * identity.
-	 * 
+	 *
 	 * @param context
 	 * The context of the Activity that is calling this method.
-	 * 
+	 *
 	 * @return
 	 * A Person object that represents the user's Facebook identity.
 	 */
@@ -598,7 +186,7 @@ public final class Utilities
 			// the name variable will be set to null.
 			final String name = sPreferences.getString(KEY_WHO_AM_I_NAME, null);
 
-			if (Person.isIdAndNameValid(id, name))
+			if (Person.isIdValid(id) && Person.isNameValid(name))
 			// check to see that we were actually able to find the user's
 			// Facebook ID and Facebook name. If we were able to find both
 			// then we will create a new Person object out of that data. That
@@ -626,28 +214,12 @@ public final class Utilities
 	 */
 	public static void setWhoAmI(final Context context, final Person facebookIdentity)
 	{
-		final SharedPreferences sPreferences = getPreferences(context);
-		final SharedPreferences.Editor editor = sPreferences.edit();
-		editor.putLong(KEY_WHO_AM_I_ID, facebookIdentity.getId());
-		editor.putString(KEY_WHO_AM_I_NAME, facebookIdentity.getName());
-		editor.commit();
+		getPreferences(context).edit()
+			.putLong(KEY_WHO_AM_I_ID, facebookIdentity.getId())
+			.putString(KEY_WHO_AM_I_NAME, facebookIdentity.getName())
+			.commit();
 
 		whoAmI = facebookIdentity;
-	}
-
-
-	/**
-	 * Verifies a String object for validity.
-	 * 
-	 * @param string
-	 * The String to check.
-	 * 
-	 * @return
-	 * Returns true if the given String is valid.
-	 */
-	public static boolean verifyValidString(final String string)
-	{
-		return string != null && string.length() >= 1;
 	}
 
 
@@ -655,18 +227,25 @@ public final class Utilities
 	 * Verifies a set of String objects for validity.
 	 * 
 	 * @param strings
-	 * The Strings to check.
+	 * The set of String objects to check.
 	 * 
 	 * @return
-	 * Returns true if all of the given Strings are valid.
+	 * Returns true if <strong>all</strong> of the given Strings are valid.
 	 */
-	public static boolean verifyValidStrings(final String... strings)
+	public static boolean validString(final String... strings)
 	{
-		for (final String string : strings)
+		if (strings == null || strings.length == 0)
 		{
-			if (!verifyValidString(string))
+			return false;
+		}
+		else
+		{
+			for (final String string : strings)
 			{
-				return false;
+				if (string == null || string.length() == 0)
+				{
+					return false;
+				}
 			}
 		}
 

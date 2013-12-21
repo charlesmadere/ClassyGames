@@ -1,17 +1,23 @@
 package com.charlesmadere.android.classygames;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
+import android.os.Handler;
+import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextSwitcher;
+import android.widget.ViewSwitcher;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Window;
 import com.charlesmadere.android.classygames.models.Person;
+import com.charlesmadere.android.classygames.server.Server;
+import com.charlesmadere.android.classygames.server.ServerApi;
+import com.charlesmadere.android.classygames.server.ServerApiRegister;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
-import com.charlesmadere.android.classygames.utilities.ServerUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 import com.facebook.*;
 import com.facebook.Request.GraphUserCallback;
@@ -21,19 +27,24 @@ import com.facebook.model.GraphUser;
 /**
  * This class is the app's entry point.
  */
-public class MainActivity extends SherlockActivity
+public final class MainActivity extends BaseActivity implements
+	Session.StatusCallback
 {
 
 
-	public final static int GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FINISH = 8;
+	private final static String LOG_TAG = Utilities.LOG_TAG + " - MainActivity";
 
 
-	private UiLifecycleHelper uiHelper;
+	private LinearLayout facebook;
+	private LinearLayout loading;
+	private ProgressBar loadingSpinner;
+	private TextSwitcher loadingText;
 
-	private boolean isResumed = false;
+
 	private boolean hasFinished = false;
-
-
+	private boolean isResumed = false;
+	private ServerApiRegister serverApiTask;
+	private UiLifecycleHelper uiHelper;
 
 
 	/**
@@ -47,20 +58,25 @@ public class MainActivity extends SherlockActivity
 	@Override
 	protected void onCreate(final Bundle savedInstanceState)
 	{
-		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		super.onCreate(savedInstanceState, R.string.classy_games, false);
 		setContentView(R.layout.main_activity);
 
-		final Session.StatusCallback sessionStatusCallback = new Session.StatusCallback()
+		facebook = (LinearLayout) findViewById(R.id.main_activity_facebook);
+		loading = (LinearLayout) findViewById(R.id.main_activity_loading);
+		loadingSpinner = (ProgressBar) findViewById(R.id.main_activity_loading_spinner);
+		loadingText = (TextSwitcher) findViewById(R.id.main_activity_loading_text);
+
+		loadingText.setFactory(new ViewSwitcher.ViewFactory()
 		{
 			@Override
-			public void call(final Session session, final SessionState state, final Exception exception)
+			public View makeView()
 			{
-				onSessionStateChange(session, state);
+				return getLayoutInflater().inflate(R.layout.main_activity_loading_text, null);
 			}
-		};
+		});
 
-		uiHelper = new UiLifecycleHelper(this, sessionStatusCallback);
+		uiHelper = new UiLifecycleHelper(this, this);
 		uiHelper.onCreate(savedInstanceState);
 	}
 
@@ -71,7 +87,7 @@ public class MainActivity extends SherlockActivity
 		super.onActivityResult(requestCode, resultCode, data);
 		uiHelper.onActivityResult(requestCode, resultCode, data);
 
-		if (resultCode == GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FINISH)
+		if (resultCode == RESULT_FIRST_USER)
 		{
 			hasFinished = true;
 			finish();
@@ -82,14 +98,8 @@ public class MainActivity extends SherlockActivity
 	@Override
 	public void onBackPressed()
 	{
-		if (isAnAsyncTaskRunning())
-		{
-			cancelRunningAnyAsyncTask();
-		}
-		else
-		{
-			super.onBackPressed();
-		}
+		cancelRunningAnyAsyncTask();
+		super.onBackPressed();
 	}
 
 
@@ -97,7 +107,6 @@ public class MainActivity extends SherlockActivity
 	protected void onDestroy()
 	{
 		cancelRunningAnyAsyncTask();
-
 		isResumed = false;
 		uiHelper.onDestroy();
 		super.onDestroy();
@@ -126,7 +135,7 @@ public class MainActivity extends SherlockActivity
 
 			if (whoAmI != null && whoAmI.isValid())
 			{
-				startCentralFragmentActivity();
+				startGameFragmentActivity();
 			}
 		}
 	}
@@ -140,6 +149,23 @@ public class MainActivity extends SherlockActivity
 	}
 
 
+	@Override
+	public void call(final Session session, final SessionState state, final Exception exception)
+	{
+		if (isResumed)
+		// only make changes if this activity is visible
+		{
+			if (state.equals(SessionState.OPENED))
+			// if the session state is open, show the authenticated activity
+			{
+				// store the user's Facebook Access Token for retrieval later
+				FacebookUtilities.setAccessToken(this, session.getAccessToken());
+
+				asyncGetFacebookIdentity = new AsyncGetFacebookIdentity(session);
+				asyncGetFacebookIdentity.execute();
+			}
+		}
+	}
 
 
 	/**
@@ -150,6 +176,11 @@ public class MainActivity extends SherlockActivity
 	{
 		if (isAnAsyncTaskRunning())
 		{
+			if (serverApiTask != null)
+			{
+				serverApiTask.cancel();
+			}
+
 			asyncGetFacebookIdentity.cancel(true);
 		}
 	}
@@ -165,29 +196,10 @@ public class MainActivity extends SherlockActivity
 	}
 
 
-	private void onSessionStateChange(final Session session, final SessionState state)
+	private void startGameFragmentActivity()
 	{
-		if (isResumed)
-		// only make changes if this activity is visible
-		{
-			if (state.equals(SessionState.OPENED))
-			// if the session state is open, show the authenticated activity
-			{
-				// store the user's Facebook Access Token for retrieval later
-				FacebookUtilities.setAccessToken(this, session.getAccessToken());
-
-				asyncGetFacebookIdentity = new AsyncGetFacebookIdentity(this,
-					(LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE), session, (ViewGroup) findViewById(R.id.main_activity_listview));
-				asyncGetFacebookIdentity.execute();
-			}
-		}
-	}
-
-
-	private void startCentralFragmentActivity()
-	{
-		final Intent intent = new Intent(MainActivity.this, GameFragmentActivity.class);
-		startActivityForResult(intent, GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FINISH);
+		final Intent intent = new Intent(this, GameFragmentActivity.class);
+		startActivityForResult(intent, RESULT_FIRST_USER);
 	}
 
 
@@ -197,18 +209,14 @@ public class MainActivity extends SherlockActivity
 	{
 
 
-		private Context context;
-		private LayoutInflater inflater;
 		private Session session;
-		private ViewGroup viewGroup;
+		private SherlockActivity activity;
 
 
-		private AsyncGetFacebookIdentity(final Context context, final LayoutInflater inflater, final Session session, final ViewGroup viewGroup)
+		private AsyncGetFacebookIdentity(final Session session)
 		{
-			this.context = context;
-			this.inflater = inflater;
+			activity = MainActivity.this;
 			this.session = session;
-			this.viewGroup = viewGroup;
 		}
 
 
@@ -219,6 +227,15 @@ public class MainActivity extends SherlockActivity
 
 			if (!isCancelled())
 			{
+				try
+				{
+					Thread.sleep(Server.WAIT_FOR_SERVER_DELAY);
+				}
+				catch (final InterruptedException e)
+				{
+					Log.w(LOG_TAG, "AsyncGetFacebookIdentity thread sleep interrupted!", e);
+				}
+
 				Request.newMeRequest(session, new GraphUserCallback()
 				{
 					@Override
@@ -228,35 +245,9 @@ public class MainActivity extends SherlockActivity
 						facebookIdentity.setName(user.getName());
 					}
 				}).executeAndWait();
-
-				ServerUtilities.gcmPerformRegister(context);
 			}
 
 			return facebookIdentity;
-		}
-
-
-		private void cancelled()
-		{
-			session.closeAndClearTokenInformation();
-			viewGroup.removeAllViews();
-			asyncGetFacebookIdentity = null;
-
-			finish();
-		}
-
-
-		@Override
-		protected void onCancelled()
-		{
-			cancelled();
-		}
-
-
-		@Override
-		protected void onCancelled(final Person facebookIdentity)
-		{
-			cancelled();
 		}
 
 
@@ -265,15 +256,55 @@ public class MainActivity extends SherlockActivity
 		{
 			if (facebookIdentity.isValid())
 			{
-				Utilities.setWhoAmI(context, facebookIdentity);
-				viewGroup.removeAllViews();
-				asyncGetFacebookIdentity = null;
+				Log.i(LOG_TAG, "received valid Facebook identity: \"" + facebookIdentity.toString() + "\"");
+				Utilities.setWhoAmI(activity, facebookIdentity);
+				final Handler handler = new Handler();
 
-				startCentralFragmentActivity();
+				serverApiTask = new ServerApiRegister(activity, false, new ServerApi.Listeners()
+				{
+					@Override
+					public void onCancel()
+					{}
+
+
+					@Override
+					public void onComplete(final String serverResponse)
+					{
+						loadingSpinner.setVisibility(View.INVISIBLE);
+						final String name = facebookIdentity.getFirstName();
+						loadingText.setText(getString(R.string.hello_x, name));
+
+						handler.postDelayed(new Runnable()
+						{
+							@Override
+							public void run()
+							{
+								asyncGetFacebookIdentity = null;
+								startGameFragmentActivity();
+							}
+						}, Server.WAIT_FOR_SERVER_DELAY);
+					}
+
+
+					@Override
+					public void onDismiss()
+					{}
+				});
+
+				loadingText.setText(getString(R.string.registering_you_with_our_servers));
+
+				handler.postDelayed(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						serverApiTask.execute(false);
+					}
+				}, Server.WAIT_FOR_SERVER_DELAY);
 			}
 			else
 			{
-				cancelled();
+				loadingText.setText(getString(R.string.we_had_a_problem_gathering_your_facebook_information));
 			}
 		}
 
@@ -281,8 +312,9 @@ public class MainActivity extends SherlockActivity
 		@Override
 		protected void onPreExecute()
 		{
-			viewGroup.removeAllViews();
-			inflater.inflate(R.layout.main_activity_loading, viewGroup);
+			facebook.setVisibility(View.GONE);
+			loading.setVisibility(View.VISIBLE);
+			loadingText.setText(getString(R.string.authenticating_you_with_facebook));
 		}
 
 

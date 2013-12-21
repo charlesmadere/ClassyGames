@@ -1,48 +1,39 @@
 package com.charlesmadere.android.classygames;
 
 
-import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.models.Game;
+import com.charlesmadere.android.classygames.models.Notification;
 import com.charlesmadere.android.classygames.models.Person;
-import com.charlesmadere.android.classygames.settings.SettingsActivity;
+import com.charlesmadere.android.classygames.settings.PreferenceActivity;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
-public class GameFragmentActivity extends SherlockFragmentActivity implements
-	GamesListFragment.GamesListFragmentListeners,
-	GenericGameFragment.GenericGameFragmentListeners
+public final class GameFragmentActivity extends BaseFragmentActivity implements
+	GamesListFragment.Listeners,
+	GenericGameFragment.Listeners,
+	MyStatsDialogFragment.Listeners
 {
 
 
 	private final static String LOG_TAG = Utilities.LOG_TAG + " - GameFragmentActivity";
-
-
-	public final static int RESULT_CODE_FINISH = MainActivity.GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FINISH;
-	public final static int NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FRIEND_SELECTED = 16;
-
-
-	public final static String BUNDLE_DATA_GAME_ID = "BUNDLE_DATA_GAME_ID";
-	public final static String BUNDLE_DATA_WHICH_GAME = "BUNDLE_DATA_WHICH_GAME";
-	public final static String BUNDLE_DATA_PERSON_OPPONENT_ID = "BUNDLE_PERSON_OPPONENT_ID";
-	public final static String BUNDLE_DATA_PERSON_OPPONENT_NAME = "BUNDLE_PERSON_OPPONENT_NAME";
-
 	private final static String KEY_ACTION_BAR_TITLE = "KEY_ACTION_BAR_TITLE";
-
-
+	public final static String KEY_NOTIFICATION = "KEY_NOTIFICATION";
 
 
 	private EmptyGameFragment emptyGameFragment;
 	private GamesListFragment gamesListFragment;
 	private GenericGameFragment genericGameFragment;
+	private MyStatsDialogFragment myStatsDialogFragment;
 
 
 
@@ -53,10 +44,9 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 	// of different things that it does, so it's necessary. Check the comments
 	// throughout the method to follow along.
 	{
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState, R.string.games_list, false);
 		setContentView(R.layout.game_fragment_activity);
-		setResult(RESULT_CODE_FINISH);
-		Utilities.setActionBar(this, R.string.games_list, false);
+		setResult(RESULT_FIRST_USER);
 
 		final FragmentManager fManager = getSupportFragmentManager();
 
@@ -74,7 +64,6 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 			{
 				emptyGameFragment = new EmptyGameFragment();
 				fTransaction.add(R.id.game_fragment_activity_fragment_game, emptyGameFragment);
-
 				gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_games_list_fragment);
 			}
 			else
@@ -95,34 +84,43 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 			// Read in the previously stored title for the Action Bar. If the
 			// title was not found, then the R.string.games_list String will be
 			// loaded in and used instead.
-			final CharSequence actionBarTitle = savedInstanceState.getCharSequence(KEY_ACTION_BAR_TITLE,
-				getString(R.string.games_list));
+			CharSequence actionBarTitle = savedInstanceState.getCharSequence(KEY_ACTION_BAR_TITLE);
+
+			if (actionBarTitle == null || !Utilities.validString(actionBarTitle.toString()))
+			{
+				actionBarTitle = getString(R.string.games_list);
+			}
 
 			if (isDeviceLarge())
 			// Checks to see if this is a large device. If this is a large
 			// device then we will load in the multi pane layout.
 			{
-				try
+				gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_games_list_fragment);
+				final Fragment fragment = fManager.findFragmentById(R.id.game_fragment_activity_fragment_game);
+
+				if (fragment instanceof EmptyGameFragment)
 				{
-					emptyGameFragment = (EmptyGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_game);
+					emptyGameFragment = (EmptyGameFragment) fragment;
 				}
-				catch (final ClassCastException e)
+				else
 				{
-					genericGameFragment = (GenericGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_fragment_game);
-					Utilities.setActionBar(this, actionBarTitle, true);
+					genericGameFragment = (GenericGameFragment) fragment;
+					updateActionBar(actionBarTitle, true);
 				}
 			}
 			else
 			// This is a small device. We will load in the single pane layout.
 			{
-				try
+				final Fragment fragment = fManager.findFragmentById(R.id.game_fragment_activity_container);
+
+				if (fragment instanceof GamesListFragment)
 				{
-					gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.game_fragment_activity_container);
+					gamesListFragment = (GamesListFragment) fragment;
 				}
-				catch (final ClassCastException e)
+				else
 				{
-					genericGameFragment = (GenericGameFragment) fManager.findFragmentById(R.id.game_fragment_activity_container);
-					Utilities.setActionBar(this, actionBarTitle, true);
+					genericGameFragment = (GenericGameFragment) fragment;
+					updateActionBar(actionBarTitle, true);
 				}
 			}
 		}
@@ -142,7 +140,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 	{
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (resultCode == NewGameFragmentActivity.RESULT_CODE_FRIEND_SELECTED)
+		if (resultCode == RESULT_OK)
 		// Check the result code as returned from NewGameFragmentActivity. If a
 		// friend was selected, then this means that the current Android user
 		// wants to start a new game against that selected user.
@@ -154,15 +152,13 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 			if (extras != null && !extras.isEmpty())
 			// Ensure that the returned data is not totally garbled.
 			{
-				final long personId = extras.getLong(NewGameFragmentActivity.BUNDLE_FRIEND_ID);
-				final String personName = extras.getString(NewGameFragmentActivity.BUNDLE_FRIEND_NAME);
-				final byte whichGame = extras.getByte(NewGameFragmentActivity.BUNDLE_WHICH_GAME);
+				final Person friend = (Person) extras.getSerializable(NewGameFragmentActivity.KEY_FRIEND);
+				final byte whichGame = extras.getByte(NewGameFragmentActivity.KEY_WHICH_GAME);
 
-				if (Game.isWhichGameValid(whichGame) && Person.isIdAndNameValid(personId, personName))
+				if (friend.isValid() && Game.isWhichGameValid(whichGame))
 				// Ensure that we received proper data from
 				// NewGameFragmentActivity.
 				{
-					final Person friend = new Person(personId, personName);
 					final Game game = new Game(friend, whichGame);
 					onGameSelected(game);
 				}
@@ -178,14 +174,26 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	public void onBackPressed()
 	{
-		if (gamesListFragment != null && gamesListFragment.isAnAsyncTaskRunning())
+		if (myStatsDialogFragment != null && myStatsDialogFragment.onBackPressed())
 		{
-			gamesListFragment.cancelRunningAnyAsyncTask();
+
+		}
+		else if (genericGameFragment != null && genericGameFragment.onBackPressed())
+		{
+
+		}
+		else if (gamesListFragment != null && gamesListFragment.onBackPressed())
+		{
+
 		}
 		else
 		{
-			Utilities.setActionBar(this, R.string.games_list, false);
 			super.onBackPressed();
+
+			if (genericGameFragment == null || !genericGameFragment.isVisible())
+			{
+				updateActionBar(R.string.games_list, false);
+			}
 		}
 	}
 
@@ -200,23 +208,6 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 
 	@Override
-	protected void onDestroy()
-	{
-		if (gamesListFragment != null)
-		{
-			gamesListFragment.cancelRunningAnyAsyncTask();
-		}
-
-		if (genericGameFragment != null)
-		{
-			genericGameFragment.cancelRunningAnyAsyncTask();
-		}
-
-		super.onDestroy();
-	}
-
-
-	@Override
 	public boolean onOptionsItemSelected(final MenuItem item)
 	{
 		switch (item.getItemId())
@@ -225,9 +216,13 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 				onBackPressed();
 				break;
 
-			case R.id.game_fragment_activity_menu_about:
-				startActivity(new Intent(this, AboutActivity.class));
-				break;
+//			case R.id.game_fragment_activity_menu_my_stats:
+//				final FragmentManager fManager = getSupportFragmentManager();
+//				final FragmentTransaction fTransaction = fManager.beginTransaction();
+//				fTransaction.addToBackStack(null);
+//				myStatsDialogFragment = new MyStatsDialogFragment();
+//				myStatsDialogFragment.show(fTransaction, null);
+//				break;
 
 			case R.id.game_fragment_activity_menu_new_game:
 				if (isDeviceLarge() && genericGameFragment != null && genericGameFragment.isVisible())
@@ -235,11 +230,13 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 					onBackPressed();
 				}
 
-				startActivityForResult(new Intent(this, NewGameFragmentActivity.class), NEW_GAME_FRAGMENT_ACTIVITY_REQUEST_CODE_FRIEND_SELECTED);
+				final Intent newGameIntent = new Intent(this, NewGameFragmentActivity.class);
+				startActivityForResult(newGameIntent, RESULT_FIRST_USER);
 				break;
 
 			case R.id.game_fragment_activity_menu_settings:
-				startActivity(new Intent(this, SettingsActivity.class));
+				final Intent settingsIntent = new Intent(this, PreferenceActivity.class);
+				startActivity(settingsIntent);
 				break;
 
 			default:
@@ -253,7 +250,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 	@Override
 	protected void onSaveInstanceState(final Bundle outState)
 	{
-		final CharSequence actionBarTitle = getSupportActionBar().getTitle();
+		final CharSequence actionBarTitle = getActionBarTitle();
 		outState.putCharSequence(KEY_ACTION_BAR_TITLE, actionBarTitle);
 
 		super.onSaveInstanceState(outState);
@@ -279,30 +276,29 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 		final Intent intent = getIntent();
 
 		if (intent != null)
-		// Check to make sure that this Intent object is not null. If it is not
-		// null then we know that the user clicked a Classy Games notification
-		// and was then sent here.
 		{
-			final String gameId = intent.getStringExtra(BUNDLE_DATA_GAME_ID);
-			final byte whichGame = intent.getByteExtra(BUNDLE_DATA_WHICH_GAME, (byte) 0);
-			final long personId = intent.getLongExtra(BUNDLE_DATA_PERSON_OPPONENT_ID, (long) 0);
-			final String personName = intent.getStringExtra(BUNDLE_DATA_PERSON_OPPONENT_NAME);
+			final Bundle arguments = intent.getExtras();
 
-			if (Game.isIdValid(gameId) && Game.isWhichGameValid(whichGame)
-					&& Person.isIdAndNameValid(personId, personName))
-			// Check the data gathered from the Intent. If a single piece of
-			// this data is found to be invalid, then we will not act upon the
-			// tapped notification.
+			if (arguments != null && !arguments.isEmpty())
+			// Check to see if the Intent contains any arguments.
 			{
-				final Game game = new Game(new Person(personId, personName), whichGame, gameId);
-				onGameSelected(game);
+				final Notification notification = (Notification) arguments.getSerializable(KEY_NOTIFICATION);
+
+				if (notification != null)
+				// Check the data gathered from the Intent. If a single piece
+				// of this data is found to be invalid, then we will not act
+				// upon the tapped notification.
+				{
+					final Game game = new Game(notification.getPerson(), notification.getWhichGame(), notification.getGameId());
+					onGameSelected(game);
+				}
 			}
 		}
 	}
 
 
 	/**
-	 * Ensures that the gamesListFragment Fragment is not null.
+	 * Ensures that the gamesListFragment Fragment object is not null.
 	 */
 	private void getGamesListFragment()
 	{
@@ -316,13 +312,15 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 			}
 			else
 			{
-				try
+				final Fragment fragment = fManager.findFragmentById(R.id.game_fragment_activity_container);
+
+				if (fragment instanceof GamesListFragment)
 				{
-					gamesListFragment = (GamesListFragment) fManager.findFragmentById(R.id.game_fragment_activity_container);
+					gamesListFragment = (GamesListFragment) fragment;
 				}
-				catch (final ClassCastException e)
+				else
 				{
-                    Log.e(LOG_TAG, "ClassCastException in getGamesListFragment()!", e);
+					Log.w(LOG_TAG, "getGamesListFragment() tried to grab the GamesListFragment but encountered weirdness!");
 				}
 			}
 		}
@@ -365,29 +363,14 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 				onBackPressed();
 			}
 
-			// Create a new Bundle object and place a bunch of data into it.
-			// This Bundle will be passed into the GenericGameFragment that
-			// is about to be created. This Bundle tells the new
-			// GenericGameFragment details about the game that it needs to
-			// display.
-			final Bundle arguments = new Bundle();
-			arguments.putString(GenericGameFragment.KEY_GAME_ID, game.getId());
-			arguments.putByte(GenericGameFragment.KEY_WHICH_GAME, game.getWhichGame());
-			arguments.putLong(GenericGameFragment.KEY_PERSON_ID, game.getPerson().getId());
-			arguments.putString(GenericGameFragment.KEY_PERSON_NAME, game.getPerson().getName());
-
 			if (game.isGameCheckers())
 			{
-				genericGameFragment = new CheckersGameFragment();
+				genericGameFragment = CheckersGameFragment.newInstance(game.getId(), game.getWhichGame(), game.getPerson());
 			}
 			else if (game.isGameChess())
 			{
-				genericGameFragment = new ChessGameFragment();
+				genericGameFragment = ChessGameFragment.newInstance(game.getId(), game.getWhichGame(), game.getPerson());
 			}
-
-			// give the newly created GenericGameFragments the Bundle that we
-			// created just a few lines above this one
-			genericGameFragment.setArguments(arguments);
 
 			final FragmentTransaction fTransaction = getSupportFragmentManager().beginTransaction();
 			fTransaction.addToBackStack(null);
@@ -398,6 +381,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 			}
 			else
 			{
+				fTransaction.setCustomAnimations(R.anim.slide_in, R.anim.slide_out, R.anim.slide_in_popped, R.anim.slide_out_popped);
 				fTransaction.add(R.id.game_fragment_activity_container, genericGameFragment);
 			}
 
@@ -405,11 +389,15 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 			if (game.isGameCheckers())
 			{
-				Utilities.setActionBar(this, getString(R.string.checkers_with_x, game.getPerson().getName()), true);
+				updateActionBar(getString(R.string.checkers_with_x, game.getPerson().getName()), true);
 			}
 			else if (game.isGameChess())
 			{
-				Utilities.setActionBar(this, getString(R.string.chess_with_x, game.getPerson().getName()), true);
+				updateActionBar(getString(R.string.chess_with_x, game.getPerson().getName()), true);
+			}
+			else
+			{
+				Log.e(LOG_TAG, "Player tried creating a game which was not one we recognize...");
 			}
 		}
 	}
@@ -422,8 +410,6 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 		{
 			onBackPressed();
 		}
-
-		((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancelAll();
 
 		getGamesListFragment();
 		gamesListFragment.refreshGamesList();
@@ -438,16 +424,25 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 
 	@Override
-	public void onDataError()
+	public void onGetGameCancelled()
 	{
-		Utilities.easyToastAndLogError(this, R.string.couldnt_create_the_game_as_malformed_data_was_detected);
 		onBackPressed();
 	}
 
 
 	@Override
-	public void onGetGameCancelled()
+	public void onGetGameDataError()
 	{
+		Toast.makeText(this, R.string.couldnt_create_the_game_as_malformed_data_was_detected, Toast.LENGTH_LONG).show();
+		onBackPressed();
+	}
+
+
+	@Override
+	public void onGetStatsDataError(final Exception e)
+	{
+		Log.e(LOG_TAG, "Exception in onGetStatsDataError!", e);
+		Toast.makeText(this, R.string.a_server_error_occurred_when_trying_to_get_your_stats_data, Toast.LENGTH_LONG).show();
 		onBackPressed();
 	}
 
@@ -475,7 +470,7 @@ public class GameFragmentActivity extends SherlockFragmentActivity implements
 
 		fTransaction.commit();
 		fManager.executePendingTransactions();
-		Utilities.setActionBar(this, R.string.games_list, false);
+		updateActionBar(R.string.games_list, false);
 
 		onRefreshSelected();
 	}

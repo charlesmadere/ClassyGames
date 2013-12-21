@@ -7,13 +7,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.util.Log;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
+import java.io.IOException;
+
 
 /**
- * A class that will hit an end point of the Classy Games server with some
+ * A class that will hit an end point on the Classy Games server with some
  * given data.
  */
 public abstract class ServerApi
@@ -32,6 +35,13 @@ public abstract class ServerApi
 
 
 	/**
+	 * Stores whether or not the user should see a ProgressDialog popup while
+	 * this ServerApi object is running.
+	 */
+	private boolean showProgressDialog;
+
+
+	/**
 	 * The Context of the class that this ServerApi class is being called from.
 	 */
 	private Context context;
@@ -39,15 +49,15 @@ public abstract class ServerApi
 
 	/**
 	 * Object that allows us to run any of the methods that are defined in the
-	 * ServerApiListeners interface.
+	 * Listeners interface.
 	 */
-	private ServerApiListeners listeners;
+	private Listeners listeners;
 
 
 	/**
-	 * An interface that will be used once we're done running code here.
+	 * An interface that will be used throughout the lifecycle of this class.
 	 */
-	public interface ServerApiListeners
+	public interface Listeners
 	{
 
 
@@ -63,8 +73,11 @@ public abstract class ServerApi
 		 * run. If the ServerApiTask AsyncTask was cancelled, or if the user
 		 * dismissed or selected "No" on the AlertDialog that this class
 		 * prompts with, then this method will never be run.
+		 *
+		 * @param serverResponse
+		 * The JSON response as received from the Classy Games.
 		 */
-		public void onComplete();
+		public void onComplete(final String serverResponse);
 
 
 		/**
@@ -81,18 +94,54 @@ public abstract class ServerApi
 
 	/**
 	 * Creates a ServerApi object. This should be used to hit certain server
-	 * end points.
+	 * end points. If this constructor is used, then the user will see a
+	 * ProgressDialog popup while this ServerApi object is running.
 	 * 
 	 * @param context
 	 * The Context of the class that you're creating this object from.
 	 * 
-	 * @param onCompleteListener
-	 * A listener to call once we're done running code here.
+	 * @param listeners
+	 * A set of listeners to call once we're done running code here.
 	 */
-	protected ServerApi(final Context context, final ServerApiListeners onCompleteListener)
+	protected ServerApi(final Context context, final Listeners listeners)
+	{
+		this(context, true, listeners);
+	}
+
+
+	/**
+	 * Creates a ServerApi object. This should be used to hit certain server
+	 * end points. This constructor also allows you to specify whether or not
+	 * the user should see a ProgressDialog popup while this ServerApi object
+	 * is running.
+	 *
+	 * @param context
+	 * The Context of the class that you're creating this object from.
+	 *
+	 * @param showProgressDialog
+	 * Set this to true if you want the user to see a ProgressDialog while this
+	 * ServerApi object is running.
+	 *
+	 * @param listeners
+	 * A set of listeners to call once we're done running code here.
+	 */
+	protected ServerApi(final Context context, final boolean showProgressDialog, final Listeners listeners)
 	{
 		this.context = context;
-		this.listeners = onCompleteListener;
+		this.showProgressDialog = showProgressDialog;
+		this.listeners = listeners;
+	}
+
+
+
+
+	/**
+	 * @return
+	 * Returns the Context object handed in through this class's constructor.
+	 */
+	protected Context getContext()
+	{
+		return context;
 	}
 
 
@@ -188,9 +237,9 @@ public abstract class ServerApi
 	/**
 	 * Starts the execution of the ServerApiTask AsyncTask.
 	 */
-	private void executeTask()
+	protected void executeTask()
 	{
-		serverApiTask = new ServerApiTask(context);
+		serverApiTask = new ServerApiTask();
 		serverApiTask.execute();
 	}
 
@@ -200,29 +249,30 @@ public abstract class ServerApi
 	/**
 	 * An AsyncTask that will query the Classy Games server.
 	 */
-	private final class ServerApiTask extends AsyncTask<Void, Void, String>
+	protected class ServerApiTask extends AsyncTask<Void, Void, String>
 	{
 
 
-		private Context context;
 		private ProgressDialog progressDialog;
 
 
-		private ServerApiTask(final Context context)
-		{
-			this.context = context;
-		}
-
-
 		@Override
-		protected String doInBackground(final Void... params)
+		protected String doInBackground(final Void... v)
 		{
 			String serverResponse = null;
 
-			if (!isCancelled())
+			if (!isCancelled() && Utilities.checkForNetworkConnectivity(context))
 			{
 				final Person whoAmI = Utilities.getWhoAmI(context);
-				serverResponse = ServerApi.this.doInBackground(whoAmI);
+
+				try
+				{
+					serverResponse = postToServer(whoAmI);
+				}
+				catch (final IOException e)
+				{
+					Log.e(LOG_TAG, "IOException during ServerApi's doInBackground()!", e);
+				}
 			}
 
 			return serverResponse;
@@ -232,7 +282,12 @@ public abstract class ServerApi
 		private void cancelled()
 		{
 			serverApiTask = null;
-			progressDialog.dismiss();
+
+			if (progressDialog != null)
+			{
+				progressDialog.dismiss();
+			}
+
 			listeners.onCancel();
 		}
 
@@ -254,31 +309,38 @@ public abstract class ServerApi
 		@Override
 		protected void onPostExecute(final String serverResponse)
 		{
+			if (progressDialog != null)
+			{
+				progressDialog.dismiss();
+			}
+
 			serverApiTask = null;
-			progressDialog.dismiss();
-			listeners.onComplete();
+			listeners.onComplete(serverResponse);
 		}
 
 
 		@Override
 		protected void onPreExecute()
 		{
-			progressDialog = new ProgressDialog(context);
-			progressDialog.setCancelable(true);
-			progressDialog.setCanceledOnTouchOutside(true);
-			progressDialog.setMessage(context.getString(getProgressDialogMessage()));
-
-			progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
+			if (showProgressDialog)
 			{
-				@Override
-				public void onCancel(final DialogInterface dialog)
-				{
-					ServerApiTask.this.cancel(true);
-				}
-			});
+				progressDialog = new ProgressDialog(context);
+				progressDialog.setCancelable(true);
+				progressDialog.setCanceledOnTouchOutside(true);
+				progressDialog.setMessage(context.getString(getProgressDialogMessage()));
 
-			progressDialog.setTitle(getDialogTitle());
-			progressDialog.show();
+				progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
+				{
+					@Override
+					public void onCancel(final DialogInterface dialog)
+					{
+						ServerApiTask.this.cancel(true);
+					}
+				});
+
+				progressDialog.setTitle(getDialogTitle());
+				progressDialog.show();
+			}
 		}
 
 
@@ -288,37 +350,47 @@ public abstract class ServerApi
 
 
 	/**
-	 * The heart of the AsyncTask's code.
-	 * 
-	 * @param whoAmI
-	 * A Person object that represents the user of this Android device.
-	 * 
 	 * @return
-	 * A String that contains the responding result from the server or null if
-	 * a problem happened.
+	 * The R.string.* value for the message to show in the dialog box. This
+	 * should ask the user something like "are you sure you want to blah blah?"
 	 */
-	protected abstract String doInBackground(final Person whoAmI);
-
-
-	/**
-	 * @return
-	 * The R.string.* value for the message to show in the dialog box.
-	 */
-	protected abstract int getDialogMessage();
+	protected int getDialogMessage()
+	{
+		return R.string.are_you_sure_that_you_want_to_send_this_data_to_the_classy_games_servers;
+	}
 
 
 	/**
 	 * @return
 	 * The R.string.* value for the title to show in the dialog box.
 	 */
-	protected abstract int getDialogTitle();
+	protected int getDialogTitle()
+	{
+		return R.string.server_exchange;
+	}
 
 
 	/**
 	 * @return
 	 * The R.string.* value for the message to show in the progress dialog box.
 	 */
-	protected abstract int getProgressDialogMessage();
+	protected int getProgressDialogMessage()
+	{
+		return R.string.sending_data_to_the_classy_games_servers;
+	}
+
+
+	/**
+	 * The heart of the AsyncTask's code.
+	 *
+	 * @param whoAmI
+	 * A Person object that represents the user of this Android device.
+	 *
+	 * @return
+	 * A String that contains the responding result from the server or null if
+	 * a problem happened.
+	 */
+	protected abstract String postToServer(final Person whoAmI) throws IOException;
 
 
 }

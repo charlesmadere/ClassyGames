@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:custom="http://schemas.android.com/apk/res/com.charlesmadere.android.classygames"
+	android:background="@drawable/bg_subtle_gray"
+	android:layout_height="wrap_content"
+	android:layout_width="match_parent"
+	android:paddingBottom="2dip"
+	android:paddingLeft="4dip"
+	android:paddingRight="4dip"
+	android:paddingTop="8dip">
+	<TextView
+		android:gravity="center"
+		android:id="@+id/choose_which_game_dialog_textview"
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:text="@string/which_game_would_you_like_to_play"
+		android:textColor="@color/gray_darker"
+		android:textSize="18sp" />
+	<LinearLayout
+		android:gravity="center"
+		android:layout_below="@id/choose_which_game_dialog_textview"
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:orientation="horizontal"
+		android:paddingBottom="16dip"
+		android:paddingLeft="8dip"
+		android:paddingRight="8dip"
+		android:paddingTop="16dip">
+		<com.charlesmadere.android.classygames.views.TypefaceButton
+			android:background="@drawable/selectable_item"
+			android:drawableTop="@drawable/game_icon_checkers_large"
+			android:id="@+id/choose_which_game_dialog_button_checkers"
+			android:layout_height="wrap_content"
+			android:layout_marginRight="8dip"
+			android:layout_weight="1"
+			android:layout_width="wrap_content"
+			android:paddingBottom="20dip"
+			android:paddingTop="20dip"
+			android:text="@string/checkers"
+			android:textColor="@color/gray_dark"
+			android:textSize="18sp"
+			custom:typefaceButton="BlueHighway" />
+		<com.charlesmadere.android.classygames.views.TypefaceButton
+			android:background="@drawable/selectable_item"
+			android:drawableTop="@drawable/game_icon_chess_large"
+			android:id="@+id/choose_which_game_dialog_button_chess"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="8dip"
+			android:layout_weight="1"
+			android:layout_width="wrap_content"
+			android:paddingBottom="20dip"
+			android:paddingTop="20dip"
+			android:text="@string/chess"
+			android:textColor="@color/gray_dark"
+			android:textSize="18sp"
+			custom:typefaceButton="BlueHighway" />
+	</LinearLayout>
+</RelativeLayout>

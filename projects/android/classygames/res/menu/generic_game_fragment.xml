@@ -5,21 +5,25 @@
 		android:icon="@drawable/ab_send_move"
 		android:id="@+id/generic_game_fragment_menu_send_move"
 		android:showAsAction="ifRoom|withText"
-		android:title="@string/send_move" />
+		android:title="@string/send_move"
+		android:titleCondensed="@string/send" />
 	<item
 		android:enabled="false"
 		android:icon="@drawable/ab_undo_move"
 		android:id="@+id/generic_game_fragment_menu_undo_move"
 		android:showAsAction="ifRoom|withText"
-		android:title="@string/undo_move" />
+		android:title="@string/undo_move"
+		android:titleCondensed="@string/undo" />
 	<item
 		android:icon="@drawable/ab_skip_move"
 		android:id="@+id/generic_game_fragment_menu_skip_move"
 		android:showAsAction="never|withText"
-		android:title="@string/skip_move" />
+		android:title="@string/skip_move"
+		android:titleCondensed="@string/skip" />
 	<item
 		android:icon="@drawable/ab_forfeit_game"
 		android:id="@+id/generic_game_fragment_menu_forfeit_game"
 		android:showAsAction="never|withText"
-		android:title="@string/forfeit_game" />
+		android:title="@string/forfeit_game"
+		android:titleCondensed="@string/forfeit" />
 </menu>

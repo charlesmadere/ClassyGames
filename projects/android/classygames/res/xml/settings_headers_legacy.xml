@@ -6,7 +6,7 @@
 		android:title="@string/game_settings">
 		<intent
 			android:action="@string/com_charlesmadere_android_classygames_settings_game"
-			android:targetClass="com.charlesmadere.android.classygames.settings.SettingsActivity"
+			android:targetClass="com.charlesmadere.android.classygames.settings.PreferenceActivity"
 			android:targetPackage="com.charlesmadere.android.classygames" />
 	</Preference>
 	<Preference
@@ -14,7 +14,15 @@
 		android:title="@string/notification_settings">
 		<intent
 			android:action="@string/com_charlesmadere_android_classygames_settings_notifications"
-			android:targetClass="com.charlesmadere.android.classygames.settings.SettingsActivity"
+			android:targetClass="com.charlesmadere.android.classygames.settings.PreferenceActivity"
+			android:targetPackage="com.charlesmadere.android.classygames" />
+	</Preference>
+	<Preference
+		android:summary="@string/classy_games_information_and_details"
+		android:title="@string/about">
+		<intent
+			android:action="@string/com_charlesmadere_android_classygames_settings_about"
+			android:targetClass="com.charlesmadere.android.classygames.settings.PreferenceActivity"
 			android:targetPackage="com.charlesmadere.android.classygames" />
 	</Preference>
 </PreferenceScreen>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.charlesmadere.android.classygames.views.TypefaceTextView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:custom="http://schemas.android.com/apk/res/com.charlesmadere.android.classygames"
+	android:ellipsize="end"
+	android:gravity="left|center_vertical"
+	android:id="@+id/action_bar_title"
+	android:layout_gravity="left|center_vertical"
+	android:layout_height="match_parent"
+	android:layout_width="match_parent"
+	android:maxLines="1"
+	android:textColor="@color/white"
+	android:textSize="18sp"
+	custom:typefaceTextView="BlueHighway" />

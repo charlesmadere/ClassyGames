@@ -4,14 +4,15 @@
 		android:id="@+id/game_fragment_activity_menu_new_game"
 		android:showAsAction="ifRoom|withText"
 		android:title="@string/new_game" />
+	<!--<item-->
+		<!--android:icon="@drawable/ab_my_stats"-->
+		<!--android:id="@+id/game_fragment_activity_menu_my_stats"-->
+		<!--android:showAsAction="never|withText"-->
+		<!--android:title="@string/my_stats"-->
+		<!--android:titleCondensed="@string/stats" />-->
 	<item
 		android:icon="@drawable/ab_settings"
 		android:id="@+id/game_fragment_activity_menu_settings"
 		android:showAsAction="never|withText"
 		android:title="@string/settings" />
-	<item
-		android:icon="@drawable/ab_about"
-		android:id="@+id/game_fragment_activity_menu_about"
-		android:showAsAction="never|withText"
-		android:title="@string/about" />
 </menu>

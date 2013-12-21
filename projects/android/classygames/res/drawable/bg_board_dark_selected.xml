@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
 	android:dither="true"
-	android:src="@drawable/bg_wild_oliva_selected"
-	android:tileMode="repeat" />
+	android:shape="rectangle">
+	<solid
+		android:background="@drawable/bg_wild_oliva"
+		android:color="@color/overlay_pink_darkest" />
+	<stroke
+		android:color="@color/overlay_red_light"
+		android:width="1dip" />
+</shape>

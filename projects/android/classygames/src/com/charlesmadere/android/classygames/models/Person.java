@@ -3,11 +3,13 @@ package com.charlesmadere.android.classygames.models;
 
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
+import java.io.Serializable;
+
 
 /**
  * Class representing a real person.
  */
-public class Person
+public final class Person implements Serializable
 {
 
 
@@ -41,10 +43,10 @@ public class Person
 
 	/**
 	 * Creates a Person object.
-	 * 
+	 *
 	 * @param id
 	 * The Facebook ID of the user.
-	 * 
+	 *
 	 * @param name
 	 * The Facebook name of the user.
 	 */
@@ -57,10 +59,10 @@ public class Person
 
 	/**
 	 * Creates a Person object.
-	 * 
+	 *
 	 * @param id
 	 * The Facebook ID of the user.
-	 * 
+	 *
 	 * @param name
 	 * The Facebook name of the user.
 	 */
@@ -68,6 +70,33 @@ public class Person
 	{
 		this.id = Long.parseLong(id);
 		this.name = name;
+	}
+
+
+
+
+	/**
+	 * If this Person's name is "Charles Madere", then this method will return
+	 * "Charles". If this Person's name is "Brian Joseph McGarry", then this
+	 * method will return "Brian". If this Person's name is "Mew2King", then
+	 * this method will return "Mew2King". Basically, it tries to return
+	 * everything before the first space in the Person's name.
+	 *
+	 * @return
+	 * Attempts to return this Person's first name. If a first name is unable
+	 * to be found, then it will just return this Person's full name.
+	 */
+	public String getFirstName()
+	{
+		String name = this.name;
+		final int index = name.indexOf(" ");
+
+		if (index >= 1)
+		{
+			name = name.substring(0, index);
+		}
+
+		return name;
 	}
 
 
@@ -82,22 +111,9 @@ public class Person
 
 
 	/**
-	 * Converts this Person's Facebook ID (a long) into a String and then
-	 * returns that String.
-	 * 
-	 * @return
-	 * Returns this Person's Facebook ID as a String.
-	 */
-	public String getIdAsString()
-	{
-		return String.valueOf(id);
-	}
-
-
-	/**
 	 * Returns this Person's Facebook name (a String). This is that person's
 	 * <strong>whole name</strong>.
-	 * 
+	 *
 	 * @return
 	 * Returns this Person's Facebook name (a String).
 	 */
@@ -110,7 +126,7 @@ public class Person
 	/**
 	 * Replaces this Person object's current Facebook ID with this newly given
 	 * id. An ID should be a number that is always greater than 0.
-	 * 
+	 *
 	 * @param id
 	 * New Facebook ID of the user.
 	 */
@@ -126,7 +142,7 @@ public class Person
 	 * will convert the given String into a long. As this method doesn't check
 	 * for the possibility that a null String was given to it, this method will
 	 * cause a crash if that happens.
-	 * 
+	 *
 	 * @param id
 	 * New Facebook ID of the user.
 	 */
@@ -138,8 +154,8 @@ public class Person
 
 	/**
 	 * Replaces this Person object's current Facebook name with this newly
-	 * given name. 
-	 * 
+	 * given name.
+	 *
 	 * @param name
 	 * New Facebook name of the user.
 	 */
@@ -157,7 +173,7 @@ public class Person
 	 * <li>This Person's name is not null.</li>
 	 * <li>This Person's name is not empty.</li>
 	 * </ol>
-	 * 
+	 *
 	 * @return
 	 * Returns true if all of the above conditions are true. Returns false if
 	 * any single one of the above conditions are false.
@@ -184,19 +200,19 @@ public class Person
 	 * be checked for validity. Use this method to check for that validity.
 	 * Valid means one thing:
 	 * <ol>
-	 * <li>This ID is greater than or equal to 1.</li>
+	 * <li>This ID is greater than or equal to 0.</li>
 	 * </ol>
-	 * 
+	 *
 	 * @param id
 	 * The Facebook ID to check for validity.
-	 * 
+	 *
 	 * @return
 	 * Returns true if the above condition is true. Returns false if the above
 	 * condition is false.
 	 */
 	public static boolean isIdValid(final long id)
 	{
-		return id >= 1;
+		return id >= 0;
 	}
 
 
@@ -210,18 +226,18 @@ public class Person
 	 * <li>This String, when converted into a long, is greater than or equal to
 	 * 1.</li>
 	 * </ol>
-	 * 
+	 *
 	 * @param id
 	 * The Facebook ID to check for validity. This parameter is converted into
-	 * a long. This String is 
-	 * 
+	 * a long. This String is
+	 *
 	 * @return
 	 * Returns true if the above condition is true. Returns false if the above
 	 * condition is false.
 	 */
 	public static boolean isIdValid(final String id)
 	{
-		if (Utilities.verifyValidString(id))
+		if (Utilities.validString(id))
 		// First, ensure that we were given a valid String. If this proves true
 		// then we will check to see that the long value of this String is a
 		// valid ID value.
@@ -236,62 +252,6 @@ public class Person
 
 
 	/**
-	 * When Facebook IDs are acquired throughout the app's runtime they should
-	 * be checked for validity. Use this method to check for that validity.
-	 * This method allows you to check a whole bunch of IDs at once. If any
-	 * single ID that is passed in is invalid, then this method will cease to
-	 * check the rest and will immediately return false.
-	 * 
-	 * @param ids
-	 * The Facebook IDs to check for validity.
-	 * 
-	 * @return
-	 * Returns true if <strong>all</strong> of the passed in Facebook IDs are
-	 * valid. Returns false if <strong>any single</strong> ID is invalid.
-	 */
-	public static boolean areIdsValid(final long... ids)
-	{
-		for (final long id : ids)
-		{
-			if (!isIdValid(id))
-			{
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-
-	/**
-	 * When Facebook IDs are acquired throughout the app's runtime they should
-	 * be checked for validity. Use this method to check for that validity.
-	 * This method allows you to check a whole bunch of IDs at once. If any
-	 * single ID that is passed in is invalid, then this method will cease to
-	 * check the rest and will immediately return false.
-	 * 
-	 * @param ids
-	 * The Facebook IDs to check for validity.
-	 * 
-	 * @return
-	 * Returns true if <strong>all</strong> of the passed in Facebook IDs are
-	 * valid. Returns false if <strong>any single</strong> ID is invalid.
-	 */
-	public static boolean areIdsValid(final String... ids)
-	{
-		for (final String id : ids)
-		{
-			if (!isIdValid(id))
-			{
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-
-	/**
 	 * When Facebook names are acquired throughout the app's runtime they
 	 * should be checked to make sure they're not messed up in any way. Use
 	 * this method to check to make sure that they're not messed up. Valid
@@ -300,62 +260,13 @@ public class Person
 	 * <li>This String is not null.</li>
 	 * <li>This String has a length of greater than or equal to 1.</li>
 	 * </ol>
-	 * 
+	 *
 	 * @return
 	 * Returns true if the passed in Facebook name is valid.
 	 */
 	public static boolean isNameValid(final String name)
 	{
-		return Utilities.verifyValidString(name);
-	}
-
-
-	/**
-	 * When Facebook names are acquired throughout the app's runtime they
-	 * should be checked to make sure they're not messed up in any way. This
-	 * method allows you to check a whole bunch of names at once. If any single
-	 * name that is passed in is invalid, then this method will cease to check
-	 * the rest and will immediately return false.
-	 * 
-	 * @param names
-	 * The Facebook names to check for validity.
-	 * 
-	 * @return
-	 * Returns true if <strong>all</strong> of the passed in Facebook names are
-	 * valid. Returns false if <strong>any single</strong> name is invalid.
-	 */
-	public static boolean areNamesValid(final String... names)
-	{
-		for (final String name : names)
-		{
-			if (!isNameValid(name))
-			{
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-
-	/**
-	 * Checks a given ID and name for validity. Some of the other validity
-	 * verifying methods in this class define exactly what <i>validity</i> is.
-	 * See those for more information!
-	 *
-	 * @param id
-	 * The Facebook ID to check for validity.
-	 *
-	 * @param name
-	 * The name to check for validity.
-	 *
-	 * @return
-	 * Returns true if the values of both given parameters are detected as
-	 * being valid.
-	 */
-	public static boolean isIdAndNameValid(final long id, final String name)
-	{
-		return isIdValid(id) && isNameValid(name);
+		return Utilities.validString(name);
 	}
 
 

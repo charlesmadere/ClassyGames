@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
+	xmlns:custom="http://schemas.android.com/apk/res/com.charlesmadere.android.classygames"
+	android:layout_height="match_parent"
+	android:layout_width="match_parent"
+	android:orientation="vertical"
+	style="@style/ClassyGames">
+	<com.google.ads.AdView
+		android:layout_centerHorizontal="true"
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		ads:adSize="BANNER"
+		ads:adUnitId="@string/admob_publisher_id"
+		ads:loadAdOnCreate="true" />
+	<com.charlesmadere.android.classygames.views.BoardView
+		android:id="@+id/generic_game_fragment_board"
+		android:layout_centerInParent="true"
+		android:layout_height="match_parent"
+		android:layout_width="match_parent"
+		custom:bright_background="@drawable/bg_board_bright"
+		custom:bright_background_selected="@drawable/bg_board_bright_selected"
+		custom:columns="8"
+		custom:dark_background="@drawable/bg_board_dark"
+		custom:dark_background_selected="@drawable/bg_board_dark_selected"
+		custom:position_padding="1dip"
+		custom:rows="8" />
+	<LinearLayout
+		android:gravity="center"
+		android:id="@+id/generic_game_fragment_loading"
+		android:layout_centerInParent="true"
+		android:layout_gravity="center"
+		android:layout_height="match_parent"
+		android:layout_width="match_parent"
+		android:orientation="vertical"
+		android:visibility="gone">
+		<ProgressBar
+			android:indeterminate="true"
+			android:layout_gravity="center"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content" />
+		<TextView
+			android:gravity="center"
+			android:id="@+id/generic_game_fragment_loading_textview"
+			android:layout_gravity="center"
+			android:layout_height="wrap_content"
+			android:layout_width="match_parent"
+			android:text="@string/loading_game"
+			android:textIsSelectable="false"
+			style="@style/Paragraph.ExtraPadding" />
+	</LinearLayout>
+</RelativeLayout>

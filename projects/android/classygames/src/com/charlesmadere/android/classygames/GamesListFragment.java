@@ -6,6 +6,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -15,46 +17,42 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
-import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.charlesmadere.android.classygames.gcm.GCMIntentService;
 import com.charlesmadere.android.classygames.models.Game;
+import com.charlesmadere.android.classygames.models.ListItem;
 import com.charlesmadere.android.classygames.models.Person;
-import com.charlesmadere.android.classygames.server.ServerApi;
-import com.charlesmadere.android.classygames.server.ServerApiForfeitGame;
-import com.charlesmadere.android.classygames.server.ServerApiSkipMove;
+import com.charlesmadere.android.classygames.server.*;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
-import com.charlesmadere.android.classygames.utilities.ServerUtilities;
-import com.charlesmadere.android.classygames.utilities.TypefaceUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedList;
 
 
-public class GamesListFragment extends SherlockFragment implements
-	OnItemClickListener,
-	OnItemLongClickListener
+public final class GamesListFragment extends SherlockListFragment implements
+	AdapterView.OnItemClickListener,
+	AdapterView.OnItemLongClickListener
 {
 
 
 	private final static String LOG_TAG = Utilities.LOG_TAG + " - GamesListFragment";
-
 	private final static String KEY_GAMES_LIST_JSON = "KEY_GAMES_LIST_JSON";
 
 
+	private ListView list;
+	private TextView empty;
+	private LinearLayout loading;
+	private TextView noInternetConnection;
 
 
 	/**
@@ -77,6 +75,14 @@ public class GamesListFragment extends SherlockFragment implements
 
 
 	/**
+	 * If the user has selected a game in their games list, then this will be a
+	 * handle to that Game object. If no game is currently selected, then this
+	 * will be null.
+	 */
+	private ListItem<Game> selectedGame;
+
+
+	/**
 	 * Holds a handle to a currently running (if it's currently running)
 	 * ServerApi object.
 	 */
@@ -86,28 +92,22 @@ public class GamesListFragment extends SherlockFragment implements
 	/**
 	 * Callback interface for the ServerApi class.
 	 */
-	private ServerApi.ServerApiListeners serverApiListeners;
-
-
-	/**
-	 * List Adapter for this Fragment's ListView layout item.
-	 */
-	private GamesListAdapter gamesListAdapter;
+	private ServerApi.Listeners serverApiListeners;
 
 
 
 
 	/**
 	 * Object that allows us to run any of the methods that are defined in the
-	 * GamesListFragmentListeners interface.
+	 * Listeners interface.
 	 */
-	private GamesListFragmentListeners listeners;
+	private Listeners listeners;
 
 
 	/**
 	 * A bunch of listener methods for this Fragment.
 	 */
-	public interface GamesListFragmentListeners
+	public interface Listeners
 	{
 
 
@@ -143,7 +143,28 @@ public class GamesListFragment extends SherlockFragment implements
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
 	{
-		serverApiListeners = new ServerApi.ServerApiListeners()
+		return inflater.inflate(R.layout.games_list_fragment, container, false);
+	}
+
+
+	@Override
+	@SuppressWarnings("deprecation")
+	public void onActivityCreated(final Bundle savedInstanceState)
+	{
+		super.onActivityCreated(savedInstanceState);
+		final View view = getView();
+
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
+		{
+			final BitmapDrawable background = (BitmapDrawable) getResources().getDrawable(R.drawable.bg_bright);
+			background.setAntiAlias(true);
+			background.setDither(true);
+			background.setFilterBitmap(true);
+			background.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+			view.setBackgroundDrawable(background);
+		}
+
+		serverApiListeners = new ServerApi.Listeners()
 		{
 			@Override
 			public void onCancel()
@@ -153,7 +174,7 @@ public class GamesListFragment extends SherlockFragment implements
 
 
 			@Override
-			public void onComplete()
+			public void onComplete(final String serverResponse)
 			{
 				serverApiTask = null;
 				listeners.onRefreshSelected();
@@ -167,20 +188,18 @@ public class GamesListFragment extends SherlockFragment implements
 			}
 		};
 
-		return inflater.inflate(R.layout.games_list_fragment, container, false);
-	}
-
-
-	@Override
-	public void onActivityCreated(final Bundle savedInstanceState)
-	{
-		super.onActivityCreated(savedInstanceState);
+		list = getListView();
+		list.setOnItemClickListener(this);
+		list.setOnItemLongClickListener(this);
+		empty = (TextView) view.findViewById(android.R.id.empty);
+		loading = (LinearLayout) view.findViewById(R.id.games_list_fragment_loading);
+		noInternetConnection = (TextView) view.findViewById(R.id.fragment_no_internet_connection);
 
 		if (savedInstanceState != null && savedInstanceState.containsKey(KEY_GAMES_LIST_JSON))
 		{
 			final String gamesListJSONString = savedInstanceState.getString(KEY_GAMES_LIST_JSON);
 
-			if (Utilities.verifyValidString(gamesListJSONString))
+			if (Utilities.validString(gamesListJSONString))
 			{
 				try
 				{
@@ -188,7 +207,7 @@ public class GamesListFragment extends SherlockFragment implements
 				}
 				catch (final JSONException e)
 				{
-                    Log.e(LOG_TAG, "JSONException in onActivityCreated()!", e);
+					Log.e(LOG_TAG, "JSONException in onActivityCreated()!", e);
 				}
 			}
 		}
@@ -202,61 +221,60 @@ public class GamesListFragment extends SherlockFragment implements
 	// been implemented, an exception is thrown.
 	{
 		super.onAttach(activity);
-
-		try
-		{
-			listeners = (GamesListFragmentListeners) activity;
-		}
-		catch (final ClassCastException e)
-		{
-			throw new ClassCastException(activity.toString() + " must implement listeners!");
-		}
+		listeners = (Listeners) activity;
 	}
 
 
 	@Override
 	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
 	{
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && isAsyncRefreshGamesListRunning())
-		{
-			inflater.inflate(R.menu.generic_cancel, menu);
-		}
-		else
-		{
-			inflater.inflate(R.menu.generic_refresh, menu);
-		}
-
+		inflater.inflate(R.menu.games_list_fragment, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
 
 	@Override
-	public void onItemClick(final AdapterView<?> l, final View v, final int position, final long id)
+	public void onDestroyView()
 	{
-		final Game game = gamesListAdapter.getItem(position);
+		cancelRunningAnyAsyncTask();
+		super.onDestroyView();
+	}
 
-		if (game.isTypeGame() && game.isTurnYours())
+
+	@Override
+	public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id)
+	{
+		@SuppressWarnings("unchecked")
+		final ListItem<Game> game = (ListItem<Game>) parent.getItemAtPosition(position);
+
+		if (!game.isSelected() && game.get().isTypeGame() && game.get().isTurnYours())
 		{
-			listeners.onGameSelected(game);
+			listeners.onGameSelected(game.get());
+			selectedGame = game;
+			selectedGame.select();
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+			{
+				view.setActivated(true);
+			}
 		}
 	}
 
 
 	@Override
-	public boolean onItemLongClick(final AdapterView<?> l, final View v, int position, final long id)
+	public boolean onItemLongClick(final AdapterView<?> parent, final View view, int position, final long id)
 	{
 		if (!isAnAsyncTaskRunning())
 		{
-			final Game game = gamesListAdapter.getItem(position);
+			@SuppressWarnings("unchecked")
+			final ListItem<Game> game = (ListItem<Game>) parent.getItemAtPosition(position);
 
-			if (game.isTypeGame())
+			if (game.get().isTypeGame())
 			{
-				v.setSelected(true);
-
 				final Context context = getSherlockActivity();
-				String[] items = null;
+				String [] items;
 
-				if (game.isTurnYours())
+				if (game.get().isTurnYours())
 				{
 					items = getResources().getStringArray(R.array.games_list_fragment_context_menu_entries_turn_yours);
 				}
@@ -265,29 +283,28 @@ public class GamesListFragment extends SherlockFragment implements
 					items = getResources().getStringArray(R.array.games_list_fragment_context_menu_entries_turn_theirs);
 				}
 
-				final AlertDialog.Builder builder = new AlertDialog.Builder(context)
+				new AlertDialog.Builder(context)
 					.setItems(items, new DialogInterface.OnClickListener()
 					{
 						@Override
 						public void onClick(final DialogInterface dialog, final int which)
 						{
-							if (!isAnAsyncTaskRunning())
+							dialog.dismiss();
+
+							switch (which)
 							{
-								switch (which)
-								{
-									case 0:
-										serverApiTask = new ServerApiForfeitGame(context, serverApiListeners, game);
-										break;
+								case 0:
+									serverApiTask = new ServerApiForfeitGame(context, serverApiListeners, game.get());
+									break;
 
-									case 1:
-										serverApiTask = new ServerApiSkipMove(context, serverApiListeners, game);
-										break;
-								}
+								case 1:
+									serverApiTask = new ServerApiSkipMove(context, serverApiListeners, game.get());
+									break;
+							}
 
-								if (serverApiTask != null)
-								{
-									serverApiTask.execute();
-								}
+							if (serverApiTask != null)
+							{
+								serverApiTask.execute();
 							}
 						}
 					})
@@ -299,9 +316,8 @@ public class GamesListFragment extends SherlockFragment implements
 							dialog.dismiss();
 						}
 					})
-					.setTitle(getString(R.string.select_an_action_for_this_game_against_x, game.getPerson().getName()));
-
-				builder.show();
+					.setTitle(getString(R.string.select_an_action_for_this_game_against_x, game.get().getPerson().getName()))
+					.show();
 
 				return true;
 			}
@@ -320,15 +336,11 @@ public class GamesListFragment extends SherlockFragment implements
 	{
 		switch (item.getItemId())
 		{
-			case R.id.generic_cancel_menu_cancel:
-				if (isAsyncRefreshGamesListRunning())
+			case R.id.games_list_fragment_menu_refresh:
+				if (!isAnAsyncTaskRunning())
 				{
-					asyncRefreshGamesList.cancel(true);
+					listeners.onRefreshSelected();
 				}
-				break;
-
-			case R.id.generic_refresh_menu_refresh:
-				listeners.onRefreshSelected();
 				break;
 
 			default:
@@ -336,30 +348,6 @@ public class GamesListFragment extends SherlockFragment implements
 		}
 
 		return true;
-	}
-
-
-	@Override
-	public void onPrepareOptionsMenu(final Menu menu)
-	{
-		final MenuItem menuItem = menu.findItem(R.id.generic_refresh_menu_refresh);
-
-		if (isAsyncRefreshGamesListRunning())
-		{
-			if (menuItem != null)
-			{
-				menuItem.setEnabled(false);
-			}
-		}
-		else
-		{
-			if (menuItem != null)
-			{
-				menuItem.setEnabled(true);
-			}
-		}
-
-		super.onPrepareOptionsMenu(menu);
 	}
 
 
@@ -385,7 +373,7 @@ public class GamesListFragment extends SherlockFragment implements
 		{
 			final String gamesListJSONString = gamesListJSON.toString();
 
-			if (Utilities.verifyValidString(gamesListJSONString))
+			if (Utilities.validString(gamesListJSONString))
 			{
 				outState.putString(KEY_GAMES_LIST_JSON, gamesListJSONString);
 			}
@@ -401,7 +389,7 @@ public class GamesListFragment extends SherlockFragment implements
 	 * Cancels the AsyncRefreshGamesList AsyncTask if it is currently
 	 * running.
 	 */
-	public void cancelRunningAnyAsyncTask()
+	private void cancelRunningAnyAsyncTask()
 	{
 		if (isAsyncRefreshGamesListRunning())
 		{
@@ -410,6 +398,24 @@ public class GamesListFragment extends SherlockFragment implements
 		else if (serverApiTask != null)
 		{
 			serverApiTask.cancel();
+		}
+	}
+
+
+	private void deselectGame()
+	{
+		if (selectedGame != null)
+		{
+			selectedGame.unselect();
+		}
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+		{
+			for (int i = 0; i < list.getChildCount(); ++i)
+			{
+				final View view = list.getChildAt(i);
+				view.setActivated(false);
+			}
 		}
 	}
 
@@ -429,9 +435,30 @@ public class GamesListFragment extends SherlockFragment implements
 	 * @return
 	 * Returns true if an AsyncTask is running.
 	 */
-	public boolean isAnAsyncTaskRunning()
+	private boolean isAnAsyncTaskRunning()
 	{
 		return isAsyncRefreshGamesListRunning() || serverApiTask != null;
+	}
+
+
+	public boolean onBackPressed()
+	{
+		if (isAnAsyncTaskRunning())
+		{
+			cancelRunningAnyAsyncTask();
+		}
+		else
+		{
+			deselectGame();
+		}
+
+		return false;
+	}
+
+
+	public void refreshGamesList()
+	{
+		refreshGamesList(false);
 	}
 
 
@@ -447,56 +474,41 @@ public class GamesListFragment extends SherlockFragment implements
 	{
 		if (!isAnAsyncTaskRunning())
 		{
-			asyncRefreshGamesList = new AsyncRefreshGamesList(getSherlockActivity(),
-				getLayoutInflater(getArguments()), (ViewGroup) getView(), restoreExistingList);
+			asyncRefreshGamesList = new AsyncRefreshGamesList(restoreExistingList);
 			asyncRefreshGamesList.execute();
 		}
 	}
 
 
-	/**
-	 * Refreshes the Games List if a refresh is not already running.
-	 */
-	public void refreshGamesList()
-	{
-		refreshGamesList(false);
-	}
 
 
-
-
-	private final class AsyncRefreshGamesList extends AsyncTask<Void, Void, ArrayList<Game>>
-		implements Comparator<Game>
+	private final class AsyncRefreshGamesList extends AsyncTask<Void, Void, LinkedList<ListItem<Game>>>
+		implements Comparator<ListItem<Game>>
 	{
 
 
+		private byte runStatus;
 		private final static byte RUN_STATUS_NORMAL = 1;
 		private final static byte RUN_STATUS_IOEXCEPTION = 2;
 		private final static byte RUN_STATUS_NO_NETWORK_CONNECTION = 3;
-		private byte runStatus;
 
 
-		private SherlockFragmentActivity fragmentActivity;
-		private LayoutInflater inflater;
-		private ViewGroup viewGroup;
 		private boolean restoreExistingList;
+		private SherlockFragmentActivity fragmentActivity;
 
 
-		private AsyncRefreshGamesList(final SherlockFragmentActivity fragmentActivity, final LayoutInflater inflater,
-			final ViewGroup viewGroup, final boolean restoreExistingList)
+		private AsyncRefreshGamesList(final boolean restoreExistingList)
 		{
-			this.fragmentActivity = fragmentActivity;
-			this.inflater = inflater;
-			this.viewGroup = viewGroup;
 			this.restoreExistingList = restoreExistingList;
+			fragmentActivity = getSherlockActivity();
+			runStatus = RUN_STATUS_NORMAL;
 		}
 
 
 		@Override
-		protected ArrayList<Game> doInBackground(final Void... params)
+		protected LinkedList<ListItem<Game>> doInBackground(final Void... params)
 		{
-			runStatus = RUN_STATUS_NORMAL;
-			ArrayList<Game> games = null;
+			LinkedList<ListItem<Game>> games = null;
 
 			if (restoreExistingList && gamesListJSON != null)
 			{
@@ -507,20 +519,33 @@ public class GamesListFragment extends SherlockFragment implements
 				restoreExistingList = false;
 				final Person whoAmI = Utilities.getWhoAmI(fragmentActivity);
 
-				// create the data that will be posted to the server
-				final ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-				nameValuePairs.add(new BasicNameValuePair(ServerUtilities.POST_DATA_ID, whoAmI.getIdAsString()));
+				GCMIntentService.clearNotifications(fragmentActivity);
+				GenericGameFragment.clearCachedBoards(fragmentActivity);
+				MyStatsDialogFragment.clearCachedStats(fragmentActivity);
 
 				if (!isCancelled() && Utilities.checkForNetworkConnectivity(fragmentActivity))
 				{
 					try
 					{
+						Thread.sleep(Server.WAIT_FOR_SERVER_DELAY);
+					}
+					catch (final InterruptedException e)
+					{
+						Log.w(LOG_TAG, "AsyncRefreshGamesList thread sleep interrupted!", e);
+					}
+
+					try
+					{
+						// create the data that will be posted to the server
+						final ApiData data = new ApiData()
+							.addKeyValuePair(Server.POST_DATA_ID, whoAmI.getId());
+
 						// Make a call to the Classy Games server API and store
 						// the JSON response. Note that we're also sending it
 						// the nameValuePairs variable that we just created.
 						// The server requires we send it some information in
 						// order for us to get a meaningful response back.
-						final String serverResponse = ServerUtilities.postToServer(ServerUtilities.ADDRESS_GET_GAMES, nameValuePairs);
+						final String serverResponse = Server.postToServerGetGames(data);
 
 						// This line does a lot. Check the parseServerResponse()
 						// method below to get detailed information. This will
@@ -546,17 +571,14 @@ public class GamesListFragment extends SherlockFragment implements
 
 		private void cancelled()
 		{
-			viewGroup.removeAllViews();
-			inflater.inflate(R.layout.games_list_fragment_cancelled, viewGroup);
-
 			setRunningState(false);
 		}
 
 
 		@Override
-		public int compare(final Game gameOne, final Game gameTwo)
+		public int compare(final ListItem<Game> gameOne, final ListItem<Game> gameTwo)
 		{
-			return (int) (gameTwo.getTimestamp() - gameOne.getTimestamp());
+			return (int) (gameTwo.get().getTimestamp() - gameOne.get().getTimestamp());
 		}
 
 
@@ -568,34 +590,38 @@ public class GamesListFragment extends SherlockFragment implements
 
 
 		@Override
-		protected void onCancelled(final ArrayList<Game> games)
+		protected void onCancelled(final LinkedList<ListItem<Game>> games)
 		{
 			cancelled();
 		}
 
 
 		@Override
-		protected void onPostExecute(final ArrayList<Game> games)
+		protected void onPostExecute(final LinkedList<ListItem<Game>> games)
 		{
-			viewGroup.removeAllViews();
-
 			if (runStatus == RUN_STATUS_NORMAL && games != null && !games.isEmpty())
 			{
-				inflater.inflate(R.layout.games_list_fragment, viewGroup);
-				gamesListAdapter = new GamesListAdapter(fragmentActivity, R.layout.games_list_fragment_listview_item, games);
+				final GamesListAdapter gamesListAdapter = new GamesListAdapter(games);
+				list.setAdapter(gamesListAdapter);
 
-				final ListView listView = (ListView) viewGroup.findViewById(R.id.games_list_fragment_listview);
-				listView.setAdapter(gamesListAdapter);
-				listView.setOnItemClickListener(GamesListFragment.this);
-				listView.setOnItemLongClickListener(GamesListFragment.this);
+				list.setVisibility(View.VISIBLE);
+				empty.setVisibility(View.GONE);
+				loading.setVisibility(View.GONE);
+				noInternetConnection.setVisibility(View.GONE);
 			}
 			else if (runStatus == RUN_STATUS_IOEXCEPTION || runStatus == RUN_STATUS_NO_NETWORK_CONNECTION)
 			{
-				inflater.inflate(R.layout.fragment_no_internet_connection, viewGroup);
+				list.setVisibility(View.GONE);
+				empty.setVisibility(View.GONE);
+				loading.setVisibility(View.GONE);
+				noInternetConnection.setVisibility(View.VISIBLE);
 			}
 			else
 			{
-				inflater.inflate(R.layout.games_list_fragment_no_games, viewGroup);
+				list.setVisibility(View.GONE);
+				empty.setVisibility(View.VISIBLE);
+				loading.setVisibility(View.GONE);
+				noInternetConnection.setVisibility(View.GONE);
 			}
 
 			setRunningState(false);
@@ -607,8 +633,10 @@ public class GamesListFragment extends SherlockFragment implements
 		{
 			setRunningState(true);
 
-			viewGroup.removeAllViews();
-			inflater.inflate(R.layout.games_list_fragment_loading, viewGroup);
+			list.setVisibility(View.GONE);
+			empty.setVisibility(View.GONE);
+			loading.setVisibility(View.VISIBLE);
+			noInternetConnection.setVisibility(View.GONE);
 		}
 
 
@@ -620,55 +648,56 @@ public class GamesListFragment extends SherlockFragment implements
 		 * The JSON response acquired from the Classy Games server. This method
 		 * <strong>does</strong> check to make sure that this String is both
 		 * not null and not empty. If that scenario happens then this method
-		 * will return an empty ArrayList of Game objects.
+		 * will return an empty LinkedList of Game objects.
 		 * 
 		 * @return
-		 * Returns an ArrayList of Game objects. This ArrayList has a
-		 * possilibity of being empty.
+		 * Returns an LinkedList of Game objects. This LinkedList has a
+		 * possibility of being empty.
 		 */
-		private ArrayList<Game> parseServerResponse(final String serverResponse)
+		private LinkedList<ListItem<Game>> parseServerResponse(final String serverResponse)
 		{
-			final ArrayList<Game> games = new ArrayList<Game>();
+			final LinkedList<ListItem<Game>> games = new LinkedList<ListItem<Game>>();
 
 			if (!isCancelled())
 			{
-				if (restoreExistingList || Utilities.verifyValidString(serverResponse))
+				if (restoreExistingList || Utilities.validString(serverResponse))
 				{
 					try
 					{
 						if (!restoreExistingList)
-						// Check to see if this boolean is set to true. If it
-						// is set to true, then 
+						// Check to see if this boolean is set to false. If it
+						// is set to false, then we're restoring an existing
+						// games list.
 						{
 							gamesListJSON = new JSONObject(serverResponse);
 						}
 
-						final JSONObject jsonResult = gamesListJSON.getJSONObject(ServerUtilities.POST_DATA_RESULT);
-						final JSONObject jsonGameData = jsonResult.optJSONObject(ServerUtilities.POST_DATA_SUCCESS);
+						final JSONObject jsonResult = gamesListJSON.getJSONObject(Server.POST_DATA_RESULT);
+						final JSONObject jsonGameData = jsonResult.optJSONObject(Server.POST_DATA_SUCCESS);
 
 						if (jsonGameData == null)
 						{
-							final String successMessage = jsonResult.optString(ServerUtilities.POST_DATA_SUCCESS);
+							final String successMessage = jsonResult.optString(Server.POST_DATA_SUCCESS);
 
-							if (Utilities.verifyValidString(successMessage))
+							if (Utilities.validString(successMessage))
 							{
 								Log.d(LOG_TAG, "Server returned success message: " + successMessage);
 							}
 							else
 							{
-								final String errorMessage = jsonResult.getString(ServerUtilities.POST_DATA_ERROR);
+								final String errorMessage = jsonResult.getString(Server.POST_DATA_ERROR);
 								Log.e(LOG_TAG, "Server returned error message: " + errorMessage);
 							}
 						}
 						else
 						{
-							ArrayList<Game> turn = parseTurn(jsonGameData, ServerUtilities.POST_DATA_TURN_YOURS, Game.TURN_YOURS);
+							LinkedList<ListItem<Game>> turn = parseTurn(jsonGameData, Server.POST_DATA_TURN_YOURS, Game.TURN_YOURS);
 							if (turn != null && !turn.isEmpty())
 							{
 								games.addAll(turn);
 							}
 
-							turn = parseTurn(jsonGameData, ServerUtilities.POST_DATA_TURN_THEIRS, Game.TURN_THEIRS);
+							turn = parseTurn(jsonGameData, Server.POST_DATA_TURN_THEIRS, Game.TURN_THEIRS);
 							if (turn != null && !turn.isEmpty())
 							{
 								games.addAll(turn);
@@ -677,10 +706,8 @@ public class GamesListFragment extends SherlockFragment implements
 					}
 					catch (final JSONException e)
 					{
-						Log.e(LOG_TAG, "JSON String is massively malformed.");
+						Log.e(LOG_TAG, "JSON String is massively malformed.", e);
 					}
-
-					games.trimToSize();
 				}
 				else
 				{
@@ -693,14 +720,15 @@ public class GamesListFragment extends SherlockFragment implements
 
 
 		/**
-		 * Creates an ArrayList of Game objects that are of the specified turn.
+		 * Creates and returns a LinkedList of Game objects that are of the
+		 * turn as specified in the whichTurn parameter.
 		 * 
 		 * @param jsonGameData
 		 * The JSON game data as received from the server.
 		 * 
 		 * @param postDataTurn
 		 * Which turn to pull from the JSON game data. This variable's value
-		 * should be one of the ServerUtilities.POST_DATA_TURN_* variables.
+		 * should be one of the Server.POST_DATA_TURN_* variables.
 		 * 
 		 * @param whichTurn
 		 * Who's turn is this? This variable's value should be one of the
@@ -710,9 +738,9 @@ public class GamesListFragment extends SherlockFragment implements
 		 * Returns all of the games of the specified turn. Has the possibility
 		 * of being null. Check for that!
 		 */
-		private ArrayList<Game> parseTurn(final JSONObject jsonGameData, final String postDataTurn, final boolean whichTurn)
+		private LinkedList<ListItem<Game>> parseTurn(final JSONObject jsonGameData, final String postDataTurn, final boolean whichTurn)
 		{
-			ArrayList<Game> games = null;
+			LinkedList<ListItem<Game>> games = null;
 
 			try
 			{
@@ -722,8 +750,9 @@ public class GamesListFragment extends SherlockFragment implements
 				if (turnLength >= 1)
 				// ensure that we have at least one element in the JSONArray
 				{
-					games = new ArrayList<Game>();
-					games.add(new Game(whichTurn));
+					games = new LinkedList<ListItem<Game>>();
+					final Game separator = new Game(whichTurn);
+					games.add(new ListItem<Game>(separator));
 
 					for (int i = 0; i < turnLength && !isCancelled(); ++i)
 					// loop through all of the games in this turn
@@ -733,7 +762,7 @@ public class GamesListFragment extends SherlockFragment implements
 							final JSONObject jsonGame = turn.getJSONObject(i);
 
 							final Game game = new Game(jsonGame, whichTurn);
-							games.add(game);
+							games.add(new ListItem<Game>(game));
 						}
 						catch (final JSONException e)
 						{
@@ -742,6 +771,10 @@ public class GamesListFragment extends SherlockFragment implements
 					}
 
 					Collections.sort(games, this);
+				}
+				else
+				{
+					throw new JSONException("Player has no games for this turn.");
 				}
 			}
 			catch (final JSONException e)
@@ -774,8 +807,6 @@ public class GamesListFragment extends SherlockFragment implements
 			{
 				asyncRefreshGamesList = null;
 			}
-
-			Utilities.compatInvalidateOptionsMenu(fragmentActivity, true);
 		}
 
 
@@ -784,63 +815,98 @@ public class GamesListFragment extends SherlockFragment implements
 
 
 
-	private final class GamesListAdapter extends ArrayAdapter<Game>
+	private final class GamesListAdapter extends BaseAdapter
 	{
 
 
-		private ArrayList<Game> games;
-		private Context context;
+		private Activity activity;
 		private Drawable checkersIcon;
 		private Drawable chessIcon;
 		private Drawable emptyProfilePicture;
-		private ImageLoader imageLoader;
+		private LayoutInflater inflater;
+		private LinkedList<ListItem<Game>> games;
+		private Resources resources;
 
 
-		private GamesListAdapter(final Context context, final int textViewResourceId, final ArrayList<Game> games)
+		private GamesListAdapter(final LinkedList<ListItem<Game>> games)
 		{
-			super(context, textViewResourceId, games);
-			this.context = context;
 			this.games = games;
-
-			imageLoader = Utilities.getImageLoader(context);
-
-			final Resources resources = context.getResources();
+			activity = getSherlockActivity();
+			inflater = activity.getLayoutInflater();
+			resources = getResources();
 			emptyProfilePicture = resources.getDrawable(R.drawable.empty_profile_picture_small);
-			checkersIcon = resources.getDrawable(R.drawable.game_icon_checkers);
-			chessIcon = resources.getDrawable(R.drawable.game_icon_chess);
+			checkersIcon = resources.getDrawable(R.drawable.game_icon_checkers_small);
+			chessIcon = resources.getDrawable(R.drawable.game_icon_chess_small);
+		}
+
+
+		@Override
+		public int getCount()
+		{
+			return games.size();
+		}
+
+
+		@Override
+		public ListItem<Game> getItem(final int position)
+		{
+			return games.get(position);
+		}
+
+
+		@Override
+		public long getItemId(final int position)
+		{
+			return position;
 		}
 
 
 		@Override
 		public View getView(final int position, View convertView, final ViewGroup parent)
 		{
-			final LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			final Game game = games.get(position);
+			final ListItem<Game> listItem = games.get(position);
+			final Game game = listItem.get();
 
 			if (game.isTypeGame())
 			{
-				convertView = inflater.inflate(R.layout.games_list_fragment_listview_item, null);
+				if (convertView == null || convertView.getTag() == null)
+				{
+					convertView = inflater.inflate(R.layout.games_list_fragment_listview_item, null);
+					final ViewHolder viewHolder = new ViewHolder(convertView);
+					convertView.setTag(viewHolder);
+				}
 
-				final ImageView picture = (ImageView) convertView.findViewById(R.id.games_list_fragment_listview_item_picture);
-				picture.setImageDrawable(emptyProfilePicture);
-				imageLoader.displayImage(FacebookUtilities.getFriendsPictureSquare(context, game.getPerson().getId()), picture);
+				final ViewHolder viewHolder = (ViewHolder) convertView.getTag();
+				viewHolder.picture.setImageDrawable(emptyProfilePicture);
+				final String friendsPictureURL = FacebookUtilities.getFriendsPictureSquare(activity, game.getPerson().getId());
+				Utilities.getImageLoader().displayImage(friendsPictureURL, viewHolder.picture);
 
-				final TextView name = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_name);
-				name.setText(game.getPerson().getName());
-				name.setTypeface(TypefaceUtilities.getTypeface(context.getAssets(), TypefaceUtilities.BLUE_HIGHWAY_D));
-
-				final TextView time = (TextView) convertView.findViewById(R.id.games_list_fragment_listview_item_time);
-				time.setText(game.getTimestampFormatted(context));
-
-				final ImageView gameIcon = (ImageView) convertView.findViewById(R.id.games_list_fragment_listview_item_game_icon);
+				viewHolder.name.setText(game.getPerson().getName());
+				viewHolder.time.setText(game.getTimestampFormatted(resources));
 
 				if (game.isGameCheckers())
 				{
-					gameIcon.setImageDrawable(checkersIcon);
+					viewHolder.gameIcon.setImageDrawable(checkersIcon);
 				}
 				else if (game.isGameChess())
 				{
-					gameIcon.setImageDrawable(chessIcon);
+					viewHolder.gameIcon.setImageDrawable(chessIcon);
+				}
+				else
+				{
+					viewHolder.gameIcon.setImageDrawable(null);
+				}
+
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+				{
+					if (listItem.isSelected())
+					{
+						convertView.setActivated(true);
+					}
+					else
+					{
+						convertView.setActivated(false);
+					}
 				}
 			}
 			else
@@ -856,9 +922,34 @@ public class GamesListFragment extends SherlockFragment implements
 
 				convertView.setOnClickListener(null);
 				convertView.setOnLongClickListener(null);
+				convertView.setTag(null);
 			}
 
 			return convertView;
+		}
+
+
+	}
+
+
+
+
+	private final class ViewHolder
+	{
+
+
+		private ImageView gameIcon;
+		private ImageView picture;
+		private TextView name;
+		private TextView time;
+
+
+		private ViewHolder(final View view)
+		{
+			gameIcon = (ImageView) view.findViewById(R.id.games_list_fragment_listview_item_game_icon);
+			picture = (ImageView) view.findViewById(R.id.games_list_fragment_listview_item_picture);
+			name = (TextView) view.findViewById(R.id.games_list_fragment_listview_item_name);
+			time = (TextView) view.findViewById(R.id.games_list_fragment_listview_item_time);
 		}
 
 
