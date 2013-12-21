@@ -30,8 +30,8 @@ public final class PreferenceActivity extends BasePreferenceActivity implements
 
 	private ListPreference checkersPieceColorOpponents;
 	private ListPreference checkersPieceColorPlayers;
-	private ListPreference chessPieceColorOpponents;
-	private ListPreference chessPieceColorPlayers;
+//	private ListPreference chessPieceColorOpponents;
+//	private ListPreference chessPieceColorPlayers;
 
 
 
@@ -70,8 +70,8 @@ public final class PreferenceActivity extends BasePreferenceActivity implements
 
 					checkersPieceColorOpponents = (ListPreference) findPreference(getString(R.string.settings_key_opponents_checkers_piece_color));
 					checkersPieceColorPlayers = (ListPreference) findPreference(getString(R.string.settings_key_players_checkers_piece_color));
-					chessPieceColorOpponents = (ListPreference) findPreference(getString(R.string.settings_key_opponents_chess_piece_color));
-					chessPieceColorPlayers = (ListPreference) findPreference(getString(R.string.settings_key_players_chess_piece_color));
+//					chessPieceColorOpponents = (ListPreference) findPreference(getString(R.string.settings_key_opponents_chess_piece_color));
+//					chessPieceColorPlayers = (ListPreference) findPreference(getString(R.string.settings_key_players_chess_piece_color));
 
 					checkersPieceColorOpponents.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
 					{
@@ -101,33 +101,33 @@ public final class PreferenceActivity extends BasePreferenceActivity implements
 						}
 					});
 
-					chessPieceColorOpponents.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
-					{
-						@Override
-						public boolean onPreferenceChange(final Preference preference, final Object newValue)
-						{
-							if (chessPieceColorPlayers == null)
-							{
-								chessPieceColorPlayers = (ListPreference) findPreference(getString(R.string.settings_key_opponents_chess_piece_color));
-							}
+//					chessPieceColorOpponents.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
+//					{
+//						@Override
+//						public boolean onPreferenceChange(final Preference preference, final Object newValue)
+//						{
+//							if (chessPieceColorPlayers == null)
+//							{
+//								chessPieceColorPlayers = (ListPreference) findPreference(getString(R.string.settings_key_opponents_chess_piece_color));
+//							}
+//
+//							return onPlayerChessPieceColorPreferenceChange(chessPieceColorPlayers, newValue);
+//						}
+//					});
 
-							return onPlayerChessPieceColorPreferenceChange(chessPieceColorPlayers, newValue);
-						}
-					});
-
-					chessPieceColorPlayers.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
-					{
-						@Override
-						public boolean onPreferenceChange(final Preference preference, final Object newValue)
-						{
-							if (chessPieceColorOpponents == null)
-							{
-								chessPieceColorOpponents = (ListPreference) findPreference(getString(R.string.settings_key_players_chess_piece_color));
-							}
-
-							return onPlayerChessPieceColorPreferenceChange(chessPieceColorOpponents, newValue);
-						}
-					});
+//					chessPieceColorPlayers.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
+//					{
+//						@Override
+//						public boolean onPreferenceChange(final Preference preference, final Object newValue)
+//						{
+//							if (chessPieceColorOpponents == null)
+//							{
+//								chessPieceColorOpponents = (ListPreference) findPreference(getString(R.string.settings_key_players_chess_piece_color));
+//							}
+//
+//							return onPlayerChessPieceColorPreferenceChange(chessPieceColorOpponents, newValue);
+//						}
+//					});
 				}
 				else if (action.equals(getString(R.string.com_charlesmadere_android_classygames_settings_notifications)))
 				// the intent's action is saying that we need to show the
@@ -249,18 +249,18 @@ public final class PreferenceActivity extends BasePreferenceActivity implements
 	}
 
 
-	@Override
-	public boolean onOpponentChessPieceColorPreferenceChange(final ListPreference playerChessPieceColor, final Object newValue)
-	{
-		return makeSureBothTeamsArentTheSameColor(playerChessPieceColor, newValue);
-	}
+//	@Override
+//	public boolean onOpponentChessPieceColorPreferenceChange(final ListPreference playerChessPieceColor, final Object newValue)
+//	{
+//		return makeSureBothTeamsArentTheSameColor(playerChessPieceColor, newValue);
+//	}
 
 
-	@Override
-	public boolean onPlayerChessPieceColorPreferenceChange(final ListPreference opponentChessPieceColor, final Object newValue)
-	{
-		return makeSureBothTeamsArentTheSameColor(opponentChessPieceColor, newValue);
-	}
+//	@Override
+//	public boolean onPlayerChessPieceColorPreferenceChange(final ListPreference opponentChessPieceColor, final Object newValue)
+//	{
+//		return makeSureBothTeamsArentTheSameColor(opponentChessPieceColor, newValue);
+//	}
 
 
 	@Override

@@ -80,8 +80,8 @@ public final class GamePreferenceFragment extends BasePreferenceFragment
 		 * Return true if you want to save this new color. False if you do not
 		 * want to save this new color.
 		 */
-		public boolean onOpponentChessPieceColorPreferenceChange(final ListPreference playerChessPieceColor,
-			final Object newValue);
+//		public boolean onOpponentChessPieceColorPreferenceChange(final ListPreference playerChessPieceColor,
+//			final Object newValue);
 
 
 		/**
@@ -99,8 +99,8 @@ public final class GamePreferenceFragment extends BasePreferenceFragment
 		 * Return true if you want to save this new color. False if you do not
 		 * want to save this new color.
 		 */
-		public boolean onPlayerChessPieceColorPreferenceChange(final ListPreference opponentChessPieceColor,
-			final Object newValue);
+//		public boolean onPlayerChessPieceColorPreferenceChange(final ListPreference opponentChessPieceColor,
+//			final Object newValue);
 
 
 	}
@@ -127,8 +127,8 @@ public final class GamePreferenceFragment extends BasePreferenceFragment
 
 		final ListPreference playersCheckersPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_players_checkers_piece_color));
 		final ListPreference opponentsCheckersPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_opponents_checkers_piece_color));
-		final ListPreference playersChessPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_players_chess_piece_color));
-		final ListPreference opponentsChessPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_opponents_chess_piece_color));
+//		final ListPreference playersChessPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_players_chess_piece_color));
+//		final ListPreference opponentsChessPieceColor = (ListPreference) findPreference(getString(R.string.settings_key_opponents_chess_piece_color));
 
 		opponentsCheckersPieceColor.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
 		{
@@ -148,23 +148,23 @@ public final class GamePreferenceFragment extends BasePreferenceFragment
 			}
 		});
 
-		opponentsChessPieceColor.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
-		{
-			@Override
-			public boolean onPreferenceChange(final Preference preference, final Object newValue)
-			{
-				return listeners.onOpponentChessPieceColorPreferenceChange(playersChessPieceColor, newValue);
-			}
-		});
-
-		playersChessPieceColor.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
-		{
-			@Override
-			public boolean onPreferenceChange(final Preference preference, final Object newValue)
-			{
-				return listeners.onPlayerChessPieceColorPreferenceChange(opponentsChessPieceColor, newValue);
-			}
-		});
+//		opponentsChessPieceColor.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
+//		{
+//			@Override
+//			public boolean onPreferenceChange(final Preference preference, final Object newValue)
+//			{
+//				return listeners.onOpponentChessPieceColorPreferenceChange(playersChessPieceColor, newValue);
+//			}
+//		});
+//
+//		playersChessPieceColor.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
+//		{
+//			@Override
+//			public boolean onPreferenceChange(final Preference preference, final Object newValue)
+//			{
+//				return listeners.onPlayerChessPieceColorPreferenceChange(opponentsChessPieceColor, newValue);
+//			}
+//		});
 	}
 
 
