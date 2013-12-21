@@ -151,7 +151,11 @@ public final class ConfirmGameFragment extends SherlockFragment
 			@Override
 			public void onClick(final View v)
 			{
-				getAlertDialog().show();
+				// TODO
+				// uncomment this and then delete the line below when chess is complete
+				// getAlertDialog().show();
+
+				listeners.onGameConfirm(friend, Game.WHICH_GAME_CHECKERS);
 			}
 		});
 
