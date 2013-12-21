@@ -8,6 +8,11 @@ import android.os.Bundle;
 import android.widget.TextView;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
+import com.charlesmadere.android.classygames.settings.AboutPreferenceFragment;
+import com.charlesmadere.android.classygames.settings.BasePreferenceFragment;
+import com.charlesmadere.android.classygames.settings.GamePreferenceFragment;
+import com.charlesmadere.android.classygames.settings.NotificationPreferenceFragment;
+import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
 public abstract class BasePreferenceActivity extends SherlockPreferenceActivity
@@ -62,6 +67,29 @@ public abstract class BasePreferenceActivity extends SherlockPreferenceActivity
 
 		final TextView titleView = (TextView) findViewById(R.id.action_bar_title);
 		titleView.setText(title);
+	}
+
+
+	@Override
+	protected boolean isValidFragment(final String fragmentName)
+	{
+		final boolean isValidFragment;
+
+		// http://stackoverflow.com/questions/19973034/isvalidfragment-android-api-19
+
+		if (Utilities.validString(fragmentName) && (AboutPreferenceFragment.class.getName().equals(fragmentName)
+			|| BasePreferenceFragment.class.getName().equals(fragmentName)
+			|| GamePreferenceFragment.class.getName().equals(fragmentName)
+			|| NotificationPreferenceFragment.class.getName().equals(fragmentName)))
+		{
+			isValidFragment = true;
+		}
+		else
+		{
+			isValidFragment = false;
+		}
+
+		return isValidFragment;
 	}
 
 
