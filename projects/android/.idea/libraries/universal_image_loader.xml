@@ -1,9 +1,11 @@
 <component name="libraryTable">
   <library name="universal-image-loader">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/classygames/libs/universal-image-loader-1.8.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/classygames/libs/universal-image-loader-1.9.0.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/classygames/libs/universal-image-loader-1.9.0.jar!/" />
+    </SOURCES>
   </library>
 </component>
