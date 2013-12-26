@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +34,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 
-public abstract class GenericGameFragment extends SherlockFragment
+public abstract class GenericGameFragment extends Fragment
 {
 
 

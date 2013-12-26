@@ -7,10 +7,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.widget.TextView;
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
 
 
-public abstract class BaseActivity extends SherlockActivity
+public abstract class BaseActivity extends ActionBarActivity
 {
 
 

@@ -2,6 +2,7 @@ package com.charlesmadere.android.classygames;
 
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,7 @@ import com.actionbarsherlock.app.SherlockFragment;
  * This Fragment is used when there is no friend in the Friends List currently
  * selected.
  */
-public final class EmptyConfirmGameFragment extends SherlockFragment
+public final class EmptyConfirmGameFragment extends Fragment
 {
 
 
