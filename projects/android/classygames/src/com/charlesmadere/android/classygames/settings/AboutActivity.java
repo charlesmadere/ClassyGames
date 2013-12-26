@@ -4,11 +4,11 @@ package com.charlesmadere.android.classygames.settings;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.BaseActivity;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.SharkActivity;
@@ -19,6 +19,8 @@ public final class AboutActivity extends BaseActivity
 
 
 	public final static String GITHUB_URL = "https://github.com/ScootrNova/ClassyGames";
+
+
 
 
 	@Override
@@ -42,7 +44,7 @@ public final class AboutActivity extends BaseActivity
 	@Override
 	public boolean onCreateOptionsMenu(final Menu menu)
 	{
-		final MenuInflater inflater = getSupportMenuInflater();
+		final MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.about_activity, menu);
 		return super.onCreateOptionsMenu(menu);
 	}

@@ -5,8 +5,9 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.widget.TextView;
-import com.actionbarsherlock.app.ActionBar;
 
 
 public abstract class BaseActivity extends ActionBarActivity

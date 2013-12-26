@@ -8,17 +8,11 @@ import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.models.games.GenericBoard;
@@ -581,7 +575,7 @@ public abstract class GenericGameFragment extends Fragment
 	{
 		if (Utilities.validString(game.getId()) && !isAnAsyncTaskRunning())
 		{
-			serverApiTask = new ServerApiForfeitGame(getSherlockActivity(), serverApiListeners, game);
+			serverApiTask = new ServerApiForfeitGame(getActivity(), serverApiListeners, game);
 			serverApiTask.execute();
 		}
 	}
@@ -631,7 +625,7 @@ public abstract class GenericGameFragment extends Fragment
 		final String opponentsColorKeyString = getString(opponentsColorKey);
 		final String playersColorKeyString = getString(playersColorKey);
 
-		final SharedPreferences sPreferences = Utilities.getPreferences(getSherlockActivity());
+		final SharedPreferences sPreferences = Utilities.getPreferences(getActivity());
 
 		// Read in the colors that the player has selected to use for their
 		// pieces. If the user has not set a color, the playerColor and
@@ -838,10 +832,10 @@ public abstract class GenericGameFragment extends Fragment
 	{
 		if (!isAnAsyncTaskRunning())
 		{
-			final boolean askUserToExecute = Utilities.checkIfSettingIsEnabled(getSherlockActivity(),
+			final boolean askUserToExecute = Utilities.checkIfSettingIsEnabled(getActivity(),
 				R.string.settings_key_ask_before_sending_move, true);
 
-			serverApiTask = new ServerApiSendMove(getSherlockActivity(), serverApiListeners, game, board);
+			serverApiTask = new ServerApiSendMove(getActivity(), serverApiListeners, game, board);
 			serverApiTask.execute(askUserToExecute);
 		}
 	}
@@ -855,7 +849,7 @@ public abstract class GenericGameFragment extends Fragment
 	{
 		if (Utilities.validString(game.getId()) && !isAnAsyncTaskRunning())
 		{
-			serverApiTask = new ServerApiSkipMove(getSherlockActivity(), serverApiListeners, game);
+			serverApiTask = new ServerApiSkipMove(getActivity(), serverApiListeners, game);
 			serverApiTask.execute();
 		}
 	}
@@ -881,7 +875,7 @@ public abstract class GenericGameFragment extends Fragment
 			}
 
 			flush();
-			getSherlockActivity().supportInvalidateOptionsMenu();
+			getActivity().supportInvalidateOptionsMenu();
 		}
 	}
 
@@ -896,12 +890,12 @@ public abstract class GenericGameFragment extends Fragment
 	{
 
 
-		private SherlockFragmentActivity fragmentActivity;
+		private FragmentActivity activity;
 
 
 		private AsyncGetGame()
 		{
-			fragmentActivity = getSherlockActivity();
+			activity = getActivity();
 		}
 
 
@@ -912,14 +906,14 @@ public abstract class GenericGameFragment extends Fragment
 
 			if (!isCancelled())
 			{
-				final SharedPreferences sPreferences = fragmentActivity.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+				final SharedPreferences sPreferences = activity.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
 				final String boardJSON = sPreferences.getString(game.getId(), null);
 
 				if (Utilities.validString(boardJSON))
 				{
 					serverResponse = boardJSON;
 				}
-				else if (Utilities.checkForNetworkConnectivity(fragmentActivity))
+				else if (Utilities.checkForNetworkConnectivity(activity))
 				{
 					final ApiData data = new ApiData()
 						.addKeyValuePair(Server.POST_DATA_ID, game.getId());
@@ -1007,7 +1001,7 @@ public abstract class GenericGameFragment extends Fragment
 				asyncGetGame = null;
 			}
 
-			fragmentActivity.supportInvalidateOptionsMenu();
+			activity.supportInvalidateOptionsMenu();
 		}
 
 

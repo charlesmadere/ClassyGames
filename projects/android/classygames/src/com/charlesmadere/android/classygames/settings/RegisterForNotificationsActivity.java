@@ -1,12 +1,12 @@
 package com.charlesmadere.android.classygames.settings;
 
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.BaseActivity;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.gcm.GCMManager;
@@ -85,7 +85,7 @@ public final class RegisterForNotificationsActivity extends BaseActivity
 
 	private void register()
 	{
-		final SherlockActivity activity = this;
+		final Activity activity = this;
 
 		if (GCMManager.checkGooglePlayServices(activity, true) && serverApiTask == null)
 		{

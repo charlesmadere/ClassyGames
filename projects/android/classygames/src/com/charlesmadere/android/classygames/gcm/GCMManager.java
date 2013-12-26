@@ -1,12 +1,12 @@
 package com.charlesmadere.android.classygames.gcm;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Looper;
 import android.util.Log;
-import com.actionbarsherlock.app.SherlockActivity;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -42,7 +42,7 @@ public final class GCMManager
 	 * https://developer.android.com/google/play-services/setup.html#ensure
 	 *
 	 * @param activity
-	 * The SherlockActivity that you're calling this method from.
+	 * The Activity that you're calling this method from.
 	 *
 	 * @param showErrorDialog
 	 * This method has the capability of showing the user an error dialog if
@@ -52,7 +52,7 @@ public final class GCMManager
 	 * @return
 	 * Returns true if this device is ready to go with Google Play services.
 	 */
-	public static boolean checkGooglePlayServices(final SherlockActivity activity, final boolean showErrorDialog)
+	public static boolean checkGooglePlayServices(final Activity activity, final boolean showErrorDialog)
 	{
 		final int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity.getApplicationContext());
 		boolean googlePlayServicesAreAvailable;

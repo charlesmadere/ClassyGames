@@ -2,10 +2,10 @@ package com.charlesmadere.android.classygames;
 
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
-import com.actionbarsherlock.view.MenuItem;
 
 
 public final class SharkActivity extends BaseActivity

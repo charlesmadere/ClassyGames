@@ -3,10 +3,10 @@ package com.charlesmadere.android.classygames.settings;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.BaseActivity;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.server.ServerApi;

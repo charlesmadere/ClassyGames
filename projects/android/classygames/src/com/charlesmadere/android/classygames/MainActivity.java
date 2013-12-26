@@ -1,18 +1,18 @@
 package com.charlesmadere.android.classygames;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextSwitcher;
 import android.widget.ViewSwitcher;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Window;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.server.Server;
 import com.charlesmadere.android.classygames.server.ServerApi;
@@ -209,8 +209,8 @@ public final class MainActivity extends BaseActivity implements
 	{
 
 
+		private Activity activity;
 		private Session session;
-		private SherlockActivity activity;
 
 
 		private AsyncGetFacebookIdentity(final Session session)

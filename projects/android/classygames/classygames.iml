@@ -29,6 +29,7 @@
     <orderEntry type="module" module-name="facebook" />
     <orderEntry type="module" module-name="googleplayservices" />
     <orderEntry type="library" name="android-support-v4" level="project" />
+    <orderEntry type="library" name="android-support-v7" level="project" />
     <orderEntry type="library" name="google-admob-ads-sdk" level="project" />
     <orderEntry type="library" name="google-play-services" level="project" />
     <orderEntry type="library" name="universal-image-loader" level="project" />
