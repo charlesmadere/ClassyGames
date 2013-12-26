@@ -19,8 +19,11 @@ public final class GCMBroadcastReceiver extends WakefulBroadcastReceiver
 	@Override
 	public final void onReceive(final Context context, final Intent intent)
 	{
+		final String packageName = context.getPackageName();
+		final String className = GCMIntentService.class.getName();
+
 		// Explicitly specify that the GCMIntentService will handle the Intent.
-		final ComponentName component = new ComponentName(context.getPackageName(), GCMIntentService.class.getName());
+		final ComponentName component = new ComponentName(packageName, className);
 		intent.setComponent(component);
 
 		// Start the service, keeping the device awake while it is launching.

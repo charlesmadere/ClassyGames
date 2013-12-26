@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Looper;
 import android.util.Log;
+import com.charlesmadere.android.classygames.App;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -19,7 +20,7 @@ public final class GCMManager
 {
 
 
-	private final static String LOG_TAG = Utilities.LOG_TAG + " - GCMManager";
+	private final static String LOG_TAG = App.BASE_TAG + GCMManager.class.getSimpleName();
 
 	// The Google API Console can be found at this website:
 	// https://code.google.com/apis/console/b/0/

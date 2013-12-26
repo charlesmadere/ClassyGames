@@ -16,6 +16,7 @@ import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.Html;
 import android.util.Log;
+import com.charlesmadere.android.classygames.App;
 import com.charlesmadere.android.classygames.GameFragmentActivity;
 import com.charlesmadere.android.classygames.GameOverActivity;
 import com.charlesmadere.android.classygames.R;
@@ -38,7 +39,7 @@ public final class GCMIntentService extends IntentService
 {
 
 
-	private final static String LOG_TAG = Utilities.LOG_TAG + " - GCMIntentService";
+	private final static String LOG_TAG = App.BASE_TAG + GCMIntentService.class.getSimpleName();
 	private final static String PREFERENCES_NAME = "GCMIntentService_Preferences";
 
 	private final static int GCM_MAX_SIMULTANEOUS_NOTIFICATIONS = 6;
@@ -52,9 +53,7 @@ public final class GCMIntentService extends IntentService
 
 	public GCMIntentService()
 	{
-		// I realize that this constructor looks goofy, but it's how the
-		// Google documentation does it!
-		super("GCMIntentService");
+		super(GCMIntentService.class.getSimpleName());
 	}
 
 
