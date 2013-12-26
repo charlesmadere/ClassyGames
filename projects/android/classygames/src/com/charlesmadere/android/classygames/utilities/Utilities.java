@@ -18,8 +18,6 @@ public final class Utilities
 {
 
 
-	public final static String LOG_TAG = "Classy Games";
-
 	// stores the Facebook user id and name of the app's current user
 	private static Person whoAmI;
 	private final static String KEY_WHO_AM_I_ID = "KEY_WHO_AM_I_ID";
