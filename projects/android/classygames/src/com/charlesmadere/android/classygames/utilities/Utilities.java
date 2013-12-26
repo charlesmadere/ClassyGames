@@ -8,11 +8,7 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
-import com.charlesmadere.android.classygames.App;
 import com.charlesmadere.android.classygames.models.Person;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 
 /**
@@ -23,8 +19,6 @@ public final class Utilities
 
 
 	public final static String LOG_TAG = "Classy Games";
-
-	private static ImageLoader imageLoader;
 
 	// stores the Facebook user id and name of the app's current user
 	private static Person whoAmI;
@@ -109,32 +103,6 @@ public final class Utilities
 		}
 
 		return versionCode;
-	}
-
-
-	/**
-	 * @return
-	 * Returns an ImageLoader object. This can be used to download images from
-	 * a web URL and then display them to a view.
-	 */
-	public static ImageLoader getImageLoader()
-	{
-		if (imageLoader == null)
-		{
-			final DisplayImageOptions displayOptions = new DisplayImageOptions.Builder()
-				.cacheInMemory(true)
-				.cacheOnDisc(true)
-				.build();
-
-			final ImageLoaderConfiguration loaderConfiguration = new ImageLoaderConfiguration.Builder(App.getContext())
-				.defaultDisplayImageOptions(displayOptions)
-				.build();
-
-			imageLoader = ImageLoader.getInstance();
-			imageLoader.init(loaderConfiguration);
-		}
-
-		return imageLoader;
 	}
 
 
