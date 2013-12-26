@@ -41,8 +41,8 @@ public final class MainActivity extends BaseActivity implements
 	private TextSwitcher loadingText;
 
 
-	private boolean hasFinished = false;
-	private boolean isResumed = false;
+	private boolean hasFinished;
+	private boolean isResumed;
 	private ServerApiRegister serverApiTask;
 	private UiLifecycleHelper uiHelper;
 
