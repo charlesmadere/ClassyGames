@@ -7,7 +7,8 @@ import java.util.LinkedList;
 
 
 /**
- * Allows data to be easily bundled up and sent to the Classy Games server.
+ * A data type that should be used to bundle up data that is to be sent to the Classy Games
+ * server.
  */
 public final class ApiData
 {
@@ -33,7 +34,7 @@ public final class ApiData
 
 	public ApiData addKeyValuePair(final String key, final long value)
 	{
-		addKeyValuePair(key, Long.toString(value));
+		addKeyValuePair(key, String.valueOf(value));
 		return this;
 	}
 
