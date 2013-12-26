@@ -12,16 +12,10 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.*;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.gcm.GCMIntentService;
 import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.ListItem;
@@ -39,7 +33,7 @@ import java.util.Comparator;
 import java.util.LinkedList;
 
 
-public final class GamesListFragment extends SherlockListFragment implements
+public final class GamesListFragment extends BaseFragment implements
 	AdapterView.OnItemClickListener,
 	AdapterView.OnItemLongClickListener
 {
@@ -137,13 +131,6 @@ public final class GamesListFragment extends SherlockListFragment implements
 	{
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-	}
-
-
-	@Override
-	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
-	{
-		return inflater.inflate(R.layout.games_list_fragment, container, false);
 	}
 
 
@@ -271,7 +258,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 
 			if (game.get().isTypeGame())
 			{
-				final Context context = getSherlockActivity();
+				final Context context = getActivity();
 				String [] items;
 
 				if (game.get().isTurnYours())
@@ -383,6 +370,11 @@ public final class GamesListFragment extends SherlockListFragment implements
 	}
 
 
+	@Override
+	protected int getConventView()
+	{
+		return R.layout.games_list_fragment;
+	}
 
 
 	/**
@@ -494,13 +486,13 @@ public final class GamesListFragment extends SherlockListFragment implements
 
 
 		private boolean restoreExistingList;
-		private SherlockFragmentActivity fragmentActivity;
+		private FragmentActivity activity;
 
 
 		private AsyncRefreshGamesList(final boolean restoreExistingList)
 		{
 			this.restoreExistingList = restoreExistingList;
-			fragmentActivity = getSherlockActivity();
+			activity = getActivity();
 			runStatus = RUN_STATUS_NORMAL;
 		}
 
@@ -517,13 +509,13 @@ public final class GamesListFragment extends SherlockListFragment implements
 			else if (!isCancelled())
 			{
 				restoreExistingList = false;
-				final Person whoAmI = Utilities.getWhoAmI(fragmentActivity);
+				final Person whoAmI = Utilities.getWhoAmI(activity);
 
-				GCMIntentService.clearNotifications(fragmentActivity);
-				GenericGameFragment.clearCachedBoards(fragmentActivity);
-				MyStatsDialogFragment.clearCachedStats(fragmentActivity);
+				GCMIntentService.clearNotifications(activity);
+				GenericGameFragment.clearCachedBoards(activity);
+				MyStatsDialogFragment.clearCachedStats(activity);
 
-				if (!isCancelled() && Utilities.checkForNetworkConnectivity(fragmentActivity))
+				if (!isCancelled() && Utilities.checkForNetworkConnectivity(activity))
 				{
 					try
 					{
@@ -831,7 +823,7 @@ public final class GamesListFragment extends SherlockListFragment implements
 		private GamesListAdapter(final LinkedList<ListItem<Game>> games)
 		{
 			this.games = games;
-			activity = getSherlockActivity();
+			activity = getActivity();
 			inflater = activity.getLayoutInflater();
 			resources = getResources();
 			emptyProfilePicture = resources.getDrawable(R.drawable.empty_profile_picture_small);

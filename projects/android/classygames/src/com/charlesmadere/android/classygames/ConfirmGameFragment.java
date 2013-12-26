@@ -7,23 +7,17 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
-public final class ConfirmGameFragment extends Fragment
+public final class ConfirmGameFragment extends BaseFragment
 {
 
 
@@ -125,13 +119,6 @@ public final class ConfirmGameFragment extends Fragment
 
 
 	@Override
-	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
-	{
-		return inflater.inflate(R.layout.confirm_game_fragment, null);
-	}
-
-
-	@Override
 	public void onActivityCreated(final Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
@@ -170,7 +157,7 @@ public final class ConfirmGameFragment extends Fragment
 			}
 		});
 
-		final Activity activity = getSherlockActivity();
+		final Activity activity = getActivity();
 		final String friendsPictureURL = FacebookUtilities.getFriendsPictureLarge(activity, friend.getId());
 		final ImageView profilePicture = (ImageView) view.findViewById(R.id.confirm_game_fragment_friend_profile_picture);
 		Utilities.getImageLoader().displayImage(friendsPictureURL, profilePicture);
@@ -202,6 +189,13 @@ public final class ConfirmGameFragment extends Fragment
 	}
 
 
+	@Override
+	protected int getConventView()
+	{
+		return R.layout.confirm_game_fragment;
+	}
+
+
 
 
 	/**
@@ -217,7 +211,8 @@ public final class ConfirmGameFragment extends Fragment
 	{
 		if (alertDialog == null)
 		{
-			final LayoutInflater inflater = getSherlockActivity().getLayoutInflater();
+			final Activity activity = getActivity();
+			final LayoutInflater inflater = activity.getLayoutInflater();
 			final View dialogView = inflater.inflate(R.layout.choose_which_game_dialog, null);
 
 			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
@@ -260,7 +255,7 @@ public final class ConfirmGameFragment extends Fragment
 				}
 			});
 
-			alertDialog = new AlertDialog.Builder(getSherlockActivity())
+			alertDialog = new AlertDialog.Builder(getActivity())
 				.setView(dialogView)
 				.create();
 		}

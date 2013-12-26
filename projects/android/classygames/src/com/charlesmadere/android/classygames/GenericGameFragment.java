@@ -7,10 +7,12 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.*;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.charlesmadere.android.classygames.models.Game;
@@ -28,7 +30,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 
-public abstract class GenericGameFragment extends Fragment
+public abstract class GenericGameFragment extends BaseFragment
 {
 
 
@@ -172,20 +174,11 @@ public abstract class GenericGameFragment extends Fragment
 	}
 
 
-
-
 	@Override
 	public void onCreate(final Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-	}
-
-
-	@Override
-	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
-	{
-		return inflater.inflate(getGameView(), container, false);
 	}
 
 
@@ -1082,13 +1075,6 @@ public abstract class GenericGameFragment extends Fragment
 	 * Returns the actual String for the opponent's default piece color.
 	 */
 	protected abstract String getDefaultOpponentsPieceColor();
-
-
-	/**
-	 * @return
-	 * Returns the int value for the XML layout to use.
-	 */
-	protected abstract int getGameView();
 
 
 	/**

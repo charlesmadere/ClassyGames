@@ -12,12 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.widget.SearchView;
 import com.charlesmadere.android.classygames.models.ListItem;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
@@ -31,7 +25,7 @@ import com.facebook.model.GraphUser;
 import java.util.*;
 
 
-public final class FriendsListFragment extends SherlockListFragment implements
+public final class FriendsListFragment extends BaseFragment implementss
 	AdapterView.OnItemClickListener
 {
 

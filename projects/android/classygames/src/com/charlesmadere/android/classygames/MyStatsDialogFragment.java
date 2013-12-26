@@ -10,13 +10,13 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.charlesmadere.android.classygames.server.Server;
 import com.charlesmadere.android.classygames.server.ServerApi;
 import com.charlesmadere.android.classygames.server.ServerApiGetStats;
@@ -28,7 +28,7 @@ import org.json.JSONObject;
 /**
  * This Fragment shows the user their stats and scores and stuff.
  */
-public final class MyStatsDialogFragment extends SherlockDialogFragment
+public final class MyStatsDialogFragment extends DialogFragment
 {
 
 
@@ -113,7 +113,7 @@ public final class MyStatsDialogFragment extends SherlockDialogFragment
 		{
 			getPreferencesEditor().clear().commit();
 
-			serverTask = new ServerApiGetStats(getSherlockActivity(), new ServerApi.Listeners()
+			serverTask = new ServerApiGetStats(getActivity(), new ServerApi.Listeners()
 			{
 				@Override
 				public void onCancel()
@@ -231,7 +231,8 @@ public final class MyStatsDialogFragment extends SherlockDialogFragment
 	{
 		if (sPreferences == null)
 		{
-			sPreferences = getSherlockActivity().getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+			final Activity activity = getActivity();
+			sPreferences = activity.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
 		}
 
 		return sPreferences;

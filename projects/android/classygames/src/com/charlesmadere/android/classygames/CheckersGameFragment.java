@@ -105,6 +105,13 @@ public final class CheckersGameFragment extends GenericGameFragment
 
 
 	@Override
+	protected int getConventView()
+	{
+		return R.layout.checkers_and_chess_game_fragment;
+	}
+
+
+	@Override
 	protected String getDefaultPlayersPieceColor()
 	{
 		return getString(R.string.green);
@@ -115,13 +122,6 @@ public final class CheckersGameFragment extends GenericGameFragment
 	protected String getDefaultOpponentsPieceColor()
 	{
 		return getString(R.string.orange);
-	}
-
-
-	@Override
-	protected int getGameView()
-	{
-		return R.layout.checkers_and_chess_game_fragment;
 	}
 
 
@@ -264,7 +264,7 @@ public final class CheckersGameFragment extends GenericGameFragment
 				if (board.move(previous, current))
 				{
 					flush();
-					getSherlockActivity().supportInvalidateOptionsMenu();
+					getActivity().supportInvalidateOptionsMenu();
 
 					if (board.isBoardLocked())
 					{

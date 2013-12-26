@@ -6,10 +6,10 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.models.games.Coordinate;
 import com.charlesmadere.android.classygames.models.games.GenericPiece;
@@ -242,6 +242,13 @@ public final class ChessGameFragment extends GenericGameFragment
 
 
 	@Override
+	protected int getConventView()
+	{
+		return R.layout.checkers_and_chess_game_fragment;
+	}
+
+
+	@Override
 	protected String getDefaultPlayersPieceColor()
 	{
 		return getString(R.string.pink);
@@ -252,13 +259,6 @@ public final class ChessGameFragment extends GenericGameFragment
 	protected String getDefaultOpponentsPieceColor()
 	{
 		return getString(R.string.blue);
-	}
-
-
-	@Override
-	protected int getGameView()
-	{
-		return R.layout.checkers_and_chess_game_fragment;
 	}
 
 
@@ -433,7 +433,7 @@ public final class ChessGameFragment extends GenericGameFragment
 			if (board.move(previous, current))
 			{
 				flush();
-				getSherlockActivity().supportInvalidateOptionsMenu();
+				getActivity().supportInvalidateOptionsMenu();
 
 				final byte boardStatus = ((Board) board).isBoardInCheckOrCheckmate();
 
@@ -467,7 +467,7 @@ public final class ChessGameFragment extends GenericGameFragment
 
 	private void boardIsInCheck()
 	{
-		Toast.makeText(getSherlockActivity(), R.string.check, Toast.LENGTH_LONG).show();
+		Toast.makeText(getActivity(), R.string.check, Toast.LENGTH_LONG).show();
 
 		// TODO
 	}
@@ -475,7 +475,7 @@ public final class ChessGameFragment extends GenericGameFragment
 
 	private void boardIsInCheckmate()
 	{
-		Toast.makeText(getSherlockActivity(), R.string.checkmate, Toast.LENGTH_LONG).show();
+		Toast.makeText(getActivity(), R.string.checkmate, Toast.LENGTH_LONG).show();
 
 		// TODO
 	}
