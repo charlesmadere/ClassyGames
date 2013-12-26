@@ -7,10 +7,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.widget.TextView;
-import com.charlesmadere.android.classygames.settings.AboutPreferenceFragment;
-import com.charlesmadere.android.classygames.settings.BasePreferenceFragment;
-import com.charlesmadere.android.classygames.settings.GamePreferenceFragment;
-import com.charlesmadere.android.classygames.settings.NotificationPreferenceFragment;
+import com.charlesmadere.android.classygames.preferences.AboutPreferenceFragment;
+import com.charlesmadere.android.classygames.preferences.BasePreferenceFragment;
+import com.charlesmadere.android.classygames.preferences.GamePreferenceFragment;
+import com.charlesmadere.android.classygames.preferences.NotificationPreferenceFragment;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 

@@ -103,7 +103,7 @@
 
 		<activity
 			android:label="@string/about"
-			android:name="com.charlesmadere.android.classygames.settings.AboutActivity"
+			android:name="com.charlesmadere.android.classygames.preferences.AboutActivity"
 			android:parentActivityName="com.charlesmadere.android.classygames.GameFragmentActivity">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
@@ -135,7 +135,7 @@
 
 		<activity
 			android:label="@string/register_for_notifications"
-			android:name="com.charlesmadere.android.classygames.settings.RegisterForNotificationsActivity"
+			android:name="com.charlesmadere.android.classygames.preferences.RegisterForNotificationsActivity"
 			android:parentActivityName="com.charlesmadere.android.classygames.settings.SettingsPreferenceActivity">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
@@ -144,7 +144,7 @@
 
 		<activity
 			android:label="@string/settings"
-			android:name="com.charlesmadere.android.classygames.settings.PreferenceActivity"
+			android:name="com.charlesmadere.android.classygames.preferences.PreferenceActivity"
 			android:parentActivityName="com.charlesmadere.android.classygames.GameFragmentActivity">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
@@ -162,7 +162,7 @@
 
 		<activity
 			android:label="@string/unregister_from_notifications"
-			android:name="com.charlesmadere.android.classygames.settings.UnregisterFromNotificationsActivity"
+			android:name="com.charlesmadere.android.classygames.preferences.UnregisterFromNotificationsActivity"
 			android:parentActivityName="com.charlesmadere.android.classygames.settings.SettingsPreferenceActivity">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"

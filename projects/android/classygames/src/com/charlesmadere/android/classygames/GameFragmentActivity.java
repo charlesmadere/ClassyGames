@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.Notification;
 import com.charlesmadere.android.classygames.models.Person;
-import com.charlesmadere.android.classygames.settings.PreferenceActivity;
+import com.charlesmadere.android.classygames.preferences.PreferenceActivity;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
 

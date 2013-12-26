@@ -2,15 +2,15 @@
 <preference-headers xmlns:android="http://schemas.android.com/apk/res/android"
 	android:title="@string/settings">
 	<header
-		android:fragment="com.charlesmadere.android.classygames.settings.GamePreferenceFragment"
+		android:fragment="com.charlesmadere.android.classygames.preferences.GamePreferenceFragment"
 		android:summary="@string/settings_game_summary"
 		android:title="@string/game_settings" />
 	<header
-		android:fragment="com.charlesmadere.android.classygames.settings.NotificationPreferenceFragment"
+		android:fragment="com.charlesmadere.android.classygames.preferences.NotificationPreferenceFragment"
 		android:summary="@string/settings_notifications_summary"
 		android:title="@string/notification_settings" />
 	<header
-		android:fragment="com.charlesmadere.android.classygames.settings.AboutPreferenceFragment"
+		android:fragment="com.charlesmadere.android.classygames.preferences.AboutPreferenceFragment"
 		android:summary="@string/classy_games_information_and_details"
 		android:title="@string/about" />
 </preference-headers>

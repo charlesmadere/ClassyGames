@@ -1,4 +1,4 @@
-package com.charlesmadere.android.classygames.settings;
+package com.charlesmadere.android.classygames.preferences;
 
 
 import android.content.Intent;
