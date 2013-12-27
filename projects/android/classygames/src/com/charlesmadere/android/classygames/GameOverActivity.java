@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.charlesmadere.android.classygames.models.Notification;
 import com.charlesmadere.android.classygames.server.Server;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
-import com.charlesmadere.android.classygames.utilities.Utilities;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 
 public final class GameOverActivity extends BaseActivity
@@ -44,7 +44,9 @@ public final class GameOverActivity extends BaseActivity
 			else
 			{
 				final ImageView friendsPicture = (ImageView) findViewById(R.id.game_over_activity_friend_picture);
-				Utilities.getImageLoader().displayImage(FacebookUtilities.getFriendsPictureLarge(this, notification.getPerson().getId()), friendsPicture);
+				final String url = FacebookUtilities.getFriendsPictureLarge(this, notification.getPerson().getId());
+				final ImageLoader imageLoader = App.getImageLoader();
+				imageLoader.displayImage(url, friendsPicture);
 
 				final TextView friendsName = (TextView) findViewById(R.id.game_over_activity_friend_name);
 				friendsName.setText(notification.getPerson().getName());
