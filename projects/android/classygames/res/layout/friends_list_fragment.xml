@@ -6,8 +6,9 @@
 	style="@style/ClassyGames">
 	<ListView
 		android:cacheColorHint="@color/cache_color_hint"
+		android:choiceMode="singleChoice"
 		android:fastScrollEnabled="true"
-		android:id="@android:id/list"
+		android:id="@+id/friends_list_fragment_listview"
 		android:layout_height="match_parent"
 		android:layout_width="match_parent"
 		android:listSelector="@drawable/selectable_item" />
