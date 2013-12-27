@@ -28,7 +28,7 @@ public final class GCMManager
 
 
 	private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-	private final static String PREFERENCES_NAME = "GCMManager_Preferences";
+	private final static String PREFERENCES_NAME = LOG_TAG + ": Preferences";
 	private final static String KEY_REGISTRATION_ID = "KEY_REGISTRATION_ID";
 	private final static String KEY_REGISTRATION_VERSION_CODE = "KEY_REGISTRATION_VERSION_CODE";
 

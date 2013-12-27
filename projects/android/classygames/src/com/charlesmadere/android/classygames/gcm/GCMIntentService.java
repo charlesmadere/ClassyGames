@@ -40,7 +40,7 @@ public final class GCMIntentService extends IntentService
 
 
 	private final static String LOG_TAG = App.BASE_TAG + GCMIntentService.class.getSimpleName();
-	private final static String PREFERENCES_NAME = "GCMIntentService_Preferences";
+	private final static String PREFERENCES_NAME = LOG_TAG + ": Preferences";
 
 	private final static int GCM_MAX_SIMULTANEOUS_NOTIFICATIONS = 6;
 	private final static int GCM_NOTIFICATION_ID = 0;

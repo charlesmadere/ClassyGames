@@ -36,7 +36,7 @@ public abstract class GenericGameFragment extends BaseFragment
 
 	private final static String LOG_TAG = App.BASE_TAG + GenericGameFragment.class.getSimpleName();
 
-	private final static String PREFERENCES_NAME = "GenericGameFragment_Preferences";
+	private final static String PREFERENCES_NAME = LOG_TAG + ": Preferences";
 	private final static String KEY_GAME_ID = "KEY_GAME_ID";
 	private final static String KEY_WHICH_GAME = "KEY_WHICH_GAME";
 	private final static String KEY_PERSON = "KEY_PERSON";
