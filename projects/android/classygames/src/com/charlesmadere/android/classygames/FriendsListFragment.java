@@ -8,9 +8,8 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v4.app.FragmentActivity;
+import android.view.*;
 import android.widget.*;
 import com.charlesmadere.android.classygames.models.ListItem;
 import com.charlesmadere.android.classygames.models.Person;
@@ -25,7 +24,7 @@ import com.facebook.model.GraphUser;
 import java.util.*;
 
 
-public final class FriendsListFragment extends BaseFragment implementss
+public final class FriendsListFragment extends BaseFragment implements
 	AdapterView.OnItemClickListener
 {
 
@@ -42,11 +41,10 @@ public final class FriendsListFragment extends BaseFragment implementss
 
 
 	/**
-	 * Boolean that marks if this is the first time that the onResume() method
-	 * was hit. We do this because we don't want to refresh the friends list
-	 * if it is not in need of refreshing.
-	 * In other words, it's not in need of a refreshment. It's not thirsty. Har
-	 * har.
+	 * Boolean that marks if this is the first time that the onResume() method was hit. We do
+	 * this because we don't want to refresh the friends list if it is not in need of refreshing.
+	 * <p/>
+	 * In other words, it's not in need of a refreshment. It's not thirsty. Har har.
 	 */
 	private boolean isFirstOnResume = true;
 
@@ -112,13 +110,6 @@ public final class FriendsListFragment extends BaseFragment implementss
 	{
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-	}
-
-
-	@Override
-	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
-	{
-		return inflater.inflate(R.layout.friends_list_fragment, container, false);
 	}
 
 
@@ -274,6 +265,11 @@ public final class FriendsListFragment extends BaseFragment implementss
 	}
 
 
+	@Override
+	protected int getConventView()
+	{
+		return R.layout.friends_list_fragment;
+	}
 
 
 	/**
@@ -310,7 +306,8 @@ public final class FriendsListFragment extends BaseFragment implementss
 	{
 		if (sPreferences == null)
 		{
-			sPreferences = getSherlockActivity().getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+			final Activity activity = getActivity();
+			sPreferences = activity.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
 		}
 
 		return sPreferences;
@@ -368,12 +365,12 @@ public final class FriendsListFragment extends BaseFragment implementss
 		private byte runStatus;
 
 
-		private SherlockFragmentActivity fragmentActivity;
+		private FragmentActivity activity;
 
 
 		private AsyncRefreshFriendsList()
 		{
-			fragmentActivity = getSherlockActivity();
+			activity = getActivity();
 			runStatus = RUN_STATUS_NORMAL;
 		}
 
@@ -390,7 +387,7 @@ public final class FriendsListFragment extends BaseFragment implementss
 
 				if (map == null || map.isEmpty())
 				{
-					if (Utilities.checkForNetworkConnectivity(fragmentActivity))
+					if (Utilities.checkForNetworkConnectivity(activity))
 					{
 						final Session session = Session.getActiveSession();
 
@@ -600,7 +597,7 @@ public final class FriendsListFragment extends BaseFragment implementss
 				asyncRefreshFriendsList = null;
 			}
 
-			fragmentActivity.supportInvalidateOptionsMenu();
+			activity.supportInvalidateOptionsMenu();
 		}
 
 
@@ -624,7 +621,7 @@ public final class FriendsListFragment extends BaseFragment implementss
 		{
 			this.friends = friends;
 
-			activity = getSherlockActivity();
+			activity = getActivity();
 			inflater = activity.getLayoutInflater();
 			emptyProfilePicture = getResources().getDrawable(R.drawable.empty_profile_picture_small);
 			filter = new FriendsListFilter(friends);
@@ -676,7 +673,7 @@ public final class FriendsListFragment extends BaseFragment implementss
 			viewHolder.name.setText(friend.getName());
 			viewHolder.picture.setImageDrawable(emptyProfilePicture);
 			final String friendsPictureURL = FacebookUtilities.getFriendsPictureSquare(activity, friend.getId());
-			Utilities.getImageLoader().displayImage(friendsPictureURL, viewHolder.picture);
+			App.getImageLoader().displayImage(friendsPictureURL, viewHolder.picture);
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 			{
