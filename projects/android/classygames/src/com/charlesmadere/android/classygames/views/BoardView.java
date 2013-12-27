@@ -9,8 +9,8 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ViewGroup;
+import com.charlesmadere.android.classygames.App;
 import com.charlesmadere.android.classygames.R;
-import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
 /**
@@ -23,7 +23,7 @@ public final class BoardView extends ViewGroup
 {
 
 
-	private final static String LOG_TAG = Utilities.LOG_TAG + " - BoardView";
+	private final static String LOG_TAG = App.BASE_TAG + BoardView.class.getSimpleName();
 	private final static int COLUMNS_DEFAULT = 2;
 	private final static int ROWS_DEFAULT = 2;
 
