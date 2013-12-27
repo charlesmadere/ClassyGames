@@ -39,7 +39,7 @@ public final class GamesListFragment extends BaseFragment implements
 {
 
 
-	private final static String LOG_TAG = Utilities.LOG_TAG + " - GamesListFragment";
+	private final static String LOG_TAG = App.BASE_TAG + GamesListFragment.class.getSimpleName();
 	private final static String KEY_GAMES_LIST_JSON = "KEY_GAMES_LIST_JSON";
 
 
