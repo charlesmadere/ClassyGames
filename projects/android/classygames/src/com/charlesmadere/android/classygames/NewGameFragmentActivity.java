@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.widget.Toast;
 import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.Person;
-import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
 public final class NewGameFragmentActivity extends BaseActivity implements
@@ -20,7 +19,7 @@ public final class NewGameFragmentActivity extends BaseActivity implements
 {
 
 
-	private final static String LOG_TAG = Utilities.LOG_TAG + " - NewGameFragmentActivity";
+	private final static String LOG_TAG = App.BASE_TAG + NewGameFragmentActivity.class.getSimpleName();
 	public final static String KEY_FRIEND = "KEY_FRIEND";
 	public final static String KEY_WHICH_GAME = "KEY_WHICH_GAME";
 

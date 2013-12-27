@@ -32,7 +32,7 @@ public final class MyStatsDialogFragment extends DialogFragment
 {
 
 
-	private final static String LOG_TAG = Utilities.LOG_TAG + " - MyStatsDialogFragment";
+	private final static String LOG_TAG = App.BASE_TAG + MyStatsDialogFragment.class.getSimpleName();
 	private final static String PREFERENCES_NAME = "MyProfileFragment_Preferences";
 	private final static String KEY_CHECKERS_LOSES = "KEY_CHECKERS_LOSES";
 	private final static String KEY_CHECKERS_WINS = "KEY_CHECKERS_WINS";

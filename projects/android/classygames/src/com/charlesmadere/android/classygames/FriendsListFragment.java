@@ -31,9 +31,6 @@ public final class FriendsListFragment extends BaseFragment implements
 
 	private final static String PREFERENCES_NAME = "FriendsListFragment_Preferences";
 
-
-
-
 	private ListView list;
 	private TextView empty;
 	private LinearLayout loading;
@@ -65,8 +62,6 @@ public final class FriendsListFragment extends BaseFragment implements
 
 
 	private SharedPreferences sPreferences;
-
-
 
 
 	/**

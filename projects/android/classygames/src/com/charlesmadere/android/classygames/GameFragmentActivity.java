@@ -25,7 +25,7 @@ public final class GameFragmentActivity extends BaseActivity implements
 {
 
 
-	private final static String LOG_TAG = Utilities.LOG_TAG + " - GameFragmentActivity";
+	private final static String LOG_TAG = App.BASE_TAG + GameFragmentActivity.class.getSimpleName();
 	private final static String KEY_ACTION_BAR_TITLE = "KEY_ACTION_BAR_TITLE";
 	public final static String KEY_NOTIFICATION = "KEY_NOTIFICATION";
 
