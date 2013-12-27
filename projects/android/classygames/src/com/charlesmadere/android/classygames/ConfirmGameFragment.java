@@ -166,9 +166,6 @@ public final class ConfirmGameFragment extends BaseFragment
 
 	@Override
 	public void onAttach(final Activity activity)
-	// This makes sure that the Activity containing this Fragment has
-	// implemented the callback interface. If the callback interface has not
-	// been implemented, an exception is thrown.
 	{
 		super.onAttach(activity);
 		listeners = (Listeners) activity;

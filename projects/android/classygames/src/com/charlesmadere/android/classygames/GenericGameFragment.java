@@ -34,8 +34,7 @@ public abstract class GenericGameFragment extends BaseFragment
 {
 
 
-	private final static String LOG_TAG = Utilities.LOG_TAG + " - GenericGameFragment";
-
+	private final static String LOG_TAG = App.BASE_TAG + GenericGameFragment.class.getSimpleName();
 
 	private final static String PREFERENCES_NAME = "GenericGameFragment_Preferences";
 	private final static String KEY_GAME_ID = "KEY_GAME_ID";
@@ -324,9 +323,6 @@ public abstract class GenericGameFragment extends BaseFragment
 
 	@Override
 	public void onAttach(final Activity activity)
-	// This makes sure that the Activity containing this Fragment has
-	// implemented the callback interface. If the callback interface has not
-	// been implemented, an exception is thrown.
 	{
 		super.onAttach(activity);
 		listeners = (Listeners) activity;
