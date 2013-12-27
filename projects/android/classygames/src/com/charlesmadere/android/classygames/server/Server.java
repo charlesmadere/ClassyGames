@@ -2,7 +2,7 @@ package com.charlesmadere.android.classygames.server;
 
 
 import android.util.Log;
-import com.charlesmadere.android.classygames.utilities.Utilities;
+import com.charlesmadere.android.classygames.App;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -24,7 +24,7 @@ public final class Server
 {
 
 
-	public final static String LOG_TAG = Utilities.LOG_TAG + " - Server";
+	public final static String LOG_TAG = App.BASE_TAG + Server.class.getSimpleName();
 	public final static long WAIT_FOR_SERVER_DELAY = 1000l;
 
 

@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
+import com.charlesmadere.android.classygames.App;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.utilities.Utilities;
@@ -23,7 +24,7 @@ public abstract class ServerApi
 {
 
 
-	protected final static String LOG_TAG = Utilities.LOG_TAG + " - ServerApi";
+	protected final static String LOG_TAG = App.BASE_TAG + ServerApi.class.getSimpleName();
 
 
 
