@@ -29,7 +29,8 @@ public final class FriendsListFragment extends BaseFragment implements
 {
 
 
-	private final static String PREFERENCES_NAME = "FriendsListFragment_Preferences";
+	private final static String LOG_TAG = App.BASE_TAG + FriendsListFragment.class.getSimpleName();
+	private final static String PREFERENCES_NAME = LOG_TAG + ": Preferences";
 
 	private ListView list;
 	private TextView empty;
