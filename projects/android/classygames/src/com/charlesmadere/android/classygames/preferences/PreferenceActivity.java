@@ -10,7 +10,6 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.actionbarsherlock.view.MenuItem;
-import com.charlesmadere.android.classygames.BasePreferenceActivity;
 import com.charlesmadere.android.classygames.R;
 import com.charlesmadere.android.classygames.utilities.Utilities;
 
