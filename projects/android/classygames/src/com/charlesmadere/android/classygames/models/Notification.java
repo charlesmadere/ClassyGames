@@ -138,8 +138,8 @@ public final class Notification implements Serializable
 	{
 		final JSONObject notificationJSON = new JSONObject();
 		notificationJSON.put(KEY_GAME_ID, gameId);
-		notificationJSON.put(KEY_WHICH_GAME, Integer.valueOf(whichGame));
-		notificationJSON.put(KEY_MESSAGE_TYPE, Integer.valueOf(messageType));
+		notificationJSON.put(KEY_WHICH_GAME, (int) whichGame);
+		notificationJSON.put(KEY_MESSAGE_TYPE, (int) messageType);
 		notificationJSON.put(KEY_PERSON_ID, person.getId());
 		notificationJSON.put(KEY_PERSON_NAME, person.getName());
 
