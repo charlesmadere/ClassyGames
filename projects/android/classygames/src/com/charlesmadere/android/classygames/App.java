@@ -17,7 +17,7 @@ public final class App extends Application
 {
 
 
-	public static String BASE_TAG = "Classy Games: ";
+	public final static String BASE_TAG = "Classy Games: ";
 
 	private static Context context;
 	private static ImageLoader imageLoader;
