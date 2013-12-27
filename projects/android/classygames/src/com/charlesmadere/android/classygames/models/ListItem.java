@@ -29,7 +29,7 @@ public final class ListItem<T>
 
 	/**
 	 * @return
-	 * Returns the object that you gave this class in the constructor.
+	 * Returns the object that you gave this class in its constructor.
 	 */
 	public T get()
 	{
