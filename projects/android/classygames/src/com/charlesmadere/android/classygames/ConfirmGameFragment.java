@@ -7,14 +7,16 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.charlesmadere.android.classygames.models.Game;
 import com.charlesmadere.android.classygames.models.Person;
 import com.charlesmadere.android.classygames.utilities.FacebookUtilities;
-import com.charlesmadere.android.classygames.utilities.Utilities;
 
 
 public final class ConfirmGameFragment extends BaseFragment
@@ -158,9 +160,9 @@ public final class ConfirmGameFragment extends BaseFragment
 		});
 
 		final Activity activity = getActivity();
-		final String friendsPictureURL = FacebookUtilities.getFriendsPictureLarge(activity, friend.getId());
+		final String url = FacebookUtilities.getFriendsPictureLarge(activity, friend.getId());
 		final ImageView profilePicture = (ImageView) view.findViewById(R.id.confirm_game_fragment_friend_profile_picture);
-		Utilities.getImageLoader().displayImage(friendsPictureURL, profilePicture);
+		App.getImageLoader().displayImage(url, profilePicture);
 	}
 
 

@@ -867,8 +867,8 @@ public final class GamesListFragment extends BaseFragment implements
 
 				final ViewHolder viewHolder = (ViewHolder) convertView.getTag();
 				viewHolder.picture.setImageDrawable(emptyProfilePicture);
-				final String friendsPictureURL = FacebookUtilities.getFriendsPictureSquare(activity, game.getPerson().getId());
-				Utilities.getImageLoader().displayImage(friendsPictureURL, viewHolder.picture);
+				final String url = FacebookUtilities.getFriendsPictureSquare(activity, game.getPerson().getId());
+				App.getImageLoader().displayImage(url, viewHolder.picture);
 
 				viewHolder.name.setText(game.getPerson().getName());
 				viewHolder.time.setText(game.getTimestampFormatted(resources));
